@@ -1,0 +1,383 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
+<html>
+<head>
+<title>MHonArc -- Resources</title>
+</head>
+<body>
+
+<!--X-NavButtons-Start-->
+<p align=center>
+[<a href="layout.html">Prev</a>][<a href="diagnos.html">Next</a>][<a href="mhonarc.html">TOC</a>][<a href="http://www.oac.uci.edu/indiv/ehood/MHonArc/faq/faq.html">FAQ</a>][<a href="bugs.html">Bugs</a>][<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html">Home</a>]
+</p>
+<!--X-NavButtons-End-->
+<hr>
+<h1><a name="resources">Resources</a></h1>
+
+<p>All the behavior of <em>MHonArc</em> is controlled by resources.
+Resources may be set via environment variables (<em>envariables</em>
+for short), command-line options, and/or elements in a resource file.
+For information on the syntax of a <em>MHonArc</em> resource file,
+see the <a href="resources/rcfile.html">RCFILE</a> resource.
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="types">Resource Types</a></h2>
+
+<p>There are four basic types of resources:
+</p>
+
+<dl>
+<dt><strong>boolean</strong>
+<dd><p>Boolean resources are resources that are either
+on or off; active or deactive; or true or false.  They basically
+work as flags for controlling <em>MHonArc</em> behavior.
+</p>
+</dd>
+<dt><strong>string</strong>
+<dd><p>The resource represents a string value.  How the
+string value is used depends on the resource.
+</p>
+</dd>
+<dt><strong>list</strong>
+<dd><p>The resource is a list of values.  How the list
+is used depends on the resource.
+</p>
+</dd>
+<dt><strong>one-shot</strong>
+<dd><p>One-shot resources are resources that
+apply only to the current <em>MHonArc</em> process.  You can
+tell if a resource is a one-shot by checking if the resource
+cannot be defined by a resource file element.  One-shot
+resources are set only by command-line options or envariables.
+</p>
+</dd>
+
+</dl>
+
+<p>A resource's type can be determined by reading the description
+for the resource.
+</p>
+
+<p>All resources, except one-shots, are stored with the archive
+in a simple database.  Therefore, after the first time you run
+<em>MHonArc</em> on an archive, you do not need to respecify the
+resources.  <em>MHonArc</em> will remember your settings so subsequent
+archive updates are faster to execute.
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="index">Resource Index</a></h2>
+
+<p>Each resource is described on its own page.
+Each resource page uses the following template:
+</p>
+
+<blockquote>
+<dl>
+<dt><strong>Syntax</strong></dt>
+<dd><p>Brief synopsis on how the resource can be defined.
+Command-line options take precedence over resource file elements.
+Resource file elements take precedence over environment
+variables ("<em>envariables</em>" for short).  See
+<a href="resources/rcfile.html">RCFILE</a> for more information
+on how resources are defined in a resource file.  See
+your system's documentation on how to define
+envariables.</p>
+</dd>
+<dt><strong>Description</strong></dt>
+<dd><p>Description of the resource.
+</p></dd>
+<dt><strong>Default Setting</strong></dt>
+<dd><p>The default value of the resource, if applicable.
+</p></dd>
+<dt><strong>Resource Variables</strong></dt>
+<dd><p>Applicable resource variables that can be used for the resource.
+See <a href="resources/rcfile.html">RCFILE</a> for information on
+the usage of resource variables.
+</p></dd>
+<dt><strong>Examples</strong></dt>
+<dd><p>Example uses of the resource.
+</p></dd>
+<dt><strong>Version</strong></dt>
+<dd><p>The version of <em>MHonArc</em> the resource became available.
+</p></dd>
+<dt><strong>See Also</strong></dt>
+<dd><p>Links to any related resources.
+</p></dd>
+</dl>
+</blockquote>
+
+<h3>Resource list</h3>
+
+<!--X-Resource-Index-Start-->
+<table border=0 cellpadding=5>
+<tbody>
+<tr>
+<td colspan=3><hr noshade size=0></td>
+</tr>
+<tr>
+<td><a name="add" href="resources/add.html">ADD</a></td>
+<td><a name="authorbegin" href="resources/authorbegin.html">AUTHORBEGIN</a></td>
+<td><a name="authorend" href="resources/authorend.html">AUTHOREND</a></td>
+</tr>
+<tr>
+<td><a name="authsort" href="resources/authsort.html">AUTHSORT</a></td>
+<td><a name="botlinks" href="resources/botlinks.html">BOTLINKS</a></td>
+<td><a name="charsetconverters" href="resources/charsetconverters.html">CHARSETCONVERTERS</a></td>
+</tr>
+<tr>
+<td><a name="conlen" href="resources/conlen.html">CONLEN</a></td>
+<td><a name="daybegin" href="resources/daybegin.html">DAYBEGIN</a></td>
+<td><a name="dayend" href="resources/dayend.html">DAYEND</a></td>
+</tr>
+<tr>
+<td><a name="dbfile" href="resources/dbfile.html">DBFILE</a></td>
+<td><a name="decodeheads" href="resources/decodeheads.html">DECODEHEADS</a></td>
+<td><a name="definederived" href="resources/definederived.html">DEFINEDERIVED</a></td>
+</tr>
+<tr>
+<td><a name="definevar" href="resources/definevar.html">DEFINEVAR</a></td>
+<td><a name="defrcfile" href="resources/defrcfile.html">DEFRCFILE</a></td>
+<td><a name="doc" href="resources/doc.html">DOC</a></td>
+</tr>
+<tr>
+<td><a name="docurl" href="resources/docurl.html">DOCURL</a></td>
+<td><a name="editidx" href="resources/editidx.html">EDITIDX</a></td>
+<td><a name="excs" href="resources/excs.html">EXCS</a></td>
+</tr>
+<tr>
+<td><a name="expireage" href="resources/expireage.html">EXPIREAGE</a></td>
+<td><a name="expiredate" href="resources/expiredate.html">EXPIREDATE</a></td>
+<td><a name="fieldorder" href="resources/fieldorder.html">FIELDORDER</a></td>
+</tr>
+<tr>
+<td><a name="fieldsbeg" href="resources/fieldsbeg.html">FIELDSBEG</a></td>
+<td><a name="fieldsend" href="resources/fieldsend.html">FIELDSEND</a></td>
+<td><a name="fieldstyles" href="resources/fieldstyles.html">FIELDSTYLES</a></td>
+</tr>
+<tr>
+<td><a name="fldbeg" href="resources/fldbeg.html">FLDBEG</a></td>
+<td><a name="fldend" href="resources/fldend.html">FLDEND</a></td>
+<td><a name="folrefs" href="resources/folrefs.html">FOLREFS</a></td>
+</tr>
+<tr>
+<td><a name="footer" href="resources/footer.html">FOOTER</a></td>
+<td><a name="force" href="resources/force.html">FORCE</a></td>
+<td><a name="genidx" href="resources/genidx.html">GENIDX</a></td>
+</tr>
+<tr>
+<td><a name="gmtdatefmt" href="resources/gmtdatefmt.html">GMTDATEFMT</a></td>
+<td><a name="headbodysep" href="resources/headbodysep.html">HEADBODYSEP</a></td>
+<td><a name="header" href="resources/header.html">HEADER</a></td>
+</tr>
+<tr>
+<td><a name="icons" href="resources/icons.html">ICONS</a></td>
+<td><a name="idxfname" href="resources/idxfname.html">IDXFNAME</a></td>
+<td><a name="idxlabel" href="resources/idxlabel.html">IDXLABEL</a></td>
+</tr>
+<tr>
+<td><a name="idxpgbegin" href="resources/idxpgbegin.html">IDXPGBEGIN</a></td>
+<td><a name="idxpgend" href="resources/idxpgend.html">IDXPGEND</a></td>
+<td><a name="idxprefix" href="resources/idxprefix.html">IDXPREFIX</a></td>
+</tr>
+<tr>
+<td><a name="idxsize" href="resources/idxsize.html">IDXSIZE</a></td>
+<td><a name="include" href="resources/include.html">INCLUDE</a></td>
+<td><a name="labelbeg" href="resources/labelbeg.html">LABELBEG</a></td>
+</tr>
+<tr>
+<td><a name="labelend" href="resources/labelend.html">LABELEND</a></td>
+<td><a name="labelstyles" href="resources/labelstyles.html">LABELSTYLES</a></td>
+<td><a name="listbegin" href="resources/listbegin.html">LISTBEGIN</a></td>
+</tr>
+<tr>
+<td><a name="listend" href="resources/listend.html">LISTEND</a></td>
+<td><a name="litemplate" href="resources/litemplate.html">LITEMPLATE</a></td>
+<td><a name="localdatefmt" href="resources/localdatefmt.html">LOCALDATEFMT</a></td>
+</tr>
+<tr>
+<td><a name="lockdelay" href="resources/lockdelay.html">LOCKDELAY</a></td>
+<td><a name="locktries" href="resources/locktries.html">LOCKTRIES</a></td>
+<td><a name="mailto" href="resources/mailto.html">MAILTO</a></td>
+</tr>
+<tr>
+<td><a name="mailtourl" href="resources/mailtourl.html">MAILTOURL</a></td>
+<td><a name="main" href="resources/main.html">MAIN</a></td>
+<td><a name="maxsize" href="resources/maxsize.html">MAXSIZE</a></td>
+</tr>
+<tr>
+<td><a name="mhpattern" href="resources/mhpattern.html">MHPATTERN</a></td>
+<td><a name="mimeargs" href="resources/mimeargs.html">MIMEARGS</a></td>
+<td><a name="mimefilters" href="resources/mimefilters.html">MIMEFILTERS</a></td>
+</tr>
+<tr>
+<td><a name="modtime" href="resources/modtime.html">MODTIME</a></td>
+<td><a name="months" href="resources/months.html">MONTHS</a></td>
+<td><a name="monthsabr" href="resources/monthsabr.html">MONTHSABR</a></td>
+</tr>
+<tr>
+<td><a name="msgfoot" href="resources/msgfoot.html">MSGFOOT</a></td>
+<td><a name="msggmtdatefmt" href="resources/msggmtdatefmt.html">MSGGMTDATEFMT</a></td>
+<td><a name="msghead" href="resources/msghead.html">MSGHEAD</a></td>
+</tr>
+<tr>
+<td><a name="msglocaldatefmt" href="resources/msglocaldatefmt.html">MSGLOCALDATEFMT</a></td>
+<td><a name="msgpgbegin" href="resources/msgpgbegin.html">MSGPGBEGIN</a></td>
+<td><a name="msgpgend" href="resources/msgpgend.html">MSGPGEND</a></td>
+</tr>
+<tr>
+<td><a name="msgsep" href="resources/msgsep.html">MSGSEP</a></td>
+<td><a name="multipg" href="resources/multipg.html">MULTIPG</a></td>
+<td><a name="news" href="resources/news.html">NEWS</a></td>
+</tr>
+<tr>
+<td><a name="nextbutton" href="resources/nextbutton.html">NEXTBUTTON</a></td>
+<td><a name="nextbuttonia" href="resources/nextbuttonia.html">NEXTBUTTONIA</a></td>
+<td><a name="nextlink" href="resources/nextlink.html">NEXTLINK</a></td>
+</tr>
+<tr>
+<td><a name="nextlinkia" href="resources/nextlinkia.html">NEXTLINKIA</a></td>
+<td><a name="nextpglink" href="resources/nextpglink.html">NEXTPGLINK</a></td>
+<td><a name="nextpglinkia" href="resources/nextpglinkia.html">NEXTPGLINKIA</a></td>
+</tr>
+<tr>
+<td><a name="otherindexes" href="resources/otherindexes.html">OTHERINDEXES</a></td>
+<td><a name="outdir" href="resources/outdir.html">OUTDIR</a></td>
+<td><a name="perlinc" href="resources/perlinc.html">PERLINC</a></td>
+</tr>
+<tr>
+<td><a name="prevbutton" href="resources/prevbutton.html">PREVBUTTON</a></td>
+<td><a name="prevbuttonia" href="resources/prevbuttonia.html">PREVBUTTONIA</a></td>
+<td><a name="prevlink" href="resources/prevlink.html">PREVLINK</a></td>
+</tr>
+<tr>
+<td><a name="prevlinkia" href="resources/prevlinkia.html">PREVLINKIA</a></td>
+<td><a name="prevpglink" href="resources/prevpglink.html">PREVPGLINK</a></td>
+<td><a name="prevpglinkia" href="resources/prevpglinkia.html">PREVPGLINKIA</a></td>
+</tr>
+<tr>
+<td><a name="quiet" href="resources/quiet.html">QUIET</a></td>
+<td><a name="rcfile" href="resources/rcfile.html">RCFILE</a></td>
+<td><a name="reverse" href="resources/reverse.html">REVERSE</a></td>
+</tr>
+<tr>
+<td><a name="rmm" href="resources/rmm.html">RMM</a></td>
+<td><a name="scan" href="resources/scan.html">SCAN</a></td>
+<td><a name="single" href="resources/single.html">SINGLE</a></td>
+</tr>
+<tr>
+<td><a name="sort" href="resources/sort.html">SORT</a></td>
+<td><a name="subjectbegin" href="resources/subjectbegin.html">SUBJECTBEGIN</a></td>
+<td><a name="subjectend" href="resources/subjectend.html">SUBJECTEND</a></td>
+</tr>
+<tr>
+<td><a name="subjectheader" href="resources/subjectheader.html">SUBJECTHEADER</a></td>
+<td><a name="subsort" href="resources/subsort.html">SUBSORT</a></td>
+<td><a name="tcontbegin" href="resources/tcontbegin.html">TCONTBEGIN</a></td>
+</tr>
+<tr>
+<td><a name="tcontend" href="resources/tcontend.html">TCONTEND</a></td>
+<td><a name="tfoot" href="resources/tfoot.html">TFOOT</a></td>
+<td><a name="thead" href="resources/thead.html">THEAD</a></td>
+</tr>
+<tr>
+<td><a name="thread" href="resources/thread.html">THREAD</a></td>
+<td><a name="tidxfname" href="resources/tidxfname.html">TIDXFNAME</a></td>
+<td><a name="tidxlabel" href="resources/tidxlabel.html">TIDXLABEL</a></td>
+</tr>
+<tr>
+<td><a name="tidxpgbegin" href="resources/tidxpgbegin.html">TIDXPGBEGIN</a></td>
+<td><a name="tidxpgend" href="resources/tidxpgend.html">TIDXPGEND</a></td>
+<td><a name="tidxprefix" href="resources/tidxprefix.html">TIDXPREFIX</a></td>
+</tr>
+<tr>
+<td><a name="timezones" href="resources/timezones.html">TIMEZONES</a></td>
+<td><a name="tindentbegin" href="resources/tindentbegin.html">TINDENTBEGIN</a></td>
+<td><a name="tindentend" href="resources/tindentend.html">TINDENTEND</a></td>
+</tr>
+<tr>
+<td><a name="title" href="resources/title.html">TITLE</a></td>
+<td><a name="tlevels" href="resources/tlevels.html">TLEVELS</a></td>
+<td><a name="tliend" href="resources/tliend.html">TLIEND</a></td>
+</tr>
+<tr>
+<td><a name="tlinone" href="resources/tlinone.html">TLINONE</a></td>
+<td><a name="tlinoneend" href="resources/tlinoneend.html">TLINONEEND</a></td>
+<td><a name="tlitxt" href="resources/tlitxt.html">TLITXT</a></td>
+</tr>
+<tr>
+<td><a name="tnextbutton" href="resources/tnextbutton.html">TNEXTBUTTON</a></td>
+<td><a name="tnextbuttonia" href="resources/tnextbuttonia.html">TNEXTBUTTONIA</a></td>
+<td><a name="tnextlink" href="resources/tnextlink.html">TNEXTLINK</a></td>
+</tr>
+<tr>
+<td><a name="tnextlinkia" href="resources/tnextlinkia.html">TNEXTLINKIA</a></td>
+<td><a name="tnextpglink" href="resources/tnextpglink.html">TNEXTPGLINK</a></td>
+<td><a name="tnextpglinkia" href="resources/tnextpglinkia.html">TNEXTPGLINKIA</a></td>
+</tr>
+<tr>
+<td><a name="toplinks" href="resources/toplinks.html">TOPLINKS</a></td>
+<td><a name="tprevbutton" href="resources/tprevbutton.html">TPREVBUTTON</a></td>
+<td><a name="tprevbuttonia" href="resources/tprevbuttonia.html">TPREVBUTTONIA</a></td>
+</tr>
+<tr>
+<td><a name="tprevlink" href="resources/tprevlink.html">TPREVLINK</a></td>
+<td><a name="tprevlinkia" href="resources/tprevlinkia.html">TPREVLINKIA</a></td>
+<td><a name="tprevpglink" href="resources/tprevpglink.html">TPREVPGLINK</a></td>
+</tr>
+<tr>
+<td><a name="tprevpglinkia" href="resources/tprevpglinkia.html">TPREVPGLINKIA</a></td>
+<td><a name="treverse" href="resources/treverse.html">TREVERSE</a></td>
+<td><a name="tsingletxt" href="resources/tsingletxt.html">TSINGLETXT</a></td>
+</tr>
+<tr>
+<td><a name="tsubjectbeg" href="resources/tsubjectbeg.html">TSUBJECTBEG</a></td>
+<td><a name="tsubjectend" href="resources/tsubjectend.html">TSUBJECTEND</a></td>
+<td><a name="tsublistbeg" href="resources/tsublistbeg.html">TSUBLISTBEG</a></td>
+</tr>
+<tr>
+<td><a name="tsublistend" href="resources/tsublistend.html">TSUBLISTEND</a></td>
+<td><a name="ttitle" href="resources/ttitle.html">TTITLE</a></td>
+<td><a name="ttopbegin" href="resources/ttopbegin.html">TTOPBEGIN</a></td>
+</tr>
+<tr>
+<td><a name="ttopend" href="resources/ttopend.html">TTOPEND</a></td>
+<td><a name="umask" href="resources/umask.html">UMASK</a></td>
+<td><a name="weekdays" href="resources/weekdays.html">WEEKDAYS</a></td>
+</tr>
+<tr>
+<td><a name="weekdaysabr" href="resources/weekdaysabr.html">WEEKDAYSABR</a></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td colspan=3><hr noshade size=0></td>
+</tr>
+</tbody>
+</table>
+<!--X-Resource-Index-End-->
+
+<!-- *************************************************************** -->
+<hr>
+<!--X-NavButtons-Start-->
+<p align=center>
+[<a href="layout.html">Prev</a>][<a href="diagnos.html">Next</a>][<a href="mhonarc.html">TOC</a>][<a href="http://www.oac.uci.edu/indiv/ehood/MHonArc/faq/faq.html">FAQ</a>][<a href="bugs.html">Bugs</a>][<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html">Home</a>]
+</p>
+<!--X-NavButtons-End-->
+
+<!-- *************************************************************** -->
+<hr>
+<address>
+97/05/15 17:14:31<br>
+<img align="top" src="monicon.gif" alt="">
+<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"
+><strong>MHonArc</strong></a><br>
+Copyright &#169; 1997, <a href="http://www.oac.uci.edu/indiv/ehood/"
+>Earl Hood</a>, <a href="mailto:ehood@medusa.acs.uci.edu"
+>ehood@medusa.acs.uci.edu</a><br>
+</address>
+
+</body>
+</html>

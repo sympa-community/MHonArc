@@ -3,6 +3,8 @@
 # A. P. Barrett <barrett@ee.und.ac.za>, October 1993
 # $Revision: 1.4 $$Date: 1994/08/11 16:08:51 $
 #
+#	@(#)  base64.pl 1.1 96/09/17 @(#)
+#
 # Modified March 21, 1996 by ehood@convex.com
 #	-> Changes to base64'uudecode to strip out any begin/end
 #	   lines from input string.

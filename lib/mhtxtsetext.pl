@@ -1,6 +1,7 @@
 ##---------------------------------------------------------------------------##
+##	@(#)  mhtxtsetext.pl 1.1 96/09/17 @(#)
 ## Library to convert text/setext to HTML.  Adapted for use in MHonArc
-## by ehood@isogen.com, Sept 1994.
+## by ehood@medusa.acs.uci.edu, Sept 1994.
 ## Filter routine can be registered with the following:
 ##		<MIMEFILTERS>
 ##		text/setext:m2h_text_setext'filter:mhtxtsetext.pl

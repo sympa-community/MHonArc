@@ -1,0 +1,659 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
+<HTML>
+<HEAD>
+<TITLE>
+MHonArc -- Bugs
+</TITLE></HEAD>
+<BODY>
+
+<!--X-NavButtons-Start-->
+<p align=center>
+[<a href="diagnos.html">Prev</a>][<a href="contacts.html">Next</a>][<a href="mhonarc.html">TOC</a>][<a href="http://www.oac.uci.edu/indiv/ehood/MHonArc/faq/faq.html">FAQ</a>][<a href="bugs.html">Bugs</a>][<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html">Home</a>]
+</p>
+<!--X-NavButtons-End-->
+<HR>
+
+<H1><a name="bugs">Bugs</a></H1>
+
+<p>The following gives a list of bugs reported against
+<em>MHonArc</em>.  Each bug listing shows the version the
+bug was reported against, a decription of the problem,
+and if applicable, a solution and version of <em>MHonArc</em>
+the bug was fixed.
+</p>
+
+<h2><a name="buglist">Bug List</a></h2>
+
+<!--X-BugList-Start-->
+<table border=0 cellspacing=0 cellpadding=4 width="100%">
+<tr valign=top>
+<td colspan=2><hr noshade size=0></td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Version</strong></td>
+<td align=left>2.0.0</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Problem</strong></td>
+<td align=left>Bogus empty entry shows up in the database.  Bogus entry appears if a duplicate message is detected.
+ Potential visible problems of bogus entry are: mailto
+ links in headers corrupted; a blank listing in the
+ index.  Maybe other potential problems.
+</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Solution</strong></td>
+<td align=left>There is a be a bug in some versions of Perl where a hash key gets added invalidly.  The section of code that
+ this occurs has been modified to avoid the problem.
+ For existing databases with a bogus empty entry,
+ MHonArc now removes any empty key entries.
+ However, it is recommed to rebuild the archive.
+</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Fixed</strong></td>
+<td align=left>2.0.1</td>
+</tr>
+<tr valign=top>
+<td colspan=2><hr noshade size=0></td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Version</strong></td>
+<td align=left>2.0.0</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Problem</strong></td>
+<td align=left>Index pages are not properly updated if zero messages are in the archive (like through the -rmm option).
+ Even -editidx cannot cause a proper update.
+</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Solution</strong></td>
+<td align=left>Page count was set to zero when no messages exist.  This caused problems in conditional checks in the write index
+ routines.  To fix, page count is forced to 1 if their
+ are no messages.
+</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Fixed</strong></td>
+<td align=left>2.0.1</td>
+</tr>
+<tr valign=top>
+<td colspan=2><hr noshade size=0></td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Version</strong></td>
+<td align=left>2.0.0 beta 3</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Problem</strong></td>
+<td align=left>Index pages with last page links are not updated when a new page is added.
+</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Solution</strong></td>
+<td align=left>All index pages are regenerated if a new page is added.
+</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Fixed</strong></td>
+<td align=left>2.0.0</td>
+</tr>
+<tr valign=top>
+<td colspan=2><hr noshade size=0></td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Version</strong></td>
+<td align=left>2.0.0 beta 3</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Problem</strong></td>
+<td align=left>"-idxsize 0" does not give unlimited page size.</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Solution</strong></td>
+<td align=left>Problem fixed and now works as documented.</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Fixed</strong></td>
+<td align=left>2.0.0</td>
+</tr>
+<tr valign=top>
+<td colspan=2><hr noshade size=0></td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Version</strong></td>
+<td align=left>2.0.0 beta 3</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Problem</strong></td>
+<td align=left>"-maxsize 0" does not reset archive with unlimited messages allowed.
+</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Solution</strong></td>
+<td align=left>Problem fixed and now works as documented.</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Fixed</strong></td>
+<td align=left>2.0.0</td>
+</tr>
+<tr valign=top>
+<td colspan=2><hr noshade size=0></td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Version</strong></td>
+<td align=left>2.0.0 beta 3</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Problem</strong></td>
+<td align=left>Non-ASCII text encodings (=?ISO-..?...) are not properly decoded when EDITIDX is set.
+</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Solution</strong></td>
+<td align=left>The charset filter libraries are now loaded for EDITIDX.
+</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Fixed</strong></td>
+<td align=left>2.0.0</td>
+</tr>
+<tr valign=top>
+<td colspan=2><hr noshade size=0></td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Version</strong></td>
+<td align=left>2.0.0 beta 3</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Problem</strong></td>
+<td align=left>MODTIME resource setting not remembered across archive updates.
+</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Solution</strong></td>
+<td align=left>MODTIME resource is now properly stored in the database.
+</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Fixed</strong></td>
+<td align=left>2.0.0</td>
+</tr>
+<tr valign=top>
+<td colspan=2><hr noshade size=0></td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Version</strong></td>
+<td align=left>2.0.0 beta 3</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Problem</strong></td>
+<td align=left>Specifying -rmm and -single caused confusion on what MHonArc does.
+</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Solution</strong></td>
+<td align=left>The case is properly handled, with -rmm taking precedence.
+</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Fixed</strong></td>
+<td align=left>2.0.0</td>
+</tr>
+<tr valign=top>
+<td colspan=2><hr noshade size=0></td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Version</strong></td>
+<td align=left>2.0.0 beta 3</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Problem</strong></td>
+<td align=left>4 digit year not checked before 2 digit year when parsing dates.
+</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Solution</strong></td>
+<td align=left>Fixed.</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Fixed</strong></td>
+<td align=left>2.0.0</td>
+</tr>
+<tr valign=top>
+<td colspan=2><hr noshade size=0></td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Version</strong></td>
+<td align=left>2.0.0 beta 3</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Problem</strong></td>
+<td align=left>Some index pages in multipage indexes not updated when messages expire.
+</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Solution</strong></td>
+<td align=left>Fixed; all pages are regenerated when a message expires.
+</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Fixed</strong></td>
+<td align=left>2.0.0</td>
+</tr>
+<tr valign=top>
+<td colspan=2><hr noshade size=0></td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Version</strong></td>
+<td align=left>2.0.0 beta 3</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Problem</strong></td>
+<td align=left>Setting MONTHS and MONTHSABR had no effect.</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Solution</strong></td>
+<td align=left>Fixed.</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Fixed</strong></td>
+<td align=left>2.0.0</td>
+</tr>
+<tr valign=top>
+<td colspan=2><hr noshade size=0></td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Version</strong></td>
+<td align=left>2.0.0 beta 3</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Problem</strong></td>
+<td align=left>$TNEXTFROM$ actually gave the value of $NEXTFROM$.</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Solution</strong></td>
+<td align=left>Fixed.</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Fixed</strong></td>
+<td align=left>2.0.0</td>
+</tr>
+<tr valign=top>
+<td colspan=2><hr noshade size=0></td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Version</strong></td>
+<td align=left>2.0.0 beta 3</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Problem</strong></td>
+<td align=left>Numerical timezone offsets not handled properly when the offset contained non-zero minutes.  This
+ caused message to be sorted wrong by date.
+</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Solution</strong></td>
+<td align=left>Fixed.</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Fixed</strong></td>
+<td align=left>2.0.0</td>
+</tr>
+<tr valign=top>
+<td colspan=2><hr noshade size=0></td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Version</strong></td>
+<td align=left>2.0.0 beta 3</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Problem</strong></td>
+<td align=left>Some characters were not properly escaped when specifying the "in URL" modifier to a resource
+ variable.
+</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Solution</strong></td>
+<td align=left>Fixed.</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Fixed</strong></td>
+<td align=left>2.0.0</td>
+</tr>
+<tr valign=top>
+<td colspan=2><hr noshade size=0></td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Version</strong></td>
+<td align=left>2.0.0 beta 3</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Problem</strong></td>
+<td align=left>Thread (formatting) information lost when a thread is split across multiple pages.
+</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Solution</strong></td>
+<td align=left>Fixed.  New resources (TCONTBEGIN, TCONTEND, TINDENTBEGIN, TINDENTEND) exist to preserve
+ formatting of threads across pages.
+</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Fixed</strong></td>
+<td align=left>2.0.0</td>
+</tr>
+<tr valign=top>
+<td colspan=2><hr noshade size=0></td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Version</strong></td>
+<td align=left>2.0.0 beta 3</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Problem</strong></td>
+<td align=left>If specifying the REVERSE resource, the next/prev links in messages do not point to the proper
+ message as one may expect.
+</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Solution</strong></td>
+<td align=left>This should be fixed by the new behavior of $NEXT...$ and $PREV...$ resource variables.
+</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Fixed</strong></td>
+<td align=left>2.0.0</td>
+</tr>
+<tr valign=top>
+<td colspan=2><hr noshade size=0></td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Version</strong></td>
+<td align=left>2.0.0 beta 2</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Problem</strong></td>
+<td align=left>Perl aborts with message "Undefined subroutine &amp;main::output_db called ..." when the GENIDX resource
+ is set.
+</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Solution</strong></td>
+<td align=left>Fixed.  The output_db function is not applicable when GENIDX is active.
+</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Fixed</strong></td>
+<td align=left>2.0.0 beta 3</td>
+</tr>
+<tr valign=top>
+<td colspan=2><hr noshade size=0></td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Version</strong></td>
+<td align=left>2.0.0 beta 2</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Problem</strong></td>
+<td align=left>Duplicate resource filenames are not removed from the OTHERINDEXES resource.  This caused duplicate work
+ to be performed.
+</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Solution</strong></td>
+<td align=left>Fixed.  Any duplicate filenames are removed before applying the OTHERINDEXES resource.
+</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Fixed</strong></td>
+<td align=left>2.0.0 beta 3</td>
+</tr>
+<tr valign=top>
+<td colspan=2><hr noshade size=0></td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Version</strong></td>
+<td align=left>2.0.0 beta 2</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Problem</strong></td>
+<td align=left>Indexes created via the OTHERINDEXES resource contain no messages.
+</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Solution</strong></td>
+<td align=left>Fixed.</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Fixed</strong></td>
+<td align=left>2.0.0 beta 3</td>
+</tr>
+<tr valign=top>
+<td colspan=2><hr noshade size=0></td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Version</strong></td>
+<td align=left>2.0.0 beta 2</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Problem</strong></td>
+<td align=left>The markup defined by TSUBLISTEND may appear when there is no corresponding TSUBLISTBEG.
+</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Solution</strong></td>
+<td align=left>Fixed.</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Fixed</strong></td>
+<td align=left>2.0.0 beta 3</td>
+</tr>
+<tr valign=top>
+<td colspan=2><hr noshade size=0></td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Version</strong></td>
+<td align=left>2.0.0 beta 1</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Problem</strong></td>
+<td align=left>A multipart boundary specified with a capital boundary parameter, and not in quotes, was not recognized.
+</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Solution</strong></td>
+<td align=left>Fixed</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Fixed</strong></td>
+<td align=left>2.0.0 beta 2</td>
+</tr>
+<tr valign=top>
+<td colspan=2><hr noshade size=0></td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Version</strong></td>
+<td align=left>1.2.3</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Problem</strong></td>
+<td align=left>Generation of links of message-ids when editting messages w/o consideration that the message-ids
+ may already be linked.  This caused nested anchor
+ markup.
+</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Solution</strong></td>
+<td align=left>Fixed.  Only new message-ids are checked for.</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Fixed</strong></td>
+<td align=left>2.0.0 beta 1</td>
+</tr>
+<tr valign=top>
+<td colspan=2><hr noshade size=0></td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Version</strong></td>
+<td align=left>1.2.2</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Problem</strong></td>
+<td align=left>The ';' character may appear in derived files if the "usename" option is set for the mhexternal.pl filter.
+</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Solution</strong></td>
+<td align=left>Fixed.</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Fixed</strong></td>
+<td align=left>1.2.3</td>
+</tr>
+<tr valign=top>
+<td colspan=2><hr noshade size=0></td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Version</strong></td>
+<td align=left>1.2.2</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Problem</strong></td>
+<td align=left>The '/' character is not properly recognized in e-mail addresses when e-mail addressess are being converted
+ to mailto links in message headers.
+</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Solution</strong></td>
+<td align=left>Fixed.</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Fixed</strong></td>
+<td align=left>1.2.3</td>
+</tr>
+<tr valign=top>
+<td colspan=2><hr noshade size=0></td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Version</strong></td>
+<td align=left>1.2.2</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Problem</strong></td>
+<td align=left>Database read failures occur in add operations on MS-DOS systems.
+</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Solution</strong></td>
+<td align=left>Fixed (?)</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Fixed</strong></td>
+<td align=left>1.2.3</td>
+</tr>
+<tr valign=top>
+<td colspan=2><hr noshade size=0></td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Version</strong></td>
+<td align=left>1.2.1</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Problem</strong></td>
+<td align=left>The TIDXPGEND resource actually sets the value of the TIDXPGBEG resource.
+</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Solution</strong></td>
+<td align=left>Fixed.</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Fixed</strong></td>
+<td align=left>1.2.2</td>
+</tr>
+<tr valign=top>
+<td colspan=2><hr noshade size=0></td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Version</strong></td>
+<td align=left>1.2.0</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Problem</strong></td>
+<td align=left>MHonArc will abort execution under MS-DOS due to regular expression error.
+</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Solution</strong></td>
+<td align=left>Fixed.</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Fixed</strong></td>
+<td align=left>1.2.1</td>
+</tr>
+<tr valign=top>
+<td colspan=2><hr noshade size=0></td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Version</strong></td>
+<td align=left>1.2.0</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Problem</strong></td>
+<td align=left>install.me will abort execution under MS-DOS due to regular expression error.
+</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Solution</strong></td>
+<td align=left>Fixed.</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Fixed</strong></td>
+<td align=left>1.2.1</td>
+</tr>
+<tr valign=top>
+<td colspan=2><hr noshade size=0></td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Version</strong></td>
+<td align=left>1.2.0</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Problem</strong></td>
+<td align=left>A reverse index listing is incorrect if the index size is less than the archive size.
+</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Solution</strong></td>
+<td align=left>Fixed.</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Fixed</strong></td>
+<td align=left>1.2.1</td>
+</tr>
+</table>
+<!--X-BugList-End-->
+
+<HR>
+<!--X-NavButtons-Start-->
+<p align=center>
+[<a href="diagnos.html">Prev</a>][<a href="contacts.html">Next</a>][<a href="mhonarc.html">TOC</a>][<a href="http://www.oac.uci.edu/indiv/ehood/MHonArc/faq/faq.html">FAQ</a>][<a href="bugs.html">Bugs</a>][<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html">Home</a>]
+</p>
+<!--X-NavButtons-End-->
+
+<!-- *************************************************************** -->
+<hr>
+<address>
+97/05/22 20:02:37<br>
+<img align="top" src="monicon.gif" alt="">
+<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"
+><strong>MHonArc</strong></a><br>
+Copyright &#169; 1997, <a href="http://www.oac.uci.edu/indiv/ehood/"
+>Earl Hood</a>, <a href="mailto:ehood@medusa.acs.uci.edu"
+>ehood@medusa.acs.uci.edu</a><br>
+</address>
+
+</BODY>
+</HTML>

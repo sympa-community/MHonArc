@@ -1,0 +1,609 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
+<html>
+<head>
+<title>MHonArc Resources: MIMEFILTERS</title>
+</head>
+<body>
+
+<address>
+<a href="../resources.html#mimefilters">MHonArc Resource List</a></br>
+</address>
+
+<hr>
+<h1>MIMEFILTERS</h1>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Syntax</h2>
+
+<dl>
+
+<dt><strong>Envariable</strong><dt>
+<dd><p>N/A
+</p>
+</dd>
+
+<dt><strong>Element</strong><dt>
+<dd><p>
+<code>&lt;MIMEFILTERS&gt;<br></code>
+<var>filter-specification</var><br>
+<var>...</var><br>
+<code>&lt;/MIMEFILTERS&gt;<br></code>
+</p>
+</dd>
+
+<dt><strong>Command-line Option</strong><dt>
+<dd><p>N/A
+</p>
+</dd>
+
+</dl>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Description</h2>
+
+<P>The resource MIMEFILTERS
+is used to hook in user
+specifed filters into <EM>MHonArc</EM>. 
+The MIMEFILTERS resource can only be set via the
+<CODE>MIMEFILTERS</CODE> element.
+The syntax for each line of
+the the <CODE>MIMEFILTERS</CODE> element is as follows: </P>
+
+<P><var>content-type</var><CODE>:</CODE><var>routine-name</var><CODE>:</CODE><var>file-of-routine</var> </P>
+
+<P>The definition of each colon-separated value is as follows:
+</P>
+
+<DL>
+<DT><var>content-type</var> 
+ 
+<DD><P>The MIME content-type the filter processes.  An explicit
+content-type (base/subtype) or a base content-type (base/*)
+can be specified.
+</P>
+
+<DT><var>routine-name</var>
+<DD><P>The actual routine name of the filter. The name
+should be fully qualified by the package it is defined in
+(e.g. "<CODE>mypackage'filter</CODE>").  </P>
+<table border=0 cellpadding=4>
+<tr valign=top>
+<td><strong>NOTE</strong></td>
+<td><p>Package qualification must use Perl 4 syntax. The '::'
+qualification is not supported, yet.
+</p>
+</td>
+</tr>
+</table>
+
+<DT><var>file-of-routine</var>
+<DD><P>The name of the file that defines
+<var>routine-name</var>. If the file is not a full
+pathname, <EM>MHonArc</EM> finds the file by looking in the
+standard include paths of Perl, and the paths specified by the
+<A HREF="perlinc.html">PERLINC</A>
+resource.
+</P>
+
+</DL>
+
+<P>Any whitespace is stripped out before processing.
+</P>
+
+<H3>Writing Filters</H3>
+
+<P>If you want to write your own filter for use in <EM>MHonArc</EM>,
+you need to know the Perl programming language. The following
+information assumes you know Perl.
+</P>
+
+<H4>Function Interface of Filter</H4>
+
+<P><EM>MHonArc</EM> interfaces with MIME filters by calling a routine
+with a specific set of arguments. The prototype of the interface
+routine is as follows: </P>
+
+<PRE>
+sub <var>filter</var> {
+    local(<b>$head</b>, <b>*fields</b>, <b>$data</b>, <b>$decoded</b>, <b>$argstring</b>) = @_;
+
+    <var># Filter code here
+
+    # The last statement should be the return value, unless an
+    # explicit return is done. See the following for the format of the
+    # return value.</var>
+}
+</PRE>
+
+<H5>Argument Descriptions</H5>
+
+<table cellspacing=1 border=0 cellpadding=4>
+<tbody>
+
+<tr valign=top>
+<td><strong><CODE>$head</CODE></strong></td>
+<td><P>This is the header text of the message (or body part if called
+in a multipart message).
+</P>
+</td>
+</tr>
+
+<tr valign=top>
+<td><strong><CODE>*fields</CODE></strong></td>
+<td><P>A pointer to an associative array that has broken down
+<CODE>$head</CODE> into field label/field value components. The
+keys are the lower-case representations of the field
+values. <STRONG>Example</STRONG>: If you would like to retrieve
+the value of the Content-Type field, then use the following:
+<CODE>$fields{`content-type'}</CODE>.
+</P>
+<P>If a field occurs more than once in a header, <EM>MHonArc</EM>
+separates the field values in the associative array by a
+`<CODE>\034</CODE>' character. To make your filter less likely to break
+due to changes in <EM>MHonArc</EM>, you may use the
+<CODE>$readmail'FieldSep</CODE>
+variable instead of `<CODE>\034</CODE>'.
+</P>
+</td>
+</tr>
+
+<tr valign=top>
+<td><strong><CODE>$data</CODE></strong></td>
+<td><P>This is a copy of the message (or body part if called in
+a mulitpart message) body.
+</P>
+</td>
+</tr>
+
+<tr valign=top>
+<td><strong><CODE>$decoded</CODE></strong></td>
+<td><P>This flag is set to 1 if <EM>MHonArc</EM> decoded the message
+and <code>$data</code>
+represents the orginal data before encoded by the sender. If
+set to 0, <code>$data</code>
+has not been decoded. The failure to decode occurs
+if <EM>MHonArc</EM> does not recognizeed the encoding specified in
+the Content-Transfer-Encoding field.
+</P>
+<P><EM>MHonArc</EM> has decoded the data for you if it was encoded
+in 7-Bit, 8-Bit, Binary, Quoted-Printable, Base64, Uuencode
+(x-uuencode, uuencode, x-uue, uue).
+</P>
+</td>
+</tr>
+
+<tr valign=top>
+<td><strong><CODE>$argstring</CODE></strong></td>
+<td><P>This is an optional argument string that may be used to modify the 
+behavior of the filter. The format of this string is determined by the filter 
+itself.  The value of the string is set by the
+<a href="mimeargs.html">MIMEARGS</a> resource.
+</P>
+</td>
+</tr>
+
+</tbody>
+</table>
+
+<H5>Return Value</H5>
+
+<P>The return value is treated as an array. The first item in the array
+is a string representing the HTML markup to insert in the HTMLized
+message. An empty string may be returned to tell <EM>MHonArc</EM>
+that the routine was unable to filter data.  </P>
+
+<P>Any other array items are treated as names of any files that were
+generated by the filter. <EM>MHonArc</EM> needs to keep track if any
+extra files that a filter may generate in order for <EM>MHonArc</EM> to
+delete those files if the message gets removed from the archive.
+</P>
+
+<table border=0 cellpadding=4>
+<tr valign=top>
+<td><strong>NOTE</strong></td>
+<td><p>If the filter creates a subdirectory with files, the filter
+only needs to return the subdirectory in the return list.  If
+the message gets removed, <EM>MHonArc</EM> will delete the entire
+directory.
+</p>
+</td>
+</tr>
+</table>
+
+<H4>Filter Writing Tips</H4>
+
+<P>The following recommendations/tips are given to help you write
+filters: </P>
+
+<UL>
+<LI><P>Qualify your filter in its own package. This eliminates possible 
+variable/routine conflicts with <EM>MHonArc</EM>.
+</P>
+
+<LI><P>If the filter creates derived files (like the image filters),
+you may use the variable <strong><CODE>$'OUTDIR</CODE></strong>
+to determine the
+location of the mail archive.  </P>
+
+<table border=0 cellpadding=4>
+<tr valign=top>
+<td><strong>NOTE</strong></td>
+<td><p><strong>Do not include</strong> <CODE>$'OUTDIR</CODE> as part as the
+filename that is returned to <EM>MHonArc</EM>.  If the filter
+does create files, just return the base name.
+</td>
+</tr>
+</table>
+</p>
+
+<LI><P>Look at the default filters contained in the distribution
+of <EM>MHonArc</EM>. You can use these as templates for writing
+your own.  </P>
+
+<LI><P>Make sure your Perl source file ends with a true statement
+(like "<CODE>1;</CODE>").  <EM>MHonArc</EM> just performs a
+<strong><CODE>require</CODE></strong>
+on the file, and if the file does not return
+true, Perl will abort execution.  </P>
+
+</UL>
+
+<H4>Using C</H4>
+
+<P>If a MIME filter requires the utilization of a C program, or
+other non-Perl executable, a Perl wrapper must be written for the
+program in-order to interface with <EM>MHonArc</EM>.
+</P>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Default Setting</h2>
+
+<PRE>
+<b>&lt;MIMEFilters&gt;</b>
+application/*:m2h_external'filter:mhexternal.pl
+application/x-patch:m2h_text_plain'filter:mhtxtplain.pl
+audio/*:m2h_external'filter:mhexternal.pl
+image/*:m2h_external'filter:mhexternal.pl
+message/partial:m2h_text_plain'filter:mhtxtplain.pl
+text/*:m2h_text_plain'filter:mhtxtplain.pl
+text/html:m2h_text_html'filter:mhtxthtml.pl
+text/plain:m2h_text_plain'filter:mhtxtplain.pl
+text/richtext:m2h_text_plain'filter:mhtxtplain.pl
+text/setext:m2h_text_setext'filter:mhtxtsetext.pl
+text/tab-separated-values:m2h_text_plain'filter:mhtxtplain.pl
+text/x-html:m2h_text_html'filter:mhtxthtml.pl
+text/x-setext:m2h_text_setext'filter:mhtxtsetext.pl
+video/*:m2h_external'filter:mhexternal.pl
+<b>&lt;/MIMEFilters&gt;</b>
+</PRE>
+
+<p>The following describes the behavior of each filter.
+</p>
+
+<H3>m2h_external'filter</h3>
+
+<P>The filter extracts the data into a separate file and puts
+a hyperlink to the file into the HTMLized message.  </P>
+
+<P>By default, the filter ignores any filename specification
+given in the message when writing the data to disk. 
+A unique filename with an extenstion based upon sub-type is
+generated.
+</P>
+
+<p><strong><tt>m2h_external'filter</tt></strong> can take the
+following
+<a href="mimeargs.html">arguments</a>:
+</p>
+
+<table cellspacing=1 border=0 cellpadding=4>
+<tbody>
+
+<tr valign=top>
+<td><strong><tt>inline</tt></strong></td>
+<td><p>Inline image data by default if content-disposition not defined.
+</p>
+</tr>
+<tr valign=top>
+<td><strong><tt>ext=<var>ext</var></tt></strong></td>
+<td><p>Use <var>ext</var> as the filename extension.
+The filter already has a large list of extensions for various
+content-types.  Only use this argument if you process a
+content-type not recognized by the filter.
+</p>
+</tr>
+<tr valign=top>
+<td><strong><tt>type="<var>description</var>"</tt></strong></td>
+<td><p>Use "<var>description</var>" as type description of the
+data.  The double quotes are required.
+The filter already has a large list of descriptions for various
+content-types.  Only use this argument if you process a
+content-type not recognized by the filter.
+</p>
+</tr>
+<tr valign=top>
+<td><strong><tt>subdir</tt></strong></td>
+<td><p>Place derived file in a subdirectory of the archive.
+The subdirectory will be called "<tt>msg<var>MSGNUM</var>.dir</tt>".
+This option may be useful if <strong><tt>usename</tt></strong> is
+specified to avoid security and name conflict problems.
+</p>
+</tr>
+<tr valign=top>
+<td><strong><tt>usename</tt></strong></td>
+<td><p>Use (file)name attribute for determining name
+of derived file.  Use this option with caution
+since it can lead to filename conflicts and
+security problems.
+</p>
+</tr>
+
+</tbody>
+</table>
+
+<p>All arguments should be separated by at least one space.</p>
+
+<p>The following table shows the default list of content-types,
+with descriptions, <strong><tt>m2h_external'filter</tt></strong>
+recognizes:
+</p>
+
+<table border=1 cellspacing=1>
+<tr align=left><th>Content-type</th><th>Description</th></tr>
+<tr><td>application/astound</td><td>Astound presentation</td></tr>
+<tr><td>application/fastman</td><td>fastman file</td></tr>
+<tr><td>application/mac-binhex40</td><td>Mac BinHex file</td></tr>
+<tr><td>application/mbedlet</td><td>mbedlet file</td></tr>
+<tr><td>application/msword</td><td>MS-Word document</td></tr>
+<tr><td>application/octet-stream</td><td>Binary data</td></tr>
+<tr><td>application/oda</td><td>ODA file</td></tr>
+<tr><td>application/pdf</td><td>PDF file</td></tr>
+<tr><td>application/pgp</td><td>PGP message</td></tr>
+<tr><td>application/pgp-signature</td><td>PGP signature</td></tr>
+<tr><td>application/postscript</td><td>PostScript document</td></tr>
+<tr><td>application/rtf</td><td>RTF file</td></tr>
+<tr><td>application/sgml</td><td>SGML document</td></tr>
+<tr><td>application/studiom</td><td>Studio M file</td></tr>
+<tr><td>application/timbuktu</td><td>timbuktu file</td></tr>
+<tr><td>application/vnd.ms-excel</td><td>MS-Excel file</td></tr>
+<tr><td>application/vnd.ms-powerpoint</td><td>MS-Powerpoint file</td></tr>
+<tr><td>application/vnd.ms-project</td><td>MS-Project file</td></tr>
+<tr><td>application/winhlp</td><td>WinHelp document</td></tr>
+<tr><td>application/wordperfect5.1</td><td>WordPerfect 5.1 document</td></tr>
+<tr><td>application/x-NET-Install</td><td>Net Install file</td></tr>
+<tr><td>application/x-asap</td><td>asap file</td></tr>
+<tr><td>application/x-bcpio</td><td>BCPIO file</td></tr>
+<tr><td>application/x-cpio</td><td>CPIO file</td></tr>
+<tr><td>application/x-csh</td><td>C-Shell script</td></tr>
+<tr><td>application/x-dot</td><td>dot file</td></tr>
+<tr><td>application/x-dvi</td><td>TeX dvi file</td></tr>
+<tr><td>application/x-earthtime</td><td>Earthtime file</td></tr>
+<tr><td>application/x-envoy</td><td>Envoy file</td></tr>
+<tr><td>application/x-excel</td><td>MS-Excel Spreadsheet</td></tr>
+<tr><td>application/x-gtar</td><td>GNU tar file</td></tr>
+<tr><td>application/x-hdf</td><td>HDF file</td></tr>
+<tr><td>application/x-javascript</td><td>JavaScript source</td></tr>
+<tr><td>application/x-ksh</td><td>Korn Shell script</td></tr>
+<tr><td>application/x-latex</td><td>LaTex document</td></tr>
+<tr><td>application/x-maker</td><td>FrameMake document</td></tr>
+<tr><td>application/x-mif</td><td>Frame MIF document</td></tr>
+<tr><td>application/x-mocha</td><td>mocha file</td></tr>
+<tr><td>application/x-msaccess</td><td>MS-Access database</td></tr>
+<tr><td>application/x-mscardfile</td><td>MS-CardFile</td></tr>
+<tr><td>application/x-msclip</td><td>MS-Clip file</td></tr>
+<tr><td>application/x-msmediaview</td><td>MS-Media View file</td></tr>
+<tr><td>application/x-msmetafile</td><td>MS-Metafile</td></tr>
+<tr><td>application/x-msmoney</td><td>MS-Money file</td></tr>
+<tr><td>application/x-mspublisher</td><td>MS-Publisher document</td></tr>
+<tr><td>application/x-msschedule</td><td>MS-Schedule file</td></tr>
+<tr><td>application/x-msterminal</td><td>MS-Terminal</td></tr>
+<tr><td>application/x-mswrite</td><td>MS-Write document</td></tr>
+<tr><td>application/x-netcdf</td><td>Cdf file</td></tr>
+<tr><td>application/x-ns-proxy-autoconfig</td><td>Netscape Proxy Auto Config</td></tr>
+<tr><td>application/x-patch</td><td>Patch file</td></tr>
+<tr><td>application/x-perl</td><td>Perl source</td></tr>
+<tr><td>application/x-pointplus</td><td>pointplus file</td></tr>
+<tr><td>application/x-salsa</td><td>salsa file</td></tr>
+<tr><td>application/x-script</td><td>A script file</td></tr>
+<tr><td>application/x-sh</td><td>Bourne shell script</td></tr>
+<tr><td>application/x-shar</td><td>Shar file</td></tr>
+<tr><td>application/x-sprite</td><td>sprite file</td></tr>
+<tr><td>application/x-sv4cpio</td><td>SV4Cpio file</td></tr>
+<tr><td>application/x-sv4crc</td><td>SV4Crc file</td></tr>
+<tr><td>application/x-tar</td><td>Tar file</td></tr>
+<tr><td>application/x-tcl</td><td>Tcl script</td></tr>
+<tr><td>application/x-tex</td><td>TeX document</td></tr>
+<tr><td>application/x-texinfo</td><td>TeXInfo document</td></tr>
+<tr><td>application/x-timbuktu</td><td>timbuktu file</td></tr>
+<tr><td>application/x-tkined</td><td>tkined file</td></tr>
+<tr><td>application/x-troff</td><td>Troff document</td></tr>
+<tr><td>application/x-troff-man</td><td>Troff manpage</td></tr>
+<tr><td>application/x-troff-me</td><td>Troff ME</td></tr>
+<tr><td>application/x-troff-ms</td><td>Troff MS</td></tr>
+<tr><td>application/x-ustar</td><td>UStar file</td></tr>
+<tr><td>application/x-wais-source</td><td>WAIS Source</td></tr>
+<tr><td>application/zip</td><td>Zip archive</td></tr>
+<tr><td>audio/basic</td><td>Basic audio</td></tr>
+<tr><td>audio/echospeech</td><td>Echospeech audio</td></tr>
+<tr><td>audio/midi</td><td>MIDI audio</td></tr>
+<tr><td>audio/x-aiff</td><td>AIF audio</td></tr>
+<tr><td>audio/x-epac</td><td>epac audio</td></tr>
+<tr><td>audio/x-midi</td><td>MIDI audio</td></tr>
+<tr><td>audio/x-pac</td><td>pac audio</td></tr>
+<tr><td>audio/x-pn-realaudio</td><td>PN Realaudio</td></tr>
+<tr><td>audio/x-wav</td><td>Wave audio</td></tr>
+<tr><td>image/bmp</td><td>Window bitmap</td></tr>
+<tr><td>image/cgm</td><td>Computer Graphics Metafile</td></tr>
+<tr><td>image/fif</td><td>FIF image</td></tr>
+<tr><td>image/gif</td><td>GIF image</td></tr>
+<tr><td>image/ief</td><td>IEF image</td></tr>
+<tr><td>image/ifs</td><td>IFS image</td></tr>
+<tr><td>image/jpeg</td><td>JPEG image</td></tr>
+<tr><td>image/png</td><td>PNG image</td></tr>
+<tr><td>image/tiff</td><td>TIFF image</td></tr>
+<tr><td>image/vnd</td><td>VND image</td></tr>
+<tr><td>image/wavelet</td><td>Wavelet image</td></tr>
+<tr><td>image/x-bmp</td><td>Windows bitmap</td></tr>
+<tr><td>image/x-cmu-raster</td><td>CMU raster</td></tr>
+<tr><td>image/x-pbm</td><td>Portable bitmap</td></tr>
+<tr><td>image/x-pcx</td><td>PCX image</td></tr>
+<tr><td>image/x-pgm</td><td>Portable graymap</td></tr>
+<tr><td>image/x-pict</td><td>Mac PICT image</td></tr>
+<tr><td>image/x-pnm</td><td>Portable anymap</td></tr>
+<tr><td>image/x-portable-anymap</td><td>Portable anymap</td></tr>
+<tr><td>image/x-portable-bitmap</td><td>Portable bitmap</td></tr>
+<tr><td>image/x-portable-graymap</td><td>Portable graymap</td></tr>
+<tr><td>image/x-portable-pixmap</td><td>Portable pixmap</td></tr>
+<tr><td>image/x-ppm</td><td>Portable pixmap</td></tr>
+<tr><td>image/x-rgb</td><td>RGB image</td></tr>
+<tr><td>image/x-xbitmap</td><td>X bitmap</td></tr>
+<tr><td>image/x-xbm</td><td>X bitmap</td></tr>
+<tr><td>image/x-xpixmap</td><td>X pixmap</td></tr>
+<tr><td>image/x-xpm</td><td>X pixmap</td></tr>
+<tr><td>image/x-xwd</td><td>X window dump</td></tr>
+<tr><td>image/x-xwindowdump</td><td>X window dump</td></tr>
+<tr><td>text/html</td><td>HTML document</td></tr>
+<tr><td>text/plain</td><td>Text document</td></tr>
+<tr><td>text/richtext</td><td>Richtext document</td></tr>
+<tr><td>text/setext</td><td>Setext document</td></tr>
+<tr><td>text/sgml</td><td>SGML document</td></tr>
+<tr><td>text/x-html</td><td>HTML document</td></tr>
+<tr><td>text/x-setext</td><td>Setext document</td></tr>
+<tr><td>text/x-speech</td><td>Speech document</td></tr>
+<tr><td>video/isivideo</td><td>isi video</td></tr>
+<tr><td>video/mpeg</td><td>MPEG movie</td></tr>
+<tr><td>video/msvideo</td><td>MS Video</td></tr>
+<tr><td>video/quicktime</td><td>QuickTime movie</td></tr>
+<tr><td>video/vivo</td><td>vivo video</td></tr>
+<tr><td>video/wavelet</td><td>Wavelet video</td></tr>
+<tr><td>video/x-msvideo</td><td>MS video</td></tr>
+<tr><td>video/x-sgi-movie</td><td>SGI movie</td></tr>
+</table>
+
+<H3>m2h_text_html'filter</h3>
+
+<p>This filter is designed to process text/html or
+text/x-html messages.
+The filter must modify the HTML for merging into the
+final filtered HTML messages.  Modification is needed so the
+resulting filtered message is valid HTML.
+</p>
+
+
+<H3>m2h_text_plain'filter</h3>
+
+<p>This filter is designed to process text/plain messages and
+messages with no MIME information.  The
+filter is also used to process text messages of an unknown
+subtype.
+</p>
+
+<p>The default behavior of the filter is wrap the data in
+the HTML PRE element and escape special characters.  It will
+also convert text that looks like a URL into a hyperlink.
+If the data contains non-ASCII character, the filter will
+convert the characters to the appropriate entity reference.
+</p>
+
+<p><strong><tt>m2h_text_plain'filter</tt></strong> can take the
+following
+<a href="mimeargs.html">arguments</a>:
+</p>
+
+<table cellspacing=1 border=0 cellpadding=4>
+<tbody>
+
+<tr valign=top>
+<td><strong><tt>asis=</tt><var>set1</var><tt>:</tt>...</strong></td>
+<td><p>Colon separated lists of charsets to leave as-is.
+Only HTML special characters will be converted into entities.
+</p>
+</tr>
+<tr valign=top>
+<td><strong><tt>keepspace</tt></strong></td>
+<td><p>Preserve all spaces if the <strong><tt>nonfixed</tt></strong>
+option is specified.  Each space will be translated to a
+<tt>&amp;nbsp;</tt> entity reference.
+</p>
+</tr>
+<tr valign=top>
+<td><strong><tt>maxwidth=<var>#</var></tt></strong></td>
+<td><p>Force the maximum width of lines to be <var>#</var> characters
+in length.  Any lines longer than <var>#</var> characters will be
+wrapped.
+</p>
+</tr>
+<tr valign=top>
+<td><strong><tt>nonfixed</tt></strong></td>
+<td><p>Do not wrap message text in the HTML PRE element.  This will
+cause text to be rendered in the default font (which is normally
+proportionally spaced).  Each line of the message will have
+a <tt>&lt;BR&gt;</tt> appended in order to preserve the line representation
+of the message.
+</p>
+</tr>
+<tr valign=top>
+<td><strong><tt>nourl</tt></strong></td>
+<td><p>Do not hyperlink URLs.
+</p>
+</tr>
+<tr valign=top>
+<td><strong><tt>quote</tt></strong></td>
+<td><p>Italicize quoted message text.
+</p>
+</tr>
+
+</tbody>
+</table>
+
+<p>All arguments should be separated by at least one space.</p>
+
+<H3>m2h_text_setext'filter</h3>
+
+<p>This filter converts text/setext and text/x-setext messages
+to HTML.
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Resource Variables</h2>
+
+<p>N/A</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Examples</h2>
+
+<p>None.
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Version</h2>
+
+<p>1.0
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>See Also</h2>
+
+<p>
+<a href="mimeargs.html">MIMEARGS</a>,
+<a href="perlinc.html">PERLINC</a>
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<address>
+97/05/13 17:29:38<br>
+<img align="top" src="../monicon.gif" alt="">
+<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"><strong>MHonArc</strong></a><br>
+Copyright &#169; 1997, <a href="http://www.oac.uci.edu/indiv/ehood/">Earl Hood</a>, <a href="mailto:ehood@medusa.acs.uci.edu">ehood@medusa.acs.uci.edu</a><br>
+</address>
+
+</body>
+</html>

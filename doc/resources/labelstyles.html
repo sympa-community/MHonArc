@@ -1,0 +1,132 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
+<html>
+<head>
+<title>MHonArc Resources: LABELSTYLES</title>
+</head>
+<body>
+
+<address>
+<a href="../resources.html#labelstyles">MHonArc Resource List</a></br>
+</address>
+
+<hr>
+<h1>LABELSTYLES</h1>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Syntax</h2>
+
+<dl>
+
+<dt><strong>Envariable</strong><dt>
+<dd><p>N/A
+</p>
+</dd>
+
+<dt><strong>Element</strong><dt>
+<dd><p>
+<code>&lt;LABELSTYLES&gt;<br></code>
+<VAR>label_name</VAR><CODE>:</CODE><VAR>html_element</VAR><br>
+<VAR>label_name</VAR><CODE>:</CODE><VAR>html_element</VAR><br>
+...<br>
+<code>&lt;/LABELSTYLES&gt;<br></code>
+</p>
+</dd>
+
+<dt><strong>Command-line Option</strong><dt>
+<dd><p>N/A
+</p>
+</dd>
+
+</dl>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Description</h2>
+
+<p>The LABELSTYLES resource is set via the <CODE>LABELSTYLES</CODE>
+element.  Each line in the <CODE>LABELSTYLES</CODE> element
+defines HTML elements to wrap around the field labels in
+mail headers (e.g. "<CODE>To</CODE>",
+"<CODE>From</CODE>"). The format of each line
+is "<VAR>label_name</VAR><CODE>:</CODE><VAR>html_element</VAR>". This
+specifies to wrap <VAR>html_element</VAR> around the label
+<VAR>label_name</VAR>. If <VAR>html_element</VAR> is empty, then the label
+is not wrapped in any element.  </P>
+ 
+<P><EM>MHonArc</EM> defines
+a special <VAR>label_name</VAR> called "<CODE>-default-</CODE>". This
+is default HTML element to wrap labels in if no explicit specific
+element is defined for the label.  </P>
+
+<P><VAR>label_name</VAR> must
+be the exact name of a header field label, but character case is ignored.
+</P>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Default Setting</h2>
+
+<PRE>
+<b>&lt;LabelStyles&gt;</b>
+-default-:em
+<b>&lt;/LabelStyles&gt;</b>
+</PRE>
+
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Resource Variables</h2>
+
+<p>N/A</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Examples</h2>
+
+<p>The following causes the subject and from labels to appear in bold and
+all other labels in normal typeface:
+</p>
+
+<PRE>
+<b>&lt;LabelStyles&gt;</b>
+subject:b
+from:b
+-default-:
+<b>&lt;/LabelStyles&gt;</b>
+</PRE>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Version</h2>
+
+<p>1.0
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>See Also</h2>
+
+<p>
+<a href="excs.html">EXCS</a>,
+<a href="fieldorder.html">FIELDORDER</a>,
+<a href="fieldsbeg.html">FIELDSBEG</a>,
+<a href="fieldsend.html">FIELDSEND</a>,
+<a href="fieldstyles.html">FIELDSTYLES</a>,
+<a href="fldbeg.html">FLDBEG</a>,
+<a href="fldend.html">FLDEND</a>,
+<a href="labelbeg.html">LABELBEG</a>,
+<a href="labelend.html">LABELEND</a>
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<address>
+97/05/13 17:29:29<br>
+<img align="top" src="../monicon.gif" alt="">
+<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"><strong>MHonArc</strong></a><br>
+Copyright &#169; 1997, <a href="http://www.oac.uci.edu/indiv/ehood/">Earl Hood</a>, <a href="mailto:ehood@medusa.acs.uci.edu">ehood@medusa.acs.uci.edu</a><br>
+</address>
+
+</body>
+</html>

@@ -1,10 +1,8 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##      mhexternal.pl
+##	@(#) mhexternal.pl 1.11 97/05/13 11:23:46 @(#)
 ##  Author:
-##      Earl Hood       ehood@isogen.com
-##  Date:
-##	Fri Jul 12 08:34:55 CDT 1996
+##      Earl Hood       ehood@medusa.acs.uci.edu
 ##  Description:
 ##	Library defines a routine for MHonArc to filter content-types
 ##	that cannot be directly filtered into HTML, but a linked to an
@@ -17,11 +15,11 @@
 ##		</MIMEFILTERS>
 ##
 ##	Where '*/*' represents various content-types.  See code below for
-##	all subtypes.
+##	all types supported.
 ##
 ##---------------------------------------------------------------------------##
 ##    MHonArc -- Internet mail-to-HTML converter
-##    Copyright (C) 1995	Earl Hood, ehood@isogen.com
+##    Copyright (C) 1995-1997	Earl Hood, ehood@medusa.acs.uci.edu
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by
@@ -40,150 +38,144 @@
 
 package m2h_external;
 
-##---------------------------------------------------------------------------
-##	Global variables
-
-$pre = '';	# Prefix to generated files
-$ext = '';	# Extension for files
-$ctype = '';	# Content-type of data
-$TYPE = '';	# English name for data type
 %ExtCnt = ();	# Array of filename counters for generated files
-$inline = 0;	# Can be changed by filter argument
-
-##---------------------------------------------------------------------------
-##	All that should be required is to add to, or edit, the %AppExt and
-##	%AppType arrays for new, or changed, application suptypes.
-
-$UnknownExt	= 'xxx';
+$UnknownExt	= 'bin';
 $UnknownType	= 'Unrecognized Data';
+$SubDir		= 0;
 
 %CTExt = (
-##  Content-Type			Filename extension
-##---------------------------------------------------------
-    'application/mac-binhex40', 	'hqx',
-    'application/octet-stream', 	'bin',
-    'application/oda', 			'oda',
-    'application/pdf', 			'pdf',
-    'application/postscript', 		'ps',
-    'application/rtf', 			'rtf',
-    'application/x-bcpio', 		'bcpio',
-    'application/x-cpio', 		'cpio',
-    'application/x-csh', 		'csh',
-    'application/x-dvi', 		'dvi',
-    'application/x-gtar', 		'gtar',
-    'application/x-hdf', 		'hdf',
-    'application/x-latex', 		'latex',
-    'application/x-mif', 		'mif',
-    'application/x-netcdf', 		'cdf',
-    'application/x-sh', 		'sh',
-    'application/x-shar', 		'shar',
-    'application/x-sv4cpio', 		'sv4cpio',
-    'application/x-sv4crc', 		'sv4crc',
-    'application/x-tar', 		'tar',
-    'application/x-tcl', 		'tcl',
-    'application/x-tex', 		'tex',
-    'application/x-texinfo', 		'texinfo',
-    'application/x-troff', 		'roff',
-    'application/x-troff-man', 		'man',
-    'application/x-troff-me', 		'me',
-    'application/x-troff-ms', 		'ms',
-    'application/x-ustar', 		'ustar',
-    'application/x-wais-source', 	'src',
-    'application/zip', 			'zip',
-    'audio/basic', 			'snd',
-    'audio/x-aiff', 			'aif',
-    'audio/x-wav', 			'wav',
-    'image/gif',			'gif',
-    'image/ief',			'ief',
-    'image/jpeg',			'jpg',
-    'image/tiff',			'tif',
-    'image/x-bmp',			'bmp',
-    'image/x-cmu-raster',		'ras',
-    'image/x-pict',			'pict',
-    'image/x-portable-anymap',		'pnm',
-    'image/x-pnm',			'pnm',
-    'image/x-portable-bitmap',		'pbm',
-    'image/x-pbm',			'pbm',
-    'image/x-portable-graymap',		'pgm',
-    'image/x-pcx',			'pcx',
-    'image/x-pgm',			'pgm',
-    'image/x-portable-pixmap',		'ppm',
-    'image/x-ppm',			'ppm',
-    'image/x-rgb',			'rgb',
-    'image/x-xbitmap',			'xbm',
-    'image/x-xbm',			'xbm',
-    'image/x-xpixmap',			'xpm',
-    'image/x-xpm',			'xpm',
-    'image/x-xwindowdump',		'xwd',
-    'image/x-xwd',			'xwd',
-    'video/mpeg',			'mpg',
-    'video/quicktime',			'mov',
-    'video/x-msvideo',			'avi',
-    'video/x-sgi-movie',		'movie',
-);
-%CTType = (
-##  Content-Type			English name
-##---------------------------------------------------------
-    'application/mac-binhex40', 	'Mac BinHex file',
-    'application/octet-stream', 	'Binary data',
-    'application/oda', 			'ODA file',
-    'application/pdf', 			'PDF file',
-    'application/postscript', 		'PostScript file',
-    'application/rtf', 			'RTF file',
-    'application/x-bcpio', 		'BCPIO file',
-    'application/x-cpio', 		'CPIO file',
-    'application/x-csh', 		'Csh script',
-    'application/x-dvi', 		'TeX dvi file',
-    'application/x-gtar', 		'Gtar file',
-    'application/x-hdf', 		'HDF file',
-    'application/x-latex', 		'LaTex document',
-    'application/x-mif', 		'Frame MIF',
-    'application/x-netcdf', 		'Cdf file',
-    'application/x-sh', 		'Sh script',
-    'application/x-shar', 		'Shar file',
-    'application/x-sv4cpio', 		'SV4Cpio file',
-    'application/x-sv4crc', 		'SV4Crc file',
-    'application/x-tar', 		'Tar file',
-    'application/x-tcl', 		'Tcl script',
-    'application/x-tex', 		'TeX document',
-    'application/x-texinfo', 		'TeXInfo file',
-    'application/x-troff', 		'Troff',
-    'application/x-troff-man', 		'Troff Man',
-    'application/x-troff-me', 		'Troff ME',
-    'application/x-troff-ms', 		'Troff MS',
-    'application/x-ustar', 		'UStar file',
-    'application/x-wais-source', 	'WAIS Source',
-    'application/zip', 			'Zip file',
-    'audio/basic', 			'Basic audio',
-    'audio/x-aiff', 			'AIF audio',
-    'audio/x-wav', 			'WAV audio',
-    'image/gif',			'GIF image',
-    'image/ief',			'IEF image',
-    'image/jpeg',			'JPEG image',
-    'image/tiff',			'TIFF image',
-    'image/x-bmp',			'Windows bitmap',
-    'image/x-cmu-raster',		'CMU raster',
-    'image/x-pict',			'Mac PICT image',
-    'image/x-portable-anymap',		'Portable anymap',
-    'image/x-pnm',			'Portable anymap',
-    'image/x-portable-bitmap',		'Portable bitmap',
-    'image/x-pbm',			'Portable bitmap',
-    'image/x-portable-graymap',		'Portable graymap',
-    'image/x-pcx',			'PCX image',
-    'image/x-pgm',			'Portable graymap',
-    'image/x-portable-pixmap',		'Portable pixmap',
-    'image/x-ppm',			'Portable pixmap',
-    'image/x-rgb',			'RGB image',
-    'image/x-xbitmap',			'X bitmap',
-    'image/x-xbm',			'X bitmap',
-    'image/x-xpixmap',			'X pixmap',
-    'image/x-xpm',			'X pixmap',
-    'image/x-xwindowdump',		'X window dump',
-    'image/x-xwd',			'X window dump',
-    'video/mpeg',			'MPEG movie',
-    'video/quicktime',			'QuickTime movie',
-    'video/x-msvideo',			'MS video',
-    'video/x-sgi-movie',		'SGI Movie',
+##-----------------------------------------------------------------------
+##  Content-Type			Extension:Description
+##-----------------------------------------------------------------------
+    'application/astound',		'asd:Astound presentation',
+    'application/fastman',		'lcc:fastman file',
+    'application/mac-binhex40', 	'hqx:Mac BinHex file',
+    'application/mbedlet',		'mbd:mbedlet file',
+    'application/msword',		'doc:MS-Word document',
+    'application/octet-stream', 	'bin:Binary data',
+    'application/oda', 			'oda:ODA file',
+    'application/pdf', 			'pdf:PDF file',
+    'application/pgp',  		'pgp:PGP message',
+    'application/pgp-signature',	'pgp:PGP signature',
+    'application/postscript', 		'ps:PostScript document',
+    'application/rtf', 			'rtf:RTF file',
+    'application/sgml',			'sgml:SGML document',
+    'application/studiom',		'smp:Studio M file',
+    'application/timbuktu',		'tbt:timbuktu file',
+    'application/vnd.ms-excel',         'xls:MS-Excel file',
+    'application/vnd.ms-powerpoint',    'ppt:MS-Powerpoint file',
+    'application/vnd.ms-project',	'mpp:MS-Project file',
+    'application/winhlp',		'hlp:WinHelp document',
+    'application/wordperfect5.1',	'hlp:WordPerfect 5.1 document',
+    'application/x-NET-Install',	'ins:Net Install file',
+    'application/x-asap',		'asp:asap file',
+    'application/x-bcpio', 		'bcpio:BCPIO file',
+    'application/x-cpio', 		'cpio:CPIO file',
+    'application/x-csh', 		'csh:C-Shell script',
+    'application/x-dot',		'dot:dot file',
+    'application/x-dvi', 		'dvi:TeX dvi file',
+    'application/x-earthtime',		'etc:Earthtime file',
+    'application/x-envoy',		'evy:Envoy file',
+    'application/x-excel',		'xls:MS-Excel Spreadsheet',
+    'application/x-gtar', 		'gtar:GNU tar file',
+    'application/x-hdf', 		'hdf:HDF file',
+    'application/x-javascript',		'js:JavaScript source',
+    'application/x-ksh',		'ksh:Korn Shell script',
+    'application/x-latex', 		'latex:LaTex document',
+    'application/x-maker',		'fm:FrameMake document',
+    'application/x-mif', 		'mif:Frame MIF document',
+    'application/x-mocha',		'moc:mocha file',
+    'application/x-msaccess',		'mdb:MS-Access database',
+    'application/x-mscardfile',		'crd:MS-CardFile',
+    'application/x-msclip',		'clp:MS-Clip file',
+    'application/x-msmediaview',	'm14:MS-Media View file',
+    'application/x-msmetafile',		'wmf:MS-Metafile',
+    'application/x-msmoney',		'mny:MS-Money file',
+    'application/x-mspublisher',	'pub:MS-Publisher document',
+    'application/x-msschedule',		'scd:MS-Schedule file',
+    'application/x-msterminal',		'trm:MS-Terminal',
+    'application/x-mswrite',		'wri:MS-Write document',
+    'application/x-netcdf', 		'cdf:Cdf file',
+    'application/x-ns-proxy-autoconfig','proxy:Netscape Proxy Auto Config',
+    'application/x-patch',		'patch:Patch file',
+    'application/x-perl',		'pl:Perl source',
+    'application/x-pointplus',		'css:pointplus file',
+    'application/x-salsa',		'slc:salsa file',
+    'application/x-script',		'script:A script file',
+    'application/x-sh', 		'sh:Bourne shell script',
+    'application/x-shar', 		'shar:Shar file',
+    'application/x-sprite',		'spr:sprite file',
+    'application/x-sv4cpio', 		'sv4cpio:SV4Cpio file',
+    'application/x-sv4crc', 		'sv4crc:SV4Crc file',
+    'application/x-tar', 		'tar:Tar file',
+    'application/x-tcl', 		'tcl:Tcl script',
+    'application/x-tex', 		'tex:TeX document',
+    'application/x-texinfo', 		'texinfo:TeXInfo document',
+    'application/x-timbuktu',		'tbp:timbuktu file',
+    'application/x-tkined',		'tki:tkined file',
+    'application/x-troff', 		'roff:Troff document',
+    'application/x-troff-man', 		'man:Troff manpage',
+    'application/x-troff-me', 		'me:Troff ME',
+    'application/x-troff-ms', 		'ms:Troff MS',
+    'application/x-ustar', 		'ustar:UStar file',
+    'application/x-wais-source', 	'src:WAIS Source',
+    'application/zip', 			'zip:Zip archive',
+    'audio/basic', 			'snd:Basic audio',
+    'audio/echospeech',			'es:Echospeech audio',
+    'audio/midi',			'midi:MIDI audio',
+    'audio/x-aiff', 			'aif:AIF audio',
+    'audio/x-epac',			'pae:epac audio',
+    'audio/x-midi',			'midi:MIDI audio',
+    'audio/x-pac',			'pac:pac audio',
+    'audio/x-pn-realaudio',		'ra:PN Realaudio',
+    'audio/x-wav', 			'wav:Wave audio',
+    'image/bmp',			'bmp:Window bitmap',
+    'image/cgm',			'cgm:Computer Graphics Metafile',
+    'image/fif',			'fif:FIF image',
+    'image/gif',			'gif:GIF image',
+    'image/ief',			'ief:IEF image',
+    'image/ifs',			'ifs:IFS image',
+    'image/jpeg',			'jpg:JPEG image',
+    'image/png',			'png:PNG image',
+    'image/tiff',			'tif:TIFF image',
+    'image/vnd',			'dwg:VND image',
+    'image/wavelet',			'wi:Wavelet image',
+    'image/x-bmp',			'bmp:Windows bitmap',
+    'image/x-cmu-raster',		'ras:CMU raster',
+    'image/x-pbm',			'pbm:Portable bitmap',
+    'image/x-pcx',			'pcx:PCX image',
+    'image/x-pgm',			'pgm:Portable graymap',
+    'image/x-pict',			'pict:Mac PICT image',
+    'image/x-pnm',			'pnm:Portable anymap',
+    'image/x-portable-anymap',		'pnm:Portable anymap',
+    'image/x-portable-bitmap',		'pbm:Portable bitmap',
+    'image/x-portable-graymap',		'pgm:Portable graymap',
+    'image/x-portable-pixmap',		'ppm:Portable pixmap',
+    'image/x-ppm',			'ppm:Portable pixmap',
+    'image/x-rgb',			'rgb:RGB image',
+    'image/x-xbitmap',			'xbm:X bitmap',
+    'image/x-xbm',			'xbm:X bitmap',
+    'image/x-xpixmap',			'xpm:X pixmap',
+    'image/x-xpm',			'xpm:X pixmap',
+    'image/x-xwd',			'xwd:X window dump',
+    'image/x-xwindowdump',		'xwd:X window dump',
+    'text/html',			'html:HTML document',
+    'text/plain',			'txt:Text document',
+    'text/richtext',			'rtx:Richtext document',
+    'text/setext',			'stx:Setext document',
+    'text/sgml',			'sgml:SGML document',
+    'text/x-html',			'html:HTML document',
+    'text/x-setext',			'stx:Setext document',
+    'text/x-speech',			'talk:Speech document',
+    'video/isivideo',			'fvi:isi video',
+    'video/mpeg',			'mpg:MPEG movie',
+    'video/msvideo',			'avi:MS Video',
+    'video/quicktime',			'mov:QuickTime movie',
+    'video/vivo',			'viv:vivo video',
+    'video/wavelet',			'wv:Wavelet video',
+    'video/x-msvideo',			'avi:MS video',
+    'video/x-sgi-movie',		'movie:SGI movie',
+
 );
 
 ##---------------------------------------------------------------------------
@@ -192,82 +184,126 @@ $UnknownType	= 'Unrecognized Data';
 ##	Argument string may contain the following values.  Each value
 ##	should be separated by a space:
 ##
-##	   inline	=> Inline image data with IMG element.
-##	   usename	=> Use name attribute for determining name
-##			   of derived file.  Use this option with caution
-##			   since it can lead to filename conflicts and
-##			   security problems.
+##	inline  	Inline image data by default if
+##			content-disposition not defined.
+##
+##	usename 	Use (file)name attribute for determining name
+##			of derived file.  Use this option with caution
+##			since it can lead to filename conflicts and
+##			security problems.
+##
+##	ext=ext 	Use `ext' as the filename extension.
+##
+##	type="description"
+##			Use "description" as type description of the
+##			data.  The double quotes are required.
+##
+##	subdir		Place derived files in a subdirectory
 ##
 sub filter {
     local($header, *fields, *data, $isdecode, $args) = @_;
-    local($ret, $filename, $nameparm);
+    local($ret,
+	  $filename,
+	  $name,
+	  $nameparm,
+	  $path,
+	  $disp,
+	  $ctype,
+	  $type,
+	  $ext,
+	  $inline,
+	  $inext,
+	  $intype);
 
     ## Init variables
-    $name = '';
-    $ctype = '';
-    $TYPE = '';
-    $ext = '';
-    $inline = 0;
+    $name	= '';
+    $ctype	= '';
+    $type	= '';
+    $ext	= '';
+    $inline	=  0;
+    $inext	= '';
+    $intype	= '';
 
     ## Get content-type
-    ($ctype) = $fields{'content-type'} =~ m%^\s*([\w-/]+)%;
+    ($ctype) = $fields{'content-type'} =~ m%^\s*([\w-\./]+)%;
     $ctype =~ tr/A-Z/a-z/;
 
-    ## See if name argument is to be used
-    ($nameparm) = $fields{'content-type'} =~ /name=(\S+)/i;
-    $nameparm =~ s/['";]//g;
-    $nameparm =~ s/.*[\/\\:]//; 	# Remove path component
+    ## Get disposition
+    ($disp, $nameparm) = &'MAILhead_get_disposition(*fields);
+
+    ## Check if using name
     if ($args =~ /usename/i) {
 	$name = $nameparm;
+    } else {
+	$name = '';
     }
 
-    ## Check if image inlining
-    $inline = ($args =~ /inline/i);
+    ## Chech if file goes in a subdirectory
+    if ($args =~ /subdir/i) {
+	$path = join('', 'msg', $'MHAmsgnum, '.dir');
+    } else {
+	$path = '';
+    }
 
-    ## Determine filename extension
-    $pre = $ext = $CTExt{$ctype};  $TYPE = $CTType{$ctype};
+    ## Check if inlining (images only)
+    if ($disp) {
+	$inline = ($disp =~ /inline/i);
+    } else {
+	$inline = ($args =~ /inline/i);
+    }
+
+    ## Check if extension and type description passed in
+    if ($args =~ /ext=(\S+)/i) { $inext = $1; }
+    if ($args =~ /type="([^"]+)"/i) { $intype = $1; }
+
+    ## Determine default filename extension
+    ($ext, $type) = split(/:/, $CTExt{$ctype}, 2);
+    $ext  = $inext   if $inext;
+    $type = $intype  if $intype;
     if (!$ext) {
 	$ext = $UnknownExt;
-	$TYPE = $UnknownType;
+	$type = "$UnknownType: $ctype";
     }
+    $pre = $ext;
+    substr($pre, 3) = "" if length($pre) > 3;	# Prune prefix to 3 chars
 
     ## Write file
-    $filename = &write_file(*data);
+    $filename = &write_file(*data, $path, $name, $pre, $ext);
 
     ## Create HTML markup
     if ($inline && ($ctype =~ /image/i)) {
-        $ret = join('', "<P>",
-                    &htmlize($fields{'content-description'}),
-                    "\n</P><P>\n",
-                    qq|<A HREF="$filename"><IMG SRC="$filename" |,
-                    qq|ALT="$TYPE"></a>\n|,
-		    "</P>\n");
+	$ret  = "<P>" . &htmlize($fields{'content-description'}) . "</P>\n"
+	    if ($fields{'content-description'});
+	$ret .= qq{<P><A HREF="$filename"><IMG SRC="$filename" } .
+		qq{ALT="$type"></A></P>\n};
+
     } else {
-        $ret = join('', "<P>\n",
-                    qq|<A HREF="$filename">|,
-                    &htmlize($fields{'content-description'}) || 
-                        $nameparm || $TYPE,
-                    "</A></P>\n");
+	$ret  = qq{<P><A HREF="$filename">} .
+		(&htmlize($fields{'content-description'}) ||
+		 $nameparm || $type) .
+		qq{</A></P>\n};
     }
-    ($ret, $filename);
+    ($ret, $path || $filename);
 }
 
 sub write_file {
-    local(*stuff) = shift;
-    local($fname, $tmp, $cnt) = ('', '');
+    local(*stuff, $path, $fname, $pre, $ext) = @_;
+    local($tmp, $cnt) = ('', '');
 
-    if ($name) {
-	$fname = $name;
-    } else {
-	if (!$ExtCnt{$ext}) { &set_cnt(); }
+    $tmp  = $'OUTDIR;
+    if ($path) {
+	$tmp .= $'DIRSEP . $path;
+	mkdir($tmp, 0777);
+    }
+
+    if (!$fname) {
+	if (!$ExtCnt{$ext}) { &set_cnt($tmp); }
 	$cnt = $ExtCnt{$ext}++;
 	$fname = $pre . sprintf("%05d.",$cnt) . $ext;
+	$ExtCnt{$ext} = 0  if $path;
     }
-    $tmp = $'OUTDIR . $'DIRSEP . $fname;
+    $tmp .= $'DIRSEP . $fname;
 
-    ## $'OUTDIR is set by MHonArc that specifies destination path
-    ## of filtered mail.
-    ##
     if (open(OUTFILE, "> $tmp")) {
 	binmode(OUTFILE);		# For MS-DOS
 	print OUTFILE $stuff;
@@ -275,17 +311,20 @@ sub write_file {
     } else {
 	warn "Warning: Unable to create $tmp\n";
     }
-    $fname;
+    $path ? $path.$'DIRSEP.$fname : $fname;
 }
 
 sub set_cnt {
     local(@files) = ();
-    opendir(DIR, $'OUTDIR);
-    @files = sort numerically grep(/^$pre\d+\.$ext$/i, readdir(DIR));
-    close(DIR);
-    if (@files) {
-	($ExtCnt{$ext}) = $files[$#files] =~ /(\d+)/;
-	$ExtCnt{$ext}++;
+    if (opendir(DIR, $_[0])) {
+	@files = sort numerically grep(/^$pre\d+\.$ext$/i, readdir(DIR));
+	close(DIR);
+	if (@files) {
+	    ($ExtCnt{$ext}) = $files[$#files] =~ /(\d+)/;
+	    $ExtCnt{$ext}++;
+	} else {
+	    $ExtCnt{$ext} = 0;
+	}
     } else {
 	$ExtCnt{$ext} = 0;
     }
@@ -303,6 +342,12 @@ sub htmlize {
     $txt =~ s/>/&gt;/g;
     $txt =~ s/</&lt;/g;
     $txt;
+}
+
+sub dump_ctext_hash {
+    foreach (sort keys %CTExt) {
+	print STDERR $_,":",$CTExt{$_},"\n";
+    }
 }
 
 1;

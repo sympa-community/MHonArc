@@ -1,0 +1,161 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
+<html>
+<head>
+<title>MHonArc Resources: OTHERINDEXES</title>
+</head>
+<body>
+
+<address>
+<a href="../resources.html#otherindexes">MHonArc Resource List</a></br>
+</address>
+
+<hr>
+<h1>OTHERINDEXES</h1>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Syntax</h2>
+
+<dl>
+
+<dt><strong>Envariable</strong><dt>
+<dd><p>
+<code>M2H_OTHERINDEXES=</code><var>rcfile1</var><code>:</code><var
+>rcfile2</var><code>:</code><var>...</var><code>:</code><var
+>rcfileN</var>
+</p>
+</dd>
+
+<dt><strong>Element</strong><dt>
+<dd><p>
+<code>&lt;OTHERINDEXES&gt;<br></code>
+<var>rcfile1</var><code>:</code><var>rcfile2</var><code>:</code><var
+>...</var><br>
+<var>rcfilei</var><code>:</code><var>...</var><code>:</code><var
+>rcfileN</var><br>
+<code>&lt;/OTHERINDEXES&gt;<br></code>
+</p>
+</dd>
+
+<dt><strong>Command-line Option</strong><dt>
+<dd><p>
+<code>-otherindexes </code><var>rcfile1</var><code>:</code><var
+>rcfile2</var><code>:</code><var>...</var><code>:</code><var
+>rcfileN</var>
+</p>
+</dd>
+
+</dl>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Description</h2>
+
+<p>OTHERINDEXES defines a list of resource files that 
+define other index pages
+to generate when creating, or updating, an archive.  When setting
+the OTHERINDEXES resource, the filenames are separated by colons
+(or semicolons under MSDOS/Windows).  Line-breaks can be used
+to separate filenames if setting OTHERINDEXES via the
+<code>OTHERINDEXES</code> element.
+</p>
+
+<DL>
+<DT><STRONG>CAUTION</STRONG>
+
+<DD><P>It is very important that each resource file specified
+defines the
+<a href="main.html">MAIN</a> or
+<a href="thread.html">THREAD</a> resource to determine the
+type of index to create.  Also, the
+<A HREF="idxfname.html">IDXFNAME</A> or 
+<A HREF="tidxfname.html">TIDXFNAME</A> resource
+(and <A HREF="idxprefix.html">IDXPREFIX</a> or
+<A HREF="tidxprefix.html">TIDXPREFIX</a> resource if
+<A HREF="multipg.html">MULTIPG</a> is active)
+must be defined
+to prevent overwriting of the default index pages.
+</P></DL>
+
+<P><EM>MHonArc</EM> will only store the name of the resource files
+listed in the database.  Therefore, for any subsequent updates of the
+archive, the extra index resource files must exist inorder to generate
+the extra index pages.  </P>
+
+<DL>
+<DT><STRONG>NOTE</STRONG> 
+
+<DD><P>Since <EM>MHonArc</EM> will look in the archive location for
+resource files specified with relative pathnames, you can keep the
+other index resource files in the same location as the archive, and
+just specify the filenames for the <CODE>OTHERINDEXES</CODE> element
+in the main resource file.  </P></DL>
+
+<P>When create resource files for extra indexes, make sure to
+explicitly set all resources desired since some resource settings may
+no longer be set to the defaults due to database settings, or from
+a previously read resource file. Ie. <EM>MHonArc</EM> does not reset
+to the default settings when reading in the other resource files.  </P>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Default Setting</h2>
+
+<p>Nil
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Resource Variables</h2>
+
+<p>N/A</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Examples</h2>
+
+<p>Since <em>MHonArc</em> only creates two indexes by default
+(the main/date index and the thread index), you can use OTHERINDEXES
+to define other index formats for navigating your archive.  A
+possible setting for OTHERINDEXES may look like this:
+</p>
+
+<pre>
+<b>&lt;OtherIndexes&gt;</b>
+reversedateidx.rc
+subjectidx.rc
+<b>&lt;/OtherIndexes&gt;</b>
+</pre>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Version</h2>
+
+<p>1.2
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>See Also</h2>
+
+<p>
+<A HREF="idxfname.html">IDXFNAME</A>,
+<A HREF="idxprefix.html">IDXPREFIX</a>,
+<A HREF="multipg.html">MULTIPG</a>,
+<A HREF="tidxfname.html">TIDXFNAME</A>,
+<A HREF="tidxprefix.html">TIDXPREFIX</a>,
+<a href="main.html">MAIN</a>,
+<a href="thread.html">THREAD</a>
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<address>
+97/05/13 17:29:51<br>
+<img align="top" src="../monicon.gif" alt="">
+<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"><strong>MHonArc</strong></a><br>
+Copyright &#169; 1997, <a href="http://www.oac.uci.edu/indiv/ehood/">Earl Hood</a>, <a href="mailto:ehood@medusa.acs.uci.edu">ehood@medusa.acs.uci.edu</a><br>
+</address>
+
+</body>
+</html>

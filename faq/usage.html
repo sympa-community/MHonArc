@@ -1,0 +1,180 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
+<HTML>
+<HEAD>
+<TITLE>MHonArc FAQ: General Usage</TITLE></HEAD>
+<BODY>
+
+<!--X-NavButtons-Start-->
+<p align=center>
+[<a href="envs.html">Prev</a>][<a href="archives.html">Next</a>][<a href="faq.html">TOC</a>][<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html">Home</a>]
+</p>
+<!--X-NavButtons-End-->
+
+<!-- ===================================================================== -->
+<HR>
+<H2><a name="genusage">General Usage</a></H2>
+
+<!-- ??????????????????????????????????????????????????????????????? -->
+<h3><img src="monicon.gif" align="bottom" alt=""> <b><a name="resources">What are "resources"?</a></b></h3>
+
+<p>The behavior of MHonArc is controled by <em>resources</em>.
+Resources are set, or defined, by command-line options, environment
+variables, or a resource file.  For example, the MAXSIZE resource tells
+MHonArc the maximum number of messages in an archive.  To set
+the resource, you can use the <strong><code>-maxsize</code></strong>
+command-line option, the <strong>M2H_MAXSIZE</strong> envariable, or the
+<strong><code>&lt;MAXSIZE&gt;</code></strong> resource file element.
+</p>
+
+<p>See the documentation for more information.
+</p>
+
+<!-- ??????????????????????????????????????????????????????????????? -->
+<h3><img src="monicon.gif" align="bottom" alt=""> <b><a name="newgetopt">I get an error that "newgetopt.pl" cannot be required, where is it?</a></b></h3>
+
+<p>newgetopt.pl comes with the standard Perl distribution.  Check with
+your sys admin on where it is located (it should be in the default Perl
+search path).
+</p>
+
+<!-- ??????????????????????????????????????????????????????????????? -->
+<h3><img src="monicon.gif" align="bottom" alt=""> <b><a name="searching">Does MHonArc provide searching of archives?</a></b></h3>
+
+<p>No, but a searching can be provided by another utility.  See
+the MHonArc home page
+(<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"
+>http://www.oac.uci.edu/indiv/ehood/mhonarc.html</a>) to
+some links to contributed programs for searching MHonArc
+archives.
+Also, any standard search engine can be used.  For example, the
+MHonArc mailing list archive
+(<A HREF="http://www.rosat.mpe-garching.mpg.de/mailing-lists/mhonarc/"
+>http://www.rosat.mpe-garching.mpg.de/mailing-lists/mhonarc/</a>)
+provides a
+<strong>Glimpse</strong>
+(<a href="http://glimpse.cs.arizona.edu:1994/"
+>http://glimpse.cs.arizona.edu:1994/</a>)
+search engine for searching messages.  For more information, see
+the respective documentation of the search engine software of
+interest.
+</p>
+
+<dl>
+<dt><strong>NOTE</strong></dt>
+<dd><p>Through MHonArc's resources, it is easy to provide
+a search form to whatever search utility you may use without
+modifying MHonArc source code.
+</p>
+</dd>
+</dl>
+
+<!-- ??????????????????????????????????????????????????????????????? -->
+<h3><img src="monicon.gif" align="bottom" alt=""> <b><a name="webui">Is there a Web interface for MHonArc?</a></b></h3>
+
+<p>There is no known Web interface that uses MHonArc to
+allow people to read incoming mail or perform archive administration
+function.  If you know of one, please contact the author of the FAQ.
+</p>
+
+<!-- ??????????????????????????????????????????????????????????????? -->
+<h3><img src="monicon.gif" align="bottom" alt=""> <b><a name="orgmsg">Does MHonArc require that the original message be available when updating an archive?</a></b></h3>
+
+<p>No.  Once a message is archived, the original can be stored
+away.  MHonArc preserves all relevant information in its
+database.  For possible recovering purposes, it is recommended
+to preserve original messages in a storage archive.  This allows
+you to rebuild MHonArc archives in case of data corruption.
+</p>
+
+<!-- ??????????????????????????????????????????????????????????????? -->
+<h3><img src="monicon.gif" align="bottom" alt=""> <b><a name="respecify">Do I have to respecify the resource file each time I update an archive?</a></b></h3>
+
+<P>No. The archive database stores all resource settings. The only
+time you need to respecify the resource file is if changes are required
+in the layout of the archive.  </P>
+
+<DL>
+<DT><STRONG>NOTE</STRONG> 
+
+<DD><P>When utilizing the <strong>OTHERINDEXES</strong> resource,
+the resource filenames listed in the main resource file are stored
+in the database, but the resources for each additional index are
+<STRONG>NOT</STRONG>. Hence, the resource files defining the additional
+indexes must be accesible.
+</P></DL>
+
+<!-- ??????????????????????????????????????????????????????????????? -->
+<h3><img src="monicon.gif" align="bottom" alt=""> <b><a name="sepfiles">Can I have MHonArc process a bunch of separate message files?</a></b></h3>
+
+<p>Yes.  MH mail folder processing is just processing a bunch of
+separate message files in a directory.  MHonArc uses
+the MHPATTERN resource to determine which files to process.  Therefore,
+all you need to do is redefine the MHPATTERN resource and pass
+the directory your message files are in when invoking MHonArc.
+</p>
+
+<p>For example, say I want to process all files in a directory
+called "messages".  I'd do the following:
+</p>
+<pre>
+    % <b>mhonarc -mhpattern "^[^.]" messages</b>
+</pre>
+<p>MHPATTERN can be any Perl regular expression.  The one in
+the example matches any file not beginning with ".".  This
+is to avoid the special files "." and ".." which are directories.
+</p>
+
+<p>The other way to process individual message files is to do
+it one at a time.  For example:
+</p>
+<pre>
+    % <b>mhonarc -add &lt; file1.822</b>
+    % <b>mhonarc -add &lt; file2.822</b>
+    ...
+</pre>
+
+<!-- ??????????????????????????????????????????????????????????????? -->
+<h3><img src="monicon.gif" align="bottom" alt=""> <b><a name="stdin">Can I tell MHonArc to read a mailbox from standard input?</a></b></h3>
+
+<p>Yes, but only in v2.0 or later (v2.0 beta releases do not have
+the capability).  The syntax is something like the following:
+</p>
+<pre>
+    % <b>mhonarc </b><var>[options-here]</var> <b>-- -</b>
+</pre>
+<p>The "--" tells MHonArc to terminate all command-line
+option processing and treat all following arguments as mail
+folders.  The "-" signifies to use standard input as a mailbox
+source.
+</p>
+
+<p>Since MHonArc can read a mailbox from stdin, this
+allows MHonArc to be part of a pipeline where MHonArc
+takes input from some preprocessor that massages some data to
+make it suitable for processing by MHonArc.  For example:
+</p>
+<pre>
+    % <b>mypreproc | mhonarc -- -</b>
+</pre>
+
+<!-- ===================================================================== -->
+<hr>
+
+<!--X-NavButtons-Start-->
+<p align=center>
+[<a href="envs.html">Prev</a>][<a href="archives.html">Next</a>][<a href="faq.html">TOC</a>][<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html">Home</a>]
+</p>
+<!--X-NavButtons-End-->
+
+<hr>
+<address>
+97/05/15 16:48:11<br>
+<img align="top" src="monicon.gif" alt="">
+<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"
+><strong>MHonArc</strong></a><br>
+Copyright &#169; 1997, <a href="http://www.oac.uci.edu/indiv/ehood/"
+>Earl Hood</a>, <a href="mailto:ehood@medusa.acs.uci.edu"
+>ehood@medusa.acs.uci.edu</a><br>
+</address>
+</body>
+</html>

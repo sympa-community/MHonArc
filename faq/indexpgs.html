@@ -1,0 +1,100 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
+<HTML>
+<HEAD>
+<TITLE>MHonArc FAQ: Index Pages</TITLE></HEAD>
+<BODY>
+
+<!--X-NavButtons-Start-->
+<p align=center>
+[<a href="archives.html">Prev</a>][<a href="msgpgs.html">Next</a>][<a href="faq.html">TOC</a>][<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html">Home</a>]
+</p>
+<!--X-NavButtons-End-->
+
+<!-- ===================================================================== -->
+<hr>
+<H2><a name="indexpages">Index Pages</a></H2>
+
+<!-- ??????????????????????????????????????????????????????????????? -->
+<h3><img src="monicon.gif" align="bottom" alt=""> <b><a name="idxtypes">What are all the different index types?</a></b></h3>
+
+<p>MHonArc catagorizes indexes into to types:
+<b>main</b> and <b>thread</b>.  <b>Main</b> covers indexes
+listing messages by the following criteria:
+</p>
+<ul>
+<li>Author
+<li>Date
+<li>Subject
+<li>Message number
+</ul>
+
+<p>When the documentation refers to <b>main</b> index,
+it refers to the index listing messages by author, date, or
+subject.  Therfore, all resources. and resource variables, that
+refer to the main index apply to either an author, date, or
+subject index.  The type of main index is controled by
+the SORT, SUBSORT, AUTHSORT resources.
+</p>
+
+<p>By default, MHonArc creates a date index
+and a thread index.
+Author index support is available only in v2.0 beta 2 or later.
+</p>
+
+<!-- ??????????????????????????????????????????????????????????????? -->
+<h3><img src="monicon.gif" align="bottom" alt=""> <b><a name="additional">Can I have additional indexes beyond the default main and thread index?</a></b></h3>
+
+<P>Yes. In version 1.2 (or later), a resource was added called
+<strong>OTHERINDEXES</strong>. With this resource, you are able to
+define an arbitrary number of indexes you desire. The additional
+indexes may be in any format you desire and that is supported
+by MHonArc. Refer to the documentation for the usage of
+<strong>OTHERINDEXES</strong>.
+</P>
+
+<dl>
+<dt><strong>NOTE</strong></dt>
+<dd><p>MHonArc will <strong>NOT</strong> automatically
+create links to any indexes created via the OTHERINDEXES resource.
+You will need to modify the relevant index and messages resources
+to contain the additional links.  See the LISTBEGIN and
+THEAD resources.
+</p>
+</dd>
+</dl>
+
+<!-- ??????????????????????????????????????????????????????????????? -->
+<h3><img src="monicon.gif" align="bottom" alt=""> <b><a name="multipage">Can I have multi-page indexes?</a></b></h3>
+
+<p>Yes, in v2.0 or later.  Setting the MULTIPG and IDXSIZE will cause
+indexes to to be listed across multiple pages with IDXSIZE determine
+the number of messages listed per page.
+</p>
+
+<!-- ??????????????????????????????????????????????????????????????? -->
+<h3><img src="monicon.gif" align="bottom" alt=""> <b><a name="authorsort">Can I sort messages by author?</a></b></h3>
+
+<P>Yes, with v2.0 beta 2, or later.
+</P>
+
+<!-- ===================================================================== -->
+<hr>
+
+<!--X-NavButtons-Start-->
+<p align=center>
+[<a href="archives.html">Prev</a>][<a href="msgpgs.html">Next</a>][<a href="faq.html">TOC</a>][<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html">Home</a>]
+</p>
+<!--X-NavButtons-End-->
+
+<HR>
+<address>
+97/05/15 16:48:09<br>
+<img align="top" src="monicon.gif" alt="">
+<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"
+><strong>MHonArc</strong></a><br>
+Copyright &#169; 1997, <a href="http://www.oac.uci.edu/indiv/ehood/"
+>Earl Hood</a>, <a href="mailto:ehood@medusa.acs.uci.edu"
+>ehood@medusa.acs.uci.edu</a><br>
+</address>
+</BODY>
+</HTML>

@@ -1,0 +1,169 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
+<HTML>
+<HEAD>
+<TITLE>MHonArc FAQ: Message Pages</TITLE></HEAD>
+<BODY>
+
+<!--X-NavButtons-Start-->
+<p align=center>
+[<a href="indexpgs.html">Prev</a>][<a href="threads.html">Next</a>][<a href="faq.html">TOC</a>][<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html">Home</a>]
+</p>
+<!--X-NavButtons-End-->
+
+<!-- ===================================================================== -->
+<hr>
+<H2><a name="messagepages">Message Pages</a></H2>
+
+<!-- ??????????????????????????????????????????????????????????????? -->
+<h3><img src="monicon.gif" align="bottom" alt=""> <b><a name="msgorder">Can I change the order the message resources are printed?</a></b></h3>
+
+<p>No.  However, with the exceptions of the message header and body
+(but see next questions), those resource can be defined
+anyway you like.  For example, I can change the TOPLINKS resource
+to look like the BOTLINKS resource.  Or, I can change the
+default meaning of the resource so it really outputs something
+else entirely.  If you look at the documentation, the resources
+are just defined by HTML markup and resource variables.  Many
+of the resource variables can be used within any resource.
+</p>
+
+<!-- ??????????????????????????????????????????????????????????????? -->
+<h3><img src="monicon.gif" align="bottom" alt=""> <b><a name="msghead">How can I change how message headers gets formatted?</a></b></h3>
+
+<p>There are several resources for controlling how message headers
+are converted into HTML.  You can exclude fields and style fields
+with your own HTML markup.  For example, here are resources that
+cause message headers to be formatted with a table:
+</p>
+<pre>
+<b>&lt;FIELDSBEG></b>
+&lt;table>
+&lt;tbody>
+<b>&lt;/FIELDSBEG></b>
+<b>&lt;LABELBEG></b>
+&lt;tr>
+&lt;td align="right" valign="top">
+<b>&lt;/LABELBEG></b>
+<b>&lt;LABELEND></b>
+&lt;/td>
+<b>&lt;/LABELEND></b>
+<b>&lt;FLDBEG></b>
+&lt;td align="left">
+<b>&lt;/FLDBEG></b>
+<b>&lt;FLDEND></b>
+&lt;/td>
+&lt;/tr>
+<b>&lt;/FLDEND></b>
+<b>&lt;FIELDSEND></b>
+&lt;/tbody>
+&lt;/table>
+<b>&lt;/FIELDSEND></b>
+</pre>
+
+<p>You can also control the order message fields are displayed:
+</p>
+<pre>
+<b>&lt;FIELDORDER></b>
+from
+subject
+date
+-extra-
+<b>&lt;/FIELDORDER></b>
+</pre>
+<p>The "-extra-" signifies all other message fields in alphabetic
+order.
+</p>
+
+<p>You can also exclude specific message fields:
+</p>
+<pre>
+<b>&lt;EXCS></b>
+x-
+precendence
+<b>&lt;/EXCS></b>
+</pre>
+<p>Here, we are exluding all "X-..." fields and the Precendence
+field.
+</p>
+
+<p>Consult the MHonArc documentation for more information
+on how to use the resources shown here and other resources for
+controlling message header formatting.
+</p>
+
+<!-- ??????????????????????????????????????????????????????????????? -->
+<h3><img src="monicon.gif" align="bottom" alt=""> <b><a name="msgbody">How can I change how message body data gets formatted?</a></b></h3>
+
+<p>Message body conversion are controlled by content-type filters.
+See the <a href="mime.html">MIME</a> section of this FAQ for
+more information.
+</p>
+
+<!-- ??????????????????????????????????????????????????????????????? -->
+<h3><img src="monicon.gif" align="bottom" alt=""> <b><a name="headnbody">Can I have the message header come after the body?</a></b></h3>
+
+<p>In general, no.  A limitation of MHonArc is that you cannot change
+the relative order of the resources/message-data in the output (but see
+other questions in this section).  MHonArc expects
+a specific order so it can edit archived messages when needed w/o
+using a bunch of logic, and performance degradation (special comment
+declarations are used to mark off the different sections of a message).
+Therefore, you cannot have the body come before the message header.
+The best you can do is suppress the header (via EXCS) and create a
+bogus header via the resource variables available.  For example:
+</p>
+<pre>
+<b>&lt;EXCS override></b>
+.
+<b>&lt;/EXCS></b>
+<b>&lt;MSGFOOT></b>
+&lt;ul>
+&lt;li>From: $FROM$
+&lt;li>Subject: $SUBJECTNA$
+&lt;li>Date: $DATE$
+&lt;ul>
+<b>&lt;/MSGFOOT></b>
+</pre>
+
+<!-- ??????????????????????????????????????????????????????????????? -->
+<h3><img src="monicon.gif" align="bottom" alt=""> <b><a name="msgbody">Can I make changes to message formatting on existing archived messages?</a></b></h3>
+
+<p>Yes, mostly.  The only thing cannot be changed once converted
+is the message header and message body.  All other parts of the
+message page can be changed at any time.  To make any changes
+appear on existing archived messages, set the EDITIDX resource.
+The EDITIDX resource tells MHonArc to recreate all archive
+pages.
+</p>
+
+<!-- ??????????????????????????????????????????????????????????????? -->
+<h3><img src="monicon.gif" align="bottom" alt=""> <b><a name="msgcomms">What are those "&lt;!--X-... -->"?</a></b></h3>
+
+<p>If you ever looked at the HTML source of converted messages,
+you will notice a bunch of comment declarations, "&lt;!--X-... -->".
+These comment declarations are used by MHonArc to
+properly edit messages when needed.  Therefore, <strong>DO NOT
+MESS WITH THEM</strong>.
+</p>
+
+<!-- ===================================================================== -->
+<hr>
+
+<!--X-NavButtons-Start-->
+<p align=center>
+[<a href="indexpgs.html">Prev</a>][<a href="threads.html">Next</a>][<a href="faq.html">TOC</a>][<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html">Home</a>]
+</p>
+<!--X-NavButtons-End-->
+
+<HR>
+<address>
+97/05/15 16:48:13<br>
+<img align="top" src="monicon.gif" alt="">
+<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"
+><strong>MHonArc</strong></a><br>
+Copyright &#169; 1997, <a href="http://www.oac.uci.edu/indiv/ehood/"
+>Earl Hood</a>, <a href="mailto:ehood@medusa.acs.uci.edu"
+>ehood@medusa.acs.uci.edu</a><br>
+</address>
+</BODY>
+</HTML>

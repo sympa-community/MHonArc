@@ -1,18 +1,16 @@
 #! /usr/local/bin/perl
 ##---------------------------------------------------------------------------##
 ##  File:
-##      install.me
+##      @(#) install.me 1.8 97/05/15 16:55:42 @(#)
 ##  Author:
-##      Earl Hood       ehood@isogen.com
+##      Earl Hood       ehood@medusa.acs.uci.edu
 ##  Description:
 ##      Configurable installation program.
-##	Just edit the variables in the CONFIG section for setting defaults
-##	for the particular program.
-##  To Do:
-##	o Add support for manpages to go in different section directories.
+##	Create an install.cfg file to define variables with the
+##	values appropriate for the software you want to install.
 ##
 ##---------------------------------------------------------------------------##
-##    Copyright (C) 1995,1996     Earl Hood, ehood@isogen.com
+##    Copyright (C) 1995-1997	Earl Hood, ehood@medusa.acs.uci.edu
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by
@@ -45,102 +43,94 @@ package main;
         $'DIRSEP = '/';  $'CURDIR = '.';
     }
     ##  Store name of program
-    ($tmp = $'DIRSEP) =~ s/(\W)/\\$1/g;
-    ($'PROG = $0) =~ s%.*[$tmp]%%o;
+    ($'DIRSEPrxp = $'DIRSEP) =~ s/(\W)/\\$1/g;
+    ($'PROG = $0) =~ s%.*[$DIRSEPrxp]%%o;
 }
 
+eval 'umask 022' if $UNIX;	# Set umask
+
 ##---------------------------------------------------------------------------
-##	Begin CONFIG section
+##	BEGIN template for install.cfg
 ##
 
-eval 'umask 022' if $UNIX;	# Set umask
+## Flag if Perl 5 install (use "use lib ..." instead if @INC)
+$doPerl5 = 0;
 
 ## Set flags
 $dobin = 1;	# Set to 1 if exectuables to install
 $dolib = 1;	# Set to 1 if libraries to install
 $dodoc = 1;	# Set to 1 if documents to install
+$doman = 1;	# Set to 1 if manpages to install
 
 ## Set default values
 $bindir  = (!$MSDOS ? '/usr/local/bin' : 'C:\\BIN');
-$libdir  = (!$MSDOS ? '/usr/local/lib/MHonArc' : 'C:\\LIB\\MHONARC');
-$docdir  = (!$MSDOS ? '/usr/local/lib/MHonArc/doc' : 'C:\\DOC\\MHONARC');
+$libdir  = (!$MSDOS ? '/usr/local/lib' : 'C:\\LIB');
+$docdir  = (!$MSDOS ? '/usr/local/lib' : 'C:\\DOC');
+$mandir  = (!$MSDOS ? '/usr/local/man' : 'C:\\MAN');
 $perlprg = (!$MSDOS ? '/usr/local/bin/perl' : 'C:\\BIN\\PERL.EXE');
 
-## Set files to install
+## Set files to install.  File can be a directory.  If so, the
+## directory is copied to destination
+
 $relbin = '.';   	# Location of source bin files relative to install.me
-@binfiles = (
-    "mhonarc",
-);
+@binfiles = ();
+
 $rellib = 'lib';	# Location of source lib files relative to install.me
-@libfiles = (
-    "base64.pl",
-    "mhdb.pl",
-    "mhexternal.pl",
-    "mhtxt2022.pl",
-    "mhtxthtml.pl",
-    "mhtxtplain.pl",
-    "mhtxtsetext.pl",
-    "mhinit.pl",
-    "mhutil.pl",
-    "osinit.pl",
-    "qprint.pl",
-    "readmail.pl",
-);
+@libfiles = ();
+
 $reldoc = 'doc';	# Location of source doc files relative to install.me
-@docfiles = (
-    "adding.html",
-    "contacts.html",
-    "details.html",
-    "diagnos.html",
-    "indexpg.html",
-    "install.html",
-    "intro.html",
-    "message.html",
-    "mhonarc.html",
-    "mhonarc.txt",
-    "mime.html",
-    "overview.html",
-    "qstart.html",
-    "rcfile.html",
-    "removing.html",
-    "stamp_t.gif",
-    "thread.html",
-);
+@docfiles = ();
+
+$relman = 'man';	# Location of source manpages relative to install.me
+@manfiles = ();
 
 ## Define intro text
 $introText =<<EndofIntro;
-MHonArc Installation
-====================
+Installation
+============
 The installation process will ask you a series of questions on where
-the Perl executable is and where to put MHonArc files.  Just hit <CR>
-to accept the default values listed in ()'s.
-
-If directory path does not exist on your system, the installation
-program will create the path for you.
+the Perl executable is and where to put files.  Just hit <CR> to accept
+the default values listed in ()'s.
 
 EndofIntro
 ##
-##	End CONFIG section
+##	END template for install.cfg
 ##---------------------------------------------------------------------------
+
 ##---------------------------------------------------------------------------
-##	Main routine
+##      Main routine
 ##---------------------------------------------------------------------------
 {
-{ package uio;
-    @LastText = ();	## Cached text
-    $use_handler = 1;	## Flag to use private CONT signal handler
-    $ext_sigcont;	## External CONT handler
+
+$Batch = 0;
+$CfgFile = "install.cfg";
+if ($ARGV[0] =~ /^batch$/i) {
+    shift(@ARGV);
+    $Batch = 1;
+}
+if ($ARGV[0] =~ /\S/) {
+    $CfgFile = shift(@ARGV);
 }
 
-if ($ARGV[0]) {		## Check for batch mode
-    eval qq{require "$ARGV[0]"};
-    die "ERROR: Unable to read $ARGV[0]\n"  if $@;
+require $CfgFile  || die "Unable to require $CfgFile\n";
 
-} else {		## Interactive mode
+{ package uio;
+    @LastText = ();     ## Cached text
+    $use_handler = 1;   ## Flag to use private CONT signal handler
+}
+
+if ($Batch) {			## Check for batch mode
+    print STDOUT "Batch mode install ...\n";
+
+} else {			## Interactive mode
     print STDOUT $introText;
     &print_note("Make sure all pathnames are absolute.");
     &pause();
 
+    $dobin = 0  unless scalar(@binfiles);
+    $dolib = 0  unless scalar(@libfiles);
+    $dodoc = 0  unless scalar(@docfiles);
+    $doman = 0  unless scalar(@manfiles);
     do {
 	## Get installation directories and path to Perl
 	while (1) {
@@ -151,27 +141,42 @@ if ($ARGV[0]) {		## Check for batch mode
 	$perlprg = $tmp;
 	if ($dobin) {
 	    do {
-		$tmp = &prompt_user_def("Location to install programs",
-					 $bindir, 0, 1);
+		$tmp = &interpolate_path(
+			  &prompt_user_def("Location to install programs",
+					 $bindir, 0, 1));
 	    } while (!&create_dir($tmp));
 	    $bindir = $tmp;
 	}
 	if ($dolib) {
 	    do {
-		$tmp = &prompt_user_def("Location to install libraries",
-					$libdir, 0, 1);
+		$tmp = &interpolate_path(
+			  &prompt_user_def("Location to install libraries",
+					   $libdir, 0, 1));
 	    } while (!&create_dir($tmp));
 	    $libdir = $tmp;
 	}
 	if ($dodoc) {
 	    if (&ask_question("Install documentation", 1)) {
 		do {
-		    $tmp = &prompt_user_def("Location to install docs",
-					    $docdir, 0, 1);
+		    $tmp = &interpolate_path(
+			      &prompt_user_def("Location to install docs",
+					       $docdir, 0, 1));
 		} while (!&create_dir($tmp));
 		$docdir = $tmp;
 	    } else {
 		$dodoc = 0;
+	    }
+	}
+	if ($doman) {
+	    if (&ask_question("Install manpages", 1)) {
+		do {
+		    $tmp = &interpolate_path(
+			      &prompt_user_def("Location to install manpages",
+					       $mandir, 0, 1));
+		} while (!&create_dir($tmp));
+		$mandir = $tmp;
+	    } else {
+		$doman = 0;
 	    }
 	}
 	print STDOUT "\n",
@@ -180,59 +185,85 @@ if ($ARGV[0]) {		## Check for batch mode
 	print STDOUT "\tProgram directory: $bindir\n"  if $dobin;
 	print STDOUT "\tLibrary directory: $libdir\n"  if $dolib;
 	print STDOUT "\tDoc directory: $docdir\n"  if $dodoc;
+	print STDOUT "\tMan directory: $mandir\n"  if $doman;
     } while (!&ask_question("Is this correct", 1));
 }
 
 ## Install files
-$perlprg = "#! $perlprg\n";
-$perlprg .= "unshift(\@INC, '$libdir');\n"  if $dolib;
+$perlprg = "#!$perlprg\n";
+if ($dolib) {
+    if ($doPerl5) {
+	$perlprg .= "use lib '$libdir';\n";
+    } else {
+	$perlprg .= "unshift(\@INC, '$libdir');\n";
+    }
+}
 
 if ($dobin && @binfiles) {
     print STDOUT "Installing the following into $bindir\n";
     foreach $file (@binfiles) {
-	&cp("$relbin$DIRSEP$file", "$bindir$DIRSEP$file", $perlprg);
+	($destfile = $file) =~ s%.*$DIRSEPrxp%%o;
+	&cp("$relbin$DIRSEP$file", "$bindir$DIRSEP$destfile", $perlprg);
 	print STDOUT "\t", $file, "\n";
-	chmod 0755, "$bindir/$file";
+	eval 'chmod 0755, "$bindir$DIRSEP$file"';
     }
 }
 if ($dolib && @libfiles) {
     print STDOUT "Installing the following into $libdir\n";
     foreach $file (@libfiles) {
-	&cp("$rellib$DIRSEP$file", "$libdir$DIRSEP$file");
+	($destfile = $file) =~ s%.*$DIRSEPrxp%%o;
+	&cp("$rellib$DIRSEP$file", "$libdir$DIRSEP$destfile");
 	print STDOUT "\t", $file, "\n";
     }
 }
 if ($dodoc && @docfiles) {
     print STDOUT "Installing the following into $docdir\n";
     foreach $file (@docfiles) {
-	&cp("$reldoc$DIRSEP$file", "$docdir$DIRSEP$file");
+	($destfile = $file) =~ s%.*$DIRSEPrxp%%o;
+	&cp("$reldoc$DIRSEP$file", "$docdir$DIRSEP$destfile");
 	print STDOUT "\t", $file, "\n";
+    }
+}
+if ($doman && @manfiles) {
+    print STDOUT "Installing the following into $mandir\n";
+    local($sect) = (1);
+    foreach $file (@manfiles) {
+	($destfile = $file) =~ s%.*$DIRSEPrxp%%o;
+	($sect) = $destfile =~ m%\.([\d\w]+)$%;
+	&create_dir("$mandir${DIRSEP}man${sect}", 1);
+	&cp("$relman$DIRSEP$file",
+	    "$mandir${DIRSEP}man${sect}${DIRSEP}$destfile");
+	print STDOUT "\t$file -> $mandir${DIRSEP}man${sect}\n";
     }
 }
 
 exit 0;
 }
+
 ##---------------------------------------------------------------------------
 ##	Main subroutines
 ##---------------------------------------------------------------------------
+
 sub create_dir {
     local($d) = shift;
-    local($tmp);
-    ($tmp = $DIRSEP) =~ s/(\W)/\\$1/g;
-    local(@a) = grep($_ ne '', split(/$tmp/o, $d));
+    local($noask) = shift;
+    local(@a) = grep($_ ne '', split(/$'DIRSEPrxp/o, $d));
     local($path, $dir);
 
+    if ((! -e $d) && (!$noask)) {
+        return 0  unless &ask_question(qq{$d does not exist.  Create}, 1);
+    }
     if ($MSDOS) {
 	if ($d =~ m%^\s*([a-zA-Z]:)?[/\\]%) {
 	    $path = shift @a;
 	} else {
-	    $path = '.';
+	    $path = $CURDIR;
 	}
     } else {
 	if ($d =~ /^\s*\//) {
 	    $path = '';
 	} else {
-	    $path = '.';
+	    $path = $CURDIR;
 	}
     }
     foreach $dir (@a) {
@@ -253,9 +284,47 @@ sub create_dir {
     }
     1;
 }
+
+##---------------------------------------------------------------------------
+sub interpolate_path {
+    local($path) = shift;
+
+    $path =~ s/^~/$ENV{'HOME'}/;
+    $path =~ s/\$(\w+)/$ENV{$1}/ge;
+    $path;
+}
+
 ##---------------------------------------------------------------------------
 sub cp {
     local($src, $dst, $prepend) = @_;
+
+    if (-d $src) {
+	if (! -e $dst) {
+	    mkdir($dst,0777) || die "Unable to create $dst: $!\n";
+	}
+	opendir(DIR, $src) || die "Unable to open $src: $!\n";
+	@files = grep(!/^(sccs|\.|\..)$/i, readdir(DIR));
+	closedir(DIR);
+	foreach $file (@files) {
+	    $srcpn = "$src$DIRSEP$file";
+	    $dstpn = "$dst$DIRSEP$file";
+	    if (-d $srcpn) {
+		&cp($srcpn, $dstpn, $prepend);
+	    } else {
+		&cpfile($srcpn, $dstpn, $prepend);
+	    }
+	}
+
+
+    } else {
+	&cpfile($src, $dst, $prepend);
+    }
+}
+
+##---------------------------------------------------------------------------
+sub cpfile {
+    local($src, $dst, $prepend) = @_;
+
     open(SRC, $src) || die "Unable to open $src: $!\n";
     open(DST, "> $dst") || die "Unable to create $dst: $!\n";
     if (-B $src) { binmode( SRC ); binmode( DST ); }
@@ -269,6 +338,37 @@ sub cp {
 
 
 ###############################################################################
+##---------------------------------------------------------------------------##
+##  File:
+##	@(#) uio.pl 1.2 97/03/11 12:29:46 @(#)
+##  Author:
+##	Earl Hood	ehood@medusa.acs.uci.edu
+##  Description:
+##	This package contains subroutines for user input routines and
+##	screen output routines.
+##---------------------------------------------------------------------------##
+##  Copyright (C) 1994-1997	Earl Hood, ehood@medusa.acs.uci.edu
+##
+##  This program is free software; you can redistribute it and/or modify
+##  it under the terms of the GNU General Public License as published by
+##  the Free Software Foundation; either version 2 of the License, or
+##  (at your option) any later version.
+##  
+##  This program is distributed in the hope that it will be useful,
+##  but WITHOUT ANY WARRANTY; without even the implied warranty of
+##  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+##  GNU General Public License for more details.
+##  
+##  You should have received a copy of the GNU General Public License
+##  along with this program; if not, write to the Free Software
+##  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+##---------------------------------------------------------------------------##
+
+if (!$uio'NoDate) {
+    # date.pl is needed for get_later_date()
+    require 'date.pl' || warn "Unable to require date.pl\n";
+}
+
 package uio;
 
 ##---------------------------------------------------------------------------##
@@ -312,14 +412,20 @@ package uio;
 ##	value is one.  More inforamtion is below in the various
 ##	subroutine descriptions.
 ##---------------------------------------------------------------------------##
+
 			    ##------------------##
 			    ## Global variables ##
 			    ##------------------##
 ##---------------------------------------------------------------------------
+
 @LastText = ();		## Cached text
 $use_handler = 1;	## Flag to use private CONT signal handler
+$term_io_bug = 0;       ## Flag if bogus reads must be done when
+                        ##      consective suspend/foregrounds are done
 $ext_sigcont;		## External CONT handler
+
 ##---------------------------------------------------------------------------
+
 		    ##---------------------------------##
 		    ## Private subroutine declerations ##
 		    ##---------------------------------##
@@ -332,6 +438,7 @@ $ext_sigcont;		## External CONT handler
 sub print_txt {
     print STDOUT @_;  @LastText = @_;
 }
+
 ##---------------------------------------------------------------------------
 ##	This routine is used by print_{error, info, note, warning}
 ##	routines to output an informitive message to STDOUT.
@@ -352,6 +459,7 @@ sub print_message {
     print STDOUT "$dashes\n", "$mesg\n", "$dashes\n";
     $* = 0;
 }
+
 ##---------------------------------------------------------------------------
 ##	handler() is the private signal handler for the uio package.
 ##	It's used to when SIGCONT is caught for redisplay cached text.
@@ -362,8 +470,9 @@ sub handler {
 	$ext_sigcont ne "") { &$ext_sigcont(@_); }
     print STDOUT @LastText;
     &'flush(STDOUT);
-    push(@Redo, 1);
+    push(@Redo, 1)  if $term_io_bug;
 }
+
 ##---------------------------------------------------------------------------
 ##	set_handler() sets the private CONT signal handler.
 ##
@@ -372,6 +481,7 @@ sub set_handler {
     $ext_sigcont = $SIG{'CONT'};
     $SIG{'CONT'} = "uio'handler";
 }
+
 ##---------------------------------------------------------------------------
 ##	reset_handler() restores the external handler
 ##
@@ -379,7 +489,9 @@ sub reset_handler {
     return unless $use_handler;
     $SIG{'CONT'} = $ext_sigcont;
 }
+
 ##---------------------------------------------------------------------------
+
 		    ##--------------------------------##
 		    ## Public subroutine declerations ##
 		    ##--------------------------------##
@@ -469,7 +581,7 @@ sub main'print_warning { &print_message("WARNING", @_); }
 sub main'get_lc_string {
     local($tmp);
     $tmp = <STDIN>;
-    while (shift(@Redo)) { $tmp = <STDIN>; }
+    if ($term_io_bug) { while (shift(@Redo)) { $tmp = <STDIN>; } }
     chop $tmp;
     $tmp =~ tr/A-Z/a-z/;
     $tmp;
@@ -480,7 +592,7 @@ sub main'get_lc_string {
 sub main'get_string {
     local($tmp);
     $tmp = <STDIN>;
-    while (shift(@Redo)) { $tmp = <STDIN>; }
+    if ($term_io_bug) { while (shift(@Redo)) { $tmp = <STDIN>; } }
     chop $tmp;
     $tmp;
 }
@@ -492,7 +604,7 @@ sub main'pause {
     local($tmp);
     &print_txt("\nHit <CR> to continue ... ");
     $tmp = <STDIN>;
-    while (shift(@Redo)) { $tmp = <STDIN>; }
+    if ($term_io_bug) { while (shift(@Redo)) { $tmp = <STDIN>; } }
     &reset_handler();
 }
 ##---------------------------------------------------------------------------

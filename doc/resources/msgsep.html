@@ -1,0 +1,118 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
+<html>
+<head>
+<title>MHonArc Resources: MSGSEP</title>
+</head>
+<body>
+
+<address>
+<a href="../resources.html#msgsep">MHonArc Resource List</a></br>
+</address>
+
+<hr>
+<h1>MSGSEP</h1>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Syntax</h2>
+
+<dl>
+
+<dt><strong>Envariable</strong><dt>
+<dd><p>
+<code>M2H_MSGSEP=</code><var>Perl-regexp</var>
+</p>
+</dd>
+
+<dt><strong>Element</strong><dt>
+<dd><p>
+<code>&lt;MSGSEP&gt;<br></code>
+<var>Perl-regexp</var><br>
+<code>&lt;/MSGSEP&gt;<br></code>
+</p>
+</dd>
+
+<dt><strong>Command-line Option</strong><dt>
+<dd><p>
+<code>-msgsep </code><var>Perl-regexp</var>
+</p>
+</dd>
+
+</dl>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Description</h2>
+
+<p>MSGSEP defines the Perl regular expression that represents the
+message separator for mailbox files.  </p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Default Setting</h2>
+
+<pre>
+^From 
+</pre>
+
+<p><strong>Note</strong>: There is a space character after
+"<code>From</code>".
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Resource Variables</h2>
+
+<p>N/A</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Examples</h2>
+
+<p>Some MTAs do not escape lines that start with "<tt>From </tt>".
+This will cause <em>MHonArc</em> to split a message into separate
+messages since it will treat the line as a message separator
+(if <em>MHonArc</em> is processing a mailbox file).  One
+way to help avoid this problem is to set the MSGSEP resource to
+a more specific regular expression.  For example:
+</p>
+
+<pre>
+<b>&lt;MSGSEP></b>
+^From \S+\s+\S+\s+\S+\s+\d+\s+\d+:\d+:\d+\s+\d+
+<b>&lt;/MSGSEP></b>
+</pre>
+
+<p>It is still possible to get bogus splitting if a message
+contains a line that matches the regexp.
+Therefore, you may
+want to activate the <a href="conlen.html">CONLEN</a> resource,
+if applicable.
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Version</h2>
+
+<p>1.0
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>See Also</h2>
+
+<p>
+<a href="conlen.html">CONLEN</a>
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<address>
+97/05/13 17:29:45<br>
+<img align="top" src="../monicon.gif" alt="">
+<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"><strong>MHonArc</strong></a><br>
+Copyright &#169; 1997, <a href="http://www.oac.uci.edu/indiv/ehood/">Earl Hood</a>, <a href="mailto:ehood@medusa.acs.uci.edu">ehood@medusa.acs.uci.edu</a><br>
+</address>
+
+</body>
+</html>

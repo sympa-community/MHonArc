@@ -1,0 +1,153 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
+<html>
+<head>
+<title>MHonArc Resources: SCAN</title>
+</head>
+<body>
+
+<address>
+<a href="../resources.html#scan">MHonArc Resource List</a></br>
+</address>
+
+<hr>
+<h1>SCAN</h1>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Syntax</h2>
+
+<dl>
+
+<dt><strong>Envariable</strong><dt>
+<dd><p>N/A
+</p>
+</dd>
+
+<dt><strong>Element</strong><dt>
+<dd><p>N/A
+</p>
+</dd>
+
+<dt><strong>Command-line Option</strong><dt>
+<dd><p>
+<code>-scan
+</code>
+</p>
+</dd>
+
+</dl>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Description</h2>
+
+<p>When SCAN is specified, a text listing of the contents of
+the archive are outputed to standard out.  Messages are listed
+in the order defined for the main index.
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Default Setting</h2>
+
+<p>N/A
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Resource Variables</h2>
+
+<p>N/A</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Examples</h2>
+
+<p>The following example generates an output in the order
+defined in the database of the archive:
+</p>
+
+<pre>
+% <b>mhonarc -scan -outdir /home/ehood/html/archive</b>
+Reading database ...
+117 messages in /home/ehood/html/archive:
+ 
+Msg #  YYYY/MM/DD  From             Subject                                    
+-----  ----------  ---------------  -------------------------------------------
+   62  1996/07/30  Kwin Kramer      Reading STDIN not from keyboard -- or, Syst
+   23  1996/07/31  Christopher M.   Re: Setting @INC to include my own modules 
+    9  1996/08/01  Dan Kirkwood     object as hash key loses methods           
+    2  1996/08/01  James F'jord Ly  Re: We're HIRING hot hackers!              
+    1  1996/08/01  Christopher Cha  Curious Multi-Dimensional array behavior   
+   14  1996/08/01  I R A Aggie      Re: Patch for arithmetic bug in 5.003 ?    
+    3  1996/08/01  Bernard Bellon   Re: How do you grab a URL in perl?         
+   38  1996/08/01  Mohammed Dewan   Help needed badly win3.1 and perl.         
+   59  1996/08/01  Mohammed Dewan   Using file in perl.                        
+    4  1996/08/01  Dan Gildor       Re: Threaded Discusion groups embeded in We
+    5  1996/08/01  kendall shaw     addicted to emacs lisp                     
+    6  1996/08/01  Ye He            Q: Sybase extension to Perl                
+   83  1996/08/01  I R A Aggie      Re: Browser/Page matching CGI script       
+    7  1996/08/01  Chris Schleiche  Re: Simple program looks good, but gives er
+   13  1996/08/01  Steve McCullagh  Perl 5.002 and $| errors                   
+...
+</pre>
+
+<p>If you to always get a listing that shows messages by number,
+use somthing like the following:
+</p>
+
+<pre>
+% <b>mhonarc -scan -noreverse -nosort -outdir /home/ehood/html/archive</b>
+Reading database ...
+117 messages in /home/ehood/html/archive:
+ 
+Msg #  YYYY/MM/DD  From             Subject                                    
+-----  ----------  ---------------  -------------------------------------------
+    0  1996/08/02  Markus Spring    How to build a stack of associative arrays?
+    1  1996/08/01  Christopher Cha  Curious Multi-Dimensional array behavior   
+    2  1996/08/01  James F'jord Ly  Re: We're HIRING hot hackers!              
+    3  1996/08/01  Bernard Bellon   Re: How do you grab a URL in perl?         
+    4  1996/08/01  Dan Gildor       Re: Threaded Discusion groups embeded in We
+    5  1996/08/01  kendall shaw     addicted to emacs lisp                     
+    6  1996/08/01  Ye He            Q: Sybase extension to Perl                
+    7  1996/08/01  Chris Schleiche  Re: Simple program looks good, but gives er
+    8  1996/08/02  Paul             Re: Eric Herrmann's Sams.Net Teach Yourself
+    9  1996/08/01  Dan Kirkwood     object as hash key loses methods           
+   10  1996/08/02  Mike Stok        Re: I cannot rename files using rename.  I 
+   11  1996/08/02  Elisabeth Freem  Re: current working directory              
+   12  1996/08/02  Søren Maagaard   Re: Make an entire site searchable         
+   13  1996/08/01  Steve McCullagh  Perl 5.002 and $| errors                   
+   14  1996/08/01  I R A Aggie      Re: Patch for arithmetic bug in 5.003 ?    
+   15  1996/08/02  Mike Stok        Re: More on -w  (was Re: Is this a known bu
+...
+</pre>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Version</h2>
+
+<p>1.0
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>See Also</h2>
+
+<p>
+<a href="outdir.html">OUTDIR</a>,
+<a href="reverse.html">REVERSE</a>,
+<a href="sort.html">SORT</a>,
+<a href="subsort.html">SUBSORT</a>
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<address>
+97/05/13 17:30:01<br>
+<img align="top" src="../monicon.gif" alt="">
+<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"><strong>MHonArc</strong></a><br>
+Copyright &#169; 1997, <a href="http://www.oac.uci.edu/indiv/ehood/">Earl Hood</a>, <a href="mailto:ehood@medusa.acs.uci.edu">ehood@medusa.acs.uci.edu</a><br>
+</address>
+
+</body>
+</html>

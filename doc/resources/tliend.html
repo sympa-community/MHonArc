@@ -1,0 +1,190 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
+<html>
+<head>
+<title>MHonArc Resources: TLIEND</title>
+</head>
+<body>
+
+<address>
+<a href="../resources.html#tliend">MHonArc Resource List</a></br>
+</address>
+
+<hr>
+<h1>TLIEND</h1>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Syntax</h2>
+
+<dl>
+
+<dt><strong>Envariable</strong><dt>
+<dd><p>N/A
+</p>
+</dd>
+
+<dt><strong>Element</strong><dt>
+<dd><p>
+<code>&lt;TLIEND&gt;<br></code>
+<var>markup ...</var><br>
+<code>&lt;/TLIEND&gt;<br></code>
+</p>
+</dd>
+
+<dt><strong>Command-line Option</strong><dt>
+<dd><p>N/A
+</p>
+</dd>
+
+</dl>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Description</h2>
+
+<p>TLIEND defines the end markup for a regular entry in
+the thread index.  A regular entry is a message that has
+either a previous or next message and is not the
+top message in a thread.
+</p>
+
+<dl>
+<dt><strong>NOTE</strong></dt>
+<dd><p>Use
+<a href="tlitxt.html">TLITXT</a> for defining
+the start and content markup for a regular entry.
+</p>
+</dd>
+</dl>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Default Setting</h2>
+
+<pre>
+<b>&lt;TLiEnd&gt;</b>
+&lt;/LI>
+<b>&lt;/TLiEnd&gt;</b>
+</pre>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Resource Variables</h2>
+
+<table cellspacing=1 border=1 cellpadding=5>
+<tbody>
+<tr align=left>
+<th>Variable</th><th>Value</th>
+</tr>
+<tr valign=top>
+<td><strong><code>$A_ATTR$</code></strong></td>
+<td>The <CODE>NAME</CODE> and <CODE>HREF</CODE> attributes to use in an anchor to link to the archived message. The <CODE>NAME</CODE> attribute links the messages to the index page.</td>
+</tr>
+<tr valign=top>
+<td><strong><code>$A_HREF$</code></strong></td>
+<td>The <CODE>HREF</CODE> attribute to use in an anchor to link to the archived message.</td>
+</tr>
+<tr valign=top>
+<td><strong><code>$A_NAME$</code></strong></td>
+<td>The <CODE>NAME</CODE> attribute to use in an anchor for messages to link to the index page.</td>
+</tr>
+<tr valign=top>
+<td><strong><code>$DATE$</code></strong></td>
+<td>The date of the message.</td>
+</tr>
+<tr valign=top>
+<td><strong><code>$DDMMYY$</code></strong></td>
+<td>Message date in dd/mm/yy format.</td>
+</tr>
+<tr valign=top>
+<td><strong><code>$FROM$</code></strong></td>
+<td>The complete text in the <CODE>From</CODE> field.</td>
+</tr>
+<tr valign=top>
+<td><strong><code>$FROMADDR$</code></strong></td>
+<td>The e-mail address in the <CODE>From</CODE> field.</td>
+</tr>
+<tr valign=top>
+<td><strong><code>$FROMNAME$</code></strong></td>
+<td>The human name of the person in the <CODE>From</CODE> field.</td>
+</tr>
+<tr valign=top>
+<td><strong><code>$ICON$</code></strong></td>
+<td>The context-type sensistive icon.</td>
+</tr>
+<tr valign=top>
+<td><strong><code>$ICONURL$</code></strong></td>
+<td>The URL to the context-type sensistive icon.</td>
+</tr>
+<tr valign=top>
+<td><strong><code>$LOCALDATE$</code></strong></td>
+<td>Current local date.</td>
+</tr>
+<tr valign=top>
+<td><strong><code>$MMDDYY$</code></strong></td>
+<td>Message date in mm/dd/yy format.</td>
+</tr>
+<tr valign=top>
+<td><strong><code>$MSGID$</code></strong></td>
+<td>The message-id of the message.</td>
+</tr>
+<tr valign=top>
+<td><strong><code>$MSGNUM$</code></strong></td>
+<td>The message numbers assigned to the message by <EM>MHonArc</EM> (includes leading zeros).</td>
+</tr>
+<tr valign=top>
+<td><strong><code>$NUMFOLUP$</code></strong></td>
+<td>Number of explicit follow-ups to the message.</td>
+</tr>
+<tr valign=top>
+<td><strong><code>$ORDNUM$</code></strong></td>
+<td>The current listing number of the message.</td>
+</tr>
+<tr valign=top>
+<td><strong><code>$SUBJECT$</code></strong></td>
+<td>The subject text of the message wrapped in an anchor element that hyperlinks to the message.</td>
+</tr>
+<tr valign=top>
+<td><strong><code>$SUBJECTNA$</code></strong></td>
+<td>The subject text of the message without the anchor element.</td>
+</tr>
+<tr valign=top>
+<td><strong><code>$YYMMDD$</code></strong></td>
+<td>Message date in yy/mm/dd format.</td>
+</tr>
+</tbody>
+</table>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Examples</h2>
+
+<p>None.
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Version</h2>
+
+<p>2.0
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>See Also</h2>
+
+<p>
+<a href="tlitxt.html">TLITXT</a>
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<address>
+97/05/13 17:30:15<br>
+<img align="top" src="../monicon.gif" alt="">
+<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"><strong>MHonArc</strong></a><br>
+Copyright &#169; 1997, <a href="http://www.oac.uci.edu/indiv/ehood/">Earl Hood</a>, <a href="mailto:ehood@medusa.acs.uci.edu">ehood@medusa.acs.uci.edu</a><br>
+</address>
+
+</body>
+</html>

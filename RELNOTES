@@ -1,172 +1,38 @@
 Release Notes for MHonArc
 
-	<URL:http://www.oac.uci.edu/indiv/ehood/mhonarc.html>
+    http://www.oac.uci.edu/indiv/ehood/mhonarc.html
 
----------------------------------------------------------------------------
-    MHonArc -- Internet mail-to-HTML converter
-    Copyright (C) 1995,1996  Earl Hood, ehood@isogen.com
+Also read the CHANGES document for changes they may affect
+you if you are a user of an earlier version of MHonArc.
 
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
+===========================================================================
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+Version 2.0.1
 
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the Free Software
-    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
----------------------------------------------------------------------------
-
-Version 1.2.3
--------------
-
-This version is a minor enhancement, bug fix release.  See the CHANGES
-files for what was added and fixed.
-
-No modifications were made that require changes to the documentation
-from v1.2.2.  The documentation has been left untouched.
-
----------------------------------------------------------------------------
-    The following are release notes from previous versions of MHonArc.
----------------------------------------------------------------------------
-
-Version 1.2.2
--------------
-
-This version is a minor enhancement, bug fix release.  See the CHANGES
-files for what was added and fixed.
+	See the BUGS file for an important bug fix related to
+	empty database entries.
 
 ---------------------------------------------------------------------------
 
-Version 1.2.1
--------------
+Version 2.0.0
 
-This version is a minor enhancement, bug fix release.  See the CHANGES
-files for what was added and fixed.
+	o  The installation process has changed slightly.  Please
+	   read the installation instructions in the README
+	   carefully.
 
+	o  Documentation is now provided only in HTML.
 
-Version 1.2.0
--------------
+	o  There are some changes to how data is stored in the
+	   database file from v1.x.  If MHonArc v2.0 reads a 1.x
+	   archive, it will automatically convert the 1.x data into
+	   2.0 data.  All existing resource settings will be preserved.
 
-The CHANGES file contains information on the changes that may affect
-1.1.0 archives.  Please read it.
-
-
-Version 1.1.0
--------------
-
-Database file:
-	1.1.0 is able to handle 1.0.x database files.  Only additions
-	have been made between 1.0.x and 1.1.0.
-
-Threading:
-
-	o  If you have a 1.0 archive, you can generate a thread index
-	   for it with the following:
-
-		mhonarc -thread -editidx ...
-
-	   NOTE:  You will also need to (re)specify the LISTBEGIN
-	   resource so a link to the thread index exists on the main
-	   index page.  See the section on _Index Page Customization_
-	   in the documentation for more information.
-
-	o  You can prevent the creation of the thread index by the
-	   following:
-	   
-		*  Set the M2H_THREAD environment variable to 0.
-		*  Specify the NOTHREAD resource file element.
-		*  Use the -nothread option.
-
-	o  Remember, the thread index does not replace the main index.
-	   It compliments the main index.  If using a custom layout,
-	   resource variables are available to link between the 2
-	   indexes.
+	   NOTE
+		Once an archive has been processed by v2.0, the
+		database may no longer be utilized by v1.x.  If
+		v1.x is used later to process the archive,
+		unpredictable results will occur.
 
 
-The following note is only relevant if you have developed your own
-MIME filters for use in MHonArc:
-
-	o  MHonArc now treats the return value from MIME filters as
-	   an array.  The first value of the array is treated as the
-	   HTML text to use in the message.  All other array values are
-	   treated as names of files that the filter may have generated
-	   (eg. mhexternal.pl).  MHonArc stores the filenames in the
-	   database.  Therefore, MHonArc can delete any extra files
-	   associated with a message if the message is removed via the
-	   -rmm option.
-
-
-Version 1.0.0
--------------
-* (See also Beta User Notes below if you were a user of 1.0.0 beta)
-
-The release notes for version 1.0.0 of MHonArc address compatiblity
-issues with the mail2html 3.1.x program.
-
-	o  The database file is compatible with mail2html database
-	   files, however the icon support feature will not work
-	   properly.  Recreate the archive with MHonArc if icon usage
-	   is desired.
-
-	o  The database filename has been renamed to ".mhonarc.db".
-	   HOWEVER, MHonArc will use the ".mail2html.db" file when
-	   adding to archives created with mail2html.
-
-	o  Many of the index page resource settings have been eliminated,
-	   like DATE and SUBONLY.  The same effects can be obtained by
-	   using the LITEMPLATE resource element.
-
-	o  The STAMP resource has been eliminated since the same effect
-	   can be achieve with the LISTBEGIN or LISTEND resource elements.
-
-	o  The USERSUBS resource element has been eliminated.  You can
-	   achieve the same results by writing your own MIME filter, or
-	   modifying the existing ones.
-
-
-1.0.0 Beta User Notes
----------------------
-
-	o  The number of library files have been reduced (beta 8).  The
-	   library 'mhexternal.pl' is a merging of the application,
-	   audio, image, and video libraries.  mhexternal.pl covers all
-	   the content-types in the old filters, plus much more.  The
-	   library is designed to be a catch-all library for
-	   content-types that get filtered to external files.
-
-	   **IMPORTANT NOTE:  Because of the change in libraries, any
-	   archive database files created with beta version less than 8
-	   will cause MHonArc to abort abnormally:  i.e.  Perl aborts
-	   because it cannot require the libraries specified in the
-	   database file.  You can utilize the file deffilters.rc in
-	   the examples directory, with the -rcfile option, to update
-	   the database when adding new mail.
-
-	o  The PERLINC resource element is recognized (beta 8).  The
-	   docs used PERLINC, but the code used PERLLIB.  Also, the
-	   paths specified in the PERLINC resource element are saved
-	   to the database.
-
-	o  The default filter libraries' filenames have been renamed to
-	   14 characters, or less (beta 5).  This is to avoid conflicts
-	   with older Unix file systems with filename limits.  See
-	   **IMPORTANT NOTE above about the effects of library filename
-	   changes.
-
-	o  The default filters had a bug fixed in them (beta 5).
-	   Content-Description text is now properly "htmlized".
-
-	o  The $CURDATE$ variable went away for the LISTBEGIN or
-	   LISTEND resource elements (beta 3).  Use $GMTDATE$ to get
-	   the current date based off GMT time, and use $LOCALDATE$ to
-	   get the local date and time for your timezone.  $CURDATE$
-	   used to give only the GMT date and time.
-
-
----------------------------------------------------------------------------
-Earl Hood, ehood@isogen.com
+===========================================================================
+97/05/22 19:01:12

@@ -1,0 +1,184 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
+<HTML>
+<HEAD>
+<TITLE>MHonArc FAQ: Supported Environments</TITLE></HEAD>
+<BODY>
+
+<!--X-NavButtons-Start-->
+<p align=center>
+[<a href="general.html">Prev</a>][<a href="usage.html">Next</a>][<a href="faq.html">TOC</a>][<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html">Home</a>]
+</p>
+<!--X-NavButtons-End-->
+
+<!-- ===================================================================== -->
+<HR>
+<H2><a name="supenvs">Supported Environments</a></H2>
+
+<!-- ??????????????????????????????????????????????????????????????? -->
+<h3><img src="monicon.gif" align="bottom" alt=""> <b><a name="platforms">What platforms can MHonArc run under?</a></b></h3>
+
+<P>MHonArc is known to run under many varieties of Unix,
+MS-DOS/Windows, WinNT, Win95, OS/2.
+</p>
+
+<!-- ??????????????????????????????????????????????????????????????? -->
+<h3><img src="monicon.gif" align="bottom" alt=""> <b><a name="mac">What about Mac?</a></b></h3>
+
+<P>MHonArc has been coded to support MacPerl, but no
+adequate testing has been done to verify the code.
+Please notify the author if you are interested in 
+testing MHonArc under MacPerl.
+</P>
+
+<!-- ??????????????????????????????????????????????????????????????? -->
+<h3><img src="monicon.gif" align="bottom" alt=""> <b><a name="perl">What version of Perl is required to run MHonArc?</a></b></h3>
+
+<P>MHonArc can run under Perl 4 or 5.  Perl 5 is recommended
+for performance reasons and for the possibility that future releases
+of MHonArc will use Perl 5 features.</P>
+
+<dl>
+<dt><strong>NOTE</strong></dt>
+<dd><p>Current plans are for MHonArc v3 
+to be the Perl 5 rewrite of MHonArc v2.x.  v2.x will
+probably be the last major version to run under Perl 4.
+</p>
+</dd>
+</dl>
+
+<!-- ??????????????????????????????????????????????????????????????? -->
+<h3><img src="monicon.gif" align="bottom" alt=""> <b><a name="muas">What mail user agents (MUA's) does MHonarc support?</a></b></h3>
+
+<P>MHonArc can convert mail that is stored in UUCP mailbox
+format (ie. all messages are in a single file), or in the format used
+by the 
+<a href="http://www.ics.uci.edu/~mh/">Rand Message Handler</a>
+(MH) (messages are contained in separate
+files within a directory). MHonArc is known to work with
+the following MUAs: <EM>MH</EM>, <EM>mail</EM>, <EM>Mail</EM>,
+<EM>Elm</EM>, <EM>Eudora</EM>, <EM>WinVN</EM>, <EM>Windows
+Trumpet</EM>, and <EM>NUPop</EM>.  </P>
+
+<DL>
+<DT><STRONG>NOTE</STRONG> 
+
+<DD><P>To support some MUA's, it may require redefining the
+MSGSEP or MHPATTERN resource.  Please consult the documentation
+for more information about these resources.</P>
+</DL>
+
+<!-- ??????????????????????????????????????????????????????????????? -->
+<h3><img src="monicon.gif" align="bottom" alt=""> <b><a name="compuserve">Can MHonArc process Compuserve messages?</a></b></h3>
+
+<p>Here is a response from a user:
+</p>
+<blockquote>
+<UL>
+<LI><em>Subject</em>: Re: CompuServe --&gt; html</LI>
+<LI><em>From</em>: Steve Pacenka &lt;<A HREF="mailto:sp17@cornell.edu">sp17@cornell.edu</A>&gt;</LI>
+<LI><em>Date</em>: Thu, 06 Mar 1997 09:09:00 -0500</LI>
+</UL>
+<PRE>
+At 11:38 AM 3/6/97 +0100, Bernard Frit wrote:
+&gt;<i>Hi everybody,</i>
+&gt;
+&gt;<i>A friend of mine has a lot of archives in CompuServe</i>
+&gt;<i>thread and message format. He'd like to convert them</i>
+&gt;<i>in a convenient format (html or whatever) with thread</i>
+&gt;<i>indexing features as MHonArc is doing it for mail</i>
+&gt;<i>archives.</i>
+&gt;
+&gt;<i>At the first glance, I didn't find out how to configure</i>
+&gt;<i>MHonArc to do the job.</i>
+
+The Compuserve "file cabinet" format is too far from the basic SMTP message
+format that MHonArc recognizes.
+
+Your friend can find software on Compuserve to read the file cabinet format
+and emit ascii text that is closer to SMTP message format that MHonArc can
+use.  A search of IBMFF using the keywords "cabinet" and "convert" yielded
+several items including these two:
+
+Forum Name: CSNAVSUPPORT                 Library: Member Uploads  (6)
+  Accesses: 839                       Size: 11368
+      File: THRDCO.ZIP           Submitted: [72662,70]   26-Aug-94
+
+
+This program converts forum message threads to a plain text file  called
+COLLECT.TXT.  Your favorite word processor can then search  for any message
+on any topic that you have downloaded.  It is  public domain and was
+created because I have so many forum  thread messages which I can't search.
+
+-----
+Forum Name: PCEFORUM                 Library: Telecom/Reseaux  (8)
+  Accesses: 32                        Size: 30865
+      File: SHWCIM.ZIP           Submitted: [72241,2132]   08-Nov-96
+
+Une fois stockes dans le "Cabinet"  CompuServe, les messages des forums et
+les courriers sont codes dans des fichiers binaires que l'on ne peut pas
+relire directement. Cet utilitaire a pour but de convertir n'importe quel
+fichier de la base WinCIM en fichier ASCII pur. Freeware en anglais.
+
+-- SP
+
+</PRE>
+</blockquote>
+
+<!-- ??????????????????????????????????????????????????????????????? -->
+<h3><img src="monicon.gif" align="bottom" alt=""> <b><a name="nonenglish">Can MHonArc create non-English archives?</a></b></h3>
+
+<p>Yes.  With MHonArc's page layout customizations features,
+you can have MHonArc create pages in any language supported
+by Web client software.  Plus, messages containing non-English text
+is supported during message conversion.  For text messages,
+MHonArc supports the ISO-8859 character sets and the
+ISO-2022-JP character set.
+</p>
+
+<!-- ??????????????????????????????????????????????????????????????? -->
+<h3><img src="monicon.gif" align="bottom" alt=""> <b><a name="bilingual">Can I create bilingual archives?</a></b></h3>
+
+<p>Yes.  You can actually create archives that have as many
+indexes as you want in as many languages that you want.  Through
+the OTHERINDEXES resource can define any number of extra indexes
+to create.  For each index, you can redfine the index resources
+to use whatever text (English or non-English) you desire.
+</p>
+<dl>
+<dt><strong>NOTE</strong></dt>
+<dd><p>There is no support for mulitple variations of message
+pages in an archive.  Therefore, a single language must be
+chosen for message pages, or you can include redundant information
+using multiple languages.
+</p>
+</dd>
+</dl>
+<dl>
+<dt><strong>NOTE</strong></dt>
+<dd><p>Actual message data will be in the language used in the
+message.  MHonArc has no built-in language translation.
+</p>
+</dd>
+</dl>
+
+<!-- ===================================================================== -->
+<hr>
+
+<!--X-NavButtons-Start-->
+<p align=center>
+[<a href="general.html">Prev</a>][<a href="usage.html">Next</a>][<a href="faq.html">TOC</a>][<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html">Home</a>]
+</p>
+<!--X-NavButtons-End-->
+
+<hr>
+<address>
+97/05/15 16:48:06<br>
+<img align="top" src="monicon.gif" alt="">
+<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"
+><strong>MHonArc</strong></a><br>
+Copyright &#169; 1997, <a href="http://www.oac.uci.edu/indiv/ehood/"
+>Earl Hood</a>, <a href="mailto:ehood@medusa.acs.uci.edu"
+>ehood@medusa.acs.uci.edu</a><br>
+</address>
+</body>
+</html>

@@ -1,0 +1,59 @@
+INSTALL for MHonArc
+
+    http://www.oac.uci.edu/indiv/ehood/mhonarc.html
+
+---------------------------------------------------------------------------
+
+    NOTE
+        Installation has changed slightly from 1.x releases.  Please
+        read the following instructions if you are familiar with
+        the 1.x installation process.
+
+This document gives the basic method for installing MHonArc on a Unix or
+MS-DOS/Windows system.
+
+Instructions
+
+    Interactive Installing:
+
+        Run the following command:
+
+            perl install.me
+
+        The installation program will ask you a series of questions on
+        where the Perl executable is and where to put MHonArc files.
+        Just hit <CR> to accept the default values listed in ()'s.
+
+    Batch Install:
+
+        1. Edit the file 'install.cfg'.  Knowledge of Perl is helpful.
+        2. Run the following command:
+
+            perl install.me batch
+
+        The installation program will output information on what
+        is being installed and where it is being installed.
+
+Notes on Installation Program
+
+    o The '#!' line in the installed mhonarc program is set to
+      point to the Perl executable specified in the installation
+      process (this has no meaning under MS-DOS).
+
+    o The installed mhonarc program has code added so it will find
+      its default libraries specified in the installation program.
+      I.e.  The install lib directory is added to mhonarc's search
+      path so it will find its libraries.
+
+    o If you specify paths that do not exist, the install.me
+      program will create the path ONLY if running in interactive
+      mode.  If running in batch mode, you must check that all paths
+      specified exist.
+
+    o MSDOS/Windows users: You many need to create a batch file
+      for easy invocation of MHonArc.  An example batch file
+      exists in the bat/ directory of the distribution.
+
+---------------------------------------------------------------------------
+Copyright (C) 1997,     Earl Hood, ehood@medusa.acs.uci.edu
+@(#) INSTALL 97/05/15 16:59:14 @(#)

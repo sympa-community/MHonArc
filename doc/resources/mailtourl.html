@@ -1,0 +1,147 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
+<html>
+<head>
+<title>MHonArc Resources: MAILTOURL</title>
+</head>
+<body>
+
+<address>
+<a href="../resources.html#mailtourl">MHonArc Resource List</a></br>
+</address>
+
+<hr>
+<h1>MAILTOURL</h1>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Syntax</h2>
+
+<dl>
+
+<dt><strong>Envariable</strong><dt>
+<dd><p>
+<code>M2H_MAILTOURL=</code><var>URL-template</var>
+</p>
+</dd>
+
+<dt><strong>Element</strong><dt>
+<dd><p>
+<code>&lt;MAILTOURL&gt;<br></code>
+<var>URL-template</var><br>
+<code>&lt;/MAILTOURL&gt;<br></code>
+</p>
+</dd>
+
+<dt><strong>Command-line Option</strong><dt>
+<dd><p>
+<code>-mailtourl </code><var>URL-template</var>
+</p>
+</dd>
+
+</dl>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Description</h2>
+
+<p>The MAILTOURL defines the URL template for hyperlinked e-mail
+addressed in message headers when the
+<a href="mailto.html">MAILTO</a> resource is active.
+</p>
+
+<DL>
+<DT><STRONG>NOTE</STRONG> 
+<DD><P>The MAILTOURL resource has
+different rules for variable expansion. If a
+variable does not exactly match the set of variables available for
+the MAILTOURL, the variable text will be taken literally
+as part of the element content. Therefore, a single "<CODE>$</CODE>"
+can be used to represent a "<CODE>$</CODE>" character.  </P>
+<P>Also,
+variables in the MAILTOURL should <STRONG>NOT</STRONG>
+have "<CODE>:</CODE><VAR>NU</VAR>" modifier. This will prevent the
+variables from be recognized. <EM>MHonArc</EM> will automatically
+treat the replacement value as a part of a URL string.
+</P>
+</DD></DL>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Default Setting</h2>
+
+<pre>
+mailto:$TO$
+</pre>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Resource Variables</h2>
+
+<table cellspacing=1 border=1 cellpadding=5>
+<tbody>
+<tr align=left>
+<th>Variable</th><th>Value</th>
+</tr>
+<tr valign=top>
+<td><strong><code>$FROM$</code></strong></td>
+<td>The complete text in the <CODE>From</td>
+</tr>
+<tr valign=top>
+<td><strong><code>$MSGID$</code></strong></td>
+<td>The message-id of the message.</td>
+</tr>
+<tr valign=top>
+<td><strong><code>$SUBJECT$</code></strong></td>
+<td>The subject text of the message.</td>
+</tr>
+<tr valign=top>
+<td><strong><code>$SUBJECTNA$</code></strong></td>
+<td>The subject text of the message.</td>
+</tr>
+<tr valign=top>
+<td><strong><code>$TO$</code></strong></td>
+<td>The complete text in the <CODE>To</code> field.</td>
+</tr>
+</tbody>
+</table>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Examples</h2>
+
+<p>The following example defines how MAILTOURL can be used
+to have e-mail addresses linked to a CGI program:
+</p>
+
+<pre>
+<b>&lt;MailToURL&gt;</b>
+/cgi-bin/mailform.cgi?to=$TO$;subject=$SUBJECT$;srcid=$MSGID$
+<b>&lt;/MailToURL&gt;</b>
+</pre>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Version</h2>
+
+<p>1.0
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>See Also</h2>
+
+<p>
+<a href="mailto.html">MAILTO</a>
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<address>
+97/05/13 17:29:34<br>
+<img align="top" src="../monicon.gif" alt="">
+<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"><strong>MHonArc</strong></a><br>
+Copyright &#169; 1997, <a href="http://www.oac.uci.edu/indiv/ehood/">Earl Hood</a>, <a href="mailto:ehood@medusa.acs.uci.edu">ehood@medusa.acs.uci.edu</a><br>
+</address>
+
+</body>
+</html>

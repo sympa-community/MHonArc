@@ -1,0 +1,201 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
+<html>
+<head>
+<title>MHonArc Resources: MSGLOCALDATEFMT</title>
+</head>
+<body>
+
+<address>
+<a href="../resources.html#msglocaldatefmt">MHonArc Resource List</a></br>
+</address>
+
+<hr>
+<h1>MSGLOCALDATEFMT</h1>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Syntax</h2>
+
+<dl>
+
+<dt><strong>Envariable</strong><dt>
+<dd><p>
+<code>M2H_MSGLOCALDATEFMT=</code><var>date-format</var>
+</p>
+</dd>
+
+<dt><strong>Element</strong><dt>
+<dd><p>
+<code>&lt;MSGLOCALDATEFMT&gt;<br></code>
+<var>date-format</var><br>
+<code>&lt;/MSGLOCALDATEFMT&gt;<br></code>
+</p>
+</dd>
+
+<dt><strong>Command-line Option</strong><dt>
+<dd><p>
+<code>-msglocaldatefmt </code><var>date-format</var>
+</p>
+</dd>
+
+</dl>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Description</h2>
+
+<p>The MSGLOCALDATEFMT resource specifies the date format for the
+<strong><code>$MSGLOCALDATE$</code></strong> resource variable
+(i.e. The local date of the current message).
+The format is a string containing zero or more conversion
+specifications and regular characters.  A conversion specification
+consists of the '<code><strong>%</strong></code>' character
+followed a character that determines the type of conversion.
+</p>
+
+<p>The following lists the possible conversion specifications:
+</p>
+
+<table border=0 cellspacing=1 cellpadding=4>
+<tbody>
+<tr valign=top>
+<th align=right>Spec</th>
+<th align=left>Value</th>
+</tr>
+<tr valign=top>
+<td align=right><strong>%%</strong></td>
+<td>the % character</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>%a</strong></td>
+<td>abbreviated weekday name</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>%A</strong></td>
+<td>full weekday name</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>%b</strong></td>
+<td>abbreviated month name</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>%B</strong></td>
+<td>full month name</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>%c</strong></td>
+<td>appropriate date and time representation</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>%d</strong></td>
+<td>day of month [1,31]; single digits are preceded by 0</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>%h</strong></td>
+<td>abbreviated month name</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>%H</strong></td>
+<td>hour (24-hour clock) [0,23]; single digits are preceded by 0</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>%I</strong></td>
+<td>hour (12-hour clock) [1,12]; single digits are preceded by 0</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>%j</strong></td>
+<td>day number of year [1,366]; single digits are preceded by 0</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>%m</strong></td>
+<td>month number [1,12]; single digits are preceded by 0</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>%M</strong></td>
+<td>minute[00,59]; single digits are preceded by 0</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>%p</strong></td>
+<td>am or pm.</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>%P</strong></td>
+<td>AM or PM.</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>%S</strong></td>
+<td>seconds [00,61]</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>%w</strong></td>
+<td>weekday as a decimal number [0,6], with 0 representing Sunday</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>%y</strong></td>
+<td>year within century [00,99]</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>%Y</strong></td>
+<td>year, including the century (for example 1993)</td>
+</tr>
+
+</tbody>
+</table>
+
+<p>Setting MSGLOCALDATEFMT to a blank string will reset the resource
+to the default setting.
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Default Setting</h2>
+
+<pre>
+%a %b %d %H:%M:%S %y
+</pre>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Resource Variables</h2>
+
+<p>N/A</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Examples</h2>
+
+<p>None.
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Version</h2>
+
+<p>2.0
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>See Also</h2>
+
+<p>
+<a href="gmtdatefmt.html">GMTDATEFMT</a>,
+<a href="localdatefmt.html">LOCALDATEFMT</a>,
+<a href="months.html">MONTHS</a>,
+<a href="monthsabr.html">MONTHSABR</a>,
+<a href="msggmtdatefmt.html">MSGGMTDATEFMT</a>,
+<a href="weekdays.html">WEEKDAYS</a>,
+<a href="weekdaysabr.html">WEEKDAYSABR</a>
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<address>
+97/05/13 17:29:42<br>
+<img align="top" src="../monicon.gif" alt="">
+<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"><strong>MHonArc</strong></a><br>
+Copyright &#169; 1997, <a href="http://www.oac.uci.edu/indiv/ehood/">Earl Hood</a>, <a href="mailto:ehood@medusa.acs.uci.edu">ehood@medusa.acs.uci.edu</a><br>
+</address>
+
+</body>
+</html>

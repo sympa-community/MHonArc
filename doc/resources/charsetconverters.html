@@ -1,0 +1,223 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
+<html>
+<head>
+<title>MHonArc Resources: CHARSETCONVERTERS</title>
+</head>
+<body>
+
+<address>
+<a href="../resources.html#charsetconverters">MHonArc Resource List</a></br>
+</address>
+
+<hr>
+<h1>CHARSETCONVERTERS</h1>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Syntax</h2>
+
+<dl>
+
+<dt><strong>Envariable</strong><dt>
+<dd><p>N/A
+</p>
+</dd>
+
+<dt><strong>Element</strong><dt>
+<dd><p>
+<code>&lt;CHARSETCONVERTERS&gt;</code><br>
+<var>charset-filter-specification</var></br>
+<code>&lt;/CHARSETCONVERTERS&gt;</code><br>
+</p>
+</dd>
+
+<dt><strong>Command-line Option</strong><dt>
+<dd><p>N/A
+</p>
+</dd>
+
+</dl>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Description</h2>
+
+<p>The CHARSETCONVERTERS resource specifies Perl routines to call
+for filtering characters of a character set to HTML legal characters.
+The filtering occurs for message header data encoded
+according to the MIME standard.
+The following example shows a header with encoded data:
+</p>
+
+<pre>
+From: =?US-ASCII?Q?Keith_Moore?= &lt;moore@cs.utk.edu&gt;
+To: =?ISO-8859-1?Q?Keld_J=F8rn_Simonsen?= &lt;keld@dkuug.dk&gt;
+CC: =?ISO-8859-1?Q?Andr=E9_?= Pirard &lt;PIRARD@vm1.ulg.ac.be&gt;
+Subject: =?ISO-8859-1?B?SWYgeW91IGNhbiByZWFkIHRoaXMgeW8=?=
+ =?ISO-8859-2?B?dSB1bmRlcnN0YW5kIHRoZSBleGFtcGxlLg==?=
+</pre>
+
+<p>This CHARSETCONVERTERS resource can only be defined via the
+resource file.  Each line of the element specifies a character set,
+the Perl routine for filtering the character set, and the Perl source
+file containing the routine.
+</p>
+
+<p>Example:</p>
+<pre>
+<b>&lt;CharsetConverters&gt;</b>
+iso-8859-1:iso_8859'str2sgml:iso8859.pl
+<b>&lt;/CharsetConverters&gt;</b>
+</pre>
+
+<p>The first field is the character set specification.  The second field
+is the routine name (which should contain a package qualifier).
+The third field is the source file the routine is defined.  The
+source file is optional if the routine is known to be define in
+an already listed source file.
+</p>
+ 
+<dl>
+<dt><strong>NOTE</strong></dt>
+<dd><p>Package qualification must use Perl 4 syntax. The '::'
+qualification is not supported yet.
+</p>
+</dd>
+</dl>
+
+<p>There are some special character set specifications.  They are
+as follows:
+</p>
+ 
+<dl>
+ 
+<dt><em>plain</em></dt>
+<dd><p>This specifies text that is not explicitly encoded in a
+specific character set.
+</p>
+</dd>
+
+<dt><em>default</em></dt>
+<dd><p>This specifies the default routine to invoke for encoded
+data is no specific character specification exists for the data.
+</p>
+</dd>
+ 
+</dl>
+ 
+<p>There are some special character set converter routines
+values.  They are as follows:
+</p>
+ 
+<dl>
+ 
+<dt><em>-ignore-</em></dt>
+<dd><p>Leave the data "as-is".  I.e.  The MIME encoding will be
+preserved.
+</p>
+</dd>
+
+<dt><em>-decode-</em></dt>
+<dd><p>Just decode the data.  This is useful if it is known that
+the characters set is the native character set for the system.
+</p>
+ 
+<dl>
+<dt><strong>WARNING</strong></dt>
+<dd><p>If the decoded data contains the characters '&lt;', '&gt;',
+and '&amp', this may conflict with HTML markup.  See
+<a href="decodeheads.html">DECODEHEADS</a>
+where "-decode-" can be used.
+</p>
+</dd>
+</dl>
+
+</dd>
+
+</dl>
+
+<p>Each charset converter function is invoked as follows:
+</p>
+
+<pre>
+    $converted_data = &amp;function($data, $charset);
+</pre>
+ 
+<p>The data passed in will already be decoded from quoted-printable
+or base64 (as specified by the MIME syntax).  Therefore, the
+called routine will be passed the raw byte data.  It is important
+that the routine convert the data into a format suitable to be
+included in HTML markup.
+</p>
+
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Default Setting</h2>
+
+<pre>
+<b>&lt;CharsetConverters&gt;</b>
+plain:main'convert_line
+us-ascii:main'convert_line
+iso-8859-1:iso_8859'str2sgml:iso8859.pl
+iso-8859-2:iso_8859'str2sgml:iso8859.pl
+iso-8859-3:iso_8859'str2sgml:iso8859.pl
+iso-8859-4:iso_8859'str2sgml:iso8859.pl
+iso-8859-5:iso_8859'str2sgml:iso8859.pl
+iso-8859-6:iso_8859'str2sgml:iso8859.pl
+iso-8859-7:iso_8859'str2sgml:iso8859.pl
+iso-8859-8:iso_8859'str2sgml:iso8859.pl
+iso-8859-9:iso_8859'str2sgml:iso8859.pl
+iso-8859-10:iso_8859'str2sgml:iso8859.pl
+default:-ignore-
+<b>&lt;/CharsetConverters&gt;</b>
+</pre>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Resource Variables</h2>
+
+<p>N/A
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Examples</h2>
+
+<p>The following example specifies to just decode iso-8859-1
+character data since it is the default character set used by most
+browsers:
+</p>
+
+<pre>
+<b>&lt;CharsetConverters&gt;</b>
+iso-8859-1:-decode-
+<b>&lt;/CharsetConverters&gt;</b>
+</pre>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Version</h2>
+
+<p>2.0
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>See Also</h2>
+
+<p>
+<a href="decodeheads.html">DECODEHEADS</a>
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<address>
+97/05/13 17:29:08<br>
+<img align="top" src="../monicon.gif" alt="">
+<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"><strong>MHonArc</strong></a><br>
+Copyright &#169; 1997, <a href="http://www.oac.uci.edu/indiv/ehood/">Earl Hood</a>, <a href="mailto:ehood@medusa.acs.uci.edu">ehood@medusa.acs.uci.edu</a><br>
+</address>
+
+</body>
+</html>

@@ -13,7 +13,7 @@ NOTES
 The batch files are for your use if you are running MHonArc under
 MS-DOS.  Edit the paths in the files to reflect where you have
 installed MHonArc via the install.me program.  Then copy the batch
-files to a location in your executable searc path.
+files to a location in your executable search path.
 
 ---------------------------------------------------------------------------
-Earl Hood, ehood@convex.com
+Copyright (C) 1997,	Earl Hood, ehood@medusa.acs.uci.edu

@@ -1,0 +1,139 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
+<HTML>
+<HEAD>
+<TITLE>MHonArc Frequently Asked Questions</TITLE></HEAD>
+<BODY>
+
+<table border=0>
+<tr valign=center>
+<td><img src="monsmall_t.gif" alt=""></td>
+<td><h1>MHonArc Frequently Asked Questions</h1></td>
+</tr>
+</table>
+
+<P>This documents contains answers to some of the frequently
+asked question on MHonArc. MHonArc is
+a <A HREF="http://perl.com/perl/">Perl</A> program
+for converting e-mail messages as specified in RFC 822 and <A
+HREF="http://www.oac.uci.edu/indiv/ehood/MIME/MIME.html">MIME</a> to <A
+HREF="http://www.w3.org/hypertext/WWW/MarkUp/MarkUp.html">HTML</A>.
+MHonArc has the ability to maintain an archive of converted
+messages, or it can be used as a basic e-mail-&gt;HTML converter.  </P>
+
+<!-- ===================================================================== -->
+<hr>
+<H2><a name="toc">Table of Contents</a></H2>
+
+<!--X-TOC-Start-->
+<ul>
+<li><a name="aboutfaq" href="about.html">About the FAQ</a>
+<ul>
+<li><a name="summary" href="about.html#summary"> Summary</a></li>
+<li><a name="version" href="about.html#version"> Version</a></li>
+<li><a name="location" href="about.html#location"> Location</a></li>
+<li><a name="author" href="about.html#author"> Author</a></li>
+</ul>
+</ul>
+<ul>
+<li><a name="general" href="general.html">General</a>
+<ul>
+<li><a name="whatis" href="general.html#whatis"> What is MHonArc?</a></li>
+<li><a name="mhversion" href="general.html#mhversion"> What's the latest version of MhonArc?</a></li>
+<li><a name="get" href="general.html#get"> Where can I get MHonArc?</a></li>
+<li><a name="cost" href="general.html#cost"> How much does MHonArc cost?</a></li>
+<li><a name="help" href="general.html#help"> Where can I get help on MHonArc?</a></li>
+<li><a name="compare" href="general.html#compare"> How does MHonArc compare to other e-mail converters, like Hypermail?</a></li>
+<li><a name="studies" href="general.html#studies"> Are their "real-world" examples of MHonArc usage?</a></li>
+</ul>
+</ul>
+<ul>
+<li><a name="supenvs" href="envs.html">Supported Environments</a>
+<ul>
+<li><a name="platforms" href="envs.html#platforms"> What platforms can MHonArc run under?</a></li>
+<li><a name="mac" href="envs.html#mac"> What about Mac?</a></li>
+<li><a name="perl" href="envs.html#perl"> What version of Perl is required to run MHonArc?</a></li>
+<li><a name="muas" href="envs.html#muas"> What mail user agents (MUA's) does MHonarc support?</a></li>
+<li><a name="compuserve" href="envs.html#compuserve"> Can MHonArc process Compuserve messages?</a></li>
+<li><a name="nonenglish" href="envs.html#nonenglish"> Can MHonArc create non-English archives?</a></li>
+<li><a name="bilingual" href="envs.html#bilingual"> Can I create bilingual archives?</a></li>
+</ul>
+</ul>
+<ul>
+<li><a name="genusage" href="usage.html">General Usage</a>
+<ul>
+<li><a name="resources" href="usage.html#resources"> What are "resources"?</a></li>
+<li><a name="newgetopt" href="usage.html#newgetopt"> I get an error that "newgetopt.pl" cannot be required, where is it?</a></li>
+<li><a name="searching" href="usage.html#searching"> Does MHonArc provide searching of archives?</a></li>
+<li><a name="webui" href="usage.html#webui"> Is there a Web interface for MHonArc?</a></li>
+<li><a name="orgmsg" href="usage.html#orgmsg"> Does MHonArc require that the original message be available when updating an archive?</a></li>
+<li><a name="respecify" href="usage.html#respecify"> Do I have to respecify the resource file each time I update an archive?</a></li>
+<li><a name="sepfiles" href="usage.html#sepfiles"> Can I have MHonArc process a bunch of separate message files?</a></li>
+<li><a name="stdin" href="usage.html#stdin"> Can I tell MHonArc to read a mailbox from standard input?</a></li>
+</ul>
+</ul>
+<ul>
+<li><a name="archives" href="archives.html">Archives</a>
+<ul>
+<li><a name="split" href="archives.html#split"> Why does a message get split into mulitple messages with no headers?</a></li>
+<li><a name="move" href="archives.html#move"> Can I move a message from one archive to another?</a></li>
+<li><a name="reconstruct" href="archives.html#reconstruct"> Can I reconstruct a database from the HTML messages?  </a></li>
+<li><a name="dynamic" href="archives.html#dynamic"> Is it safe to add messages to an archive as they are received?</a></li>
+<li><a name="forward" href="archives.html#forward"> So it is safe.  How do I do it??</a></li>
+<li><a name="different" href="archives.html#different"> Can I get MHonArc to filter messages to different archives?</a></li>
+<li><a name="addsafe" href="archives.html#addsafe"> Is it safe to specify <tt>-add</tt> when no archive exists?</a></li>
+<li><a name="jumps" href="archives.html#jumps"> Why are there "jumps" in message numbers?</a></li>
+</ul>
+</ul>
+<ul>
+<li><a name="indexpages" href="indexpgs.html">Index Pages</a>
+<ul>
+<li><a name="idxtypes" href="indexpgs.html#idxtypes"> What are all the different index types?</a></li>
+<li><a name="additional" href="indexpgs.html#additional"> Can I have additional indexes beyond the default main and thread index?</a></li>
+<li><a name="multipage" href="indexpgs.html#multipage"> Can I have multi-page indexes?</a></li>
+<li><a name="authorsort" href="indexpgs.html#authorsort"> Can I sort messages by author?</a></li>
+</ul>
+</ul>
+<ul>
+<li><a name="messagepages" href="msgpgs.html">Message Pages</a>
+<ul>
+<li><a name="msgorder" href="msgpgs.html#msgorder"> Can I change the order the message resources are printed?</a></li>
+<li><a name="msghead" href="msgpgs.html#msghead"> How can I change how message headers gets formatted?</a></li>
+<li><a name="msgbody" href="msgpgs.html#msgbody"> How can I change how message body data gets formatted?</a></li>
+<li><a name="headnbody" href="msgpgs.html#headnbody"> Can I have the message header come after the body?</a></li>
+<li><a name="msgbody" href="msgpgs.html#msgbody"> Can I make changes to message formatting on existing archived messages?</a></li>
+<li><a name="msgcomms" href="msgpgs.html#msgcomms"> What are those "&lt;!--X-... -->"?</a></li>
+</ul>
+</ul>
+<ul>
+<li><a name="threading" href="threads.html">Threading</a>
+<ul>
+<li><a name="howthreads" href="threads.html#howthreads"> How does threading work?</a></li>
+<li><a name="whynotthreads" href="threads.html#whynotthreads"> Why isn't threading working for me?</a></li>
+<li><a name="refsinmua" href="threads.html#refsinmua"> How can I get my MUA to define the References or In-Reply-To field? </a></li>
+</ul>
+</ul>
+<ul>
+<li><a name="mime" href="mime.html">MIME</a>
+<ul>
+<li><a name="whatismime" href="mime.html#whatismime"> What is MIME?</a></li>
+<li><a name="nonascii" href="mime.html#nonascii"> Does MHonArc support message header extensions for non-ASCII text </a></li>
+<li><a name="howtorecog" href="mime.html#howtorecog"> How can I get MHonArc to recognize content-types it states it does not recognize?</a></li>
+<li><a name="overridedefs" href="mime.html#overridedefs"> Can I override the default filters in MHonArc</a></li>
+<li><a name="overridemulti" href="mime.html#overridemulti"> Can I override the multipart/* processing of MHonArc</a></li>
+</ul>
+</ul>
+<!--X-TOC-End-->
+
+<!-- ===================================================================== -->
+<HR>
+<address>
+97/05/15 16:48:07<br>
+<img align="top" src="monicon.gif" alt="">
+<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"
+><strong>MHonArc</strong></a><br>
+Copyright &#169; 1997, <a href="http://www.oac.uci.edu/indiv/ehood/"
+>Earl Hood</a>, <a href="mailto:ehood@medusa.acs.uci.edu"
+>ehood@medusa.acs.uci.edu</a><br>
+</address>
+</BODY>
+</HTML>

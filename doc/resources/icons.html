@@ -1,0 +1,162 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
+<html>
+<head>
+<title>MHonArc Resources: ICONS</title>
+</head>
+<body>
+
+<address>
+<a href="../resources.html#icons">MHonArc Resource List</a></br>
+</address>
+
+<hr>
+<h1>ICONS</h1>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Syntax</h2>
+
+<dl>
+
+<dt><strong>Envariable</strong><dt>
+<dd><p>N/A
+</p>
+</dd>
+
+<dt><strong>Element</strong><dt>
+<dd><p>
+<code>&lt;ICONS&gt;<br></code>
+<var>icon-specification</var><br>
+<var>icon-specification</var><br>
+<var>...</var><br>
+<code>&lt;/ICONS&gt;<br></code>
+</p>
+</dd>
+
+<dt><strong>Command-line Option</strong><dt>
+<dd><p>N/A
+</p>
+</dd>
+
+</dl>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Description</h2>
+
+<P>The ICONS resource is used to specify the icons that represent the
+different content-types of messages.
+</p>
+
+<p>The ICON resource can only be defined via the resource file element.
+The format of each line in the <CODE>ICONS</CODE> element is as
+follows:
+</p>
+
+<P><var>content-type</var><CODE>:</CODE><var>URL-for-icon</var> </P>
+
+<P><var>content-type</var> represents a MIME
+content-type. <var>URL-for-icon</var> is the URL to the icon. The
+special content-type called "<CODE>unknown</CODE>" may be defined
+to specify the icon to use for non-recognized content-types. If
+<CODE>unknown</CODE> is not defined, the text/plain icon is used for
+unknown content types.  </P>
+
+<P>In order to have icons appear in your pages, use the
+<strong><code>$ICON$</code></strong> resource variable.
+For example:
+</p>
+
+<PRE>
+<b>&lt;LiTemplate&gt;</b>
+$ICON$ &lt;strong&gt;$SUBJECT:40$&lt;/strong&gt;
+&lt;em&gt;$FROMNAME$&lt;/em&gt;&lt;br&gt;
+<b>&lt;/LiTemplate&gt;</b>
+</PRE>
+
+<P>The <CODE>$ICON$</CODE> variable expands to the <CODE>IMG</CODE>
+HTML element with the appropriate URL in the <CODE>SRC</CODE> attribute
+to the icon. The <CODE>ALT</CODE> attribute of the <CODE>IMG</CODE>
+element contains the content-type of the message, surrounded by
+<CODE>[]</CODE>'s, for use with text based browsers.  </P>
+
+<p>The <strong><code>$ICONURL$</code></strong> resource
+variable may be used if you want redefine the format of the
+<CODE>IMG</CODE> element.  For example:
+</p>
+
+<PRE>
+<b>&lt;LiTemplate&gt;</b>
+&lt;img src="$ICONURL$" alt="*"&gt;
+&lt;strong&gt;$SUBJECT:40$&lt;/strong&gt;
+&lt;em&gt;$FROMNAME$&lt;/em&gt;&lt;br&gt;
+<b>&lt;/LiTemplate&gt;</b>
+</PRE>
+
+<P>The example overrides what is normally used in the <CODE>ALT</CODE>
+attribute.  </p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Default Setting</h2>
+
+<p>Nil.
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Resource Variables</h2>
+
+<p>N/A</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Examples</h2>
+
+<PRE>
+<b>&lt;Icons&gt;</b>
+audio/basic:http://foo.org/gifs/gsound.gif
+image/gif:http://foo.org/gifs/gimage.gif
+image/jpeg:http://foo.org/gifs/gimage.gif
+image/tiff:http://foo.org/gifs/ggraphic.gif
+multipart/alternative:http://foo.org/gifs/gmulti.gif
+multipart/digest:http://foo.org/gifs/gtext.gif
+multipart/mixed:http://foo.org/gifs/gdoc2.gif
+multipart/parallel:http://foo.org/gifs/gdoc.gif
+text/richtext:http://foo.org/gifs/gdoc.gif
+text/html:http://foo.org/gifs/gdoc.gif
+text/plain:http://foo.org/gifs/gletter.gif
+unknown:http://foo.org/gifs/gunknown.gif
+video/mpeg:http://foo.org/gifs/gmovie.gif
+<b>&lt;/Icons&gt;</b>
+</PRE>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Version</h2>
+
+<p>1.0
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>See Also</h2>
+
+<p>
+<a href="litemplate.html">LITEMPLATE</a>,
+<a href="tlitxt.html">TLITXT</a>,
+<a href="tsingletxt.html">TSINGLETXT</a>,
+<a href="ttopbegin.html">TTOPBEGIN</a>
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<address>
+97/05/13 17:29:23<br>
+<img align="top" src="../monicon.gif" alt="">
+<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"><strong>MHonArc</strong></a><br>
+Copyright &#169; 1997, <a href="http://www.oac.uci.edu/indiv/ehood/">Earl Hood</a>, <a href="mailto:ehood@medusa.acs.uci.edu">ehood@medusa.acs.uci.edu</a><br>
+</address>
+
+</body>
+</html>

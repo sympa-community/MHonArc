@@ -1,0 +1,137 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
+<html>
+<head>
+<title>MHonArc Resources: FIELDSBEG</title>
+</head>
+<body>
+
+<address>
+<a href="../resources.html#fieldsbeg">MHonArc Resource List</a></br>
+</address>
+
+<hr>
+<h1>FIELDSBEG</h1>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Syntax</h2>
+
+<dl>
+
+<dt><strong>Envariable</strong><dt>
+<dd><p>N/A
+</p>
+</dd>
+
+<dt><strong>Element</strong><dt>
+<dd><p>
+<code>&lt;FIELDSBEG&gt;<br></code>
+<var>markup ... </var><br>
+<code>&lt;/FIELDSBEG&gt;<br></code>
+</p>
+</dd>
+
+<dt><strong>Command-line Option</strong><dt>
+<dd><p>N/A
+</p>
+</dd>
+
+</dl>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Description</h2>
+
+<p>FIELDSBEG represents the beginning markup of a message
+header.
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Default Setting</h2>
+
+<pre>
+<b>&lt;FieldsBeg&gt;</b>
+&lt;UL>
+<b>&lt;/FieldsBeg&gt;</b>
+</pre>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Resource Variables</h2>
+
+<p>N/A</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Examples</h2>
+
+<p>The following example shows how FIELDSBEG, with other
+message layout resources, be used to have message headers formatted
+using table markup:
+</p>
+
+<pre>
+<b>&lt;Fieldsbeg></b>
+&lt;table border=0>
+&lt;tbody>
+<b>&lt;/FieldsBeg></b>
+ 
+<b>&lt;<a href="labelbeg.html">LabelBeg</a>></b>
+&lt;tr>
+&lt;td align="right" valign="top">
+<b>&lt;/LabelBeg></b>
+ 
+<b>&lt;<a href="labelend.html">LabelEnd</a>></b>
+&lt;/td>
+<b>&lt;/LabelEnd></b>
+ 
+<b>&lt;<a href="fldbeg.html">FldBeg</a>></b>
+&lt;td align="left">
+<b>&lt;/FldBeg></b>
+ 
+<b>&lt;<a href="fldend.html">FldEnd</a>></b>
+&lt;/td>
+&lt;/tr>
+<b>&lt;/FldEnd></b>
+ 
+<b>&lt;<a href="fieldsend.html">FieldsEnd</a>></b>
+&lt;/tbody>
+&lt;/table>
+<b>&lt;/FieldsEnd></b>
+</pre>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Version</h2>
+
+<p>2.0
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>See Also</h2>
+
+<p>
+<a href="excs.html">EXCS</a>,
+<a href="fieldorder.html">FIELDORDER</a>,
+<a href="fieldsend.html">FIELDSEND</a>,
+<a href="fieldstyles.html">FIELDSTYLES</a>,
+<a href="fldbeg.html">FLDBEG</a>,
+<a href="fldend.html">FLDEND</a>,
+<a href="labelbeg.html">LABELBEG</a>,
+<a href="labelend.html">LABELEND</a>,
+<a href="labelstyles.html">LABELSTYLES</a>
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<address>
+97/05/13 17:29:16<br>
+<img align="top" src="../monicon.gif" alt="">
+<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"><strong>MHonArc</strong></a><br>
+Copyright &#169; 1997, <a href="http://www.oac.uci.edu/indiv/ehood/">Earl Hood</a>, <a href="mailto:ehood@medusa.acs.uci.edu">ehood@medusa.acs.uci.edu</a><br>
+</address>
+
+</body>
+</html>

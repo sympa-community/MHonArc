@@ -1,0 +1,186 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
+<HTML>
+<HEAD>
+<TITLE>MHonArc -- Page Layout
+</TITLE>
+</HEAD>
+<BODY>
+
+<!--X-NavButtons-Start-->
+<p align=center>
+[<a href="quickstart.html">Prev</a>][<a href="resources.html">Next</a>][<a href="mhonarc.html">TOC</a>][<a href="http://www.oac.uci.edu/indiv/ehood/MHonArc/faq/faq.html">FAQ</a>][<a href="bugs.html">Bugs</a>][<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html">Home</a>]
+</p>
+<!--X-NavButtons-End-->
+<HR>
+
+<!-- ******************************************************************** -->
+<H1><a name="pagelayout">Page Layout</a></H1>
+
+<p>The section describes the layout of the pages created by
+<em>MHonArc</em>.  Each page's layout is controlled by resources
+(see <a href="resources.html"><em>MHonArc</em> Resources</a>).
+To simplify the description of each type of page created
+by <em>MHonArc</em>, the following notation is used:
+</p>
+
+<dl>
+<dt><strong>(&#160;)</strong></dt>
+<dd>Parentheses denote a <em>group</em> of resources.
+</dd>
+<dt><strong>?</strong></dt>
+<dd>Denotes that preceding resource, or group, is
+optional.
+</dd>
+<dt><strong>*</strong></dt>
+<dd>Denotes that preceding resource, or group, can
+occur zero or more times.
+</dd>
+<dt><strong>+</strong></dt>
+<dd>Denotes that preceding resource, or group, can
+occur one or more times.
+</dd>
+</dl>
+
+<!-- ******************************************************************** -->
+<hr>
+<h2><a name="mainidxpg">Main Index Page</a></h2>
+
+<p>The main index is normally the default index of an
+archive.  The main index list messages by date,
+subject, author, or message number.
+Since date listing is the default, the
+main index is commonly referred to as the date index.
+</p>
+
+<h3>Main index page resource layout</h3>
+
+<pre>
+<a href="resources/idxpgbegin.html"><b>IDXPGBEGIN</b></a>
+    <a href="resources/header.html"><b>HEADER</b></a>
+	<a href="resources/listbegin.html"><b>LISTBEGIN</b></a>
+	<b>(</b><a href="resources/authorbegin.html"><b>AUTHORBEGIN</b></a> <b>|</b>
+	 <a href="resources/daybegin.html"><b>DAYBEGIN</b></a> <b>|</b>
+	 <a href="resources/subjectbegin.html"><b>SUBJECTBEGIN</b></a><b>)?</b>
+	<a href="resources/litemplate.html"><b>LITEMPLATE</b></a><b>+</b>
+	<b>(</b><a href="resources/authorend.html"><b>AUTHOREND</b></a> <b>|</b>
+	 <a href="resources/dayend.html"><b>DAYEND</b></a> <b>|</b>
+	 <a href="resources/subjectend.html"><b>SUBJECTEND</b></a><b>)?</b>
+         <a href="resources/listend.html"><b>LISTEND</b></a>
+    <a href="resources/footer.html"><b>FOOTER</b></a>
+    <a href="resources/doc.html"><b>DOC</b></a>
+<a href="resources/idxpgend.html"><b>IDXPGEND</b></a>
+</pre>
+
+<p>Main index pages also contain comment declarations.  Some of the
+comment declarations are vital markers to allow <em>MHonArc</em>
+to properly edit the index during archive updates.
+</p>
+
+<!-- ******************************************************************** -->
+<hr>
+<h2><a name="threadidxpg">Thread Index Page</a></h2>
+
+<p>The thread index list messages by thread.  Threads
+are based upon <em>In-Reply-To</em> and <em>References</em> fields of
+messages and by same <em>Subject</em>s.
+</p>
+
+<p>The layout of a thread index page is more complicated
+than other pages since threads are more
+complex than a regular date or subject listing.
+Also, <em>MHonArc</em> tries to provide the greatest
+flexibility for customizing thread listing layout.
+</p>
+
+<h3>Thread index page resource layout</h3>
+
+<pre>
+<a href="resources/tidxpgbegin.html"><b>TIDXPGBEGIN</b></a>
+    <a href="resources/thead.html"><b>THEAD</b></a>
+	<b>((</b><a href="resources/ttopbegin.html"><b>TTOPBEGIN</b></a>
+	    <a href="resources/tsublistbeg.html"><b>TSUBLISTBEG</b></a>
+		<b>((</b><a href="resources/tlitxt.html"><b>TLITXT</b></a>
+		    <font size="-1">[possible subthread listing]</font>
+		  <a href="resources/tliend.html"><b>TLIEND</b></a><b>)|</b>
+		<b>(</b><a href="resources/tlinone.html"><b>TLINONE</b></a>
+		    <font size="-1">[possible subthread listing]</font>
+		 <a href="resources/tlinoneend.html"><b>TLINONEEND</b></a><b>))+</b>
+	    <a href="resources/tsublistend.html"><b>TSUBLISTEND</b></a><b></b>
+	    <b>(</b><a href="resources/tsubjectbeg.html"><b>TSUBJECTBEG</b></a>
+		<b>((</b><a href="resources/tlitxt.html"><b>TLITXT</b></a>
+		    <font size="-1">[possible subthread listing]</font>
+		  <a href="resources/tliend.html"><b>TLIEND</b></a><b>)|</b>
+		<b>(</b><a href="resources/tlinone.html"><b>TLINONE</b></a>
+		    <font size="-1">[possible subthread listing]</font>
+		 <a href="resources/tlinoneend.html"><b>TLINONEEND</b></a><b>))+</b>
+	     <a href="resources/tsubjectend.html"><b>TSUBJECTEND</b></a><b>)?</b>
+	  <a href="resources/ttopend.html"><b>TTOPEND</b></a><b>)</b>
+	 <b>|</b>
+	 <a href="resources/tsingletxt.html"><b>TSINGLETXT</b></a><b>)*</b> <font size="-1">[message w/o references or follow-ups]</font>
+    <a href="resources/tfoot.html"><b>TFOOT</b></a>
+    <a href="resources/doc.html"><b>DOC</b></a>
+<a href="resources/tidxpgend.html"><b>TIDXPGEND</b></a>
+</pre>
+
+<p>If the previous is not confusing enough, there are four other resources
+for controlling the thread index page layout:
+<a href="resources/tcontbegin.html">TCONTBEGIN</a>,
+<a href="resources/tcontend.html">TCONTEND</a>,
+<a href="resources/tindentbegin.html">TINDENTBEGIN</a>,
+<a href="resources/tindentend.html">TINDENTEND</a>.
+If the <a href="resources/multipg.html">multiple page resource</a> is
+set, it is possible that a thread can span more than one page.  These
+resources are used to restart a thread that has been clipped due to
+a page boundary.
+</p>
+
+<!-- ******************************************************************** -->
+<hr>
+<h2><a name="msgpg">Message Page</a></h2>
+
+<p>The message page contains a single message converted
+to HTML and archive navigational links.
+</p>
+
+<h3>Message page resource layout</h3>
+
+<pre>
+<a href="resources/msgpgbegin.html"><b>MSGPGBEGIN</b></a>
+    <a href="resources/msghead.html"><b>MSGHEAD</b></a>
+    <a href="resources/toplinks.html"><b>TOPLINKS</b></a>
+    <a href="resources/subjectheader.html"><b>SUBJECTHEADER</b></a>
+    <i>Converted message header</i>
+    <a href="resources/headbodysep.html"><b>HEADBODYSEP</b></a>
+    <i>Converted message body</i>
+    <a href="resources/folrefs.html"><b>FOLREFS</b></a>
+    <a href="resources/botlinks.html"><b>BOTLINKS</b></a>
+    <a href="resources/msgfoot.html"><b>MSGFOOT</b></a>
+<a href="resources/msgpgend.html"><b>MSGPGEND</b></a>
+</pre>
+
+<p>Message pages also contain comment declarations.  Some of the
+comment declarations are vital markers to allow <em>MHonArc</em>
+to properly edit the message when needed during updates.
+</p>
+
+<hr>
+<!--X-NavButtons-Start-->
+<p align=center>
+[<a href="quickstart.html">Prev</a>][<a href="resources.html">Next</a>][<a href="mhonarc.html">TOC</a>][<a href="http://www.oac.uci.edu/indiv/ehood/MHonArc/faq/faq.html">FAQ</a>][<a href="bugs.html">Bugs</a>][<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html">Home</a>]
+</p>
+<!--X-NavButtons-End-->
+
+<!-- ******************************************************************** -->
+<HR>
+<address>
+97/05/15 17:14:33<br>
+<img align="top" src="monicon.gif" alt="">
+<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"
+><strong>MHonArc</strong></a><br>
+Copyright &#169; 1997, <a href="http://www.oac.uci.edu/indiv/ehood/"
+>Earl Hood</a>, <a href="mailto:ehood@medusa.acs.uci.edu"
+>ehood@medusa.acs.uci.edu</a><br>
+</address>
+
+</BODY>
+</HTML>

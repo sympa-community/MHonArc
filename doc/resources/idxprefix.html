@@ -1,0 +1,113 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
+<html>
+<head>
+<title>MHonArc Resources: IDXPREFIX</title>
+</head>
+<body>
+
+<address>
+<a href="../resources.html#idxprefix">MHonArc Resource List</a></br>
+</address>
+
+<hr>
+<h1>IDXPREFIX</h1>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Syntax</h2>
+
+<dl>
+
+<dt><strong>Envariable</strong><dt>
+<dd><p>
+<code>M2H_IDXPREFIX=</code><var>prefix</var>
+</p>
+</dd>
+
+<dt><strong>Element</strong><dt>
+<dd><p>
+<code>&lt;IDXPREFIX&gt;<br></code>
+<var>prefix</var><br>
+<code>&lt;/IDXPREFIX&gt;<br></code>
+</p>
+</dd>
+
+<dt><strong>Command-line Option</strong><dt>
+<dd><p>
+<code>-idxprefix </code><var>prefix</var>
+</p>
+</dd>
+
+</dl>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Description</h2>
+
+<p>IDXPREFIX defines the prefix for the filenames of a multi-page
+main index.  The filename of the first page of the main index is always equal
+to the value of the
+<a href="idxfname.html">IDXFNAME</a> resource.  All other pages have
+a filename starting with the IDXPREFIX value with the page number and
+"<tt>.html</tt>" following.  For example, the filenames for a 4 page
+main index would be the following:
+</p>
+<pre>
+    maillist.html
+    mail2.html
+    mail3.html
+    mail4.html
+</pre>
+<p>assuming the default values for the IDXFNAME and IDXPREFIX
+resources.
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Default Setting</h2>
+
+<pre>
+mail
+</pre>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Resource Variables</h2>
+
+<p>N/A</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Examples</h2>
+
+<p>None.
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Version</h2>
+
+<p>2.0
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>See Also</h2>
+
+<p>
+<a href="idxfname.html">IDXFNAME</a>,
+<a href="multipg.html">MULTIPG</a>,
+<a href="tidxprefix.html">TIDXPREFIX</a>
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<address>
+97/05/13 17:29:26<br>
+<img align="top" src="../monicon.gif" alt="">
+<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"><strong>MHonArc</strong></a><br>
+Copyright &#169; 1997, <a href="http://www.oac.uci.edu/indiv/ehood/">Earl Hood</a>, <a href="mailto:ehood@medusa.acs.uci.edu">ehood@medusa.acs.uci.edu</a><br>
+</address>
+
+</body>
+</html>

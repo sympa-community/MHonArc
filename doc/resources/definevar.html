@@ -1,0 +1,142 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
+<html>
+<head>
+<title>MHonArc Resources: DEFINEVAR</title>
+</head>
+<body>
+
+<address>
+<a href="../resources.html#definevar">MHonArc Resource List</a></br>
+</address>
+
+<hr>
+<h1>DEFINEVAR</h1>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Syntax</h2>
+
+<dl>
+
+<dt><strong>Envariable</strong><dt>
+<dd><p>N/A
+</p>
+</dd>
+
+<dt><strong>Element</strong><dt>
+<dd><p>
+<code>&lt;DEFINEVAR&gt;<br></code>
+<var>variable-name</var><br>
+<var>value ...</var><br>
+<code>&lt;/DEFINEVAR&gt;<br></code>
+</p>
+</dd>
+
+<dt><strong>Command-line Option</strong><dt>
+<dd><p>
+<code>-definevars </code><var>variable-specification-list</var>
+</p>
+</dd>
+
+</dl>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Description</h2>
+
+<p>DEFINEVAR is used for creating user-defined resource variables.
+DEFINEVAR can be defined on the command-line or in the resource file.
+</p>
+
+<p>On the command-line, the option is called <code>-definevars</code>
+(note the 's').  The following argument after <code>-definevars</code>
+is treated as a variable specification list.  The specification list
+is a string containing name/value pairs with the following format: </p>
+
+<p><var>NAME</var><code>=</code><var>VALUE</var></p>
+
+<p>If <var>VALUE</var> contains whitespace, then it must be surrounded
+by single or double quotes.  Use single quotes if the <var>VALUE</var>
+contained double quotes.  Use double quotes if the <var>VALUE</var>
+contains single quotes.  Multiple name/value pairs are separated
+by whitespace.
+</p>
+
+<p>In a resource file the <DEFINEVAR> element may occur mutliple times
+to define multiple variables.  The first line of the &lt;DEFINEVAR&gt;
+element is the name of the variables.  All subsequent lines represent
+the content of the variable.  </p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Default Setting</h2>
+
+<p>N/A
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Resource Variables</h2>
+
+<p>Variables that are applicable to where user-defined
+variable is referenced.
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Examples</h2>
+
+<p>The following is a simple example of defining a variable to
+represent the base text for the title of an archive:
+</p>
+ 
+<pre>
+<b>&lt;DefineVar chop&gt;</b>
+MAIN-TITLE
+Comp.lang.perl.misc 
+<b>&lt;/DefineVar&gt;</b>
+</pre>
+
+<p>Now, the variable can be refernced as follows:
+</p>
+
+<pre>
+<b>&lt;<a href="ttitle.html">TTitle</a> chop&gt;</b>
+$MAIN-TITLE$ (thread)
+<b>&lt;/TTitle&gt;</b>
+</pre>
+
+<p>If you wanted to use the same resource file for multiple arcvhives
+it may better to define <code>$MAIN-TITLE$</code> on the command-line
+as follows:
+</p>
+
+<pre>
+    % <b>mhonarc -definevars "MAIN-TITLE='mhonarc mailing list'"</b> ...
+</pre>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Version</h2>
+
+<p>2.0
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>See Also</h2>
+
+<p>
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<address>
+97/05/13 17:29:11<br>
+<img align="top" src="../monicon.gif" alt="">
+<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"><strong>MHonArc</strong></a><br>
+Copyright &#169; 1997, <a href="http://www.oac.uci.edu/indiv/ehood/">Earl Hood</a>, <a href="mailto:ehood@medusa.acs.uci.edu">ehood@medusa.acs.uci.edu</a><br>
+</address>
+
+</body>
+</html>

@@ -1,159 +1,85 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
 <HTML>
 <HEAD>
-<TITLE>MHonArc v1.2.2</TITLE>
-
+<TITLE>MHonArc v2.0</TITLE>
 </HEAD>
-<BODY><h1 align="center"><img src="stamp_t.gif"><br>
+<BODY>
+<hr>
+<h1 align="center"><img src="monstamp_t.gif" alt="[Cool Logo Here]"><br>
 <br>
 MHonArc</h1>
 <p align="center">
-An Internet mail-to-HTML converter.
+An Email-to-HTML converter.
 </p>
+
 <hr>
 <h2>Table of Contents</h2>
 
-<UL>
-<LI><A HREF="intro.html#35018">Introduction</A>
-<UL>
-<LI><A HREF="intro.html#MMM0">Why Use MHonArc?</A>
-<LI><A HREF="intro.html#MMM1">Supported Platforms</A>
-<LI><A HREF="intro.html#MMM2">Availability</A>
-<LI><A HREF="intro.html#MMM3">About the Documentation</A>
-</UL>
-</UL>
-<UL>
-<LI><A HREF="install.html#18081">Installation</A>
-<UL>
-<LI><A HREF="install.html#MMM0">System Requirements</A>
-<LI><A HREF="install.html#MMM1">Extracting the Distribution File</A>
-<LI><A HREF="install.html#MMM2">Installing the Software</A>
-<LI><A HREF="install.html#MMM3">Tested Environments</A>
-</UL>
-</UL>
-<UL>
-<LI><A HREF="qstart.html#21278">Quick Start</A>
-<UL>
-<LI><A HREF="qstart.html#MMM0">Converting MH mail folders or Mailbox files</A>
-<LI><A HREF="qstart.html#MMM1">Adding Messages to an Archive</A>
-<LI><A HREF="qstart.html#MMM2">Converting a single message</A>
-</UL>
-</UL>
-<UL>
-<LI><A HREF="overview.html#23618">Overview</A>
-<UL>
-<LI><A HREF="overview.html#MMM0">Synopsis</A>
-<LI><A HREF="overview.html#40331">Options</A>
-<LI><A HREF="overview.html#42234">Environment</A>
-</UL>
-</UL>
-<UL>
-<LI><A HREF="rcfile.html#21846">Resource File</A>
-<UL>
-<LI><A HREF="rcfile.html#MMM0">Resource Syntax</A>
-<LI><A HREF="rcfile.html#28308">Resource Elements</A>
-<LI><A HREF="rcfile.html#34544">Example Resource File</A>
-<LI><A HREF="rcfile.html#MMM1">Notes on Resource File</A>
-</UL>
-</UL>
-<UL>
-<LI><A HREF="adding.html#31694">Adding Messages</A>
-<UL>
-<LI><A HREF="adding.html#MMM0">Examples</A>
-</UL>
-</UL>
-<UL>
-<LI><A HREF="removing.html#22943">Removing Messages</A>
-<UL>
-<LI><A HREF="removing.html#MMM0">Message Numbers</A>
-<LI><A HREF="removing.html#MMM1">Scanning an Archive</A>
-</UL>
-</UL>
-<UL>
-<LI><A HREF="indexpg.html#30032">Index Page Customization</A>
-<UL>
-<LI><A HREF="indexpg.html#MMM0">Filename</A>
-<LI><A HREF="indexpg.html#12832">Beginning Markup</A>
-<LI><A HREF="indexpg.html#MMM1">End Markup</A>
-<LI><A HREF="indexpg.html#39385">Include Files</A>
-<LI><A HREF="indexpg.html#18820">Listing Layout</A>
-<LI><A HREF="indexpg.html#20837">Icons</A>
-<LI><A HREF="indexpg.html#MMM2">Examples</A>
-</UL>
-</UL>
-<UL>
-<LI><A HREF="thread.html#35869">Thread Index Customization</A>
-<UL>
-<LI><A HREF="thread.html#MMM0">Filename</A>
-<LI><A HREF="thread.html#22356">Beginning Markup</A>
-<LI><A HREF="thread.html#MMM1">End Markup</A>
-<LI><A HREF="thread.html#17901">Listing Layout</A>
-</UL>
-</UL>
-<UL>
-<LI><A HREF="message.html#37242">Message Customization</A>
-<UL>
-<LI><A HREF="message.html#13652">Beginning Markup</A>
-<LI><A HREF="message.html#MMM0">End Markup</A>
-<LI><A HREF="message.html#20883">Header and Footer</A>
-<LI><A HREF="message.html#10204">Navigational Links</A>
-<LI><A HREF="message.html#MMM1">Message Layout</A>
-<LI><A HREF="message.html#MMM2">Other Resources</A>
-</UL>
-</UL>
-<UL>
-<LI><A HREF="mime.html#23201">MIME</A>
-<UL>
-<LI><A HREF="mime.html#20677">Default Filters</A>
-<LI><A HREF="mime.html#MMM0">Non-MIME Messages</A>
-<LI><A HREF="mime.html#24464">Writing Filters</A>
-<LI><A HREF="mime.html#19421">Specifying Filters</A>
-</UL>
-</UL>
-<UL>
-<LI><A HREF="details.html#20814">Gory Details</A>
-<UL>
-<LI><A HREF="details.html#MMM0">OS Detection</A>
-<LI><A HREF="details.html#MMM1">Processing Steps</A>
-<LI><A HREF="details.html#13308">Archive Integrity</A>
-<LI><A HREF="details.html#MMM2">File Formats</A>
-<LI><A HREF="details.html#MMM3">Notes</A>
-</UL>
-</UL>
-<UL>
-<LI><A HREF="diagnos.html#30719">Diagnostics</A>
-<UL>
-<LI><A HREF="diagnos.html#MMM0">Informative messages</A>
-<LI><A HREF="diagnos.html#MMM1">Warnings</A>
-<LI><A HREF="diagnos.html#MMM2">Errors</A>
-<LI><A HREF="diagnos.html#MMM3">Perl Messages</A>
-</UL>
-</UL>
-<UL>
-<LI><A HREF="glossary.html#20432">Glossary</A>
-</UL>
-<UL>
-<LI><A HREF="contacts.html#23223">Contacts</A>
-<UL>
-<LI><A HREF="contacts.html#MMM0">Mailing List</A>
-<LI><A HREF="contacts.html#MMM1">People</A>
-</UL>
-</UL>
+<!--X-TOC-Start-->
+<ul>
+<li><a name="intro" href="intro.html">Introduction</a>
+<ul>
+<li><a name="whyuse" href="intro.html#whyuse">Why Use MHonArc?</a></li>
+<li><a name="platforms" href="intro.html#platforms">Supported Platforms</a></li>
+<li><a name="availability" href="intro.html#availability">Availability</a></li>
+</ul>
+</ul>
+<ul>
+<li><a name="quickstart" href="quickstart.html">Quick Start</a>
+<ul>
+<li><a name="folders" href="quickstart.html#folders">Converting MH mail folders or Mailbox files</a></li>
+<li><a name="adding" href="quickstart.html#adding">Adding Messages to an Archive</a></li>
+<li><a name="single" href="quickstart.html#single">Converting a single message</a></li>
+</ul>
+</ul>
+<ul>
+<li><a name="pagelayout" href="layout.html">Page Layout</a>
+<ul>
+<li><a name="mainidxpg" href="layout.html#mainidxpg">Main Index Page</a></li>
+<li><a name="threadidxpg" href="layout.html#threadidxpg">Thread Index Page</a></li>
+<li><a name="msgpg" href="layout.html#msgpg">Message Page</a></li>
+</ul>
+</ul>
+<ul>
+<li><a name="resources" href="resources.html">Resources</a>
+<ul>
+<li><a name="types" href="resources.html#types">Resource Types</a></li>
+<li><a name="index" href="resources.html#index">Resource Index</a></li>
+</ul>
+</ul>
+<ul>
+<li><a name="diagnostics" href="diagnos.html">Diagnostics</a>
+<ul>
+<li><a name="infomsgs" href="diagnos.html#infomsgs">Informative messages</a></li>
+<li><a name="warnings" href="diagnos.html#warnings">Warnings</a></li>
+<li><a name="errors" href="diagnos.html#errors">Errors</a></li>
+<li><a name="perlmsgs" href="diagnos.html#perlmsgs">Perl Messages</a></li>
+</ul>
+</ul>
+<ul>
+<li><a name="bugs" href="bugs.html">Bugs</a>
+<ul>
+<li><a name="buglist" href="bugs.html#buglist">Bug List</a></li>
+</ul>
+</ul>
+<ul>
+<li><a name="contacts" href="contacts.html">Contacts</a>
+<ul>
+<li><a name="mailinglist" href="contacts.html#mailinglist">Mailing List</a></li>
+<li><a name="people" href="contacts.html#people">People</a></li>
+</ul>
+</ul>
+<!--X-TOC-End-->
+
 <hr>
 <address>
-<a href="http://www.oac.uci.edu/indiv/ehood/">Earl Hood</a>
-&lt;<a href="mailto:ehood@isogen.com">ehood@isogen.com</a>&gt;<br>
-<a href="http://www.isogen.com/">Isogen International Corp</a><br>
-2200 North Lamar #230<br>
-Dallas, TX  75202<br>
-<br>
-Phone: (214) 953-004 x127<br>
-FAX: (214) 953-3152<br>
-</address>
-<hr>
-<address>
-Document converted from Frame by
-<a href="http://www.oac.uci.edu/indiv/ehood/mifmucker.doc.html"
->MifMucker</a>
+97/05/15 16:49:00<br>
+<img align="top" src="monicon.gif" alt="">
+<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"
+><strong>MHonArc</strong></a><br>
+Copyright &#169; 1997, <a href="http://www.oac.uci.edu/indiv/ehood/"
+>Earl Hood</a>, <a href="mailto:ehood@medusa.acs.uci.edu"
+>ehood@medusa.acs.uci.edu</a><br>
 </address>
 
 </BODY>

@@ -1,10 +1,8 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##      mhtxthtml.pl
+##	@(#)  mhtxthtml.pl 1.1 96/09/17 @(#)
 ##  Author:
-##      Earl Hood       ehood@isogen.com
-##  Date:
-##	Fri Jan 19 16:12:01 CST 1996
+##      Earl Hood       ehood@medusa.acs.uci.edu
 ##  Description:
 ##	Library defines routine to filter text/html body parts
 ##	for MHonArc.
@@ -14,7 +12,7 @@
 ##		</MIMEFILTERS>
 ##---------------------------------------------------------------------------##
 ##    MHonArc -- Internet mail-to-HTML converter
-##    Copyright (C) 1995	Earl Hood, ehood@isogen.com
+##    Copyright (C) 1995	Earl Hood, ehood@medusa.acs.uci.edu
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by

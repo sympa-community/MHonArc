@@ -1,0 +1,129 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
+<html>
+<head>
+<title>MHonArc Resources: MIMEARGS</title>
+</head>
+<body>
+
+<address>
+<a href="../resources.html#mimeargs">MHonArc Resource List</a></br>
+</address>
+
+<hr>
+<h1>MIMEARGS</h1>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Syntax</h2>
+
+<dl>
+
+<dt><strong>Envariable</strong><dt>
+<dd><p>N/A
+</p>
+</dd>
+
+<dt><strong>Element</strong><dt>
+<dd><p>
+<code>&lt;MIMEARGS&gt;<br></code>
+<var>content-type</var><code>:</code><var>argument-string</var><br>
+<var>...</var><br>
+<code>&lt;/MIMEARGS&gt;<br></code>
+</p>
+</dd>
+
+<dt><strong>Command-line Option</strong><dt>
+<dd><p>N/A
+</p>
+</dd>
+
+</dl>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Description</h2>
+
+<P>The MIMEARGS resource may be used to pass optional
+arguments to MIME filters to control their behavior. Arguments may
+be defined on a per content-type basis, or for a specific filter
+itself.  The MIMEARGS resource can only be set via the
+<CODE>MIMEARGS</CODE> element.
+The syntax for each line of the the <CODE>MIMEARGS</CODE>
+element is as follows: </P>
+
+<P><var>content-type</var><CODE>:</CODE><var>argument-string</var> 
+</P>
+
+<P>Or,
+</P>
+
+<P><var>filter-name</var><CODE>:</CODE><var>argument-string</var> 
+</P>
+
+<P>The format of argument strings is dependent on the filter that
+processes <var>content-type</var> or by the specified filter,
+<var>filter-name</var>.  </P>
+
+<P>If an argument string is defined for a filter explicitly and for a
+content-type that the filter processes, the content-type string will
+override the filter string.  </P>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Default Setting</h2>
+
+<PRE>
+<b>&lt;MIMEArgs&gt;</b>
+image/gif:inline
+image/jpeg:inline
+image/x-xbitmap:inline
+image/x-xbm:inline
+<b>&lt;/MIMEArgs&gt;</b>
+</PRE>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Resource Variables</h2>
+
+<p>N/A</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Examples</h2>
+
+<p>The following tells the text/plain filter to italicize quoted text
+in a followup.
+</p>
+
+<PRE>
+<b>&lt;MIMEArgs&gt;</b>
+text/plain:quote
+<b>&lt;/MIMEArgs&gt;</b>
+</PRE>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Version</h2>
+
+<p>1.2
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>See Also</h2>
+
+<p>
+<a href="mimefilters.html">MIMEFILTERS</a>
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<address>
+97/05/13 17:29:36<br>
+<img align="top" src="../monicon.gif" alt="">
+<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"><strong>MHonArc</strong></a><br>
+Copyright &#169; 1997, <a href="http://www.oac.uci.edu/indiv/ehood/">Earl Hood</a>, <a href="mailto:ehood@medusa.acs.uci.edu">ehood@medusa.acs.uci.edu</a><br>
+</address>
+
+</body>
+</html>

@@ -1,0 +1,139 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
+<html>
+<head>
+<title>MHonArc Resources: EXCS</title>
+</head>
+<body>
+
+<address>
+<a href="../resources.html#excs">MHonArc Resource List</a></br>
+</address>
+
+<hr>
+<h1>EXCS</h1>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Syntax</h2>
+
+<dl>
+
+<dt><strong>Envariable</strong><dt>
+<dd><p>N/A
+</p>
+</dd>
+
+<dt><strong>Element</strong><dt>
+<dd><p>
+<code>&lt;EXCS&gt;<br></code>
+<var>field-name</var><br>
+<var>field-name</var><br>
+<var>...</var><br>
+<code>&lt;/EXCS&gt;<br></code>
+</p>
+</dd>
+
+<dt><strong>Command-line Option</strong><dt>
+<dd><p>N/A
+</p>
+</dd>
+
+</dl>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Description</h2>
+
+<P>The EXCS resource allows you to specify what fields should be
+excluded in the HTML output.  </P>
+
+<P>Each line of the &lt;EXCS&gt; element specifies a mail header
+field to exclude in the converted HTML output. Each line is treated
+as a Perl regular expression (<STRONG>NOTE</STRONG>: <EM>the regular
+expression is already anchored to the begining of the line</EM>).  </P>
+
+<P>Any fields you specify for the EXCS resource will
+augment the default list, unless the "<CODE>Override</CODE>" attribute
+is specified. If "<CODE>Override</CODE>" is specified, the default
+list is discarded along with any other lists specified from previous
+&lt;EXCS&gt; elements; and only header fields specified in the
+&lt;EXCS&gt; element are excluded.  </P>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Default Setting</h2>
+
+<PRE>
+<b>&lt;Excs&gt;</b>
+content-
+errors-to
+forward
+lines
+message-id
+mime-
+nntp-
+originator
+path
+precedence
+received
+replied
+return-path
+status
+via
+x-
+<b>&lt;/Excs&gt;</b>
+</PRE>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Resource Variables</h2>
+
+<p>N/A</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Examples</h2>
+
+<p>The following example shows how to exclude all message headers:
+</p>
+
+<PRE>
+<b>&lt;Excs Override&gt;</b>
+.*
+<b>&lt;/Excs&gt;</b>
+</PRE>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Version</h2>
+
+<p>1.0
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>See Also</h2>
+
+<p>
+<a href="fieldorder.html">FIELDORDER</a>,
+<a href="fieldsbeg.html">FIELDSBEG</a>,
+<a href="fieldsend.html">FIELDSEND</a>,
+<a href="fieldstyles.html">FIELDSTYLES</a>,
+<a href="fldbeg.html">FLDBEG</a>,
+<a href="fldend.html">FLDEND</a>,
+<a href="labelbeg.html">LABELBEG</a>,
+<a href="labelend.html">LABELEND</a>,
+<a href="labelstyles.html">LABELSTYLES</a>
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<address>
+97/05/13 17:29:14<br>
+<img align="top" src="../monicon.gif" alt="">
+<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"><strong>MHonArc</strong></a><br>
+Copyright &#169; 1997, <a href="http://www.oac.uci.edu/indiv/ehood/">Earl Hood</a>, <a href="mailto:ehood@medusa.acs.uci.edu">ehood@medusa.acs.uci.edu</a><br>
+</address>
+
+</body>
+</html>

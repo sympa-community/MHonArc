@@ -1,0 +1,216 @@
+	BUGS 97/05/22 18:54:46
+	Bug History for MHonArc
+
+Each bug listing has the following fields:
+
+    Version: 	    Lists the version of MHonArc that the bug was
+		    reported against.
+    Problem:	    A description of the bug.
+    Solution:	    A description of what was done to fix the bug.
+    Version Fixed:  The version that the solution exists in, if
+		    applicable.
+
+
+Bug List
+------------------------------------------------------------------------
+Version:	2.0.0
+Problem:   	Bogus empty entry shows up in the database.  Bogus
+		entry appears if a duplicate message is detected.
+		Potential visible problems of bogus entry are: mailto
+		links in headers corrupted; a blank listing in the
+		index.  Maybe other potential problems.
+Solution:  	There is a be a bug in some versions of Perl where a
+		hash key gets added invalidly.  The section of code that
+		this occurs has been modified to avoid the problem.
+		For existing databases with a bogus empty entry,
+		MHonArc now removes any empty key entries.
+		However, it is recommed to rebuild the archive.
+Version Fixed:	2.0.1
+------------------------------------------------------------------------
+Version:	2.0.0
+Problem:   	Index pages are not properly updated if zero messages
+		are in the archive (like through the -rmm option).
+		Even -editidx cannot cause a proper update.
+Solution:  	Page count was set to zero when no messages exist.  This
+		caused problems in conditional checks in the write index
+		routines.  To fix, page count is forced to 1 if their
+		are no messages.
+Version Fixed:	2.0.1
+------------------------------------------------------------------------
+Version:	2.0.0 beta 3
+Problem:   	Index pages with last page links are not updated
+		when a new page is added.
+Solution:  	All index pages are regenerated if a new page
+		is added.
+Version Fixed:	2.0.0
+------------------------------------------------------------------------
+Version:	2.0.0 beta 3
+Problem:   	"-idxsize 0" does not give unlimited page size.
+Solution:  	Problem fixed and now works as documented.
+Version Fixed:	2.0.0
+------------------------------------------------------------------------
+Version:	2.0.0 beta 3
+Problem:   	"-maxsize 0" does not reset archive with
+		unlimited messages allowed.
+Solution:  	Problem fixed and now works as documented.
+Version Fixed:  2.0.0
+------------------------------------------------------------------------
+Version:	2.0.0 beta 3
+Problem:   	Non-ASCII text encodings (=?ISO-..?...) are not
+		properly decoded when EDITIDX is set.
+Solution:  	The charset filter libraries are now loaded
+		for EDITIDX.
+Version Fixed:  2.0.0
+------------------------------------------------------------------------
+Version:	2.0.0 beta 3
+Problem:   	MODTIME resource setting not remembered across
+		archive updates.
+Solution:  	MODTIME resource is now properly stored in the
+		database.
+Version Fixed:  2.0.0
+------------------------------------------------------------------------
+Version:	2.0.0 beta 3
+Problem:   	Specifying -rmm and -single caused confusion on
+		what MHonArc does.
+Solution:  	The case is properly handled, with -rmm taking
+		precedence.
+Version Fixed:  2.0.0
+------------------------------------------------------------------------
+Version:	2.0.0 beta 3
+Problem:	4 digit year not checked before 2 digit year
+		when parsing dates.
+Solution:	Fixed.
+Version Fixed:  2.0.0
+------------------------------------------------------------------------
+Version:	2.0.0 beta 3
+Problem:	Some index pages in multipage indexes not
+		updated when messages expire.
+Solution:	Fixed; all pages are regenerated when a message
+		expires.
+Version Fixed:  2.0.0
+------------------------------------------------------------------------
+Version:	2.0.0 beta 3
+Problem:	Setting MONTHS and MONTHSABR had no effect.
+Solution:	Fixed.
+Version Fixed:  2.0.0
+------------------------------------------------------------------------
+Version:	2.0.0 beta 3
+Problem:	$TNEXTFROM$ actually gave the value of $NEXTFROM$.
+Solution:	Fixed.
+Version Fixed:  2.0.0
+------------------------------------------------------------------------
+Version:	2.0.0 beta 3
+Problem:	Numerical timezone offsets not handled properly
+		when the offset contained non-zero minutes.  This
+		caused message to be sorted wrong by date.
+Solution:	Fixed.
+Version Fixed:  2.0.0
+------------------------------------------------------------------------
+Version:	2.0.0 beta 3
+Problem:	Some characters were not properly escaped when
+		specifying the "in URL" modifier to a resource
+		variable.
+Solution:	Fixed.
+Version Fixed:  2.0.0
+------------------------------------------------------------------------
+Version:	2.0.0 beta 3
+Problem:	Thread (formatting) information lost when a
+		thread is split across multiple pages.
+Solution:	Fixed.  New resources (TCONTBEGIN, TCONTEND,
+		TINDENTBEGIN, TINDENTEND) exist to preserve
+		formatting of threads across pages.
+Version Fixed:  2.0.0
+------------------------------------------------------------------------
+Version:	2.0.0 beta 3
+Problem:	If specifying the REVERSE resource, the next/prev
+		links in messages do not point to the proper
+		message as one may expect.
+Solution:	This should be fixed by the new behavior of
+		$NEXT...$ and $PREV...$ resource variables.
+Version Fixed:  2.0.0
+------------------------------------------------------------------------
+Version:	2.0.0 beta 2
+Problem:	Perl aborts with message "Undefined subroutine
+		&main::output_db called ..." when the GENIDX resource
+		is set.
+Solution:	Fixed.  The output_db function is not applicable when
+		GENIDX is active.
+Version Fixed:  2.0.0 beta 3
+------------------------------------------------------------------------
+Version:	2.0.0 beta 2
+Problem:	Duplicate resource filenames are not removed from the
+		OTHERINDEXES resource.  This caused duplicate work
+		to be performed.
+Solution:	Fixed.  Any duplicate filenames are removed before
+		applying the OTHERINDEXES resource.
+Version Fixed:	2.0.0 beta 3
+------------------------------------------------------------------------
+Version:	2.0.0 beta 2
+Problem:	Indexes created via the OTHERINDEXES resource contain
+		no messages.
+Solution:	Fixed.
+Version Fixed:	2.0.0 beta 3
+------------------------------------------------------------------------
+Version:	2.0.0 beta 2
+Problem:	The markup defined by TSUBLISTEND may appear when there
+		is no corresponding TSUBLISTBEG.
+Solution:	Fixed.
+Version Fixed:	2.0.0 beta 3
+------------------------------------------------------------------------
+Version:	2.0.0 beta 1
+Problem:	A multipart boundary specified with a capital boundary
+		parameter, and not in quotes, was not recognized.
+Solution:	Fixed
+Version Fixed:	2.0.0 beta 2
+------------------------------------------------------------------------
+Version:	1.2.3
+Problem:	Generation of links of message-ids when editting
+		messages w/o consideration that the message-ids
+		may already be linked.  This caused nested anchor
+		markup.
+Solution:	Fixed.  Only new message-ids are checked for.
+Version Fixed:	2.0.0 beta 1
+------------------------------------------------------------------------
+Version:	1.2.2
+Problem:	The ';' character may appear in derived files if the
+		"usename" option is set for the mhexternal.pl filter.
+Solution:	Fixed.
+Version Fixed:	1.2.3
+------------------------------------------------------------------------
+Version:	1.2.2
+Problem:	The '/' character is not properly recognized in e-mail
+		addresses when e-mail addressess are being converted
+		to mailto links in message headers.
+Solution:	Fixed.
+Version Fixed:	1.2.3
+------------------------------------------------------------------------
+Version:	1.2.2
+Problem:	Database read failures occur in add operations on
+		MS-DOS systems.
+Solution:	Fixed (?)
+Version Fixed:	1.2.3
+------------------------------------------------------------------------
+Version:	1.2.1
+Problem:	The TIDXPGEND resource actually sets the value of the
+		TIDXPGBEG resource.
+Solution:	Fixed.
+Version Fixed:	1.2.2
+------------------------------------------------------------------------
+Version:	1.2.0
+Problem:	MHonArc will abort execution under MS-DOS due to
+		regular expression error.
+Solution:	Fixed.
+Version Fixed:	1.2.1
+------------------------------------------------------------------------
+Version:	1.2.0
+Problem:	install.me will abort execution under MS-DOS due to
+		regular expression error.
+Solution:	Fixed.
+Version Fixed:	1.2.1
+------------------------------------------------------------------------
+Version:	1.2.0
+Problem:	A reverse index listing is incorrect if the index size
+		is less than the archive size.
+Solution:	Fixed.
+Version Fixed:	1.2.1
+------------------------------------------------------------------------

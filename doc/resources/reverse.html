@@ -1,0 +1,112 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
+<html>
+<head>
+<title>MHonArc Resources: REVERSE</title>
+</head>
+<body>
+
+<address>
+<a href="../resources.html#reverse">MHonArc Resource List</a></br>
+</address>
+
+<hr>
+<h1>REVERSE</h1>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Syntax</h2>
+
+<dl>
+
+<dt><strong>Envariable</strong><dt>
+<dd><p>
+<code>M2H_REVERSE=</code>[ <code>0</code> | <code>1</code> ]
+</p>
+</dd>
+
+<dt><strong>Element(s)</strong><dt>
+<dd><p>
+<code>
+&lt;REVERSE&gt;<br>
+&lt;NOREVERSE&gt;<br>
+</code>
+</p>
+</dd>
+
+<dt><strong>Command-line Option(s)</strong><dt>
+<dd><p>
+<code>-reverse<br>
+-noreverse
+</code>
+</p>
+</dd>
+
+</dl>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Description</h2>
+
+<p>If the REVERSE resource on, message groups in the main index will be
+listed in the reverse chronological
+order of the sort option specified.  For example,
+if date sorting is specified (see
+<a href="sort.html">SORT</a>), then the messages will be listed
+in reverse chronological order.  If <a href="subsort.html">SUBSORT</a>
+is active, each subject group will have the most recent message
+first and oldest last.
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Default Setting</h2>
+
+<p>Off.
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Resource Variables</h2>
+
+<p>N/A</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Examples</h2>
+
+<p>The following example shows how to get the most recent messages
+to be listed first in the main index:
+</p>
+
+<pre>
+    % <b>mhonarc -sort -reverse</b> ...
+</pre>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Version</h2>
+
+<p>1.0
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>See Also</h2>
+
+<p>
+<a href="authsort.html">AUTHSORT</a>,
+<a href="sort.html">SORT</a>,
+<a href="subsort.html">SUBSORT</a>
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<address>
+97/05/13 17:30:00<br>
+<img align="top" src="../monicon.gif" alt="">
+<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"><strong>MHonArc</strong></a><br>
+Copyright &#169; 1997, <a href="http://www.oac.uci.edu/indiv/ehood/">Earl Hood</a>, <a href="mailto:ehood@medusa.acs.uci.edu">ehood@medusa.acs.uci.edu</a><br>
+</address>
+
+</body>
+</html>

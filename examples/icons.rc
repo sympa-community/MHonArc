@@ -1,10 +1,15 @@
 <!--	MHonArc resource file
 
+	icons.rc 1.1 96/10/13
+
 	This example file makes use of the icons feature of
 	MHonArc.
   -->
 
+<main>
 <sort>
+<nothread>
+<noreverse>
 
 <!--	Have LISTBEGIN contain last updated information
   -->

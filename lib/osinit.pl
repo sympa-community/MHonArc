@@ -1,16 +1,14 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##      osinit.pl
+##	@(#) osinit.pl 1.2 97/01/28 12:19:10 @(#)
 ##  Author:
-##      Earl Hood       ehood@isogen.com
+##      Earl Hood       ehood@medusa.acs.uci.edu
 ##  Description:
 ##	A library for setting up a script based upon the OS the script
 ##	is running under.  The main routine defined is OSinit.  See
 ##	the routine for specific information.
-##  Date:
-##	Mon Mar 11 15:52:12 CST 1996
 ##---------------------------------------------------------------------------##
-##    Copyright (C) 1995	Earl Hood, ehood@isogen.com
+##    Copyright (C) 1995-1997	Earl Hood, ehood@medusa.acs.uci.edu
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by
@@ -40,6 +38,9 @@ package os_init;
 ##	    $'MACOS	=> Set to 1 if running under Mac
 ##	    $'UNIX	=> Set to 1 if running under Unix
 ##	    $'DIRSEP	=> Directory separator character
+##	    $'DIRSEPREX	=> Directory separator character for use in
+##			   regular expressions.
+##	    $'PATHSEP	=> Recommend path list separator
 ##	    $'CURDIR	=> Current working directory
 ##	    $'PROG	=> Program name with leading pathname component
 ##			   stripped off.
@@ -56,16 +57,19 @@ sub main'OSinit {
     if (($tmp = $ENV{'COMSPEC'}) && ($tmp =~ /[a-zA-Z]:\\/) && (-e $tmp)) {
         $'MSDOS = 1;  $'MACOS = 0;  $'UNIX = 0;
 	$'DIRSEP = '\\';  $'CURDIR = '.';
+	$'PATHSEP = ';';
     } elsif (defined($MacPerl'Version)) {
         $'MSDOS = 0;  $'MACOS = 1;  $'UNIX = 0;
 	$'DIRSEP = ':';  $'CURDIR = ':';
+	$'PATHSEP = ';';
     } else {
         $'MSDOS = 0;  $'MACOS = 0;  $'UNIX = 1;
 	$'DIRSEP = '/';  $'CURDIR = '.';
+	$'PATHSEP = ':';
     }
     ##	Store name of program
-    ($tmp = $'DIRSEP) =~ s/(\W)/\\$1/g;
-    ($'PROG = $0) =~ s%.*[$tmp]%%o;
+    ($'DIRSEPREX = $'DIRSEP) =~ s/(\W)/\\$1/g;
+    ($'PROG = $0) =~ s%.*[$'DIRSEPREX]%%o;
 
     ##	Ask for command-line options if script is a Mac droplet
     ##		Code taken from the MacPerl FAQ

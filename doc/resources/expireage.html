@@ -1,0 +1,150 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
+<html>
+<head>
+<title>MHonArc Resources: EXPIREAGE</title>
+</head>
+<body>
+
+<address>
+<a href="../resources.html#expireage">MHonArc Resource List</a></br>
+</address>
+
+<hr>
+<h1>EXPIREAGE</h1>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Syntax</h2>
+
+<dl>
+
+<dt><strong>Envariable</strong><dt>
+<dd><p>
+<code>M2H_EXPIREAGE=</code><var>seconds</var>
+</p>
+</dd>
+
+<dt><strong>Element</strong><dt>
+<dd><p>
+<code>&lt;EXPIREAGE&gt;<br></code>
+<var>seconds</var><br>
+<code>&lt;/EXPIREAGE&gt;<br></code>
+</p>
+</dd>
+
+<dt><strong>Command-line Option</strong><dt>
+<dd><p>
+<code>-expireage </code><var>seconds</var>
+</p>
+</dd>
+
+</dl>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Description</h2>
+
+<p>EXPIREAGE specifies the time in seconds from the current 
+time if a message has expired.  I.e.  If the difference
+between the current time and the message time is greater
+than EXPIREAGE, the message is expired.  Expired messages
+do not get added into an archive, and any archived
+expired messages will get automatically removed during
+an archive update.
+</p>
+
+<p>EXPIREAGE is specified in seconds.  The following table
+shows common time periods in seconds:
+</p>
+
+<table cellspacing=1 border=1 cellpadding=4>
+<tbody>
+<tr>
+<th>Time period</th><th>Equivalance in seconds</th>
+</tr>
+<tr valign=top align=center>
+<td>day</td><td>86400</td>
+</tr>
+<tr valign=top align=center>
+<td>week (7 days)</td><td>604800</td>
+</tr>
+<tr valign=top align=center>
+<td>month (30.5 days)</td><td>2635200</td>
+</tr>
+<tr valign=top align=center>
+<td>year (365 days)</td><td>31536000</td>
+</tr>
+</tbody>
+</table>
+
+<dl>
+<dt><strong>NOTE</strong></dt>
+<dd><p>Setting EXPIREAGE to zero turns off the
+EXPIREAGE check.
+</p>
+</dd>
+</dl>
+
+<p>If you want to control expiration of messages based
+on a specific date, then see
+<a href="expiredate.html">EXPIREDATE</a>.
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Default Setting</h2>
+
+<p>Nil.
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Resource Variables</h2>
+
+<p>N/A
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Examples</h2>
+
+<p>EXPIREAGE is useful for "message from the last ..." archives.
+For example, if you are archiving a mailing list with much traffic,
+you may want to have an archive that shows only messages from the
+last 7 days (week).  Set set EXPIREAGE as follows: </p>
+
+<pre>
+<b>&lt;ExpireAge&gt;</b>
+604800
+<b>&lt;/ExpireAge&gt;</b>
+</pre>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Version</h2>
+
+<p>2.0
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>See Also</h2>
+
+<p>
+<a href="expiredate.html">EXPIREDATE</a>
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<address>
+97/05/13 17:29:15<br>
+<img align="top" src="../monicon.gif" alt="">
+<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"
+><strong>MHonArc</strong></a><br>
+Copyright &#169; 1997, <a href="http://www.oac.uci.edu/indiv/ehood/"
+>Earl Hood</a>, <a href="mailto:ehood@medusa.acs.uci.edu"
+>ehood@medusa.acs.uci.edu</a><br>
+</address>
+
+</body>
+</html>

@@ -1,0 +1,147 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
+<html>
+<head>
+<title>MHonArc Resources: EXPIREDATE</title>
+</head>
+<body>
+
+<address>
+<a href="../resources.html#expiredate">MHonArc Resource List</a></br>
+</address>
+
+<hr>
+<h1>EXPIREDATE</h1>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Syntax</h2>
+
+<dl>
+
+<dt><strong>Envariable</strong><dt>
+<dd><p>
+<code>M2H_EXPIREDATE=</code><var>date</var>
+</p>
+</dd>
+
+<dt><strong>Element</strong><dt>
+<dd><p>
+<code>&lt;EXPIREDATE&gt;<br></code>
+<var>date</var><br>
+<code>&lt;/EXPIREDATE&gt;<br></code>
+</p>
+</dd>
+
+<dt><strong>Command-line Option</strong><dt>
+<dd><p>
+<code>-expiredate </code><var>date</var>
+</p>
+</dd>
+
+</dl>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Description</h2>
+
+<p>If defined, EXPIREDATE sets the expiration date for messages
+in an archive.  During an archive update, any messages with
+dates less than the EXPIREDATE are automatically removed.  If
+a message to be added is older than EXPIREDATE, it is not added.
+</p>
+
+<p>The syntax for EXPIREDATE is as follows:
+</p>
+
+<blockquote>
+<p><var>DD</var><tt> </tt><var>Mon</var><tt> </tt><var>YY</var><tt> </tt><var>HH</var><tt>:</tt><var>MM</var><tt>:</tt><var>SS</var><tt> </tt><var>Zone</var>
+</p>
+</blockquote>
+
+<p>24 hour time must be used.
+The timezone is optional.  If non-existent, the local zone is used.
+If a symbolic timezone is used (eg: "EST"), make sure it is defined
+in the
+<a href="timezones.html">TIMEZONES</a> resource.
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Default Setting</h2>
+
+<p>Nil.
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Resource Variables</h2>
+
+<p>N/A
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Examples</h2>
+
+<p>EXPIREDATE is useful if you want to insure messages older
+than a specified date do not get archived.  For example, if
+you want to make sure that no message before 1997 is added, then
+define EXPIREDATE as follows:
+</p>
+
+<pre>
+<b>&lt;ExpireDate&gt;</b>
+1 Jan 1997 00:00:00
+<b>&lt;/ExpireDate&gt;</b>
+</pre>
+
+<p>However, this specifies local time.  It is possible that some
+message can get excluded that have a 1997 date (depending on
+what timezone you are in).  The following
+is more accurate:
+</p>
+
+<pre>
+<b>&lt;ExpireDate&gt;</b>
+1 Jan 1997 00:00:00 +0000
+<b>&lt;/ExpireDate&gt;</b>
+</pre>
+
+<p>Or,</p>
+
+<pre>
+<b>&lt;ExpireDate&gt;</b>
+1 Jan 1997 00:00:00 GMT
+<b>&lt;/ExpireDate&gt;</b>
+</pre>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Version</h2>
+
+<p>2.0
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>See Also</h2>
+
+<p>
+<a href="expireage.html">EXPIREAGE</a>,
+<a href="timezones.html">TIMEZONES</a>
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<address>
+97/05/13 17:29:15<br>
+<img align="top" src="../monicon.gif" alt="">
+<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"
+><strong>MHonArc</strong></a><br>
+Copyright &#169; 1997, <a href="http://www.oac.uci.edu/indiv/ehood/"
+>Earl Hood</a>, <a href="mailto:ehood@medusa.acs.uci.edu"
+>ehood@medusa.acs.uci.edu</a><br>
+</address>
+
+</body>
+</html>

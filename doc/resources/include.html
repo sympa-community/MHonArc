@@ -1,0 +1,110 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
+<html>
+<head>
+<title>MHonArc Resources: INCLUDE</title>
+</head>
+<body>
+
+<address>
+<a href="../resources.html#include">MHonArc Resource List</a></br>
+</address>
+
+<hr>
+<h1>INCLUDE</h1>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Syntax</h2>
+
+<dl>
+
+<dt><strong>Envariable</strong><dt>
+<dd><p>N/A
+</p>
+</dd>
+
+<dt><strong>Element</strong><dt>
+<dd><p>
+<code>&lt;INCLUDE&gt;<br></code>
+<var>filename</var><br>
+<var>...</var><br>
+<code>&lt;/INCLUDE&gt;<br></code>
+</p>
+</dd>
+
+<dt><strong>Command-line Option</strong><dt>
+<dd><p>N/A
+</p>
+</dd>
+
+</dl>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Description</h2>
+
+<p>The INCLUDE resource is only applicable in the resource file.
+It specifies other resource files to include at the location of the
+<code>INCLUDE</code> element that lists the files.  When including
+multiple files in an <code>INCLUDE</code> element, each file must be
+listed on a separate line.  </p>
+
+<p>Multiple <code>INCLUDE</code> elements can be defined in
+a resource file for including files at different locations.
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Default Setting</h2>
+
+<p>N/A
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Resource Variables</h2>
+
+<p>N/A</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Examples</h2>
+
+<p>If managing multiple archives, it is common to have common
+resource settings for the archives.  With the INCLUDE resource,
+you define these common resources in a single file, and have
+each archive resource file include it.  For example:
+</p>
+
+<pre>
+<b>&lt;Include&gt;</b>
+/usr/local/lib/MHonArc/common.rc
+<b>&lt;/Include&gt;</b>
+</pre>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Version</h2>
+
+<p>2.0
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>See Also</h2>
+
+<p>
+<a href="rcfile.html">RCFILE</a>
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<address>
+97/05/13 17:29:27<br>
+<img align="top" src="../monicon.gif" alt="">
+<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"><strong>MHonArc</strong></a><br>
+Copyright &#169; 1997, <a href="http://www.oac.uci.edu/indiv/ehood/">Earl Hood</a>, <a href="mailto:ehood@medusa.acs.uci.edu">ehood@medusa.acs.uci.edu</a><br>
+</address>
+
+</body>
+</html>

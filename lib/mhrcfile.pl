@@ -1,0 +1,817 @@
+##---------------------------------------------------------------------------##
+##  File:
+##	@(#) mhrcfile.pl 1.12 97/05/13 11:25:35 @(#)
+##  Author:
+##      Earl Hood       ehood@medusa.acs.uci.edu
+##  Description:
+##      Routines for parsing resource files
+##---------------------------------------------------------------------------##
+##    MHonArc -- Internet mail-to-HTML converter
+##    Copyright (C) 1996	Earl Hood, ehood@medusa.acs.uci.edu
+##
+##    This program is free software; you can redistribute it and/or modify
+##    it under the terms of the GNU General Public License as published by
+##    the Free Software Foundation; either version 2 of the License, or
+##    (at your option) any later version.
+##
+##    This program is distributed in the hope that it will be useful,
+##    but WITHOUT ANY WARRANTY; without even the implied warranty of
+##    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+##    GNU General Public License for more details.
+##
+##    You should have received a copy of the GNU General Public License
+##    along with this program; if not, write to the Free Software
+##    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+##---------------------------------------------------------------------------##
+
+$RcFileHandleCnt = 0;
+
+##---------------------------------------------------------------------------
+##	read_fmt_file() parses the resource file.  The name is misleading.
+##	(The code for this routine could probably be simplified).
+##
+sub read_fmt_file {
+    local($file) = shift;
+    local($line, $tag, $label, $acro, $hr, $type, $routine, $plfile,
+	  $url, $arg, $tmp, @a);
+    local($elem, $attr, $override, $handle, $pathhead, $chop);
+
+    $handle = 'FMT' . $RcFileHandleCnt++;
+    if (!open($handle, $file)) {
+	warn "Warning: Unable to open resource file: $file\n";
+	return 0;
+    }
+    if ($file =~ m%(.*[$'DIRSEPREX])%o) {
+	$pathhead = $1;
+    } else {
+	$pathhead = '';
+    }
+
+    print STDOUT "Reading resource file: $file ...\n"  unless $QUIET;
+    while ($line = <$handle>) {
+	next unless $line =~ /^\s*<([^>]+)>/;
+	($elem, $attr) = split(' ', $1, 2);
+	$elem =~ tr/A-Z/a-z/;
+	$override = ($attr =~ /override/i);
+	$chop = ($attr =~ /chop/i);
+
+      FMTSW: {
+	if ($elem eq "authorbegin") {		# Begin for author group
+	    $AUTHBEG = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq "authorend") {		# End for author group
+	    $AUTHEND = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq "authsort") {		# Sort msgs by author
+	    $AUTHSORT = 1;
+	    $NOSORT = 0;  $SUBSORT = 0;
+	    last FMTSW;
+	}
+	if ($elem eq "botlinks") {		# Bottom links in message
+	    $BOTLINKS = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq "charsetconverters") {	# Charset filters
+	    @CharSetRequires = (), %'MIMECharSetConverters = ()
+		if $override;
+	    while ($line = <$handle>) {
+		last  if $line =~ /^\s*<\/charsetconverters\s*>/i;
+		next  if $line =~ /^\s*$/;
+		$line =~ s/\s//g;
+		($type,$routine,$plfile) = split(/:/,$line,3);
+		$type =~ tr/A-Z/a-z/;
+		$'MIMECharSetConverters{$type} = $routine;
+		push(@CharSetRequires, $plfile)  if $plfile =~ /\S/;
+	    }
+	    last FMTSW;
+	}
+	if ($elem eq "conlen") {
+	    $CONLEN = 1; last FMTSW;
+	}
+	if ($elem eq "daybegin") {		# Begin for day group
+	    $DAYBEG = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq "dayend") {		# End for day group
+	    $DAYEND = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq "decodeheads") {
+	    $DecodeHeads = 1; last FMTSW;
+	}
+	if ($elem eq "definederived") {		# Custom derived file
+	    %UDerivedFile = ()  if $override;
+	    $line = <$handle>;
+	    last FMTSW if $line =~ /^\s*<\/definederived\s*>/i;
+	    $line =~ s/\s//g;
+	    $UDerivedFile{$line} = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq "definevar") {		# Custom resource variable
+	    @CustomRcVars = ()  if $override;
+	    $line = <$handle>;
+	    last FMTSW if $line =~ /^\s*<\/definevar\s*>/i;
+	    $line =~ s/\s//g;
+	    $CustomRcVars{$line} = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq "doc") {			# Link to documentation
+	    $NODOC = 0; last FMTSW;
+	}
+	if ($elem eq "docurl") {		# Doc URL
+	    if ($line = &get_elem_last_line($handle, $elem)) {
+		$DOCURL = $line;
+	    }
+	    last FMTSW;
+	}
+	if ($elem eq "dbfile") {		# Database file
+	    if ($line = &get_elem_last_line($handle, $elem)) {
+		$line =~ s/\s//g;
+		$DBFILE = $line;
+	    }
+	    last FMTSW;
+	}
+	if ($elem eq "excs") {			# Exclude header fields
+	    %HFieldsExc = ()  if $override;
+	    while ($line = <$handle>) {
+		last  if $line =~ /^\s*<\/excs\s*>/i;
+		$line =~ s/\s//g;  $line =~ tr/A-Z/a-z/;
+		$HFieldsExc{$line} = 1  if $line;
+	    }
+	    last FMTSW;
+	}
+	if ($elem eq "expireage") {		# Time in seconds until expire
+	    if (($tmp = &get_elem_int($handle, $elem, 1)) ne '') {
+		$ExpireTime = $tmp;
+	    }
+	    last FMTSW;
+	}
+	if ($elem eq "expiredate") {		# Expiration date
+	    if ($line = &get_elem_last_line($handle, $elem)) {
+		$ExpireDate = $line;
+	    }
+	    last FMTSW;
+	}
+	if ($elem eq "fieldstyles") {		# Field text style
+	    while ($line = <$handle>) {
+		last  if $line =~ /^\s*<\/fieldstyles\s*>/i;
+		next  if $line =~ /^\s*$/;
+		$line =~ s/\s//g;  $line =~ tr/A-Z/a-z/;
+		($label, $tag) = split(/:/,$line);
+		$HeadFields{$label} = $tag;
+	    }
+	    last FMTSW;
+	}
+	if ($elem eq "fieldorder") {		# Field order
+	    @FieldOrder = ();  %FieldODefs = ();
+	    while ($line = <$handle>) {
+		last  if $line =~ /^\s*<\/fieldorder\s*>/i;
+		next  if $line =~ /^\s*$/;
+		$line =~ s/\s//g;  $line =~ tr/A-Z/a-z/;
+		push(@FieldOrder, $line);
+		$FieldODefs{$line} = 1;
+	    }
+	    # push(@FieldOrder,'-extra-')  if (!$FieldODefs{'-extra-'});
+	    last FMTSW;
+	}
+	if ($elem eq "fieldsbeg") {		# Begin markup of mail head
+	    $FIELDSBEG = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq "fieldsend") {		# End markup of mail head
+	    $FIELDSEND = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq "fldbeg") {		# Begin markup of field text
+	    $FLDBEG = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq "fldend") {		# End markup of field text
+	    $FLDEND = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq "folrefs") {
+	    $DoFolRefs = 1; last FMTSW;
+	}
+	if ($elem eq "footer") {		# Footer file
+	    if ($line = &get_elem_last_line($handle, $elem)) {
+		$line =~ s/\s//g;
+		$FOOTER = $line;
+	    }
+	    last FMTSW;
+	}
+	if ($elem eq "gmtdatefmt") {		# GMT date format
+	    if ($line = &get_elem_last_line($handle, $elem)) {
+		$GMTDateFmt = $line;
+	    }
+	    last FMTSW;
+	}
+	if ($elem eq "headbodysep") {
+	    $HEADBODYSEP = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq "header") {		# Header file
+	    if ($line = &get_elem_last_line($handle, $elem)) {
+		$line =~ s/\s//g;
+		$HEADER = $line;
+	    }
+	    last FMTSW;
+	}
+	if ($elem eq "icons") {			# Icons
+	    %Icons = ()  if $override;
+	    while ($line = <$handle>) {
+		last  if $line =~ /^\s*<\/icons\s*>/i;
+		next  if $line =~ /^\s*$/;
+		$line =~ s/\s//g;
+		($type, $url) = split(/:/,$line,2);
+		$type =~ tr/A-Z/a-z/;
+		$Icons{$type} = $url;
+	    }
+	    last FMTSW;
+	}
+	if ($elem eq "idxfname") {		# Index filename
+	    if ($line = &get_elem_last_line($handle, $elem)) {
+		$line =~ s/\s//g;
+		$IDXNAME = $line;
+	    }
+	    last FMTSW;
+	}
+	if ($elem eq "idxlabel") {		# Index label
+	    $IDXLABEL = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq "idxpgbegin") {		# Opening markup of index
+	    $IDXPGBEG = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq "idxpgend") {		# Closing markup of index
+	    $IDXPGEND = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq "idxprefix") {		# Prefix for main idx pages
+	    if ($line = &get_elem_last_line($handle, $elem)) {
+		$line =~ s/\s//g;
+		$IDXPREFIX = $line;
+	    }
+	    last FMTSW;
+	}
+	if ($elem eq "idxsize") {		# Size of index
+	    if (($tmp = &get_elem_int($handle, $elem, 1)) ne '') {
+		$IDXSIZE = $tmp;
+	    }
+	    last FMTSW;
+	}
+	if ($elem eq "include") {		# Include other rc files
+	    while ($line = <$handle>) {
+		last  if $line =~ /^\s*<\/include\s*>/i;
+		next  if $line =~ /^\s*$/;
+		$line =~ s/\s+$//;
+		$line = $pathhead . $line  if ($line !~ /$'DIRSEPREX/o);
+		&read_fmt_file($line);
+	    }
+	    last FMTSW;
+	}
+	if ($elem eq "labelbeg") {		# Begin markup of label
+	    $LABELBEG = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq "labelend") {		# End markup of label
+	    $LABELEND = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq "labelstyles") {		# Field label style
+	    while ($line = <$handle>) {
+		last  if $line =~ /^\s*<\/labelstyles\s*>/i;
+		next  if $line =~ /^\s*$/;
+		$line =~ s/\s//g;  $line =~ tr/A-Z/a-z/;
+		($label, $tag) = split(/:/,$line);
+		$HeadHeads{$label} = $tag;
+	    }
+	    last FMTSW;
+	}
+	if ($elem eq "listbegin") {		# List begin
+	    $LIBEG = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq "listend") {		# List end
+	    $LIEND = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq "litemplate") {		# List item template
+	    $LITMPL = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq "localdatefmt") {		# Local date format
+	    if ($line = &get_elem_last_line($handle, $elem)) {
+		$LocalDateFmt = $line;
+	    }
+	    last FMTSW;
+	}
+	if ($elem eq "mailto") {		# Convert e-mail addrs
+	    $NOMAILTO = 0; last FMTSW;
+	}
+	if ($elem eq "mailtourl") {		# mailto URL
+	    while ($line = <$handle>) {
+		last  if $line =~ /^\s*<\/mailtourl\s*>/i;
+		next  if $line =~ /^\s*$/;
+		$line =~ s/\s//g;
+		$MAILTOURL = $line;
+	    }
+	    last FMTSW;
+	}
+	if ($elem eq "main") {
+	    $MAIN = 1; last FMTSW;
+	}
+	if ($elem eq "maxsize") {		# Size of archive
+	    if (($tmp = &get_elem_int($handle, $elem, 1)) ne '') {
+		$MAXSIZE = $tmp;
+	    }
+	    last FMTSW;
+	}
+	if ($elem eq "mhpattern") {		# File pattern MH-like dirs
+	    if ($line = &get_elem_last_line($handle, $elem)) {
+		$MHPATTERN = $line;
+	    }
+	    last FMTSW;
+	}
+	if ($elem eq "mimefilters") {		# Mime filters
+	    @Requires = (), %'MIMEFilters = ()  if $override;
+	    while ($line = <$handle>) {
+		last  if $line =~ /^\s*<\/mimefilters\s*>/i;
+		next  if $line =~ /^\s*$/;
+		$line =~ s/\s//g;
+		($type,$routine,$plfile) = split(/:/,$line,3);
+		$type =~ tr/A-Z/a-z/;
+		$'MIMEFilters{$type} = $routine;
+		push(@Requires, $plfile)  if $plfile =~ /\S/;
+	    }
+	    last FMTSW;
+	}
+	if ($elem eq "mimeargs") {		# Mime arguments
+	    %'MIMEFiltersArgs = ()  if $override;
+	    while ($line = <$handle>) {
+		last  if $line =~ /^\s*<\/mimeargs\s*>/i;
+		next  if $line =~ /^\s*$/;
+		($type,$arg) = split(/:/,$line,2);
+		$type =~ tr/A-Z/a-z/  if $type =~ m%/%;
+		$'MIMEFiltersArgs{$type} = $arg;
+	    }
+	    last FMTSW;
+	}
+	if ($elem eq "months") {		# Full month names
+	    @a = &get_list_content($handle, $elem);
+	    if (scalar(@a)) {
+		@Months = @a;
+	    }
+	    last FMTSW;
+	}
+	if ($elem eq "monthsabr") {		# Abbreviated month names
+	    @a = &get_list_content($handle, $elem);
+	    if (scalar(@a)) {
+		@months = @a;
+	    }
+	    last FMTSW;
+	}
+	if ($elem eq "modtime") {		# Mod time same as msg date
+	    $MODTIME = 1; last FMTSW;
+	}
+	if ($elem eq "msgfoot") {		# Message footer text
+	    $MSGFOOT = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq "msggmtdatefmt") {		# Message GMT date format
+	    if ($line = &get_elem_last_line($handle, $elem)) {
+		$MsgGMTDateFmt = $line;
+	    }
+	    last FMTSW;
+	}
+	if ($elem eq "msghead") {		# Message header text
+	    $MSGHEAD = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq "msglocaldatefmt") {	# Message local date format
+	    if ($line = &get_elem_last_line($handle, $elem)) {
+		$MsgLocalDateFmt = $line;
+	    }
+	    last FMTSW;
+	}
+	if ($elem eq "msgpgbegin") {		# Opening markup of message
+	    $MSGPGBEG = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq "msgpgend") {		# Closing markup of message
+	    $MSGPGEND = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq "msgsep") {		# Message separator
+	    if ($line = &get_elem_last_line($handle, $elem)) {
+		$FROM = $line;
+	    }
+	    last FMTSW;
+	}
+	if ($elem eq "multipg") {
+	    $MULTIIDX = 1; last FMTSW;
+	}
+	if ($elem eq "nextbutton") {		# Next button link in message
+	    $NEXTBUTTON = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq "nextbuttonia") {
+	    $NEXTBUTTONIA = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq "nextlink") {		# Next link in message
+	    $NEXTLINK = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq "nextlinkia") {
+	    $NEXTLINKIA = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq "nextpglink") {		# Next page link in index
+	    $NEXTPGLINK = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq "nextpglinkia") {
+	    $NEXTPGLINKIA = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq "news") {			# News for linking
+	    $NONEWS = 0; last FMTSW;
+	}
+	if ($elem eq "noauthsort") {		# Do not sort msgs by author
+	    $AUTHSORT = 0;
+	    last FMTSW;
+	}
+	if ($elem eq "noconlen") {		# Ignore content-length
+	    $CONLEN = 0; last FMTSW;
+	}
+	if ($elem eq "nodecodeheads") {
+	    $DecodeHeads = 0; last FMTSW;
+	}
+	if ($elem eq "nodoc") {			# Do not link to docs
+	    $NODOC = 1; last FMTSW;
+	}
+	if ($elem eq "nofolrefs") {
+	    $DoFolRefs = 0; last FMTSW;
+	}
+	if ($elem eq "nomailto") {		# Do not convert e-mail addrs
+	    $NOMAILTO = 1; last FMTSW;
+	}
+	if ($elem eq "nomain") {		# No main index
+	    $MAIN = 0; last FMTSW;
+	}
+	if ($elem eq "nomodtime") {		# Do not change mod times
+	    $MODTIME = 0; last FMTSW;
+	}
+	if ($elem eq "nomultipg") {		# Single page index
+	    $MULTIIDX = 0; last FMTSW;
+	}
+	if ($elem eq "nonews") {		# Ignore news for linking
+	    $NONEWS = 1; last FMTSW;
+	}
+	if ($elem eq "noreverse") {		# Sort in normal order
+	    $REVSORT = 0; last FMTSW;
+	}
+	if ($elem eq "nosort") {		# Do not sort messages
+	    $NOSORT = 1;
+	    last FMTSW;
+	}
+	if ($elem eq "nosubsort") {		# Do not sort msgs by subject
+	    $SUBSORT = 0;
+	    last FMTSW;
+	}
+	if ($elem eq "nothread") {		# No thread index
+	    $THREAD = 0; last FMTSW;
+	}
+	if ($elem eq "notreverse") {		# Thread sort in normal order
+	    $TREVERSE = 0; last FMTSW;
+	}
+	if ($elem eq "nourl") {			# Ignore URLs
+	    $NOURL = 1; last FMTSW;
+	}
+	if ($elem eq "otherindexes") {		# Other indexes
+	    @OtherIdxs = ()  if $override;
+	    unshift(@OtherIdxs, &get_list_content($handle, $elem, $'PATHSEP));
+	    last FMTSW;
+	}
+	if ($elem eq "perlinc") {		# Define perl search paths
+	    @PerlINC = ()  if $override;
+	    unshift(@PerlINC, &get_list_content($handle, $elem, $'PATHSEP));
+	    last FMTSW;
+	}
+	if ($elem eq "prevbutton") {		# Prev button link in message
+	    $PREVBUTTON = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq "prevbuttonia") {
+	    $PREVBUTTONIA = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq "prevlink") {		# Prev link in message
+	    $PREVLINK = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq "prevlinkia") {
+	    $PREVLINKIA = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq "prevpglink") {		# Prev page link for index
+	    $PREVPGLINK = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq "prevpglinkia") {
+	    $PREVPGLINKIA = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq "reverse") {		# Reverse sort
+	    $REVSORT = 1;
+	    last FMTSW;
+	}
+	if ($elem eq "sort") {			# Sort messages by date
+	    $NOSORT = 0;
+	    $AUTHSORT = 0;  $SUBSORT = 0;
+	    last FMTSW;
+	}
+	if ($elem eq "subsort") {		# Sort messages by subject
+	    $SUBSORT = 1;
+	    $AUTHSORT = 0;  $NOSORT = 0;
+	    last FMTSW;
+	}
+	if ($elem eq "subjectbegin") {		# Begin for subject group
+	    $SUBJECTBEG = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq "subjectend") {		# End for subject group
+	    $SUBJECTEND = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq "subjectheader") {
+	    $SUBJECTHEADER = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq "tcontbegin") {		# Thread cont. start
+	    $TCONTBEG = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq "tcontend") {		# Thread cont. end
+	    $TCONTEND = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq "thead") {			# Thread idx head
+	    $THEAD = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq "tfoot") {			# Thread idx foot
+	    $TFOOT = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq "tidxfname") {		# Threaded idx filename
+	    if ($line = &get_elem_last_line($handle, $elem)) {
+		$line =~ s/\s//g;
+		$TIDXNAME = $line;
+	    }
+	    last FMTSW;
+	}
+	if ($elem eq "tidxlabel") {		# Thread index label
+	    $TIDXLABEL = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq "tidxpgbegin") {		# Opening markup of thread idx
+	    $TIDXPGBEG = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq "tidxpgend") {		# Closing markup of thread idx
+	    $TIDXPGEND = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq "tidxprefix") {		# Prefix for thread idx pages
+	    if ($line = &get_elem_last_line($handle, $elem)) {
+		$line =~ s/\s//g;
+		$TIDXPREFIX = $line;
+	    }
+	    last FMTSW;
+	}
+	if ($elem eq "timezones") {		# Time zones
+	    %Zone = ()  if $override;
+	    while ($line = <$handle>) {
+		last  if $line =~ /^\s*<\/timezones\s*>/i;
+		$line =~ s/\s//g;  $line =~ tr/a-z/A-Z/;
+		($acro,$hr) = split(/:/,$line);
+		$Zone{$acro} = $hr;
+	    }
+	    last FMTSW;
+	}
+	if ($elem eq "tindentbegin") {		# Thread indent start
+	    $TINDENTBEG = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq "tindentend") {		# Thread indent end
+	    $TINDENTEND = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq "title") {			# Title of index page
+	    $TITLE = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq "tlevels") {		# Level of threading
+	    if (($tmp = &get_elem_int($handle, $elem, 1)) ne '') {
+		$TLEVELS = $tmp;
+	    }
+	    last FMTSW;
+	}
+	if ($elem eq "tsublistbeg") {		# List begin in sub-thread
+	    $TSUBLISTBEG = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq "tsublistend") {		# List end in sub-thread
+	    $TSUBLISTEND = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq "tsubjectbeg") {		# Begin markup for sub thread
+	    $TSUBJECTBEG = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq "tsubjectend") {		# End markup for sub thread
+	    $TSUBJECTEND = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq "tsingletxt") {		# Markup for single msg
+	    $TSINGLETXT = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq "ttopbegin") {		# Begin for top of a thread
+	    $TTOPBEG = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq "ttopend") {		# End for a thread
+	    $TTOPEND = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq "tlinone") {		# Markup for missing message
+	    $TLINONE = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq "tlinoneend") {		# End markup for missing msg
+	    $TLINONEEND = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq "tlitxt") {		# Thread idx list item
+	    $TLITXT = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq "tliend") {		# Thread idx list item end
+	    $TLIEND = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq "toplinks") {		# Top links in message
+	    $TOPLINKS = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq "ttitle") {		# Title of threaded idx
+	    $TTITLE = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq "thread") {		# Create thread index
+	    $THREAD = 1; last FMTSW;
+	}
+	if ($elem eq "treverse") {		# Reverse order of threads
+	    $TREVERSE = 1; last FMTSW;
+	}
+	if ($elem eq "tnextbutton") {		# Thread Next button link
+	    $TNEXTBUTTON = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq "tnextbuttonia") {
+	    $TNEXTBUTTONIA = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq "tnextlink") {		# Thread Next link
+	    $TNEXTLINK = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq "tnextlinkia") {
+	    $TNEXTLINKIA = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq "tnextpglink") {		# Thread next page link
+	    $TNEXTPGLINK = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq "tnextpglinkia") {
+	    $TNEXTPGLINKIA = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq "tprevbutton") {		# Thread Prev button link
+	    $TPREVBUTTON = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq "tprevbuttonia") {
+	    $TPREVBUTTONIA = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq "tprevlink") {		# Thread Prev link in message
+	    $TPREVLINK = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq "tprevlinkia") {
+	    $TPREVLINKIA = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq "tprevpglink") {		# Thread previous page link
+	    $TPREVPGLINK = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq "tprevpglinkia") {
+	    $TPREVPGLINKIA = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq "umask") {		# Umask of process
+	    if ($line = &get_elem_last_line($handle, $elem)) {
+		$line =~ s/\s//g;
+		$UMASK = $line;
+	    }
+	    last FMTSW;
+	}
+	if ($elem eq "weekdays") {		# Full weekday name
+	    @a = &get_list_content($handle, $elem);
+	    if (scalar(@a)) {
+		@Weekdays = @a;
+	    }
+	    last FMTSW;
+	}
+	if ($elem eq "weekdaysabr") {		# Abbreviated weekday name
+	    @a = &get_list_content($handle, $elem);
+	    if (scalar(@a)) {
+		@weekdays = @a;
+	    }
+	    last FMTSW;
+	}
+
+      } ## End FMTSW
+    }
+    close($handle);
+    1;
+}
+
+##----------------------------------------------------------------------
+sub get_elem_content {
+    local($filehandle, $gi, $chop) = ($_[0], $_[1], $_[2]);
+    local($ret) = '';
+
+    while (<$filehandle>) {
+	last  if /^\s*<\/$gi\s*>/i;
+	$ret .= $_;
+    }
+    $ret =~ s/\r?\n?$//  if $chop;
+    $ret;
+}
+
+##----------------------------------------------------------------------
+sub get_elem_int {
+    local($filehandle, $gi, $abs) = ($_[0], $_[1], $_[2]);
+    local($ret) = '';
+
+    while (<$filehandle>) {
+	last  if /^\s*<\/$gi\s*>/i;
+	next  unless /^\s*[-+]?\d+\s*$/;
+	s/[+\s]//g;
+	s/-//  if $abs;
+	$ret = $_;
+    }
+    $ret;
+}
+
+##----------------------------------------------------------------------
+sub get_elem_last_line {
+    local($filehandle, $gi) = ($_[0], $_[1]);
+    local($ret) = '';
+
+    while (<$filehandle>) {
+	last  if /^\s*<\/$gi\s*>/i;
+	next  unless /\S/;
+	$ret = $_;
+    }
+    $ret =~ s/\r?\n?$//;
+    $ret;
+}
+
+##----------------------------------------------------------------------
+sub get_list_content {
+    local($filehandle, $gi, $sep) = ($_[0], $_[1], $_[2]);
+    local(@items) = ();
+    $sep = ':'  unless $sep;
+
+    while (<$filehandle>) {
+	last  if /^\s*<\/$gi\s*>/i;
+	next  unless /\S/;
+	s/\r?\n?$//;
+	push(@items, split(/$sep/, $_));
+    }
+    @items;
+}
+
+##---------------------------------------------------------------------------##
+1;

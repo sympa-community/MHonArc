@@ -1,0 +1,222 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
+<HTML>
+<HEAD>
+<TITLE>MHonArc -- Quick Start
+</TITLE>
+</HEAD>
+<BODY>
+
+<!--X-NavButtons-Start-->
+<p align=center>
+[<a href="intro.html">Prev</a>][<a href="layout.html">Next</a>][<a href="mhonarc.html">TOC</a>][<a href="http://www.oac.uci.edu/indiv/ehood/MHonArc/faq/faq.html">FAQ</a>][<a href="bugs.html">Bugs</a>][<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html">Home</a>]
+</p>
+<!--X-NavButtons-End-->
+<HR>
+
+<H1><a name="quickstart">Quick Start</a></H1>
+
+<P>This section will give you a "<EM>quick start</EM>" on using
+<EM>MHonArc</EM>. However, I recommend reading through the entire
+documentation to take full advantage of all the features of
+<EM>MHonArc</EM>.  </P>
+
+<hr>
+<H2><a name="folders">Converting MH mail folders or Mailbox files</a></H2>
+
+<P>Since <EM>MHonArc</EM> supports <EM>MH</EM> mail folders and
+UUCP/Unix mailbox files, the term "<EM>mail folder</EM>" will represent
+the <EM>MH</EM> mail folder or mailbox file you want to process.
+To convert your mail folder to an HTML archive, use the following:
+</P>
+
+<P>
+<tt>% </tt><tt><b>mhonarc </b></tt><VAR>path</VAR><tt><b>/inbox</b></tt></b>
+</P>
+
+<P>Where <VAR>path</VAR> represents the path to the directory
+that contains the mail folder <EM>inbox</EM>. If you are in the
+directory that contains inbox, then you can leave out the
+"<VAR>path</VAR><tt>/</tt>".
+</P>
+
+<P><EM>MHonArc</EM> prints out messages showing its progress as your
+e-mail is processed.  When <EM>MHonArc</EM> finishes, the following
+files will be created: </P>
+
+<UL>
+
+<LI><P><tt><strong>maillist.html</strong></tt>:
+The main index file containing links
+to all mail messages converted. Messages are listed with subjects and
+who the messages are from. All messages are listed in sorted order
+by date received/sent.  </P>
+
+<LI><P><tt><strong>threads.html</strong></tt>:
+The file listing messages by thread.
+</P>
+
+<LI><P><tt><strong>msg*.html</strong></tt>: HTML versions of the mail messages, where<CODE> * </CODE>represents a 
+message number from 0 to the number of message processed minus 1.
+</P>
+
+<LI><P><tt><strong>.mhonarc.db</strong></tt>
+(or <tt>MHONARC.DB</tt> under MS-DOS):
+This database file is 
+needed inorder for <EM>MHonArc</EM> to perform additions of new mail messages 
+to the archive. Information is stored to perform mail threading updates 
+when new messages are added, as well as any defined
+<a href="resources.html">resources</a>.
+</P>
+
+<LI><P><EM>Other</EM>: Depending on the content-types of the e-mail
+messages converted, other files may be created for images, videos,
+binaries, etc.
+</P>
+
+</UL>
+
+<P><EM>MHonArc</EM> allows you to specify more than one mail folder
+to process on the command-line.  </P>
+
+<DL>
+<DT><STRONG>Example</STRONG> 
+
+<DD><pre>
+% <b>mhonarc /home/ehood/mail/inbox1 /home/ehood/mail/inbox2</b>...
+</pre>
+</DL>
+
+<P>All the files created will be put into the current
+working directory, by default. You can control the
+destination of the output location by using the
+<tt>-outdir</tt> option.  </P>
+
+<DL>
+<DT><STRONG>Example</STRONG> 
+
+<DD><PRE>
+% <b>mhonarc -outdir /home/ehood/htmlarchive /home/ehood/mail/inbox</b>
+</PRE>
+</DL>
+
+<P>Here is a sample session converting a mail folder:
+</P>
+
+<PRE>
+% <b>mhonarc ~/mail/inbox</b>
+Requiring content filter libraries ...
+        mhexternal.pl
+        mhtxthtml.pl
+        mhtxtplain.pl
+        mhtxtsetext.pl
+Requiring charset filter libraries ...
+        iso8859.pl
+Converting messages to .
+Reading /mnt/ehood/mail/inbox ..........
+Writing mail ...
+Writing ./maillist.html ...
+Writing ./threads.html ...
+Writing database ...
+10 messages
+</PRE>
+
+<hr>
+<H2><a name="adding">Adding Messages to an Archive</a></H2>
+
+<P>If you have new messages you want to add to an existing archive,
+you must utilizing the <tt>-add</tt> command-line option. With the
+<tt>-add</tt>, you can do the following: </P>
+
+<UL>
+<LI><P>Add a mail folder to an archive, or
+</P>
+<LI><P>Add a single message to an archive.
+</P>
+</UL>
+
+<P>Adding a mail folder to an archive in the current working directory
+can be done like the following: </P>
+
+<P><tt>% </tt><tt><b>mhonarc -add </b></tt><VAR>&lt;path&gt;</VAR><tt><b>/mailfolder</b></tt> 
+</P>
+
+<P>If you are not in the same directory as the archive, then you
+can specify the location of the archive to add to with the
+<tt>-outdir</tt> option. </P>
+
+<DL>
+<DT><STRONG>NOTE</STRONG> 
+
+<DD><P> <EM>MHonArc</EM> will skip any messages that already exist in
+the archive.  Therefore, <EM>MHonArc</EM> can be used to rescan the
+same mail folder and only convert any new messages it finds.  </P></DL>
+
+<P>If no mail folder arguments are specified, then <EM>MHonArc</EM>
+will attempt to add a <EM>single</EM> message read in from standard
+input.  </P>
+
+<DL>
+<DT><STRONG>Example</STRONG> 
+
+<DD>
+<P><tt>% <b>mhonarc -add &lt; single.msg</b></tt> 
+</P>
+<P>Or, from a pipe:
+</P>
+<P><tt>% <b>cat single.msg | mhonarc -add</b></tt> 
+</P>
+</DL>
+
+<hr>
+<H2><a name="single">Converting a single message</a></H2>
+
+<P><EM>MHonArc</EM> has the ability to process a single
+mail message independent of creating, or modifying, an
+archive. To convert a single message to HTML use the
+<tt>-single</tt> command-line
+option. The message to process can be specified by a filename on the
+command-line, or by reading the message from standard input if no file
+is specified. The filtered message is sent to standard output. All
+formatting options apply to the single message as with messages
+being processed for an archive, with the exception of formatting
+related specificly to archive processing, like index links and mail
+thread links.  </P>
+
+<H3><STRONG>Examples</STRONG> 
+</H3>
+
+<DL>
+<DT>Input from standard input:
+
+<DD><P><tt>% <b>mhonarc -single &lt; messagefile &gt; file.html</b></tt> 
+</P>
+</DL>
+
+<DL>
+<DT>Filename on command-line:
+
+<DD>
+<P><tt>% <b>mhonarc -single messagefile &gt; file.html</b></tt> 
+</P>
+</DL>
+
+<hr>
+<!--X-NavButtons-Start-->
+<p align=center>
+[<a href="intro.html">Prev</a>][<a href="layout.html">Next</a>][<a href="mhonarc.html">TOC</a>][<a href="http://www.oac.uci.edu/indiv/ehood/MHonArc/faq/faq.html">FAQ</a>][<a href="bugs.html">Bugs</a>][<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html">Home</a>]
+</p>
+<!--X-NavButtons-End-->
+
+<HR>
+<address>
+97/05/15 16:49:00<br>
+<img align="top" src="monicon.gif" alt="">
+<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"
+><strong>MHonArc</strong></a><br>
+Copyright &#169; 1997, <a href="http://www.oac.uci.edu/indiv/ehood/"
+>Earl Hood</a>, <a href="mailto:ehood@medusa.acs.uci.edu"
+>ehood@medusa.acs.uci.edu</a><br>
+</address>
+
+</BODY>
+</HTML>

@@ -1,0 +1,111 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
+<html>
+<head>
+<title>MHonArc Resources: MHPATTERN</title>
+</head>
+<body>
+
+<address>
+<a href="../resources.html#mhpattern">MHonArc Resource List</a></br>
+</address>
+
+<hr>
+<h1>MHPATTERN</h1>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Syntax</h2>
+
+<dl>
+
+<dt><strong>Envariable</strong><dt>
+<dd><p>
+<code>M2H_MHPATTERN=</code><var>Perl-regexp</var>
+</p>
+</dd>
+
+<dt><strong>Element</strong><dt>
+<dd><p>
+<code>&lt;MHPATTERN&gt;<br></code>
+<var>Perl-regexp</var><br>
+<code>&lt;/MHPATTERN&gt;<br></code>
+</p>
+</dd>
+
+<dt><strong>Command-line Option</strong><dt>
+<dd><p>
+<code>-mhpattern </code><var>Perl-regexp</var>
+</p>
+</dd>
+
+</dl>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Description</h2>
+
+<p>MHPATTERN defines the Perl regular expression to use for
+matching message files in an MH mail folder.  In general,
+MHPATTERN allows you to tell <em>MHonArc</em> which message files
+to read when a specified mail folder is a directory.
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Default Setting</h2>
+
+<pre>
+^\d+$
+</pre>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Resource Variables</h2>
+
+<p>N/A</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Examples</h2>
+
+<p>The following example shows how you can tell <em>MHonArc</em> to
+process every non-dotfile in a directory:
+</p>
+
+<pre>
+    % <b>mhonarc -add -mhpattern '^[^\.]' msgdir</b>
+</pre>
+
+<p>Remember, each file in <code>msgdir</code> must be a single
+mail message.
+</p>
+
+<p>Be careful in that the regexp you define does
+not match "<code>.</code>" and "<code>..</code>".
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Version</h2>
+
+<p>2.0
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>See Also</h2>
+
+<p>
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<address>
+97/05/13 17:29:36<br>
+<img align="top" src="../monicon.gif" alt="">
+<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"><strong>MHonArc</strong></a><br>
+Copyright &#169; 1997, <a href="http://www.oac.uci.edu/indiv/ehood/">Earl Hood</a>, <a href="mailto:ehood@medusa.acs.uci.edu">ehood@medusa.acs.uci.edu</a><br>
+</address>
+
+</body>
+</html>

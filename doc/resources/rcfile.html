@@ -1,0 +1,372 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
+<html>
+<head>
+<title>MHonArc Resources: RCFILE</title>
+</head>
+<body>
+
+<address>
+<a href="../resources.html#rcfile">MHonArc Resource List</a></br>
+</address>
+
+<hr>
+<h1>RCFILE</h1>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Syntax</h2>
+
+<dl>
+
+<dt><strong>Envariable</strong><dt>
+<dd><p>
+<code>M2H_RCFILE=</code><var>filename</var>
+</p>
+</dd>
+
+<dt><strong>Element</strong><dt>
+<dd><p>N/A
+</p>
+</dd>
+
+<dt><strong>Command-line Option</strong><dt>
+<dd><p>
+<code>-rcfile </code><var>filename</var>
+</p>
+</dd>
+
+</dl>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Description</h2>
+
+<p>RCFILE tells <em>MHonArc</em> what the resource file is.
+The resource file allows you to specify most of the resources set by 
+environment variables and command-line options, and it allows you to specify 
+other resources to control <EM>MHonArc</EM>'s behavior.
+</p>
+
+<h3>Resource file syntax</h3>
+
+<P>Resources are set in the file by using <EM>elements</EM> similiar
+in style to HTML/SGML markup. However, <EM>MHonArc</EM> uses simpler
+parsing rules for the resource file than standard SGML: </P>
+
+<UL>
+
+<LI><P>Any line that is not a recognized element open tag, <EM>and</EM>
+the line is not contained within an element, is ignored.  This implies
+that regular text can be put anywhere <STRONG>outside</STRONG> of
+recognized elements for commenting purposes.  </P>
+
+<dl><dt><STRONG>NOTE</STRONG></dt>
+<dd><p>You should use SGML comment declarations
+(<CODE>&lt;!-- </CODE>...<CODE> --&gt;</CODE>) when commenting a
+resource file. This will eliminate possible conflict with later
+versions of <EM>MHonArc</EM> if more stricter parsing rules are
+adopted.  </P>
+</dd></dl>
+
+<LI><P>The opening tag of an element must occur by itself on a
+single line.  Whitespace is allowed before the the open tag.  </P>
+
+<LI><P>No comments are allowed inside elements because the text will
+be treated as element content (unless the comment text is supposed
+to be part of the resource value).  </P>
+
+<LI><P>Each element must be closed with a
+<CODE>&lt;/</CODE><VAR>element_name</VAR><CODE>&gt;</CODE> tag on
+its own line unless resource associated with the element is
+a boolean resource.
+Whitespace is allowed
+before the close tag.  </P>
+
+<LI><P>Some elements can take an optional attribute called
+"<CODE>Override</CODE>", if applicable.  This tells <EM>MHonArc</EM>
+that the contents of the element will completely override the default
+behavior of <EM>MHonArc</EM>, and previous instances of the element.
+<STRONG>Example</STRONG>: "<CODE>&lt;EXCS Override&gt;</CODE>". If
+"<CODE>Override</CODE>" is not specified, then the contents of the
+element augment the current setting.  </P>
+
+<LI><P>Some elements can take an optional attribute called
+"<CODE>Chop</CODE>", if applicable.  This tells <EM>MHonArc</EM>
+to remove the last line-break of the element's content.
+</P>
+
+<LI><P>Element names are case-insensitive.
+</P>
+
+<LI><P>Elements can occur in any order in the resource file.
+</P>
+
+</UL>
+
+<H3>Resource variables</h3>
+
+<p>Many resources are allowed to have <em>resource variables</em> as
+part of there content.  Resource variables represent data that
+can only be defined during run-time.  I.e.  Resource variables
+will get expanded to an appropriate value during the execution
+of <em>MHonArc</em>.
+</p>
+
+<P>The syntax of <EM>variables</EM> in resources
+is as follows: </P>
+
+<P><CODE>$</CODE><var>VARIABLE</var>[<CODE>:</CODE>[<var>N</var>][<CODE>U</CODE>]]<CODE>$
+</CODE></P>
+
+<P>The items in []'s are optional. Definition of each part: </P>
+
+<DL> <DT><CODE>$</CODE>
+
+<DD><P> The <CODE>$</CODE> character represents the beginning, and
+ending, of the variable.  </P>
+
+<DT><EM>VARIABLE</EM> 
+ 
+<DD><P> This is the the actual name of the variable. Variable names are
+case sensitive.
+</P>
+
+<DT><CODE>:</CODE>[<var>N</var>][<CODE>U</CODE>] <em>(optional)</EM>
+
+<DD><P> This defines a maximum length of the replacement string for
+the variable.  The option "<CODE>U</CODE>" denotes that the replacement
+string should be treated as part of a URL string. This can be useful
+when the variable may contain special characters, and the variable
+is used as part of a URL.  </P>
+
+</DL>
+
+<P><STRONG>No</STRONG> whitespace is allowed between the opening
+<CODE>$</CODE> and closing <CODE>$</CODE>. If an unrecognize d variable
+is encountered, it gets replaced with an empty string. If a literal
+"<CODE>$</CODE>" is needed, use "<CODE>$$</CODE>".  </P>
+
+<DL>
+<DT><STRONG>NOTE</STRONG> 
+<DD><P>The
+<a href="mailtourl.html">MAILTOURL</a>
+resource has
+different rules for variable expansion. If a
+variable does not exactly match the set of variables available for
+the MAILTOURL, the variable text will be taken literally
+as part of the element content. Therefore, a single "<CODE>$</CODE>"
+can be used to represent a "<CODE>$</CODE>" character.  </P>
+<P>Also,
+variables in the MAILTOURL should <STRONG>NOT</STRONG>
+have "<CODE>:</CODE><VAR>NU</VAR>" modifier. This will prevent the
+variables from be recognized. <EM>MHonArc</EM> will automatically
+treat the replacement value as a part of a URL string.
+</P>
+</DD></DL>
+
+<P>Here are some examples of legal variable usage:
+</P>
+<UL>
+<LI><CODE>$SUBJECT$</CODE> 
+<LI><CODE>$FROMNAME$</CODE> 
+<LI><CODE>$SUBJECT:50$</CODE> 
+<LI><CODE>$SUBJECTNA:60U$</CODE> 
+<LI><CODE>$FROMADDR:U$</CODE> 
+</UL>
+
+<p>The description of for each resource will contain a list
+of all applicable variables that may be used in defining the
+resource's value.
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Default Setting</h2>
+
+<p>Nil.
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Resource Variables</h2>
+
+<p>N/A
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Examples</h2>
+
+<p>The following shows you what a resource file looks like:
+</p>
+
+<PRE>
+&lt;!-- MHonArc resource file
+  --&gt;
+<b>&lt;<a href="sort.html">SORT</a>&gt;</b>
+<b>&lt;<a href="title.html">TITLE</a>&gt;</b>
+MHonArc test
+<b>&lt;/TITLE&gt;</b>
+ 
+<b>&lt;<a href="ttitle.html">TTITLE</a>&gt;</b>
+MHonArc test (by thread)
+<b>&lt;/TTITLE&gt;</b>
+ 
+&lt;!--=== Index Page Customizations =========================================--&gt;
+ 
+&lt;!-- Have LISTBEGIN contain last updated information
+  --&gt;
+<b>&lt;<a href="listbegin.html">LISTBEGIN</a>&gt;</b>
+&lt;address&gt;
+Last updated: $LOCALDATE$&lt;br&gt;
+$NUMOFMSG$ messages in chronological order&lt;br&gt;
+&lt;/address&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="$TIDXFNAME$"&gt;Thread Index&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;
+Listing format is the following:
+&lt;p&gt;
+&lt;ul&gt;&lt;li&gt; 
+&lt;strong&gt;Subject&lt;/strong&gt;
+(# of follow-ups)
+&lt;em&gt;From&lt;/em&gt;&lt;br&gt;
+&lt;/ul&gt;
+&lt;p&gt;
+&lt;hr&gt;
+&lt;ul&gt;
+<b>&lt;/LISTBEGIN&gt;</b>
+ 
+ 
+&lt;!-- A compact listing template
+  --&gt;
+<b>&lt;<a href="litemplate.html">LITEMPLATE</a>&gt;</b>
+&lt;li&gt; 
+&lt;strong&gt;$SUBJECT:40$&lt;/strong&gt;
+($NUMFOLUP$) &lt;em&gt;$FROMNAME$&lt;/em&gt;&lt;br&gt;
+<b>&lt;/LITEMPLATE&gt;</b>
+ 
+<b>&lt;<a href="listend.html">LISTEND</a>&gt;</b>
+&lt;/ul&gt;
+&lt;p&gt;
+&lt;hr&gt;
+&lt;strong&gt;
+&lt;a href="http://foo.org/"&gt;Home&lt;/a&gt;
+&lt;/strong&gt;
+&lt;p&gt;
+<b>&lt;/LISTEND&gt;</b>
+ 
+&lt;!--=== Thread Index Page Customizations ==================================--&gt;
+<b>&lt;<a href="thead.html">THEAD</a>&gt;</b>
+&lt;address&gt;
+Thread index&lt;br&gt;
+Last updated: $LOCALDATE$&lt;br&gt;
+$NUMOFMSG$ messages&lt;br&gt;
+&lt;/address&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="$IDXFNAME$"&gt;Main Index&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+<b>&lt;/THEAD&gt;</b>
+ 
+&lt;!--=== Message Customizations ============================================--&gt;
+<b>&lt;<a href="excs.html">EXCS</a> override&gt;</b>
+apparently
+errors-to 
+followup
+forward 
+lines 
+message-id
+mime- 
+nntp- 
+originator 
+path 
+precedence 
+received 
+replied 
+return-path 
+status 
+via 
+x- 
+<b>&lt;/EXCS&gt;</b>
+
+<b>&lt;<a href="labelstyles.html">LABELSTYLES</a>&gt;</b>
+-default-
+subject:strong
+from:strong
+to:strong
+&lt;/LABELSTYLES&gt;
+ 
+<b>&lt;<a href="fieldstyles.html">FIELDSTYLES</a>&gt;</b>
+-default-
+subject:strong
+from:strong
+to:strong
+keywords:em
+newsgroups:strong
+<b>&lt;/FIELDSTYLES&gt;</b>
+ 
+<b>&lt;<a href="msghead.html">MSGHEAD</a>&gt;</b>
+&lt;address&gt;
+MHonArc test archive
+&lt;/address&gt;
+<b>&lt;/MSGHEAD&gt;</b>
+ 
+<b>&lt;<a href="msgfoot.html">MSGFOOT</a>&gt;</b>
+&lt;strong&gt;
+&lt;a href="http://foo.org/"&gt;Home&lt;/a&gt; |
+&lt;a href="$IDXFNAME$"&gt;Main Index&lt;/a&gt; |
+&lt;a href="$TIDXFNAME$"&gt;Thread Index&lt;/a&gt;
+&lt;/strong&gt;
+<b>&lt;/MSGFOOT&gt;</b>
+ 
+&lt;!--=== Icons =============================================================--&gt;
+<b>&lt;<a href="icons.html">ICONS</a>&gt;</b>
+application/octet-stream:http://foo.org/icons/binary.xbm
+application/postscript:http://foo.org/icons/postscript.xbm
+audio/basic:http://foo.org/icons/sound.xbm
+image/gif:http://foo.org/icons/image.xbm
+image/jpeg:http://foo.org/icons/image.xbm
+image/tiff:http://foo.org/icons/image.xbm
+multipart/alternative:http://foo.org/icons/alternative.xbm
+multipart/digest:http://foo.org/icons/text.xbm
+multipart/mixed:http://foo.org/icons/mixed.xbm
+multipart/parallel:http://foo.org/icons/mixed.xbm
+text/richtext:http://foo.org/icons/mixed.xbm
+text/html:http://foo.org/icons/mixed.xbm
+text/plain:http://foo.org/icons/text.xbm
+unknown:http://foo.org/icons/unknown.doc.xbm
+video/mpeg:http://foo.org/icons/movie.xbm
+video/quicktime:http://foo.org/icons/movie.xbm
+<b>&lt;/ICONS&gt;</b>
+</PRE>
+
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Version</h2>
+
+<p>1.0
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>See Also</h2>
+
+<p>
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<address>
+97/05/13 17:30:00<br>
+<img align="top" src="../monicon.gif" alt="">
+<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"
+><strong>MHonArc</strong></a><br>
+Copyright &#169; 1997, <a href="http://www.oac.uci.edu/indiv/ehood/"
+>Earl Hood</a>, <a href="mailto:ehood@medusa.acs.uci.edu"
+> ehood@medusa.acs.uci.edu</a><br>
+</address>
+
+</body>
+</html>

@@ -1,0 +1,123 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
+<html>
+<head>
+<title>MHonArc Resources: FIELDORDER</title>
+</head>
+<body>
+
+<address>
+<a href="../resources.html#fieldorder">MHonArc Resource List</a></br>
+</address>
+
+<hr>
+<h1>FIELDORDER</h1>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Syntax</h2>
+
+<dl>
+
+<dt><strong>Envariable</strong><dt>
+<dd><p>N/A
+</p>
+</dd>
+
+<dt><strong>Element</strong><dt>
+<dd><p>
+<code>&lt;FIELDORDER&gt;<br></code>
+<var>1st-field-name</var><br>
+<var>2nd-field-name</var><br>
+<var>...</var><br>
+<code>&lt;/FIELDORDER&gt;<br></code>
+</p>
+</dd>
+
+<dt><strong>Command-line Option</strong><dt>
+<dd><p>N/A
+</p>
+</dd>
+
+</dl>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Description</h2>
+
+<P>The FIELDORDER resource allows you to control the order the message header 
+fields appear in the HTML output.
+</P>
+ 
+<P>Each line of the &lt;FIELDORDER&gt; element is the exact
+case-insensitive name of a message header field. The order the fields
+are listed is the order they will appear in the filtered message. The
+special field value "<CODE>-extra-</CODE>" represents all fields not
+explicitly specified in the &lt;FIELDORDER&gt; element and not
+excluded by the <a href="excs.html">EXCS</a> resource. Extra fields are listed
+in sorted order.  </P>
+
+<p>If <CODE>-extra-</CODE> is not specified, then only the fields
+listed will be displayed.
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Default Setting</h2>
+
+<PRE>
+<b>&lt;FieldOrder&gt;</b>
+to
+subject
+from
+date
+-extra-
+<b>&lt;/FieldOrder&gt;</b>
+</PRE>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Resource Variables</h2>
+
+<p>N/A</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Examples</h2>
+
+<p>None.
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Version</h2>
+
+<p>1.0
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>See Also</h2>
+
+<p>
+<a href="excs.html">EXCS</a>,
+<a href="fieldsbeg.html">FIELDSBEG</a>,
+<a href="fieldsend.html">FIELDSEND</a>,
+<a href="fieldstyles.html">FIELDSTYLES</a>,
+<a href="fldbeg.html">FLDBEG</a>,
+<a href="fldend.html">FLDEND</a>,
+<a href="labelbeg.html">LABELBEG</a>,
+<a href="labelend.html">LABELEND</a>,
+<a href="labelstyles.html">LABELSTYLES</a>
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<address>
+97/05/13 17:29:16<br>
+<img align="top" src="../monicon.gif" alt="">
+<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"><strong>MHonArc</strong></a><br>
+Copyright &#169; 1997, <a href="http://www.oac.uci.edu/indiv/ehood/">Earl Hood</a>, <a href="mailto:ehood@medusa.acs.uci.edu">ehood@medusa.acs.uci.edu</a><br>
+</address>
+
+</body>
+</html>
