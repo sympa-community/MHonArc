@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhrcfile.pl,v 2.34 2003/02/04 23:31:19 ehood Exp $
+##	$Id: mhrcfile.pl,v 2.35 2003/02/22 04:40:11 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -186,6 +186,9 @@ sub read_resource_file {
 		$ExpireDate = $line;
 	    }
 	    last FMTSW;
+	}
+	if ($elem eq 'fasttempfiles') {		# Non-random temp files
+	    $FastTempFiles = 1; last FMTSW;
 	}
 	if ($elem eq 'fieldstore') {		# Fields to store
 	    @ExtraHFields = ()  if $override;
@@ -627,6 +630,9 @@ sub read_resource_file {
 	if ($elem eq 'nodoc') {			# Do not link to docs
 	    $NODOC = 1; last FMTSW;
 	}
+	if ($elem eq 'nofasttempfiles') {	# Random temp files
+	    $FastTempFiles = 0; last FMTSW;
+	}
 	if ($elem eq 'nofolrefs') {		# Don't print explicit fol/refs
 	    $DoFolRefs = 0; last FMTSW;
 	}
@@ -877,7 +883,7 @@ sub read_resource_file {
 	}
 	if ($elem eq 'defcharset') {		# Default charset
 	    $readmail::TextDefCharset = lc get_elem_last_line($handle, $elem);
-	    $readmail::TextDefCharset = s/\s//g;
+	    $readmail::TextDefCharset =~ s/\s//g;
 	    $readmail::TextDefCharset = 'us-ascii'
 		if $readmail::TextDefCharset eq '';
 	}

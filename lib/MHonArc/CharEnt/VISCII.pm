@@ -1,11 +1,7 @@
 
 package MHonArc::CharEnt::VISCII;
 
-# Vietnamese
 +{
-
-  # Hex Code    Entity Ref
-
     '' =>	'&#x1EB2;',
     '' =>	'&#x1EB4;',
     '' =>	'&#x1EAA;',
@@ -50,7 +46,7 @@ package MHonArc::CharEnt::VISCII;
     '£' =>	'&#x1EB7;',
     '¤' =>	'&#x1EA5;',
     '¥' =>	'&#x1EA7;',
-    '¦' =>	'&#x1EA8;',
+    '¦' =>	'&#x1EA9;',
     '§' =>	'&#x1EAD;',
     '¨' =>	'&#x1EBD;',
     '©' =>	'&#x1EB9;',

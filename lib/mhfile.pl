@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhfile.pl,v 2.9 2002/11/24 04:15:12 ehood Exp $
+##	$Id: mhfile.pl,v 2.10 2003/02/22 04:40:11 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -168,6 +168,15 @@ sub file_temp {
     my($handle, $tmpfile);
 
     MKTEMP: {
+	if ($FastTempFiles) {
+	    $handle = gensym;
+	    $tmpfile = join($DIRSEP, $dir, $template.$$);
+	    if (!sysopen($handle, $tmpfile,
+			 (O_WRONLY|O_EXCL|O_CREAT), 0600)) {
+		die qq/ERROR: Unable to create temp file "$tmpfile": $!\n/;
+	    }
+	    last MKTEMP;
+	}
 	if ($_have_File_Temp) {
 	    ($handle, $tmpfile) =
 		File::Temp::tempfile($template, 'DIR' => $dir, 'UNLINK' => 0);

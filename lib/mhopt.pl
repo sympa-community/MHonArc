@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##      $Id: mhopt.pl,v 2.51 2003/01/19 01:35:59 ehood Exp $
+##      $Id: mhopt.pl,v 2.52 2003/02/22 04:40:11 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -62,6 +62,7 @@ sub get_resources {
 	'editidx',	# Change index page layout only
 	'expiredate=s',	# Message cut-off date
 	'expireage=i',	# Time in seconds from current if message expires
+	'fasttempfiles',# Do not use random filenames for temporary files
 	'fileperms=i',	# Octal permission to create files
 	'folrefs',	# Print links to explicit follow-ups/references
 	'footer=s',	# File containing user text for bottom of index page
@@ -114,6 +115,8 @@ sub get_resources {
 	'nodecodeheads',
 			# Do not decode 1522 encoded data in message headers
 	'nodoc',	# Do not print link to doc at end of index page
+	'nofasttempfiles',
+			# Use random filenames for temporary files
 	'nofolrefs',	# Do not print links to explicit follow-ups/references
 	'nogzipfiles',	# Do not Gzip files
 	'nogziplinks',	# Do not add '.gz' extensions to files
@@ -579,6 +582,8 @@ sub get_resources {
 
     $CheckNoArchive = 1  if $opt{'checknoarchive'};
     $CheckNoArchive = 0  if $opt{'nochecknoarchive'};
+    $FastTempFiles  = 1  if $opt{'fasttempfiles'};
+    $FastTempFiles  = 0  if $opt{'nofasttempfiles'};
     $POSIXstrftime  = 1  if $opt{'posixstrftime'};
     $POSIXstrftime  = 0  if $opt{'noposixstrftime'};
 

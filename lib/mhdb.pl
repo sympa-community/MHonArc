@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhdb.pl,v 2.31 2003/02/04 23:31:19 ehood Exp $
+##	$Id: mhdb.pl,v 2.32 2003/02/22 04:40:11 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -155,6 +155,7 @@ print_var($db,'DecodeHeads',    \$DecodeHeads);
 print_var($db,'DoFolRefs',      \$DoFolRefs);
 print_var($db,'ExpireDate',     \$ExpireDate);
 print_var($db,'ExpireTime',     \$ExpireTime);
+print_var($db,'FastTempFiles',  \$FastTempFiles);
 print_var($db,'FROM',           \$FROM);
 print_var($db,'GMTDateFmt',     \$GMTDateFmt);
 print_var($db,'GzipExe',        \$GzipExe);

@@ -1,7 +1,7 @@
 " Vim syntax file
 " Language:	MHonArc Resource File
 " Maintainer:	Earl Hood <mhonarc@pobox.com>
-" Last change:	$Date: 2003/02/04 23:31:19 $ 
+" Last change:	$Date: 2003/02/22 04:40:10 $ 
 
 "	Adapted from the following:
 " Language:	HTML
@@ -69,6 +69,8 @@ syn keyword mhaTagName contained docurl
 syn keyword mhaTagName contained excs
 syn keyword mhaTagName contained expireage
 syn keyword mhaTagName contained expiredate
+syn keyword mhaTagName contained fasttempfiles
+syn keyword mhaTagName contained nofasttempfiles
 syn keyword mhaTagName contained fieldorder
 syn keyword mhaTagName contained fieldsbeg
 syn keyword mhaTagName contained fieldsend

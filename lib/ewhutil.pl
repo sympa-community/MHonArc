@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: ewhutil.pl,v 2.11 2003/01/18 02:57:34 ehood Exp $
+##	$Id: ewhutil.pl,v 2.13 2003/02/19 06:26:18 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -26,12 +26,13 @@
 
 package mhonarc;
 
+my $HTMLSpecials = '"&<>';
 my %HTMLSpecials = (
   '"'	=> '&quot;',
   '&'	=> '&amp;',
   '<'	=> '&lt;',
   '>'	=> '&gt;',
-  '@'	=> '&#x40;',
+  # '@'	=> '&#x40;',  # XXX: Screws up ISO-2022-JP conversion
 );
 
 ##---------------------------------------------------------------------------
@@ -52,7 +53,7 @@ sub htmlize {			# Older name
     return ''  unless scalar(@_) && defined($_[0]);
     my $txt   = shift;
     my $txt_r = ref($txt) ? $txt : \$txt;
-    $$txt_r =~ s/(["&<>@])/$HTMLSpecials{$1}/g;
+    $$txt_r =~ s/([$HTMLSpecials])/$HTMLSpecials{$1}/go;
     $$txt_r;
 }
 
@@ -60,7 +61,7 @@ sub entify {			# Alternate name
     return ''  unless scalar(@_) && defined($_[0]);
     my $txt   = shift;
     my $txt_r = ref($txt) ? $txt : \$txt;
-    $$txt_r =~ s/(["&<>@])/$HTMLSpecials{$1}/g;
+    $$txt_r =~ s/([$HTMLSpecials])/$HTMLSpecials{$1}/go;
     $$txt_r;
 }
 

@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhinit.pl,v 2.46 2003/02/04 23:31:19 ehood Exp $
+##	$Id: mhinit.pl,v 2.47 2003/02/22 04:40:11 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -396,6 +396,9 @@ $DoArchive   = defined($ENV{'M2H_ARCHIVE'})     ? $ENV{'M2H_ARCHIVE'}     : 1;
 $DoFolRefs   = defined($ENV{'M2H_FOLREFS'})     ? $ENV{'M2H_FOLREFS'}     : 1;
 $Reconvert   = defined($ENV{'M2H_RECONVERT'})   ? $ENV{'M2H_RECONVERT'}   : 0;
 $UsingLASTPG = defined($ENV{'M2H_USINGLASTPG'}) ? $ENV{'M2H_USINGLASTPG'} : 1;
+
+$FastTempFiles = defined($ENV{'M2H_FASTTEMPFILES'}) ?
+			 $ENV{'M2H_FASTTEMPFILES'} : 0;
 
 @FMTFILE     = defined($ENV{'M2H_RCFILE'}) ?
 		    ($ENV{'M2H_RCFILE'}) : ();

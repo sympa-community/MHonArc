@@ -1,0 +1,133 @@
+<html>
+<head>
+<title>MHonArc Resources: FASTTEMPFILES</title>
+<link rel="stylesheet" type="text/css" href="../docstyles.css">
+</head>
+<body>
+
+<!--x-rc-nav-->
+<table border=0><tr valign="top">
+<td align="left" width="50%">[Prev:&nbsp;<a href="expiredate.html">EXPIREDATE</a>]</td><td><nobr>[<a href="../resources.html#fasttempfiles">Resources</a>][<a href="../mhonarc.html">TOC</a>]</nobr></td><td align="right" width="50%">[Next:&nbsp;<a href="fieldorder.html">FIELDORDER</a>]</td></tr></table>
+<!--/x-rc-nav-->
+
+<hr>
+<h1>FASTTEMPFILES</h1>
+<!--X-TOC-Start-->
+<ul>
+<li><a href="#syntax">Syntax</a>
+<li><a href="#description">Description</a>
+<li><a href="#default">Default Setting</a>
+<li><a href="#rcvars">Resource Variables</a>
+<li><a href="#examples">Examples</a>
+<li><a href="#version">Version</a>
+<li><a href="#seealso">See Also</a>
+</ul>
+<!--X-TOC-End-->
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="syntax">Syntax</a></h2>
+
+<dl>
+
+<dt><strong>Envariable</strong></dt>
+<dd><p>
+<code>M2H_FASTTEMPFILES=</code>[ <code>0</code> | <code>1</code> ]
+</p>
+</dd>
+
+<dt><strong>Element</strong></dt>
+<dd><p>
+<code>&lt;FASTTEMPFILES&gt;</code><br>
+<code>&lt;NOFASTTEMPFILES&gt;</code><br>
+</p>
+</dd>
+
+<dt><strong>Command-line Option</strong></dt>
+<dd><p>
+<code>-fasttempfiles</code><br>
+<code>-nofasttempfiles</code>
+</p>
+</dd>
+
+</dl>
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="description">Description</a></h2>
+
+<p>When FASTTEMPFILES is active, MHonArc will use non-random
+temporary filenames.
+</p>
+
+<p>When MHonArc creates, or edits, an archive file, MHonArc first
+writes to a temporary file.  If no errors occur, the temporary file
+is then renamed to the appropriate archive filename.  For security
+reasons (like to avoid local symlink attacks), MHonArc generates
+random filenames for temporary files.  This operation does
+increase the overhead of temporary file creation.  The overhead is
+generally negligable, but if processing a large set of files and
+performance is a primary concern, you can enable FASTTEMPFILES to
+avoid the random filename creation.  </p>
+
+<p>If you want to enable FASTTEMPFILES, but are concerned about
+security, make sure that the archive directory and file permissions
+are set to only allow write access to trusted users.
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="default">Default Setting</a></h2>
+
+<p>Off
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="rcvars">Resource Variables</a></h2>
+
+<p>N/A
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="examples">Examples</a></h2>
+
+<p>None.
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="version">Version</a></h2>
+
+<p>2.6.1
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="seealso">See Also</a></h2>
+
+<p>
+<a href="dbfileperms.html">DBFILEPERMS</a>,
+<a href="fileperms.html">FILEPERMS</a>,
+<a href="umask.html">UMASK</a>
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<!--x-rc-nav-->
+<table border=0><tr valign="top">
+<td align="left" width="50%">[Prev:&nbsp;<a href="expiredate.html">EXPIREDATE</a>]</td><td><nobr>[<a href="../resources.html#fasttempfiles">Resources</a>][<a href="../mhonarc.html">TOC</a>]</nobr></td><td align="right" width="50%">[Next:&nbsp;<a href="fieldorder.html">FIELDORDER</a>]</td></tr></table>
+<!--/x-rc-nav-->
+<hr>
+<address>
+$Date: 2003/02/22 04:40:10 $<br>
+<img align="top" src="../monicon.png" alt="">
+<a href="http://www.mhonarc.org/"><strong>MHonArc</strong></a><br>
+Copyright &#169; 2003, <a href="http://www.earlhood.com/"
+>Earl Hood</a>, <a href="mailto:mhonarc@mhonarc.org"
+>mhonarc@mhonarc.org</a><br>
+</address>
+
+</body>
+</html>
