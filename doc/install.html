@@ -160,7 +160,7 @@ for installation instructions.
 <li><p>Perl 5 is installed.  If you do not have Perl 5, goto
     <a href="http://language.perl.com/"
     >&lt;http://language.perl.com/&gt;</a> for download information.
-    Perl versions 5.004 and later are recommended.
+    Perl versions 5.6.1 and later are recommended.
     </p>
     </li>
 <li><p>The following standard modules are installed:
@@ -184,18 +184,41 @@ for installation instructions.
     </tr>
     </table>
     </li>
-<li><p>The following modules are optional:
+<li><p>The following modules are optional (they are not required, but
+    they will provided improved or enhanced functionality):
     </p>
     <ul>
     <li><p><b>Digest::MD5</b>:  Used for creating IDs for messages without
-    message-ids.  This module helps MHonArc detect already
-    archived messages for messages without message-ids.
+    message-ids.  Normally, messages define a unique message-id, however,
+    there are some use cases where message-ids are not present.  Therefore,
+    this module helps MHonArc detect already
+    archived messages for messages without message-ids.  If
+    <tt>Digest::MD5</tt> is not available, MHonArc will be unable to
+    detect for duplicate messages that do not contain message-ids.
+    </p>
+    </li>
+    <li><p><b>File::Temp</b>:  MHonArc uses temporary files when writing
+    files to disk (for security and data integrity reasons).
+    If <tt>File::Temp</tt> is not available, MHonArc will use its own
+    internal implementation, which is not as secure as <tt>File::Temp</tt>,
+    but it should be adequate for most uses.
+    </p>
+    </li>
+    <li><p><b>MIME::Base64</b>:  Used for base64 decoding (base64 is
+    the standard way to encoding binary data in mail).
+    <tt>MIME::Base64</tt> is normally provided with the standard perl
+    distribution.  If <tt>MIME::Base64</tt> is not available,
+    MHonArc will fallback to its own internal, less efficient, base64 decoder.
+    </p>
+    </li>
+    <li><p><b>POSIX</b>:  Used for setting locale as defined by the
+    <a href="resources/lang.html">LANG</a> resource and for formatting
+    time strings if
+    <a href="resources/posixstrftime.html">POSIXSTRFTIME</a>
+    resource is enabled.
     </p>
     </li>
     </ul>
-    <p>MHonArc will still function if the above listed modules are
-    not available.
-    </p>
 </li>
 </ul>
 
@@ -226,6 +249,18 @@ list various sites that you can download MHonArc.
 of the RPM.  Generally, the release number is equal to '<tt>1</tt>'.
 Choose the format that best suits your environment.
 </p>
+
+<table class="note" width="100%">
+<tr valign="baseline">
+<td><strong>NOTE:</strong></td>
+<td width="100%"><p>
+A source RPM, <tt>MHonArc-<var>X.X.X-n</var>.src.rpm</tt>, is also
+provided for those that need to create custom RPM bundles.
+</p>
+</td>
+</tr>
+</table>
+<p> </p>
 
 <table class="note" width="100%">
 <tr valign="baseline">
@@ -265,7 +300,9 @@ prompt&gt; <b>rpm -Uvh MHonArc-<var>X.X.X-n</var>.noarch.rpm</b>
 <tr valign="baseline">
 <td><strong>NOTE:</strong></td>
 <td width="100%"><p>RPM-based installation requires that the perl
-executable is located at <tt>/usr/bin/perl</tt>.
+executable is located at <tt>/usr/bin/perl</tt>.  If you have perl
+installed in a different location, you can download the src RPM
+and edit the RPM spec file to reflect your system's configuration.
 </p>
 </td>
 </tr>
@@ -299,7 +336,8 @@ executable is located at <tt>/usr/bin/perl</tt>.
 
 <p>It is highly likely that you will need to have root priviledges
 to install via RPM.  If you do not have root access, or you want
-to install in a non-standard location, you will need to 
+to install in a non-standard location, you either need to create
+a new RPM from the source RPM or
 <a href="#extraction">install MHonArc from the non-RPM bundles</a>.
 </p>
 
@@ -369,8 +407,7 @@ the Unix-based extraction methods.
 <td width="100%"><p>If your are using
 <a href="http://www.cygwin.com/">Cygwin</a> and the
 cygwin build of Perl, then the installation and usage of MHonArc is
-the same as a Unix-based environment.  MHonArc treats the
-cygwin environment as a Unix-type environment.
+the same as a Unix-based environment.
 </p>
 </td>
 </tr>
@@ -543,9 +580,11 @@ prompt&gt; <b>make install</b>
 <table class="note" width="100%">
 <tr valign="baseline">
 <td><strong>NOTE:</strong></td>
-<td width="100%"><p><b><tt>install.me</tt></b> is actually called "behind the scenes"
-in batch mode to install the files.  Therefore, more unusually invocations
-methods of <tt class="ishell"><b>perl Makefile.PL</b></tt> may not be supported.
+<td width="100%"><p><b><tt>install.me</tt></b> is actually called
+"behind the scenes"
+in batch mode to install the files.  Therefore, alternate variations
+of invoking <tt class="ishell"><b>perl Makefile.PL</b></tt> may not be
+supported.
 </p>
 </td>
 </tr>
@@ -752,12 +791,14 @@ color-capable terminals.
 <!-- *************************************************************** -->
 <hr>
 <address>
-$Date: 2003/07/20 03:27:49 $ <br>
+$Date: 2004/05/07 22:18:07 $ <br>
 <img align="top" src="monicon.png" alt="">
 <a href="http://www.mhonarc.org/"><strong>MHonArc</strong></a><br>
 Copyright &#169; 1997-2003, <a href="http://www.mhonarc.org/~ehood/"
->Earl Hood</a>, <a href="mailto:mhonarc@mhonarc.org"
->mhonarc@mhonarc.org</a><br>
+>Earl Hood</a>, <a href="mailto:mhonarc&#37;40mhonarc.org"
+>mhonarc<!--
+-->&#64;<!--
+-->mhonarc.org</a><br>
 </address>
 
 </BODY>

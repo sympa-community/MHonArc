@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhinit.pl,v 2.48 2003/08/02 06:15:37 ehood Exp $
+##	$Id: mhinit.pl,v 2.51 2003/10/17 22:01:38 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -266,8 +266,6 @@ $DoMissingMsgs	=  0;	# Flag is missing messages should be noted in index
 %IsDefault	= ();	# Flags if certain resources are the default
 
 $bs 		= "\b";	# Used as a separator
-$Url 		= '(http://|https://|ftp://|afs://|wais://|telnet://|' .
-		   'gopher://|news:|nntp:|mid:|cid:|mailto:|prospero:)';
 
 $MLCP		= 0;	# Main index contains included files flag
 $SLOW		= 0;	# Save memory flag
@@ -309,6 +307,7 @@ $OUTDIR    = $ENV{'M2H_OUTDIR'}     || $CURDIR;
 $TTITLE    = $ENV{'M2H_TTITLE'}     || "Mail Thread Index";
 $TITLE     = $ENV{'M2H_TITLE'}      || "Mail Index";
 $MAILTOURL = $ENV{'M2H_MAILTOURL'}  || "";
+$NewsUrl   = $ENV{'M2H_NEWSURL'}  || "";
 $FROM      = $ENV{'M2H_MSGSEP'}     || '^From ';
 $LOCKFILE  = $ENV{'M2H_LOCKFILE'}   ||
 	     ($MSDOS ? "mhonarc.lck" :
@@ -444,6 +443,11 @@ $MsgExcFilter = $ENV{'M2H_MSGEXCFILTER'} || "";
 @months   = $ENV{'M2H_MONTHSABR'}   ? split(/:/, $ENV{'M2H_MONTHSABR'})   : ();
 @Weekdays = $ENV{'M2H_WEEKDAYS'}    ? split(/:/, $ENV{'M2H_WEEKDAYS'})    : ();
 @weekdays = $ENV{'M2H_WEEKDAYSABR'} ? split(/:/, $ENV{'M2H_WEEKDAYSABR'}) : ();
+
+##	Location to put attachments.
+
+$AttachmentDir = $ENV{'M2H_ATTACHMENTDIR'};
+$AttachmentUrl = $ENV{'M2H_ATTACHMENTURL'} || '';
 
 ##	Many of the following are set during runtime after the
 ##	database and resources have been read.  The variables are

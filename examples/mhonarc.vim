@@ -1,7 +1,7 @@
 " Vim syntax file
 " Language:	MHonArc Resource File
 " Maintainer:	Earl Hood <mhonarc@pobox.com>
-" Last change:	$Date: 2003/08/02 06:15:37 $ 
+" Last change:	$Date: 2003/10/02 03:30:58 $ 
 
 "	Adapted from the following:
 " Language:	HTML
@@ -43,6 +43,8 @@ syn region  mhaRcVarArg	 contained start=+(+  end=+)+
 
 " BEGIN: MHonArc Tags
 syn keyword mhaTagName contained addressmodifycode
+syn keyword mhaTagName contained attachmentdir
+syn keyword mhaTagName contained attachmenturl
 syn keyword mhaTagName contained authorbegin
 syn keyword mhaTagName contained authorend
 syn keyword mhaTagName contained authsort
@@ -148,6 +150,7 @@ syn keyword mhaTagName contained msgsep
 syn keyword mhaTagName contained multipg
 syn keyword mhaTagName contained news
 syn keyword mhaTagName contained nonews
+syn keyword mhaTagName contained newsurl
 syn keyword mhaTagName contained nextbuttonia
 syn keyword mhaTagName contained nextbutton
 syn keyword mhaTagName contained nextlinkia

@@ -1,17 +1,17 @@
 <html>
 <head>
-<title>MHonArc Resources: DEFCHARSET</title>
+<title>MHonArc Resources: NEWSURL</title>
 <link rel="stylesheet" type="text/css" href="../docstyles.css">
 </head>
 <body>
 
 <!--x-rc-nav-->
 <table border=0><tr valign="top">
-<td align="left" width="50%">[Prev:&nbsp;<a href="decodeheads.html">DECODEHEADS</a>]</td><td><nobr>[<a href="../resources.html#defcharset">Resources</a>][<a href="../mhonarc.html">TOC</a>]</nobr></td><td align="right" width="50%">[Next:&nbsp;<a href="definederived.html">DEFINEDERIVED</a>]</td></tr></table>
+<td align="left" width="50%">[Prev:&nbsp;<a href="news.html">NEWS</a>]</td><td><nobr>[<a href="../resources.html#newsurl">Resources</a>][<a href="../mhonarc.html">TOC</a>]</nobr></td><td align="right" width="50%">[Next:&nbsp;<a href="nextbutton.html">NEXTBUTTON</a>]</td></tr></table>
 <!--/x-rc-nav-->
 
 <hr>
-<h1>DEFCHARSET</h1>
+<h1>NEWSURL</h1>
 <!--X-TOC-Start-->
 <ul>
 <li><a href="#syntax">Syntax</a>
@@ -31,20 +31,22 @@
 <dl>
 
 <dt><strong>Envariable</strong></dt>
-<dd><p>N/A
+<dd><p>
+<code>M2H_NEWSURL=</code><var>url</var>
 </p>
 </dd>
 
 <dt><strong>Element</strong></dt>
 <dd><p>
-<code>&lt;DEFCHARSET&gt;</code><br>
-<var>charset</var><br>
-<code>&lt;/DEFCHARSET&gt;</code><br>
+<code>&lt;NEWSURL&gt;</code><br>
+<var>url</var><br>
+<code>&lt;/NEWSURL&gt;</code><br>
 </p>
 </dd>
 
 <dt><strong>Command-line Option</strong></dt>
-<dd><p>N/A
+<dd><p>
+<code>-newsurl </code><var>url</var>
 </p>
 </dd>
 
@@ -54,12 +56,9 @@
 <hr>
 <h2><a name="description">Description</a></h2>
 
-<p>DEFCHARSET donotes the default character set of message
-text bodies.  The MIME standard states that if a charset parameter
-is not specified for a text message, then <tt>us-ascii</tt> should
-be assumed.  However, in some locales, MUAs fail to specify a
-charset when the text is non-ascii.  DEFCHARSET allows you to
-compensate for this problem for a given locale.
+<p>NEWURL defines the URL template for linking newsgroup names
+in <tt>Newsgroup:</tt> header fields when the <a href="news.html">NEWS</a>
+resource is active.
 </p>
 
 <!-- *************************************************************** -->
@@ -67,30 +66,53 @@ compensate for this problem for a given locale.
 <h2><a name="default">Default Setting</a></h2>
 
 <pre class="code">
-<b>&lt;DefCharset&gt;</b>
-us-ascii
-<b>&lt;/DefCharset&gt;</b>
+news:$NEWSGROUP$
 </pre>
 
 <!-- *************************************************************** -->
 <hr>
 <h2><a name="rcvars">Resource Variables</a></h2>
 
-<p>N/A
-</p>
+<table border=1>
+<tr bgcolor="#C0C0C0">
+<th>Variable</th><th>Value</th>
+</tr>
+<tr valign=top>
+<td align=center><a name="MSGID" href="../rcvars.html#MSGID"><strong><code>$MSGID$</code></strong></a></td>
+<td>The message-id of the message.</td>
+</tr>
+<tr valign=top>
+<td align=center><a name="NEWSGROUP" href="../rcvars.html#NEWSGROUP"><strong><code>$NEWSGROUP$</code></strong></a></td>
+<td>Newsgroup name</td>
+</tr>
+</table>
 
 <!-- *************************************************************** -->
 <hr>
 <h2><a name="examples">Examples</a></h2>
 
-<p>None.
+<p>If archiving news posts for a local server, it may be desireable
+to specify a specific news host:
 </p>
+<pre class="code">
+<b>&lt;NewsUrl&gt;</b>
+news://news.example.com/$NEWSGROUP$
+<b>&lt;/NewsUrl&gt;</b>
+</pre>
+
+<p>Or, you may want to link directly to the message itself:
+</p>
+<pre class="code">
+<b>&lt;NewsUrl&gt;</b>
+news://news.example.com/$MSGID$
+<b>&lt;/NewsUrl&gt;</b>
+</pre>
 
 <!-- *************************************************************** -->
 <hr>
 <h2><a name="version">Version</a></h2>
 
-<p>2.6.0
+<p>2.6.9
 </p>
 
 <!-- *************************************************************** -->
@@ -98,22 +120,22 @@ us-ascii
 <h2><a name="seealso">See Also</a></h2>
 
 <p>
-<a href="charsetaliases.html">CHARSETALIASES</a>,
-<a href="charsetconverters.html">CHARSETCONVERTERS</a>
+<a href="news.html">NEWS</a>,
+<a href="mailtourl.html">MAILTOURL</a>
 </p>
 
 <!-- *************************************************************** -->
 <hr>
 <!--x-rc-nav-->
 <table border=0><tr valign="top">
-<td align="left" width="50%">[Prev:&nbsp;<a href="decodeheads.html">DECODEHEADS</a>]</td><td><nobr>[<a href="../resources.html#defcharset">Resources</a>][<a href="../mhonarc.html">TOC</a>]</nobr></td><td align="right" width="50%">[Next:&nbsp;<a href="definederived.html">DEFINEDERIVED</a>]</td></tr></table>
+<td align="left" width="50%">[Prev:&nbsp;<a href="news.html">NEWS</a>]</td><td><nobr>[<a href="../resources.html#newsurl">Resources</a>][<a href="../mhonarc.html">TOC</a>]</nobr></td><td align="right" width="50%">[Next:&nbsp;<a href="nextbutton.html">NEXTBUTTON</a>]</td></tr></table>
 <!--/x-rc-nav-->
 <hr>
 <address>
-$Date: 2003/10/06 22:04:16 $<br>
+$Date: 2003/10/06 22:04:18 $<br>
 <img align="top" src="../monicon.png" alt="">
 <a href="http://www.mhonarc.org/"><strong>MHonArc</strong></a><br>
-Copyright &#169; 2002, <a href="http://www.earlhood.com/"
+Copyright &#169; 2003, <a href="http://www.earlhood.com/"
 >Earl Hood</a>, <a href="mailto:mhonarc&#37;40mhonarc.org"
 >mhonarc<!--
 -->&#64;<!--

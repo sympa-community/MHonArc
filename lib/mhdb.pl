@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhdb.pl,v 2.33 2003/08/02 06:15:37 ehood Exp $
+##	$Id: mhdb.pl,v 2.36 2003/10/07 02:29:17 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -69,6 +69,7 @@ print_var($db,'Subject',     \%Subject);
 print_var($db,'ExtraHFields',\@ExtraHFields);
 print_var($db,'ExtraHFields',\%ExtraHFields);
 print_var($db,'TListOrder',  \@TListOrder);
+print_var($db,'MULTIIDX',    \$MULTIIDX);
 print_var($db,'NumOfMsgs',   \$NumOfMsgs);
 print_var($db,'NumOfPages',  \$NumOfPages);
 print_var($db,'SaveRsrcs',   \$SaveRsrcs);
@@ -148,6 +149,8 @@ print_var($db,'weekdays',   \@weekdays)   if scalar(@weekdays);
 print_var($db,'AddressModify',  \$AddressModify)
 				unless $IsDefault{'AddressModify'};
 print_var($db,'AddrModifyBodies', \$AddrModifyBodies);
+print_var($db,'AttachmentDir',  \$AttachmentDir);
+print_var($db,'AttachmentUrl',  \$AttachmentUrl);
 print_var($db,'CheckNoArchive', \$CheckNoArchive);
 print_var($db,'DOCURL',         \$DOCURL);
 print_var($db,'NODOC',          \$NODOC);
@@ -178,7 +181,7 @@ print_var($db,'MSGHEAD',        \$MSGHEAD);
 print_var($db,'MsgExcFilter',   \$MsgExcFilter);
 print_var($db,'MsgLocalDateFmt',\$MsgLocalDateFmt);
 print_var($db,'MsgPrefix',      \$MsgPrefix);
-print_var($db,'MULTIIDX',       \$MULTIIDX);
+print_var($db,'NewsUrl',        \$NewsUrl)  unless $IsDefault{'NEWSURL'};
 print_var($db,'NOMAILTO',       \$NOMAILTO);
 print_var($db,'NONEWS',         \$NONEWS);
 print_var($db,'NOURL',          \$NOURL);

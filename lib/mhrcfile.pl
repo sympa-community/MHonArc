@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhrcfile.pl,v 2.37 2003/08/13 03:56:28 ehood Exp $
+##	$Id: mhrcfile.pl,v 2.41 2004/03/15 20:28:23 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -35,7 +35,6 @@ sub read_resource_file {
     my $filename = shift;
     my $nowarn	 = shift;
     my $lang	 = shift || $Lang;
-    my @files = get_lang_file_list($filename, $lang);
 
     my $file;
     my $found = 0;
@@ -98,6 +97,7 @@ sub parse_resource_file {
     if ($file =~ m%(.*)[$DIRSEPREX]%o) {
 	$pathhead = $1;
 	$MainRcDir = $pathhead  unless defined $MainRcDir;
+	$pathhead .= $DIRSEP; # for INCLUDE resource
     } else {
 	$pathhead = '';
     }
@@ -117,7 +117,20 @@ sub parse_resource_file {
 	    $AddressModify = &get_elem_content($handle, $elem, $chop);
 	    last FMTSW;
 	}
-	if ($elem eq 'authorbegin') {		# Begin for author group
+	if ($elem eq 'attachmentdir') {		# Attachments directory
+	    if ($line = &get_elem_last_line($handle, $elem)) {
+		$AttachmentDir = $line;
+	    }
+	    last FMTSW;
+	}
+	if ($elem eq 'attachmenturl') {		# Attachments URL
+	    if ($line = &get_elem_last_line($handle, $elem)) {
+		$AttachmentUrl = $line;
+	    }
+	    last FMTSW;
+	}
+	if ($elem eq 'authorbegin' ||
+	    $elem eq 'authorbeg') {		# Begin for author group
 	    $AUTHBEG = &get_elem_content($handle, $elem, $chop);
 	    last FMTSW;
 	}
@@ -176,7 +189,8 @@ sub parse_resource_file {
 	    if (@a) { @DateFields = @a; }
 	    last FMTSW;
 	}
-	if ($elem eq 'daybegin') {		# Begin for day group
+	if ($elem eq 'daybegin' ||
+	    $elem eq 'daybeg') {		# Begin for day group
 	    $DAYBEG = &get_elem_content($handle, $elem, $chop);
 	    last FMTSW;
 	}
@@ -276,7 +290,8 @@ sub parse_resource_file {
 	    # push(@FieldOrder,'-extra-')  if (!$FieldODefs{'-extra-'});
 	    last FMTSW;
 	}
-	if ($elem eq 'fieldsbeg') {		# Begin markup of mail head
+	if ($elem eq 'fieldsbeg' ||
+	    $elem eq 'fieldsbegin') {		# Begin markup of mail head
 	    $FIELDSBEG = &get_elem_content($handle, $elem, $chop);
 	    last FMTSW;
 	}
@@ -295,7 +310,8 @@ sub parse_resource_file {
 	    $FIRSTPGLINK = &get_elem_content($handle, $elem, $chop);
 	    last FMTSW;
 	}
-	if ($elem eq 'fldbeg') {		# Begin markup of field text
+	if ($elem eq 'fldbeg' ||
+	    $elem eq 'fldbegin') {		# Begin markup of field text
 	    $FLDBEG = &get_elem_content($handle, $elem, $chop);
 	    last FMTSW;
 	}
@@ -306,7 +322,8 @@ sub parse_resource_file {
 	if ($elem eq 'folrefs') {		# Print explicit fol/refs
 	    $DoFolRefs = 1; last FMTSW;
 	}
-	if ($elem eq 'folupbegin') {		# Begin markup for follow-ups
+	if ($elem eq 'folupbegin' ||
+	    $elem eq 'folupbeg') {		# Begin markup for follow-ups
 	    $FOLUPBEGIN = &get_elem_content($handle, $elem, $chop);
 	    last FMTSW;
 	}
@@ -383,7 +400,8 @@ sub parse_resource_file {
 	    $IDXLABEL = &get_elem_content($handle, $elem, $chop);
 	    last FMTSW;
 	}
-	if ($elem eq 'idxpgbegin') {		# Opening markup of index
+	if ($elem eq 'idxpgbegin' ||
+	    $elem eq 'idxpgbeg') {		# Opening markup of index
 	    $IDXPGBEG = &get_elem_content($handle, $elem, $chop);
 	    last FMTSW;
 	}
@@ -423,7 +441,8 @@ sub parse_resource_file {
 	    $Lang =~ s/\s+//g;
 	    last FMTSW;
 	}
-	if ($elem eq 'labelbeg') {		# Begin markup of label
+	if ($elem eq 'labelbeg' ||
+	    $elem eq 'labelbegin') {		# Begin markup of label
 	    $LABELBEG = &get_elem_content($handle, $elem, $chop);
 	    last FMTSW;
 	}
@@ -445,7 +464,8 @@ sub parse_resource_file {
 	    $LASTPGLINK = &get_elem_content($handle, $elem, $chop);
 	    last FMTSW;
 	}
-	if ($elem eq 'listbegin') {		# List begin
+	if ($elem eq 'listbegin' ||
+	    $elem eq 'listbeg') {		# List begin
 	    $LIBEG = &get_elem_content($handle, $elem, $chop);
 	    last FMTSW;
 	}
@@ -629,7 +649,8 @@ sub parse_resource_file {
 	    }
 	    last FMTSW;
 	}
-	if ($elem eq 'msgpgbegin') {		# Opening markup of message
+	if ($elem eq 'msgpgbegin' ||
+	    $elem eq 'msgpgbeg') {		# Opening markup of message
 	    $MSGPGBEG = &get_elem_content($handle, $elem, $chop);
 	    last FMTSW;
 	}
@@ -645,6 +666,15 @@ sub parse_resource_file {
 	}
 	if ($elem eq 'multipg') {		# Print multi-page indexes
 	    $MULTIIDX = 1; last FMTSW;
+	}
+	if ($elem eq 'newsurl') {		# News URL
+	    while (defined($line = <$handle>)) {
+		last  if $line =~ /^\s*<\/newsurl\s*>/i;
+		next  if $line =~ /^\s*$/;
+		$line =~ s/\s//g;
+		$NewsUrl = $line;
+	    }
+	    last FMTSW;
 	}
 	if ($elem eq 'nextbutton') {		# Next button link in message
 	    $NEXTBUTTON = &get_elem_content($handle, $elem, $chop);
@@ -841,7 +871,8 @@ sub parse_resource_file {
 	    $PREVPGLINKIA = &get_elem_content($handle, $elem, $chop);
 	    last FMTSW;
 	}
-	if ($elem eq 'refsbegin') {		# Explicit ref links begin
+	if ($elem eq 'refsbegin' ||
+	    $elem eq 'refsbeg') {		# Explicit ref links begin
 	    $REFSBEGIN = &get_elem_content($handle, $elem, $chop);
 	    last FMTSW;
 	}
@@ -910,7 +941,8 @@ sub parse_resource_file {
 	    $AUTHSORT = 0;  $NOSORT = 0;
 	    last FMTSW;
 	}
-	if ($elem eq 'subjectbegin') {		# Begin for subject group
+	if ($elem eq 'subjectbegin' ||
+	    $elem eq 'subjectbeg') {		# Begin for subject group
 	    $SUBJECTBEG = &get_elem_content($handle, $elem, $chop);
 	    last FMTSW;
 	}
@@ -922,7 +954,8 @@ sub parse_resource_file {
 	    $SUBJECTHEADER = &get_elem_content($handle, $elem, $chop);
 	    last FMTSW;
 	}
-	if ($elem eq 'tcontbegin') {		# Thread cont. start
+	if ($elem eq 'tcontbegin' ||
+	    $elem eq 'tcontbeg') {		# Thread cont. start
 	    $TCONTBEG = &get_elem_content($handle, $elem, $chop);
 	    last FMTSW;
 	}
@@ -1004,7 +1037,8 @@ sub parse_resource_file {
 	    $TIDXLABEL = &get_elem_content($handle, $elem, $chop);
 	    last FMTSW;
 	}
-	if ($elem eq 'tidxpgbegin') {		# Opening markup of thread idx
+	if ($elem eq 'tidxpgbegin' ||
+	    $elem eq 'tidxpgbeg') {		# Opening markup of thread idx
 	    $TIDXPGBEG = &get_elem_content($handle, $elem, $chop);
 	    last FMTSW;
 	}
@@ -1030,7 +1064,8 @@ sub parse_resource_file {
 	    }
 	    last FMTSW;
 	}
-	if ($elem eq 'tindentbegin') {		# Thread indent start
+	if ($elem eq 'tindentbegin' ||
+	    $elem eq 'tindentbeg') {		# Thread indent start
 	    $TINDENTBEG = &get_elem_content($handle, $elem, $chop);
 	    last FMTSW;
 	}
@@ -1077,7 +1112,8 @@ sub parse_resource_file {
 		&get_list_content($handle, $elem);
 	    last FMTSW;
 	}
-	if ($elem eq 'tslicebeg') {		# Start of thread slice
+	if ($elem eq 'tslicebeg' ||
+	    $elem eq 'tslicebegin') {		# Start of thread slice
 	    $TSLICEBEG = &get_elem_content($handle, $elem, $chop);
 	    last FMTSW;
 	}
@@ -1095,7 +1131,8 @@ sub parse_resource_file {
           $TSLICESINGLETXT = &get_elem_content($handle, $elem, $chop);
           last FMTSW;
         }
-        if ($elem eq 'tslicetopbegin') {
+        if ($elem eq 'tslicetopbegin' ||
+	    $elem eq 'tslicetopbeg') {
           $TSLICETOPBEG = &get_elem_content($handle, $elem, $chop);
           last FMTSW;
         }
@@ -1103,7 +1140,8 @@ sub parse_resource_file {
           $TSLICETOPEND = &get_elem_content($handle, $elem, $chop);
           last FMTSW;
         }
-        if ($elem eq 'tslicesublistbeg') {
+        if ($elem eq 'tslicesublistbeg' ||
+	    $elem eq 'tslicesublistbegin') {
           $TSLICESUBLISTBEG = &get_elem_content($handle, $elem, $chop);
           last FMTSW;
         }
@@ -1127,7 +1165,8 @@ sub parse_resource_file {
           $TSLICELINONEEND = &get_elem_content($handle, $elem, $chop);
           last FMTSW;
         }
-        if ($elem eq 'tslicesubjectbeg') {
+        if ($elem eq 'tslicesubjectbeg' ||
+	    $elem eq 'tslicesubjectbegin') {
           $TSLICESUBJECTBEG = &get_elem_content($handle, $elem, $chop);
           last FMTSW;
         }
@@ -1135,7 +1174,8 @@ sub parse_resource_file {
           $TSLICESUBJECTEND = &get_elem_content($handle, $elem, $chop);
           last FMTSW;
         }
-        if ($elem eq 'tsliceindentbegin') {
+        if ($elem eq 'tsliceindentbegin' ||
+	    $elem eq 'tsliceindentbeg') {
           $TSLICEINDENTBEG = &get_elem_content($handle, $elem, $chop);
           last FMTSW;
         }
@@ -1143,7 +1183,8 @@ sub parse_resource_file {
           $TSLICEINDENTEND = &get_elem_content($handle, $elem, $chop);
           last FMTSW;
         }
-        if ($elem eq 'tslicecontbegin') {
+        if ($elem eq 'tslicecontbegin' ||
+	    $elem eq 'tslicecontbeg') {
           $TSLICECONTBEG = &get_elem_content($handle, $elem, $chop);
           last FMTSW;
         }
@@ -1179,7 +1220,8 @@ sub parse_resource_file {
 	    $TNOSORT = 0; $TSUBSORT = 1;
 	    last FMTSW;
 	}
-	if ($elem eq 'tsublistbeg') {		# List begin in sub-thread
+	if ($elem eq 'tsublistbeg' ||
+	    $elem eq 'tsublistbegin') {		# List begin in sub-thread
 	    $TSUBLISTBEG = &get_elem_content($handle, $elem, $chop);
 	    last FMTSW;
 	}
@@ -1187,7 +1229,8 @@ sub parse_resource_file {
 	    $TSUBLISTEND = &get_elem_content($handle, $elem, $chop);
 	    last FMTSW;
 	}
-	if ($elem eq 'tsubjectbeg') {		# Begin markup for sub thread
+	if ($elem eq 'tsubjectbeg' ||
+	    $elem eq 'tsubjectbegin') {		# Begin markup for sub thread
 	    $TSUBJECTBEG = &get_elem_content($handle, $elem, $chop);
 	    last FMTSW;
 	}
@@ -1199,7 +1242,8 @@ sub parse_resource_file {
 	    $TSINGLETXT = &get_elem_content($handle, $elem, $chop);
 	    last FMTSW;
 	}
-	if ($elem eq 'ttopbegin') {		# Begin for top of a thread
+	if ($elem eq 'ttopbegin' ||		# Begin for top of a thread
+	    $elem eq 'ttopbeg') {		# (more consistent name)
 	    $TTOPBEG = &get_elem_content($handle, $elem, $chop);
 	    last FMTSW;
 	}

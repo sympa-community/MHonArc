@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##      $Id: mhopt.pl,v 2.54 2003/08/02 06:15:37 ehood Exp $
+##      $Id: mhopt.pl,v 2.56 2003/10/02 03:30:58 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -46,6 +46,10 @@ sub get_resources {
 	'addressmodifycode=s',
 			# Perl expression for modifying displayed addresses
 	'annotate',	# Add a note to message(s)
+	'attachmentdir=s',
+			# Pathname to attachment files directory
+	'attachmenturl=s',
+			# URL to attachment files directory
 	'authsort',	# Sort by author
 	'archive',	# Create an archive (the default)
 	'conlen',	# Honor Content-Length fields
@@ -108,6 +112,7 @@ sub get_resources {
 	'msgprefix=s',	# Filename prefix for message files
 	'multipg',	# Generate multi-page indexes
 	'news',		# Add links to newsgroups
+	'newsurl=s',	# URL to use for news hyperlinks
 	'noauthsort',	# Do not sort by author
 	'noarchive',	# Do not create an archive
 	'nochecknoarchive',
@@ -503,6 +508,7 @@ sub get_resources {
 	$IDXSIZE *= -1  if $IDXSIZE < 0;
     $OUTDIR	= $opt{'outdir'}     if $opt{'outdir'}; # Override db
     $MAILTOURL	= $opt{'mailtourl'}  if $opt{'mailtourl'};
+    $NewsUrl	= $opt{'newsurl'}    if $opt{'newsurl'};
     $MAXSIZE	= $opt{'maxsize'}    if defined($opt{'maxsize'});
 	$MAXSIZE = 0  if $MAXSIZE < 0;
     $MHPATTERN	= $opt{'mhpattern'}  if $opt{'mhpattern'};
@@ -538,6 +544,9 @@ sub get_resources {
     $NoSubjectTxt  = $opt{'nosubjecttxt'}	if $opt{'nosubjecttxt'};
 
     $IdxPageNum  = $opt{'pagenum'}   if defined($opt{'pagenum'});
+
+    $AttachmentDir = $opt{'attachmentdir'}  if defined($opt{'attachmentdir'});
+    $AttachmentUrl = $opt{'attachmenturl'}  if defined($opt{'attachmenturl'});
 
     ## Determine location of message note files
     $NoteDir = $opt{'notedir'}	if $opt{'notedir'};

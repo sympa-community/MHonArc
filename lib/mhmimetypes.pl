@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhmimetypes.pl,v 1.18 2003/01/18 03:00:41 ehood Exp $
+##	$Id: mhmimetypes.pl,v 1.19 2003/09/29 05:03:57 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -26,6 +26,8 @@
 ##---------------------------------------------------------------------------##
 
 package mhonarc;
+
+use File::Basename;
 
 $UnknownExt     = 'bin';
 
@@ -286,80 +288,84 @@ sub get_mime_ext {
 ##	to a file.
 ##
 sub write_attachment {
-    my $content	= lc shift;
-    my $sref	= shift;
-    my $path	= shift;
-    my $fname	= shift;
-    my $inext	= shift;
-    my($ctype, $cnt, $pre, $ext, $pathname);
+    my $content	= lc shift;   # Content-type
+    my $sref	= shift;      # Reference to data
+    my $opt	= ref($_[0]) ? shift : +{ @_ };
 
-    ($ctype) = $content =~ m%^\s*([\w\-\./]+)%;	# Extract content-type
+    my $path	 = $opt->{'-dirpath'}  || '';
+    my $fname    = $opt->{'-filename'} || '';
+    my $inext    = $opt->{'-ext'}      || '';
+    my $url	 = $opt->{'-url'}      || $AttachmentUrl || '';
 
-    $pathname = $OUTDIR;
+    my $pathname   = $AttachmentDir;
+    my $rel_outdir = 0;
+    if (!$pathname) {
+	$pathname = $OUTDIR;
+	$rel_outdir = 1;
+    }
+
+    my $ctype	 = 'application/octet-stream';
+    if ($content =~ m%^\s*([\w\-\./]+)%) {
+	$ctype = $1;
+    }
+    
     if ($path) {
-	$pathname .= $DIRSEP . $path;
-	dir_create($pathname);
+	if (OSis_absolute_path($path)) {
+	    $pathname   = $path;
+	    $rel_outdir = 0;
+	} else {
+	    $pathname .= $DIRSEP . $path;
+	    $url .= '/' if ($url); $url .= urlize_file_path($path);
+	}
     }
+    dir_create($pathname);
 
-    ## If no filename specified, generate it
+    my $ext;
     if (!$fname) {
-	($cnt, $pre, $ext) = get_cnt($ctype, $pathname, $inext);
-	$fname = $pre . $cnt . '.' . $ext;
-
-    ## Else, filename given
+        $ext = $inext || (get_mime_ext($ctype))[0];
     } else {
-	# Convert invalid characters to underscores
-	$fname =~ tr/\0-\40\t\n\r?:*"'<>|\177-\377/_/;
+	# Convert invalid characters in filename to underscores
+	$fname =~ tr/\0-\40\t\n\r?:\57\134*"'<>|\177-\377/_/;
     }
 
-    ## Write to temp file first
-    my($fh, $tmpfile) = file_temp('atchXXXXXXXXXX', $pathname);
+    ## Write to random file first
+    my($fh, $tmpfile) = file_temp($ext.'XXXXXXXXXX', $pathname, '.'.$ext);
     binmode($fh);
     print $fh $$sref;
     close($fh);
 
     ## Set pathname for file
-    $pathname .= $DIRSEP . $fname;
-    if (!rename($tmpfile, $pathname)) {
-	die qq/ERROR: Unable to rename "$tmpfile" to "$pathname": $!\n/;
+    if ($fname) {
+	# need to rename to desired filename
+	$pathname .= $DIRSEP . $fname;
+	if (!rename($tmpfile, $pathname)) {
+	    die qq/ERROR: Unable to rename "$tmpfile" to "$pathname": $!\n/;
+	}
+    } else {
+	# just use random filename
+	$pathname = $tmpfile;
+	$fname    = basename($tmpfile);
     }
+    $url .= '/' if ($url); $url .= urlize_file_path($fname);
     file_chmod($pathname);
 
-    join("",
-	 ($mhonarc::SINGLE ? $mhonarc::OUTDIR.$mhonarc::DIRSEP : ""),
-	 ($path ? join($mhonarc::DIRSEP,$path,$fname) : $fname));
+    if ($rel_outdir) {
+	$pathname  = $path;
+	$pathname .= $DIRSEP if ($pathname);
+	$pathname .= $fname;
+	$url       = join('/', $OUTDIR, $url)  if $SINGLE;
+    }
+    ($pathname, $url);
 }
 
 ##---------------------------------------------------------------------------
-##	get_cnt(): Function that returns a list which can be used to
-##	generate a unique filename for a given content-type.
+##	Convert a filesystem path into a URL path.
 ##
-sub get_cnt {
-    my $ctype 	= shift;		# content-type
-    my $dir 	= shift || $CURDIR;	# directory
-    my $inext 	= shift;		# passed in extension (optional)
-
-    my(@files)  = ();
-    my $ext 	= $inext || (get_mime_ext($ctype))[0];
-    my $pre 	= $ext;
-    my $cnt	= -1;
-    local(*DIR);
-
-    substr($pre, 3) = "" if length($pre) > 3;
-
-    if (!opendir(DIR, $dir)) {
-	warn qq/Warning: Unable to open "$dir": $!\n/;
-    } else {
-	my($file, $num);
-	foreach $file (grep(/^$pre\d+\.$ext$/i, readdir(DIR))) {
-	    $num = substr($file, length($pre));
-	    $num = substr($num, 0, length($num)-(length($ext)+1));
-	    $cnt = $num  if $num > $cnt;
-	}
-	close(DIR);
-    }
-    ++$cnt;
-    (sprintf("%05d", $cnt), $pre, $ext);
+sub urlize_file_path {
+    my $path = shift;
+    $path =~ s/$DIRSEP/\//go;
+    $path =~ s/([^\w.\-\/])/sprintf("%%%X",unpack("C",$1))/ge;
+    $path;
 }
 
 ##---------------------------------------------------------------------------

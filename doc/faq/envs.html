@@ -68,7 +68,9 @@ to the MHonArc mailing list.
 </td></tr></table>
 
 <P>The following includes information from Walter F.J. Mueller,
-<a href="mailto:W.F.J.Mueller@gsi.de">W.F.J.Mueller@gsi.de</a>:
+<a href="mailto:W.F.J.Mueller&#37;40gsi.de">W.F.J.Mueller<!--
+-->&#64;<!--
+-->gsi.de</a>:
 </P>
 <pre>
  * The -outdir argument must be specified UNIX style.
@@ -145,7 +147,9 @@ for more information about these resources.
 <BLOCKQUOTE class="mail">
 <UL>
 <LI><em>Subject</em>: Re: Majordomo Digest -&gt; MHonarc?</LI>
-<LI><em>From</em>: "Christopher P. Lindsey" &lt;<A HREF="mailto:lindsey@mallorn.com">lindsey@mallorn.com</A>&gt;</LI>
+<LI><em>From</em>: "Christopher P. Lindsey" &lt;<A HREF="mailto:lindsey&#37;40mallorn.com">lindsey<!--
+-->&#64;<!--
+-->mallorn.com</A>&gt;</LI>
 <LI><em>Date</em>: Sun, 4 Jan 1998 22:33:31 -0600 (CST)</LI>
 <LI><em>List-Name</em>: mhonarc</LI>
 </UL>
@@ -178,7 +182,9 @@ Chris
 <BLOCKQUOTE class="mail">
 <UL>
 <LI><em>Subject</em>: Majordomo Digests to mbox format for MHonarc (perl script)</LI>
-<LI><em>From</em>: The Hermit Hacker &lt;<A HREF="mailto:scrappy@hub.org">scrappy@hub.org</A>&gt;</LI>
+<LI><em>From</em>: The Hermit Hacker &lt;<A HREF="mailto:scrappy&#37;40hub.org">scrappy<!--
+-->&#64;<!--
+-->hub.org</A>&gt;</LI>
 <LI><em>Date</em>: Sun, 4 Jan 1998 23:44:43 -0400 (AST)</LI>
 <LI><em>List-Name</em>: mhonarc</LI>
 </UL>
@@ -197,8 +203,14 @@ like to know and try to fix it
 	Just run it as: &lt;scriptname&gt; &lt;infile&gt; &gt; &lt;outfile&gt;
 
 Marc G. Fournier                                
-Systems Administrator @ hub.org 
-primary: scrappy@hub.org           secondary: scrappy@{freebsd|postgresql}.org 
+Systems Administrator <!--
+-->&#64;<!--
+--> hub.org 
+primary: scrappy<!--
+-->&#64;<!--
+-->hub.org           secondary: scrappy<!--
+-->&#64;<!--
+-->{freebsd|postgresql}.org 
 
 #!/usr/local/bin/perl
 $userid = getlogin();
@@ -244,9 +256,13 @@ for($jj = 0; $jj &lt; $ii; $jj++) {
 </p>
 <blockquote class="mail">
 <UL>
-<LI><em>To</em>: <A HREF="mailto:mhonarc@rosat.mpe-garching.mpg.de">mhonarc@rosat.mpe-garching.mpg.de</A></LI>
+<LI><em>To</em>: <A HREF="mailto:mhonarc&#37;40rosat.mpe-garching.mpg.de">mhonarc<!--
+-->&#64;<!--
+-->rosat.mpe-garching.mpg.de</A></LI>
 <LI><em>Subject</em>: re: digest to mbox</LI>
-<LI><em>From</em>: <A HREF="mailto:KMcCann@idrc.ca">KMcCann@idrc.ca</A></LI>
+<LI><em>From</em>: <A HREF="mailto:KMcCann&#37;40idrc.ca">KMcCann<!--
+-->&#64;<!--
+-->idrc.ca</A></LI>
 <LI><em>Date</em>: 12 Jun 97 09:15:27 EDT</LI>
 <LI><em>List-Name</em>: mhonarc</LI>
 </UL>
@@ -273,16 +289,32 @@ $MONDIR = "/u/www/htdocs/listproc/mhonarc";
 #
 ## Let's figure out what lists exist
 opendir(DIR,"$ARCHDIR/") || die "Can't open directory";
-@dirs = readdir(DIR);
-@sorteddirs = sort @dirs;
+<!--
+-->&#64;<!--
+-->dirs = readdir(DIR);
+<!--
+-->&#64;<!--
+-->sorteddirs = sort <!--
+-->&#64;<!--
+-->dirs;
 closedir(DIR);
-for (@sorteddirs) {      # processing a list
+for (<!--
+-->&#64;<!--
+-->sorteddirs) {      # processing a list
    $listname = $_;
    opendir(DIR,"$ARCHDIR/$listname") || die "Can't open directory";
-   @logs = readdir(DIR);
-   @sortedlogs = sort @logs;
+   <!--
+-->&#64;<!--
+-->logs = readdir(DIR);
+   <!--
+-->&#64;<!--
+-->sortedlogs = sort <!--
+-->&#64;<!--
+-->logs;
    closedir(DIR);
-   for (@sortedlogs) {
+   for (<!--
+-->&#64;<!--
+-->sortedlogs) {
      if (/log/) {                # processing files with name format 
 'logYYMM'
        $log = $_;
@@ -308,7 +340,9 @@ mine is set to /usr/local/bin/perl5.
 Good luck!
 
 - Kevin McCann
-kmccann@idrc.ca
+kmccann<!--
+-->&#64;<!--
+-->idrc.ca
 www.cruciverb.com
 </PRE>
 </blockquote>
@@ -434,7 +468,9 @@ the raw messages that can be passed into MHonArc directly.
 <blockquote class="mail">
 <UL>
 <LI><em>Subject</em>: Re: CompuServe --&gt; html</LI>
-<LI><em>From</em>: Steve Pacenka &lt;<A HREF="mailto:sp17@cornell.edu">sp17@cornell.edu</A>&gt;</LI>
+<LI><em>From</em>: Steve Pacenka &lt;<A HREF="mailto:sp17&#37;40cornell.edu">sp17<!--
+-->&#64;<!--
+-->cornell.edu</A>&gt;</LI>
 <LI><em>Date</em>: Thu, 06 Mar 1997 09:09:00 -0500</LI>
 </UL>
 <PRE>
@@ -608,13 +644,15 @@ message.  MHonArc has no built-in language translation.
 
 <hr>
 <address>
-$Date: 2002/12/21 07:44:21 $ <br>
+$Date: 2003/10/06 22:04:15 $ <br>
 <img align="top" src="monicon.png" alt="">
 <a href="http://www.mhonarc.org/"
 ><strong>MHonArc</strong></a><br>
 Copyright &#169; 1997-1999, <a href="http://www.earlhood.com/"
->Earl Hood</a>, <a href="mailto:mhonarc@mhonarc.org"
->mhonarc@mhonarc.org</a><br>
+>Earl Hood</a>, <a href="mailto:mhonarc&#37;40mhonarc.org"
+>mhonarc<!--
+-->&#64;<!--
+-->mhonarc.org</a><br>
 </address>
 </body>
 </html>

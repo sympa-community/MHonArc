@@ -1,8 +1,8 @@
 <!-- ================================================================== -->
 <!-- File:
-	$Id: blog.mrc,v 1.2 2002/05/04 04:57:23 ehood Exp $
+	$Id: blog.mrc,v 1.4 2004/03/15 21:07:18 ehood Exp $
      Author:
-	Earl Hood <earl@earlhood.com>
+	Earl Hood <earl @ earlhood . com>
 
      Description:
 	MHonArc, <http://www.mhonarc.org/>, resource file to
@@ -32,7 +32,8 @@ index.shtml
 
 <!-- We define beginning markup to include style definitions. -->
 <IdxPgBegin>
-<!doctype html public "-//W3C//DTD HTML//EN">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 <title>$IDXTITLE$</title>

@@ -1,8 +1,8 @@
 <!-- ================================================================== -->
 <!--  File:
-	$Id: utf-8.mrc,v 1.5 2002/12/21 07:26:33 ehood Exp $
+	$Id: utf-8.mrc,v 1.7 2004/03/15 21:07:18 ehood Exp $
       Author:
-	Earl Hood <earl@earlhood.com>
+	Earl Hood <earl @ earlhood . com>
 
       Description:
 	MHonArc, <http://www.mhonarc.org/>, resource file to
@@ -39,7 +39,8 @@ MHonArc::UTF8::clip; MHonArc/UTF8.pm
   -->
 
 <IdxPgBegin>
-<!doctype html public "-//W3C//DTD HTML//EN">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 <title>$IDXTITLE$</title>
@@ -50,7 +51,8 @@ MHonArc::UTF8::clip; MHonArc/UTF8.pm
 </IdxPgBegin>
 
 <TIdxPgBegin>
-<!doctype html public "-//W3C//DTD HTML//EN">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 <title>$TIDXTITLE$</title>
@@ -62,7 +64,8 @@ MHonArc::UTF8::clip; MHonArc/UTF8.pm
 
 
 <MsgPgBegin>
-<!doctype html public "-//W3C//DTD HTML//EN">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 <title>$SUBJECTNA$</title>

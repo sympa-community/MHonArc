@@ -190,19 +190,26 @@ is needed, use "<tt class="icode">$$</tt>".
 <tr valign=top>
 <td><strong>NOTE:</strong></td>
 <td width="100%"><p>The
-<a href="resources/mailtourl.html">MAILTOURL</a>
-resource has
-different rules for variable expansion. If a
-variable does not exactly match the set of variables available for
-the MAILTOURL, the variable text will be taken literally
-as part of the element content. Therefore, a single "<tt>$</tt>"
-can be used to represent a "<tt>$</tt>" character.  </p>
-<p>Also,
-variables in the MAILTOURL should <STRONG>NOT</STRONG>
-have "<tt class="icode">:<i>N</i>UJ</tt>" modifiers. This will prevent the
-variables from being recognized. MHonArc will automatically
-treat the replacement value as a part of a URL string.
+<a href="resources/mailtourl.html">MAILTOURL</a> and
+<a href="resources/newsurl.html">NEWSURL</a>
+resources have
+different rules for variable expansion:
 </p>
+<ul>
+<li><p>If a
+    variable does not exactly match the set of variables available for
+    each resource, the variable text will be taken literally
+    as part of the element content. Therefore, a single "<tt>$</tt>"
+    can be used to represent a "<tt>$</tt>" character.  </p>
+    </li>
+<li><p>Variables should <STRONG>NOT</STRONG>
+    have "<tt class="icode">:<i>N</i>UJ</tt>" modifiers. This will prevent the
+    variables from being recognized. MHonArc automatically
+    treats the replacement value as a part of a URL string, so the
+    "<tt class="icode">:U</tt>" modifier is not needed.
+    </p>
+    </li>
+</ul>
 </td></tr>
 </table>
 
@@ -399,6 +406,19 @@ This variable is equivalent to
 </td>
 </tr>
 </table><br></dd>
+<dt><strong><a name="ATTACHMENTURL"><tt>$ATTACHMENTURL$</tt></a></strong></dt>
+<dd><table border=0>
+<tr valign=top>
+<td align=right><b>Arguments:</b></td>
+<td>N/A</td>
+</tr>
+<tr valign=top>
+<td align=right><b>Description:</b></td>
+<td>The value of the <a href="resources/attachmenturl.html">ATTACHMENTURL</a>
+resource.
+</td>
+</tr>
+</table><br></dd>
 <dt><strong><a name="BUTTON"><tt>$BUTTON$</tt></a></strong></dt>
 <dd><table border=0>
 <tr valign=top>
@@ -441,7 +461,11 @@ is determined by the following resources based on
 </tr>
 <tr valign=top>
 <td align=right><b>Description:</b></td>
-<td>The date of the message.</td>
+<td>The (raw) date of the message.  This variable will expanded to
+the date string used within the message itself.  If you want to
+customize the formatting of the date, use
+<a href="#MSGLOCALDATE"><tt>$MSGLOCALDATE$</tt></a> or
+<a href="#MSGGMTDATE"><tt>$MSGGMTDATE$</tt></a> instead.</td>
 </tr>
 </table><br></dd>
 <dt><strong><a name="DDMMYYYY"><tt>$DDMMYYYY$</tt></a></strong></dt>
@@ -511,7 +535,9 @@ HOME environment variable.</td>
 <tr valign=top>
 <td align=right><b>Description:</b></td>
 <td>The username/local-part of the mail address in the <tt>From:</tt>
-field of the message.  For example, given the address "someuser@example.com",
+field of the message.  For example, given the address "someuser<!--
+-->&#64;<!--
+-->example.com",
 <tt>$FROMADDRNAME$</tt> would equal "someuser".</td>
 </tr>
 </table><br></dd>
@@ -524,7 +550,9 @@ field of the message.  For example, given the address "someuser@example.com",
 <tr valign=top>
 <td align=right><b>Description:</b></td>
 <td>The domain part of the mail address in the <tt>From:</tt>
-field of the message.  For example, given the address "someuser@mhonarc.org",
+field of the message.  For example, given the address "someuser<!--
+-->&#64;<!--
+-->mhonarc.org",
 <tt>$FROMADDRDOMAIN$</tt> would equal "mhonarc.org".</td>
 </tr>
 </table><br></dd>
@@ -549,10 +577,11 @@ is used.</td>
 </tr>
 <tr valign=top>
 <td align=right><b>Description:</b></td>
-<td>Current GMT date.
-Default format of date set by the
+<td>Current system GMT date.  If no
+<i><a href="#time_fmt_str">time_fmt_str</a></i> argument is provided,
+the format specifed by the
 <a href="resources/gmtdatefmt.html">GMTDATEFMT</a>
-resource.
+resource is used.
 </td>
 </tr>
 </table><br></dd>
@@ -706,10 +735,12 @@ by the following resources based on
 </tr>
 <tr valign=top>
 <td align=right><b>Description:</b></td>
-<td>Current local date.
-Default format of date set by the
+<td>Current system local date.
+If no
+<i><a href="#time_fmt_str">time_fmt_str</a></i> argument is provided,
+the format specifed by the
 <a href="resources/localdatefmt.html">LOCALDATEFMT</a>
-resource.
+resource is used.
 </td>
 </tr>
 </table><br></dd>
@@ -747,7 +778,13 @@ following resources:
 </tr>
 <tr valign=top>
 <td align=right><b>Description:</b></td>
-<td>GMT date of current message.</td>
+<td>GMT date of message.
+If no
+<i><a href="#time_fmt_str">time_fmt_str</a></i> argument is provided,
+the format specifed by the
+<a href="resources/gmtdatefmt.html">GMTDATEFMT</a>
+resource is used.
+</td>
 </tr>
 </table><br></dd>
 <dt><strong><a name="MSGHFIELD"><tt>$MSGHFIELD$</tt></a></strong></dt>
@@ -789,7 +826,13 @@ apply.
 </tr>
 <tr valign=top>
 <td align=right><b>Description:</b></td>
-<td>Local date of current message.</td>
+<td>Local date of message.
+If no
+<i><a href="#time_fmt_str">time_fmt_str</a></i> argument is provided,
+the format specifed by the
+<a href="resources/localdatefmt.html">LOCALDATEFMT</a>
+resource is used.
+</td>
 </tr>
 </table><br></dd>
 <dt><strong><a name="MSGNUM"><tt>$MSGNUM$</tt></a></strong></dt>
@@ -800,7 +843,9 @@ apply.
 </tr>
 <tr valign=top>
 <td align=right><b>Description:</b></td>
-<td>The message number assigned to the message by MHonArc (includes leading zeros).</td>
+<td>The message number assigned to the message by MHonArc.  The number
+is at least 5 digits wide, padded with leading zeros if actual number
+is less than 5 digits.  For example, message 45 would be <tt>00045</tt>.</td>
 </tr>
 </table><br></dd>
 <dt><strong><a name="MSGPREFIX"><tt>$MSGPREFIX$</tt></a></strong></dt>
@@ -845,6 +890,19 @@ goes from 1 to 8.
 </td>
 </tr>
 </table><br></dd>
+<dt><strong><a name="NEWSGROUP"><tt>$NEWSGROUP$</tt></a></strong></dt>
+<dd><table border=0>
+<tr valign=top>
+<td align=right><b>Arguments:</b></td>
+<td>N/A</td>
+</tr>
+<tr valign=top>
+<td align=right><b>Description:</b></td>
+<td>Newsgroup name.
+This variable is only applicable for use in
+<a href="resources/newsurl.html">NEWSURL</a>.</td>
+</tr>
+</table><br></dd>
 <dt><strong><a name="NOTE"><tt>$NOTE$</tt></a></strong></dt>
 <dd><table border=0>
 <tr valign=top>
@@ -868,7 +926,7 @@ value of $NOTE$.  When no annotation text is defined,
 <tr valign=top>
 <td align=right><b>Description:</b></td>
 <td>Base text of message annotation.  Variable should be used only
-within the <a href="resource/note.html">NOTE</a> resource.</td>
+within the <a href="resources/note.html">NOTE</a> resource.</td>
 </tr>
 </table><br></dd>
 <dt><strong><a name="NUMFOLUP"><tt>$NUMFOLUP$</tt></a></strong></dt>
@@ -891,7 +949,7 @@ within the <a href="resource/note.html">NOTE</a> resource.</td>
 </tr>
 <tr valign=top>
 <td align=right><b>Description:</b></td>
-<td>Number of message listed for the current page.</td>
+<td>Number of message listed on the current index page.</td>
 </tr>
 </table><br></dd>
 <dt><strong><a name="NUMOFMSG"><tt>$NUMOFMSG$</tt></a></strong></dt>
@@ -924,7 +982,7 @@ within the <a href="resource/note.html">NOTE</a> resource.</td>
 </tr>
 <tr valign=top>
 <td align=right><b>Description:</b></td>
-<td>The current listing number of the message.</td>
+<td>The current listing number of the message.  Number starts at 1.</td>
 </tr>
 </table><br></dd>
 <dt><strong><a name="OUTDIR"><tt>$OUTDIR$</tt></a></strong></dt>
@@ -1014,8 +1072,13 @@ to create links to; the second is the number of pages after the
 current page to create links to.  If either number argument is prefixed
 with a '<tt><b>T</b></tt>', then the list of links apply to the thread index.
 Examples: <tt class="icode">$PGLINKLIST(3;3)$</tt>, <tt class="icode">$PGLINKLIST(T2;T3)$</tt>.  The
-link text for to a give page is the page number.
+link text for a given page is the page number, with the current page not
+linked.  For example, if the current index page is 5, <tt>$PGLINKLIST$</tt>
+would expand to something like the following:
 </p>
+<div class="example">
+<a href="javascript:void(0);">1</a> | <a href="javascript:void(0);">2</a> | <a href="javascript:void(0);">3</a> | <a href="javascript:void(0);">4</a> | 5 | <a href="javascript:void(0);">6</a> | <a href="javascript:void(0);">7</a> | <a href="javascript:void(0);">8</a> | <a href="javascript:void(0);">9</a>
+</div>
 <p>If no arguments are provided to <tt>$PGLINKLIST$</tt>, then the
 links to all index pages will be printed.  To get the entire list
 for a thread index, use <tt>$PGLINKLIST(T)$</tt>.
@@ -1031,7 +1094,9 @@ for a thread index, use <tt>$PGLINKLIST(T)$</tt>.
 </tr>
 <tr valign=top>
 <td align=right><b>Description:</b></td>
-<td>Program name</td>
+<td>Program name.  Generally, it will be "<tt>mhonarc</tt>", but it can
+vary if MHonArc is called via a custom front-end or installed under
+a different name.</td>
 </tr>
 </table><br></dd>
 <dt><strong><a name="SUBJECT"><tt>$SUBJECT$</tt></a></strong></dt>
@@ -1044,7 +1109,7 @@ for a thread index, use <tt>$PGLINKLIST(T)$</tt>.
 <td align=right><b>Description:</b></td>
 <td>The subject text of the message, <em>and if no arguments</em>, wrapped in
 an anchor element that hyperlinks to the message.  This behavior exists
-for backwards capatibility and a simple way to provide a link to
+for backwards capatibility to provide a simple way to link to
 the current message using the subject as the link text.  The
 no argument version is equivalent to:
 "<nobr><tt class="icode">&lt;a&nbsp;<a href="#A_ATTR">$A_ATTR$</a>&gt;<a href="#SUBJECTNA">$SUBJECTNA$</a>&lt;/a&gt;</tt></nobr>".
@@ -1153,7 +1218,9 @@ This variable is only applicable for use in the
 <tr valign=top>
 <td align=right><b>Description:</b></td>
 <td>The username/local-part of the e-mail address.
-For example, given the address "someuser@example.com",
+For example, given the address "someuser<!--
+-->&#64;<!--
+-->example.com",
 <tt>$TOADDRNAME$</tt> would equal "someuser".
 This variable is only applicable for use in the
 <a href="resources/mailtourl.html">MAILTOURL</a>.</td>
@@ -1168,7 +1235,9 @@ This variable is only applicable for use in the
 <tr valign=top>
 <td align=right><b>Description:</b></td>
 <td>The domain part of the e-mail address.
-For example, given the address "someuser@example.com",
+For example, given the address "someuser<!--
+-->&#64;<!--
+-->example.com",
 <tt>$TOADDRDOMAIN$</tt> would equal "example.com".
 This variable is only applicable for use in the
 <a href="resources/mailtourl.html">MAILTOURL</a>.</td>
@@ -1256,13 +1325,15 @@ resources.
 <!-- *************************************************************** -->
 <hr>
 <address>
-$Date: 2003/02/04 23:31:19 $ <br>
+$Date: 2003/10/06 22:04:14 $ <br>
 <img align="top" src="monicon.png" alt="">
 <a href="http://www.mhonarc.org"
 ><strong>MHonArc</strong></a><br>
 Copyright &#169; 1998-1999, <a href="http://www.mhonarc.org/~ehood/"
->Earl Hood</a>, <a href="mailto:mhonarc@mhonarc.org"
->mhonarc@mhonarc.org</a><br>
+>Earl Hood</a>, <a href="mailto:mhonarc&#37;40mhonarc.org"
+>mhonarc<!--
+-->&#64;<!--
+-->mhonarc.org</a><br>
 </address>
 
 </body>

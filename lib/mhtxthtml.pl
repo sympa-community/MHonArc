@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhtxthtml.pl,v 2.34 2003/08/07 21:24:53 ehood Exp $
+##	$Id: mhtxthtml.pl,v 2.36 2003/10/17 22:08:45 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -31,9 +31,6 @@
 
 
 package m2h_text_html;
-
-# Beginning of URL match expression
-my $Url	= '(\w+://|\w+:)';
 
 # Script related attributes: Basically any attribute that starts with "on"
 my $SAttr = q/\bon\w+\b/;
@@ -238,7 +235,7 @@ sub filter {
     ## Modify relative urls to absolute using BASE
     if ($base =~ /\S/) {
         $$data =~ s/($UAttr\s*=\s*['"])([^'"]+)(['"])/
-		   join("", $1, &addbase($base,$2), $3)/geoix;
+		   join("", $1, readmail::apply_base_url($base,$2), $3)/geoix;
     }
     
     ## Check for frames: Do not support, so just show source
@@ -354,39 +351,6 @@ sub filter {
 
 ##---------------------------------------------------------------------------
 
-sub addbase {
-    my($b, $u) = @_;
-    return $u  if !defined($b) || $b !~ /\S/;
-
-    my($ret);
-    $u =~ s/^\s+//;
-    if ($u =~ m%^$Url%o || $u =~ m/^#/) {
-	## Absolute URL or scroll link; do nothing
-        $ret = $u;
-    } else {
-	## Relative URL
-	if ($u =~ /^\./) {
-	    ## "./---" or "../---": Need to remove and adjust base
-	    ## accordingly.
-	    $b =~ s/\/$//;
-	    my @a = split(/\//, $b);
-	    my $cnt = 0;
-	    while ( $cnt <= scalar(@a) &&
-		    $u =~ s|^(\.{1,2})/|| ) { ++$cnt  if length($1) == 2; }
-	    splice(@a, -$cnt)  if $cnt > 0;
-	    $b = join('/', @a, "");
-
-	} elsif ($u =~ m%^/%) {
-	    ## "/---": Just use hostname:port of base.
-	    $b =~ s%^(${Url}[^/]*)/.*%$1%o;
-	}
-        $ret = $b . $u;
-    }
-    $ret;
-}
-
-##---------------------------------------------------------------------------
-
 sub resolve_cid {
     my $onlycid   = shift;
     my $cid_in    = shift;
@@ -428,12 +392,12 @@ sub resolve_cid {
 	$filename = mhonarc::write_attachment(
 			    $ctype,
 			    \$data,
-			    $attachdir);
+			    { '-dirpath' => $attachdir });
     } else {
 	$filename = mhonarc::write_attachment(
 			    $ctype,
 			    $href->{'body'},
-			    $attachdir);
+			    { '-dirpath' => $attachdir });
     }
     $href->{'filtered'} = 1; # mark part filtered for readmail.pl
     $href->{'uri'}      = $filename;

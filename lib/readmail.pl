@@ -1,8 +1,8 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: readmail.pl,v 2.33 2003/08/02 06:04:47 ehood Exp $
+##	$Id: readmail.pl,v 2.35 2004/03/10 22:01:33 ehood Exp $
 ##  Author:
-##      Earl Hood       mhonarc@mhonarc.org
+##      Earl Hood       mhonarc AT mhonarc DOT org
 ##  Description:
 ##      Library defining routines to parse MIME e-mail messages.  The
 ##	library is designed so it may be reused for other e-mail
@@ -24,7 +24,7 @@
 ##	$parm_hash_ref  = MAILparse_parameter_str($header_field, 1);
 ##
 ##---------------------------------------------------------------------------##
-##    Copyright (C) 1996-2002	Earl Hood, mhonarc@mhonarc.org
+##    Copyright (C) 1996-2003	Earl Hood, mhonarc AT mhonarc DOT org
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by
@@ -48,8 +48,7 @@ package readmail;
 ##	Private Globals							     ##
 ###############################################################################
 
-my $Url	          = '(\w+://|\w+:)';
-
+#my $Url	  = '(\w+://|\w+:)';
 my @_MIMEAltPrefs = ();
 my %_MIMEAltPrefs = ();
 
@@ -60,6 +59,14 @@ my %_MIMEAltPrefs = ();
 ##---------------------------------------------------------------------------##
 ##	Constants
 ##
+
+## String for matching the start of a URL
+$UrlRxStr	  =
+    '(?:(?:https?|ftp|afs|wais|telnet|ldap|gopher|z39\.50[rs]|vemmi|imap|'.
+	  'nfs|acap|rtspu?|tip|pop|sip|(?:soap|xmlrpc)\.beeps?|go|ipp|'.
+	  'tftp)://|'.
+       'news:(?://)?|'.
+       '(?:nntp|mid|cid|mailto|prospero|data|service|tel|fax|modem|h\.323):)';
 
 ##  Constants for use as second argument to MAILdecode_1522_str().
 sub JUST_DECODE() { 1; }
@@ -377,7 +384,7 @@ sub MAILdecode_1522_str {
 			    ? $MIMECharsetAliases{$charset} : $charset;
 	    $strtxt =~ s/_/ /g;
 	    $strtxt =  &$dec($strtxt);
-	    &$encfunc(\$strtxt, $charset, $TextEncode);
+	    &$encfunc(\$strtxt, $real_charset, $TextEncode);
 	    $ret   .= $strtxt;
 
 	# Regular conversion
@@ -1250,37 +1257,76 @@ sub extract_ctype {
 }
 
 ##---------------------------------------------------------------------------##
-
+##	apply_base_url(): Convert a relative URL to a full URL with
+##	specific base;
+##
 sub apply_base_url {
-    my($b, $u) = @_;
+    my $b = shift;  # Base URL
+    my $u = shift;  # URL to apply base to
+
+    ## If no base, nothing to do
     return $u  if !defined($b) || $b !~ /\S/;
 
-    my($ret);
+    ## If absolute URL or scroll link; do nothing
     $u =~ s/^\s+//;
-    if ($u =~ m%^$Url%o || $u =~ m/^#/) {
-	## Absolute URL or scroll link; do nothing
-        $ret = $u;
-    } else {
-	## Relative URL
-	if ($u =~ /^\./) {
-	    ## "./---" or "../---": Need to remove and adjust base
-	    ## accordingly.
-	    $b =~ s/\/$//;
-	    my @a = split(/\//, $b);
-	    my $cnt = 0;
-	    while ( $cnt <= scalar(@a) &&
-		    $u =~ s|^(\.{1,2})/|| ) { ++$cnt  if length($1) == 2; }
-	    splice(@a, -$cnt)  if $cnt > 0;
-	    $b = join('/', @a, "");
-
-	} elsif ($u =~ m%^/%) {
-	    ## "/---": Just use hostname:port of base.
-	    $b =~ s%^(${Url}[^/]*)/.*%$1%o;
-	}
-        $ret = $b . $u;
+    if ($u =~ /^$UrlRxStr/o || $u =~ m/^#/) {
+        return $u;
     }
-    $ret;
+
+    ## Check if base URL allows relative resolution
+    my($host_part, $scheme);
+    if ($b =~ s{^((https?|ftp|file|nfs|acap|tftp)://[\w\-:\d.\@\%=~&]+)/?}{}) {
+	$host_part = $1;
+	$scheme    = lc $2;
+    } else {
+	warn qq/Warning: Invalid base url, "$b" to apply to "$u"\n/;
+	return $u;
+    }
+
+    ## If "/---", just use hostname:port of base.
+    if ($u =~ /^\//) {
+	return $host_part . $u;
+    }
+
+    ## Clean up base URL
+    SCHEME: {
+	if ($scheme eq 'http' || $scheme eq 'https' || $scheme eq 'acap') {
+	    $b =~ s/\?.*$//;
+	    last SCHEME;
+	}
+	if ($scheme eq 'ftp') {
+	    $b =~ s/;type=.$//;
+	    last SCHEME;
+	}
+	if ($scheme eq 'tftp') {
+	    $b =~ s/;mode=\w+$//;
+	    last SCHEME;
+	}
+    }
+    $b =~ s/\/$//;    # strip any trailing '/' (we add it back later)
+
+    ## "./---" or "../---": Need to remove and adjust base accordingly.
+    my $cnt = 0;
+    while ( $u =~ s|^(\.{1,2})/|| ) { ++$cnt  if length($1) == 2; }
+
+    if ($b eq '') {
+	# base is just host
+	return join('/', $host_part, $u);
+    }
+    if ($cnt > 0) {
+	# trim path
+	my @a = split(/\//, $b);
+	if ($cnt <= scalar(@a)) {
+	    splice(@a, -$cnt);
+	    return join('/', $host_part, @a, $u);
+	}
+	# invalid relative path, tries to go past root
+	return join('/', $host_part, $u);
+
+    }
+    return join('/', $host_part, $b, $u);
 }
+
 ##---------------------------------------------------------------------------##
 
 sub extract_charset {

@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##      $Id: mhusage.pl,v 2.23 2003/08/02 06:15:37 ehood Exp $
+##      $Id: mhusage.pl,v 2.25 2003/10/02 03:30:58 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -68,6 +68,8 @@ Options:
   -addressmodifycode <exp> : Perl expressions for modifying addresses
   -annotate                : Add an annotation to message(s)
   -archive                 : Generate archive related files (the default)
+  -attachmentdir <path>    : Location to write attachments to
+  -attachmenturl <url>     : Web URL to location of attachments
   -authsort                : Sort messages by author
   -checknoarchive          : Check for "no archive" flags in messages
   -conlen                  : Honor Content-Length fields
@@ -131,6 +133,8 @@ Options:
                              (def: "^From ")
   -multipg                 : Generate multi-page indexes
   -news                    : Add links to newsgroups (the default)
+  -newsurl <url>           : URL to use for newsgroup hyperlinks
+                             (def: "news:\$NEWSGROUP\$")
   -noarchive               : Do not generate archive related files
   -noauthsort              : Do not sort messages by author
   -nochecknoarchive        : Ignore "no archive" flags in messages

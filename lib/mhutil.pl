@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhutil.pl,v 2.27 2003/01/09 23:42:28 ehood Exp $
+##	$Id: mhutil.pl,v 2.30 2003/10/24 19:24:35 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -47,7 +47,11 @@ use MHonArc::RFC822;
     'cc'		=> 1,
     'dcc'		=> 1,
     'from'		=> 1,
+    'mail-followup-to'	=> 1,
     'mail-reply-to'	=> 1,
+    'notify-bcc'	=> 1,
+    'notify-cc' 	=> 1,
+    'notify-to' 	=> 1,
     'original-bcc'	=> 1,
     'original-cc'	=> 1,
     'original-from'	=> 1,
@@ -527,7 +531,7 @@ sub field_add_links {
 	    last LBLSW;
 	}
 	if (!$NONEWS && ($label eq 'newsgroup' || $label eq 'newsgroups')) {
-	    $fld_text = newsurl($fld_text);
+	    $fld_text = newsurl($fld_text, $fields->{'x-mha-message-id'});
 	    last LBLSW;
 	}
 	last LBLSW;
@@ -540,16 +544,23 @@ sub field_add_links {
 ##	Routine to add news links of newsgroups names
 ##
 sub newsurl {
-    my $str = shift;
+    my $str     = shift;
+    my $msgid_u = urlize(shift);
     my $h = "";
 
+    local $_;
     if ($str =~ s/^([^:]*:\s*)//) {
 	$h = $1;
     }
-    $str =~ s/\s//g;			# Strip whitespace
-    my @groups = split(/,/, $str);	# Split groups
-    foreach (@groups) {			# Make hyperlinks
-	s|(.*)|<a href="news:$1">$1</a>|;
+    $str =~ s/[\s<>]//g;
+    my @groups = split(/,/, $str);
+    my $group;
+    foreach $group (@groups) {
+	my $url     = $NewsUrl;
+	my $group_u = urlize($group);
+	$url =~ s/\$NEWSGROUP(?::U)?\$/$group_u/g;
+	$url =~ s/\$MSGID(?::U)?\$/$msgid_u/g;
+	$group = qq{<a href="$url">$group</a>};
     }
     $h . join(', ', @groups);	# Rejoin string
 }

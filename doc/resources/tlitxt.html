@@ -87,6 +87,10 @@ the end markup for a regular entry.
 <th>Variable</th><th>Value</th>
 </tr>
 <tr valign=top>
+<td align=center><a name="ATTACHMENTURL" href="../rcvars.html#ATTACHMENTURL"><strong><code>$ATTACHMENTURL$</code></strong></a></td>
+<td>Base URL to attachments</td>
+</tr>
+<tr valign=top>
 <td align=center><a name="A_ATTR" href="../rcvars.html#A_ATTR"><strong><code>$A_ATTR$</code></strong></a></td>
 <td>The <tt>NAME</tt> and <tt>HREF</tt> attributes to use in an anchor to link to the archived message. The <tt>NAME</tt> attribute links the messages to the index page.</td>
 </tr>
@@ -105,6 +109,10 @@ the end markup for a regular entry.
 <tr valign=top>
 <td align=center><a name="DDMMYYYY" href="../rcvars.html#DDMMYYYY"><strong><code>$DDMMYYYY$</code></strong></a></td>
 <td>Message date in dd/mm/yyyy format.</td>
+</tr>
+<tr valign=top>
+<td align=center><a name="DOCURL" href="../rcvars.html#DOCURL"><strong><code>$DOCURL$</code></strong></a></td>
+<td>URL to documentation.</td>
 </tr>
 <tr valign=top>
 <td align=center><a name="ENV" href="../rcvars.html#ENV"><strong><code>$ENV$</code></strong></a></td>
@@ -131,6 +139,10 @@ the end markup for a regular entry.
 <td>The human name of the person in the <tt>From:</tt> field of the message. If no human name is found, the username specified in the e-mail address is used.</td>
 </tr>
 <tr valign=top>
+<td align=center><a name="GMTDATE" href="../rcvars.html#GMTDATE"><strong><code>$GMTDATE$</code></strong></a></td>
+<td>Current GMT date.</td>
+</tr>
+<tr valign=top>
 <td align=center><a name="ICON" href="../rcvars.html#ICON"><strong><code>$ICON$</code></strong></a></td>
 <td>The content-type sensitive icon.</td>
 </tr>
@@ -143,8 +155,36 @@ the end markup for a regular entry.
 <td>Value of ICONURLPREFIX resource.</td>
 </tr>
 <tr valign=top>
+<td align=center><a name="IDXFNAME" href="../rcvars.html#IDXFNAME"><strong><code>$IDXFNAME$</code></strong></a></td>
+<td>Filename of main index page.</td>
+</tr>
+<tr valign=top>
+<td align=center><a name="IDXLABEL" href="../rcvars.html#IDXLABEL"><strong><code>$IDXLABEL$</code></strong></a></td>
+<td>Label for main index page.</td>
+</tr>
+<tr valign=top>
+<td align=center><a name="IDXPREFIX" href="../rcvars.html#IDXPREFIX"><strong><code>$IDXPREFIX$</code></strong></a></td>
+<td>Prefix of filenames of main index pages.</td>
+</tr>
+<tr valign=top>
+<td align=center><a name="IDXSIZE" href="../rcvars.html#IDXSIZE"><strong><code>$IDXSIZE$</code></strong></a></td>
+<td>Max number of messages that may be listed in index page.</td>
+</tr>
+<tr valign=top>
+<td align=center><a name="IDXTITLE" href="../rcvars.html#IDXTITLE"><strong><code>$IDXTITLE$</code></strong></a></td>
+<td>The title of the main index page.</td>
+</tr>
+<tr valign=top>
+<td align=center><a name="LOCALDATE" href="../rcvars.html#LOCALDATE"><strong><code>$LOCALDATE$</code></strong></a></td>
+<td>Current local date.</td>
+</tr>
+<tr valign=top>
 <td align=center><a name="MMDDYYYY" href="../rcvars.html#MMDDYYYY"><strong><code>$MMDDYYYY$</code></strong></a></td>
 <td>Message date in mm/dd/yyyy format.</td>
+</tr>
+<tr valign=top>
+<td align=center><a name="MSG" href="../rcvars.html#MSG"><strong><code>$MSG$</code></strong></a></td>
+<td>Filename of message.</td>
 </tr>
 <tr valign=top>
 <td align=center><a name="MSGGMTDATE" href="../rcvars.html#MSGGMTDATE"><strong><code>$MSGGMTDATE$</code></strong></a></td>
@@ -187,6 +227,14 @@ the end markup for a regular entry.
 <td>The current listing number of the message.</td>
 </tr>
 <tr valign=top>
+<td align=center><a name="OUTDIR" href="../rcvars.html#OUTDIR"><strong><code>$OUTDIR$</code></strong></a></td>
+<td>Pathname of archive.</td>
+</tr>
+<tr valign=top>
+<td align=center><a name="PROG" href="../rcvars.html#PROG"><strong><code>$PROG$</code></strong></a></td>
+<td>Program name</td>
+</tr>
+<tr valign=top>
 <td align=center><a name="SUBJECT" href="../rcvars.html#SUBJECT"><strong><code>$SUBJECT$</code></strong></a></td>
 <td>The subject text of the message, and if no arguments, wrapped in an anchor element that hyperlinks to the message.</td>
 </tr>
@@ -195,8 +243,28 @@ the end markup for a regular entry.
 <td>The subject text of the message without the anchor element.</td>
 </tr>
 <tr valign=top>
+<td align=center><a name="TIDXFNAME" href="../rcvars.html#TIDXFNAME"><strong><code>$TIDXFNAME$</code></strong></a></td>
+<td>Filename of thread index page.</td>
+</tr>
+<tr valign=top>
+<td align=center><a name="TIDXLABEL" href="../rcvars.html#TIDXLABEL"><strong><code>$TIDXLABEL$</code></strong></a></td>
+<td>Label for thread index page.</td>
+</tr>
+<tr valign=top>
+<td align=center><a name="TIDXPREFIX" href="../rcvars.html#TIDXPREFIX"><strong><code>$TIDXPREFIX$</code></strong></a></td>
+<td>Prefix of filenames of thread index pages.</td>
+</tr>
+<tr valign=top>
+<td align=center><a name="TIDXTITLE" href="../rcvars.html#TIDXTITLE"><strong><code>$TIDXTITLE$</code></strong></a></td>
+<td>Title of thread index.</td>
+</tr>
+<tr valign=top>
 <td align=center><a name="TLEVEL" href="../rcvars.html#TLEVEL"><strong><code>$TLEVEL$</code></strong></a></td>
 <td>Numeric level of message in thread, starting with 0.</td>
+</tr>
+<tr valign=top>
+<td align=center><a name="VERSION" href="../rcvars.html#VERSION"><strong><code>$VERSION$</code></strong></a></td>
+<td>Program version.</td>
 </tr>
 <tr valign=top>
 <td align=center><a name="YYYYMMDD" href="../rcvars.html#YYYYMMDD"><strong><code>$YYYYMMDD$</code></strong></a></td>
@@ -239,10 +307,12 @@ the end markup for a regular entry.
 <!--/x-rc-nav-->
 <hr>
 <address>
-$Date: 2003/01/09 23:42:26 $ <br>
+$Date: 2003/10/06 22:04:21 $ <br>
 <img align="top" src="../monicon.png" alt="">
 <a href="http://www.mhonarc.org/"><strong>MHonArc</strong></a><br>
-Copyright &#169; 1997-1998, <a href="http://www.earlhood.com/">Earl Hood</a>, <a href="mailto:mhonarc@mhonarc.org">mhonarc@mhonarc.org</a><br>
+Copyright &#169; 1997-1998, <a href="http://www.earlhood.com/">Earl Hood</a>, <a href="mailto:mhonarc&#37;40mhonarc.org">mhonarc<!--
+-->&#64;<!--
+-->mhonarc.org</a><br>
 </address>
 
 </body>

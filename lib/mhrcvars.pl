@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhrcvars.pl,v 2.25 2003/02/04 23:31:19 ehood Exp $
+##	$Id: mhrcvars.pl,v 2.26 2003/10/01 04:30:42 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -603,6 +603,11 @@ sub replace_li_var {
 	## -------------------------------- ##
 	## Miscellaneous resource variables ##
 	## -------------------------------- ##
+    	if ($var eq 'ATTACHMENTURL') {
+	    $isurl = 0;
+	    $tmp = $AttachmentUrl;
+	    last REPLACESW;
+	}
     	if ($var eq 'DOCURL') {
 	    $isurl = 0;
 	    $tmp = $DOCURL;

@@ -92,7 +92,9 @@ prompt&gt; <b>mhonarc -annotate -outdir /home/httpd/docs/mail \</b>
 <p>Multiple <tt>-notetext</tt> can be specified if you want to keep
 the command-line cleaner for larger annotations.  The following adds
 an annotation to the messages with a message-id of
-<tt>&lt;34D622C8.C37760AB@example.com&gt;</tt> and message number of
+<tt>&lt;34D622C8.C37760AB<!--
+-->&#64;<!--
+-->example.com&gt;</tt> and message number of
 23:
 </p>
 <table border=1 width="100%"><tr><td><pre class="shell">
@@ -101,7 +103,9 @@ prompt&gt; <b>mhonarc -annotate -outdir /home/httpd/docs/mail \</b>
 	<b>-notetext "Here is some more text." \</b>
 	<b>-notetext "Here is some more text (again)." \</b>
 	<b>-notetext "The End.&lt;/p&gt;" \</b>
-	<b>"34D622C8.C37760AB@example.com" 23</b>
+	<b>"34D622C8.C37760AB<!--
+-->&#64;<!--
+-->example.com" 23</b>
 </pre></td></tr></table>
 
 <p>All <tt>-notetext</tt> options text will be concatenated together
@@ -177,13 +181,15 @@ them to standard output (standard on Unix-based systems).
 <!--/x-rc-nav-->
 <hr>
 <address>
-$Date: 2002/12/10 04:08:02 $ <br>
+$Date: 2003/10/06 22:04:16 $ <br>
 <img align="top" src="../monicon.png" alt="">
 <a href="http://www.mhonarc.org/"
 ><strong>MHonArc</strong></a><br>
 Copyright &#169; 1998-1999, <a href="http://www.earlhood.com/"
->Earl Hood</a>, <a href="mailto:mhonarc@mhonarc.org"
->mhonarc@mhonarc.org</a><br>
+>Earl Hood</a>, <a href="mailto:mhonarc&#37;40mhonarc.org"
+>mhonarc<!--
+-->&#64;<!--
+-->mhonarc.org</a><br>
 </address>
 
 </body>

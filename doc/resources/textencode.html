@@ -165,7 +165,9 @@ which can include non-ASCII MIME encoded data like
 the following:
 </p>
 <pre class="code">
-From: =?US-ASCII?Q?Earl_Hood?= &lt;earl@earlhood.com&gt;
+From: =?US-ASCII?Q?Earl_Hood?= &lt;earl<!--
+-->&#64;<!--
+-->earlhood.com&gt;
 Subject: =?ISO-8859-1?B?SWYgeW91IGNhbiByZWFkIHRoaXMgeW8=?=
  =?ISO-8859-2?B?dSB1bmRlcnN0YW5kIHRoZSBleGFtcGxlLg==?=
 </pre>
@@ -220,7 +222,9 @@ routine is as follows: </P>
 
 <PRE class="code">
 sub <var>text_encoder</var> {
-    my(<b>$text_ref</b>, <b>$from_charset</b>, <b>$to_charset</b>) = @_;
+    my(<b>$text_ref</b>, <b>$from_charset</b>, <b>$to_charset</b>) = <!--
+-->&#64;<!--
+-->_;
 
     <var># code here
 
@@ -487,7 +491,8 @@ iso_2022_jp::clip; iso2022jp.pl
 <b>&lt;/TextClipFunc&gt;</b>
 
 <b><a href="idxpgbegin.html">&lt;IdxPgBegin&gt;</a></b>
-&lt;!doctype html public "-//W3C//DTD HTML//EN"&gt;
+&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd"&gt;
 &lt;html&gt;
 &lt;head&gt;
 &lt;title&gt;<b><a href="../rcvars.html#IDXTITLE">$IDXTITLE$</a></b>&lt;/title&gt;
@@ -498,7 +503,8 @@ iso_2022_jp::clip; iso2022jp.pl
 <b>&lt;/IdxPgBegin&gt;</b>
 
 <b><a href="tidxpgbegin.html">&lt;TIdxPgBegin&gt;</a></b>
-&lt;!doctype html public "-//W3C//DTD HTML//EN"&gt;
+&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd"&gt;
 &lt;html&gt;
 &lt;head&gt;
 &lt;title&gt;<b><a href="../rcvars.html#TIDXTITLE">$TIDXTITLE$</a></b>&lt;/title&gt;
@@ -510,7 +516,8 @@ iso_2022_jp::clip; iso2022jp.pl
 
 
 <b><a href="msgpgbegin.html">&lt;MsgPgBegin&gt;</a></b>
-&lt;!doctype html public "-//W3C//DTD HTML//EN"&gt;
+&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd"&gt;
 &lt;html&gt;
 &lt;head&gt;
 &lt;title&gt;<b><a href="../rcvars.html#SUBJECTNA">$SUBJECTNA$</a></b>&lt;/title&gt;
@@ -546,12 +553,14 @@ iso_2022_jp::clip; iso2022jp.pl
 <!--/x-rc-nav-->
 <hr>
 <address>
-$Date: 2002/12/21 07:26:33 $<br>
+$Date: 2004/03/15 21:07:18 $<br>
 <img align="top" src="../monicon.png" alt="">
 <a href="http://www.mhonarc.org/"><strong>MHonArc</strong></a><br>
 Copyright &#169; 2002, <a href="http://www.earlhood.com/"
->Earl Hood</a>, <a href="mailto:mhonarc@mhonarc.org"
->mhonarc@mhonarc.org</a><br>
+>Earl Hood</a>, <a href="mailto:mhonarc&#37;40mhonarc.org"
+>mhonarc<!--
+-->&#64;<!--
+-->mhonarc.org</a><br>
 </address>
 
 </body>

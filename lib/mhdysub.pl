@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhdysub.pl,v 2.10 2003/01/10 03:35:40 ehood Exp $
+##	$Id: mhdysub.pl,v 2.11 2004/03/09 07:14:01 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -106,7 +106,7 @@ EndOfRoutine
 	foreach (readdir(DIR)) {
 	    if (/$msgrex/io) { $max = int($1)  if $1 > $max; }
 	}
-	close(DIR);
+	closedir(DIR);
 	$max;
     }
 EndOfRoutine

@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhfile.pl,v 2.10 2003/02/22 04:40:11 ehood Exp $
+##	$Id: mhfile.pl,v 2.11 2003/09/29 05:03:11 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -163,12 +163,16 @@ sub file_utime {
 }
 
 sub file_temp {
-    my $template = shift;
-    my $dir	 = shift || $CURDIR;
+    my $template = shift;	      # Filename template
+    my $dir	 = shift || $CURDIR;  # Where to write the file
+    my $suffix	 = shift;	      # Required suffix (optional)
     my($handle, $tmpfile);
 
     MKTEMP: {
-	if ($FastTempFiles) {
+	# Do not honor FASTTEMPFILES if a suffix is required, mainly
+	# because things like attachment writing will not work with
+	# FASTTEMPFILES.
+	if ($FastTempFiles && !defined($suffix)) {
 	    $handle = gensym;
 	    $tmpfile = join($DIRSEP, $dir, $template.$$);
 	    if (!sysopen($handle, $tmpfile,
@@ -177,9 +181,12 @@ sub file_temp {
 	    }
 	    last MKTEMP;
 	}
+
+	# Use File::Temp when at all possible
 	if ($_have_File_Temp) {
-	    ($handle, $tmpfile) =
-		File::Temp::tempfile($template, 'DIR' => $dir, 'UNLINK' => 0);
+	    my @tf_opts = ('DIR' => $dir, 'UNLINK' => 0);
+	    push(@tf_opts, 'SUFFIX' => $suffix)  if $suffix;
+	    ($handle, $tmpfile) = File::Temp::tempfile($template, @tf_opts);
 	    last MKTEMP;
 	}
 
@@ -188,7 +195,8 @@ sub file_temp {
 	for ($i=0; $i < TEMP_MAX_TRIES; ++$i) {
 	    ($tmpfile = $template) =~
 		s/X/$TEMP_CHARS[int(rand($#TEMP_CHARS))]/ge;
-	    $tmpfile = join($DIRSEP, $dir, $tmpfile);
+	    $tmpfile  = join($DIRSEP, $dir, $tmpfile);
+	    $tmpfile .= $suffix  if defined($suffix);
 	    last  if sysopen($handle, $tmpfile,
 			     (O_WRONLY|O_EXCL|O_CREAT), 0600);
 	}

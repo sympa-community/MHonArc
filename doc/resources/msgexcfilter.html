@@ -92,7 +92,9 @@ operation:
 </p>
 <pre>
 <b>&lt;MsgExcFilter&gt;</b>
-/^From: .*\behood@/im;
+/^From: .*\behood<!--
+-->&#64;<!--
+-->/im;
 <b>&lt;/MsgExcFilter&gt;</b>
 </pre>
 <p>Here, we are excluding any messages that are from "ehood".  The
@@ -101,11 +103,15 @@ header will contain newlines.
 </p>
 
 <p>The following example attempts to exclude all messages not addressed
-to <tt>mhonarc-users@mhonarc.org</tt>:
+to <tt>mhonarc-users<!--
+-->&#64;<!--
+-->mhonarc.org</tt>:
 </p>
 <pre>
 <b>&lt;MsgExcFilter&gt;</b>
-!/\bmhonarc-users@mhonarc.org\b/i;
+!/\bmhonarc-users<!--
+-->&#64;<!--
+-->mhonarc.org\b/i;
 <b>&lt;/MsgExcFilter&gt;</b>
 </pre>
 
@@ -144,13 +150,15 @@ resource basically does:
 <!--/x-rc-nav-->
 <hr>
 <address>
-$Date: 2002/12/10 04:08:02 $ <br>
+$Date: 2003/10/06 22:04:18 $ <br>
 <img align="top" src="../monicon.png" alt="">
 <a href="http://www.mhonarc.org/"
 ><strong>MHonArc</strong></a><br>
 Copyright &#169; 1999, <a href="http://www.earlhood.com/"
->Earl Hood</a>, <a href="mailto:mhonarc@mhonarc.org"
->mhonarc@mhonarc.org</a><br>
+>Earl Hood</a>, <a href="mailto:mhonarc&#37;40mhonarc.org"
+>mhonarc<!--
+-->&#64;<!--
+-->mhonarc.org</a><br>
 </address>
 
 </body>

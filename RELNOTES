@@ -20,6 +20,9 @@ NOTE: Read the CHANGES document included in the distribution for a more
       + UPGRADING FROM v2.4.x OR EARLIER: MIMEFILTERS API Change
       + UPGRADING FROM v2.1.x OR EARLIER: Database Format Change
       + DOWNGRADING TO OLDER VERSIONS
+  * v2.6.9 Notes
+      + Attachment filename format change
+      + mhonarc::write_attachment: API change
   * v2.6.0 Notes
       + m2h_text_html::filter: default argument removed
       + SPAMMODE: Applies to message body text.
@@ -146,6 +149,29 @@ TIP: The safest way to downgrade is to recreate an archive from the
      original raw mail data. It is good practice to preserve the raw mail  
      data for cases like this and for general archive recovering situations
      due to file corruption or other system failures.                      
+
+---------------------------------------------------------------------------
+
+v2.6.9 Notes
+
+Attachment filename format change
+
+Attachment filenames have changed from the numeric-style <ext><#####>.<ext>
+to <ext><XXXXXXXXXX>.<ext> where <XXXXXXXXXX> is a random string. For
+example, a jpeg image in the older format would have a filename like
+"jpg00001.jpg", and in the new style, it would be something like
+"jpgAOMySzCNIE.jpg".
+
+The change should be transparent and was done to provide support for the 
+ATTACHMENTDIR resource and as a performance enhancement. However, if you
+perform any custom post-processing on archives that depends on the old
+numeric-style format, you will need to take this change into account.
+
+mhonarc::write_attachment: API change
+
+mhonarc::write_attachment is the main routine for filters that save data to
+an external file. The signature of the routine was changed while fixing bug
+#5473. See the API appendix for more information.
 
 ---------------------------------------------------------------------------
 
@@ -301,7 +327,7 @@ your settings and use the variant version when updating your archives.
 
 ---------------------------------------------------------------------------
 
-$Date: 2003/02/04 23:31:19 $
+$Date: 2004/03/05 22:03:16 $
 MHonArc
 Copyright © 1997-2002, Earl Hood, mhonarc@mhonarc.org
 

@@ -1,6 +1,6 @@
 <!-- ================================================================== -->
-<!--    $Id: def-mime.mrc,v 1.24 2003/01/19 01:39:32 ehood Exp $
-        Earl Hood <earl@earlhood.com>
+<!--    $Id: def-mime.mrc,v 1.25 2003/10/06 22:04:23 ehood Exp $
+        Earl Hood <earl @ earlhood . com>
   -->
 <!--    MHonArc Resource File                                           --
   --                                                                    --

@@ -1,30 +1,20 @@
 #!/usr/bin/perl
-# base64.pl -- A perl package to handle MIME-style BASE64 encoding
-# A. P. Barrett <barrett@ee.und.ac.za>, October 1993
-# $Revision: 2.2 $$Date: 2001/09/05 11:53:01 $
+# $Id: base64.pl,v 2.3 2003/09/28 07:20:43 ehood Exp $
 #
-#	$Id: base64.pl,v 2.2 2001/09/05 11:53:01 ehood Exp $
+# Library based on Perl 4 code from:
+#       base64.pl -- A perl package to handle MIME-style BASE64 encoding
+#       A. P. Barrett <barrett@ee.und.ac.za>, October 1993
+#       Revision: 1.4 Date: 1994/08/11 16:08:51
 #
-# Modified March 21, 1996 by ehood@convex.com
-#	-> Changes to base64'uudecode to strip out any begin/end
-#	   lines from input string.
-#
-# Modified April 16, 1996 by ehood@convex.com
-#	-> Change in base64'b64decode to use substr() to extract
-#	   data for decoding instead of a regular expression.
-#	   Results in a huge increase in execution time under Perl 4.
-#	   Perl 5 regular expression capability could be used to
-#	   give comperable performance, but would break Perl 4
-#	   compatibility.  Also, the substr() algorithm appears
-#	   to edge out the perl 5 method.
-#
-#	   Other functions have not been changed to use substr(), but
-#	   may benefit from it.
-#
-# Modified February 20, 1998 by ehood@medusa.acs.uci.edu
-#	-> Removed all uses of $&.
+# Subsequent changes made by Earl Hood, earl@earlhood.com.
 
 package base64;
+
+my $_have_MIME_Base64;
+BEGIN {
+  eval { require MIME::Base64; };
+  $_have_MIME_Base64 = scalar($@) ? 0 : 1;
+}
 
 # Synopsis:
 #       require 'base64.pl';
@@ -49,22 +39,22 @@ package base64;
 
 ####################
 
-$base64_alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.
-                   'abcdefghijklmnopqrstuvwxyz'.
-                   '0123456789+/';
-$base64_pad = '=';
+my $base64_alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.
+                      'abcdefghijklmnopqrstuvwxyz'.
+                      '0123456789+/';
+my $base64_pad = '=';
 
-$uuencode_alphabet = q|`!"#$%&'()*+,-./0123456789:;<=>?|.
-                      '@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_'; # double that '\\'!
-$uuencode_pad = '`';
+my $uuencode_alphabet = q|`!"#$%&'()*+,-./0123456789:;<=>?|.
+                        '@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_';
+my $uuencode_pad = '`';
 
 # Build some strings for use in tr/// commands.
 # Some uuencodes use " " and some use "`", so we handle both.
 # We also need to protect backslashes and other special characters.
-$tr_uuencode = " ".$uuencode_alphabet;
-$tr_uuencode =~ s/(\W)/\\$1/g;
-$tr_base64 = "A".$base64_alphabet;
-$tr_base64 =~ s/(\W)/\\$1/g;
+my $tr_uuencode =  " ".$uuencode_alphabet;
+my $tr_uuencode =~ s/(\W)/\\$1/g;
+my $tr_base64   =  "A".$base64_alphabet;
+my $tr_base64   =~ s/(\W)/\\$1/g;
 
 sub b64touu
 {
@@ -79,12 +69,12 @@ sub b64touu
 
     # break into lines of 60 encoded chars, prepending "M" for uuencode
     while (s/^(.{60})//) {
-	$result .= "M" . $1 . "\n";
+	$result .= 'M' . $1 . "\n";
     }
 
     # any leftover chars go onto a shorter line
     # with padding to the next multiple of 4 chars
-    if ($_ ne "") {
+    if ($_ ne '') {
 	$result .= substr($uuencode_alphabet, length($_)*3/4, 1)
 		   . $_
 		   . ($uuencode_pad x ((60 - length($_)) % 4)) . "\n";
@@ -96,10 +86,15 @@ sub b64touu
 
 sub b64decode
 {
+    # call more efficient module if available (ehood, 2003-09-28)
+    if ($_have_MIME_Base64) {
+	return &MIME::Base64::decode_base64;
+    }
+
     # substr() usage added by ehood, 1996/04/16
 
     local($str) = shift;
-    local($result, $tmp, $offset, $len);
+    my($result, $tmp, $offset, $len);
     
     # zap bad characters and translate others to uuencode alphabet
     eval qq{
@@ -109,19 +104,18 @@ sub b64decode
 
     # break into lines of 60 encoded chars, prepending "M" for uuencode,
     # and then using perl's builtin uudecoder to convert to binary.
-    #
     $result 	= '';			# init return string
     $offset	= 0;		    	# init offset to 0
     $len 	= length($str);		# store length
     while ($offset+60 <= $len) {		# loop until < 60 chars left
 	$tmp = substr($str, $offset, 60);	# grap 60 char block
 	$offset += 60;				# increment offset
-	$result .= unpack("u", "M" . $tmp);	# decode block
+	$result .= unpack('u', 'M' . $tmp);	# decode block
     }
     # also decode any leftover chars
     if ($offset < $len) {
 	$tmp = substr($str, $offset, $len-$offset);
-	$result .= unpack("u",
+	$result .= unpack('u',
 		    substr($uuencode_alphabet, length($tmp)*3/4, 1) . $tmp);
     }
 
@@ -131,9 +125,6 @@ sub b64decode
 
 sub uutob64
 {
-    local ($_) = @_;
-    local ($result);
-    
     # This is the most difficult, because some perverse uuencoder
     # might have made lines that do not describe multiples of 3 bytes.
     # I don't see any better method than uudecoding to binary and then
@@ -144,7 +135,12 @@ sub uutob64
 
 sub b64encode
 {
-    local ($_) = @_;
+    # call more efficient module if available (ehood, 2003-09-28)
+    if ($_have_MIME_Base64) {
+	return &MIME::Base64::encode_base64;
+    }
+
+    local ($_) = shift;
     my ($chunk);
     my ($result);
     
@@ -153,28 +149,21 @@ sub b64encode
     # then kill the leading "M", translate to the base64 alphabet,
     # and finally append a newline.
     while (s/^([\s\S]{45})//) {
-	#warn "in:$1:\n";
-	$chunk = substr(pack("u", $1), $[+1, 60);
-	#warn "packed    :$chunk:\n";
+	$chunk = substr(pack('u', $1), $[+1, 60);
 	eval qq{
 	    \$chunk =~ tr|$tr_uuencode|$tr_base64|;
 	};
-	#warn "translated:$chunk:\n";
 	$result .= $chunk . "\n";
     }
 
     # any leftover chars go onto a shorter line
     # with uuencode padding converted to base64 padding
-    if ($_ ne "") {
-	#warn "length ".length($_)." \$_:$_:\n";
-	#warn "enclen ", int((length($_)+2)/3)*4 - (45-length($_))%3, "\n";
-	$chunk = substr(pack("u", $_), $[+1,
+    if ($_ ne '') {
+	$chunk = substr(pack('u', $_), $[+1,
 			int((length($_)+2)/3)*4 - (45-length($_))%3);
-	#warn "chunk:$chunk:\n";
 	eval qq{
 	    \$chunk =~ tr|$tr_uuencode|$tr_base64|;
 	};
-	#warn "translated:$chunk:\n";
 	$result .= $chunk . ($base64_pad x ((60 - length($chunk)) % 4)) . "\n";
     }
 
@@ -184,20 +173,20 @@ sub b64encode
 
 sub uuencode
 {
-    local ($_) = @_;
-    local ($result);
+    local ($_) = shift;
+    my ($result);
     
     # break into chunks of 45 input chars, and use perl's builtin
     # uuencoder to convert each chunk to uuencode format.
     # (newline is added by builtin uuencoder.)
     while (s/^([\s\S]{45})//) {
-	$result .= pack("u", $1);
+	$result .= pack('u', $1);
     }
 
     # any leftover chars go onto a shorter line
     # with padding to the next multiple of 4 chars
-    if ($_ ne "") {
-	$result .= pack("u", $_);
+    if ($_ ne '') {
+	$result .= pack('u', $_);
     }
 
     # return result
@@ -222,3 +211,5 @@ sub uudecode
     # return result
     $result;
 }
+
+1;

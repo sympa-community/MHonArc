@@ -1,15 +1,17 @@
 <html>
 <head>
-<title>MHonArc Resources: MHPATTERN</title>
+<title>MHonArc Resources: ATTACHMENTURL</title>
 <link rel="stylesheet" type="text/css" href="../docstyles.css">
 </head>
 <body>
+
 <!--x-rc-nav-->
 <table border=0><tr valign="top">
-<td align="left" width="50%">[Prev:&nbsp;<a href="maxsize.html">MAXSIZE</a>]</td><td><nobr>[<a href="../resources.html#mhpattern">Resources</a>][<a href="../mhonarc.html">TOC</a>]</nobr></td><td align="right" width="50%">[Next:&nbsp;<a href="mimealtprefs.html">MIMEALTPREFS</a>]</td></tr></table>
+<td align="left" width="50%">[Prev:&nbsp;<a href="attachmentdir.html">ATTACHMENTDIR</a>]</td><td><nobr>[<a href="../resources.html#attachmenturl">Resources</a>][<a href="../mhonarc.html">TOC</a>]</nobr></td><td align="right" width="50%">[Next:&nbsp;<a href="authorbegin.html">AUTHORBEGIN</a>]</td></tr></table>
 <!--/x-rc-nav-->
+
 <hr>
-<h1>MHPATTERN</h1>
+<h1>ATTACHMENTURL</h1>
 <!--X-TOC-Start-->
 <ul>
 <li><a href="#syntax">Syntax</a>
@@ -30,21 +32,21 @@
 
 <dt><strong>Envariable</strong></dt>
 <dd><p>
-<code>M2H_MHPATTERN=</code><var>Perl-regexp</var>
+<code>M2H_ATTACHMENTURL=</code><var>url</var>
 </p>
 </dd>
 
 <dt><strong>Element</strong></dt>
 <dd><p>
-<code>&lt;MHPATTERN&gt;<br></code>
-<var>Perl-regexp</var><br>
-<code>&lt;/MHPATTERN&gt;<br></code>
+<code>&lt;ATTACHMENTURL&gt;</code><br>
+<var>url</var><br>
+<code>&lt;/ATTACHMENTURL&gt;</code><br>
 </p>
 </dd>
 
 <dt><strong>Command-line Option</strong></dt>
 <dd><p>
-<code>-mhpattern </code><var>Perl-regexp</var>
+<code>-attachmenturl </code><var>url</var>
 </p>
 </dd>
 
@@ -54,19 +56,21 @@
 <hr>
 <h2><a name="description">Description</a></h2>
 
-<p>MHPATTERN defines the Perl regular expression to use for
-matching message files in an MH mail folder.  In general,
-MHPATTERN allows you to tell MHonArc which message files
-to read when a specified mail folder is a directory.
+<p>ATTACHMENTURL defines the base URL for linking to attachment
+files.
+</p>
+
+<p>If <a href="attachmentdir.html">ATTACHMENTDIR</a> is a
+relative pathname, than ATTACHMENTURL should equal the value of <a
+href="attachmentdir.html">ATTACHMENTDIR</a>.
 </p>
 
 <!-- *************************************************************** -->
 <hr>
 <h2><a name="default">Default Setting</a></h2>
 
-<pre>
-^\d+$
-</pre>
+<p><i>Nil</i>.
+</p>
 
 <!-- *************************************************************** -->
 <hr>
@@ -79,27 +83,14 @@ to read when a specified mail folder is a directory.
 <hr>
 <h2><a name="examples">Examples</a></h2>
 
-<p>The following example shows how you can tell MHonArc to
-process every non-dotfile in a directory:
-</p>
-
-<pre>
-    % <b>mhonarc -add -mhpattern '^[^\.]' msgdir</b>
-</pre>
-
-<p>Remember, each file in <code>msgdir</code> must be a single
-mail message.
-</p>
-
-<p>Be careful in that the regexp you define does
-not match "<code>.</code>" and "<code>..</code>".
+<p>See <a href="attachmentdir.html#examples">ATTACHMENTDIR</a>.
 </p>
 
 <!-- *************************************************************** -->
 <hr>
 <h2><a name="version">Version</a></h2>
 
-<p>2.0
+<p>2.6.9
 </p>
 
 <!-- *************************************************************** -->
@@ -107,20 +98,23 @@ not match "<code>.</code>" and "<code>..</code>".
 <h2><a name="seealso">See Also</a></h2>
 
 <p>
+<a href="attachmentdir.html">ATTACHMENTDIR</a>,
 </p>
 
 <!-- *************************************************************** -->
 <hr>
 <!--x-rc-nav-->
 <table border=0><tr valign="top">
-<td align="left" width="50%">[Prev:&nbsp;<a href="maxsize.html">MAXSIZE</a>]</td><td><nobr>[<a href="../resources.html#mhpattern">Resources</a>][<a href="../mhonarc.html">TOC</a>]</nobr></td><td align="right" width="50%">[Next:&nbsp;<a href="mimealtprefs.html">MIMEALTPREFS</a>]</td></tr></table>
+<td align="left" width="50%">[Prev:&nbsp;<a href="attachmentdir.html">ATTACHMENTDIR</a>]</td><td><nobr>[<a href="../resources.html#attachmenturl">Resources</a>][<a href="../mhonarc.html">TOC</a>]</nobr></td><td align="right" width="50%">[Next:&nbsp;<a href="authorbegin.html">AUTHORBEGIN</a>]</td></tr></table>
 <!--/x-rc-nav-->
 <hr>
 <address>
-$Date: 2003/10/06 22:04:18 $ <br>
+$Date: 2003/10/06 22:04:16 $<br>
 <img align="top" src="../monicon.png" alt="">
 <a href="http://www.mhonarc.org/"><strong>MHonArc</strong></a><br>
-Copyright &#169; 1997-1998, <a href="http://www.earlhood.com/">Earl Hood</a>, <a href="mailto:mhonarc&#37;40mhonarc.org">mhonarc<!--
+Copyright &#169; 2003, <a href="http://www.earlhood.com/"
+>Earl Hood</a>, <a href="mailto:mhonarc&#37;40mhonarc.org"
+>mhonarc<!--
 -->&#64;<!--
 -->mhonarc.org</a><br>
 </address>

@@ -1,6 +1,6 @@
 <!-- ================================================================== -->
-<!--    $Id: subject.mrc,v 1.3 2002/05/04 04:52:52 ehood Exp $
-        Earl Hood <earl@earlhood.com>
+<!--    $Id: subject.mrc,v 1.4 2003/10/06 22:04:23 ehood Exp $
+        Earl Hood <earl @ earlhood . com>
 
 	This resource file utilizes the subject grouping feature of
 	MHonArc to format the main index.

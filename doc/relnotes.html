@@ -44,6 +44,11 @@ for a more complete summary of changes to MHonArc.
 <li><small><a href="#v2.1.x-dbedit">UPGRADING FROM v2.1.x OR EARLIER: Database Format Change</a></small>
 <li><small><a href="#down">DOWNGRADING TO OLDER VERSIONS</a></small>
 </ul>
+<li><a href="#v2.6.9">v2.6.9 Notes</a>
+<ul>
+<li><small><a href="#attach-filenaming">Attachment filename format change</a></small>
+<li><small><a href="#mhonarc::write_attachment"><tt>mhonarc::write_attachment</tt>: API change</a></small>
+</ul>
 <li><a href="#v2.6.0">v2.6.0 Notes</a>
 <ul>
 <li><small><a href="#m2h_text_plain:default"><tt>m2h_text_html::filter</tt>: <tt>default</tt> argument removed</a></small>
@@ -221,6 +226,37 @@ iso-2022-jp; iso_2022_jp::str2html; iso2022jp.pl
 </td>
 </tr>
 </table>
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="v2.6.9">v2.6.9 Notes</a></h2>
+
+<h3><a name="attach-filenaming">Attachment filename format change</a></h3>
+    <p>Attachment filenames have changed from the numeric-style
+    <b><var>&lt;ext&gt;</var><var>&lt;#####&gt;</var>.<var>&lt;ext&gt;</var></b>
+    to
+    <b><var>&lt;ext&gt;</var><var>&lt;XXXXXXXXXX&gt;</var>.<var>&lt;ext&gt;</var></b>
+    where <var>&lt;XXXXXXXXXX&gt;</var> is a random string.  For example,
+    a jpeg image in the older format would have a filename like
+    "<tt>jpg00001.jpg</tt>", and in the new style, it would be something
+    like "<tt>jpgAOMySzCNIE.jpg</tt>".  </p>
+
+    <p>The change should be transparent and was done to provide support
+    for the <a href="resources/attachmentdir.html">ATTACHMENTDIR</a>
+    resource and as a performance enhancement.  However, if you
+    perform any custom post-processing on archives that depends on
+    the old numeric-style format, you will need to take this change
+    into account.  </p>
+
+<h3><a name="mhonarc::write_attachment"><tt>mhonarc::write_attachment</tt>: API change</a></h3>
+    <p><tt>mhonarc::write_attachment</tt> is the main routine for
+    <a href="resources/mimefilters.html">filters</a> that save data to
+    an external file.  The signature of the routine was changed while
+    fixing
+    <a href="http://savannah.nongnu.org/bugs/?func=detailbug&bug_id=5473&group_id=1968">bug #5473</a>.  See the
+    <a href="app-api.html#mhonarc::write_attachment">API appendix</a>
+    for more information.
+    </p>
 
 <!-- *************************************************************** -->
 <hr>
@@ -423,12 +459,14 @@ mha-dbedit -rcfile examples/<a class="shell" href="rcfileexs/def-mime.mrc.html">
 <!-- *************************************************************** -->
 <hr>
 <address>
-$Date: 2003/02/04 23:31:19 $ <br>
+$Date: 2004/03/05 22:03:16 $ <br>
 <img align="top" src="monicon.png" alt="">
 <a href="http://www.mhonarc.org/"><strong>MHonArc</strong></a><br>
 Copyright &#169; 1997-2002, <a href="http://www.mhonarc.org/~ehood/"
->Earl Hood</a>, <a href="mailto:mhonarc@mhonarc.org"
->mhonarc@mhonarc.org</a><br>
+>Earl Hood</a>, <a href="mailto:mhonarc&#37;40mhonarc.org"
+>mhonarc<!--
+-->&#64;<!--
+-->mhonarc.org</a><br>
 </address>
 
 </BODY>

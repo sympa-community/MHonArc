@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhtxtplain.pl,v 2.40 2003/08/02 20:38:14 ehood Exp $
+##	$Id: mhtxtplain.pl,v 2.43 2003/10/17 22:08:45 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -39,18 +39,18 @@ sub Q_SIMPLE() { 1; }
 sub Q_FANCY()  { 2; }
 sub Q_FLOWED() { 3; }
 
-$Url    	= '(http://|https://|ftp://|afs://|wais://|telnet://|ldap://' .
-		   '|gopher://|news:|nntp:|mid:|cid:|mailto:|prospero:)';
-$UrlExp 	= $Url . q/[^\s\(\)\|<>"'\0-\037]+/ .
+$UrlExp 	= $readmail::UrlRxStr .
+			 q/[^\s\(\)\|<>"'\0-\037]+/ .
 			 q/[^\.?!;,"'\|\[\]\(\)\s<>\0-\037]/;
-$HUrlExp        = $Url . q/(?:&(?![gl]t;)|[^\s\(\)\|<>"'\&\0-\037])+/ .
+$HUrlExp        = $readmail::UrlRxStr .
+			 q/(?:&(?![gl]t;)|[^\s\(\)\|<>"'\&\0-\037])+/ .
 			 q/[^\.?!;,"'\|\[\]\(\)\s<>\&\0-\037]/;
 $QuoteChars	= '[>]';
 $HQuoteChars	= '&gt;';
 
 $StartFlowedQuote =
-  '<blockquote style="border-left: #0000FF solid 0.1em; '.
-                     'margin: 0em; padding-left: 1.0em">';
+  '<blockquote style="border-left: #5555EE solid 0.2em; '.
+                     'margin: 0em; padding-left: 0.85em">';
 $EndFlowedQuote   = "</blockquote>";
 $StartFixedQuote  = '<pre style="margin: 0em;">';
 $EndFixedQuote    = '</pre>';
@@ -197,8 +197,11 @@ sub filter {
 		} else {
 		    push(@files,
 			 mhonarc::write_attachment(
-			    'application/octet-stream', \$uddata, $atdir,
-			    ($usename?$file:''), $inext));
+			    'application/octet-stream', \$uddata, {
+				'-dirpath'  => $atdir,
+				'-filename' => ($usename?$file:''),
+				'-ext'      => $inext
+			    }));
 		    $urlfile = mhonarc::htmlize($files[$#files]);
 
 		    # create link to file
@@ -386,7 +389,6 @@ sub filter {
 		$para =~ s/^\n/<br>/;
 		my $nls = ($para =~ tr/\n/\n/);
 		if (($para =~ / \n/) || ($para =~ / \Z/) ||
-			($nls < 1) ||
 			(($nls == 1) && ($para =~ /\S/)
 			 && ($para =~ /\n\Z/))) {
 		    # flowed format
@@ -412,6 +414,9 @@ sub filter {
 			    $para =~ s/^(.*)$/&preserve_space($1)/gem;
 			}
 			$chunk .= $para;
+		    } elsif (($nls < 1) && ($para !~ /\S/)) {
+			#$chunk .= '<br>';
+			$chunk .= $startfixq . '<br>' . $endfixq;
 		    } else {
 			$chunk .= $startfixq . $para . $endfixq;
 		    }

@@ -108,7 +108,9 @@ routine is as follows: </P>
 
 <pre>
 sub <var>clip</var> {
-    my(<b>$text</b>, <b>$clip_length</b>, <b>$is_html</b>, <b>$has_tags</b>) = @_;
+    my(<b>$text</b>, <b>$clip_length</b>, <b>$is_html</b>, <b>$has_tags</b>) = <!--
+-->&#64;<!--
+-->_;
     <var># code here
 }
 </pre>
@@ -123,9 +125,13 @@ sub <var>clip</var> {
 </p>
 <p><b>NOTE:</b> Since Perl allows one to modify the data passed into
 it, the first argument should <strong>NOT</strong> be modified.  If
-you copy arguments from <tt>@_</tt> as shown above, then you will be
+you copy arguments from <tt><!--
+-->&#64;<!--
+-->_</tt> as shown above, then you will be
 okay since the <tt>my</tt> operation creates a copy of the arguments
-in <tt>@_</tt>.
+in <tt><!--
+-->&#64;<!--
+-->_</tt>.
 </p>
 </td>
 </tr>
@@ -247,12 +253,14 @@ text.
 <!--/x-rc-nav-->
 <hr>
 <address>
-$Date: 2003/02/04 23:31:19 $<br>
+$Date: 2003/10/06 22:04:21 $<br>
 <img align="top" src="../monicon.png" alt="">
 <a href="http://www.mhonarc.org/"><strong>MHonArc</strong></a><br>
 Copyright &#169; 2002, <a href="http://www.earlhood.com/"
->Earl Hood</a>, <a href="mailto:mhonarc@mhonarc.org"
->mhonarc@mhonarc.org</a><br>
+>Earl Hood</a>, <a href="mailto:mhonarc&#37;40mhonarc.org"
+>mhonarc<!--
+-->&#64;<!--
+-->mhonarc.org</a><br>
 </address>
 
 </body>

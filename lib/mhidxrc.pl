@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhidxrc.pl,v 2.15 2003/03/31 17:53:47 ehood Exp $
+##	$Id: mhidxrc.pl,v 2.17 2004/03/15 21:07:18 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -49,7 +49,8 @@ $IdxTypeStr = $NOSORT ? 'Message' :
     ##	Beginning of main index page
     unless ($IDXPGBEG) {
 	$IDXPGBEG =<<'EndOfStr';
-<!doctype html public "-//W3C//DTD HTML//EN">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 <title>$IDXTITLE$</title>
@@ -130,7 +131,8 @@ EndOfStr
     ##	Beginning of thread index page
     unless ($TIDXPGBEG) {
 	$TIDXPGBEG =<<'EndOfStr';
-<!doctype html public "-//W3C//DTD HTML//EN">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 <title>$TIDXTITLE$</title>
@@ -386,7 +388,8 @@ unless (@FromFields) {
 ## Beginning of message page
 unless ($MSGPGBEG) {
     $MSGPGBEG =<<'EndOfStr';
-<!doctype html public "-//W3C//DTD HTML//EN">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 <title>$SUBJECTNA$</title>
@@ -758,6 +761,11 @@ if ($MAILTOURL eq "") {
 	$MAILTOURL = 'mailto:$TO$';
     }
     $IsDefault{'MAILTOURL'} = 1;
+}
+
+if ($NewsUrl eq "") {
+    $NewsUrl = 'news:$NEWSGROUP$';
+    $IsDefault{'NEWSURL'} = 1;
 }
 
 if (!defined($AddrModifyBodies)) {

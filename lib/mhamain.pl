@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhamain.pl,v 2.71 2003/08/13 03:03:17 ehood Exp $
+##	$Id: mhamain.pl,v 2.73 2004/05/07 23:12:38 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -29,7 +29,7 @@ package mhonarc;
 
 require 5;
 
-$VERSION = '2.6.8';
+$VERSION = '2.6.9';
 $VINFO =<<EndOfInfo;
   MHonArc v$VERSION (Perl $] $^O)
   Copyright (C) 1995-2003  Earl Hood, mhonarc\@mhonarc.org

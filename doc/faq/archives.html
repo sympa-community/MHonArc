@@ -71,7 +71,9 @@ the address part of the separator, you can use the following:
 
 <pre class="code">
 <b>&lt;MsgSep></b>
-^From\s+(?:"[^"]+"@\S+|\S+)\s+\S+\s+\S+\s+\d+\s+\d+:\d+:\d+\s+\d+
+^From\s+(?:"[^"]+"<!--
+-->&#64;<!--
+-->\S+|\S+)\s+\S+\s+\S+\s+\d+\s+\d+:\d+:\d+\s+\d+
 <b>&lt;/MsgSep></b>
 </pre>
 
@@ -91,7 +93,7 @@ Sun Solaris' delivery agent will define the
 </p>
 <p>If you use Procmail to filter your mail,
 you can try the following Procmail recipe (contributed by
-<a href="mailto:lindsey@ncsa.uiuc.edu">Christopher Lindsey</a>):
+<a href="mailto:lindsey&#37;40ncsa.uiuc.edu">Christopher Lindsey</a>):
 </p>
 <blockquote>
 <p>However, one can add a Content-Length: header with everyone's favorite
@@ -115,7 +117,7 @@ your system's MTA and you use Procmail as your local delivery agent,
 you can configure things to have <tt>Content-Length</tt> defined
 for all locally delivered mail.  The following technique is
 contributed by
-<a href="mailto:tibbs@math.uh.edu">Jason L Tibbitts III</a>:
+<a href="mailto:tibbs&#37;40math.uh.edu">Jason L Tibbitts III</a>:
 </p>
 <blockquote>
 <p>I use Procmail as my local delivery agent.  I have the following extremely
@@ -278,7 +280,9 @@ $MHonArc = "/home/ehood/bin/mhonarc";
 ##	Define ARGV (ARGV is same across all packages).
 ##	Edit options as required/desired.
 
-@ARGV = ("-add",
+<!--
+-->&#64;<!--
+-->ARGV = ("-add",
 	 "-quiet",
 	 "-outdir", "/home/ehood/public_html/newmail");
 
@@ -391,7 +395,9 @@ lists using Procmail, MHonArc, and Namazu.
 
 <blockquote class="mail">
 <UL>
-<LI><em>From</em>: Achim Bohnet &lt;<A HREF="mailto:ach@rosat.mpe-garching.mpg.de">ach@rosat.mpe-garching.mpg.de</A>&gt;</LI>
+<LI><em>From</em>: Achim Bohnet &lt;<A HREF="mailto:ach&#37;40rosat.mpe-garching.mpg.de">ach<!--
+-->&#64;<!--
+-->rosat.mpe-garching.mpg.de</A>&gt;</LI>
 <LI><em>Date</em>: Wed, 13 Nov 1996 13:56:08 +0100</LI>
 </UL>
 <pre>
@@ -402,7 +408,9 @@ Here is what I use in .procmailrc to archive the mhonarc list:
 NEWDATE="`/usr/bin/date +%Y-%m`"
 MHONARC_MBOX="/local/mail/lists/mhonarc/$NEWDATE.mbox"
 :0: $MHONARC_MBOX$LOCKEXT
-* ^Sender:.*owner-mhonarc@
+* ^Sender:.*owner-mhonarc<!--
+-->&#64;<!--
+-->
 {
         :0 c
         $MHONARC_MBOX
@@ -423,7 +431,9 @@ P.S. Procmail itself comes with an example manual page. It's worth
 
 <blockquote class="mail">
 <UL>
-<LI><em>From</em>: "Eric D. Friedman" &lt;<A HREF="mailto:friedman@hydra.acs.uci.edu">friedman@hydra.acs.uci.edu</A>&gt;</LI>
+<LI><em>From</em>: "Eric D. Friedman" &lt;<A HREF="mailto:friedman&#37;40hydra.acs.uci.edu">friedman<!--
+-->&#64;<!--
+-->hydra.acs.uci.edu</A>&gt;</LI>
 <LI><em>Date</em>: Wed, 13 Nov 1996 06:38:42 -0800</LI>
 </UL>
 <pre>
@@ -443,7 +453,9 @@ PMDIR=$HOME/.procmail
 MHONARC='/dcs/packages/infosys/bin/mhonarc -add -quiet -umask 022 -idxfname inde
 x.html'
 :0
-* ^Originator:.*@classes.uci.edu
+* ^Originator:.*<!--
+-->&#64;<!--
+-->classes.uci.edu
 {
   MHHOME=$HOME/classarc
   LOGFILE=$PMDIR/classlists.log
@@ -471,13 +483,17 @@ on the Originator: of the message), lots of the following:
 }
 
 Eric D. Friedman
-friedman@uci.edu
+friedman<!--
+-->&#64;<!--
+-->uci.edu
 </pre>
 </blockquote>
 
 <blockquote class="mail">
 <UL>
-<LI><em>From</em>: Paul McKinley &lt;<A HREF="mailto:mckinley@austin.asc.slb.com">mckinley@austin.asc.slb.com</A>&gt;</LI>
+<LI><em>From</em>: Paul McKinley &lt;<A HREF="mailto:mckinley&#37;40austin.asc.slb.com">mckinley<!--
+-->&#64;<!--
+-->austin.asc.slb.com</A>&gt;</LI>
 <LI><em>Date</em>: Mon, 21 Apr 1997 15:29:08 -0500</LI>
 </UL>
 <pre>
@@ -575,13 +591,15 @@ resource.
 <p>If using an earlier version, or if you are already doing some preprocessing,
 you can use a pre-processor like <b>Procmail</b>
 to do the filtering.  Here is a message sent to the
-<a href="mailto:mhonarc-users@mhonarc.org">MHonArc mailing list</a>:
+<a href="mailto:mhonarc-users&#37;40mhonarc.org">MHonArc mailing list</a>:
 </p>
 
 <blockquote class="mail">
 <UL>
 <LI><em>Subject</em>: Re: No archive</LI>
-<LI><em>From</em>: Christopher Lindsey &lt;<A HREF="mailto:lindsey@ncsa.uiuc.edu">lindsey@ncsa.uiuc.edu</A>&gt;</LI>
+<LI><em>From</em>: Christopher Lindsey &lt;<A HREF="mailto:lindsey&#37;40ncsa.uiuc.edu">lindsey<!--
+-->&#64;<!--
+-->ncsa.uiuc.edu</A>&gt;</LI>
 <LI><em>Date</em>: Thu, 1 Oct 1998 11:33:07 -0500 (CDT)</LI>
 </UL>
 <pre>
@@ -746,7 +764,7 @@ and examples.
 <h3><b><a name="tombox">Can I convert an archive back to mailbox format?</a></b></h3>
 </td></tr></table>
 
-<p><a href="mailto:anthonyw@albany.net">Anthony W</a> provides a
+<p><a href="mailto:anthonyw&#37;40albany.net">Anthony W</a> provides a
 Perl program called <tt>mhn2mbox</tt> for converting archives back
 into mailbox format.  To obtain more information and to download
 the program, goto
@@ -764,13 +782,15 @@ the program, goto
 
 <hr>
 <address>
-$Date: 2003/01/03 04:32:32 $ <br>
+$Date: 2003/10/06 22:04:15 $ <br>
 <img align="top" src="monicon.png" alt="">
 <a href="http://www.mhonarc.org/"
 ><strong>MHonArc</strong></a><br>
 Copyright &#169; 1997-2001, <a href="http://www.earlhood.com/"
->Earl Hood</a>, <a href="mailto:mhonarc@mhonarc.org"
->mhonarc@mhonarc.org</a><br>
+>Earl Hood</a>, <a href="mailto:mhonarc&#37;40mhonarc.org"
+>mhonarc<!--
+-->&#64;<!--
+-->mhonarc.org</a><br>
 </address>
 
 </body>

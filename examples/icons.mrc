@@ -1,6 +1,6 @@
 <!-- ================================================================== -->
-<!--    $Id: icons.mrc,v 1.5 2002/05/04 04:52:52 ehood Exp $
-        Earl Hood <earl@earlhood.com>
+<!--    $Id: icons.mrc,v 1.6 2003/10/06 22:04:23 ehood Exp $
+        Earl Hood <earl @ earlhood  .com>
 
 	This example file makes use of the icons feature of
 	MHonArc.  The icon mappings used work with the

@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhexternal.pl,v 2.17 2003/08/07 05:49:47 ehood Exp $
+##	$Id: mhexternal.pl,v 2.18 2003/09/29 05:03:57 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -201,10 +201,12 @@ sub filter {
     $target = qq/ TARGET="$target"/  if $target;
 
     ## Write file
-    $filename =
-	mhonarc::write_attachment($ctype, $data, $path, $name, $inext);
-    ($urlfile = $filename) =~
-	s/([^\w.\-\/])/sprintf("%%%X",unpack("C",$1))/ge;
+    ($filename, $urlfile) =
+	mhonarc::write_attachment($ctype, $data, {
+	  '-dirpath'  => $path,
+	  '-filename' => $name,
+	  '-ext'      => $ext,
+	});
     &debug("File-written: $filename")  if $debug;
 
     ## Check if inlining when CT not image/*

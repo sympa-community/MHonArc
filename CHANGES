@@ -13,6 +13,46 @@
 
 YYYY/MM/DD
 ============================================================================
+2004/05/07	(2.6.9)
+
+* Bug Fixes:
+
+    Bug ID  Summary
+    ------  ------------------------------------------------------------
+     5473   directory separator for attachments on W2K
+     5643   New ressource - newsserver
+     5758   MULTIPG and NOSAVERESOURCES cause archive to be rewritten
+     5905   Modification of non-creatable array value attempted
+     6208   Mhonarc creates slightly incorrect HTML-code
+     7571   <include> element doesn't look for resource files in
+	    $OUTDIR$
+     7628   typo in mhrcfile.pl
+    ------  ------------------------------------------------------------
+    <https://savannah.nongnu.org/bugs/?group=mhonarc>
+
+* New resources:
+
+    ATTACHMENTDIR	Directory to save attachments.
+    ATTACHMENTURL	Web URL to attachment directory.
+    NEWSURL		URL template for linking to newsgroups.
+
+* Attachment filenames have changed from the numeric-style
+  <ext><#####>.<ext> to <ext><XXXXXXXXXX>.<ext> where <XXXXXXXXXX>
+  is a random string.  The change corresponds with a change to the
+  API to mhonarc::write_attachment() function in mhmimetypes.pl.
+
+* m2h_text_plain::filter:
+  . Changed default quoting styles: Left rule changed from 0.1em
+    to 0.2em and the color changed from #0000FF to #5555EE.
+
+  . Minor changes to flowed formatting in order to provide
+    consistancy with how Mozilla's Gecko engine renders flowed text.
+
+* base64.pl will use MIME::Base64 module if present.  MIME::Base64
+  uses an underly C implementation for decoding, so it is noticably
+  faster than the pure-Perl approach.
+
+============================================================================
 2003/08/12	(2.6.8)
 
 * Bug Fixes:
@@ -2573,4 +2613,4 @@ YYYY/MM/DD
 
 =======================================================================
 Earl Hood, mhonarc@mhonarc.org
-$Id: CHANGES,v 1.117 2003/08/13 04:18:17 ehood Exp $
+$Id: CHANGES,v 1.124 2004/05/07 22:56:36 ehood Exp $

@@ -44,6 +44,13 @@ of MHonArc within other Perl programs.
 <li><small><a href="#CBRawMessageBodyRead">$mhonarc::CBRawMessageBodyRead</a></small>
 <li><small><a href="#CBRcVarExpand">$mhonarc::CBRcVarExpand</a></small>
 </ul>
+<li><a href="#utilities">Utility Routines</a>
+<ul>
+<li><small><a href="#mhonarc::get_icon_url">mhonarc::get_icon_url</a></small>
+<li><small><a href="#mhonarc::htmlize">mhonarc::htmlize</a></small>
+<li><small><a href="#mhonarc::write_attachment">mhonarc::write_attachment</a></small>
+<li><small><a href="#readmail::MAILhead_get_disposition">readmail::MAILhead_get_disposition</a></small>
+</ul>
 <li><a href="#notes">Notes</a>
 </ul>
 <!--X-TOC-End-->
@@ -95,7 +102,9 @@ routine:
 <b>mhonarc::process_input();</b>
 </pre>
 <p>When <tt>mhonarc::process_input()</tt> is called with no
-arguments, it parses <tt>@ARGV</tt> for command-line arguments.
+arguments, it parses <tt><!--
+-->&#64;<!--
+-->ARGV</tt> for command-line arguments.
 If you pass a list of arguments into <tt>mhonarc::process_input()</tt>
 then that list will be processed for the command-line arguments.
 For example:
@@ -316,9 +325,9 @@ $do_save = &amp;$mhonarc::CBDbPreSave($pathname, $tmp_pathname);
 <p><b>Arguments:</b></p>
 <dl>
 <dt><tt>$fields_hash_ref</tt></dt>
-<dd><p>Reference to hash containing parsed message header.  The
+<dd><p>reference to hash containing parsed message header.  the
     structure of this hash is the same as described for
-    the <a href="#CBMessageHeadRead"><tt>$mhonarc::CBMessageHeadRead</tt></a>
+    the <a href="#cbmessageheadread"><tt>$mhonarc::cbmessageheadread</tt></a>
     callback.
     </p>
 
@@ -620,6 +629,264 @@ expansion support.
 
 <!-- ================================================================== -->
 <hr>
+<h2><a name="utilities">Utility Routines</a></h2>
+
+<p>The following are various utility routines available for use by
+custom extensions and <a href="resources/mimefilters.html">filters</a>:
+</p>
+
+<!-- .................................................................. -->
+<h3 class="cb_head"><a name="mhonarc::get_icon_url">mhonarc::get_icon_url</a></h3>
+
+<div class="cb_body">
+<p>Retrieve icon URL for a give content-type as defined by the
+<a href="resources/icons.html">ICONS</a> resource.
+</p>
+
+<p><b>Synopsis:</b></p>
+<pre class="code">
+$url = mhonarc::get_icon_url($content_type);
+</pre>
+
+<p><b>Arguments:</b></p>
+<dl>
+<dt><tt>$content_type</tt></dt>
+<dd><p>MIME content-type to retrieve icon for.
+    </p>
+    </dd>
+</dl>
+
+<p><b>Return Value:</b></p>
+    <p>URL to icon.
+    </p>
+</div>
+
+<!-- .................................................................. -->
+<h3 class="cb_head"><a name="mhonarc::htmlize">mhonarc::htmlize</a></h3>
+
+<div class="cb_body">
+<p>Convert HTML special characters into entity references.  The
+following table shows with characters are converted:
+</p>
+<table border="1">
+<tr>
+  <th>Character</th><th>Entity Reference</th>
+</tr>
+<tr>
+  <td>&lt;</td><td>&amp;lt;</td>
+</tr>
+<tr>
+  <td>&gt;</td><td>&amp;gt;</td>
+</tr>
+<tr>
+  <td>&amp;</td><td>&amp;amp;</td>
+</tr>
+<tr>
+  <td>&quot;</td><td>&amp;quot;</td>
+</tr>
+</table>
+
+<p><b>Synopsis:</b></p>
+<pre class="code">
+# Create an htmlized version of a string
+$html_text = mhonarc::htmlize($text);
+
+# Htmlize in-place
+mhonarc::htmlize($text_ref);
+</pre>
+
+<p><b>Arguments:</b></p>
+<dl>
+<dt><tt>$text</tt></dt>
+<dd><p>Text to convert.  If a reference, conversion is done in-place,
+    </p>
+    </dd>
+</dl>
+
+<p><b>Return Value:</b></p>
+    <p>The converted htmlized text.
+    </p>
+</div>
+
+<!-- .................................................................. -->
+<h3 class="cb_head"><a name="mhonarc::write_attachment">mhonarc::write_attachment</a></h3>
+
+<div class="cb_body">
+<p>Saves data to a file with a specified content-type.
+</p>
+
+<p><b>Synopsis:</b></p>
+<pre class="code">
+require 'mhmimetypes.pl';
+
+($filename, $url) =
+    mhonarc::write_attachment($content_type, $data_ref, $options_hash_ref);
+</pre>
+
+<p><b>Arguments:</b></p>
+<dl>
+<dt><tt>$content_type</tt></dt>
+<dd><p>The content-type of the data.  The value should be a string
+    in standard MIME content-type format.  Examples: <tt>images/jpeg</tt>,
+    <tt>application/postscript</tt>.
+    </p>
+    </dd>
+
+<dt><tt>$data_ref</tt></dt>
+<dd><p>Scalar reference of data to write to disk.
+    </p>
+    </dd>
+
+<dt><tt>$options_hash_ref</tt></dt>
+<dd><p>Reference to hash containing options to routine.  All options
+    are optional.  The following options are available:
+    </p>
+    <dl>
+    <dt><tt>-dirpath</tt></dt>
+	<dd>Pathname to directory to write file to.  If not specified,
+	the value of <a href="resources/attachmentdir.html">ATTACHMENTDIR</a>
+	or <a href="resources/outdir.html">OUTDIR</a> if ATTACHMENTDIR is
+	not defined.
+	</dd>
+    <dt><tt>-filename</tt></dt>
+	<dd>Name of file to write to.  If not specified, a random filename
+	will be generated based on the value of <var>$content_type</var>.
+	</dd>
+    <dt><tt>-ext</tt></dt>
+	<dd>Filename extension to use for file.
+	If not specified, extension will be
+	based on the value of <var>$content_type</var>.  The
+	<tt>-filename</tt>, if specified, supercedes this option.
+	</dd>
+    <dt><tt>-url</tt></dt>
+	<dd>Base URL.  If not specified the value of
+	<a href="resources/attachmenturl.html">ATTACHMENTURL</a> is used.
+	</dd>
+    </dl>
+    </dd>
+</dl>
+
+<p><b>Return Value:</b></p>
+    <p>The return value is a list of values interpreted as follows:</p>
+    <dl>
+    <dt><tt>$filename</tt></dt>
+    <dd><p>The name of the file <tt>$data_ref</tt> was written to.
+	<tt>$filename</tt> may contain pathname components.  For
+	<a href="resources/mimefilters.html">filters</a>, this value
+	is suitable for us in the file return list.
+	</p>
+	</dd>
+    <dt><tt>$url</tt></dt>
+    <dd><p>The URL that links to <tt>$filename</tt>.  Calling code
+	can use the URL within an HTML link.
+	</p>
+	</dd>
+    </dl>
+
+<p><b>Example:</b></p>
+    <p>The following illustrates the typical way of specifying options
+    to <tt>mhonarc::write_attachment</tt>:
+    </p>
+<pre class="code">
+    ($filename, $urlfile) =
+	mhonarc::write_attachment($ctype, $data, {
+	  '-dirpath'  =&gt; $path,
+	  '-filename' =&gt; $name,
+	  '-ext'      =&gt; $ext,
+	});
+</pre>
+
+<p><b>Notes:</b></p>
+<ul>
+<li><p>Care should practiced when using the <tt>-filename</tt> or
+    <tt>-ext</tt> option since it could result in security vulnerabilities.
+    When these options are not specified, <tt>mhonarc::write_attachment</tt>
+    will created a safe random filename based upon the given content-type.
+    </p>
+</ul>
+</div>
+
+<!-- .................................................................. -->
+<h3 class="cb_head"><a name="readmail::MAILhead_get_disposition">readmail::MAILhead_get_disposition</a></h3>
+
+<div class="cb_body">
+<p>Retrieve the content disposition of a message entity.
+</p>
+
+<p><b>Synopsis:</b></p>
+<pre class="code">
+require 'readmail.pl';
+
+($disposition, $filename, $raw_filename, $html_name) =
+    readmail::MAILhead_get_disposition($fields_hash_ref, $do_html);
+</pre>
+
+<p><b>Arguments:</b></p>
+<dl>
+<dt><tt>$fields_hash_ref</tt></dt>
+<dd><p>reference to hash containing parsed message header.  the
+    structure of this hash is the same as described for
+    the <a href="#cbmessageheadread"><tt>$mhonarc::cbmessageheadread</tt></a>
+    callback.
+    </p>
+    </dd>
+
+<dt><tt>$do_html</tt></dt>
+<dd><p>Generate an HTMLized version of filename designated in
+    <tt>$fields_hash_ref</tt> for informational use within HTML markup.
+    </p>
+    </dd>
+</dl>
+
+<p><b>Return Value:</b></p>
+    <p>The return value is a list of values interpreted as follows:</p>
+    <dl>
+    <dt><tt>$disposition</tt></dt>
+    <dd><p>The disposition of the entity.  Generally, the value
+	is either not defined, "<tt>attachment</tt>", or
+	"<tt>inline</tt>".
+	</p>
+	</dd>
+    <dt><tt>$filename</tt></dt>
+    <dd><p>Filename of entity as defined in <tt>$fields_hash_ref</tt>,
+	but translated for safe usage.  Any leading pathname component
+	is removed and any unsafe characters are translated to
+	underscores.
+	</p>
+	</dd>
+    <dt><tt>$raw_filename</tt></dt>
+    <dd><p>Raw filename of entity as defined in <tt>$fields_hash_ref</tt>.
+	This is only provided for informative uses and should not
+	be used for creating files.  Use <tt>$filename</tt> instead.
+	</p>
+	</dd>
+    <dt><tt>$html_name</tt></dt>
+    <dd><p>Raw filename of entity converted to HTML.  This return value
+	is only provided if the <tt>$do_html</tt> argument is a true value.
+	<tt>$html_name</tt> can be used for informative purposes in
+	generated HTML by
+	<a href="resources/mimefilters.html">filters</a>.
+	</p>
+	<table class="note" width="100%">
+	<tr valign="baseline">
+	<td><strong>NOTE:</strong></td>
+	<td width="100%"><p>It is recommended that <tt>$html_name</tt>
+	be used instead of HTMLizing <tt>$raw_filename</tt> directly since
+	<tt>readmail::MAILhead_get_disposition</tt> does non-ASCII
+	decoding and uses the
+	<a href="resources/charsetconverters.html">CHARSETCONVERTERS</a>
+	resource.
+	</p>
+	</td>
+	</tr>
+	</table>
+	</p>
+	</dd>
+    </dl>
+</div>
+
+<!-- ================================================================== -->
+<hr>
 <h2><a name="notes">Notes</a></h2>
 
 <ul>
@@ -629,7 +896,8 @@ expansion support.
     source code for the commands provided in the MHonArc distribution:
     <tt>mhonarc</tt>, <tt>mha-dbedit</tt>,
     <tt>mha-dbrecover</tt>, and <tt>mha-decode</tt>.  You may also
-    want to look at the source of <tt>mhamain.pl</tt>.
+    want to look at the source of <tt>mhamain.pl</tt> and the
+    various default <a href="resources/mimefilters.html">filters</a>.
     </p>
 
 <li><p>Only a single archive can be processed at any given time.
@@ -646,13 +914,15 @@ expansion support.
 
 <hr>
 <address>
-$Date: 2003/01/02 05:46:01 $ <br>
+$Date: 2004/03/05 22:03:16 $ <br>
 <img align="top" src="monicon.png" alt="">
 <a href="http://www.mhonarc.org/"
 ><strong>MHonArc</strong></a><br>
 Copyright &#169; 2001, <a href="http://www.earlhood.com/"
->Earl Hood</a>, <a href="mailto:mhonarc@mhonarc.org"
->mhonarc@mhonarc.org</a><br>
+>Earl Hood</a>, <a href="mailto:mhonarc&#37;40mhonarc.org"
+>mhonarc<!--
+-->&#64;<!--
+-->mhonarc.org</a><br>
 </address>
 
 </body>
