@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhrcfile.pl,v 2.36 2003/08/02 06:15:37 ehood Exp $
+##	$Id: mhrcfile.pl,v 2.37 2003/08/13 03:56:28 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -95,7 +95,7 @@ sub parse_resource_file {
 
     $handle = &file_open($file);
 
-    if ($file =~ m%(.*[$DIRSEPREX])%o) {
+    if ($file =~ m%(.*)[$DIRSEPREX]%o) {
 	$pathhead = $1;
 	$MainRcDir = $pathhead  unless defined $MainRcDir;
     } else {

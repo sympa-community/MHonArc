@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhamain.pl,v 2.70 2003/08/07 21:34:27 ehood Exp $
+##	$Id: mhamain.pl,v 2.71 2003/08/13 03:03:17 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -29,7 +29,7 @@ package mhonarc;
 
 require 5;
 
-$VERSION = '2.6.7';
+$VERSION = '2.6.8';
 $VINFO =<<EndOfInfo;
   MHonArc v$VERSION (Perl $] $^O)
   Copyright (C) 1995-2003  Earl Hood, mhonarc\@mhonarc.org
@@ -630,7 +630,7 @@ sub write_pages {
 	}
 	    
 	## read resource file and print index
-	if (read_fmt_file($rcfile)) {
+	if (read_resource_file($rcfile)) {
 	    if ($THREAD) {
 		@TListOrder = ();
 		write_thread_index();
