@@ -13,6 +13,20 @@
 
 YYYY/MM/DD
 ============================================================================
+2003/07/21	(2.6.6)
+
+* Bug Fixes:
+
+    Bug ID  Summary
+    ------  ------------------------------------------------------------
+     4387   m2h_text_plain::filter maxwidth usage can lead to crash
+	    with a certain kind of input 
+    ------  ------------------------------------------------------------
+    <http://savannah.nongnu.org/bugs/index.php?group_id=1968
+     &set=custom&advsrch=0&msort=0&report_id=105&go_report=Go
+     &fix_release=2.6.6&chunksz=50>
+
+============================================================================
 2003/07/19	(2.6.5)
 
 * Bug Fixes:
@@ -2516,4 +2530,4 @@ YYYY/MM/DD
 
 =======================================================================
 Earl Hood, mhonarc@mhonarc.org
-$Id: CHANGES,v 1.112 2003/07/20 03:27:49 ehood Exp $
+$Id: CHANGES,v 1.113 2003/07/21 16:32:02 ehood Exp $

@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhtxtplain.pl,v 2.38 2003/02/04 23:31:20 ehood Exp $
+##	$Id: mhtxtplain.pl,v 2.39 2003/07/20 20:52:38 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -445,7 +445,7 @@ sub filter {
 	my $currdepth = 0;
 	my $ret='';
 
-	# Compress '>'s to have not spacing, makes latter patterns
+	# Compress '>'s to have no spacing, makes latter patterns
 	# simplier.
 	$$data =~ s/(?:^|\G(${HQuoteChars}))[ ]?/$1/gm;
 	while (length($$data) > 0) {
@@ -581,7 +581,12 @@ sub break_line {
     ## See if str begins with a quote char
     if ($str =~ s/^([ ]?(?:$QuoteChars[ ]?)+)//o) {
 	$q = $1;
-	$width -= length($q);
+	if (length($q) >= $width) {
+	    # too many quote chars, so treat line as-is
+	    $str = $q . $str;
+	} else {
+	    $width -= length($q);
+	}
     }
 
     ## Create new string by breaking up str
