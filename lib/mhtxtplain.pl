@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	@(#) mhtxtplain.pl 1.10 98/02/23 14:56:02
+##	@(#) mhtxtplain.pl 2.1 98/03/02 20:24:30
 ##  Author:
 ##      Earl Hood       ehood@medusa.acs.uci.edu
 ##  Description:
@@ -43,17 +43,18 @@ $HQuoteChars	= '&gt;|[\|\]+:]';
 ##	Text/plain filter for mhonarc.  The following filter arguments
 ##	are recognized ($args):
 ##
-##	    nourl		-- Do hyperlink URLs
-##	    quote		-- Italicize quoted message text
-##	    nonfixed		-- Use normal typeface
-##	    keepspace		-- Preserve whitespace if nonfixed
-##	    maxwidth=#		-- Set the maximum width of lines.  Lines
-##				   exceeding the maxwidth will be broken
-##				   up across multiple lines.
 ##	    asis=set1:set2:...	-- Colon separated lists of charsets
 ##				   to leave as-is.  Only HTML special
 ##				   characters will be converted into
 ##				   entities.
+##	    default=set 	-- Default charset to use if not set.
+##	    keepspace		-- Preserve whitespace if nonfixed
+##	    nourl		-- Do hyperlink URLs
+##	    nonfixed		-- Use normal typeface
+##	    maxwidth=#		-- Set the maximum width of lines.  Lines
+##				   exceeding the maxwidth will be broken
+##				   up across multiple lines.
+##	    quote		-- Italicize quoted message text
 ##	    target=name  	-- Set TARGET attribute for links if
 ##				   converting URLs to links.  Defaults to
 ##				   _top.
@@ -62,49 +63,48 @@ $HQuoteChars	= '&gt;|[\|\]+:]';
 ##
 sub filter {
     local($header, *fields, *data, $isdecode, $args) = @_;
-    local($ctype, $charset, $nourl, $doquote, $igncharset, $nonfixed,
-	  $keepspace, $maxwidth, $target);
+    local($charset, $nourl, $doquote, $igncharset, $nonfixed,
+	  $keepspace, $maxwidth, $target, $defset);
     local(%asis) = ();
+    local($_);
 
-    $nourl	= ($'NOURL || ($args =~ /nourl/i));
+    ## Parse arguments
+    $nourl	= ($mhonarc'NOURL || ($args =~ /nourl/i));
     $doquote	= ($args =~ /quote/i);
     $nonfixed	= ($args =~ /nonfixed/i);
     $keepspace	= ($args =~ /keepspace/i);
-    if ($args =~ /maxwidth=(\d+)/) {
-	$maxwidth = $1;
-    } else {
-	$maxwidth = 0;
-    }
-    if ($args =~ /target="([^"]+)"/i) {
-	$target = $1;
-    } elsif ($args =~ /target=(\S+)/i) {
-	$target = $1;
-    } else {
-	$target = "_top";
-    }
+    if ($args =~ /maxwidth=(\d+)/i) { $maxwidth = $1; }
+	else { $maxwidth = 0; }
+    if ($args =~ /default=(\S+)/i) { $defset = $1; }
+	else { $defset = 'us-ascii'; }
+    if ($args =~ /target="([^"]+)"/i) { $target = $1; }
+	elsif ($args =~ /target=(\S+)/i) { $target = $1; }
+	else { $target = "_top"; }
+    $defset =~ s/['"]//g;
+    $target =~ s/['"]//g;
 
     ## Grab charset parameter (if defined)
-    $ctype = $fields{'content-type'};
-    ($charset) = $ctype =~ /charset=(\S+)/;
-    $charset =~ s/['"]//g;  $charset =~ tr/A-Z/a-z/;
+    if ($fields{'content-type'} =~ /charset=(\S+)/i) { $charset = $1; }
+	else { $charset = $defset; }
+    $charset =~ s/['";]//g;  $charset =~ tr/A-Z/a-z/;
 
     ## Check if certain charsets should be left alone
     if ($args =~ /asis=(\S+)/i) {
 	local(@a) = split(':', $1);
 	foreach (@a) {
-	    tr/A-Z/a-z/;
+	    s/["']//g;  tr/A-Z/a-z/;
 	    $asis{$_} = 1;
 	}
     }
 
     ## Check MIMECharSetConverters if charset should be left alone
-    if ($main'MIMECharSetConverters{$charset} eq "-decode-") {
+    if ($readmail'MIMECharSetConverters{$charset} eq "-decode-") {
 	$asis{$charset} = 1;
     }
 
-    ##	Check if max-width set
+    ## Check if max-width set
     if ($maxwidth) {
-	$* = 1;
+	local($*) = 1;
 	$data =~ s/^(.*)$/&break_line($1, $maxwidth)/ge;
 	$* = 0;
     }
@@ -117,6 +117,7 @@ sub filter {
 
 	##	Latin 2-6, Greek, Hebrew, Arabic
 	} elsif ($charset =~ /iso-8859-([2-9]|10)/i) {
+	    require "iso8859.pl";
 	    $data = &iso_8859'str2sgml($data, $charset);
 
 	##	ASCII, Latin 1, Other
@@ -129,7 +130,7 @@ sub filter {
 
     ##	Check for quoting
     if ($doquote) {
-	$* = 1;
+	local($*) = 1;
 	$data =~ s@^( ?${HQuoteChars})(.*)$@$1<I>$2</I>@go;
 	$* = 0;
     }
@@ -138,7 +139,7 @@ sub filter {
     if ($nonfixed) {
 	$data =~ s/(\r?\n)/<br>$1/g;
 	if ($keepspace) {
-	    $* = 1;
+	    local($*) = 1;
 	    $data =~ s/^(.*)$/&preserve_space($1)/ge;
 	    $* = 0;
 	}
@@ -189,7 +190,7 @@ sub jp2022 {
 		$ascii_text =~ s%>%\&gt;%g;
 		## Convert URLs to hyperlinks
 		$ascii_text =~ s%($HUrlExp)%<A HREF="$1">$1</A>%gio
-		    unless $'NOURL;
+		    unless $mhonarc'NOURL;
 
 		$ret .= $ascii_text;
 	    } elsif (s/(\033\.[A-F])//) { # G2 Designate Sequence
@@ -206,7 +207,7 @@ sub jp2022 {
 	    if (s/^(\033\([BJ])//) { # Single Byte Segment
 		$ret .= $1;
 		while(1) {
-		    if (/^([^\033]+)/) {	# ASCII plain text
+		    if (s/^([^\033]+)//) {	# ASCII plain text
 			$ascii_text = $1;
 
 			# Replace meta characters in ASCII plain text
@@ -215,7 +216,7 @@ sub jp2022 {
 			$ascii_text =~ s%>%\&gt;%g;
 			## Convert URLs to hyperlinks
 			$ascii_text =~ s%($HUrlExp)%<A HREF="$1">$1</A>%gio
-			    unless $'NOURL;
+			    unless $mhonarc'NOURL;
 
 			$ret .= $ascii_text;
 		    } elsif (s/(\033\.[A-F])//) { # G2 Designate Sequence
@@ -226,7 +227,7 @@ sub jp2022 {
 			last;
 		    }
 		}
-	    } elsif (/^(\033\$[\@AB]|\033\$\([CD])/) { # Double Byte Segment
+	    } elsif (s/^(\033\$[\@AB]|\033\$\([CD])//) { # Double Byte Segment
 		$ret .= $1;
 		while (1) {
 		    if (s/^([!-~][!-~]+)//) { # Double Char plain text
@@ -271,7 +272,6 @@ sub preserve_space {
 
     1 while
     $str =~ s/^([^\t]*)(\t+)/$1 . ' ' x (length($2) * 8 - length($1) % 8)/e;
-
     $str =~ s/ /\&nbsp;/g;
     $str;
 }
@@ -292,7 +292,7 @@ sub break_line {
     return $str  if length($str) <= $width;
 
     ## See if str begins with a quote char
-    if ($str =~ s/^($QuoteChars)//o) {
+    if ($str =~ s/^( ?$QuoteChars)//o) {
 	$q = $1;
 	--$width;
     }

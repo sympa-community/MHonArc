@@ -3,7 +3,7 @@
 # A. P. Barrett <barrett@ee.und.ac.za>, October 1993
 # $Revision: 1.4 $$Date: 1994/08/11 16:08:51 $
 #
-#	@(#) base64.pl 1.2 98/02/23 14:05:54
+#	@(#) base64.pl 2.1 98/03/02 20:24:23
 #
 # Modified March 21, 1996 by ehood@convex.com
 #	-> Changes to base64'uudecode to strip out any begin/end
@@ -98,8 +98,8 @@ sub b64decode
 {
     # substr() usage added by ehood, 1996/04/16
 
-    local ($str) = shift;
-    local ($result, $tmp, $offset, $len) = ('','', 0, 0);
+    local($str) = shift;
+    local($result, $tmp, $offset, $len);
     
     # zap bad characters and translate others to uuencode alphabet
     eval qq{
@@ -110,7 +110,9 @@ sub b64decode
     # break into lines of 60 encoded chars, prepending "M" for uuencode,
     # and then using perl's builtin uudecoder to convert to binary.
     #
-    $len = length($str);		    # store length
+    $result 	= '';			# init return string
+    $offset	= 0;		    	# init offset to 0
+    $len 	= length($str);		# store length
     while ($offset+60 <= $len) {		# loop until < 60 chars left
 	$tmp = substr($str, $offset, 60);	# grap 60 char block
 	$offset += 60;				# increment offset

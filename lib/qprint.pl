@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	@(#)  qprint.pl 1.1 96/09/17 @(#)
+##	@(#) qprint.pl 2.1 98/03/02 20:24:32
 ##  Authors:
 ##      Earl Hood       ehood@medusa.acs.uci.edu
 ##	Alan Barrett	barrett@daisy.ee.und.ac.za
@@ -12,7 +12,7 @@
 ##		$text = &quoted_printable'qprdecode($data);
 ##
 ##---------------------------------------------------------------------------##
-##    Copyright (C) 1995	Earl Hood, ehood@medusa.acs.uci.edu
+##    Copyright (C) 1995,1998	Earl Hood, ehood@medusa.acs.uci.edu
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by

@@ -66,7 +66,7 @@ file containing the routine.
 <p>Example:</p>
 <pre>
 <b>&lt;CharsetConverters&gt;</b>
-iso-8859-1:iso_8859'str2sgml:iso8859.pl
+iso-8859-1;iso_8859::str2sgml;iso8859.pl
 <b>&lt;/CharsetConverters&gt;</b>
 </pre>
 
@@ -76,14 +76,13 @@ The third field is the source file the routine is defined.  The
 source file is optional if the routine is known to be define in
 an already listed source file.
 </p>
- 
+
 <table border=0 cellpadding=4>
 <tr valign=top>
 <td><strong>NOTE</strong></td>
-<td><p>Package qualification must use Perl 4 syntax. If Perl 5
-'<strong><code>::</code></strong>'
-qualification is desired, then values should be separated by
-a semi-colon.
+<td><p>For backwards compatibility, the values of a converter specification
+can be separated with a colon, "<tt>:</tt>".  However, if you use a colon,
+package qualification of a function must use Perl 4 syntax.
 </p>
 </td>
 </tr>
@@ -160,19 +159,19 @@ included in HTML markup.
 
 <pre>
 <b>&lt;CharsetConverters&gt;</b>
-plain:main'htmlize:
-us-ascii:main'htmlize:
-iso-8859-1:main'htmlize:
-iso-8859-2:iso_8859'str2sgml:iso8859.pl
-iso-8859-3:iso_8859'str2sgml:iso8859.pl
-iso-8859-4:iso_8859'str2sgml:iso8859.pl
-iso-8859-5:iso_8859'str2sgml:iso8859.pl
-iso-8859-6:iso_8859'str2sgml:iso8859.pl
-iso-8859-7:iso_8859'str2sgml:iso8859.pl
-iso-8859-8:iso_8859'str2sgml:iso8859.pl
-iso-8859-9:iso_8859'str2sgml:iso8859.pl
-iso-8859-10:iso_8859'str2sgml:iso8859.pl
-default:-ignore-
+plain;		mhonarc::htmlize;
+us-ascii;	mhonarc::htmlize;
+iso-8859-1;	mhonarc::htmlize;
+iso-8859-2;	iso_8859::str2sgml;	iso8859.pl
+iso-8859-3;	iso_8859::str2sgml;	iso8859.pl
+iso-8859-4;	iso_8859::str2sgml;	iso8859.pl
+iso-8859-5;	iso_8859::str2sgml;	iso8859.pl
+iso-8859-6;	iso_8859::str2sgml;	iso8859.pl
+iso-8859-7;	iso_8859::str2sgml;	iso8859.pl
+iso-8859-8;	iso_8859::str2sgml;	iso8859.pl
+iso-8859-9;	iso_8859::str2sgml;	iso8859.pl
+iso-8859-10;	iso_8859::str2sgml;	iso8859.pl
+default;	-ignore-
 <b>&lt;/CharsetConverters&gt;</b>
 </pre>
 
@@ -194,7 +193,7 @@ browsers:
 
 <pre>
 <b>&lt;CharsetConverters&gt;</b>
-iso-8859-1:-decode-
+iso-8859-1;-decode-
 <b>&lt;/CharsetConverters&gt;</b>
 </pre>
 
@@ -210,13 +209,15 @@ iso-8859-1:-decode-
 <h2>See Also</h2>
 
 <p>
-<a href="decodeheads.html">DECODEHEADS</a>
+<a href="decodeheads.html">DECODEHEADS</a>,
+<a href="mimefilters.html">MIMEFILTERS</a>,
+<a href="perlinc.html">PERLINC</a>
 </p>
 
 <!-- *************************************************************** -->
 <hr>
 <address>
-98/02/23 16:15:37<br>
+98/03/03 18:19:26<br>
 <img align="top" src="../monicon.gif" alt="">
 <a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"><strong>MHonArc</strong></a><br>
 Copyright &#169; 1997-1998, <a href="http://www.oac.uci.edu/indiv/ehood/">Earl Hood</a>, <a href="mailto:ehood@medusa.acs.uci.edu">ehood@medusa.acs.uci.edu</a><br>

@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##      @(#) mhthread.pl 1.2 98/02/23 18:58:07
+##      @(#) mhthread.pl 2.2 98/03/03 14:33:44
 ##  Author:
 ##      Earl Hood       ehood@medusa.acs.uci.edu
 ##  Description:
@@ -25,7 +25,7 @@
 ##    02111-1307, USA
 ##---------------------------------------------------------------------------##
 
-package main;
+package mhonarc;
 
 ##---------------------------------------------------------------------------
 ##	write_thread_index outputs the thread index
@@ -34,14 +34,17 @@ sub write_thread_index {
     local($tmpl, $handle);
     local($index) = ("");
     local(*a, $PageNum, %Printed);
-    local($lastlevel, $tlevel, $iscont, $i);
+    local($lastlevel, $tlevel, $iscont, $i, $offstart, $offend);
 
     local($level) = 0;  	## !!!Used in print_thread!!!
     local($last0index) = '';
 
     for ($PageNum = 1; $PageNum <= $NumOfPages; $PageNum++) {
 	if ($MULTIIDX) {
-	    @a = splice(@TListOrder, 0, $IDXSIZE);
+	    $offstart = ($PageNum-1) * $IDXSIZE;
+	    $offend   = $offstart + $IDXSIZE-1;
+	    $offend   = $#TListOrder  if $#TListOrder < $offend;
+	    @a        = @TListOrder[$offstart..$offend];
 	}
 	next  if $PageNum < $TIdxMinPg;
 
@@ -50,10 +53,10 @@ sub write_thread_index {
 		$TIDXPATHNAME = join("", $OUTDIR, $DIRSEP,
 				     $TIDXPREFIX, $PageNum, ".", $HtmlExt);
 	    } else {
-		$TIDXPATHNAME = ${OUTDIR} . ${DIRSEP} . ${TIDXNAME};
+		$TIDXPATHNAME = join($DIRSEP, $OUTDIR, $TIDXNAME);
 	    }
 	} else {
-	    $TIDXPATHNAME = ${OUTDIR} . ${DIRSEP} . ${TIDXNAME};
+	    $TIDXPATHNAME = join($DIRSEP, $OUTDIR, $TIDXNAME);
 	    if ($IDXSIZE && (($i = ($#ThreadList+1) - $IDXSIZE) > 0)) {
 		if ($TREVERSE) {
 		    @NotIdxThreadList = splice(@ThreadList, $IDXSIZE);
@@ -86,7 +89,7 @@ sub write_thread_index {
 
 	## Print index.  Print unless message has been printed, or
 	## unless it has reference that is visible.
-	$level = 0;		# Used in print_thread!!!
+	$level = 0;		# !!!Used in print_thread!!!
 	$lastlevel = $ThreadLevel{$a[0]};
 
 	# check if continuing a thread
@@ -190,8 +193,8 @@ sub compute_threads {
     ##	Find first occurrances of subjects
     foreach $index (@ThreadList) {
 	$tmp = $Subject{$index};
-	1 while (($tmp =~ s/^re[\[\]\d]*:\s*//i) ||
-		 ($tmp =~ s/\s*-\s*re(ply|sponse)\s*$//i));
+	1 while (($tmp =~ s/^$SubReplyRxp//io) ||
+		 ($tmp =~ s/\s*-\s*re(ply|sponse)\s*$//io));
 
 	$stripsub{$index} = $tmp;
 	$FirstSub2Index{$tmp} = $index
@@ -291,12 +294,12 @@ sub print_thread {
     local($attop, $haverepls, $hvnirepls, $single, $depth, $i);
 
     ## Get replies
-    @repls = sort increase_index split(/$bs/o, $Replies{$idx});
+    @repls  = sort increase_index split(/$bs/o, $Replies{$idx});
     @srepls = sort increase_index split(/$bs/o, $SReplies{$idx});
-    $depth = $HasRefDepth{$idx};
+    $depth  = $HasRefDepth{$idx};
     $hvnirepls = (@repls || @srepls);
 
-    @repls = grep($TVisible{$_}, @repls);
+    @repls  = grep($TVisible{$_}, @repls);
     @srepls = grep($TVisible{$_}, @srepls);
     $haverepls = (@repls || @srepls);
 
@@ -307,10 +310,10 @@ sub print_thread {
     ## calls and level.
 
     ## Print entry
-    #$attop = ($top && $haverepls);
+    #$attop  = ($top && $haverepls);
     #$single = ($top && !$haverepls);
-    $attop = ($top && $hvnirepls);
-    $single = ($top && !$hvnirepls);
+    $attop   = ($top && $hvnirepls);
+    $single  = ($top && !$hvnirepls);
 
     if ($attop) {
 	&print_thread_var($handle, $idx, *TTOPBEG);
@@ -388,6 +391,205 @@ sub print_thread_var {
     print $handle $tmpl;
 }
 
+##---------------------------------------------------------------------------
+##	make_thread_slice generates a slice of the thread listing.
+##	Arguments are:
+##
+##	    $refindex	: Reference message index that slice is based
+##	    $bcnt	: Number of messages before $refindex to list
+##	    $acnt	: Number of messages after $refindex to list
+##
+##	Returns string containing thread slice text.
+##
+sub make_thread_slice {
+    local($refindex, $bcnt, $acnt) = @_;
+    local($slicetxt) = "";
+
+    local($pos)   = $Index2TLoc{$refindex};
+    local($start) = $pos - $bcnt;
+    local($end)   = $pos + $acnt;
+	  $start  = 0		  if $start < 0;
+	  $end    = $#TListOrder  if $end > $#TListOrder;
+    local(@a)	  = @TListOrder[$start..$end];
+
+    local($lastlevel) = $ThreadLevel{$a[0]};
+    local($level)     = 0;  	## !!!Used in print_thread!!!
+    local(%Printed);		## !!!Used in print_thread!!!
+    local($tmpl, $index, $tlevel, $iscont, $i);
+
+    ($tmpl = $TSLICEBEG) =~ s/$VarExp/&replace_li_var($1,'')/geo;
+    $slicetxt .= $tmpl;
+
+    ## Flag visible messages for use in printing thread
+    foreach $index (@a) { $TVisible{$index} = 1; }
+
+    # check if continuing a thread
+    if ($lastlevel > 0) {
+	($tmpl = $TCONTBEG) =~ s/$VarExp/&replace_li_var($1,$a[0])/geo;
+	$slicetxt .= $tmpl;
+    }
+    # perform any indenting
+    for ($i=0; $i < $lastlevel; ++$i) {
+	++$level;
+	if ($level <= $TLEVELS) {
+	    ($tmpl = $TINDENTBEG) =~ s/$VarExp/&replace_li_var($1,'')/geo;
+	    $slicetxt .= $tmpl;
+	}
+    }
+    # print index listing
+    foreach $index (@a) {
+	$tlevel = $ThreadLevel{$index};
+	if (($lastlevel > 0) && ($tlevel < $lastlevel)) {
+	    for ($i=$tlevel; $i < $lastlevel; ++$i) {
+		if ($level <= $TLEVELS) {
+		    ($tmpl = $TINDENTEND) =~
+			s/$VarExp/&replace_li_var($1,'')/geo;
+		    $slicetxt .= $tmpl;
+		}
+		--$level;
+	    }
+	    $lastlevel = $tlevel;
+	    if ($lastlevel < 1) {	# Check if continuation done
+		($tmpl = $TCONTEND) =~
+		    s/$VarExp/&replace_li_var($1,'')/geo;
+		$slicetxt .= $tmpl;
+	    }
+	}
+	unless ($Printed{$index} ||
+		($HasRef{$index} && $TVisible{$HasRef{$index}})) {
+	    $slicetxt .= &make_thread($index, ($lastlevel > 0) ? 0 : 1);
+	}
+    }
+    # unindent if required
+    for ($i=0; $i < $lastlevel; ++$i) {
+	if ($level <= $TLEVELS) {
+	    ($tmpl = $TINDENTEND) =~ s/$VarExp/&replace_li_var($1,'')/geo;
+	    $slicetxt .= $tmpl;
+	}
+	--$level;
+    }
+    # close continuation if required
+    if ($lastlevel > 0) {
+	($tmpl = $TCONTEND) =~ s/$VarExp/&replace_li_var($1,'')/geo;
+	$slicetxt .= $tmpl;
+    }
+
+    ## Reset visibility flags
+    foreach $index (@a) { $TVisible{$index} = 0; }
+
+    ($tmpl = $TSLICEEND) =~ s/$VarExp/&replace_li_var($1,'')/geo;
+    $slicetxt .= $tmpl;
+
+    $slicetxt;
+}
+
+##---------------------------------------------------------------------------
+##	Routine to generate text representing a thread.
+##	Uses %Printed and $level defined by caller.
+##
+sub make_thread {
+    local($idx, $top) = @_;
+    local(@repls, @srepls);
+    local($attop, $haverepls, $hvnirepls, $single, $depth, $i);
+    local($ret) = "";
+
+    ## Get replies
+    @repls  = sort increase_index split(/$bs/o, $Replies{$idx});
+    @srepls = sort increase_index split(/$bs/o, $SReplies{$idx});
+    $depth  = $HasRefDepth{$idx};
+    $hvnirepls = (@repls || @srepls);
+
+    @repls  = grep($TVisible{$_}, @repls);
+    @srepls = grep($TVisible{$_}, @srepls);
+    $haverepls = (@repls || @srepls);
+
+    ## $hvnirepls is a flag if the message has replies, but they are
+    ## not visible.  $haverepls is a flag if the message has visible
+    ## replies.  $hvnirepls is used to determine the $attop and
+    ## $single flags.  $haverepls is used for determine recursive
+    ## calls and level.
+
+    ## Print entry
+    $attop   = ($top && $hvnirepls);
+    $single  = ($top && !$hvnirepls);
+
+    if ($attop) {
+	$ret .= &expand_thread_var($idx, *TTOPBEG);
+    } elsif ($single) {
+	$ret .= &expand_thread_var($idx, *TSINGLETXT);
+    } else {
+	## Check for missing messages
+	if ($DoMissingMsgs) {
+	    for ($i = $depth; $i > 0; $i--) {
+		$level++;
+		$ret .= &expand_thread_var($idx, *TLINONE);
+		$ret .= &expand_thread_var($idx, *TSUBLISTBEG)
+		    if $level <= $TLEVELS;
+	    }
+	}
+	$ret .= &expand_thread_var($idx, *TLITXT);
+    }
+
+    ## Increment level count if their are replies
+    if ($haverepls) {
+	$level++;
+    }
+
+    ## Mark message printed
+    $Printed{$idx} = 1;
+
+    ## Print sub-threads
+    if (@repls) {
+	$ret .= &expand_thread_var($idx, *TSUBLISTBEG)  if $level <= $TLEVELS;
+	foreach (@repls) {
+	    $ret .= &make_thread($_);
+	}
+	$ret .= &expand_thread_var($idx, *TSUBLISTEND)  if $level <= $TLEVELS;
+    }
+    if (@srepls) {
+	$ret .= &expand_thread_var($idx, *TSUBLISTBEG)  if $level <= $TLEVELS;
+	$ret .= &expand_thread_var($idx, *TSUBJECTBEG);
+	foreach (@srepls) {
+	    $ret .= &make_thread($_);
+	}
+	$ret .= &expand_thread_var($idx, *TSUBJECTEND);
+	$ret .= &expand_thread_var($idx, *TSUBLISTEND)  if $level <= $TLEVELS;
+    }
+
+    ## Decrement level count if their were replies
+    if ($haverepls) {
+	$level--;
+    }
+    ## Check for missing messages
+    if ($DoMissingMsgs && !($attop || $single)) {
+	for ($i = $depth; $i > 0; $i--) {
+	    $ret .= &expand_thread_var($idx, *TLINONEEND);
+	    $ret .= &expand_thread_var($idx, *TSUBLISTEND)
+		if $level <= $TLEVELS;
+	    $level--;
+	}
+    }
+
+    ## Close entry text
+    if ($attop) {
+	$ret .= &expand_thread_var($idx, *TTOPEND);
+    } elsif (!$single) {
+	$ret .= &expand_thread_var($idx, *TLIEND);
+    }
+
+    $ret;
+}
+
+##---------------------------------------------------------------------------
+##	Expand text based upon resource variable referenced by *tvar.
+##
+sub expand_thread_var {
+    local($index, *tvar) = @_;
+    local($i_p0, $filename, $expstr, $msgnum);
+
+    ($expstr = $tvar) =~ s/$VarExp/&replace_li_var($1,$index)/geo;
+    $expstr;
+}
 
 ##---------------------------------------------------------------------------
 1;

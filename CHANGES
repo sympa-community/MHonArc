@@ -10,6 +10,59 @@ MM/DD/YY(YY)
 =======================================================================
 #######################################################################
 =======================================================================
+03/03/1998	(2.2.0)
+
+    Enhancements/Changes
+    --------------------
+    *IMPORTANT* *IMPORTANT* *IMPORTANT* *IMPORTANT* *IMPORTANT*
+
+    Please read the RELNOTES file for important information regarding
+    upgrading to v2.2.0 from previous releases.
+
+	o  New resource
+
+		MSGIDLINK	  - Hyperlink markup for message-ids
+		SUBJECTARTICLERXP - Regex to match articles (a,an,the)
+				    in subject text.
+		SUBJECTREPLYRXP	  - Regex to match reply annotation
+				    in subject text.
+		TSLICE		  - Set the size of a thread slice listing
+		TSLICEBEG	  - Begin markup of a thread slice listing
+		TSLICEEND	  - End markup of a thread slice listing
+
+	o  New resource variables
+
+		$TSLICE$	  - Print thread listing slice relative to
+				    current message.
+
+	o  Added default=charset option to mhtxtplain.pl filter.
+
+	o  Added mhtxttsv.pl to handle text/tab-separated-values
+	   content.
+
+	o  Expanded list of recognized content-types in mhexternal.pl.
+
+	o  Changed loading of decoders, charset convertes, and
+	   content-type filters to be done on demand.  Should
+	   provide an increase in start-up time.
+
+	o  Modified source so no Perl structures are in the "main"
+	   package.  The base package is now "mhonarc".  This
+	   should make it easier for incorporating mhonarc into
+	   another Perl program.
+
+	   *IMPORTANT*: This change causes changes to db file format.
+	   See release notes on how to upgrade pre v2.2 archives.
+
+	o  Main routines are now located in mhamain.pl.  The main
+	   mhonarc source file now just requires mhamain.pl and
+	   just calls two main functions.
+
+	o  Although code should still be Perl 4 compatible, Perl
+	   related resource documentation now puts preference to
+	   Perl 5 notations (eg: MIMEFILTERS, CHARSETCONVERTERS).
+
+=======================================================================
 02/23/1998	(2.1.2)
 
     Enhancements/Changes
@@ -1130,4 +1183,4 @@ MM/DD/YY(YY)
 #######################################################################
 =======================================================================
 Earl Hood, ehood@medusa.acs.uci.edu
-@(#) CHANGES 98/02/23 18:56:12 @(#)
+@(#) CHANGES 98/03/03 19:10:13 @(#)

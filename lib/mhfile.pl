@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	@(#) mhfile.pl 1.2 98/02/23 14:13:52
+##	@(#) mhfile.pl 2.1 98/03/02 20:24:34
 ##  Author:
 ##      Earl Hood       ehood@medusa.acs.uci.edu
 ##  Description:
@@ -25,11 +25,13 @@
 ##    02111-1307, USA
 ##---------------------------------------------------------------------------##
 
+package mhonarc;
+
 ##---------------------------------------------------------------------------##
 
 sub file_open {
     local($file) = shift;
-    local($handle) = 'FOPEN' . ++$_fo_cnt;
+    local($handle) = q/mhonarc'FOPEN/ . ++$_fo_cnt;
     local($gz) = $file =~ /\.gz$/;
 
     return $handle  if $gz && (open($handle, "$GzipExe -cd $file |"));
@@ -41,7 +43,7 @@ sub file_open {
 sub file_create {
     local($file) = shift;
     local($gz) = shift;
-    local($handle) = 'FCREAT' . ++$_fc_cnt;
+    local($handle) = q/mhonarc'FCREAT/ . ++$_fc_cnt;
 
     if ($gz) {
 	$file .= ".gz"  unless $file =~ /\.gz$/;
@@ -97,7 +99,7 @@ sub dir_remove {
 	@files = grep(!/^(\.|\..)$/i, readdir(DIR));
 	closedir(DIR);
 	foreach (@files) {
-	    &dir_remove($file . $'DIRSEP . $_);
+	    &dir_remove($file . $mhonarc'DIRSEP . $_);
 	}
 	if (!rmdir($file)) {
 	    warn qq{Warning: Unable to remove "$file": $!\n};

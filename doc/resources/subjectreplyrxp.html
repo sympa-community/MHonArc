@@ -1,0 +1,109 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
+<html>
+<head>
+<title>MHonArc Resources: SUBJECTREPLYRXP</title>
+</head>
+<body>
+
+<address>
+<a href="../resources.html#subjectreplyrxp">MHonArc Resource List</a></br>
+</address>
+
+<hr>
+<h1>SUBJECTREPLYRXP</h1>
+
+<!-- *************************************************************** -->
+<h2>Syntax</h2>
+
+<dl>
+
+<dt><strong>Envariable</strong><dt>
+<dd><p>
+<code>M2H_SUBJECTREPLYRXP=</code><var>perl_regex</var>
+</p>
+</dd>
+
+<dt><strong>Element</strong><dt>
+<dd><p>
+<code>&lt;SUBJECTREPLYRXP&gt;</code><br>
+<var>perl_regex</var><br>
+<code>&lt;/SUBJECTREPLYRXP&gt;</code><br>
+</p>
+</dd>
+
+<dt><strong>Command-line Option</strong><dt>
+<dd><p>
+<code>-subjectreplyrxp <var>perl_regex</var></code>
+</p>
+</dd>
+
+</dl>
+
+<!-- *************************************************************** -->
+<h2>Description</h2>
+
+<p>SUBJECTREPLYRXP defines the Perl regular expression matching
+subject text that denotes a reply message.  For example, the
+string "<tt>Re: </tt>" is commonly prepended to the subject
+to denote a reply.
+</p>
+
+<p>SUBJECTREPLYRXP is used by MHonArc for sorting and threading
+purposes.  The regex defined is used in <b><tt>s///</tt></b>
+operation loops with the case-insensitive modifier.  Hence, the regex should eventually fail if
+called repeatedly on the same string in an <b><tt>s///</tt></b> operation.
+If not, an infinite loop will result.  In sum, SUBJECTREPLYRXP
+should <strong>NOT</strong> be able to match the null string.  Also,
+the regex should be anchored to the beginning of the string.
+</p>
+
+<p>The SUBJECTREPLYRXP is normally changed to suit a particular
+locale or if unusual notations are being used to denote replies.
+</p>
+
+<!-- *************************************************************** -->
+<h2>Default Setting</h2>
+
+<pre>
+^\s*(re|sv|fwd|fw)[\[\]\d]*[:>-]+\s*
+</pre>
+
+<!-- *************************************************************** -->
+<h2>Resource Variables</h2>
+
+<p>N/A
+</p>
+
+<!-- *************************************************************** -->
+<h2>Examples</h2>
+
+<p>None.
+</p>
+
+<!-- *************************************************************** -->
+<h2>Version</h2>
+
+<p>2.2.0
+</p>
+
+<!-- *************************************************************** -->
+<h2>See Also</h2>
+
+<p>
+<a href="subjectarticlerxp.html">SUBJECTARTICLERXP</a>
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<address>
+98/03/03 18:19:52<br>
+<img align="top" src="../monicon.gif" alt="">
+<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"
+><strong>MHonArc</strong></a><br>
+Copyright &#169; 1998, <a href="http://www.oac.uci.edu/indiv/ehood/"
+>Earl Hood</a>, <a href="mailto:ehood@medusa.acs.uci.edu"
+>ehood@medusa.acs.uci.edu</a><br>
+</address>
+
+</body>
+</html>

@@ -51,13 +51,13 @@ itself.  The MIMEARGS resource can only be set via the
 The syntax for each line of the the <CODE>MIMEARGS</CODE>
 element is as follows: </P>
 
-<P><var>content-type</var><CODE>:</CODE><var>argument-string</var> 
+<P><var>content-type</var><CODE>;</CODE><var>argument-string</var> 
 </P>
 
 <P>Or,
 </P>
 
-<P><var>filter-name</var><CODE>:</CODE><var>argument-string</var> 
+<P><var>filter-name</var><CODE>;</CODE><var>argument-string</var> 
 </P>
 
 <P>The format of argument strings is dependent on the filter that
@@ -71,11 +71,9 @@ override the filter string.  </P>
 <table border=0 cellpadding=4>
 <tr valign=top>
 <td><strong>NOTE</strong></td>
-<td><p>Package qualification must use Perl 4 syntax when specifing
-arguments at the filter name level.  If Perl 5
-'<strong><code>::</code></strong>'
-qualification is desired, then values should be separated by
-a semi-colon.
+<td><p>For backwards compatibility, the values of a MIMEARGS specification
+can be separated with a colon, "<tt>:</tt>".  However, if you use a colon,
+package qualification of a function must use Perl 4 syntax.
 </p>
 </td>
 </tr>
@@ -88,10 +86,10 @@ a semi-colon.
 
 <PRE>
 <b>&lt;MIMEArgs&gt;</b>
-image/gif:inline
-image/jpeg:inline
-image/x-xbitmap:inline
-image/x-xbm:inline
+image/gif;	 inline
+image/jpeg;	 inline
+image/x-xbitmap; inline
+image/x-xbm;	 inline
 <b>&lt;/MIMEArgs&gt;</b>
 </PRE>
 
@@ -133,7 +131,7 @@ text/plain:quote
 <!-- *************************************************************** -->
 <hr>
 <address>
-98/02/23 16:15:37<br>
+98/03/03 18:19:41<br>
 <img align="top" src="../monicon.gif" alt="">
 <a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"><strong>MHonArc</strong></a><br>
 Copyright &#169; 1997-1998, <a href="http://www.oac.uci.edu/indiv/ehood/">Earl Hood</a>, <a href="mailto:ehood@medusa.acs.uci.edu">ehood@medusa.acs.uci.edu</a><br>

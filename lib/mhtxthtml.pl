@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	@(#)  mhtxthtml.pl 1.1 96/09/17 @(#)
+##	@(#)  mhtxthtml.pl 2.1 98/03/02 @(#)
 ##  Author:
 ##      Earl Hood       ehood@medusa.acs.uci.edu
 ##  Description:
@@ -42,6 +42,9 @@ $Url	= '(\w+://|\w+:)';	# Beginning of URL match expression
 sub filter {
     local($header, *fields, *data, $isdecode, $args) = @_;
     local($base, $title, $tmp);
+    $base 	= '';
+    $title	= '';
+    $tmp	= '';
 
     ## Get/remove title
     if ($data =~ s%<title\s*>([^<]*)</title\s*>%%i) {
@@ -60,7 +63,7 @@ sub filter {
     $data =~ s%<head\s*>[\s\S]*</head\s*>%%i;
 
     ## Modify relative urls to absolute using BASE
-    if ($base !~ /^\s*$/) {
+    if ($base =~ /\S/) {
         $data =~ s%(href\s*=\s*['"])([^'"]+)(['"])%
 		   &addbase($base,$1,$2,$3)%gei;
         $data =~ s%(src\s*=\s*['"])([^'"]+)(['"])%

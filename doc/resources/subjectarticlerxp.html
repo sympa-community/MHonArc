@@ -1,0 +1,110 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
+<html>
+<head>
+<title>MHonArc Resources: SUBJECTARTICLERXP</title>
+</head>
+<body>
+
+<address>
+<a href="../resources.html#subjectarticlerxp">MHonArc Resource List</a></br>
+</address>
+
+<hr>
+<h1>SUBJECTARTICLERXP</h1>
+
+<!-- *************************************************************** -->
+<h2>Syntax</h2>
+
+<dl>
+
+<dt><strong>Envariable</strong><dt>
+<dd><p>
+<code>M2H_SUBJECTARTICLERXP=</code><var>perl_regex</var>
+</p>
+</dd>
+
+<dt><strong>Element</strong><dt>
+<dd><p>
+<code>&lt;SUBJECTARTICLERXP&gt;</code><br>
+<var>perl_regex</var><br>
+<code>&lt;/SUBJECTARTICLERXP&gt;</code><br>
+</p>
+</dd>
+
+<dt><strong>Command-line Option</strong><dt>
+<dd><p>
+<code>-subjectarticlerxp <var>perl_regex</var></code>
+</p>
+</dd>
+
+</dl>
+
+<!-- *************************************************************** -->
+<h2>Description</h2>
+
+<p>SUBJECTARTICLERXP defines the Perl regular expression matching
+leading articles (eg: "the", "a", "an") in subject text.
+</p>
+
+<p>SUBJECTARTICLERXP is used by MHonArc for sorting.
+The regex defined is used in <b><tt>s///</tt></b>
+operation with the case-insensitive modifier.
+The regex should be anchored to the beginning of the string.
+</p>
+
+<p>The SUBJECTARTICLERXP is normally changed to suit a particular
+locale.
+</p>
+
+<!-- *************************************************************** -->
+<h2>Default Setting</h2>
+
+<pre>
+^(the|a|an)\s+
+</pre>
+
+<!-- *************************************************************** -->
+<h2>Resource Variables</h2>
+
+<p>N/A
+</p>
+
+<!-- *************************************************************** -->
+<h2>Examples</h2>
+
+<p>If you are archiving French message, the following setting
+maybe appropriate:
+</p>
+<pre>
+<b>&lt;SubjectArticleRxp&gt;</b>
+^l(es|e|a)\s+
+<b>&lt;/SubjectArticleRxp&gt;</b>
+</pre>
+
+<!-- *************************************************************** -->
+<h2>Version</h2>
+
+<p>2.2.0
+</p>
+
+<!-- *************************************************************** -->
+<h2>See Also</h2>
+
+<p>
+<a href="subjectreplyrxp.html">SUBJECTREPLYRXP</a>
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<address>
+98/03/03 18:19:51<br>
+<img align="top" src="../monicon.gif" alt="">
+<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"
+><strong>MHonArc</strong></a><br>
+Copyright &#169; 1998, <a href="http://www.oac.uci.edu/indiv/ehood/"
+>Earl Hood</a>, <a href="mailto:ehood@medusa.acs.uci.edu"
+>ehood@medusa.acs.uci.edu</a><br>
+</address>
+
+</body>
+</html>

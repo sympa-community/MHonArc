@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	@(#) mhidxrc.pl 1.8 98/02/23 16:25:37
+##	@(#) mhidxrc.pl 2.2 98/03/03 14:29:10
 ##  Author:
 ##      Earl Hood       ehood@medusa.acs.uci.edu
 ##  Description:
@@ -25,6 +25,8 @@
 ##    02111-1307, USA
 ##---------------------------------------------------------------------------##
 
+package mhonarc;
+
 ##-----------------##
 ## Index resources ##
 ##-----------------##
@@ -33,7 +35,8 @@ $IdxTypeStr = $NOSORT ? 'Message' :
 		        $SUBSORT ? 'Subject' :
 			$AUTHSORT ? 'Author' :
 			'Date';
-if ($MAIN) {
+## MAIN index resources
+## if ($MAIN) {
 
     ##	Label for main index
     unless ($IDXLABEL) {
@@ -107,9 +110,11 @@ EndOfStr
     unless ($SUBJECTEND) {
 	$SUBJECTEND = ''; $IsDefault{'SUBJECTEND'} = 1;
     }
-}
 
-if ($THREAD) {
+## }
+
+## THREAD index resources
+## if ($THREAD) {
 
     ##	Label for thread index
     unless ($TIDXLABEL) {
@@ -247,6 +252,15 @@ EndOfStr
 
     $DoMissingMsgs = $TLINONE =~ /\S/;
 
+## }
+
+unless ($TSLICEBEG) {
+    $TSLICEBEG = "<BLOCKQUOTE><UL>\n";
+    $IsDefault{'TSLICEBEG'} = 1;
+}
+unless ($TSLICEEND) {
+    $TSLICEEND = "</UL></BLOCKQUOTE>\n";
+    $IsDefault{'TSLICEEND'} = 1;
 }
 
 ##-------------------##
@@ -481,6 +495,9 @@ $TNEXTPGLINKIA = '[Next Page]',
     $IsDefault{'TNEXTPGLINKIA'} = 1	unless $TNEXTPGLINKIA;
 $TPREVPGLINKIA = '[Prev Page]',
     $IsDefault{'TPREVPGLINKIA'} = 1	unless $TPREVPGLINKIA;
+
+$MSGIDLINK = '<A $A_HREF$>$MSGID$</A>',
+     $IsDefault{'MSGIDLINK'} = 1	unless $MSGIDLINK;
 
 ##	Set unknown icon
 $Icons{'unknown'} = $Icons{'text/plain'}  unless $Icons{'unknown'};

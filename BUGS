@@ -1,11 +1,12 @@
-	BUGS 98/02/23 18:55:45
+	BUGS 98/03/03 19:09:35
 	Bug History for MHonArc
 
 Each bug listing has the following fields:
 
     Version: 	    Lists the version of MHonArc that the bug was
 		    reported against.  It is possible a bug could
-		    be applicable to earlier versions.
+		    be applicable to earlier versions.  Version listed
+		    is when the bug was discovered.
     Problem:	    A description of the bug.
     Solution:	    A description of what was done to fix the bug.
     Version Fixed:  The version that the solution exists in, if
@@ -13,6 +14,31 @@ Each bug listing has the following fields:
 
 
 Bug List
+------------------------------------------------------------------------
+Version:	2.1.2
+Problem:   	The @TListOrder array is empty in .mhonarc.db when
+		MULTIPG is set.  This may cause some messages not
+		getting properly updated when new messages are added.
+Solution:	Removed use of splice on @TListOrder when MULTIPG.
+		Now, array slices are used so @TListOrder is preserved.
+Version Fixed:	2.2.0
+------------------------------------------------------------------------
+Version:	2.1.2
+Problem:   	Convert ISO-2022-JP messages can generate "Out of
+		Memory" errors.
+Solution:	The cleanup of mhtxtplain.pl's iso-2022-jp code
+		introduced a bug that caused an infinite loop and
+		to gobble memoery until it ran out.  The fix was
+		straight-forward.
+Version Fixed:	2.2.0
+------------------------------------------------------------------------
+Version:	2.1.2
+Problem:   	Quoted text that is broken due to maxwidth setting of
+		the mhtxtplain.pl filter did not have the quote
+		character prepended to broken the text.
+Solution:	A regex updated to dealing with a leading space before
+		quote character.
+Version Fixed:	2.2.0
 ------------------------------------------------------------------------
 Version:	2.1.1
 Problem:   	Documentation of MAILTOURL incorrectly states that

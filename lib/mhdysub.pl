@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	@(#)  mhdysub.pl 1.2 97/02/17 @(#)
+##	@(#)  mhdysub.pl 2.1 98/03/02 @(#)
 ##  Author:
 ##      Earl Hood       ehood@medusa.acs.uci.edu
 ##  Description:
@@ -24,6 +24,8 @@
 ##    along with this program; if not, write to the Free Software
 ##    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 ##---------------------------------------------------------------------------##
+
+package mhonarc;
 
 ##---------------------------------------------------------------------------
 ##	create_routines is used to dynamically create routines that

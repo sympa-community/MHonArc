@@ -1,12 +1,12 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	@(#)  iso8859.pl 1.2 97/06/03 @(#)
+##	@(#) iso8859.pl 2.1 98/03/02 20:24:24
 ##  Author:
 ##      Earl Hood       ehood@medusa.acs.uci.edu
 ##  Description:
 ##      Routines to process data encoded in iso8859 character sets.
 ##---------------------------------------------------------------------------##
-##    Copyright (C) 1996        Earl Hood, ehood@medusa.acs.uci.edu
+##    Copyright (C) 1996,1998	Earl Hood, ehood@medusa.acs.uci.edu
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by

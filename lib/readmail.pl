@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	@(#) readmail.pl 1.10 98/02/23 16:31:06
+##	@(#) readmail.pl 2.1 98/03/02 20:24:33
 ##  Author:
 ##      Earl Hood       ehood@medusa.acs.uci.edu
 ##  Description:
@@ -13,16 +13,16 @@
 ##	Public Functions:
 ##	----------------
 ##	($data) =
-##	    &main'MAILdecode_1522_str($str);
+##	    &MAILdecode_1522_str($str);
 ##	($data, @files) =
-##	    &main'MAILread_body($header, $body, $ctypeArg, $encodingArg);
+##	    &MAILread_body($header, $body, $ctypeArg, $encodingArg);
 ##	($header) =
-##	    &main'MAILread_file_header($handle, *fields, *l2o);
+##	    &MAILread_file_header($handle, *fields, *l2o);
 ##	($header) =
-##	    &main'MAILread_header(*mesg, *fields, *l2o);
+##	    &MAILread_header(*mesg, *fields, *l2o);
 ##
 ##	($disposition, $filename) =
-##	    &main'MAILhead_get_disposition(*fields);
+##	    &MAILhead_get_disposition(*fields);
 ##
 ##---------------------------------------------------------------------------##
 ##    Copyright (C) 1996-1998	Earl Hood, ehood@medusa.acs.uci.edu
@@ -44,9 +44,6 @@
 ##---------------------------------------------------------------------------##
 
 package readmail;
-
-require "base64.pl" || die "ERROR: Unable to require base64.pl\n";
-require "qprint.pl" || die "ERROR: Unable to require qprint.pl\n";
 
 ##---------------------------------------------------------------------------##
 ##	Scalar Variables
@@ -88,27 +85,39 @@ $DecodeHeader	= 0;
 ##  decoding to the registered filter, but the decoded flag will be
 ##  set to true.
 
-%main'MIMEDecoders			= ()
-    unless defined(%main'MIMEDecoders);
+%MIMEDecoders			= ()
+    unless defined(%MIMEDecoders);
+%MIMEDecodersSrc		= ()
+    unless defined(%MIMEDecodersSrc);
 
 ##	Default settings:
+$MIMEDecoders{"7bit"}		  = "as-is"
+    unless defined($MIMEDecoders{"7bit"});
+$MIMEDecoders{"8bit"}		  = "as-is"
+    unless defined($MIMEDecoders{"8bit"});
+$MIMEDecoders{"binary"}		  = "as-is"
+    unless defined($MIMEDecoders{"binary"});
+$MIMEDecoders{"base64"}		  = "base64'b64decode"
+    unless defined($MIMEDecoders{"base64"});
+$MIMEDecoders{"quoted-printable"} = "quoted_printable'qprdecode"
+    unless defined($MIMEDecoders{"quoted-printable"});
+$MIMEDecoders{"x-uuencode"}	  = "base64'uudecode"
+    unless defined($MIMEDecoders{"x-uuencode"});
+$MIMEDecoders{"x-uue"}     	  = "base64'uudecode"
+    unless defined($MIMEDecoders{"x-uue"});
+$MIMEDecoders{"uuencode"}  	  = "base64'uudecode"
+    unless defined($MIMEDecoders{"uuencode"});
 
-$main'MIMEDecoders{"7bit"}		= "as-is"
-    unless defined($main'MIMEDecoders{"7bit"});
-$main'MIMEDecoders{"8bit"}		= "as-is"
-    unless defined($main'MIMEDecoders{"8bit"});
-$main'MIMEDecoders{"binary"}		= "as-is"
-    unless defined($main'MIMEDecoders{"binary"});
-$main'MIMEDecoders{"base64"}		= "base64'b64decode"
-    unless defined($main'MIMEDecoders{"base64"});
-$main'MIMEDecoders{"quoted-printable"}	= "quoted_printable'qprdecode"
-    unless defined($main'MIMEDecoders{"quoted-printable"});
-$main'MIMEDecoders{"x-uuencode"}	= "base64'uudecode"
-    unless defined($main'MIMEDecoders{"x-uuencode"});
-$main'MIMEDecoders{"x-uue"}     	= "base64'uudecode"
-    unless defined($main'MIMEDecoders{"x-uue"});
-$main'MIMEDecoders{"uuencode"}  	= "base64'uudecode"
-    unless defined($main'MIMEDecoders{"uuencode"});
+$MIMEDecodersSrc{"base64"}	  	= "base64.pl"
+    unless defined($MIMEDecodersSrc{"base64"});
+$MIMEDecodersSrc{"quoted-printable"}	= "qprint.pl"
+    unless defined($MIMEDecodersSrc{"quoted-printable"});
+$MIMEDecodersSrc{"x-uuencode"}	 	= "base64.pl"
+    unless defined($MIMEDecodersSrc{"x-uuencode"});
+$MIMEDecodersSrc{"x-uue"}     	 	= "base64.pl"
+    unless defined($MIMEDecodersSrc{"x-uue"});
+$MIMEDecodersSrc{"uuencode"}  	 	= "base64.pl"
+    unless defined($MIMEDecodersSrc{"uuencode"});
 
 ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ##  MIMECharSetConverters is the associative array for storing functions
@@ -144,13 +153,14 @@ $main'MIMEDecoders{"uuencode"}  	= "base64'uudecode"
 ##  the encoding will stay unprocessed and passed back in the return
 ##  string.
 
-%'MIMECharSetConverters			= ()
-    unless defined(%main'MIMECharSetConverters);
+%MIMECharSetConverters			= ()
+    unless defined(%MIMECharSetConverters);
+%MIMECharSetConvertersSrc		= ()
+    unless defined(%MIMECharSetConvertersSrc);
 
 ##	Default settings:
-
-$main'MIMECharSetConverters{"default"}	= "-ignore-"
-    unless defined($main'MIMECharSetConverters{"default"});
+$MIMECharSetConverters{"default"}	= "-ignore-"
+    unless defined($MIMECharSetConverters{"default"});
 
 ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ##  MIMEFilters is the associative array for storing functions that
@@ -174,8 +184,10 @@ $main'MIMECharSetConverters{"default"}	= "-ignore-"
 ##  tries to invoke it, MAILread_body will silently ignore.  Make sure
 ##  that all functions are defined before invoking MAILread_body.
 
-%main'MIMEFilters	= ()
-    unless defined(%main'MIMEFilters);
+%MIMEFilters	= ()
+    unless defined(%MIMEFilters);
+%MIMEFiltersSrc	= ()
+    unless defined(%MIMEFiltersSrc);
 
 ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ##  MIMEFiltersArgs is the associative array for storing any optional
@@ -188,8 +200,8 @@ $main'MIMECharSetConverters{"default"}	= "-ignore-"
 ##  Arguments listed for a content-type will be used over arguments
 ##  listed for a function if both are applicable.
 
-%main'MIMEFiltersArgs	= ()
-    unless defined(%main'MIMEFiltersArgs);
+%MIMEFiltersArgs	= ()
+    unless defined(%MIMEFiltersArgs);
 
 ##---------------------------------------------------------------------------
 ##	Variables holding functions for generating processed output
@@ -256,12 +268,12 @@ $FormatHeaderFunc		= ""
 ##
 ##	Usage:
 ##
-##	    $ret_data = &'MAILdecode_1522_str($str, $justdecode);
+##	    $ret_data = &MAILdecode_1522_str($str, $justdecode);
 ##
 ##	If $justdecode is non-zero, $str will be decoded for only
 ##	the charsets specified as "-decode-".
 ##
-sub main'MAILdecode_1522_str {
+sub MAILdecode_1522_str {
     local($str) = shift;
     local($justdecode) = shift;
     local($charset,
@@ -279,10 +291,10 @@ sub main'MAILdecode_1522_str {
     $defcharcnv = '-bogus-';
 
     # Get default converter
-    $defcharcnv = $'MIMECharSetConverters{"default"};
+    $defcharcnv = &load_charset('default');
 
     # Get plain converter
-    $plaincnv = $'MIMECharSetConverters{"plain"};
+    $plaincnv = &load_charset('plain');
     $plaincnv = $defcharcnv  unless $plaincnv;
 
     # Decode string
@@ -294,9 +306,9 @@ sub main'MAILdecode_1522_str {
 
 	# Check encoding method and grab proper decoder
 	if ($encoding =~ /b/i) {
-	    $dec = $'MIMEDecoders{"base64"};
+	    $dec = &load_decoder('base64');
 	} else {
-	    $dec = $'MIMEDecoders{"quoted-printable"};
+	    $dec = &load_decoder('quoted-printable');
 	}
 
 	# Convert before (unencoded) text
@@ -313,7 +325,7 @@ sub main'MAILdecode_1522_str {
 
 	# Convert encoded text
 	($lcharset = $charset) =~ tr/A-Z/a-z/;
-	$charcnv = $'MIMECharSetConverters{$lcharset};
+	$charcnv = &load_charset($lcharset);
 	$charcnv = $defcharcnv  unless $charcnv;
 
 	# Decode only
@@ -366,14 +378,15 @@ sub main'MAILdecode_1522_str {
 ##	generated, and the other items are filenames of any derived
 ##	files.
 ##
-sub main'MAILread_body {
+sub MAILread_body {
     local($header, $body, $ctypeArg, $encodingArg) = @_;
 
-    local($type, $subtype, $boundary, $ret, $tmp, $content, $ctype);
+    local($type, $subtype, $boundary, $ret, $tmp, $content, $ctype, $pos);
     local($part, $parthead, $partcontent, $partencoding);
     local(@parts, %partfields, %partl2o) = ();
     local(@files) = ();
     local(@array) = ();
+    $ret = "";
 
     ## Get type/subtype
     $content = $ctypeArg || 'text/plain';	# Default to text/plain 
@@ -389,28 +402,31 @@ sub main'MAILread_body {
 	$type = $subtype = '';
     }
 
-    ## Process message
-    $filter = $main'MIMEFilters{$ctype};		   # Specific filter
-    $filter = $main'MIMEFilters{"$type/*"} unless $filter; # Base type filter
-    $filter = $main'MIMEFilters{"*/*"}     unless $filter; # Last resort
+    ## Load content-type filter
+    $filter = &load_filter($ctype);
+    $filter = &load_filter("$type/*")	unless $filter;
+    $filter = &load_filter("*/*")	unless $filter;
 
     ## A filter is defined for given content-type
     if ($filter && defined(&$filter)) {
-	local($tmphead) = ($header . "\n"); # Bogus header for MAILread_header
-	local($encoding) = ($encodingArg);
-	local($decodefunc, $decoded, $args) = ('', '', '');
+	local($tmphead, $encoding, $decodefunc, $decoded, $args);
+	$tmphead	= $header . "\n";
+	$encoding	= $encodingArg;
+	$decodefunc	= "";
+	$decoded	= "";
+	$args   	= "";
 
 	## Check for filter arguments
-	$args = $main'MIMEFiltersArgs{$ctype};
-	$args = $main'MIMEFiltersArgs{"$type/*"} if $args eq '';
-	$args = $main'MIMEFiltersArgs{$filter} if $args eq '';
+	$args = $MIMEFiltersArgs{$ctype};
+	$args = $MIMEFiltersArgs{"$type/*"} if $args eq '';
+	$args = $MIMEFiltersArgs{$filter}   if $args eq '';
 
 	## Parse message header for filter
-	&main'MAILread_header(*tmphead, *partfields, *partl2o);
+	&MAILread_header(*tmphead, *partfields, *partl2o);
 
 	## Check encoding and decode data
 	$encoding =~ s/\s//g;  $encoding =~ tr/A-Z/a-z/;
-	$decodefunc = $main'MIMEDecoders{$encoding};
+	$decodefunc = &load_decoder($encoding);
 	if (defined(&$decodefunc)) {
 	    $decoded = &$decodefunc($body);
 	    @array = &$filter($header, *partfields, *decoded, 1, $args);
@@ -427,35 +443,45 @@ sub main'MAILread_body {
     } else {
 	## If multipart, recursively process each part
 	if ($type =~ /multipart/i) {
+	    local($isalt) = $subtype =~ /alternative/i;
 
 	    ## Get boundary
+	    $boundary = "";
 	    if ($content =~ m%boundary\s*=\s*"([^"]*)"%i) {
 		$boundary = $1;
 	    } else {
 		($boundary) = $content =~ m%boundary\s*=\s*(\S+)%i;
 	    }
-	    $boundary =~ s/(\W)/\\$1/g;
 
-	    ## Split parts and process each
-	    $body = "\r\n" . $body;	# Pad data for splitting
-	    if ($subtype =~ /alternative/i) {	# Go in reverse order
-		@parts = reverse split(/\r?\n--$boundary/, $body);
-		pop @parts;
-		while (@parts && ($parts[0] !~ /^--/)) { shift @parts; }
-		shift @parts;
+	    ## If boundary defined, split body into parts
+	    if ($boundary =~ /\S/) {
+		substr($body, 0, 0) = "\n";
+		substr($boundary, 0, 0) = "\n--";
+		while (($pos = index($body, $boundary, 0)) > -1) {
+		    if ($isalt) {
+			unshift(@parts, substr($body, 0, $pos));
+			$parts[0] =~ s/^\r//;
+		    } else {
+			push(@parts, substr($body, 0, $pos));
+			$parts[$#parts] =~ s/^\r//;
+		    }
+		    substr($body, 0, $pos+length($boundary)) = "";
+		    last  if $body =~ /^--/;
+		    $body =~ s/^\r?\n//;
+		}
+		# Discard front-matter
+		if ($isalt) { pop(@parts); } else { shift(@parts); }
+
+	    ## Else treat body as one part
 	    } else {
-		@parts = split(/\r?\n--$boundary/, $body);
-		shift @parts;
-		while (@parts && ($parts[$#parts] !~ /^--/)) { pop @parts; }
-		pop @parts;
+		@parts = ($body);
 	    }
 
 	    ## Process parts
 	    foreach $part (@parts) {
-		$part =~ s/^\r?\n//;	# Drop begining newline
 
 		## Read header to get content-type
-		$parthead = &main'MAILread_header(*part, *partfields, *partl2o);
+		$parthead = &MAILread_header(*part, *partfields, *partl2o);
 		$partcontent = $partfields{'content-type'};
 		$partencoding = $partfields{'content-transfer-encoding'};
 
@@ -471,8 +497,8 @@ sub main'MAILread_body {
 		}
 
 		## Process part
-		@array = &main'MAILread_body($parthead, $part,
-					 $partcontent, $partencoding);
+		@array = &MAILread_body($parthead, $part,
+					$partcontent, $partencoding);
 
 		## Only use last filterable part in alternate
 		if ($subtype =~ /alternative/) {
@@ -496,7 +522,7 @@ sub main'MAILread_body {
 
 	## Else if message/rfc822 or message/news
 	} elsif ($ctype =~ m%message/(rfc822|news)%i) {
-	    $parthead = &main'MAILread_header(*body, *partfields, *partl2o);
+	    $parthead = &MAILread_header(*body, *partfields, *partl2o);
 	    $partcontent = $partfields{'content-type'};
 	    $partencoding = $partfields{'content-transfer-encoding'};
 
@@ -507,7 +533,7 @@ sub main'MAILread_body {
 		warn "WARNING: readmail.pl: No message header formatting ",
 		     "function defined\n";
 	    }
-	    @array = &main'MAILread_body($parthead, $body,
+	    @array = &MAILread_body($parthead, $body,
 				     $partcontent, $partencoding);
 	    $ret .= shift @array ||
 		    &$CantProcessPartFunc($partfields{'content-type'});
@@ -538,7 +564,7 @@ sub main'MAILread_body {
 ##	
 ##	The return value is the original (extracted) header text.
 ##
-sub main'MAILread_header {
+sub MAILread_header {
     local(*mesg, *fields, *l2o) = @_;
     local($label, $olabel, $value, $tmp, $header);
 
@@ -553,7 +579,7 @@ sub main'MAILread_header {
 	$tmp =~ s/[\r\n]//g;		# Delete eol characters
 
 	## Decode text if requested
-	$tmp = &'MAILdecode_1522_str($tmp,1)  if $DecodeHeader;
+	$tmp = &MAILdecode_1522_str($tmp,1)  if $DecodeHeader;
 
 	## Check for continuation of a field
 	if ($tmp =~ s/^\s//) {
@@ -581,7 +607,7 @@ sub main'MAILread_header {
 ##	from the filehandle $handle.  The routine behaves in the
 ##	same manner as MAILread_header;
 ##	
-sub main'MAILread_file_header {
+sub MAILread_file_header {
     local($handle, *fields, *l2o) = @_;
     local($label, $olabel, $value, $tmp, $header);
     local($d) = ($/);
@@ -597,7 +623,7 @@ sub main'MAILread_file_header {
 	$tmp =~ s/[\r\n]//g;
 
 	## Decode text if requested
-	$tmp = &'MAILdecode_1522_str($tmp,1)  if $DecodeHeader;
+	$tmp = &MAILdecode_1522_str($tmp,1)  if $DecodeHeader;
 
 	## Check for continuation of a field
 	if ($tmp =~ s/^\s//) {
@@ -626,7 +652,7 @@ sub main'MAILread_file_header {
 ##	filename from *hfields, *hfields is a hash produced by the
 ##	MAILread_head* routines.
 ##
-sub main'MAILhead_get_disposition {
+sub MAILhead_get_disposition {
     local(*hfields) = shift;
     local($disp, $filename) = ('', '');
     local($_);
@@ -657,6 +683,7 @@ sub main'MAILhead_get_disposition {
 ###############################################################################
 ##	Private Routines
 ###############################################################################
+
 ##---------------------------------------------------------------------------##
 ##	Default function for unable to process a part of a multipart
 ##	message.
@@ -666,40 +693,52 @@ sub cantProcessPart {
 
     warn "Warning: Could not process part with given Content-Type: ",
 	 "$ctype\n";
-    join('',"<DL>\n",
-	    "<DT><STRONG>Warning</STRONG></DT>\n",
-	    "<DD>Could not process part with given ",
-	    "Content-Type: <CODE>", $ctype, "</CODE>\n",
-	    "</DD>\n",
-	    "</DL>\n"
-	    );
+    join('',"<HR NOSHADE SIZE=1>\n",
+	    "Could not process part with Content-Type: <TT>$ctype</TT>.\n",
+	    "<HR NOSHADE SIZE=1>\n");
 }
 ##---------------------------------------------------------------------------##
 ##	Default function for unrecognizeable part in multipart/alternative.
 ##
 sub unrecognizedAltPart {
     warn "Warning: No recognizable part in multipart/alternative\n";
-    join('',"<HR>\n",
-	    "<P>No recognizable part in ",
-	    "<CODE>multipart/alternative</CODE>.</P>\n",
-	    "<HR>\n");
+    join('',"<HR NOSHADE SIZE=1>\n",
+	    "No recognizable part in <TT>multipart/alternative</TT>.\n",
+	    "<HR NOSHADE SIZE=1>\n");
 }
 ##---------------------------------------------------------------------------##
 ##	Default function for beggining of embedded message
 ##	(ie message/rfc822 or message/news).
 ##
 sub beginEmbeddedMesg {
-    join('',"<P><EM>-- BEGIN included message</EM></P>\n",
-	    "<BLOCKQUOTE>\n");
+    "<BR><EM>---- Begin included message ----</EM><BLOCKQUOTE>\n";
 }
 ##---------------------------------------------------------------------------##
 ##	Default function for end of embedded message
 ##	(ie message/rfc822 or message/news).
 ##
 sub endEmbeddedMesg {
-    join('',"</BLOCKQUOTE>\n",
-	    "<P><EM>-- END included message</EM></P>\n");
+    "</BLOCKQUOTE><EM>---- End included message ----</EM><BR>\n";
 	    
 }
+
+##---------------------------------------------------------------------------##
+
+sub load_charset {
+    require $MIMECharSetConvertersSrc{$_[0]}
+	if $MIMECharSetConvertersSrc{$_[0]};
+    $MIMECharSetConverters{$_[0]};
+}
+sub load_decoder {
+    require $MIMEDecodersSrc{$_[0]}
+	if $MIMEDecodersSrc{$_[0]};
+    $MIMEDecoders{$_[0]};
+}
+sub load_filter {
+    require $MIMEFiltersSrc{$_[0]}
+	if $MIMEFiltersSrc{$_[0]};
+    $MIMEFilters{$_[0]};
+}
+
 ##---------------------------------------------------------------------------##
 1; # for require

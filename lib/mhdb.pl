@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	@(#) mhdb.pl 1.15 98/02/23 16:25:11
+##	@(#) mhdb.pl 2.2 98/03/03 14:27:42
 ##  Author:
 ##      Earl Hood       ehood@medusa.acs.uci.edu
 ##  Description:
@@ -54,17 +54,22 @@ sub output_db {
 	&print_assoc(DB, 'HeadHeads', *HeadHeads);
 	&print_assoc(DB, 'Icons', *Icons);
 	&print_assoc(DB, 'IndexNum', *IndexNum);
-	&print_assoc(DB, "main'MIMECharSetConverters",
-			 *main'MIMECharSetConverters);
-	&print_assoc(DB, "main'MIMEFilters", *main'MIMEFilters);
-	&print_assoc(DB, "main'MIMEFiltersArgs", *main'MIMEFiltersArgs);
+	&print_assoc(DB, "readmail'MIMECharSetConverters",
+			 *readmail'MIMECharSetConverters);
+	&print_assoc(DB, "readmail'MIMECharSetConvertersSrc",
+			 *readmail'MIMECharSetConvertersSrc);
+	&print_assoc(DB, "readmail'MIMEFilters",
+			 *readmail'MIMEFilters);
+	&print_assoc(DB, "readmail'MIMEFiltersSrc",
+			 *readmail'MIMEFiltersSrc);
+	&print_assoc(DB, "readmail'MIMEFiltersArgs",
+			 *readmail'MIMEFiltersArgs);
 	&print_assoc(DB, 'MsgId', *MsgId);
 	&print_assoc(DB, 'Refs', *Refs);
 	&print_assoc(DB, 'Subject', *Subject);
 	&print_assoc(DB, 'UDerivedFile', *UDerivedFile);
 	&print_assoc(DB, 'Zone', *Zone);
 
-	&print_array(DB, 'CharSetRequires', *CharSetRequires);
 	&print_array(DB, 'DateFields', *DateFields)
 	    unless $IsDefault{'DATEFIELDS'};
 	&print_array(DB, 'FieldOrder', *FieldOrder);
@@ -74,7 +79,6 @@ sub output_db {
 	&print_array(DB, 'months', *months);
 	&print_array(DB, 'OtherIdxs', *OtherIdxs);
 	&print_array(DB, 'PerlINC', *PerlINC);
-	&print_array(DB, 'Requires', *Requires);
 	&print_array(DB, 'TListOrder', *TListOrder);
 	&print_array(DB, 'Weekdays', *Weekdays);
 	&print_array(DB, 'weekdays', *weekdays);
@@ -112,16 +116,18 @@ sub output_db {
 	&print_var(DB, 'NumOfMsgs', *NumOfMsgs);
 	&print_var(DB, 'NumOfPages', *NumOfPages);
 	&print_var(DB, 'THREAD', *THREAD);
+	&print_var(DB, 'SubArtRxp', *SubArtRxp);
+	&print_var(DB, 'SubReplyRxp', *SubReplyRxp);
 	&print_var(DB, 'UsingLASTPG', *UsingLASTPG);
 
 	# Main index resources
+	&print_var(DB, 'AUTHSORT', *AUTHSORT);
+	&print_var(DB, 'NOSORT', *NOSORT);
+	&print_var(DB, 'REVSORT', *REVSORT);
+	&print_var(DB, 'SUBSORT', *SUBSORT);
 	if ($MAIN) {
-	    &print_var(DB, 'AUTHSORT', *AUTHSORT);
 	    &print_var(DB, 'IDXNAME', *IDXNAME);
 	    &print_var(DB, 'IDXPREFIX', *IDXPREFIX);
-	    &print_var(DB, 'NOSORT', *NOSORT);
-	    &print_var(DB, 'REVSORT', *REVSORT);
-	    &print_var(DB, 'SUBSORT', *SUBSORT);
 	    &print_var(DB, 'TITLE', *TITLE);
 
 	    &print_var(DB, 'AUTHBEG', *AUTHBEG)
@@ -162,132 +168,110 @@ sub output_db {
 	if ($THREAD) {
 	    &print_var(DB, 'TIDXNAME', *TIDXNAME);
 	    &print_var(DB, 'TIDXPREFIX', *TIDXPREFIX);
-	    &print_var(DB, 'TLEVELS', *TLEVELS);
-	    &print_var(DB, 'TNOSORT', *TNOSORT);
-	    &print_var(DB, 'TREVERSE', *TREVERSE);
-	    &print_var(DB, 'TSUBSORT', *TSUBSORT);
 	    &print_var(DB, 'TTITLE', *TTITLE);
-
-	    &print_var(DB, 'TCONTBEG', *TCONTBEG)
-					unless $IsDefault{'TCONTBEG'};
-	    &print_var(DB, 'TCONTEND', *TCONTEND)
-					unless $IsDefault{'TCONTEND'};
-	    &print_var(DB, 'TFOOT', *TFOOT)
-					unless $IsDefault{'TFOOT'};
-	    &print_var(DB, 'THEAD', *THEAD)
-					unless $IsDefault{'THEAD'};
 	    &print_var(DB, 'TIDXLABEL', *TIDXLABEL)
-					unless $IsDefault{'TIDXLABEL'};
+				    unless $IsDefault{'TIDXLABEL'};
 	    &print_var(DB, 'TIDXPGBEG', *TIDXPGBEG)
-					unless $IsDefault{'TIDXPGBEG'};
+				    unless $IsDefault{'TIDXPGBEG'};
 	    &print_var(DB, 'TIDXPGEND', *TIDXPGEND)
-					unless $IsDefault{'TIDXPGEND'};
-	    &print_var(DB, 'TINDENTBEG', *TINDENTBEG)
-					unless $IsDefault{'TINDENTBEG'};
-	    &print_var(DB, 'TINDENTEND', *TINDENTEND)
-					unless $IsDefault{'TINDENTEND'};
-	    &print_var(DB, 'TLIEND', *TLIEND)
-					unless $IsDefault{'TLIEND'};
-	    &print_var(DB, 'TLINONE', *TLINONE)
-					unless $IsDefault{'TLINONE'};
-	    &print_var(DB, 'TLINONEEND', *TLINONEEND)
-					unless $IsDefault{'TLINONEEND'};
-	    &print_var(DB, 'TLITXT', *TLITXT)
-					unless $IsDefault{'TLITXT'};
+				    unless $IsDefault{'TIDXPGEND'};
 	    &print_var(DB, 'TNEXTPGLINK', *TNEXTPGLINK)
-					unless $IsDefault{'TNEXTPGLINK'};
+				    unless $IsDefault{'TNEXTPGLINK'};
 	    &print_var(DB, 'TNEXTPGLINKIA', *TNEXTPGLINKIA)
-					unless $IsDefault{'TNEXTPGLINKIA'};
+				    unless $IsDefault{'TNEXTPGLINKIA'};
 	    &print_var(DB, 'TPREVPGLINK', *TPREVPGLINK)
-					unless $IsDefault{'TPREVPGLINK'};
+				    unless $IsDefault{'TPREVPGLINK'};
 	    &print_var(DB, 'TPREVPGLINKIA', *TPREVPGLINKIA)
-					unless $IsDefault{'TPREVPGLINKIA'};
-	    &print_var(DB, 'TSINGLETXT', *TSINGLETXT)
-					unless $IsDefault{'TSINGLETXT'};
-	    &print_var(DB, 'TSUBJECTBEG', *TSUBJECTBEG)
-					unless $IsDefault{'TSUBJECTBEG'};
-	    &print_var(DB, 'TSUBJECTEND', *TSUBJECTEND)
-					unless $IsDefault{'TSUBJECTEND'};
-	    &print_var(DB, 'TSUBLISTBEG', *TSUBLISTBEG)
-					unless $IsDefault{'TSUBLISTBEG'};
-	    &print_var(DB, 'TSUBLISTEND', *TSUBLISTEND)
-					unless $IsDefault{'TSUBLISTEND'};
-	    &print_var(DB, 'TTOPBEG', *TTOPBEG)
-					unless $IsDefault{'TTOPBEG'};
-	    &print_var(DB, 'TTOPEND', *TTOPEND)
-					unless $IsDefault{'TTOPEND'};
+				    unless $IsDefault{'TPREVPGLINKIA'};
 	}
+	&print_var(DB, 'TLEVELS', *TLEVELS);
+	&print_var(DB, 'TNOSORT', *TNOSORT);
+	&print_var(DB, 'TREVERSE', *TREVERSE);
+	&print_var(DB, 'TSUBSORT', *TSUBSORT);
+	&print_var(DB, 'TCONTBEG', *TCONTBEG) unless $IsDefault{'TCONTBEG'};
+	&print_var(DB, 'TCONTEND', *TCONTEND) unless $IsDefault{'TCONTEND'};
+	&print_var(DB, 'TFOOT', *TFOOT) unless $IsDefault{'TFOOT'};
+	&print_var(DB, 'THEAD', *THEAD) unless $IsDefault{'THEAD'};
+	&print_var(DB, 'TINDENTBEG', *TINDENTBEG)
+				    unless $IsDefault{'TINDENTBEG'};
+	&print_var(DB, 'TINDENTEND', *TINDENTEND)
+				    unless $IsDefault{'TINDENTEND'};
+	&print_var(DB, 'TLIEND', *TLIEND) unless $IsDefault{'TLIEND'};
+	&print_var(DB, 'TLINONE', *TLINONE) unless $IsDefault{'TLINONE'};
+	&print_var(DB, 'TLINONEEND', *TLINONEEND)
+				    unless $IsDefault{'TLINONEEND'};
+	&print_var(DB, 'TLITXT', *TLITXT) unless $IsDefault{'TLITXT'};
+	&print_var(DB, 'TSINGLETXT', *TSINGLETXT)
+				    unless $IsDefault{'TSINGLETXT'};
+	&print_var(DB, 'TSUBJECTBEG', *TSUBJECTBEG)
+				    unless $IsDefault{'TSUBJECTBEG'};
+	&print_var(DB, 'TSUBJECTEND', *TSUBJECTEND)
+				    unless $IsDefault{'TSUBJECTEND'};
+	&print_var(DB, 'TSUBLISTBEG', *TSUBLISTBEG)
+				    unless $IsDefault{'TSUBLISTBEG'};
+	&print_var(DB, 'TSUBLISTEND', *TSUBLISTEND)
+				    unless $IsDefault{'TSUBLISTEND'};
+	&print_var(DB, 'TTOPBEG', *TTOPBEG) unless $IsDefault{'TTOPBEG'};
+	&print_var(DB, 'TTOPEND', *TTOPEND) unless $IsDefault{'TTOPEND'};
 
-	&print_var(DB, 'BOTLINKS', *BOTLINKS)
-	    				unless $IsDefault{'BOTLINKS'};
-	&print_var(DB, 'FIELDSBEG', *FIELDSBEG)
-	    				unless $IsDefault{'FIELDSBEG'};
-	&print_var(DB, 'FIELDSEND', *FIELDSEND)
-					unless $IsDefault{'FIELDSEND'};
-	&print_var(DB, 'FLDBEG', *FLDBEG)
-	    				unless $IsDefault{'FLDBEG'};
-	&print_var(DB, 'FLDEND', *FLDEND)
-	    				unless $IsDefault{'FLDEND'};
+	## Other resources
+	&print_var(DB, 'BOTLINKS', *BOTLINKS) unless $IsDefault{'BOTLINKS'};
+	&print_var(DB, 'FIELDSBEG', *FIELDSBEG) unless $IsDefault{'FIELDSBEG'};
+	&print_var(DB, 'FIELDSEND', *FIELDSEND) unless $IsDefault{'FIELDSEND'};
+	&print_var(DB, 'FLDBEG', *FLDBEG) unless $IsDefault{'FLDBEG'};
+	&print_var(DB, 'FLDEND', *FLDEND) unless $IsDefault{'FLDEND'};
 	&print_var(DB, 'FOLUPBEGIN', *FOLUPBEGIN)
 	    				unless $IsDefault{'FOLUPBEGIN'};
-	&print_var(DB, 'FOLUPEND', *FOLUPEND)
-	    				unless $IsDefault{'FOLUPEND'};
+	&print_var(DB, 'FOLUPEND', *FOLUPEND) unless $IsDefault{'FOLUPEND'};
 	&print_var(DB, 'FOLUPLITXT', *FOLUPLITXT)
 	    				unless $IsDefault{'FOLUPLITXT'};
 	&print_var(DB, 'HEADBODYSEP ', *HEADBODYSEP)
 	    				unless $IsDefault{'HEADBODYSEP'};
-	&print_var(DB, 'LABELBEG', *LABELBEG)
-	    				unless $IsDefault{'LABELBEG'};
-	&print_var(DB, 'LABELEND', *LABELEND)
-	    				unless $IsDefault{'LABELEND'};
+	&print_var(DB, 'LABELBEG', *LABELBEG) unless $IsDefault{'LABELBEG'};
+	&print_var(DB, 'LABELEND', *LABELEND) unless $IsDefault{'LABELEND'};
 	&print_var(DB, 'MSGBODYEND', *MSGBODYEND)
 	    				unless $IsDefault{'MSGBODYEND'};
-	&print_var(DB, 'MSGPGBEG', *MSGPGBEG)
-	    				unless $IsDefault{'MSGPGBEG'};
-	&print_var(DB, 'MSGPGEND', *MSGPGEND)
-	    				unless $IsDefault{'MSGPGEND'};
+	&print_var(DB, 'MSGIDLINK', *MSGIDLINK) unless $IsDefault{'MSGIDLINK'};
+	&print_var(DB, 'MSGPGBEG', *MSGPGBEG) unless $IsDefault{'MSGPGBEG'};
+	&print_var(DB, 'MSGPGEND', *MSGPGEND) unless $IsDefault{'MSGPGEND'};
 	&print_var(DB, 'NEXTBUTTON', *NEXTBUTTON)
 	    				unless $IsDefault{'NEXTBUTTON'};
 	&print_var(DB, 'NEXTBUTTONIA', *NEXTBUTTONIA)
 	    				unless $IsDefault{'NEXTBUTTONIA'};
-	&print_var(DB, 'NEXTLINK', *NEXTLINK)
-	    				unless $IsDefault{'NEXTLINK'};
+	&print_var(DB, 'NEXTLINK', *NEXTLINK) unless $IsDefault{'NEXTLINK'};
 	&print_var(DB, 'NEXTLINKIA', *NEXTLINKIA)
 	    				unless $IsDefault{'NEXTLINKIA'};
 	&print_var(DB, 'PREVBUTTON', *PREVBUTTON)
 	    				unless $IsDefault{'PREVBUTTON'};
 	&print_var(DB, 'PREVBUTTONIA', *PREVBUTTONIA)
 	    				unless $IsDefault{'PREVBUTTONIA'};
-	&print_var(DB, 'PREVLINK', *PREVLINK)
-	    				unless $IsDefault{'PREVLINK'};
+	&print_var(DB, 'PREVLINK', *PREVLINK) unless $IsDefault{'PREVLINK'};
 	&print_var(DB, 'PREVLINKIA', *PREVLINKIA)
 	    				unless $IsDefault{'PREVLINKIA'};
-	&print_var(DB, 'REFSBEGIN', *REFSBEGIN)
-	    				unless $IsDefault{'REFSBEGIN'};
-	&print_var(DB, 'REFSEND', *REFSEND)
-	    				unless $IsDefault{'REFSEND'};
-	&print_var(DB, 'REFSLITXT', *REFSLITXT)
-	    				unless $IsDefault{'REFSLITXT'};
+	&print_var(DB, 'REFSBEGIN', *REFSBEGIN) unless $IsDefault{'REFSBEGIN'};
+	&print_var(DB, 'REFSEND', *REFSEND) unless $IsDefault{'REFSEND'};
+	&print_var(DB, 'REFSLITXT', *REFSLITXT) unless $IsDefault{'REFSLITXT'};
 	&print_var(DB, 'SUBJECTHEADER ', *SUBJECTHEADER)
 	    				unless $IsDefault{'SUBJECTHEADER'};
 	&print_var(DB, 'TNEXTBUTTON', *TNEXTBUTTON)
 	    				unless $IsDefault{'TNEXTBUTTON'};
 	&print_var(DB, 'TNEXTBUTTONIA', *TNEXTBUTTONIA)
 	    				unless $IsDefault{'TNEXTBUTTONIA'};
-	&print_var(DB, 'TNEXTLINK', *TNEXTLINK)
-	    				unless $IsDefault{'TNEXTLINK'};
+	&print_var(DB, 'TNEXTLINK', *TNEXTLINK) unless $IsDefault{'TNEXTLINK'};
 	&print_var(DB, 'TNEXTLINKIA', *TNEXTLINKIA)
 	    				unless $IsDefault{'TNEXTLINKIA'};
-	&print_var(DB, 'TOPLINKS', *TOPLINKS)
-	    				unless $IsDefault{'TOPLINKS'};
+	&print_var(DB, 'TOPLINKS', *TOPLINKS) unless $IsDefault{'TOPLINKS'};
 	&print_var(DB, 'TPREVBUTTON', *TPREVBUTTON)
 	    				unless $IsDefault{'TPREVBUTTON'};
 	&print_var(DB, 'TPREVBUTTONIA', *TPREVBUTTONIA)
 	    				unless $IsDefault{'TPREVBUTTONIA'};
-	&print_var(DB, 'TPREVLINK', *TPREVLINK)
-	    				unless $IsDefault{'TPREVLINK'};
+	&print_var(DB, 'TPREVLINK', *TPREVLINK) unless $IsDefault{'TPREVLINK'};
 	&print_var(DB, 'TPREVLINKIA', *TPREVLINKIA)
 	    				unless $IsDefault{'TPREVLINKIA'};
+	&print_var(DB, 'TSLICEBEG', *TSLICEBEG) unless $IsDefault{'TSLICEBEG'};
+	&print_var(DB, 'TSLICEEND', *TSLICEEND) unless $IsDefault{'TSLICEEND'};
+	&print_var(DB, 'TSliceNBefore', *TSliceNBefore);
+	&print_var(DB, 'TSliceNAfter', *TSliceNAfter);
 	&print_var(DB, 'UMASK', *UMASK);
 
 	print DB "1;\n";	# for require

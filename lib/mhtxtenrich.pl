@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	@(#) mhtxtenrich.pl 1.2 98/02/23 14:56:35
+##	@(#) mhtxtenrich.pl 2.1 98/03/02 20:24:36
 ##  Author:
 ##      Earl Hood       ehood@medusa.acs.uci.edu
 ##  Description:
@@ -76,6 +76,7 @@ sub filter {
     ## Translate 8-bit characters to entity refs based on charset
     ## 		(we already did '<' and '&' characters)
     if ($charset =~ /iso-8859-([2-9]|10)/i) {
+	require 'iso8859.pl';
 	$ret = &iso_8859'str2sgml($ret, $charset, 1);
     }
 

@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	@(#) mhrcfile.pl 1.17 98/02/23 16:27:51
+##	@(#) mhrcfile.pl 2.2 98/03/03 14:30:49
 ##  Author:
 ##      Earl Hood       ehood@medusa.acs.uci.edu
 ##  Description:
@@ -25,6 +25,8 @@
 ##    02111-1307, USA
 ##---------------------------------------------------------------------------##
 
+package mhonarc;
+
 ##---------------------------------------------------------------------------
 ##	read_resource_file() parses the resource file.
 ##	(The code for this routine could probably be simplified).
@@ -34,12 +36,13 @@ sub read_resource_file {
     local($line, $tag, $label, $acro, $hr, $type, $routine, $plfile,
 	  $url, $arg, $tmp, @a);
     local($elem, $attr, $override, $handle, $pathhead, $chop);
+    $override = 0;
 
     if (!($handle = &file_open($file))) {
 	warn "Warning: Unable to open resource file: $file\n";
 	return 0;
     }
-    if ($file =~ m%(.*[$'DIRSEPREX])%o) {
+    if ($file =~ m%(.*[$DIRSEPREX])%o) {
 	$pathhead = $1;
     } else {
 	$pathhead = '';
@@ -48,6 +51,7 @@ sub read_resource_file {
     print STDOUT "Reading resource file: $file ...\n"  unless $QUIET;
     while ($line = <$handle>) {
 	next unless $line =~ /^\s*<([^>]+)>/;
+	$attr = '';
 	($elem, $attr) = split(' ', $1, 2);
 	$elem =~ tr/A-Z/a-z/;
 	$override = ($attr =~ /override/i);
@@ -72,8 +76,10 @@ sub read_resource_file {
 	    last FMTSW;
 	}
 	if ($elem eq "charsetconverters") {	# Charset filters
-	    @CharSetRequires = (), %'MIMECharSetConverters = ()
-		if $override;
+	    if ($override) {
+		%readmail'MIMECharSetConverters = ();
+		%readmail'MIMECharSetConvertersSrc = ();
+	    }
 	    while ($line = <$handle>) {
 		last  if $line =~ /^\s*<\/charsetconverters\s*>/i;
 		next  if $line =~ /^\s*$/;
@@ -84,8 +90,9 @@ sub read_resource_file {
 		    ($type,$routine,$plfile) = split(/:/,$line,3);
 		}
 		$type =~ tr/A-Z/a-z/;
-		$'MIMECharSetConverters{$type} = $routine;
-		push(@CharSetRequires, $plfile)  if $plfile =~ /\S/;
+		$readmail'MIMECharSetConverters{$type}    = $routine;
+		$readmail'MIMECharSetConvertersSrc{$type} = $plfile
+		    if $plfile =~ /\S/;
 	    }
 	    last FMTSW;
 	}
@@ -312,7 +319,7 @@ sub read_resource_file {
 		last  if $line =~ /^\s*<\/include\s*>/i;
 		next  if $line =~ /^\s*$/;
 		$line =~ s/\s+$//;
-		$line = $pathhead . $line  if ($line !~ /$'DIRSEPREX/o);
+		$line = $pathhead . $line  if ($line !~ /$DIRSEPREX/o);
 		&read_resource_file($line);
 	    }
 	    last FMTSW;
@@ -392,7 +399,10 @@ sub read_resource_file {
 	    last FMTSW;
 	}
 	if ($elem eq "mimefilters") {		# Mime filters
-	    @Requires = (), %'MIMEFilters = ()  if $override;
+	    if ($override) {
+		%readmail'MIMEFilters = ();
+		%readmail'MIMEFiltersSrc = ();
+	    }
 	    while ($line = <$handle>) {
 		last  if $line =~ /^\s*<\/mimefilters\s*>/i;
 		next  if $line =~ /^\s*$/;
@@ -403,13 +413,13 @@ sub read_resource_file {
 		    ($type,$routine,$plfile) = split(/:/,$line,3);
 		}
 		$type =~ tr/A-Z/a-z/;
-		$'MIMEFilters{$type} = $routine;
-		push(@Requires, $plfile)  if $plfile =~ /\S/;
+		$readmail'MIMEFilters{$type}    = $routine;
+		$readmail'MIMEFiltersSrc{$type} = $plfile  if $plfile =~ /\S/;
 	    }
 	    last FMTSW;
 	}
 	if ($elem eq "mimeargs") {		# Mime arguments
-	    %'MIMEFiltersArgs = ()  if $override;
+	    %readmail'MIMEFiltersArgs = ()  if $override;
 	    while ($line = <$handle>) {
 		last  if     $line =~ /^\s*<\/mimeargs\s*>/i;
 		next  unless $line =~ /\S/;
@@ -420,7 +430,7 @@ sub read_resource_file {
 		    ($type, $arg) = split(/:/,$line,2);
 		}
 		$type =~ tr/A-Z/a-z/  if $type =~ m%/%;
-		$'MIMEFiltersArgs{$type} = $arg;
+		$readmail'MIMEFiltersArgs{$type} = $arg;
 	    }
 	    last FMTSW;
 	}
@@ -453,6 +463,10 @@ sub read_resource_file {
 	}
 	if ($elem eq "msghead") {		# Message header text
 	    $MSGHEAD = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq "msgidlink") {
+	    $MSGIDLINK = &get_elem_content($handle, $elem, $chop);
 	    last FMTSW;
 	}
 	if ($elem eq "msglocaldatefmt") {	# Message local date format
@@ -620,6 +634,18 @@ sub read_resource_file {
 	    $AUTHSORT = 0;  $SUBSORT = 0;
 	    last FMTSW;
 	}
+	if ($elem eq "subjectarticlerxp") {
+	    if ($line = &get_elem_last_line($handle, $elem)) {
+		$SubArtRxp = $line;
+	    }
+	    last FMTSW;
+	}
+	if ($elem eq "subjectreplyrxp") {
+	    if ($line = &get_elem_last_line($handle, $elem)) {
+		$SubReplyRxp = $line;
+	    }
+	    last FMTSW;
+	}
 	if ($elem eq "subsort") {		# Sort messages by subject
 	    $SUBSORT = 1;
 	    $AUTHSORT = 0;  $NOSORT = 0;
@@ -734,6 +760,19 @@ sub read_resource_file {
 	}
 	if ($elem eq "tnosort") {		# Raw order for threads
 	    $TNOSORT = 1; $TSUBSORT = 0;
+	    last FMTSW;
+	}
+	if ($elem eq "tslice") {
+	    ($TSliceNBefore, $TSliceNAfter) =
+		&get_list_content($handle, $elem);
+	    last FMTSW;
+	}
+	if ($elem eq "tslicebeg") {		# Start of thread slice
+	    $TSLICEBEG = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq "tsliceend") {		# End of thread slice
+	    $TSLICEEND = &get_elem_content($handle, $elem, $chop);
 	    last FMTSW;
 	}
 	if ($elem eq "tsort") {			# Date order for threads
@@ -926,7 +965,7 @@ sub get_pathname_content {
 	last  if /^\s*<\/$gi\s*>/i;
 	next  unless /\S/;
 	s/\r?\n?$//;
-	push(@items, split(/$'PATHSEP/o, $_));
+	push(@items, split(/$PATHSEP/o, $_));
     }
     @items;
 }

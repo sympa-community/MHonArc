@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##      @(#) mhopt.pl 1.4 98/02/23 16:35:33
+##      @(#) mhopt.pl 2.3 98/03/03 15:09:40
 ##  Author:
 ##      Earl Hood       ehood@medusa.acs.uci.edu
 ##  Description:
@@ -25,7 +25,7 @@
 ##    02111-1307, USA
 ##---------------------------------------------------------------------------##
 
-package main;
+package mhonarc;
 
 ##---------------------------------------------------------------------------
 ##	get_cli_opts() is responsible for grabbing command-line options
@@ -109,6 +109,8 @@ sub get_cli_opts {
 	"scan",		# List out archive contents to terminal
 	"single",	# Convert a single message to HTML
 	"sort",		# Sort messages in increasing date order
+	"subjectarticlerxp=s",	# Regex for leading articles in subjects
+	"subjectreplyrxp=s",	# Regex for leading reply string in subjects
 	"subsort",	# Sort message by subject
 	"tidxfname=s",	# File name of threaded index page
 	"tidxprefix=s",	# Filename prefix for multi-page thread index
@@ -118,6 +120,7 @@ sub get_cli_opts {
 	"thread",	# Create threaded index
 	"tlevels=i",	# Maximum # of nested lists in threaded index
 	"treverse",	# Reverse order of thread listing
+	"tslice=s",	# Set size of thread slice listing
 	"tsort",	# List threads by date
 	"tnosort",	# List threads by ordered processed
 	"tsubsort",	# List threads by subject
@@ -248,7 +251,7 @@ sub get_cli_opts {
     ## Remove lock file if scanning messages
     ##
     if ($SCAN) {
-	&clean_up();
+	&remove_lock_file();
     }
 
     ##	Read resource file (I initially used the term 'format file').
@@ -279,36 +282,8 @@ sub get_cli_opts {
     if (!$SCAN) {
 	## Require readmail library
 	require 'readmail.pl' || die("ERROR: Unable to require readmail.pl\n");
-
-	if (!$RMM) {
-	    ## Require MIME filters
-	    if (!$EDITIDX) {
-		&remove_dups(*Requires);
-		print STDOUT "Requiring content filter libraries ...\n"
-		    unless $QUIET;
-		foreach (@Requires) {
-		    print STDOUT "\t$_\n"  unless $QUIET;
-		    require $_ || die("ERROR: Unable to require ${_}\n");
-		}
-	    }
-
-	    ## Register functions to readmail.pl
-	    $readmail'FormatHeaderFunc = "main'htmlize_header";
-	}
-
-	## Check for 1522 processing (should always be true)
-	if ($RFC1522) {
-	    &remove_dups(*CharSetRequires);
-	    print STDOUT "Requiring charset filter libraries ...\n"
-		unless $QUIET;
-	    foreach (@CharSetRequires) {
-		print STDOUT "\t$_\n"  unless $QUIET;
-		require $_ || die("ERROR: Unable to require ${_}\n");
-	    }
-	    $MHeadCnvFunc = "main'MAILdecode_1522_str";
-	} else {
-	    $MHeadCnvFunc = "convert_line";
-	}
+	$readmail'FormatHeaderFunc = "mhonarc'htmlize_header";
+	$MHeadCnvFunc = "readmail'MAILdecode_1522_str";
     }
 
     ## Get other command-line options
@@ -345,6 +320,9 @@ sub get_cli_opts {
 
     $GMTDateFmt	= $opt_gmtdatefmt  if $opt_gmtdatefmt;
     $LocalDateFmt = $opt_localdatefmt  if $opt_localdatefmt;
+
+    $SubArtRxp   = $opt_subjectarticlerxp  if $subjectarticlerxp;
+    $SubReplyRxp = $opt_subjectreplyrxp    if $subjectreplyrxp;
 
     ## Parse any rc variable definition from command-line
     %CustomRcVars = (%CustomRcVars, &parse_vardef_str($opt_definevars))
@@ -387,6 +365,8 @@ sub get_cli_opts {
     foreach (@DateFields) { s/\s//g; tr/A-Z/a-z/; }
     @FromFields	 = split(/:/, $opt_fromfields)  if $opt_fromfields;
     foreach (@FromFields) { s/\s//g; tr/A-Z/a-z/; }
+
+    ($TSliceNBefore, $TSliceNAfter) = split(/:/, $opt_tslice)  if $opt_tslice;
 
     @Months   = split(/:/, $opt_months) 	if defined($opt_months);
     @months   = split(/:/, $opt_monthsabr)  	if defined($opt_monthsabr);
@@ -495,7 +475,6 @@ sub get_cli_opts {
 
     ## Check if printing process time
     $TIME = defined($opt_time);
-    $StartTime = (times)[0]  if ($TIME);
 
     1;
 }
@@ -537,6 +516,27 @@ sub create_lock_file {
 	$ISLOCK = 1;  $ret = 1;
     }
     $ret;
+}
+
+##---------------------------------------------------------------------------
+##	remove_lock_file removes the lock on the archive
+##
+sub remove_lock_file {
+    if ($ISLOCK) {
+	if (-d $LOCKFILE) {
+	    if (!rmdir($LOCKFILE)) {
+		warn "Warning: Unable to remove $LOCKFILE: $!\n";
+		return 0;
+	    }
+	} else {
+	    if (!unlink($LOCKFILE)) {
+		warn "Warning: Unable to remove $LOCKFILE\n";
+		return 0;
+	    }
+	}
+	$ISLOCK = 0;
+    }
+    1;
 }
 
 ##---------------------------------------------------------------------------

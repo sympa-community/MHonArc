@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	@(#) mhtime.pl 1.9 98/02/23 16:32:40
+##	@(#) mhtime.pl 2.1 98/03/02 20:24:34
 ##  Author:
 ##      Earl Hood       ehood@medusa.acs.uci.edu
 ##  Description:
@@ -199,7 +199,7 @@ sub parse_date {
 					 @array[$#array-3..$#array]);
     @array = split(' ', $rest);
     $rest  = join(' ', ($#array  >= 1) ? @array[0..1] :
-					 @array[0]);
+					 $array[0]);
     # Wdy DD Mon YY HH:MM:SS Zone
     if ( $start =~
 	 /($p_weekdays),*\s+($p_day)\s+($p_months)\s+($p_year)$/io ) {

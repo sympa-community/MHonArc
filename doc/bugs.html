@@ -32,6 +32,73 @@ the bug was fixed.
 </tr>
 <tr valign=top>
 <td align=right><strong>Version</strong></td>
+<td align=left>2.1.2</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Problem</strong></td>
+<td align=left>The @TListOrder array is empty in .mhonarc.db when MULTIPG is set.  This may cause some messages not
+ getting properly updated when new messages are added.
+</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Solution</strong></td>
+<td align=left>Removed use of splice on @TListOrder when MULTIPG. Now, array slices are used so @TListOrder is preserved.
+</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Fixed</strong></td>
+<td align=left>2.2.0</td>
+</tr>
+<tr valign=top>
+<td colspan=2><hr noshade size=0></td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Version</strong></td>
+<td align=left>2.1.2</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Problem</strong></td>
+<td align=left>Convert ISO-2022-JP messages can generate "Out of Memory" errors.
+</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Solution</strong></td>
+<td align=left>The cleanup of mhtxtplain.pl's iso-2022-jp code introduced a bug that caused an infinite loop and
+ to gobble memoery until it ran out.  The fix was
+ straight-forward.
+</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Fixed</strong></td>
+<td align=left>2.2.0</td>
+</tr>
+<tr valign=top>
+<td colspan=2><hr noshade size=0></td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Version</strong></td>
+<td align=left>2.1.2</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Problem</strong></td>
+<td align=left>Quoted text that is broken due to maxwidth setting of the mhtxtplain.pl filter did not have the quote
+ character prepended to broken the text.
+</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Solution</strong></td>
+<td align=left>A regex updated to dealing with a leading space before quote character.
+</td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Fixed</strong></td>
+<td align=left>2.2.0</td>
+</tr>
+<tr valign=top>
+<td colspan=2><hr noshade size=0></td>
+</tr>
+<tr valign=top>
+<td align=right><strong>Version</strong></td>
 <td align=left>2.1.1</td>
 </tr>
 <tr valign=top>
@@ -1028,7 +1095,7 @@ the bug was fixed.
 <!-- *************************************************************** -->
 <hr>
 <address>
-98/02/23 18:35:02<br>
+98/03/03 18:58:32<br>
 <img align="top" src="monicon.gif" alt="">
 <a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"
 ><strong>MHonArc</strong></a><br>

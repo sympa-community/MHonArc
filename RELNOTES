@@ -6,6 +6,44 @@ Also read the CHANGES document for changes that may affect you if
 you are a user of an earlier version of MHonArc.
 
 ===========================================================================
+Version 2.2.0
+
+    o	*IMPORTANT* *IMPORTANT* *IMPORTANT* *IMPORTANT* *IMPORTANT* 
+
+	If you have archives created with v2.1.x, or earlier, you
+	must update the archive before using v2.2.0, and later.  If
+	you are creating new archives, then you can skip the how-to
+	on upgrading older archives.
+
+	To update your v2.1.x, or earlier, archives, you can run the
+	-editidx option with the def-mime.rc resource in the examples
+	directory on your archives.  For example:
+
+	    mhonarc -editidx -rcfile examples/def-mime.rc \
+		    -outdir /path/to/archive
+
+	Make sure that the mhonarc you are using is v2.2.0, or later.
+	Of course, change the -rcfile and -outdir pathname to reflect
+	where you are running mhonarc and where your archive is
+	located, respectively.
+
+	The key is to apply the def-mime.rc to all your archives.
+	Note, if your archives are using custom settings of
+	MIMEFILTERS, MIMEARGS, and/or CHARSETCONVERTERS resources,
+	you will need to create a variant version of def-mime.rc
+	to include your settings and use the variant version when
+	updating your archives.
+
+    o	If you have written any custom MIME filters, you filters may
+	be affected by v2.2.0.	If your filter accessed some
+	main variables, your filter will not operate properly.
+	All variables that used to be in package "main" are no
+	longer.  The major variables are now in package "mhonarc".
+	For example, $::OUTDIR is now $mhonarc::OUTDIR.  See the
+	MIMEFILTERS resource page for more information.
+
+
+---------------------------------------------------------------------------
 Version 2.1.2
 
     o	The new default setting for CHARSETCONVERTERS will not get
@@ -87,4 +125,4 @@ Version 2.0.0
 
 
 ===========================================================================
-98/02/23 18:58:27
+98/03/03 19:09:24

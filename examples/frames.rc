@@ -1,5 +1,5 @@
 <!-- ================================================================== -->
-<!--	frames.rc 1.4 97/05/15 17:48:44
+<!--	@(#) frames.rc 1.5 98/03/03 14:21:10
 	Earl Hood <ehood@medusa.acs.uci.edu>
   -->
 <!--	MHonArc Resource File						--
@@ -19,7 +19,7 @@
   --	    <head>							--
   --	    <title>Mail Archive (by MHonArc)</title>			--
   --	    </head>							--
-  --	    <frameset cols="35%,65%">					--
+  --	    <frameset cols="275,*">					--
   --	    <frame src="threads.html" name="INDEX">			--
   --	    <frame src="start.html" name="MAIN">			--
   --	    </frameset>							--
@@ -40,7 +40,7 @@
   --	    resource variable.  This variable should be defined on	--
   --	    the command-line.  Example:					--
   --									--
-  --		mhonarc -definevars "MAIN-TITLE='Mail Archive'" ...	--
+  --	        -definevars "MAIN-TITLE='Sample Frame Archive'" ...	--
   --									--
 <!-- ================================================================== -->
 
@@ -116,18 +116,18 @@ width="100%" border=0 cellpadding=0 cellspacing=0
 <NoReverse>
 <NoTReverse>
 
-<!--	Have mhonarc generate multipage indexes with a maximum of 25
+<!--	Have mhonarc generate multipage indexes with a maximum of 50
 	messages listed per page.  MULITPG requires IDXSIZE to be
 	set to a finite value to be in effect.
   -->
 <MultiPg>
 <IdxSize>
-25
+50
 </IdxSize>
 
 <!--	Shut-off mhonarc's adding follow-up/ref links after message.
-	These are not customizable, and the navigation buttons should
-	suffice.
+	This resource file defines other mechanisms for a reader
+	to navigate the archive.
   -->
 <NoFolRefs>
 
@@ -156,9 +156,11 @@ frm$MSGNUM$.html
 <head>
 <title>Message View</title>
 </head>
-<frameset rows="75,*">
-<frame src="nav$MSGNUM$.html" name="NAV">
-<frame src="msg$MSGNUM$.html" name="MESSAGE">
+<frameset rows="60,*">
+<frame src="nav$MSGNUM$.html" name="NAV"
+       frameborder=1 scrolling=no marginheight=0 marginwidth=0>
+<frame src="msg$MSGNUM$.html" name="MESSAGE"
+       frameborder=0>
 </frameset>
 </html>
 </DefineDerived>
@@ -227,7 +229,7 @@ $MAIN-TITLE$ (thread)
 <table $IDXPG-TBL-LINKS-ATTRS$>
 <tbody>
 <tr align="center">
-<th colspan=4>Page $PAGENUM$ of $NUMOFPAGES$
+<th colspan=4><small>Page $PAGENUM$ of $NUMOFPAGES$</small></th>
 <tr>
 <td align="left"><a href="$TFIRSTPG$">&lt;&lt;&lt;&lt;</a>
 <td align="right">$TPREVPGLINK$
@@ -235,7 +237,8 @@ $MAIN-TITLE$ (thread)
 <td align="right"><a href="$TLASTPG$">&gt;&gt;&gt;&gt;</a>
 </tbody>
 </table>
-<hr>
+<hr noshade size=1>
+<small>
 <ul>
 </THead>
 
@@ -244,7 +247,8 @@ $MAIN-TITLE$ (thread)
   -->
 <TFoot>
 </ul>
-<hr>
+</small>
+<hr noshade size=1>
 <table $IDXPG-TBL-LINKS-ATTRS$>
 <tbody>
 <tr>
@@ -253,7 +257,7 @@ $MAIN-TITLE$ (thread)
 <td align="left">$TNEXTPGLINK$
 <td align="right"><a href="$TLASTPG$">&gt;&gt;&gt;&gt;</a>
 <tr align="center">
-<th colspan=4>Page $PAGENUM$ of $NUMOFPAGES$
+<th colspan=4><small>Page $PAGENUM$ of $NUMOFPAGES$</small></th>
 </tbody>
 </table>
 </TFoot>
@@ -263,7 +267,6 @@ $MAIN-TITLE$ (thread)
   -->
 <TTopBegin>
 <!-- Top of a thread -->
-<p>
 <li><a $A_NAME$><strong>$SUBJECTNA$</strong></a><br>
 <a $FRAME-MAIN$ href="frm$MSGNUM$.html">$FROMNAME$</a>
 </TTopBegin>
@@ -272,7 +275,6 @@ $MAIN-TITLE$ (thread)
   -->
 <TTopEnd>
 </li>
-</p>
 <!-- End of a thread -->
 </TTopEnd>
 
@@ -376,10 +378,11 @@ $MAIN-TITLE$ (date)
 <ul>
 <li><a href="$TIDXFNAME$">Thread Index</a></li>
 </ul>
+<hr>
 <table $IDXPG-TBL-LINKS-ATTRS$>
 <tbody>
 <tr align="center">
-<th colspan=4>Page $PAGENUM$ of $NUMOFPAGES$
+<th colspan=4><small>Page $PAGENUM$ of $NUMOFPAGES$</small></th>
 <tr>
 <td align="left"><a href="$FIRSTPG$">&lt;&lt;&lt;&lt;</a>
 <td align="right">$PREVPGLINK$
@@ -387,7 +390,8 @@ $MAIN-TITLE$ (date)
 <td align="right"><a href="$LASTPG$">&gt;&gt;&gt;&gt;</a>
 </tbody>
 </table>
-<hr>
+<hr noshade size=1>
+<small>
 <ul>
 </ListBegin>
 
@@ -396,7 +400,8 @@ $MAIN-TITLE$ (date)
   -->
 <ListEnd>
 </ul>
-<hr>
+</small>
+<hr noshade size=1>
 <table $IDXPG-TBL-LINKS-ATTRS$>
 <tbody>
 <tr>
@@ -405,7 +410,7 @@ $MAIN-TITLE$ (date)
 <td align="left">$NEXTPGLINK$
 <td align="right"><a href="$LASTPG$">&gt;&gt;&gt;&gt;</a>
 <tr align="center">
-<th colspan=4>Page $PAGENUM$ of $NUMOFPAGES$
+<th colspan=4><small>Page $PAGENUM$ of $NUMOFPAGES$</small></th>
 </tbody>
 </table>
 </ListEnd>
@@ -436,7 +441,7 @@ href="frm$MSGNUM$.html"><strong>$SUBJECTNA$</strong></a>
 	we need to be sure this is what we want.
   -->
 <SubjectHeader>
-<h1 align="center">$SUBJECTNA$</h1>
+<h2 align="center">$SUBJECTNA$</h2>
 <hr>
 </SubjectHeader>
 
@@ -500,8 +505,39 @@ xref
 	So we need to be sure this is what we want.
   -->
 <HeadBodySep>
-<hr>
+<hr noshade size=1>
 </HeadBodySep>
+
+<!--	Define message-id link markup.  We redefine it so the message-id
+	links will link to the appropriate message frame document.  Note,
+	this applies to message data.  Therefore, once a message-id
+	is converted to a link, the format of the link cannot be changed.
+	Any changes to MSGIDLINK will only affect newly create links.
+  -->
+<MsgIdLink>
+<A $FRAME-MAIN$ HREF="frm$MSGNUM$.html">$MSGID$</A>
+</MsgIdLink>
+
+<!--	Define MSGFOOT to contain a partial thread listing.  Set
+	TSLICE to have current message as the start of the listing.
+	Redefine TSLICEBEG and TSLICEEND to suit our needs.  The
+	thread formating resources used for the thread index are
+	also apply to a thread slice listing.
+  -->
+<MsgFoot>
+Partial thread listing:
+$TSLICE$
+</MsgFoot>
+
+<TSlice>
+0:4
+</TSlice>
+<TSliceBeg>
+<ul>
+</TSliceBeg>
+<TSliceEnd>
+</ul>
+</TSliceEnd>
 
 <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  -->
 <!-- 	Message navigation resources					-->

@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	@(#) mhrcvars.pl 1.9 98/02/16 20:25:45
+##	@(#) mhrcvars.pl 2.2 98/03/03 14:31:22
 ##  Author:
 ##      Earl Hood       ehood@medusa.acs.uci.edu
 ##  Description:
@@ -24,6 +24,8 @@
 ##    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
 ##    02111-1307, USA
 ##---------------------------------------------------------------------------##
+
+package mhonarc;
 
 ##---------------------------------------------------------------------------
 ##	replace_li_var() is used to substitute vars to current
@@ -300,6 +302,10 @@ sub replace_li_var {
 	    $tmp = $TTITLE;
 	    last REPLACESW;
 	}
+    	if ($var eq 'TSLICE') {
+	    $tmp = &make_thread_slice($index, $TSliceNBefore, $TSliceNAfter);
+	    last REPLACESW;
+	}
     	if ($var eq 'VERSION') {
 	    $tmp = $VERSION;
 	    last REPLACESW;
@@ -533,7 +539,7 @@ sub replace_li_var {
 
     } else {
 	if ($raw) {
-	    $ret = &$MHeadCnvFunc($tmp) if $raw;
+	    $ret = &$MHeadCnvFunc($tmp);
 	} else {
 	    $ret = $tmp;
 	}

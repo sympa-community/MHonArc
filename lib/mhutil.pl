@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	@(#) mhutil.pl 1.14 98/02/23 16:30:38
+##	@(#) mhutil.pl 2.1 98/03/02 20:24:31
 ##  Author:
 ##      Earl Hood       ehood@medusa.acs.uci.edu
 ##  Description:
@@ -25,45 +25,7 @@
 ##    02111-1307, USA
 ##---------------------------------------------------------------------------##
 
-package main;
-
-##	Regular expression variables for sorting routines
-$PreSubjectStripExp = q{^\s*(re|sv|fwd|fw)(\[[\d+]\])?[:>-]+\s*};
-$ArtSubjectStripExp = q{^(the|a|an)\s+};
-
-##---------------------------------------------------------------------------
-##	convert_line() translates a line to HTML.  Checks are made for
-##	embedded URLs.
-##
-sub convert_line {
-    local($str, $charset) = ($_[0], $_[1]);
-    local($item, $item2, $item2h, @array);
-
-    if (!$NOURL &&
-	(@array = split(m%($Url[^\s\(\)\|<>"']*[^\.\?;,"'\|\[\]\(\)\s<>])%o,
-		  $str))
-       ) {
-	    $str = '';
-	    while($#array > 0) {
-		$item = &entify(shift @array);      # Get non-URL text
-		$item2 = shift @array;              # Get URL
-		$item2h = &entify($item2);          # Variable for <A> content
-
-		$str .= join('',
-			     $item,
-			     '<A HREF="', $item2, '">', $item2h, '</A>');
-
-		# The next line is needed since Perl's split function also
-		# returns extra entries for nested ()'s in the split pattern.
-		shift @array  if $array[0] =~ m%^$Url$%o;
-	    }
-	    $item = &entify(shift @array);          # Last item in array
-	    $str .= $item;
-    } else {
-	$str = &htmlize($str);
-    }
-    $str;
-}
+package mhonarc;
 
 ##---------------------------------------------------------------------------
 ##	Get an e-mail address from (HTML) $str.
@@ -168,17 +130,17 @@ sub decrease_index {
 sub increase_subject {
     local($A, $B) = ($Subject{$a}, $Subject{$b});
     $A =~ tr/A-Z/a-z/;  $B =~ tr/A-Z/a-z/; 
-    1 while $A =~ s/$PreSubjectStripExp//io;
-    1 while $B =~ s/$PreSubjectStripExp//io;
-    $A =~ s/$ArtSubjectStripExp//io;  $B =~ s/$ArtSubjectStripExp//io;
+    1 while $A =~ s/$SubReplyRxp//io;
+    1 while $B =~ s/$SubReplyRxp//io;
+    $A =~ s/$SubArtRxp//io;  $B =~ s/$SubArtRxp//io;
     ($A cmp $B) || (&get_time_from_index($a) <=> &get_time_from_index($b));
 }
 sub decrease_subject {
     local($A, $B) = ($Subject{$a}, $Subject{$b});
     $A =~ tr/A-Z/a-z/;  $B =~ tr/A-Z/a-z/; 
-    1 while $A =~ s/$PreSubjectStripExp//io;
-    1 while $B =~ s/$PreSubjectStripExp//io;
-    $A =~ s/$ArtSubjectStripExp//io;  $B =~ s/$ArtSubjectStripExp//io;
+    1 while $A =~ s/$SubReplyRxp//io;
+    1 while $B =~ s/$SubReplyRxp//io;
+    $A =~ s/$SubArtRxp//io;  $B =~ s/$SubArtRxp//io;
     ($A cmp $B) || (&get_time_from_index($b) <=> &get_time_from_index($a));
 }
 sub increase_author {
@@ -198,7 +160,8 @@ sub decrease_author {
 ##	Routine to determine last message number in use.
 ##
 sub get_last_msg_num {
-    opendir(DIR, $'OUTDIR) || die("ERROR: Unable to open $'OUTDIR\n");
+    opendir(DIR, $mhonarc'OUTDIR) ||
+	die("ERROR: Unable to open $mhonarc'OUTDIR\n");
     local($max) = -1;
 
     local($htmlext) = $HtmlExt;
@@ -245,7 +208,7 @@ sub get_filename_from_index {
 ##	Routine to get time component from index
 ##
 sub get_time_from_index {
-    (split(/$'X/o, $_[0]))[0];
+    (split(/$X/o, $_[0]))[0];
 }
 
 ##---------------------------------------------------------------------------
@@ -262,7 +225,7 @@ sub get_base_author {
 ##
 sub get_base_subject {
     local($ret) = ($Subject{$_[0]});
-    1 while $ret =~ s/$PreSubjectStripExp//io;
+    1 while $ret =~ s/$SubReplyRxp//io;
     $ret;
 }
 
@@ -347,6 +310,7 @@ sub htmlize_header {
 	  @array,
 	  %hf);
 
+    $mesg = "";
     %hf = %fields;
     foreach $item (@FieldOrder) {
 	if ($item eq '-extra-') {

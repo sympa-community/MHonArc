@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	@(#) osinit.pl 1.3 98/02/16 20:30:12
+##	@(#) osinit.pl 2.1 98/03/02 20:24:32
 ##  Author:
 ##      Earl Hood       ehood@medusa.acs.uci.edu
 ##  Description:
@@ -8,6 +8,7 @@
 ##	is running under.  The main routine defined is OSinit.  See
 ##	the routine for specific information.
 ##---------------------------------------------------------------------------##
+##    MHonArc -- Internet mail-to-HTML converter
 ##    Copyright (C) 1995-1998	Earl Hood, ehood@medusa.acs.uci.edu
 ##
 ##    This program is free software; you can redistribute it and/or modify
@@ -26,7 +27,7 @@
 ##    02111-1307, USA
 ##---------------------------------------------------------------------------##
 
-package os_init;
+package mhonarc;
 
 ##---------------------------------------------------------------------------##
 ##	OSinit() checks what operating system we are running on set
@@ -35,55 +36,57 @@ package os_init;
 ##
 ##	Variables set:
 ##
-##	    $'MSDOS	=> Set to 1 if running under MS-DOS/Windows
-##	    $'MACOS	=> Set to 1 if running under Mac
-##	    $'UNIX	=> Set to 1 if running under Unix
-##	    $'VMS	=> Set to 1 if running under VMS
-##	    $'DIRSEP	=> Directory separator character
-##	    $'DIRSEPREX	=> Directory separator character for use in
+##	    $MSDOS	=> Set to 1 if running under MS-DOS/Windows
+##	    $MACOS	=> Set to 1 if running under Mac
+##	    $UNIX	=> Set to 1 if running under Unix
+##	    $VMS	=> Set to 1 if running under VMS
+##	    $DIRSEP	=> Directory separator character
+##	    $DIRSEPREX	=> Directory separator character for use in
 ##			   regular expressions.
-##	    $'PATHSEP	=> Recommend path list separator
-##	    $'CURDIR	=> Current working directory
-##	    $'PROG	=> Program name with leading pathname component
+##	    $PATHSEP	=> Recommend path list separator
+##	    $CURDIR	=> Current working directory
+##	    $PROG	=> Program name with leading pathname component
 ##			   stripped off.
 ##
 ##	If running under a Mac and the script is a droplet, command-line
 ##	options will be prompted for unless $noOptions argument is
 ##	set to true.
 ##
-sub main'OSinit {
+sub OSinit {
     local($noOptions) = shift;
 
     ##  Check what system we are executing under
     local($tmp);
-    $'VMS = 0;
+    $VMS = 0;
     eval q%$VMS = ($^O=~/vms/i);%;
-    if (!$@ && $'VMS) {
-        $'MSDOS = 0;  $'MACOS = 0;  $'UNIX = 0;  $'VMS = 1;
-	$'DIRSEP = '/';  $'CURDIR = '.';
-	$'PATHSEP = ':';
+    if (!$@ && $VMS) {
+        $MSDOS = 0;  $MACOS = 0;  $UNIX = 0;  $VMS = 1;
+	$DIRSEP = '/';  $CURDIR = '.';
+	$PATHSEP = ':';
     } elsif (($tmp = $ENV{'COMSPEC'}) &&
 	     ($tmp =~ /[a-zA-Z]:\\/) &&
 	     (-e $tmp)) {
-        $'MSDOS = 1;  $'MACOS = 0;  $'UNIX = 0;  $'VMS = 0;
-	$'DIRSEP = '\\';  $'CURDIR = '.';
-	$'PATHSEP = ';';
+        $MSDOS = 1;  $MACOS = 0;  $UNIX = 0;  $VMS = 0;
+	$DIRSEP = '\\';  $CURDIR = '.';
+	$PATHSEP = ';';
     } elsif (defined($MacPerl'Version)) {
-        $'MSDOS = 0;  $'MACOS = 1;  $'UNIX = 0;  $'VMS = 0;
-	$'DIRSEP = ':';  $'CURDIR = ':';
-	$'PATHSEP = ';';
+        $MSDOS = 0;  $MACOS = 1;  $UNIX = 0;  $VMS = 0;
+	$DIRSEP = ':';  $CURDIR = ':';
+	$PATHSEP = ';';
     } else {
-        $'MSDOS = 0;  $'MACOS = 0;  $'UNIX = 1;  $'VMS = 0;
-	$'DIRSEP = '/';  $'CURDIR = '.';
-	$'PATHSEP = ':';
+        $MSDOS = 0;  $MACOS = 0;  $UNIX = 1;  $VMS = 0;
+	$DIRSEP = '/';  $CURDIR = '.';
+	$PATHSEP = ':';
     }
     ##	Store name of program
-    ($'DIRSEPREX = $'DIRSEP) =~ s/(\W)/\\$1/g;
-    ($'PROG = $0) =~ s%.*[$'DIRSEPREX]%%o;
+    ($DIRSEPREX = $DIRSEP) =~ s/(\W)/\\$1/g;
+    ($PROG = $0) =~ s%.*[$DIRSEPREX]%%o;
 
     ##	Ask for command-line options if script is a Mac droplet
     ##		Code taken from the MacPerl FAQ
-    if (!$noOptions && ( $MacPerl'Version =~ /Application$/ )) {
+    if (!$noOptions &&
+	defined($MacPerl'Version) && ( $MacPerl'Version =~ /Application$/ )) {
+
 	# we're running from the app
 	local( $cmdLine, @args );
 	$cmdLine = &MacPerl'Ask( "Enter command line options:" );

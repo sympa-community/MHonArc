@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	@(#) mhinit.pl 1.24 98/02/23 16:26:24
+##	@(#) mhinit.pl 2.2 98/03/03 14:30:12
 ##  Author:
 ##      Earl Hood       ehood@medusa.acs.uci.edu
 ##  Description:
@@ -24,6 +24,8 @@
 ##    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
 ##    02111-1307, USA
 ##---------------------------------------------------------------------------##
+
+package mhonarc;
 
 ##---------------------------------------------------------------------------##
 
@@ -135,43 +137,25 @@ $DoMissingMsgs	=  0;	# Flag is missing messages should be noted in index
 
 ##	Some miscellaneous variables
 
-%IsDefault	= ();		# Flags if certain resources are the default
+%IsDefault	= ();	# Flags if certain resources are the default
 
-$bs 		= "\b";		# Used as a separator
+$bs 		= "\b";	# Used as a separator
 $Url 		= '(http://|https://|ftp://|afs://|wais://|telnet://|' .
 		   'gopher://|news:|nntp:|mid:|cid:|mailto:|prospero:)';
-$MLCP		= 0;		# Main index contains included files flag
-$SLOW		= 0;		# Save memory flag
-$NumOfPages	= 0;		# Number of index pages
-$IdxMinPg	= -1;		# Starting page of index for updating
-$TIdxMinPg	= -1;		# Starting page of thread index for updating
-$DBPathName	= '';		# Full pathname of database file
 
-##	Set default filter libraries
-
-@Requires = (
-
-    "mhexternal.pl",
-    "mhtxtenrich.pl",
-    "mhtxthtml.pl",
-    "mhtxtplain.pl",
-    "mhtxtsetext.pl",
-
-);
-
-@CharSetRequires = (
-
-    "iso8859.pl",
-
-);
+$MLCP		= 0;	# Main index contains included files flag
+$SLOW		= 0;	# Save memory flag
+$NumOfPages	= 0;	# Number of index pages
+$IdxMinPg	= -1;	# Starting page of index for updating
+$TIdxMinPg	= -1;	# Starting page of thread index for updating
+$DBPathName	= '';	# Full pathname of database file
 
 ##----------------------------------------------------------------------
 ##	BEGIN readmail.pl variable settings
 ##----------------------------------------------------------------------
 ##	Default filters
 ##
-%main'MIMEFilters = (
-
+%readmail'MIMEFilters = (
     # Content-type			Filter
     #-------------------------------------------------------------------
     "application/x-patch",		"m2h_text_plain'filter",
@@ -181,43 +165,60 @@ $DBPathName	= '';		# Full pathname of database file
     "text/plain",			"m2h_text_plain'filter",
     "text/richtext",    		"m2h_text_enriched'filter",
     "text/setext",			"m2h_text_setext'filter",
-    "text/tab-separated-values",	"m2h_text_plain'filter",
+    "text/tab-separated-values",	"m2h_text_tsv'filter",
     "text/x-html",			"m2h_text_html'filter",
     "text/x-setext",    		"m2h_text_setext'filter",
 
     "application/*",		 	"m2h_external'filter",
     "audio/*",				"m2h_external'filter",
+    "chemical/*",  			"m2h_external'filter",
     "image/*",  			"m2h_external'filter",
     "model/*",  			"m2h_external'filter",
     "text/*",   			"m2h_text_plain'filter",
     "video/*",  			"m2h_external'filter",
+);
+%readmail'MIMEFiltersSrc = (
+    # Content-type			Filter
+    #-------------------------------------------------------------------
+    "application/x-patch",		"mhtxtplain.pl",
+    "message/partial",   		"mhtxtplain.pl",
+    "text/enriched",    		"mhtxtenrich.pl",
+    "text/html",			"mhtxthtml.pl",
+    "text/plain",			"mhtxtplain.pl",
+    "text/richtext",    		"mhtxtenrich.pl",
+    "text/setext",			"mhtxtsetext.pl",
+    "text/tab-separated-values",	"mhtxttsv.pl",
+    "text/x-html",			"mhtxthtml.pl",
+    "text/x-setext",    		"mhtxtsetext.pl",
 
-    # Nead to add to list if more base types are registered.
-
+    "application/*",		 	"mhexternal.pl",
+    "audio/*",				"mhexternal.pl",
+    "chemical/*",  			"mhexternal.pl",
+    "image/*",  			"mhexternal.pl",
+    "model/*",  			"mhexternal.pl",
+    "text/*",   			"mhtxtplain.pl",
+    "video/*",  			"mhexternal.pl",
 );
 
 ##  Default filter arguments
 ##
-%main'MIMEFiltersArgs = (
-
+%readmail'MIMEFiltersArgs = (
     # Content-type			Arguments
     #-------------------------------------------------------------------
     "image/gif",			"inline",
     "image/jpeg",			"inline",
     "image/x-xbitmap", 	 		"inline",
     "image/x-xbm",			"inline",
-
 );
 
 ##  Charset filters
 ##
-%main'MIMECharSetConverters = (
-
+%readmail'MIMECharSetConverters = (
     # Character set			Converter Function
     #-------------------------------------------------------------------
-    "plain",     			"main'htmlize",
-    "us-ascii",   			"main'htmlize",
-    "iso-8859-1",   			"main'htmlize",
+    "plain",     			"mhonarc'htmlize",
+    "us-ascii",   			"mhonarc'htmlize",
+    "iso-8859-1",   			"mhonarc'htmlize",
     "iso-8859-2",   			"iso_8859'str2sgml",
     "iso-8859-3",   			"iso_8859'str2sgml",
     "iso-8859-4",   			"iso_8859'str2sgml",
@@ -227,17 +228,32 @@ $DBPathName	= '';		# Full pathname of database file
     "iso-8859-8",   			"iso_8859'str2sgml",
     "iso-8859-9",   			"iso_8859'str2sgml",
     "iso-8859-10",   			"iso_8859'str2sgml",
-
     "default",     			"-ignore-",
-
 );
+%readmail'MIMECharSetConvertersSrc = (
+    # Character set			Converter Function
+    #-------------------------------------------------------------------
+    "plain",     			undef,
+    "us-ascii",   			undef,
+    "iso-8859-1",   			undef,
+    "iso-8859-2",   			"iso8859.pl",
+    "iso-8859-3",   			"iso8859.pl",
+    "iso-8859-4",   			"iso8859.pl",
+    "iso-8859-5",   			"iso8859.pl",
+    "iso-8859-6",   			"iso8859.pl",
+    "iso-8859-7",   			"iso8859.pl",
+    "iso-8859-8",   			"iso8859.pl",
+    "iso-8859-9",   			"iso8859.pl",
+    "iso-8859-10",   			"iso8859.pl",
+    "default",     			undef,
+);
+
 ##------------------------------------------------------------------------
 ##	END readmail.pl variable settings
 ##------------------------------------------------------------------------
 
 ##  Variable to hold function for converting message header text.
-#$MHeadCnvFunc	= "convert_line";
-$MHeadCnvFunc	= "iso_8859'str2sgml";
+$MHeadCnvFunc	= "mhonarc'htmlize";
 
 ##  Regexp for variable detection
 $VarExp = '\$([^\$]*)\$';
@@ -256,7 +272,7 @@ $HEADER    = $ENV{'M2H_HEADER'}     || "";
 $IDXNAME   = "";	# Set in get_cli_opts()
 $IDXPREFIX = $ENV{'M2H_IDXPREFIX'}  || "mail";
 $TIDXPREFIX= $ENV{'M2H_TIDXPREFIX'} || "thrd";
-$IDXSIZE   = $ENV{'M2H_IDXSIZE'}    || "";
+$IDXSIZE   = $ENV{'M2H_IDXSIZE'}    || 0;
 $TIDXNAME  = "";	# Set in get_cli_opts()
 $OUTDIR    = $ENV{'M2H_OUTDIR'}     || $CURDIR;
 $FMTFILE   = $ENV{'M2H_RCFILE'}     || "";
@@ -268,7 +284,7 @@ $LOCKFILE  = $ENV{'M2H_LOCKFILE'}   ||
 	     (($MSDOS || $VMS) ? "mhonarc.lck": ".mhonarc.lck");
 $LOCKTRIES = $ENV{'M2H_LOCKTRIES'}  || 10;
 $LOCKDELAY = $ENV{'M2H_LOCKDELAY'}  || 3;
-$MAXSIZE   = $ENV{'M2H_MAXSIZE'}    || "";
+$MAXSIZE   = $ENV{'M2H_MAXSIZE'}    || 0;
 $TLEVELS   = $ENV{'M2H_TLEVELS'}    || 3;
 $MHPATTERN = $ENV{'M2H_MHPATTERN'}  || '^\d+$';
 $DefRcFile = $ENV{'M2H_DEFRCFILE'}  || '';
@@ -327,6 +343,14 @@ $UsingLASTPG = defined($ENV{'M2H_USINGLASTPG'}) ? $ENV{'M2H_USINGLASTPG'} : 1;
 @FromFields  = defined($ENV{'M2H_FROMFIELDS'}) ?
 		    split(/:/, $ENV{'M2H_FROMFIELDS'}) : ();
 
+($TSliceNBefore, $TSliceNAfter) = defined($ENV{'M2H_TSLICE'}) ?
+		    split(/:/, $ENV{'M2H_TSLICE'}) : (0, 4);
+
+$SubArtRxp   = $ENV{'M2H_SUBJECTARTICLERXP'} ||
+	       q/^(the|a|an)\s+/;
+$SubReplyRxp = $ENV{'M2H_SUBJECTREPLYRXP'} ||
+	       q/^\s*(re|sv|fwd|fw)[\[\]\d]*[:>-]+\s*/;
+
 ##	Arrays for months and weekdays.  If empty, the default settings
 ##	in mhtime.pl are used.
 
@@ -351,10 +375,8 @@ $SUBJECTBEG	= '';		# Begin of subject group
 $SUBJECTEND	= '';		# End of subject group
 
 $TIDXLABEL	= '';		# Label for thread index
-$THEAD  	= '';		# Thread index header
-$TFOOT  	= '';		# Thread index footer
-$TLISTBEG	= '';		# Thread list open
-$TLISTEND	= '';		# Thread list close
+$THEAD  	= '';		# Thread index header (and list start)
+$TFOOT  	= '';		# Thread index footer (and list end)
 $TSINGLETXT	= '';		# Single/lone thread entry template
 $TTOPBEG	= '';		# Top of a thread begin template
 $TTOPEND	= '';		# Top of a thread end template
@@ -370,6 +392,9 @@ $TINDENTBEG	= '';		# Thread indent open
 $TINDENTEND	= '';		# Thread indent close
 $TCONTBEG	= '';		# Thread continue open
 $TCONTEND	= '';		# Thread continue close
+
+$TSLICEBEG	= '';		# Start of thread slice
+$TSLICEEND	= '';		# End of thread slice
 
 $MSGFOOT	= '';		# Message footer
 $MSGHEAD	= '';		# Message header
@@ -428,6 +453,8 @@ $FOLUPEND	= '';		# End of follow-ups for message page
 $REFSBEGIN	= '';		# Start of refs for message page
 $REFSLITXT	= '';		# Markup for ref list entry
 $REFSEND	= '';		# End of refs for message page
+
+$MSGIDLINK 	= '';		# Markup for linking message-ids
 
 ##	The following associative array if for defining custom
 ##	resource variables
