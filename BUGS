@@ -1,10 +1,11 @@
-	BUGS 97/05/22 18:54:46
+	BUGS 98/02/23 18:55:45
 	Bug History for MHonArc
 
 Each bug listing has the following fields:
 
     Version: 	    Lists the version of MHonArc that the bug was
-		    reported against.
+		    reported against.  It is possible a bug could
+		    be applicable to earlier versions.
     Problem:	    A description of the bug.
     Solution:	    A description of what was done to fix the bug.
     Version Fixed:  The version that the solution exists in, if
@@ -13,13 +14,142 @@ Each bug listing has the following fields:
 
 Bug List
 ------------------------------------------------------------------------
+Version:	2.1.1
+Problem:   	Documentation of MAILTOURL incorrectly states that
+		the $TO$ resource variable is the value of the
+		To: message header field.
+Solution:	Fixed documentation to state that $TO$ represents the
+		address being hyperlinked.
+Version Fixed:	2.1.2
+------------------------------------------------------------------------
+Version:	2.1.1
+Problem:   	Attachments saved to files with spaces in filename
+		(due to "usename" option set to m2h_external::filter),
+		will cause anchors to the attachments in the HTML
+		message contain spaces.
+Solution:	Fixed m2h_external::filter to escape special characters
+		in the URL linking to the external file.
+Version Fixed:	2.1.2
+------------------------------------------------------------------------
+Version:	2.1.0
+Problem:   	Message with dates after 2037, or before 1970, will hang
+		MHonArc, not get processed, or listed in wrong order.
+Solution:	The problem is that Perl's timelocal.pl library cannot
+		handle dates out of those ranges (same applies to
+		Time::Local).  Since get_time_from_date() is the only
+		routine require the services of timelocal.pl, the
+		routine will generate a warning of bad years and use
+		the current year.
+Version Fixed:	2.1.1 (Work-around)
+------------------------------------------------------------------------
+Version:	2.1.0
+Problem:   	Anchors to attachments in a message converted via
+		SINGLE do not contain OUTDIR if OUTDIR is specified.
+		OUTDIR may want to be set to all attachments to be
+		contained in a separate directory from the converted
+		message.
+Solution:	mhexternal.pl now checks $SINGLE variable set by the
+		main code during startup.  If set, the value of
+		$OUTDIR is prepending to any hrefs to external files.
+Version Fixed:	2.1.1
+------------------------------------------------------------------------
+Version:	2.1.0
+Problem:   	February is misspelled "Febuary" in mhtime.pl.
+Solution:	Change the spelling so its correct.
+Version Fixed:	2.1.1
+------------------------------------------------------------------------
+Version:	2.1.0
+Problem:   	Lowercase timezones in dates are not recognized.
+Solution:	Code modified to convert zones to uppercase when
+		performing hash lookups.
+Version Fixed:	2.1.1
+------------------------------------------------------------------------
+Version:	2.1.0
+Problem:   	Specified filenames of attachments sometimes have a
+		';' appended when utilizing the "usename" option is
+		set for mhexternal.pl.
+Solution:	Fixed MAILhead_get_disposition() in readmail.pl to
+		strip off ';' parameter separator.
+Version Fixed:	2.1.1
+------------------------------------------------------------------------
+Version:	2.1.0
+Problem:   	Specified filenames with spaces of attachments are not
+		recognized properly.  Filename gets truncated to first
+		occurance of a space.
+Solution:	Fixed MAILhead_get_disposition() in readmail.pl to
+		to handle filenames with spaces.
+Version Fixed:	2.1.1
+------------------------------------------------------------------------
+Version:	2.1.0
+Problem:   	The HTMLEXT resource does not affect the numbered index
+		page filenames of a MUTLIPG archive.
+Solution:	write_main_index() and write_thread_index() fixed.
+Version Fixed:	2.1.1
+------------------------------------------------------------------------
+Version:	2.1.0
+Problem:   	Anchor text of MAILTOURL links is translated to URL
+		escaped text.
+Solution:	mailUrl() routine fixed.
+Version Fixed:	2.1.1
+------------------------------------------------------------------------
+Version:	2.1.0
+Problem:   	Message 0 could not be deleted if specified with more
+		than one 0 (eg: 00000);
+Solution:	rmm() routine fixed.
+Version Fixed:	2.1.1
+------------------------------------------------------------------------
+Version:	2.1.0
+Problem:   	SUBJECTHEADER does not get stored in the db.
+Solution:	output_db() routine updated to save SUBJECTHEADER.
+Version Fixed:	2.1.1
+------------------------------------------------------------------------
+Version:	2.1.0
+Problem:   	Empty links can be created if there is no "From" defined
+		for a message and it is used as link text.
+Solution:	Use 'No Author' as "From" if not defined.
+Version Fixed:	2.1.1
+------------------------------------------------------------------------
+Version:	2.1.0
+Problem:	If a user defined resource variable is a string that
+		Perl interprets as a false value, it will not be used.
+Solution:	Changed code to used define() function in
+		replace_li_vars().
+Version Fixed:	2.1.1
+------------------------------------------------------------------------
+Version:	2.1.0
+Problem:   	Expired messages are not removed when a the main index
+		is not sorted by date.
+Solution:	Always sort message by date when doing expire check.
+Version Fixed:	2.1.1
+------------------------------------------------------------------------
+Version:	2.0.1
+Problem:   	An undefined subroutine error occured during an
+		RMM operation when there are messages with non-ASCII
+		encodings in message headers.
+Solution:  	Proper libraries are now loaded for RMM operations.
+Version Fixed:	2.1.0
+------------------------------------------------------------------------
+Version:	2.0.1
+Problem:   	Subjects using the "... -Reply" convention started
+		a new thread.
+Solution:  	Fixed typo in regexp.
+Version Fixed:	2.1.0
+------------------------------------------------------------------------
+Version:	2.0.1
+Problem:   	Nested anchor markup occurs on index pages when
+		a message's subject contains a URL and the subject
+		is used to link to the message page.
+Solution:  	Replaced default routine that converts subject text
+		to HTML to a routine that does not hyperlink URLs.
+Version Fixed:	2.1.0
+------------------------------------------------------------------------
 Version:	2.0.0
 Problem:   	Bogus empty entry shows up in the database.  Bogus
 		entry appears if a duplicate message is detected.
 		Potential visible problems of bogus entry are: mailto
 		links in headers corrupted; a blank listing in the
 		index.  Maybe other potential problems.
-Solution:  	There is a be a bug in some versions of Perl where a
+Solution:  	There is a bug in some versions of Perl where a
 		hash key gets added invalidly.  The section of code that
 		this occurs has been modified to avoid the problem.
 		For existing databases with a bogus empty entry,

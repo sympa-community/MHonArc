@@ -14,8 +14,27 @@
 <HR>
 <H2><a name="archives">Archives</a></H2>
 
+<!--X-TOC-Start-->
+<ul>
+<li><a href="#split">Why does a message get split into mulitple messages with no headers?</a></li>
+<li><a href="#move">Can I move a message from one archive to another?</a></li>
+<li><a href="#reconstruct">Can I reconstruct a database from the HTML messages?  </a></li>
+<li><a href="#dynamic">Is it safe to add messages to an archive as they are received?</a></li>
+<li><a href="#forward">So it is safe.  How do I do it??</a></li>
+<li><a href="#different">Can I get MHonArc to filter messages to different archives?</a></li>
+<li><a href="#addsafe">Is it safe to specify <tt>-add</tt> when no archive exists?</a></li>
+<li><a href="#jumps">Why are there "jumps" in message numbers?</a></li>
+<li><a href="#dups">Why do some messages get re-added each time MHonArc processes a mail folder?</a></li>
+<li><a href="#remove">How do I remove messages from an archive?</a></li>
+</ul>
+<!--X-TOC-End-->
+
 <!-- ??????????????????????????????????????????????????????????????? -->
-<h3><img src="monicon.gif" align="bottom" alt=""> <b><a name="split">Why does a message get split into mulitple messages with no headers?</a></b></h3>
+<hr noshade size=1>
+<table border=0>
+<tr valign=top><td><img src="monicon.gif" align="bottom" alt=""></td><td>
+<h3><b><a name="split">Why does a message get split into mulitple messages with no headers?</a></b></h3>
+</td></tr></table>
 
 <P>If you are processing UUCP mailbox files, messages are
 separated by a line starting with "<CODE>From </CODE>" (ie. The
@@ -50,14 +69,22 @@ in the message head.  If your MTA defines this field accurately
 feature.  </p>
 
 <!-- ??????????????????????????????????????????????????????????????? -->
-<h3><img src="monicon.gif" align="bottom" alt=""> <b><a name="move">Can I move a message from one archive to another?</a></b></h3>
+<hr noshade size=1>
+<table border=0>
+<tr valign=top><td><img src="monicon.gif" align="bottom" alt=""></td><td>
+<h3><b><a name="move">Can I move a message from one archive to another?</a></b></h3>
+</td></tr></table>
 
 <P>No. In order to achieve the same effect, you must add the original,
 unprocessed, message to the destination archive, then remove the
 appropriate HTML version of the message from the source archive.  </P>
 
 <!-- ??????????????????????????????????????????????????????????????? -->
-<h3><img src="monicon.gif" align="bottom" alt=""> <b><a name="reconstruct">Can I reconstruct a database from the HTML messages?  </a></b></h3>
+<hr noshade size=1>
+<table border=0>
+<tr valign=top><td><img src="monicon.gif" align="bottom" alt=""></td><td>
+<h3><b><a name="reconstruct">Can I reconstruct a database from the HTML messages?  </a></b></h3>
+</td></tr></table>
 
 <p>Yes.  The following was contributed by
 <a href="mailto:bortzmeyer@internatif.org">Stephane Bortzmeyer</a>:
@@ -147,7 +174,11 @@ print ");\n";
 
 
 <!-- ??????????????????????????????????????????????????????????????? -->
-<h3><img src="monicon.gif" align="bottom" alt=""> <b><a name="dynamic">Is it safe to add messages to an archive as they are received?</a></b></h3>
+<hr noshade size=1>
+<table border=0>
+<tr valign=top><td><img src="monicon.gif" align="bottom" alt=""></td><td>
+<h3><b><a name="dynamic">Is it safe to add messages to an archive as they are received?</a></b></h3>
+</td></tr></table>
 
 <p>Yes.  MHonArc performs archive locking to protect from
 multiple MHonArc process attempting to write to an archive
@@ -156,7 +187,11 @@ be used to add messages as they are received.
 </p>
 
 <!-- ??????????????????????????????????????????????????????????????? -->
-<h3><img src="monicon.gif" align="bottom" alt=""> <b><a name="forward">So it is safe.  How do I do it??</a></b></h3>
+<hr noshade size=1>
+<table border=0>
+<tr valign=top><td><img src="monicon.gif" align="bottom" alt=""></td><td>
+<h3><b><a name="forward">So it is safe.  How do I do it??</a></b></h3>
+</td></tr></table>
 
 <p>The following example assumes you are using on a Unix system
 using <b><tt>sendmail</tt></b> as the mail transfer agent.
@@ -228,7 +263,11 @@ bit set.  This is achieved by using "<tt><b>chmod a+x webnewmail</b></tt>".
 </p>
 
 <!-- ??????????????????????????????????????????????????????????????? -->
-<h3><img src="monicon.gif" align="bottom" alt=""> <b><a name="different">Can I get MHonArc to filter messages to different archives?</a></b></h3>
+<hr noshade size=1>
+<table border=0>
+<tr valign=top><td><img src="monicon.gif" align="bottom" alt=""></td><td>
+<h3><b><a name="different">Can I get MHonArc to filter messages to different archives?</a></b></h3>
+</td></tr></table>
 
 <p>No.  This is outside of the MHonArc's scope.  You can grow your
 own filter, using the method described in the previous question, to
@@ -411,7 +450,11 @@ Unix SysAdmin Contractor
 </blockquote>
 
 <!-- ??????????????????????????????????????????????????????????????? -->
-<h3><img src="monicon.gif" align="bottom" alt=""> <b><a name="addsafe">Is it safe to specify <tt>-add</tt> when no archive exists?</a></b></h3>
+<hr noshade size=1>
+<table border=0>
+<tr valign=top><td><img src="monicon.gif" align="bottom" alt=""></td><td>
+<h3><b><a name="addsafe">Is it safe to specify <tt>-add</tt> when no archive exists?</a></b></h3>
+</td></tr></table>
 
 <p>Yes.  If MHonArc sees no archive exists when perform
 an add, it will automatically create the archive.
@@ -429,7 +472,11 @@ is not in the proper format.
 </dl>
 
 <!-- ??????????????????????????????????????????????????????????????? -->
-<h3><img src="monicon.gif" align="bottom" alt=""> <b><a name="jumps">Why are there "jumps" in message numbers?</a></b></h3>
+<hr noshade size=1>
+<table border=0>
+<tr valign=top><td><img src="monicon.gif" align="bottom" alt=""></td><td>
+<h3><b><a name="jumps">Why are there "jumps" in message numbers?</a></b></h3>
+</td></tr></table>
 
 <p>Big gaps in the message number sequence may occur if you
 defined the <strong>MAXSIZE</strong> resource and you have
@@ -456,6 +503,48 @@ preventing message number jumping since expiration of a message is
 checked when it is initially read (bypassing the assignment of
 a message number).  </p>
 
+<!-- ??????????????????????????????????????????????????????????????? -->
+<hr noshade size=1>
+<table border=0>
+<tr valign=top><td><img src="monicon.gif" align="bottom" alt=""></td><td>
+<h3><b><a name="dups">Why do some messages get re-added each time MHonArc processes a mail folder?</a></b></h3>
+</td></tr></table>
+
+<p>This condition may occur when you have MHonArc examine the
+same folder periodically to add any new message.  If there are
+messages in the folder without message-ids, then those messages
+will be re-added each time MHonArc runs.
+</p>
+
+<p>Why?  Well, MHonArc uses message-ids for determining if a
+message has been archived, or not.  Therefore, if a message-id
+is missing for a message, then MHonArc believes it is new.
+</p>
+
+<p>In general, mail has message-ids.  They get assigned by
+MTAs.  However, if messages are generated by a CGI
+program, or other non-mail specific software, then the program
+in question should create a message-id.  Else, you will need
+to move already-processed messages into a different area so
+MHonArc does not read them again.
+</p>
+
+<!-- ??????????????????????????????????????????????????????????????? -->
+<hr noshade size=1>
+<table border=0>
+<tr valign=top><td><img src="monicon.gif" align="bottom" alt=""></td><td>
+<h3><b><a name="remove">How do I remove messages from an archive?</a></b></h3>
+</td></tr></table>
+
+<p>Automatic removal can be done via the <strong>EXPIREAGE</strong> or
+<strong>EXPIREDATE</strong> resources (available in v2.0 beta 2,
+or later).
+</p>
+<p>Explicit message removal can be done with the <strong>RMM</strong>
+resource.  Please read the RMM resource page for more information
+and examples.
+</p>
+
 <!-- ===================================================================== -->
 <hr>
 
@@ -467,11 +556,11 @@ a message number).  </p>
 
 <hr>
 <address>
-97/05/20 12:42:04<br>
+98/02/18 18:56:42<br>
 <img align="top" src="monicon.gif" alt="">
 <a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"
 ><strong>MHonArc</strong></a><br>
-Copyright &#169; 1997, <a href="http://www.oac.uci.edu/indiv/ehood/"
+Copyright &#169; 1997-1998, <a href="http://www.oac.uci.edu/indiv/ehood/"
 >Earl Hood</a>, <a href="mailto:ehood@medusa.acs.uci.edu"
 >ehood@medusa.acs.uci.edu</a><br>
 </address>

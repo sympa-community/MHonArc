@@ -1,13 +1,14 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##      @(#) mhusage.pl 1.1 97/02/06 19:14:31 @(#)
+##      @(#) mhusage.pl 1.4 98/02/23 16:33:28
 ##  Author:
 ##      Earl Hood       ehood@medusa.acs.uci.edu
 ##  Description:
-##      Usage output.
+##      Usage output.  Just require the file to have usage info
+##	printed to STDOUT.
 ##---------------------------------------------------------------------------##
 ##    MHonArc -- Internet mail-to-HTML converter
-##    Copyright (C) 1995-1997   Earl Hood, ehood@medusa.acs.uci.edu
+##    Copyright (C) 1995-1998   Earl Hood, ehood@medusa.acs.uci.edu
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by
@@ -21,17 +22,20 @@
 ##
 ##    You should have received a copy of the GNU General Public License
 ##    along with this program; if not, write to the Free Software
-##    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+##    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+##    02111-1307, USA
 ##---------------------------------------------------------------------------##
 
 select(STDOUT);
 print <<EndOfUsage;
 Usage:  $PROG [<options>] <file> ... 
-        $PROG [<options>] -rmm <msg #> ...
+        $PROG [<options>] -rmm <msg> ...
 Options:
   -add                  : Add message(s) to archive
+  -archive              : Generate archive related files (the default)
   -authsort             : Sort messages by author
   -conlen               : Honor Content-Length fields
+  -datefields <list>    : Fields to check to determine the date of a message
   -decodeheads          : Decode 1522 decode-only data when reading mail
   -definevars <varlist> : Define custom resource variables
   -dbfile <name>        : Name of MHonArc database file
@@ -40,16 +44,23 @@ Options:
   -docurl <url>         : URL to MHonArc documentation
                             (def: "http://www.oac.uci.edu/indiv/ehood/
 				   mhonarc.html")
-  -editidx              : Only edit/change index page and messages
+  -editidx              : Edit/change index page(s) and messages, only
   -expiredate <date>    : Message cut-off date
-  -expireage <secs>     : Time in seconds from current if message expires
+  -expireage <secs>     : Time in seconds from current when messages expire
   -folrefs              : Print links to explicit follow-ups/references
   -force                : Perform archive operation even if unable to lock
   -footer <file>        : File containing user text for bottom of index page
+  -fromfields <list>    : Fields to check to detemine whom the message is from
   -genidx               : Output index to stdout based upon archive contents
   -gmtdatefmt <fmt>     : Format for GMT date
+  -gzipexe <file>       : Pathname of Gzip executable
+			    (def: "gzip")
+  -gzipfiles            : Gzip files
+  -gziplinks            : Add ".gz" to filenames in links
   -header <file>        : User text to include at top of index page
   -help                 : This message
+  -htmlext <ext>        : Filename extension for generated HTML files
+			    (def: "html")
   -idxfname <name>      : Name of index page
                             (def: "maillist.html")
   -idxprefix <string>   : Filename prefix for multi-page main index
@@ -69,21 +80,26 @@ Options:
   -modtime              : Set modification time on files to message date
   -months <list>        : Month names
   -monthsabr <list>     : Abbreviated month names
-  -msgsep <exp>         : Message separator (Perl) expression for mbox files
+  -msgprefix <prefix>   : Filename prefix for message HTML files
+                            (def: "msg")
+  -msgsep <exp>         : Message separator (Perl) regex for mbox files
                             (def: "^From ")
   -multipg              : Generate multi-page indexes
-  -news                 : Add links to newsgroups
+  -news                 : Add links to newsgroups (the default)
+  -noarchive            : Do not generate archive related files
   -noauthsort           : Do not sort messages by author
-  -noconlen             : Ignore Content-Length fields
+  -noconlen             : Ignore Content-Length fields (the default)
   -nodecodeheads        : Leave message headers "as is" when read
   -nodoc                : Do not print link to doc at end of index page
   -nofolrefs            : Do not print links to explicit follow-ups/references
+  -nogzipfiles          : Do not Gzip files (the default)
+  -notgziplinks         : Do not add ".gz" to filenames in links
   -nomailto             : Do not add in mailto links for e-mail addresses
   -nomain               : Do not create a main index
   -nomodtime            : Do not set mod time on files to message date
   -nomultipg            : Do not generate multi-page indexes
   -nonews               : Do not add links to newsgroups
-  -noreverse            : List messages in normal order
+  -noreverse            : List messages in normal order (the default)
   -nosort               : Do not sort messages
   -nosubsort            : Do not sort messages by subject
   -nothread             : Do not create threaded index
@@ -98,10 +114,10 @@ Options:
   -rmm                  : Remove messages from archive
   -savemem              : Write message data while processing
   -scan                 : List out archive contents to stdout
-  -single               : Convert a single message to HTML
-  -sort                 : Sort messages by date (this is the default)
+  -single               : Convert a single message to HTML (no archive ops)
+  -sort                 : Sort messages by date (the default)
   -subsort              : Sort message by subject
-  -thread               : Create threaded index
+  -thread               : Create threaded index (the default)
   -tidxfname <name>     : Filename of threaded index page
                             (def: "threads.html")
   -tidxprefix <string>  : Filename prefix for multi-page thread index
@@ -111,21 +127,26 @@ Options:
                             (def: "Mail Index")
   -tlevels <#>          : Maximum # of nested lists in threaded index
                             (def: "3")
-  -treverse             : List threads with newest thread first
+  -tnoreverse           : List threads in normal order (the default)
+  -tnosort              : List threads by ordered processed
+  -tnosubsort           : Do not list threads by subject
+  -treverse             : List threads in reverse order
+  -tsort                : List threads by date (the default)
+  -tsubsort             : List threads by subject
   -ttitle <string>      : Title of thread index page
                             (def: "Mail Thread Index")
   -umask <umask>        : Umask of MHonArc process (Unix only)
-  -url                  : Make URL hyperlinks
+  -url                  : Make URL hyperlinks (the default)
   -v                    : Print version information
   -weekdays <list>      : Weekday names
   -weekdaysabr <list>   : Abbreviated weekday names
 
 Description:
   MHonArc is a highly customizable Perl program for converting e-mail,
-  encoded with MIME, into HTML.  MHonArc supports the conversion of UUCP
-  style mailbox files or MH mail folders into HTML with an index linking
-  to each mail message.  The -single option can be used to convert a
-  single mail message.
+  encoded with MIME, into HTML archives.  MHonArc supports the conversion
+  of UUCP style mailbox files or MH mail folders into HTML with an index
+  linking to each mail message.  The -single option can be used to convert
+  a single mail message.
 
   Read the documentation for more complete usage information.
 

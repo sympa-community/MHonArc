@@ -30,7 +30,9 @@
 
 <dt><strong>Command-line Option</strong><dt>
 <dd><p>
-<code>-rmm </code><var>msgnum</var> ...
+<code>-rmm </code><var>msgnum</var> ...<br>
+<code>-rmm </code><var>msgnum</var><code>-</code><var>msgnum</var> ...<br>
+<code>-rmm </code><var>msg-id</var> ...<br>
 </p>
 </dd>
 
@@ -42,11 +44,9 @@
 
 <p>The RMM resource is activated by the <tt>-rmm</tt> command-line
 option.  When active, all non-option related arguments are treated
-as message numbers to delete from the archive.
-</p>
-
-<p>To help correlate message numbers to messages, see
-<a href="scan.html">SCAN</a>.
+as messages to delete from the archive.  Messages can be specified
+by message numbers, message number ranges, or message-ids.  Either
+methods can be used together.  See <b>Examples</b> below.
 </p>
 
 <!-- *************************************************************** -->
@@ -66,13 +66,12 @@ as message numbers to delete from the archive.
 <hr>
 <h2>Examples</h2>
 
+<p>The following example specifies the messages to be deleted by
+individual message numbers.
+</p>
 <PRE>
     % <b>mhonarc -rmm 24 28 39 48</b>
     Removing messages from ./maillist.html ...
-	    Removing message 24
-	    Removing message 28
-	    Removing message 39
-	    Removing message 48
      
     Writing mail ...
     Writing tmp/maillist.html ...
@@ -80,6 +79,30 @@ as message numbers to delete from the archive.
     45 messages
 </PRE>
 
+<p>If we want to delete message 15 and message 20 through 35, the
+following can be used:
+</p>
+<PRE>
+    % <b>mhonarc -rmm 15 20-35</b>
+</PRE>
+
+<p>In some cases, you may know the message-id of the message
+to delete and not the message number:
+</p>
+<PRE>
+    % <b>mhonarc -rmm 199802171800.KAA27647@medusa.acs.uci.edu</b>
+</PRE>
+<p>You can surround message-ids with <tt>&lt;&gt;</tt>'s, but you
+then may need to quote the arguments to prevent the shell interpreting
+them as I/O redirection.
+</p>
+
+<p>The following example shows how you can intermingle the various
+ways of specifying messages:
+</p>
+<PRE>
+    % <b>mhonarc -rmm 23-34 199802171800.KAA27647@medusa.acs.uci.edu 52</b>
+</PRE>
 
 <!-- *************************************************************** -->
 <hr>
@@ -100,7 +123,7 @@ as message numbers to delete from the archive.
 <!-- *************************************************************** -->
 <hr>
 <address>
-97/05/13 17:30:01<br>
+98/02/17 13:28:23<br>
 <img align="top" src="../monicon.gif" alt="">
 <a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"><strong>MHonArc</strong></a><br>
 Copyright &#169; 1997, <a href="http://www.oac.uci.edu/indiv/ehood/">Earl Hood</a>, <a href="mailto:ehood@medusa.acs.uci.edu">ehood@medusa.acs.uci.edu</a><br>

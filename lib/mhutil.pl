@@ -1,13 +1,13 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	@(#)  mhutil.pl 1.11 97/05/13 @(#)
+##	@(#) mhutil.pl 1.14 98/02/23 16:30:38
 ##  Author:
 ##      Earl Hood       ehood@medusa.acs.uci.edu
 ##  Description:
 ##      Utility routines for MHonArc
 ##---------------------------------------------------------------------------##
 ##    MHonArc -- Internet mail-to-HTML converter
-##    Copyright (C) 1995,1996	Earl Hood, ehood@medusa.acs.uci.edu
+##    Copyright (C) 1995-1998	Earl Hood, ehood@medusa.acs.uci.edu
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by
@@ -21,8 +21,11 @@
 ##
 ##    You should have received a copy of the GNU General Public License
 ##    along with this program; if not, write to the Free Software
-##    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+##    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+##    02111-1307, USA
 ##---------------------------------------------------------------------------##
+
+package main;
 
 ##	Regular expression variables for sorting routines
 $PreSubjectStripExp = q{^\s*(re|sv|fwd|fw)(\[[\d+]\])?[:>-]+\s*};
@@ -128,6 +131,24 @@ sub sort_messages {
 }
 
 ##---------------------------------------------------------------------------
+##	Routine to sort messages based on thread resources.
+##
+sub t_sort_messages {
+    if ($TNOSORT) {				# Processed order
+	if ($TREVERSE) { return sort decrease_msgnum keys %Subject; }
+	else { return sort increase_msgnum keys %Subject; }
+
+    } elsif ($TSUBSORT) {			# Subject order
+	if ($TREVERSE) { return sort decrease_subject keys %Subject; }
+	else { return sort increase_subject keys %Subject; }
+
+    } else {					# Date order
+	if ($TREVERSE) { return sort decrease_index keys %Subject; }
+	else { return sort increase_index keys %Subject; }
+    }
+}
+
+##---------------------------------------------------------------------------
 ##	Message-sort routines for sort_messages
 ##
 sub increase_msgnum {
@@ -179,8 +200,17 @@ sub decrease_author {
 sub get_last_msg_num {
     opendir(DIR, $'OUTDIR) || die("ERROR: Unable to open $'OUTDIR\n");
     local($max) = -1;
+
+    local($htmlext) = $HtmlExt;
+    local($msgpre) = $MsgPrefix;
+    $htmlext =~ s/\W/\\$1/g;
+    $msgpre =~ s/\W/\\$1/g;
+
+    local($regexp) = '^' . $msgpre . '0*(\d+)\.'. $htmlext;
+    chop $regexp  if ($htmlext =~ /html$/i);
+
     foreach (readdir(DIR)) {
-	if (/^msg0*(\d+).htm/i) {
+	if (/$regexp/io) {
 	    $max = $1  if $1 > $max;
 	}
     }
@@ -199,14 +229,16 @@ sub fmt_msgnum {
 ##	Routine to get filename of a message number.
 ##
 sub msgnum_filename {
-    sprintf("msg%05d.html", $_[0]);
+    local($fmtstr) = "$MsgPrefix%05d.$HtmlExt";
+    $fmtstr .= ".gz"  if $GzipLinks;
+    sprintf($fmtstr, $_[0]);
 }
 
 ##---------------------------------------------------------------------------
 ##	Routine to get filename of an index
 ##
 sub get_filename_from_index {
-    sprintf("msg%05d.html", $IndexNum{$_[0]});
+    &msgnum_filename($IndexNum{$_[0]});
 }
 
 ##---------------------------------------------------------------------------
@@ -241,10 +273,16 @@ sub get_time_from_date {
     local($mday, $mon, $yr, $hr, $min, $sec, $zone) = @_;
     local($time) = 0;
 
+    $yr -= 1900  if $yr >= 1900;
+    if (($yr < 70) || ($yr > 137)) {
+	warn "Warning: Bad year (", $yr+1900, ") using current\n";
+	$yr = (localtime(time))[5];
+    }
+    $zone =~ tr/a-z/A-Z/;
+
     ## If $zone, grab gmt time, else grab local
     if ($zone) {
-	$time = &timegm($sec,$min,$hr,$mday,$mon,
-			($yr > 1900 ? $yr-1900 : $yr));
+	$time = &timegm($sec,$min,$hr,$mday,$mon,$yr);
 
 	# try to modify time/date based on timezone
 	if ($zone =~ /^[\+-]\d+$/) {	# numeric timezone
@@ -260,8 +298,7 @@ sub get_time_from_date {
 	}
 
     } else {
-	$time = &timelocal($sec,$min,$hr,$mday,$mon,
-			   ($yr > 1900 ? $yr-1900 : $yr));
+	$time = &timelocal($sec,$min,$hr,$mday,$mon,$yr);
     }
     $time;
 }
@@ -349,6 +386,74 @@ sub htmlize_header {
     $mesg;
 }
 
+##---------------------------------------------------------------------------
+##	Routine to add mailto/news links to a message header string.
+##
+sub field_add_links {
+    local($label, *fld_text) = @_;
+    &mailto(*fld_text)
+	if !$NOMAILTO &&
+	    $label =~ /^(to|from|cc|sender|reply-to|resent-to|resent-cc)/i;
+    &newsurl(*fld_text)
+	if !$NONEWS && $label =~ /^newsgroup/i;
+}
+
+
+##---------------------------------------------------------------------------
+##	Routine to add news links of newsgroups names
+##
+sub newsurl {
+    local(*str) = shift;
+    local($h, @groups);
+    $str =~ s/^([^:]*:\s*)//;  $h = $1;
+    $str =~ s/\s//g;			# Strip whitespace
+    @groups = split(/,/, $str);		# Split groups
+    foreach (@groups) {			# Make hyperlinks
+	s|(.*)|<A HREF="news:$1">$1</A>|;
+    }
+    $str = $h . join(', ', @groups);	# Rejoin string
+}
+
+##---------------------------------------------------------------------------
+##	Add mailto URLs to $str.
+##
+sub mailto {
+    local(*str) = shift;
+    if ($MAILTOURL) {
+	$str =~ s|([\!\%\w\.\-+=/]+@[\w\.\-]+)|&mailUrl($1)|ge;
+    } else {
+	$str =~ s|([\!\%\w\.\-+=/]+@[\w\.\-]+)|<A HREF="mailto:$1">$1</A>|g;
+    }
+}
+
+##---------------------------------------------------------------------------
+##	$sub, $msgid, $from come from read_mail_header() (ugly!!!!)
+##
+sub mailUrl {
+    local($eaddr) = shift;
+
+    local($url) = ($MAILTOURL);
+    local($to) = (&urlize($eaddr));
+    local($froml, $msgidl) = (&urlize($from), &urlize($msgid));
+    local($fromaddrl) = (&urlize(&extract_email_address($from)));
+    local($subjectl);
+
+    # Add "Re:" to subject if not present
+    if ($sub !~ /^\s*Re:/) {
+	$subjectl = &urlize("Re: ") . &urlize($sub);
+    } else {
+	$subjectl = &urlize($sub);
+    }
+    $url =~ s/\$FROM\$/$froml/g;
+    $url =~ s/\$FROMADDR\$/$froml/g;
+    $url =~ s/\$MSGID\$/$msgidl/g;
+    $url =~ s/\$SUBJECT\$/$subjectl/g;
+    $url =~ s/\$SUBJECTNA\$/$subjectl/g;
+    $url =~ s/\$TO\$/$to/g;
+    $url =~ s/\$ADDR\$/$to/g;
+    qq|<A HREF="$url">$eaddr</A>|;
+}
+
 ##---------------------------------------------------------------------------##
 ##	Routine to parse variable definitions in a string.  The
 ##	function returns a list of variable/value pairs.  The format of
@@ -358,11 +463,11 @@ sub htmlize_header {
 sub parse_vardef_str {
     local($org) = shift;
     local(%hash) = ();
+    local($str, $q, $var, $value);
 
     ($str = $org) =~ s/^\s+//;
-    while ($str =~ /^([^=\s]+)\s*=\s*/) {
+    while ($str =~ s/^([^=\s]+)\s*=\s*//) {
 	$var = $1;
-	$str = $';
 	if ($str =~ s/^(['"])//) {
 	    $q = $1;
 	    if (!($q eq "'" ? $str =~ s/^([^']*)'// :

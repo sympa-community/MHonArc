@@ -24,13 +24,13 @@
 
 ---------------------------------------------------------------------------
                             README for MHonArc
-                                 v2.0.1
+                                 v2.1.2
 
              http://www.oac.uci.edu/indiv/ehood/mhonarc.html
 
 ---------------------------------------------------------------------------
     MHonArc -- Internet mail-to-HTML converter
-    Copyright (C) 1995-1997   Earl Hood, ehood@medusa.acs.uci.edu
+    Copyright (C) 1995-1998   Earl Hood, ehood@medusa.acs.uci.edu
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -123,16 +123,16 @@ BUGS/COMMENTS/SUGGESTIONS?
     your message:
 
         o  Version of Perl (can be retrievied by "perl -v").
-        o  Version of the program (can be retrievied by "mhonarc -b").
+        o  Version of the program (can be retrievied by "mhonarc -v").
 	o  The operating system you are using (on Unix the output
 	   of "uname -a" is useful).
         o  The exact command-line used to invoke the program.
         o  Error/diagnostic messages from the program.
         o  Any other information that might prove useful (eg. input
-           files, resource files, environment settings, etc.
+           files, resource files, environment settings, etc).
 
-    Before sending e-mail, make sure the documentation does not already
-    have an answer to your question/problem.
+    Before sending e-mail, make sure the documentation, or FAQ, does
+    not already have an answer to your question/problem.
 
 ---------------------------------------------------------------------------
 USING/COPYING
@@ -149,5 +149,5 @@ USING/COPYING
     file COPYING.
 
 ---------------------------------------------------------------------------
-Copyright (C) 1997,     Earl Hood, ehood@medusa.acs.uci.edu
-@(#) README 97/05/23 11:15:18 @(#)
+Copyright (C) 1995-1998,	Earl Hood, ehood@medusa.acs.uci.edu
+@(#) README 98/02/23 18:58:27

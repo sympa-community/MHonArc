@@ -1,12 +1,12 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	@(#)  mhtime.pl 1.7 97/05/13 @(#)
+##	@(#) mhtime.pl 1.9 98/02/23 16:32:40
 ##  Author:
 ##      Earl Hood       ehood@medusa.acs.uci.edu
 ##  Description:
 ##      Time related routines for mhonarc
 ##---------------------------------------------------------------------------##
-##    Copyright (C) 1996	Earl Hood, ehood@medusa.acs.uci.edu
+##    Copyright (C) 1996-1998	Earl Hood, ehood@medusa.acs.uci.edu
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by
@@ -20,31 +20,39 @@
 ##
 ##    You should have received a copy of the GNU General Public License
 ##    along with this program; if not, write to the Free Software
-##    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+##    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+##    02111-1307, USA
 ##---------------------------------------------------------------------------##
 
 ##---------------------------------------------------------------------------##
 ##      Date variables for date routines
 ##
 {
-package mhtime;
+    package mhtime;
 
-%Month2Num = (
-    'jan', 0, 'feb', 1, 'mar', 2, 'apr', 3, 'may', 4, 'jun', 5, 'jul', 6,
-    'aug', 7, 'sep', 8, 'oct', 9, 'nov', 10, 'dec', 11,
-);
-%WDay2Num = (
-    'sun', 0, 'mon', 1, 'tue', 2, 'wed', 3, 'thu', 4, 'fri', 5, 'sat', 6,
-);
+    %Month2Num = (
+	'jan', 0, 'feb', 1, 'mar', 2, 'apr', 3, 'may', 4, 'jun', 5, 'jul', 6,
+	'aug', 7, 'sep', 8, 'oct', 9, 'nov', 10, 'dec', 11,
+    );
+    %WDay2Num = (
+	'sun', 0, 'mon', 1, 'tue', 2, 'wed', 3, 'thu', 4, 'fri', 5, 'sat', 6,
+    );
 
-@weekdays = ('Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat');
-@Weekdays = ('Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday',
-	     'Friday', 'Saturday');
-@months   = ('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug',
-	     'Sep', 'Oct', 'Nov', 'Dec');
-@Months   = ('January', 'Febuary', 'March', 'April', 'May', 'June',
-	     'July', 'August', 'September', 'October', 'November',
-	     'December');
+    @weekdays = ('Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat');
+    @Weekdays = ('Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday',
+		 'Friday', 'Saturday');
+    @months   = ('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug',
+		 'Sep', 'Oct', 'Nov', 'Dec');
+    @Months   = ('January', 'February', 'March', 'April', 'May', 'June',
+		 'July', 'August', 'September', 'October', 'November',
+		 'December');
+
+    $p_weekdays = "Mon|Tue|Wed|Thu|Fri|Sat|Sun";
+    $p_months   = "Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec";
+    $p_hrminsec = '\d{1,2}:\d\d:\d\d';
+    $p_hrmin    = '\d{1,2}:\d\d';
+    $p_day      = '\d{1,2}';
+    $p_year     = '\d\d\d\d|\d\d';
 }
 
 ##---------------------------------------------------------------------------
@@ -169,26 +177,19 @@ sub parse_date {
     local(@array);
     local($start, $rest);
 
-    local($p_weekdays) = "Mon|Tue|Wed|Thu|Fri|Sat|Sun";
-    local($p_months)   = "Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec";
-    local($p_hrminsec) = '\d{1,2}:\d\d:\d\d';
-    local($p_hrmin)    = '\d{1,2}:\d\d';
-    local($p_day)      = '\d{1,2}';
-    local($p_year)     = '\d\d\d\d|\d\d';
-
     # Try to find the date by focusing on the "\d\d:\d\d" field.
     # All parsing is then done relative to this location.
     #
-    $date =~ s/^\s*//;
-    if ( $date =~ /\b($p_hrminsec)/o ) {
-	($start, $time, $rest) = ($`, $1, $');
-    } elsif ( $date =~ /\b($p_hrmin)/o ) {
-	($start, $time, $rest) = ($`, $1, $');
-    } else {
-	return (); # no time here !
-    }
+    $date =~ s/^\s+//;  $time = "";  $rest = "";
+    #	 Don't use $p_hrmin(sec) vars in split due to bug in perl 5.003.
+    ($start, $time, $rest) = split(/(\b\d{1,2}:\d\d:\d\d)/o, $date, 2);
+    ($start, $time, $rest) = split(/(\b\d{1,2}:\d\d)/o, $date, 2)
+	    if $time eq "";
+    return ()
+	unless $time ne "";
+
     ($hr, $min, $sec) = split(/:/, $time);
-    $sec = 0  unless $sec;          # Sometime seconds not defined
+    $sec = 0  unless $sec;          # Sometimes seconds not defined
 
     # Strip $start of all but the last 4 tokens,
     # and stuff all tokens in $rest into @array

@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	@(#)  iso8859.pl 1.1 96/09/17 @(#)
+##	@(#)  iso8859.pl 1.2 97/06/03 @(#)
 ##  Author:
 ##      Earl Hood       ehood@medusa.acs.uci.edu
 ##  Description:
@@ -20,7 +20,8 @@
 ##
 ##    You should have received a copy of the GNU General Public License
 ##    along with this program; if not, write to the Free Software
-##    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+##    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+##    02111-1307, USA
 ##---------------------------------------------------------------------------##
 
 package iso_8859;
@@ -1143,10 +1144,13 @@ package iso_8859;
 ##	string where special characters are converted to entity
 ##	references.
 ##
-##	    $return_data = iso_8859'str2sgml($data, $charset);
+##	$return_data = iso_8859'str2sgml($data, $charset, $only8bit);
+##
+##	If $only8bit is non-zero, than only 8-bit characters are
+##	translated.
 ##
 sub str2sgml {
-    local($data, $charset) = ($_[0], $_[1]);
+    local($data, $charset, $only8bit) = ($_[0], $_[1], $_[2]);
     local($ret, $offset, $len) = ('', 0, 0);
 
     # Get mapping (this method works for Perl 4 and 5)
@@ -1158,10 +1162,15 @@ sub str2sgml {
     $len = length($data);
     while ($offset < $len) {
 	$char = unpack("C", substr($data, $offset++, 1));
-	$ret .= ($map{$char} || $US_ASCII_To_Ent{$char} || pack("C", $char));
+	if ($only8bit && $char < 0xA0) {
+	    $ret .= pack("C", $char);
+	} else {
+	    $ret .= ($map{$char} || $US_ASCII_To_Ent{$char} ||
+		     pack("C", $char));
+	}
     }
     $ret;
 }
-##---------------------------------------------------------------------------##
 
+##---------------------------------------------------------------------------##
 1;

@@ -1,13 +1,13 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	@(#) mhrcfile.pl 1.12 97/05/13 11:25:35 @(#)
+##	@(#) mhrcfile.pl 1.17 98/02/23 16:27:51
 ##  Author:
 ##      Earl Hood       ehood@medusa.acs.uci.edu
 ##  Description:
 ##      Routines for parsing resource files
 ##---------------------------------------------------------------------------##
 ##    MHonArc -- Internet mail-to-HTML converter
-##    Copyright (C) 1996	Earl Hood, ehood@medusa.acs.uci.edu
+##    Copyright (C) 1996-1998	Earl Hood, ehood@medusa.acs.uci.edu
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by
@@ -21,23 +21,21 @@
 ##
 ##    You should have received a copy of the GNU General Public License
 ##    along with this program; if not, write to the Free Software
-##    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+##    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+##    02111-1307, USA
 ##---------------------------------------------------------------------------##
 
-$RcFileHandleCnt = 0;
-
 ##---------------------------------------------------------------------------
-##	read_fmt_file() parses the resource file.  The name is misleading.
+##	read_resource_file() parses the resource file.
 ##	(The code for this routine could probably be simplified).
 ##
-sub read_fmt_file {
+sub read_resource_file {
     local($file) = shift;
     local($line, $tag, $label, $acro, $hr, $type, $routine, $plfile,
 	  $url, $arg, $tmp, @a);
     local($elem, $attr, $override, $handle, $pathhead, $chop);
 
-    $handle = 'FMT' . $RcFileHandleCnt++;
-    if (!open($handle, $file)) {
+    if (!($handle = &file_open($file))) {
 	warn "Warning: Unable to open resource file: $file\n";
 	return 0;
     }
@@ -80,7 +78,11 @@ sub read_fmt_file {
 		last  if $line =~ /^\s*<\/charsetconverters\s*>/i;
 		next  if $line =~ /^\s*$/;
 		$line =~ s/\s//g;
-		($type,$routine,$plfile) = split(/:/,$line,3);
+		if ($line =~ /;/) {	# using Perl 5 qualification
+		    ($type,$routine,$plfile) = split(/;/,$line,3);
+		} else {
+		    ($type,$routine,$plfile) = split(/:/,$line,3);
+		}
 		$type =~ tr/A-Z/a-z/;
 		$'MIMECharSetConverters{$type} = $routine;
 		push(@CharSetRequires, $plfile)  if $plfile =~ /\S/;
@@ -89,6 +91,11 @@ sub read_fmt_file {
 	}
 	if ($elem eq "conlen") {
 	    $CONLEN = 1; last FMTSW;
+	}
+	if ($elem eq "datefields") {
+	    @a = &get_list_content($handle, $elem);
+	    if (@a) { @DateFields = @a; }
+	    last FMTSW;
 	}
 	if ($elem eq "daybegin") {		# Begin for day group
 	    $DAYBEG = &get_elem_content($handle, $elem, $chop);
@@ -195,6 +202,18 @@ sub read_fmt_file {
 	if ($elem eq "folrefs") {
 	    $DoFolRefs = 1; last FMTSW;
 	}
+	if ($elem eq "folupbegin") {
+	    $FOLUPBEGIN = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq "folupend") {
+	    $FOLUPEND = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq "foluplitxt") {
+	    $FOLUPLITXT = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
 	if ($elem eq "footer") {		# Footer file
 	    if ($line = &get_elem_last_line($handle, $elem)) {
 		$line =~ s/\s//g;
@@ -202,11 +221,29 @@ sub read_fmt_file {
 	    }
 	    last FMTSW;
 	}
+	if ($elem eq "fromfields") {
+	    @a = &get_list_content($handle, $elem);
+	    if (@a) { @FromFields = @a; }
+	    last FMTSW;
+	}
 	if ($elem eq "gmtdatefmt") {		# GMT date format
 	    if ($line = &get_elem_last_line($handle, $elem)) {
 		$GMTDateFmt = $line;
 	    }
 	    last FMTSW;
+	}
+	if ($elem eq "gzipexe") {		# Gzip executable
+	    if ($line = &get_elem_last_line($handle, $elem)) {
+		$line =~ s/\s+$//g;
+		$GzipExe = $line;
+	    }
+	    last FMTSW;
+	}
+	if ($elem eq "gzipfiles") {
+	    $GzipFiles = 1;  last FMTSW;
+	}
+	if ($elem eq "gziplinks") {
+	    $GzipLinks = 1;  last FMTSW;
 	}
 	if ($elem eq "headbodysep") {
 	    $HEADBODYSEP = &get_elem_content($handle, $elem, $chop);
@@ -216,6 +253,13 @@ sub read_fmt_file {
 	    if ($line = &get_elem_last_line($handle, $elem)) {
 		$line =~ s/\s//g;
 		$HEADER = $line;
+	    }
+	    last FMTSW;
+	}
+	if ($elem eq "htmlext") {		# Extension for HTML files
+	    if ($line = &get_elem_last_line($handle, $elem)) {
+		$line =~ s/\s//g;
+		$HtmlExt = $line;
 	    }
 	    last FMTSW;
 	}
@@ -269,7 +313,7 @@ sub read_fmt_file {
 		next  if $line =~ /^\s*$/;
 		$line =~ s/\s+$//;
 		$line = $pathhead . $line  if ($line !~ /$'DIRSEPREX/o);
-		&read_fmt_file($line);
+		&read_resource_file($line);
 	    }
 	    last FMTSW;
 	}
@@ -330,6 +374,17 @@ sub read_fmt_file {
 	    }
 	    last FMTSW;
 	}
+	if ($elem eq "msgbodyend") {
+	    $MSGBODYEND = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq "msgprefix") {		# Prefix for message files
+	    if ($line = &get_elem_last_line($handle, $elem)) {
+		$line =~ s/\s//g;
+		$MsgPrefix = $line;
+	    }
+	    last FMTSW;
+	}
 	if ($elem eq "mhpattern") {		# File pattern MH-like dirs
 	    if ($line = &get_elem_last_line($handle, $elem)) {
 		$MHPATTERN = $line;
@@ -342,7 +397,11 @@ sub read_fmt_file {
 		last  if $line =~ /^\s*<\/mimefilters\s*>/i;
 		next  if $line =~ /^\s*$/;
 		$line =~ s/\s//g;
-		($type,$routine,$plfile) = split(/:/,$line,3);
+		if ($line =~ /;/) {	# using Perl 5 qualification
+		    ($type,$routine,$plfile) = split(/;/,$line,3);
+		} else {
+		    ($type,$routine,$plfile) = split(/:/,$line,3);
+		}
 		$type =~ tr/A-Z/a-z/;
 		$'MIMEFilters{$type} = $routine;
 		push(@Requires, $plfile)  if $plfile =~ /\S/;
@@ -352,9 +411,14 @@ sub read_fmt_file {
 	if ($elem eq "mimeargs") {		# Mime arguments
 	    %'MIMEFiltersArgs = ()  if $override;
 	    while ($line = <$handle>) {
-		last  if $line =~ /^\s*<\/mimeargs\s*>/i;
-		next  if $line =~ /^\s*$/;
-		($type,$arg) = split(/:/,$line,2);
+		last  if     $line =~ /^\s*<\/mimeargs\s*>/i;
+		next  unless $line =~ /\S/;
+		$line =~ s/^\s+//;
+		if ($line =~ /;/) {	# using Perl 5 qualification
+		    ($type, $arg) = split(/;/,$line,2);
+		} else {
+		    ($type, $arg) = split(/:/,$line,2);
+		}
 		$type =~ tr/A-Z/a-z/  if $type =~ m%/%;
 		$'MIMEFiltersArgs{$type} = $arg;
 	    }
@@ -457,6 +521,12 @@ sub read_fmt_file {
 	if ($elem eq "nofolrefs") {
 	    $DoFolRefs = 0; last FMTSW;
 	}
+	if ($elem eq "nogzipfiles") {
+	    $GzipFiles = 0;  last FMTSW;
+	}
+	if ($elem eq "nogziplinks") {
+	    $GzipLinks = 0;  last FMTSW;
+	}
 	if ($elem eq "nomailto") {		# Do not convert e-mail addrs
 	    $NOMAILTO = 1; last FMTSW;
 	}
@@ -492,14 +562,17 @@ sub read_fmt_file {
 	if ($elem eq "nourl") {			# Ignore URLs
 	    $NOURL = 1; last FMTSW;
 	}
+	if ($elem eq "nousinglastpg") {
+	    $UsingLASTPG = 0; last FMTSW;
+	}
 	if ($elem eq "otherindexes") {		# Other indexes
 	    @OtherIdxs = ()  if $override;
-	    unshift(@OtherIdxs, &get_list_content($handle, $elem, $'PATHSEP));
+	    unshift(@OtherIdxs, &get_pathname_content($handle, $elem));
 	    last FMTSW;
 	}
 	if ($elem eq "perlinc") {		# Define perl search paths
 	    @PerlINC = ()  if $override;
-	    unshift(@PerlINC, &get_list_content($handle, $elem, $'PATHSEP));
+	    unshift(@PerlINC, &get_pathname_content($handle, $elem));
 	    last FMTSW;
 	}
 	if ($elem eq "prevbutton") {		# Prev button link in message
@@ -524,6 +597,18 @@ sub read_fmt_file {
 	}
 	if ($elem eq "prevpglinkia") {
 	    $PREVPGLINKIA = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq "refsbegin") {
+	    $REFSBEGIN = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq "refsend") {
+	    $REFSEND = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq "refslitxt") {
+	    $REFSLITXT = &get_elem_content($handle, $elem, $chop);
 	    last FMTSW;
 	}
 	if ($elem eq "reverse") {		# Reverse sort
@@ -600,6 +685,7 @@ sub read_fmt_file {
 		last  if $line =~ /^\s*<\/timezones\s*>/i;
 		$line =~ s/\s//g;  $line =~ tr/a-z/A-Z/;
 		($acro,$hr) = split(/:/,$line);
+		$acro =~ tr/a-z/A-Z/;
 		$Zone{$acro} = $hr;
 	    }
 	    last FMTSW;
@@ -620,6 +706,42 @@ sub read_fmt_file {
 	    if (($tmp = &get_elem_int($handle, $elem, 1)) ne '') {
 		$TLEVELS = $tmp;
 	    }
+	    last FMTSW;
+	}
+	if ($elem eq "tlinone") {		# Markup for missing message
+	    $TLINONE = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq "tlinoneend") {		# End markup for missing msg
+	    $TLINONEEND = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq "tlitxt") {		# Thread idx list item
+	    $TLITXT = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq "tliend") {		# Thread idx list item end
+	    $TLIEND = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq "toplinks") {		# Top links in message
+	    $TOPLINKS = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq "tnosubsort") {		# No subject order for threads
+	    $TSUBSORT = 0;
+	    last FMTSW;
+	}
+	if ($elem eq "tnosort") {		# Raw order for threads
+	    $TNOSORT = 1; $TSUBSORT = 0;
+	    last FMTSW;
+	}
+	if ($elem eq "tsort") {			# Date order for threads
+	    $TNOSORT = 0; $TSUBSORT = 0;
+	    last FMTSW;
+	}
+	if ($elem eq "tsubsort") {		# Subject order for threads
+	    $TNOSORT = 0; $TSUBSORT = 1;
 	    last FMTSW;
 	}
 	if ($elem eq "tsublistbeg") {		# List begin in sub-thread
@@ -650,35 +772,12 @@ sub read_fmt_file {
 	    $TTOPEND = &get_elem_content($handle, $elem, $chop);
 	    last FMTSW;
 	}
-	if ($elem eq "tlinone") {		# Markup for missing message
-	    $TLINONE = &get_elem_content($handle, $elem, $chop);
-	    last FMTSW;
-	}
-	if ($elem eq "tlinoneend") {		# End markup for missing msg
-	    $TLINONEEND = &get_elem_content($handle, $elem, $chop);
-	    last FMTSW;
-	}
-	if ($elem eq "tlitxt") {		# Thread idx list item
-	    $TLITXT = &get_elem_content($handle, $elem, $chop);
-	    last FMTSW;
-	}
-	if ($elem eq "tliend") {		# Thread idx list item end
-	    $TLIEND = &get_elem_content($handle, $elem, $chop);
-	    last FMTSW;
-	}
-	if ($elem eq "toplinks") {		# Top links in message
-	    $TOPLINKS = &get_elem_content($handle, $elem, $chop);
-	    last FMTSW;
-	}
 	if ($elem eq "ttitle") {		# Title of threaded idx
 	    $TTITLE = &get_elem_content($handle, $elem, $chop);
 	    last FMTSW;
 	}
 	if ($elem eq "thread") {		# Create thread index
 	    $THREAD = 1; last FMTSW;
-	}
-	if ($elem eq "treverse") {		# Reverse order of threads
-	    $TREVERSE = 1; last FMTSW;
 	}
 	if ($elem eq "tnextbutton") {		# Thread Next button link
 	    $TNEXTBUTTON = &get_elem_content($handle, $elem, $chop);
@@ -728,12 +827,18 @@ sub read_fmt_file {
 	    $TPREVPGLINKIA = &get_elem_content($handle, $elem, $chop);
 	    last FMTSW;
 	}
+	if ($elem eq "treverse") {		# Reverse order of threads
+	    $TREVERSE = 1; last FMTSW;
+	}
 	if ($elem eq "umask") {		# Umask of process
 	    if ($line = &get_elem_last_line($handle, $elem)) {
 		$line =~ s/\s//g;
 		$UMASK = $line;
 	    }
 	    last FMTSW;
+	}
+	if ($elem eq "usinglastpg") {
+	    $UsingLASTPG = 1; last FMTSW;
 	}
 	if ($elem eq "weekdays") {		# Full weekday name
 	    @a = &get_list_content($handle, $elem);
@@ -758,7 +863,7 @@ sub read_fmt_file {
 
 ##----------------------------------------------------------------------
 sub get_elem_content {
-    local($filehandle, $gi, $chop) = ($_[0], $_[1], $_[2]);
+    local($filehandle, $gi, $chop) = @_;
     local($ret) = '';
 
     while (<$filehandle>) {
@@ -771,7 +876,7 @@ sub get_elem_content {
 
 ##----------------------------------------------------------------------
 sub get_elem_int {
-    local($filehandle, $gi, $abs) = ($_[0], $_[1], $_[2]);
+    local($filehandle, $gi, $abs) = @_;
     local($ret) = '';
 
     while (<$filehandle>) {
@@ -786,7 +891,7 @@ sub get_elem_int {
 
 ##----------------------------------------------------------------------
 sub get_elem_last_line {
-    local($filehandle, $gi) = ($_[0], $_[1]);
+    local($filehandle, $gi) = @_;
     local($ret) = '';
 
     while (<$filehandle>) {
@@ -800,15 +905,28 @@ sub get_elem_last_line {
 
 ##----------------------------------------------------------------------
 sub get_list_content {
-    local($filehandle, $gi, $sep) = ($_[0], $_[1], $_[2]);
+    local($filehandle, $gi) = @_;
     local(@items) = ();
-    $sep = ':'  unless $sep;
 
     while (<$filehandle>) {
 	last  if /^\s*<\/$gi\s*>/i;
 	next  unless /\S/;
 	s/\r?\n?$//;
-	push(@items, split(/$sep/, $_));
+	push(@items, split(/[:;]/, $_));
+    }
+    @items;
+}
+
+##----------------------------------------------------------------------
+sub get_pathname_content {
+    local($filehandle, $gi) = @_;
+    local(@items) = ();
+
+    while (<$filehandle>) {
+	last  if /^\s*<\/$gi\s*>/i;
+	next  unless /\S/;
+	s/\r?\n?$//;
+	push(@items, split(/$'PATHSEP/o, $_));
     }
     @items;
 }

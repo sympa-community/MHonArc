@@ -1,13 +1,13 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	@(#) mhrcvars.pl 1.7 97/05/13 11:28:21 @(#)
+##	@(#) mhrcvars.pl 1.9 98/02/16 20:25:45
 ##  Author:
 ##      Earl Hood       ehood@medusa.acs.uci.edu
 ##  Description:
 ##      Defines routine for expanding resource variables.
 ##---------------------------------------------------------------------------##
 ##    MHonArc -- Internet mail-to-HTML converter
-##    Copyright (C) 1996,1997	Earl Hood, ehood@medusa.acs.uci.edu
+##    Copyright (C) 1996-1998	Earl Hood, ehood@medusa.acs.uci.edu
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by
@@ -21,7 +21,8 @@
 ##
 ##    You should have received a copy of the GNU General Public License
 ##    along with this program; if not, write to the Free Software
-##    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+##    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+##    02111-1307, USA
 ##---------------------------------------------------------------------------##
 
 ##---------------------------------------------------------------------------
@@ -146,12 +147,13 @@ sub replace_li_var {
 	    if ($MULTIIDX &&
 		($n = int($Index2MLoc{$index}/$IDXSIZE)+1) > 1) {
 
-		$tmp = sprintf("%s%d.html",
+		$tmp = sprintf("%s%d.$HtmlExt",
 			       $IDXPREFIX, $index ne '' ? $n : 1);
 
 	    } else {
 		$tmp = $IDXNAME;
 	    }
+	    $tmp .= ".gz"  if $GzipLinks;
 	    last REPLACESW;
 	}
     	if ($var eq 'IDXLABEL') {
@@ -190,6 +192,10 @@ sub replace_li_var {
 	}
     	if ($var eq 'MSGNUM') {
 	    $tmp = &fmt_msgnum($IndexNum{$index});
+	    last REPLACESW;
+	}
+    	if ($var eq 'MSGPREFIX') {
+	    $tmp = $MsgPrefix;
 	    last REPLACESW;
 	}
     	if ($var eq 'NEXTFROM') {
@@ -276,12 +282,13 @@ sub replace_li_var {
 	    if ($MULTIIDX &&
 		($n = int($Index2TLoc{$index}/$IDXSIZE)+1) > 1) {
 
-		$tmp = sprintf("%s%d.html",
+		$tmp = sprintf("%s%d.$HtmlExt",
 			       $TIDXPREFIX, $index ne '' ? $n : 1);
 
 	    } else {
 		$tmp = $TIDXNAME;
 	    }
+	    $tmp .= ".gz"  if $GzipLinks;
 	    last REPLACESW;
 	}
     	if ($var eq 'TIDXLABEL') {
@@ -446,43 +453,51 @@ sub replace_li_var {
 	    last REPLACESW;
 	}
 	if ($var eq 'NEXTPG') {
-	    $tmp = sprintf("%s%d.html", $IDXPREFIX, $PageNum+1);
+	    $tmp = sprintf("%s%d.$HtmlExt", $IDXPREFIX, $PageNum+1);
+	    $tmp .= ".gz"  if $GzipLinks;
 	    last REPLACESW;
 	}
 	if ($var eq 'PREVPG') {
 	    $tmp = $PageNum > 2 ?
-		   sprintf("%s%d.html", $IDXPREFIX, $PageNum-1) :
+		   sprintf("%s%d.$HtmlExt", $IDXPREFIX, $PageNum-1) :
 		   $IDXNAME;
+	    $tmp .= ".gz"  if $GzipLinks;
 	    last REPLACESW;
 	}
 	if ($var eq 'TNEXTPG') {
-	    $tmp = sprintf("%s%d.html", $TIDXPREFIX, $PageNum+1);
+	    $tmp = sprintf("%s%d.$HtmlExt", $TIDXPREFIX, $PageNum+1);
+	    $tmp .= ".gz"  if $GzipLinks;
 	    last REPLACESW;
 	}
 	if ($var eq 'TPREVPG') {
 	    $tmp = $PageNum > 2 ?
-		   sprintf("%s%d.html", $TIDXPREFIX, $PageNum-1) :
+		   sprintf("%s%d.$HtmlExt", $TIDXPREFIX, $PageNum-1) :
 		   $TIDXNAME;
+	    $tmp .= ".gz"  if $GzipLinks;
 	    last REPLACESW;
 	}
 	if ($var eq 'FIRSTPG') {
 	    $tmp = $IDXNAME;
+	    $tmp .= ".gz"  if $GzipLinks;
 	    last REPLACESW;
 	}
 	if ($var eq 'LASTPG') {
-	    $tmp = ($MULTIIDX && $NumOfPages > 1 ? sprintf("%s%d.html",
+	    $tmp = ($MULTIIDX && $NumOfPages > 1 ? sprintf("%s%d.$HtmlExt",
 					$IDXPREFIX, $NumOfPages) :
 				$IDXNAME);
+	    $tmp .= ".gz"  if $GzipLinks;
 	    last REPLACESW;
 	}
 	if ($var eq 'TFIRSTPG') {
 	    $tmp = $TIDXNAME;
+	    $tmp .= ".gz"  if $GzipLinks;
 	    last REPLACESW;
 	}
 	if ($var eq 'TLASTPG') {
-	    $tmp = ($MULTIIDX && $NumOfPages > 1 ? sprintf("%s%d.html",
+	    $tmp = ($MULTIIDX && $NumOfPages > 1 ? sprintf("%s%d.$HtmlExt",
 					$TIDXPREFIX, $NumOfPages) :
 				$TIDXNAME);
+	    $tmp .= ".gz"  if $GzipLinks;
 	    last REPLACESW;
 	}
 	if ($var eq 'IDXPREFIX') {
@@ -497,7 +512,7 @@ sub replace_li_var {
 	##
 	## User defined variable check
 	##
-	if ($CustomRcVars{$var}) {
+	if (defined($CustomRcVars{$var})) {
 	    $expand = 1;
 	    $tmp = $CustomRcVars{$var};
 	    last REPLACESW;

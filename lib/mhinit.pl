@@ -1,13 +1,13 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	@(#) mhinit.pl 1.18 97/05/13 11:25:03 @(#)
+##	@(#) mhinit.pl 1.24 98/02/23 16:26:24
 ##  Author:
 ##      Earl Hood       ehood@medusa.acs.uci.edu
 ##  Description:
 ##      Initialization stuff for MHonArc.
 ##---------------------------------------------------------------------------##
 ##    MHonArc -- Internet mail-to-HTML converter
-##    Copyright (C) 1995-1997	Earl Hood, ehood@medusa.acs.uci.edu
+##    Copyright (C) 1995-1998	Earl Hood, ehood@medusa.acs.uci.edu
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by
@@ -21,7 +21,8 @@
 ##
 ##    You should have received a copy of the GNU General Public License
 ##    along with this program; if not, write to the Free Software
-##    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+##    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+##    02111-1307, USA
 ##---------------------------------------------------------------------------##
 
 ##---------------------------------------------------------------------------##
@@ -145,13 +146,13 @@ $NumOfPages	= 0;		# Number of index pages
 $IdxMinPg	= -1;		# Starting page of index for updating
 $TIdxMinPg	= -1;		# Starting page of thread index for updating
 $DBPathName	= '';		# Full pathname of database file
-$DefRcName	= ($MSDOS ? "mhonarc.rc" : ".mhonarc.rc");
 
 ##	Set default filter libraries
 
 @Requires = (
 
     "mhexternal.pl",
+    "mhtxtenrich.pl",
     "mhtxthtml.pl",
     "mhtxtplain.pl",
     "mhtxtsetext.pl",
@@ -175,9 +176,10 @@ $DefRcName	= ($MSDOS ? "mhonarc.rc" : ".mhonarc.rc");
     #-------------------------------------------------------------------
     "application/x-patch",		"m2h_text_plain'filter",
     "message/partial",   		"m2h_text_plain'filter",
+    "text/enriched",    		"m2h_text_enriched'filter",
     "text/html",			"m2h_text_html'filter",
     "text/plain",			"m2h_text_plain'filter",
-    "text/richtext",    		"m2h_text_plain'filter",
+    "text/richtext",    		"m2h_text_enriched'filter",
     "text/setext",			"m2h_text_setext'filter",
     "text/tab-separated-values",	"m2h_text_plain'filter",
     "text/x-html",			"m2h_text_html'filter",
@@ -186,6 +188,7 @@ $DefRcName	= ($MSDOS ? "mhonarc.rc" : ".mhonarc.rc");
     "application/*",		 	"m2h_external'filter",
     "audio/*",				"m2h_external'filter",
     "image/*",  			"m2h_external'filter",
+    "model/*",  			"m2h_external'filter",
     "text/*",   			"m2h_text_plain'filter",
     "video/*",  			"m2h_external'filter",
 
@@ -212,9 +215,9 @@ $DefRcName	= ($MSDOS ? "mhonarc.rc" : ".mhonarc.rc");
 
     # Character set			Converter Function
     #-------------------------------------------------------------------
-    "plain",     			"main'convert_line",
-    "us-ascii",   			"main'convert_line",
-    "iso-8859-1",   			"iso_8859'str2sgml",
+    "plain",     			"main'htmlize",
+    "us-ascii",   			"main'htmlize",
+    "iso-8859-1",   			"main'htmlize",
     "iso-8859-2",   			"iso_8859'str2sgml",
     "iso-8859-3",   			"iso_8859'str2sgml",
     "iso-8859-4",   			"iso_8859'str2sgml",
@@ -233,7 +236,8 @@ $DefRcName	= ($MSDOS ? "mhonarc.rc" : ".mhonarc.rc");
 ##------------------------------------------------------------------------
 
 ##  Variable to hold function for converting message header text.
-$MHeadCnvFunc	= "convert_line";
+#$MHeadCnvFunc	= "convert_line";
+$MHeadCnvFunc	= "iso_8859'str2sgml";
 
 ##  Regexp for variable detection
 $VarExp = '\$([^\$]*)\$';
@@ -243,35 +247,42 @@ $AddrExp = q%[^()<>@,;:\/\s"'&|]+@[^()<>@,;:\/\s"'&|]+%;
 
 ##	Grab environment variable settings
 ##
-$DBFILE    = $ENV{'M2H_DBFILE'}     || ($MSDOS? "mhonarc.db": ".mhonarc.db");
+$DBFILE    = $ENV{'M2H_DBFILE'}     || 
+	     (($MSDOS || $VMS) ? "mhonarc.db": ".mhonarc.db");
 $DOCURL    = $ENV{'M2H_DOCURL'}     ||
 	     'http://www.oac.uci.edu/indiv/ehood/mhonarc.html';
 $FOOTER    = $ENV{'M2H_FOOTER'}     || "";
 $HEADER    = $ENV{'M2H_HEADER'}     || "";
-$IDXNAME   = $ENV{'M2H_IDXFNAME'}   || "maillist.html";
+$IDXNAME   = "";	# Set in get_cli_opts()
 $IDXPREFIX = $ENV{'M2H_IDXPREFIX'}  || "mail";
 $TIDXPREFIX= $ENV{'M2H_TIDXPREFIX'} || "thrd";
 $IDXSIZE   = $ENV{'M2H_IDXSIZE'}    || "";
-$TIDXNAME  = $ENV{'M2H_TIDXFNAME'}  || "threads.html";
+$TIDXNAME  = "";	# Set in get_cli_opts()
 $OUTDIR    = $ENV{'M2H_OUTDIR'}     || $CURDIR;
 $FMTFILE   = $ENV{'M2H_RCFILE'}     || "";
 $TTITLE    = $ENV{'M2H_TTITLE'}     || "Mail Thread Index";
 $TITLE     = $ENV{'M2H_TITLE'}      || "Mail Index";
 $MAILTOURL = $ENV{'M2H_MAILTOURL'}  || "";
 $FROM      = $ENV{'M2H_MSGSEP'}     || '^From ';
-$LOCKFILE  = $ENV{'M2H_LOCKFILE'}   || ($MSDOS? "mhonarc.lck": ".mhonarc.lck");
+$LOCKFILE  = $ENV{'M2H_LOCKFILE'}   ||
+	     (($MSDOS || $VMS) ? "mhonarc.lck": ".mhonarc.lck");
 $LOCKTRIES = $ENV{'M2H_LOCKTRIES'}  || 10;
 $LOCKDELAY = $ENV{'M2H_LOCKDELAY'}  || 3;
 $MAXSIZE   = $ENV{'M2H_MAXSIZE'}    || "";
 $TLEVELS   = $ENV{'M2H_TLEVELS'}    || 3;
 $MHPATTERN = $ENV{'M2H_MHPATTERN'}  || '^\d+$';
 $DefRcFile = $ENV{'M2H_DEFRCFILE'}  || '';
+$HtmlExt   = $ENV{'M2H_HTMLEXT'}    || "html";
+$MsgPrefix = $ENV{'M2H_MSGPREFIX'}  || "msg";
+$DefRcName = $ENV{'M2H_DEFRCNAME'}  ||
+	     (($MSDOS || $VMS) ? "mhonarc.rc": ".mhonarc.rc");
+$GzipExe   = $ENV{'M2H_GZIPEXE'}    || 'gzip';
 
-$GMTDateFmt	= $ENV{'M2H_GMTDATEFMT'}   	|| '';
-$LocalDateFmt	= $ENV{'M2H_LOCALDATEFMT'}	|| '';
-$ExpireDate	= $ENV{'M2H_EXPIREDATE'}	|| '';
+$GMTDateFmt	= $ENV{'M2H_GMTDATEFMT'}   || '';
+$LocalDateFmt	= $ENV{'M2H_LOCALDATEFMT'} || '';
+$ExpireDate	= $ENV{'M2H_EXPIREDATE'}   || '';
     $ExpireDateTime = 0;
-$ExpireTime	= $ENV{'M2H_EXPIREAGE'} 	|| 0;
+$ExpireTime	= $ENV{'M2H_EXPIREAGE'}    || 0;
 
 $MsgGMTDateFmt	= $ENV{'M2H_MSGGMTDATEFMT'}   	|| '';
 $MsgLocalDateFmt= $ENV{'M2H_MSGLOCALDATEFMT'}	|| '';
@@ -289,7 +300,11 @@ $REVSORT     = defined($ENV{'M2H_REVSORT'}) ? $ENV{'M2H_REVSORT'} : 0;
 $SUBSORT     = defined($ENV{'M2H_SUBSORT'}) ? $ENV{'M2H_SUBSORT'} : 0;
 $AUTHSORT    = defined($ENV{'M2H_AUTHSORT'}) ? $ENV{'M2H_AUTHSORT'} : 0;
 $THREAD      = defined($ENV{'M2H_THREAD'}) ? $ENV{'M2H_THREAD'} : 1;
+$TNOSORT     = defined($ENV{'M2H_TSORT'}) ? !$ENV{'M2H_TSORT'} : 0;
 $TREVERSE    = defined($ENV{'M2H_TREVERSE'}) ? $ENV{'M2H_TREVERSE'} : 0;
+$TSUBSORT    = defined($ENV{'M2H_TSUBSORT'}) ? $ENV{'M2H_TSUBSORT'} : 0;
+$GzipFiles   = defined($ENV{'M2H_GZIPFILES'}) ? $ENV{'M2H_GZIPFILES'} : 0;
+$GzipLinks   = defined($ENV{'M2H_GZIPLINKS'}) ? $ENV{'M2H_GZIPLINKS'} : 0;
 
 if ($UNIX) {
     eval q/
@@ -299,12 +314,18 @@ if ($UNIX) {
 }
 
 $DecodeHeads = defined($ENV{'M2H_DECODEHEADS'}) ? $ENV{'M2H_DECODEHEADS'} : 0;
+$DoArchive   = defined($ENV{'M2H_ARCHIVE'}) ? $ENV{'M2H_ARCHIVE'} : 1;
 $DoFolRefs   = defined($ENV{'M2H_FOLREFS'}) ? $ENV{'M2H_FOLREFS'} : 1;
+$UsingLASTPG = defined($ENV{'M2H_USINGLASTPG'}) ? $ENV{'M2H_USINGLASTPG'} : 1;
 
 @OtherIdxs   = defined($ENV{'M2H_OTHERINDEXES'}) ?
 		    split(/:/, $ENV{'M2H_OTHERINDEXES'}) : ();
 @PerlINC     = defined($ENV{'M2H_PERLINC'}) ?
 		    split(/:/, $ENV{'M2H_PERLINC'}) : ();
+@DateFields  = defined($ENV{'M2H_DATEFIELDS'}) ?
+		    split(/:/, $ENV{'M2H_DATEFIELDS'}) : ();
+@FromFields  = defined($ENV{'M2H_FROMFIELDS'}) ?
+		    split(/:/, $ENV{'M2H_FROMFIELDS'}) : ();
 
 ##	Arrays for months and weekdays.  If empty, the default settings
 ##	in mhtime.pl are used.
@@ -356,6 +377,7 @@ $TOPLINKS	= '';		# Message links at top of message
 $BOTLINKS	= '';		# Message links at bottom of message
 $SUBJECTHEADER	= '';		# Markup for message main subject line
 $HEADBODYSEP 	= '';		# Markup between mail header and body
+$MSGBODYEND 	= '';		# Markup at end of message data
 
 $FIELDSBEG	= '';		# Beginning markup for mail header
 $FIELDSEND	= '';		# End markup for mail header
@@ -399,6 +421,13 @@ $TNEXTPGLINK	= '';   	# Thread next page link template
 $TNEXTPGLINKIA	= '';   	# Thread next page inactive link template
 $TPREVPGLINK	= '';   	# Thread previous page link template
 $TPREVPGLINKIA	= '';   	# Thread previous page inactive link template
+
+$FOLUPBEGIN	= '';		# Start of follow-ups for message page
+$FOLUPLITXT	= '';		# Markup for follow-up list entry
+$FOLUPEND	= '';		# End of follow-ups for message page
+$REFSBEGIN	= '';		# Start of refs for message page
+$REFSLITXT	= '';		# Markup for ref list entry
+$REFSEND	= '';		# End of refs for message page
 
 ##	The following associative array if for defining custom
 ##	resource variables

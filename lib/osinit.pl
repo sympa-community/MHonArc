@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	@(#) osinit.pl 1.2 97/01/28 12:19:10 @(#)
+##	@(#) osinit.pl 1.3 98/02/16 20:30:12
 ##  Author:
 ##      Earl Hood       ehood@medusa.acs.uci.edu
 ##  Description:
@@ -8,7 +8,7 @@
 ##	is running under.  The main routine defined is OSinit.  See
 ##	the routine for specific information.
 ##---------------------------------------------------------------------------##
-##    Copyright (C) 1995-1997	Earl Hood, ehood@medusa.acs.uci.edu
+##    Copyright (C) 1995-1998	Earl Hood, ehood@medusa.acs.uci.edu
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by
@@ -22,7 +22,8 @@
 ##
 ##    You should have received a copy of the GNU General Public License
 ##    along with this program; if not, write to the Free Software
-##    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+##    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+##    02111-1307, USA
 ##---------------------------------------------------------------------------##
 
 package os_init;
@@ -37,6 +38,7 @@ package os_init;
 ##	    $'MSDOS	=> Set to 1 if running under MS-DOS/Windows
 ##	    $'MACOS	=> Set to 1 if running under Mac
 ##	    $'UNIX	=> Set to 1 if running under Unix
+##	    $'VMS	=> Set to 1 if running under VMS
 ##	    $'DIRSEP	=> Directory separator character
 ##	    $'DIRSEPREX	=> Directory separator character for use in
 ##			   regular expressions.
@@ -54,16 +56,24 @@ sub main'OSinit {
 
     ##  Check what system we are executing under
     local($tmp);
-    if (($tmp = $ENV{'COMSPEC'}) && ($tmp =~ /[a-zA-Z]:\\/) && (-e $tmp)) {
-        $'MSDOS = 1;  $'MACOS = 0;  $'UNIX = 0;
+    $'VMS = 0;
+    eval q%$VMS = ($^O=~/vms/i);%;
+    if (!$@ && $'VMS) {
+        $'MSDOS = 0;  $'MACOS = 0;  $'UNIX = 0;  $'VMS = 1;
+	$'DIRSEP = '/';  $'CURDIR = '.';
+	$'PATHSEP = ':';
+    } elsif (($tmp = $ENV{'COMSPEC'}) &&
+	     ($tmp =~ /[a-zA-Z]:\\/) &&
+	     (-e $tmp)) {
+        $'MSDOS = 1;  $'MACOS = 0;  $'UNIX = 0;  $'VMS = 0;
 	$'DIRSEP = '\\';  $'CURDIR = '.';
 	$'PATHSEP = ';';
     } elsif (defined($MacPerl'Version)) {
-        $'MSDOS = 0;  $'MACOS = 1;  $'UNIX = 0;
+        $'MSDOS = 0;  $'MACOS = 1;  $'UNIX = 0;  $'VMS = 0;
 	$'DIRSEP = ':';  $'CURDIR = ':';
 	$'PATHSEP = ';';
     } else {
-        $'MSDOS = 0;  $'MACOS = 0;  $'UNIX = 1;
+        $'MSDOS = 0;  $'MACOS = 0;  $'UNIX = 1;  $'VMS = 0;
 	$'DIRSEP = '/';  $'CURDIR = '.';
 	$'PATHSEP = ':';
     }

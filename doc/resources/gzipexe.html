@@ -1,0 +1,109 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
+<html>
+<head>
+<title>MHonArc Resources: GZIPEXE</title>
+</head>
+<body>
+
+<address>
+<a href="../resources.html#gzipexe">MHonArc Resource List</a></br>
+</address>
+
+<hr>
+<h1>GZIPEXE</h1>
+
+<!-- *************************************************************** -->
+<h2>Syntax</h2>
+
+<dl>
+
+<dt><strong>Envariable</strong><dt>
+<dd><p>
+<code>M2H_GZIPEXE=</code><var>pathname</var>
+</p>
+</dd>
+
+<dt><strong>Element</strong><dt>
+<dd><p>
+<code>&lt;GZIPEXE&gt;</code><br>
+<var>pathname</var><br>
+<code>&lt;/GZIPEXE&gt;</code><br>
+</p>
+</dd>
+
+<dt><strong>Command-line Option</strong><dt>
+<dd><p>
+<code>-gzipexe </code><var>pathname</var>
+</p>
+</dd>
+
+</dl>
+
+<!-- *************************************************************** -->
+<h2>Description</h2>
+
+<p>GZIPEXE defines the pathname of the <em>Gzip</em> executable.
+MHonArc automatically invokes gzip to decompress files with a
+"<strong><tt>.gz</tt></strong>" extension.  Gzip is also invoked
+for compressing files when the <a href="gzipfiles.html">GZIPFILES</a>
+resource is set.
+</p>
+
+<p>If the value of GZIPEXE is not an absolute pathname, then
+gzip should exist in your search path.
+</p>
+
+<!-- *************************************************************** -->
+<h2>Default Setting</h2>
+
+<p><tt>gzip</tt>
+</p>
+
+<!-- *************************************************************** -->
+<h2>Resource Variables</h2>
+
+<p>N/A
+</p>
+
+<!-- *************************************************************** -->
+<h2>Examples</h2>
+
+<p>This example is not specific to GZIPEXE, but the following
+sample invocation:
+</p>
+<pre>
+    % <b>mhonarc mailbox.gz</b>
+</pre>
+<p>can be done if MHonArc is able to invoke gzip.  Therefore,
+you do not have to manually ungzip the mailbox first or use a
+pipe to decompress the data before passing it to MHonArc.
+</p>
+
+<!-- *************************************************************** -->
+<h2>Version</h2>
+
+<p>2.1.0
+</p>
+
+<!-- *************************************************************** -->
+<h2>See Also</h2>
+
+<p>
+<a href="gzipfiles.html">GZIPFILES</a>,
+<a href="gziplinks.html">GZIPLINKS</a>
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<address>
+97/06/03 17:04:06<br>
+<img align="top" src="../monicon.gif" alt="">
+<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"
+><strong>MHonArc</strong></a><br>
+Copyright &#169; 1997, <a href="http://www.oac.uci.edu/indiv/ehood/"
+>Earl Hood</a>, <a href="mailto:ehood@medusa.acs.uci.edu"
+>ehood@medusa.acs.uci.edu</a><br>
+</address>
+
+</body>
+</html>

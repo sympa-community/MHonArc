@@ -3,7 +3,7 @@
 # A. P. Barrett <barrett@ee.und.ac.za>, October 1993
 # $Revision: 1.4 $$Date: 1994/08/11 16:08:51 $
 #
-#	@(#)  base64.pl 1.1 96/09/17 @(#)
+#	@(#) base64.pl 1.2 98/02/23 14:05:54
 #
 # Modified March 21, 1996 by ehood@convex.com
 #	-> Changes to base64'uudecode to strip out any begin/end
@@ -20,6 +20,9 @@
 #
 #	   Other functions have not been changed to use substr(), but
 #	   may benefit from it.
+#
+# Modified February 20, 1998 by ehood@medusa.acs.uci.edu
+#	-> Removed all uses of $&.
 
 package base64;
 
@@ -76,7 +79,7 @@ sub b64touu
 
     # break into lines of 60 encoded chars, prepending "M" for uuencode
     while (s/^(.{60})//) {
-	$result .= "M" . $& . "\n";
+	$result .= "M" . $1 . "\n";
     }
 
     # any leftover chars go onto a shorter line
@@ -147,9 +150,9 @@ sub b64encode
     # uuencoder to convert each chunk to uuencode format,
     # then kill the leading "M", translate to the base64 alphabet,
     # and finally append a newline.
-    while (s/^((.|\n){45})//) {
-	#warn "in:$&:\n";
-	$chunk = substr(pack("u", $&), $[+1, 60);
+    while (s/^([\s\S]{45})//) {
+	#warn "in:$1:\n";
+	$chunk = substr(pack("u", $1), $[+1, 60);
 	#warn "packed    :$chunk:\n";
 	eval qq{
 	    \$chunk =~ tr|$tr_uuencode|$tr_base64|;
@@ -185,8 +188,8 @@ sub uuencode
     # break into chunks of 45 input chars, and use perl's builtin
     # uuencoder to convert each chunk to uuencode format.
     # (newline is added by builtin uuencoder.)
-    while (s/^((.|\n){45})//) {
-	$result .= pack("u", $&);
+    while (s/^([\s\S]{45})//) {
+	$result .= pack("u", $1);
     }
 
     # any leftover chars go onto a shorter line
@@ -210,7 +213,7 @@ sub uudecode
 
     # use perl's builtin uudecoder to convert each line
     while (s/^([^\n]+\n?)//) {
-	$result .= unpack("u", $&);
+	$result .= unpack("u", $1);
     }
 
     # return result

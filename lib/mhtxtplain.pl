@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	@(#) mhtxtplain.pl 1.8 97/05/13 11:29:12 @(#)
+##	@(#) mhtxtplain.pl 1.10 98/02/23 14:56:02
 ##  Author:
 ##      Earl Hood       ehood@medusa.acs.uci.edu
 ##  Description:
@@ -12,7 +12,7 @@
 ##              </MIMEFILTERS>
 ##---------------------------------------------------------------------------##
 ##    MHonArc -- Internet mail-to-HTML converter
-##    Copyright (C) 1995-1997	Earl Hood, ehood@medusa.acs.uci.edu
+##    Copyright (C) 1995-1998	Earl Hood, ehood@medusa.acs.uci.edu
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by
@@ -26,9 +26,9 @@
 ##
 ##    You should have received a copy of the GNU General Public License
 ##    along with this program; if not, write to the Free Software
-##    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+##    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+##    02111-1307, USA
 ##---------------------------------------------------------------------------##
-
 
 package m2h_text_plain;
 
@@ -36,7 +36,7 @@ $Url    	= '(http://|https://|ftp://|afs://|wais://|telnet://' .
 		   '|gopher://|news:|nntp:|mid:|cid:|mailto:|prospero:)';
 $UrlExp 	= $Url . q%[^\s\(\)\|<>"']*[^\.;,"'\|\[\]\(\)\s<>]%;
 $HUrlExp	= $Url . q%[^\s\(\)\|<>"'\&]*[^\.;,"'\|\[\]\(\)\s<>\&]%;
-$QuoteChars	= '>|[\|\]+:]';
+$QuoteChars	= '[>\|\]+:]';
 $HQuoteChars	= '&gt;|[\|\]+:]';
 
 ##---------------------------------------------------------------------------##
@@ -54,13 +54,16 @@ $HQuoteChars	= '&gt;|[\|\]+:]';
 ##				   to leave as-is.  Only HTML special
 ##				   characters will be converted into
 ##				   entities.
+##	    target=name  	-- Set TARGET attribute for links if
+##				   converting URLs to links.  Defaults to
+##				   _top.
 ##
 ##	All arguments should be separated by at least one space
 ##
 sub filter {
     local($header, *fields, *data, $isdecode, $args) = @_;
     local($ctype, $charset, $nourl, $doquote, $igncharset, $nonfixed,
-	  $keepspace, $maxwidth);
+	  $keepspace, $maxwidth, $target);
     local(%asis) = ();
 
     $nourl	= ($'NOURL || ($args =~ /nourl/i));
@@ -71,6 +74,13 @@ sub filter {
 	$maxwidth = $1;
     } else {
 	$maxwidth = 0;
+    }
+    if ($args =~ /target="([^"]+)"/i) {
+	$target = $1;
+    } elsif ($args =~ /target=(\S+)/i) {
+	$target = $1;
+    } else {
+	$target = "_top";
     }
 
     ## Grab charset parameter (if defined)
@@ -137,7 +147,8 @@ sub filter {
     }
 
     ## Convert URLs to hyperlinks
-    $data =~ s@($HUrlExp)@<A HREF="$1">$1</A>@gio  unless $nourl;
+    $data =~ s@($HUrlExp)@<A TARGET="$target" HREF="$1">$1</A>@gio
+	unless $nourl;
 
     ($data);
 }
@@ -157,21 +168,20 @@ sub filter {
 ##  Author of function:
 ##      NIIBE Yutaka	gniibe@mri.co.jp
 ##	(adapted for mhtxtplain.pl by Earl Hood <ehood@medusa.acs.uci.edu>)
+##	(some changes made to remove use of $& and few other optimizations)
 ##
 sub jp2022 {
     local(*body) = shift;
     local(@lines) = split(/\r?\n/,$body);
     local($ret, $ascii_text);
+    local($_);
 
     $ret = "<PRE>\n";
-    for ($i = 0; $i <= $#lines; $i++) {
-        $_ = $lines[$i];
-
+    foreach (@lines) {
 	# Process preceding ASCII text
 	while(1) {
-	    if (/^[^\033]+/) {	# ASCII plain text
-		$ascii_text = $&;
-		$_ = $';
+	    if (s/^([^\033]+)//) {	# ASCII plain text
+		$ascii_text = $1;
 
 		# Replace meta characters in ASCII plain text
 		$ascii_text =~ s%\&%\&amp;%g;
@@ -182,12 +192,10 @@ sub jp2022 {
 		    unless $'NOURL;
 
 		$ret .= $ascii_text;
-	    } elsif (/\033\.[A-F]/) { # G2 Designate Sequence
-		$_ = $';
-		$ret .= $&;
-	    } elsif (/\033N[ -]/) { # Single Shift Sequence
-		$_ = $';
-		$ret .= $&;
+	    } elsif (s/(\033\.[A-F])//) { # G2 Designate Sequence
+		$ret .= $1;
+	    } elsif (s/(\033N[ -])//) { # Single Shift Sequence
+		$ret .= $1;
 	    } else {
 		last;
 	    }
@@ -195,13 +203,11 @@ sub jp2022 {
 
 	# Process Each Segment
 	while(1) {
-	    if (/^\033\([BJ]/) { # Single Byte Segment
-		$_ = $';
-		$ret .= $&;
+	    if (s/^(\033\([BJ])//) { # Single Byte Segment
+		$ret .= $1;
 		while(1) {
-		    if (/^[^\033]+/) {	# ASCII plain text
-			$ascii_text = $&;
-			$_ = $';
+		    if (/^([^\033]+)/) {	# ASCII plain text
+			$ascii_text = $1;
 
 			# Replace meta characters in ASCII plain text
 			$ascii_text =~ s%\&%\&amp;%g;
@@ -212,29 +218,23 @@ sub jp2022 {
 			    unless $'NOURL;
 
 			$ret .= $ascii_text;
-		    } elsif (/\033\.[A-F]/) { # G2 Designate Sequence
-			$_ = $';
-			$ret .= $&;
-		    } elsif (/\033N[ -]/) { # Single Shift Sequence
-			$_ = $';
-			$ret .= $&;
+		    } elsif (s/(\033\.[A-F])//) { # G2 Designate Sequence
+			$ret .= $1;
+		    } elsif (s/(\033N[ -])//) { # Single Shift Sequence
+			$ret .= $1;
 		    } else {
 			last;
 		    }
 		}
-	    } elsif (/^\033\$[\@AB]|\033\$\([CD]/) { # Double Byte Segment
-		$_ = $';
-		$ret .= $&;
-		while(1) {
-		    if (/^([!-~][!-~])+/) { # Double Char plain text
-			$_ = $';
-			$ret .= $&;
-		    } elsif (/\033\.[A-F]/) { # G2 Designate Sequence
-			$_ = $';
-			$ret .= $&;
-		    } elsif (/\033N[ -]/) { # Single Shift Sequence
-			$_ = $';
-			$ret .= $&;
+	    } elsif (/^(\033\$[\@AB]|\033\$\([CD])/) { # Double Byte Segment
+		$ret .= $1;
+		while (1) {
+		    if (s/^([!-~][!-~]+)//) { # Double Char plain text
+			$ret .= $1;
+		    } elsif (s/(\033\.[A-F])//) { # G2 Designate Sequence
+			$ret .= $1;
+		    } elsif (s/(\033N[ -])//) { # Single Shift Sequence
+			$ret .= $1;
 		    } else {
 			last;
 		    }
@@ -269,8 +269,9 @@ sub esc_chars_inplace {
 sub preserve_space {
     local($str) = shift;
 
-    1 while $str =~ s/\t+/'&nbsp;' x (length($&) * 8 - length($`) % 8)/e;
-    # $str =~ s/ {2,}/'&nbsp;' x length($&)/ge;
+    1 while
+    $str =~ s/^([^\t]*)(\t+)/$1 . ' ' x (length($2) * 8 - length($1) % 8)/e;
+
     $str =~ s/ /\&nbsp;/g;
     $str;
 }
@@ -281,36 +282,43 @@ sub break_line {
     local($str) = shift;
     local($width) = shift;
     local($q, $new) = ('', '');
-    local($try, $trywidth);
+    local($try, $trywidth, $len);
 
     ## Translate tabs to spaces
-    1 while $str =~ s/\t+/' ' x (length($&) * 8 - length($`) % 8)/e;
+    1 while
+    $str =~ s/^([^\t]*)(\t+)/$1 . ' ' x (length($2) * 8 - length($1) % 8)/e;
 
     ## Do nothing if str <= width
     return $str  if length($str) <= $width;
 
     ## See if str begins with a quote char
-    if ($str =~ s/^($QuoteChars)//) {
+    if ($str =~ s/^($QuoteChars)//o) {
 	$q = $1;
 	--$width;
     }
 
     ## Create new string by breaking up str
-    while ($str) {
+    while ($str ne "") {
+
+	# If $str less than width, break out
+	if (length($str) <= $width) {
+	    $new .= $q . $str;
+	    last;
+	}
 
 	# handle case where no-whitespace line larger than width
-	if (($str =~ /^\S+/) && (length($&) >= $width)) {
-	    $new .= $q . $&;
-	    $str = $';
+	if (($str =~ /^(\S+)/) && (($len = length($1)) >= $width)) {
+	    $new .= $q . $1;
+	    substr($str, 0, $len) = "";
 	    next;
 	}
 
+	# Break string at whitespace
 	$try = '';
 	$trywidth = $width;
 	$try = substr($str, 0, $trywidth);
-
-	if ($try =~ /\S+$/) {
-	    $trywidth -= length($&);
+	if ($try =~ /(\S+)$/) {
+	    $trywidth -= length($1);
 	    $new .= $q . substr($str, 0, $trywidth);
 	} else {
 	    $new .= $q . $try;

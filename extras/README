@@ -12,7 +12,13 @@ MosaicMail	Program to pipe a mail/news message into NCSA Mosaic for X.
 		Mosaic session.  See comments at beginning of source file
 		on how to use it.
 
+prsfrom.pl	Contributer: A.R. Burgers, burgers@ecn.nl
+		Supply missing Date: and From: fields to mailboxes.
+		Documentation in POD format included in the source.
+		Use the pod2* utilities provided with Perl to convert
+		POD documentation into desired format.
+
 README		This file.
 
 ---------------------------------------------------------------------------
-Earl Hood, ehood@convex.com
+Earl Hood, ehood@medusa.acs.uci.edu

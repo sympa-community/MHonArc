@@ -2,10 +2,62 @@ Release Notes for MHonArc
 
     http://www.oac.uci.edu/indiv/ehood/mhonarc.html
 
-Also read the CHANGES document for changes they may affect
-you if you are a user of an earlier version of MHonArc.
+Also read the CHANGES document for changes that may affect you if
+you are a user of an earlier version of MHonArc.
 
 ===========================================================================
+Version 2.1.2
+
+    o	The new default setting for CHARSETCONVERTERS will not get
+	used in existing archives.  If you want the settings to
+	help improve the performance on existing archives, you need
+	to define the following resource:
+
+	<CHARSETCONVERTERS>
+	plain:main'htmlize:
+	us-ascii:main'htmlize:
+	iso-8859-1:main'htmlize:
+	</CHARSETCONVERTERS>
+
+	If you do not specify a resource file each time you update
+	and archive, you can create one with the above settings and
+	do -editidx so subsequent updates will use the new settings
+	(you do not need to respecify the resource file again after
+	the -editidx operation).
+
+    o	For a reason why you may want to set the ARCHIVE resource to
+	0, see the ARCHIVE resource page of the documentation.
+
+---------------------------------------------------------------------------
+Version 2.1.1
+
+    o	A bug-fix, minor enhancement, release.  There are no
+	changes to MHonArc that require any special notes.
+
+    o	A new (contributed) program, prsfrom.pl, has been added to
+	the extras directory.  This program may be of use depending
+	on the type of input you pass to MHonArc.  See the extras
+	README for more information.
+
+---------------------------------------------------------------------------
+Version 2.1.0
+
+    o	See the Warnings in the documentation for the new HTMLEXT
+	and MSGPREFIX resources before using them.
+
+    o	To take advantage of the new default MIMEFILTERS setting
+	for existing archives, you will need set the MIMEFILERS
+	resource in a update operation.  The simplest approach
+	is to perform an -editidx on existing archives with a
+	resource file containing the following settings:
+
+	<MIMEFILTERS>
+	model/*:m2h_external'filter:mhexternal.pl
+	text/enriched:m2h_text_enriched'filter:mhtxtenrich.pl
+	text/richtext:m2h_text_enriched'filter:mhtxtenrich.pl
+	</MIMEFILTERS>
+
+---------------------------------------------------------------------------
 
 Version 2.0.1
 
@@ -35,4 +87,4 @@ Version 2.0.0
 
 
 ===========================================================================
-97/05/22 19:01:12
+98/02/23 18:58:27

@@ -1,12 +1,12 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	@(#) ewhutil.pl 1.5 97/04/23 13:38:51 @(#)
+##	@(#) ewhutil.pl 1.6 98/02/23 14:06:53 @(#)
 ##  Author:
 ##      Earl Hood       ehood@medusa.acs.uci.edu
 ##  Description:
 ##      Generic utility routines
 ##---------------------------------------------------------------------------##
-##    Copyright (C) 1996,1997	Earl Hood, ehood@medusa.acs.uci.edu
+##    Copyright (C) 1996-1998	Earl Hood, ehood@medusa.acs.uci.edu
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by
@@ -20,7 +20,8 @@
 ##
 ##    You should have received a copy of the GNU General Public License
 ##    along with this program; if not, write to the Free Software
-##    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+##    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+##    02111-1307, USA
 ##---------------------------------------------------------------------------##
 
 ##---------------------------------------------------------------------------
@@ -71,38 +72,6 @@ sub cp {
     print DST <SRC>;
     close(SRC);
     close(DST);
-}
-
-##---------------------------------------------------------------------------
-##	Remove a directory (or file)
-##
-sub rmdir {
-    local($file) = shift;
-
-    if (-d $file) {
-	local(@files) = ();
-
-	if (!opendir(DIR, $file)) {
-	    warn qq{Warning: Unable to open "$file"\n};
-	    return 0;
-	}
-	@files = grep(!/^(\.|\..)$/i, readdir(DIR));
-	closedir(DIR);
-	foreach (@files) {
-	    &rmdir($file . $'DIRSEP . $_);
-	}
-	if (!rmdir($file)) {
-	    warn qq{Warning: Unable to remove "$file": $!\n};
-	    return 0;
-	}
-
-    } else {
-	if (!unlink($file)) {
-	    warn qq{Warning: Unable to delete "$file": $!\n};
-	    return 0;
-	}
-    }
-    1;
 }
 
 ##---------------------------------------------------------------------------

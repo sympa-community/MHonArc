@@ -6,9 +6,200 @@ Revision history for MHonArc.  Changes listed are brief.  Consult
 the documentation for further information/clarification.  It is
 possible that not all changes are documented here.
 
-MM/DD/YY
+MM/DD/YY(YY)
 =======================================================================
 #######################################################################
+=======================================================================
+02/23/1998	(2.1.2)
+
+    Enhancements/Changes
+    --------------------
+
+	o  Added the following resources:
+
+		ARCHIVE   	Create archive files
+		FROMFIELDS	Define fields to extract "FROM"
+		USINGLASTPG	Is $LASTPG$ in use
+
+	o  Removed (almost) all uses of $& in code.  Still used
+	   in readmail.pl for decoding non-ASCII encoded text.
+
+	o  Changed the default value of CHARSETCONVERTS resource.
+	   The plain, us-ascii, and iso-8859-1 charsets now
+	   default to main::htmlize.  This provided a significant
+	   performance improvement when process a large amount of
+	   input.
+
+	o  Moved thread related routines into a file called
+	   mhthread.pl.
+
+	o  MIMEFILTERS, MIMEARGS, and CHARSETCONVERTS resources
+	   support Perl 5 package qualification in function names
+	   if a semi-colon is used instead of a colon as the
+	   list values separator.
+
+	o  Probably some other changes I forgot about.
+
+    Bug Fixes
+    ---------
+    Problem:   	Documentation of MAILTOURL incorrectly states that
+		the $TO$ resource variable is the value of the
+		To: message header field.
+    Solution:	Fixed documentation to state that $TO$ represents the
+		address being hyperlinked.
+
+    Problem:   	Attachments saved to files with spaces in filename
+		(due to "usename" option set to m2h_external::filter),
+		will cause anchors to the attachments in the HTML
+		message contain spaces.
+    Solution:	Fixed m2h_external::filter to escape special characters
+		in the URL linking to the external file.
+
+=======================================================================
+02/18/1998	(2.1.1)
+
+    Enhancements/Changes
+    --------------------
+
+	o  Added DATEFIELDS resource.  The resource allows the user to
+	   specify the fields (and order) that are checked when
+	   MHonArc extracts the date of a message.
+
+	o  RMM can now take message number ranges and/or message-ids.
+
+	o  Added $FROMADDR$ variable for MAILTOURL resource.
+
+	o  Message-id printed in warning about unable to parse date.
+	   Helps users locate offending message.
+
+	o  'No Author' used if no message sender is not present.
+
+    Bug Fixes
+    ---------
+    Problem:   	Message with dates after 2037, or before 1970, will hang
+		MHonArc, not get processed, or listed in wrong order.
+    Solution:	The problem is that Perl's timelocal.pl library cannot
+		handle dates out of those ranges (same applies to
+		Time::Local).  Since get_time_from_date() is the only
+		routine require the services of timelocal.pl, the
+		routine will generate a warning of bad years and use
+		the current year.
+
+    Problem:   	Anchors to attachments in a message converted via
+		SINGLE do not contain OUTDIR if OUTDIR is specified.
+		OUTDIR may want to be set to all attachments to be
+		contained in a separate directory from the converted
+		message.
+    Solution:	mhexternal.pl now checks $SINGLE variable set by the
+		main code during startup.  If set, the value of
+		$OUTDIR is prepending to any hrefs to external files.
+
+    Problem:   	February is misspelled "Febuary" in mhtime.pl.
+    Solution:	Change the spelling so its correct.
+
+    Problem:   	Lowercase timezones in dates are not recognized.
+    Solution:	Code modified to convert zones to uppercase when
+		performing hash lookups.
+
+    Problem:   	Specified filenames of attachments sometimes have a
+		';' appended when utilizing the "usename" option is
+		set for mhexternal.pl.
+    Solution:	Fixed MAILhead_get_disposition() in readmail.pl to
+		strip off ';' parameter separator.
+
+    Problem:   	Specified filenames with spaces of attachments are not
+		recognized properly.  Filename gets truncated to first
+		occurance of a space.
+    Solution:	Fixed MAILhead_get_disposition() in readmail.pl to
+		to handle filenames with spaces.
+
+    Problem:   	The HTMLEXT resource does not affect the numbered index
+		page filenames of a MUTLIPG archive.
+    Solution:	write_main_index() and write_thread_index() fixed.
+
+    Problem:   	Anchor text of MAILTOURL links is translated to URL
+		escaped text.
+    Solution:	mailUrl() routine fixed.
+
+    Problem:   	Message 0 could not be deleted if specified with more
+		than one 0 (eg: 00000);
+    Solution:	rmm() routine fixed.
+
+    Problem:   	SUBJECTHEADER does not get stored in the db.
+    Solution:	output_db() routine updated to save SUBJECTHEADER.
+
+    Problem:   	Empty links can be created if there is no "From" defined
+		for a message and it is used as link text.
+    Solution:	Use 'No Author' as "From" if not defined.
+
+    Problem:	If a user defined resource variable is a string that
+		Perl interprets as a false value, it will not be used.
+    Solution:	Changed code to used define() function in
+		replace_li_vars().
+
+    Problem:   	Expired messages are not removed when a the main index
+		is not sorted by date.
+    Solution:	Always sort message by date when doing expire check.
+
+=======================================================================
+06/09/97	(2.1.0)
+
+    Enhancements/Changes
+    --------------------
+
+	o  Added the following resources:
+
+		DEFRCNAME	Base name of default resource file
+		FOLUPBEGIN	Begin markup for message follow-ups
+		FOLUPEND	End markup for message follow-ups
+		FOLUPLITXT	Markup for follow-up list entry
+		GZIPEXE		Pathname of gzip executable
+		GZIPFILES	Gzip files
+		GZIPLINKS	Add ".gz" to filenames in URLs
+		HTMLEXT		HTML extension for files
+		MSGBODYEND	Markup at end of converted message body
+		MSGPREFIX	Prefix for message filenames
+		REFSBEGIN	Begin markup for message references
+		REFSEND 	End markup for message references
+		REFSLITXT	Markup for reference list entry
+		TSORT		Sort threads by date or message number
+		TSUBSORT	Sort threads by subject
+
+	o  Changes to mhexternal.pl filter:
+	
+	    -  Two new options: useicons and iconurl="url".
+	    -  Added some more content-types to CTExt hash.
+
+	o  Added filter for text/enriched data (mhtxtenrich.pl).
+
+	o  Changed default setting for MIMEFILTERS.  The following
+	   was added:
+
+	    model/*:m2h_external'filter:mhexternal.pl
+	    text/enriched:m2h_text_enriched'filter:mhtxtenrich.pl
+	    text/richtext:m2h_text_enriched'filter:mhtxtenrich.pl
+
+	o  Some code moved to new library files (mhopt.pl,
+	   mhfile.pl).
+
+
+    Bug Fixes
+    ---------
+    Problem:    An undefined subroutine error occured during an
+		RMM operation when there are messages with non-ASCII
+		encodings in message headers.
+    Solution:   Proper libraries are now loaded for RMM operations.
+
+    Problem:   	Subjects using the "... -Reply" convention started
+		a new thread.
+    Solution:  	Fixed typo in regexp.
+
+    Problem:   	Nested anchor markup occurs on index pages where
+		a message's subject contains a URL and the subject
+		is used to link to the message page.
+    Solution:  	Replaced default routine that converts subject text
+
+
 =======================================================================
 05/23/97	(2.0.1)
 
@@ -939,4 +1130,4 @@ MM/DD/YY
 #######################################################################
 =======================================================================
 Earl Hood, ehood@medusa.acs.uci.edu
-@(#) CHANGES 97/05/22 19:01:09 @(#)
+@(#) CHANGES 98/02/23 18:56:12 @(#)

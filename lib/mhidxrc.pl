@@ -1,13 +1,13 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	@(#) mhidxrc.pl 1.5 97/05/13 11:24:35 @(#)
+##	@(#) mhidxrc.pl 1.8 98/02/23 16:25:37
 ##  Author:
 ##      Earl Hood       ehood@medusa.acs.uci.edu
 ##  Description:
 ##      MHonArc library defining values for various index resources
 ##---------------------------------------------------------------------------##
 ##    MHonArc -- Internet mail-to-HTML converter
-##    Copyright (C) 1996,1997	Earl Hood, ehood@medusa.acs.uci.edu
+##    Copyright (C) 1996-1998	Earl Hood, ehood@medusa.acs.uci.edu
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by
@@ -21,7 +21,8 @@
 ##
 ##    You should have received a copy of the GNU General Public License
 ##    along with this program; if not, write to the Free Software
-##    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+##    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+##    02111-1307, USA
 ##---------------------------------------------------------------------------##
 
 ##-----------------##
@@ -252,6 +253,15 @@ EndOfStr
 ## Message resources ##
 ##-------------------##
 
+unless (@DateFields) {
+    @DateFields = ('received', 'date');
+    $IsDefault{'DATEFIELDS'} = 1;
+}
+unless (@FromFields) {
+    @FromFields = ('from', 'reply-to', 'apparently-from');
+    $IsDefault{'FROMFIELDS'} = 1;
+}
+
 ## Beginning of message page
 unless ($MSGPGBEG) {
     $MSGPGBEG =<<'EndOfStr';
@@ -282,6 +292,12 @@ unless ($SUBJECTHEADER) {
 unless ($HEADBODYSEP) {
     $HEADBODYSEP = "<HR>\n";
     $IsDefault{'HEADBODYSEP'} = 1;
+}
+
+## Separator between end of message data and rest of page
+unless ($MSGBODYEND) {
+    $MSGBODYEND = "<HR>\n";
+    $IsDefault{'MSGBODYEND'} = 1;
 }
 
 ##---------------------------------##
@@ -387,7 +403,7 @@ if (!$TOPLINKS) {
 
 ## Bottom links in message
 if (!$BOTLINKS) {
-    $BOTLINKS =  "<HR>\n<UL>\n";
+    $BOTLINKS =  "<UL>\n";
     $BOTLINKS .= '$PREVLINK$$NEXTLINK$'  if $MAIN;
     $BOTLINKS .= '$TPREVLINK$$TNEXTLINK$'  if $THREAD;
     if ($MAIN || $THREAD) {
@@ -399,6 +415,49 @@ if (!$BOTLINKS) {
     }
     $BOTLINKS .= "</UL>\n</LI>\n</UL>\n";
     $IsDefault{'BOTLINKS'} = 1;
+}
+
+## Follow-up and References resources
+unless ($FOLUPBEGIN) {
+    $FOLUPBEGIN =<<'EndOfVar';
+<UL><LI><STRONG>Follow-Ups</STRONG>:
+<UL>
+EndOfVar
+    $IsDefault{'FOLUPBEGIN'} = 1;
+}
+unless ($FOLUPLITXT) {
+    $FOLUPLITXT =<<'EndOfVar';
+<LI><STRONG>$SUBJECT$</STRONG>
+<UL><LI><EM>From:</EM> $FROM$</LI></UL></LI>
+EndOfVar
+    $IsDefault{'FOLUPLITXT'} = 1;
+}
+unless ($FOLUPEND) {
+    $FOLUPEND =<<'EndOfVar';
+</UL></LI></UL>
+EndOfVar
+    $IsDefault{'FOLUPEND'} = 1;
+}
+
+unless ($REFSBEGIN) {
+    $REFSBEGIN =<<'EndOfVar';
+<UL><LI><STRONG>References</STRONG>:
+<UL>
+EndOfVar
+    $IsDefault{'REFSBEGIN'} = 1;
+}
+unless ($REFSLITXT) {
+    $REFSLITXT =<<'EndOfVar';
+<LI><STRONG>$SUBJECT$</STRONG>
+<UL><LI><EM>From:</EM> $FROM$</LI></UL></LI>
+EndOfVar
+    $IsDefault{'REFSLITXT'} = 1;
+}
+unless ($REFSEND) {
+    $REFSEND =<<'EndOfVar';
+</UL></LI></UL>
+EndOfVar
+    $IsDefault{'REFSEND'} = 1;
 }
 
 ##--------------------------------------------##

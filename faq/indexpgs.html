@@ -14,8 +14,23 @@
 <hr>
 <H2><a name="indexpages">Index Pages</a></H2>
 
+<!--X-TOC-Start-->
+<ul>
+<li><a href="#idxtypes">What are all the different index types?</a></li>
+<li><a href="#additional">Can I have additional indexes beyond the default main and thread index?</a></li>
+<li><a href="#multipage">Can I have multi-page indexes?</a></li>
+<li><a href="#authorsort">Can I sort messages by author?</a></li>
+<li><a href="#otherindexes">How does the OTHERINDEXES resource work?</a></li>
+<li><a href="#attachments">Can I include links to message attachments on index pages?</a></li>
+</ul>
+<!--X-TOC-End-->
+
 <!-- ??????????????????????????????????????????????????????????????? -->
-<h3><img src="monicon.gif" align="bottom" alt=""> <b><a name="idxtypes">What are all the different index types?</a></b></h3>
+<hr noshade size=1>
+<table border=0>
+<tr valign=top><td><img src="monicon.gif" align="bottom" alt=""></td><td>
+<h3><b><a name="idxtypes">What are all the different index types?</a></b></h3>
+</td></tr></table>
 
 <p>MHonArc catagorizes indexes into to types:
 <b>main</b> and <b>thread</b>.  <b>Main</b> covers indexes
@@ -42,14 +57,19 @@ Author index support is available only in v2.0 beta 2 or later.
 </p>
 
 <!-- ??????????????????????????????????????????????????????????????? -->
-<h3><img src="monicon.gif" align="bottom" alt=""> <b><a name="additional">Can I have additional indexes beyond the default main and thread index?</a></b></h3>
+<hr noshade size=1>
+<table border=0>
+<tr valign=top><td><img src="monicon.gif" align="bottom" alt=""></td><td>
+<h3><b><a name="additional">Can I have additional indexes beyond the default main and thread index?</a></b></h3>
+</td></tr></table>
 
 <P>Yes. In version 1.2 (or later), a resource was added called
 <strong>OTHERINDEXES</strong>. With this resource, you are able to
 define an arbitrary number of indexes you desire. The additional
 indexes may be in any format you desire and that is supported
 by MHonArc. Refer to the documentation for the usage of
-<strong>OTHERINDEXES</strong>.
+<strong>OTHERINDEXES</strong> (also see
+"<a href="#otherindexes">How does the OTHERINDEXES resource work?</a>").
 </P>
 
 <dl>
@@ -64,7 +84,11 @@ THEAD resources.
 </dl>
 
 <!-- ??????????????????????????????????????????????????????????????? -->
-<h3><img src="monicon.gif" align="bottom" alt=""> <b><a name="multipage">Can I have multi-page indexes?</a></b></h3>
+<hr noshade size=1>
+<table border=0>
+<tr valign=top><td><img src="monicon.gif" align="bottom" alt=""></td><td>
+<h3><b><a name="multipage">Can I have multi-page indexes?</a></b></h3>
+</td></tr></table>
 
 <p>Yes, in v2.0 or later.  Setting the MULTIPG and IDXSIZE will cause
 indexes to to be listed across multiple pages with IDXSIZE determine
@@ -72,10 +96,144 @@ the number of messages listed per page.
 </p>
 
 <!-- ??????????????????????????????????????????????????????????????? -->
-<h3><img src="monicon.gif" align="bottom" alt=""> <b><a name="authorsort">Can I sort messages by author?</a></b></h3>
+<hr noshade size=1>
+<table border=0>
+<tr valign=top><td><img src="monicon.gif" align="bottom" alt=""></td><td>
+<h3><b><a name="authorsort">Can I sort messages by author?</a></b></h3>
+</td></tr></table>
 
 <P>Yes, with v2.0 beta 2, or later.
 </P>
+
+<!-- ??????????????????????????????????????????????????????????????? -->
+<hr noshade size=1>
+<table border=0>
+<tr valign=top><td><img src="monicon.gif" align="bottom" alt=""></td><td>
+<h3><b><a name="otherindexes">How does the OTHERINDEXES resource work?</a></b></h3>
+</td></tr></table>
+
+<p>I am going to describe a basic example on how OTHERINDEXES can be used.
+</p>
+<p>First, lets have the top resource file (call it "top.rc") that
+defines the formatting of the default 2 indexes (a main and
+a thread).  Example:
+</p>
+<pre>*** snip "top.rc" ***
+&lt;MAIN&gt;
+&lt;THREAD&gt;
+&lt;SORT&gt;
+&lt;NOTREVERSE&gt;
+&lt;NOREVERSE&gt;
+*** snip "top.rc" ***
+</pre>
+<p>I may have a bunch of layout stuff, but that is not important
+for this discussion.
+</p>
+<p>The above tells MHonArc to create a date and thread index.
+I am explicit with the settings to avoid potential unknown settings
+from a default resource file (ie. It is always good to be explicit,
+especially when we get to otherindexes).
+</p>
+<p>Now, I would like to also create subject and author indexes.
+In "top.rc" I would add the following:
+</p>
+<pre>*** snip "top.rc" ***
+&lt;OTHERINDEXES&gt;
+subject.rc
+date.rc
+&lt;/OTHERINDEXES&gt;
+*** snip "top.rc" ***
+</pre>
+<p>The filenames listed are arbitrary, but it is useful if they
+imply their purpose.  Since absolute pathnames were not used,
+the files will be looked for in the current working directory,
+or in the archive directory.  Since the current working directory
+may not be appropriate, it is usually best to put the files in
+the archive directory.
+</p>
+<p>The following now shows the important settings for each file:
+</p>
+<pre>*** snip "subject.rc" ***
+&lt;MAIN&gt;
+&lt;NOTHREAD&gt;
+&lt;SUBSORT&gt;
+&lt;IDXFNAME&gt;
+subject.html
+&lt;/IDXFNAME&gt;
+&lt;IDXPREFIX&gt;
+subject
+&lt;/IDXPREFIX&gt;
+&lt;NOREVERSE&gt;
+*** snip "subject.rc" ***
+</pre>
+<pre>*** snip "author.rc" ***
+&lt;MAIN&gt;
+&lt;NOTHREAD&gt;
+&lt;AUTHSORT&gt;
+&lt;IDXFNAME&gt;
+author.html
+&lt;/IDXFNAME&gt;
+&lt;IDXPREFIX&gt;
+author
+&lt;/IDXPREFIX&gt;
+&lt;NOREVERSE&gt;
+*** snip "author.rc" ***
+</pre>
+<p>Again, notice how I am being explicit.  MHonArc does not reset
+resources when reading the otherindexes resource files. with one
+<em>exception</em>: THREAD is shut-off.  To avoid overriding the default
+index files, I must explicitly redefine IDXFNAME (amd IDXPREFIX
+if MULTIPG is active).  If I want different layouts for my
+other indexes, I must explicitly define those, or they will
+use what was ever set in top.rc (or the applicable default resource setting(s)
+when no explicit setting provided).
+</p>
+<p><strong>NOTE</strong>:
+    Otherindexes resource file only defines a *single* index type: main
+    or thread.  If you specify the THREAD, a thread index will be
+    created and all MAIN related resources are ignored.  I.e.  THREAD
+    overrides MAIN.
+</p>
+<p><strong>WARNING</strong>:
+    Do <b>NOT</b> define OTHERINDEXES in your otherindexes resource files.
+    Also, make sure there is no self references.  If you do not heed
+    these warnings, you will cause an infinite loop, and/or
+    unpredictable results.
+</p>
+<p>Make sure OTHERINDEXES resource files are present for all
+updates to an archive.  Mhonarc only stores settings for the
+default indexes, so the resource files are needed each time
+for other indexes.
+</p>
+<p>What I left out in this example is the redefinition of the navigational
+based resources.  Since I am adding more indexes, I would have to
+redefine resources like TOPLINK, BOTLINKS, LISTBEGIN, THEAD, etc, so
+there will be links to the other indexes.
+</p>
+
+<!-- ??????????????????????????????????????????????????????????????? -->
+<hr noshade size=1>
+<table border=0>
+<tr valign=top><td><img src="monicon.gif" align="bottom" alt=""></td><td>
+<h3><b><a name="attachments">Can I include links to message attachments on index pages?</a></b></h3>
+</td></tr></table>
+
+<p>Not directly, but a (dirty) work-around maybe possible.
+You can modify the
+mhexternal.pl filter to write to a file (name based off the message
+number) with some HTML markup that creates the HTML attachment list
+(mhexternal.pl knows about content-types and other stuff, so it can
+make a useful list).  Note, since mhexternal.pl works on a single part
+at a time, it needs to create the list via append operations to the
+file.  The implementation is similiar to how mhexternal.pl supports
+placing attachments into a subdirectory.  Make sure that mhexternal.pl
+returns the file as part of the return value so it is automatically
+deleted if the message is removed from the archive.
+</p>
+<p>Then, you define the LITEMPLATE resource to use a server-side include
+to include the file as part of the message listing.  I did say
+it was dirty, but it should work.
+</p>
 
 <!-- ===================================================================== -->
 <hr>
@@ -88,11 +246,11 @@ the number of messages listed per page.
 
 <HR>
 <address>
-97/05/15 16:48:09<br>
+98/02/18 18:56:45<br>
 <img align="top" src="monicon.gif" alt="">
 <a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"
 ><strong>MHonArc</strong></a><br>
-Copyright &#169; 1997, <a href="http://www.oac.uci.edu/indiv/ehood/"
+Copyright &#169; 1997-1998, <a href="http://www.oac.uci.edu/indiv/ehood/"
 >Earl Hood</a>, <a href="mailto:ehood@medusa.acs.uci.edu"
 >ehood@medusa.acs.uci.edu</a><br>
 </address>

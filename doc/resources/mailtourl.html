@@ -84,7 +84,11 @@ mailto:$TO$
 </tr>
 <tr valign=top>
 <td><strong><code>$FROM$</code></strong></td>
-<td>The complete text in the <CODE>From</td>
+<td>The complete text in the <tt>From:</tt> field.</td>
+</tr>
+<tr valign=top>
+<td><strong><code>$FROMADDR$</code></strong></td>
+<td>Address portion of <tt>From:</tt> field.</td>
 </tr>
 <tr valign=top>
 <td><strong><code>$MSGID$</code></strong></td>
@@ -100,7 +104,9 @@ mailto:$TO$
 </tr>
 <tr valign=top>
 <td><strong><code>$TO$</code></strong></td>
-<td>The complete text in the <CODE>To</code> field.</td>
+<td>The email address being converted into a hyperlink.
+It is <b>NOT</b> the value of the <tt>To:</tt> field.  The variable
+name is misleading.</td>
 </tr>
 </tbody>
 </table>
@@ -115,7 +121,7 @@ to have e-mail addresses linked to a CGI program:
 
 <pre>
 <b>&lt;MailToURL&gt;</b>
-/cgi-bin/mailform.cgi?to=$TO$;subject=$SUBJECT$;srcid=$MSGID$
+/cgi-bin/mailform.cgi?to=$FROM$;subject=$SUBJECT$;srcid=$MSGID$
 <b>&lt;/MailToURL&gt;</b>
 </pre>
 
@@ -137,10 +143,10 @@ to have e-mail addresses linked to a CGI program:
 <!-- *************************************************************** -->
 <hr>
 <address>
-97/05/13 17:29:34<br>
+98/02/23 16:16:05<br>
 <img align="top" src="../monicon.gif" alt="">
 <a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"><strong>MHonArc</strong></a><br>
-Copyright &#169; 1997, <a href="http://www.oac.uci.edu/indiv/ehood/">Earl Hood</a>, <a href="mailto:ehood@medusa.acs.uci.edu">ehood@medusa.acs.uci.edu</a><br>
+Copyright &#169; 1997-1998, <a href="http://www.oac.uci.edu/indiv/ehood/">Earl Hood</a>, <a href="mailto:ehood@medusa.acs.uci.edu">ehood@medusa.acs.uci.edu</a><br>
 </address>
 
 </body>

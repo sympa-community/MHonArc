@@ -40,30 +40,29 @@
 <hr>
 <h2>Description</h2>
 
-<p>DEFRCFILE points to the default resource file.  The file
-is read each time <em>MHonArc</em> is invoked.  The file is
+<p>DEFRCFILE is the pathname to the default resource file.  The file
+is read each time MHonArc is invoked.  The file is
 read before processing the resource file specified by the
 <a href="rcfile.html">RCFILE</a> resource and before command-line options
 are processed.
 The default resource file allows you change the default values resource
-values of <em>MHonArc</em>.
+values of MHonArc.
 </p>
 
 <!-- *************************************************************** -->
 <hr>
 <h2>Default Setting</h2>
 
-<p><var>user-home-path</var><tt>/.mhonarc.rc</tt>
+<p><var>user-home-path</var><tt>/</tt><a href="defrcname.html"
+>DEFRCNAME</a>
 </p>
 
 <p>If the above does not exist, then:
 </p>
 
-<p><var>MHonArc-library-path</var><tt>/.mhonarc.rc</tt>
+<p><var>MHonArc-library-path</var><tt>/</tt><a href="defrcname.html"
+>DEFRCNAME</a>
 </p>
-
-<p>Replace <tt>.mhonarc.rc</tt> with <tt>MHONARC.RC</tt>
-if running under MSDOS/Windows.
 
 <!-- *************************************************************** -->
 <hr>
@@ -91,13 +90,14 @@ if running under MSDOS/Windows.
 <h2>See Also</h2>
 
 <p>
+<a href="defrcname.html">DEFRCNAME</a>,
 <a href="rcfile.html">RCFILE</a>
 </p>
 
 <!-- *************************************************************** -->
 <hr>
 <address>
-97/05/13 17:29:12<br>
+97/06/03 17:03:59<br>
 <img align="top" src="../monicon.gif" alt="">
 <a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"
 ><strong>MHonArc</strong></a><br>

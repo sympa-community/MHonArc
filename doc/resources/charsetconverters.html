@@ -77,13 +77,17 @@ source file is optional if the routine is known to be define in
 an already listed source file.
 </p>
  
-<dl>
-<dt><strong>NOTE</strong></dt>
-<dd><p>Package qualification must use Perl 4 syntax. The '::'
-qualification is not supported yet.
+<table border=0 cellpadding=4>
+<tr valign=top>
+<td><strong>NOTE</strong></td>
+<td><p>Package qualification must use Perl 4 syntax. If Perl 5
+'<strong><code>::</code></strong>'
+qualification is desired, then values should be separated by
+a semi-colon.
 </p>
-</dd>
-</dl>
+</td>
+</tr>
+</table>
 
 <p>There are some special character set specifications.  They are
 as follows:
@@ -121,17 +125,16 @@ preserved.
 <dd><p>Just decode the data.  This is useful if it is known that
 the characters set is the native character set for the system.
 </p>
- 
-<dl>
-<dt><strong>WARNING</strong></dt>
-<dd><p>If the decoded data contains the characters '&lt;', '&gt;',
+<table border=0 cellpadding=4>
+<tr valign=top>
+<td><strong><font color=red>WARNING</font></strong></td>
+<td><p>If the decoded data contains the characters '&lt;', '&gt;',
 and '&amp', this may conflict with HTML markup.  See
 <a href="decodeheads.html">DECODEHEADS</a>
 where "-decode-" can be used.
-</p>
-</dd>
-</dl>
-
+</td>
+</tr>
+</table>
 </dd>
 
 </dl>
@@ -157,9 +160,9 @@ included in HTML markup.
 
 <pre>
 <b>&lt;CharsetConverters&gt;</b>
-plain:main'convert_line
-us-ascii:main'convert_line
-iso-8859-1:iso_8859'str2sgml:iso8859.pl
+plain:main'htmlize:
+us-ascii:main'htmlize:
+iso-8859-1:main'htmlize:
 iso-8859-2:iso_8859'str2sgml:iso8859.pl
 iso-8859-3:iso_8859'str2sgml:iso8859.pl
 iso-8859-4:iso_8859'str2sgml:iso8859.pl
@@ -213,10 +216,10 @@ iso-8859-1:-decode-
 <!-- *************************************************************** -->
 <hr>
 <address>
-97/05/13 17:29:08<br>
+98/02/23 16:15:37<br>
 <img align="top" src="../monicon.gif" alt="">
 <a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"><strong>MHonArc</strong></a><br>
-Copyright &#169; 1997, <a href="http://www.oac.uci.edu/indiv/ehood/">Earl Hood</a>, <a href="mailto:ehood@medusa.acs.uci.edu">ehood@medusa.acs.uci.edu</a><br>
+Copyright &#169; 1997-1998, <a href="http://www.oac.uci.edu/indiv/ehood/">Earl Hood</a>, <a href="mailto:ehood@medusa.acs.uci.edu">ehood@medusa.acs.uci.edu</a><br>
 </address>
 
 </body>

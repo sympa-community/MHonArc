@@ -1,13 +1,13 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	@(#) mhdb.pl 1.10 97/05/13 11:00:54 @(#)
+##	@(#) mhdb.pl 1.15 98/02/23 16:25:11
 ##  Author:
 ##      Earl Hood       ehood@medusa.acs.uci.edu
 ##  Description:
 ##      MHonArc library defining routines for outputing database.
 ##---------------------------------------------------------------------------##
 ##    MHonArc -- Internet mail-to-HTML converter
-##    Copyright (C) 1995-1997	Earl Hood, ehood@medusa.acs.uci.edu
+##    Copyright (C) 1995-1998	Earl Hood, ehood@medusa.acs.uci.edu
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by
@@ -21,7 +21,8 @@
 ##
 ##    You should have received a copy of the GNU General Public License
 ##    along with this program; if not, write to the Free Software
-##    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+##    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+##    02111-1307, USA
 ##---------------------------------------------------------------------------##
 
 ##---------------------------------------------------------------------------
@@ -64,7 +65,11 @@ sub output_db {
 	&print_assoc(DB, 'Zone', *Zone);
 
 	&print_array(DB, 'CharSetRequires', *CharSetRequires);
+	&print_array(DB, 'DateFields', *DateFields)
+	    unless $IsDefault{'DATEFIELDS'};
 	&print_array(DB, 'FieldOrder', *FieldOrder);
+	&print_array(DB, 'FromFields', *FromFields)
+	    unless $IsDefault{'FROMFIELDS'};
 	&print_array(DB, 'Months', *Months);
 	&print_array(DB, 'months', *months);
 	&print_array(DB, 'OtherIdxs', *OtherIdxs);
@@ -84,6 +89,10 @@ sub output_db {
 	&print_var(DB, 'ExpireTime', *ExpireTime);
 	&print_var(DB, 'FROM', *FROM);
 	&print_var(DB, 'GMTDateFmt', *GMTDateFmt);
+	&print_var(DB, 'GzipExe', *GzipExe);
+	&print_var(DB, 'GzipFiles', *GzipFiles);
+	&print_var(DB, 'GzipLinks', *GzipLinks);
+	&print_var(DB, 'HtmlExt', *HtmlExt);
 	&print_var(DB, 'IDXSIZE', *IDXSIZE);
 	&print_var(DB, 'LocalDateFmt', *LocalDateFmt);
 	&print_var(DB, 'MAILTOURL', *MAILTOURL);
@@ -95,20 +104,22 @@ sub output_db {
 	&print_var(DB, 'MsgGMTDateFmt', *MsgGMTDateFmt);
 	&print_var(DB, 'MSGHEAD', *MSGHEAD);
 	&print_var(DB, 'MsgLocalDateFmt', *MsgLocalDateFmt);
+	&print_var(DB, 'MsgPrefix', *MsgPrefix);
 	&print_var(DB, 'MULTIIDX', *MULTIIDX);
 	&print_var(DB, 'NOMAILTO', *NOMAILTO);
 	&print_var(DB, 'NONEWS', *NONEWS);
-	&print_var(DB, 'NOSORT', *NOSORT);
 	&print_var(DB, 'NOURL', *NOURL);
 	&print_var(DB, 'NumOfMsgs', *NumOfMsgs);
 	&print_var(DB, 'NumOfPages', *NumOfPages);
 	&print_var(DB, 'THREAD', *THREAD);
+	&print_var(DB, 'UsingLASTPG', *UsingLASTPG);
 
 	# Main index resources
 	if ($MAIN) {
 	    &print_var(DB, 'AUTHSORT', *AUTHSORT);
 	    &print_var(DB, 'IDXNAME', *IDXNAME);
 	    &print_var(DB, 'IDXPREFIX', *IDXPREFIX);
+	    &print_var(DB, 'NOSORT', *NOSORT);
 	    &print_var(DB, 'REVSORT', *REVSORT);
 	    &print_var(DB, 'SUBSORT', *SUBSORT);
 	    &print_var(DB, 'TITLE', *TITLE);
@@ -152,7 +163,9 @@ sub output_db {
 	    &print_var(DB, 'TIDXNAME', *TIDXNAME);
 	    &print_var(DB, 'TIDXPREFIX', *TIDXPREFIX);
 	    &print_var(DB, 'TLEVELS', *TLEVELS);
+	    &print_var(DB, 'TNOSORT', *TNOSORT);
 	    &print_var(DB, 'TREVERSE', *TREVERSE);
+	    &print_var(DB, 'TSUBSORT', *TSUBSORT);
 	    &print_var(DB, 'TTITLE', *TTITLE);
 
 	    &print_var(DB, 'TCONTBEG', *TCONTBEG)
@@ -215,12 +228,20 @@ sub output_db {
 	    				unless $IsDefault{'FLDBEG'};
 	&print_var(DB, 'FLDEND', *FLDEND)
 	    				unless $IsDefault{'FLDEND'};
+	&print_var(DB, 'FOLUPBEGIN', *FOLUPBEGIN)
+	    				unless $IsDefault{'FOLUPBEGIN'};
+	&print_var(DB, 'FOLUPEND', *FOLUPEND)
+	    				unless $IsDefault{'FOLUPEND'};
+	&print_var(DB, 'FOLUPLITXT', *FOLUPLITXT)
+	    				unless $IsDefault{'FOLUPLITXT'};
 	&print_var(DB, 'HEADBODYSEP ', *HEADBODYSEP)
 	    				unless $IsDefault{'HEADBODYSEP'};
 	&print_var(DB, 'LABELBEG', *LABELBEG)
 	    				unless $IsDefault{'LABELBEG'};
 	&print_var(DB, 'LABELEND', *LABELEND)
 	    				unless $IsDefault{'LABELEND'};
+	&print_var(DB, 'MSGBODYEND', *MSGBODYEND)
+	    				unless $IsDefault{'MSGBODYEND'};
 	&print_var(DB, 'MSGPGBEG', *MSGPGBEG)
 	    				unless $IsDefault{'MSGPGBEG'};
 	&print_var(DB, 'MSGPGEND', *MSGPGEND)
@@ -241,6 +262,14 @@ sub output_db {
 	    				unless $IsDefault{'PREVLINK'};
 	&print_var(DB, 'PREVLINKIA', *PREVLINKIA)
 	    				unless $IsDefault{'PREVLINKIA'};
+	&print_var(DB, 'REFSBEGIN', *REFSBEGIN)
+	    				unless $IsDefault{'REFSBEGIN'};
+	&print_var(DB, 'REFSEND', *REFSEND)
+	    				unless $IsDefault{'REFSEND'};
+	&print_var(DB, 'REFSLITXT', *REFSLITXT)
+	    				unless $IsDefault{'REFSLITXT'};
+	&print_var(DB, 'SUBJECTHEADER ', *SUBJECTHEADER)
+	    				unless $IsDefault{'SUBJECTHEADER'};
 	&print_var(DB, 'TNEXTBUTTON', *TNEXTBUTTON)
 	    				unless $IsDefault{'TNEXTBUTTON'};
 	&print_var(DB, 'TNEXTBUTTONIA', *TNEXTBUTTONIA)

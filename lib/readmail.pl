@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	@(#) readmail.pl 1.8 97/02/12 18:12:30 @(#)
+##	@(#) readmail.pl 1.10 98/02/23 16:31:06
 ##  Author:
 ##      Earl Hood       ehood@medusa.acs.uci.edu
 ##  Description:
@@ -25,7 +25,7 @@
 ##	    &main'MAILhead_get_disposition(*fields);
 ##
 ##---------------------------------------------------------------------------##
-##    Copyright (C) 1996,1997	Earl Hood, ehood@medusa.acs.uci.edu
+##    Copyright (C) 1996-1998	Earl Hood, ehood@medusa.acs.uci.edu
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by
@@ -39,7 +39,8 @@
 ##
 ##    You should have received a copy of the GNU General Public License
 ##    along with this program; if not, write to the Free Software
-##    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+##    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+##    02111-1307, USA
 ##---------------------------------------------------------------------------##
 
 package readmail;
@@ -628,18 +629,28 @@ sub main'MAILread_file_header {
 sub main'MAILhead_get_disposition {
     local(*hfields) = shift;
     local($disp, $filename) = ('', '');
+    local($_);
 
     if ($_ = $hfields{'content-disposition'}) {
 	($disp)	    = /^\s*(\S+)/;
-	($filename) = /filename=(\S+)/i;
-	 $disp	    =~ s%;%%g;		# Remove semi-colon if grabbed
+	$disp	    =~ s/;//g;		# Remove semi-colon if grabbed
+	if (/filename="([^"]+)"/i) {
+	    $filename = $1;
+	} elsif (/filename=(\S+)/i) {
+	    ($filename = $1) =~ s/;\s*$//g;
+	}
     }
     if (!$filename) {
 	$_ = $hfields{'content-type'};
-	($filename) = /name=(\S+)/i;
+	if (/name="([^"]+)"/i) {
+	    $filename = $1;
+	} elsif (/name=(\S+)/i) {
+	    ($filename = $1) =~ s/;\s*$//g;
+	}
     }
-    $filename =~ s%["']%%g;	# Remove quotes
     $filename =~ s%.*[/\\:]%%;	# Remove any path component
+    $filename =~ s/^\s+//;	# Remove leading whitespace
+    $filename =~ s/\s+$//;	# Remove trailing whitespace
     ($disp, $filename);
 }
 

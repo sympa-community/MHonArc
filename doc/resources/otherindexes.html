@@ -60,10 +60,10 @@ to separate filenames if setting OTHERINDEXES via the
 <code>OTHERINDEXES</code> element.
 </p>
 
-<DL>
-<DT><STRONG>CAUTION</STRONG>
-
-<DD><P>It is very important that each resource file specified
+<table border=0 cellpadding=4>
+<tr valign=top>
+<td><strong>CAUTION</strong></td>
+<td><P>It is very important that each resource file specified
 defines the
 <a href="main.html">MAIN</a> or
 <a href="thread.html">THREAD</a> resource to determine the
@@ -75,27 +75,71 @@ type of index to create.  Also, the
 <A HREF="multipg.html">MULTIPG</a> is active)
 must be defined
 to prevent overwriting of the default index pages.
-</P></DL>
+</P>
+</td>
+</tr>
+</table>
 
-<P><EM>MHonArc</EM> will only store the name of the resource files
+<table border=0 cellpadding=4>
+<tr valign=top>
+<td><strong><font color=red>WARNING</font></strong></td>
+<td><p>Make sure OTHERINDEXES does <strong>NOT</strong>
+list the file OTHERINDEXES
+is defined in.  This will cause an infinite loop.
+</td>
+</tr>
+</table>
+
+<table border=0 cellpadding=4>
+<tr valign=top>
+<td><strong><font color=red>WARNING</font></strong></td>
+<td><p>OTHERINDEXES resource file should <strong>NOT</strong>
+define the OTHERINDEXES resource.  Unpredictable results may
+occur, possibly infinite recursion.
+</td>
+</tr>
+</table>
+
+
+<P>MHonArc will only store the name of the resource files
 listed in the database.  Therefore, for any subsequent updates of the
 archive, the extra index resource files must exist inorder to generate
 the extra index pages.  </P>
 
-<DL>
-<DT><STRONG>NOTE</STRONG> 
+<p>All filenames are treated relative to the current working
+directory or the archive directory, except for absolute
+pathnames.  It is common to place OTHERINDEXES resource
+files in the archive directory to simplify archive administration.
+</p>
 
-<DD><P>Since <EM>MHonArc</EM> will look in the archive location for
-resource files specified with relative pathnames, you can keep the
-other index resource files in the same location as the archive, and
-just specify the filenames for the <CODE>OTHERINDEXES</CODE> element
-in the main resource file.  </P></DL>
-
-<P>When create resource files for extra indexes, make sure to
+<table border=0 cellpadding=4>
+<tr valign=top>
+<td><strong>NOTE</strong></td>
+<td><P>When creating resource files for extra indexes, make sure to
 explicitly set all resources desired since some resource settings may
-no longer be set to the defaults due to database settings, or from
-a previously read resource file. Ie. <EM>MHonArc</EM> does not reset
-to the default settings when reading in the other resource files.  </P>
+no longer be set to the defaults due to database settings or from
+a previously read resource file. Ie. MHonArc does not reset
+to the default settings before reading the other resource files.  </P>
+</td>
+</tr>
+</table>
+
+<table border=0 cellpadding=4>
+<tr valign=top>
+<td><strong>NOTE</strong></td>
+<td><P>Archive navigational resources, like
+<a href="listbegin.html">LISTBEGIN</a>,
+<a href="thead.html">THEAD</a>,
+<a href="toplinks.html">TOPLINKS</a>, and
+<a href="botlinks.html">BOTLINKS</a>,
+are <strong>NOT</strong> automatically modified to include
+navigational links related to the other indexes created (even
+if using the default settings).  Therefore, you will have
+to explicily define these resources if you want navigational
+links for the other indexes.
+</td>
+</tr>
+</table>
 
 <!-- *************************************************************** -->
 <hr>
@@ -114,7 +158,7 @@ to the default settings when reading in the other resource files.  </P>
 <hr>
 <h2>Examples</h2>
 
-<p>Since <em>MHonArc</em> only creates two indexes by default
+<p>Since MHonArc only creates two indexes by default
 (the main/date index and the thread index), you can use OTHERINDEXES
 to define other index formats for navigating your archive.  A
 possible setting for OTHERINDEXES may look like this:
@@ -151,7 +195,7 @@ subjectidx.rc
 <!-- *************************************************************** -->
 <hr>
 <address>
-97/05/13 17:29:51<br>
+97/06/06 16:47:51<br>
 <img align="top" src="../monicon.gif" alt="">
 <a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"><strong>MHonArc</strong></a><br>
 Copyright &#169; 1997, <a href="http://www.oac.uci.edu/indiv/ehood/">Earl Hood</a>, <a href="mailto:ehood@medusa.acs.uci.edu">ehood@medusa.acs.uci.edu</a><br>

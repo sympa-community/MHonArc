@@ -6,7 +6,7 @@
 <body>
 
 <address>
-<a href="../resources.html#mimefilters">MHonArc Resource List</a></br>
+<a href="../resources.html#mimefilters">MHonArc Resource List</a><br>
 </address>
 
 <hr>
@@ -45,7 +45,7 @@
 
 <P>The resource MIMEFILTERS
 is used to hook in user
-specifed filters into <EM>MHonArc</EM>. 
+specifed filters into MHonArc. 
 The MIMEFILTERS resource can only be set via the
 <CODE>MIMEFILTERS</CODE> element.
 The syntax for each line of
@@ -68,11 +68,14 @@ can be specified.
 <DD><P>The actual routine name of the filter. The name
 should be fully qualified by the package it is defined in
 (e.g. "<CODE>mypackage'filter</CODE>").  </P>
+
 <table border=0 cellpadding=4>
 <tr valign=top>
 <td><strong>NOTE</strong></td>
-<td><p>Package qualification must use Perl 4 syntax. The '::'
-qualification is not supported, yet.
+<td><p>Package qualification must use Perl 4 syntax. If Perl 5
+'<strong><code>::</code></strong>'
+qualification is desired, then values should be separated by
+a semi-colon.
 </p>
 </td>
 </tr>
@@ -81,7 +84,7 @@ qualification is not supported, yet.
 <DT><var>file-of-routine</var>
 <DD><P>The name of the file that defines
 <var>routine-name</var>. If the file is not a full
-pathname, <EM>MHonArc</EM> finds the file by looking in the
+pathname, MHonArc finds the file by looking in the
 standard include paths of Perl, and the paths specified by the
 <A HREF="perlinc.html">PERLINC</A>
 resource.
@@ -94,14 +97,37 @@ resource.
 
 <H3>Writing Filters</H3>
 
-<P>If you want to write your own filter for use in <EM>MHonArc</EM>,
+<P>If you want to write your own filter for use in MHonArc,
 you need to know the Perl programming language. The following
 information assumes you know Perl.
 </P>
 
+<table border=0 cellpadding=4>
+<tr valign=top>
+<td><strong>NOTE</strong></td>
+<td><p>The filter model follows Perl 4 syntax conventions
+and constructs.  This is because of historical reasons.
+Note, the implementation of the filter can use Perl 5
+syntax and features, where applicable, if running MHonArc
+under Perl 5.
+</p>
+</td>
+</tr>
+</table>
+
+<table border=0 cellpadding=4>
+<tr valign=top>
+<td><strong>NOTE</strong></td>
+<td><p>The default filters provided by MHonArc are described
+in the <strong>Default Settings</strong> section.
+</p>
+</td>
+</tr>
+</table>
+
 <H4>Function Interface of Filter</H4>
 
-<P><EM>MHonArc</EM> interfaces with MIME filters by calling a routine
+<P>MHonArc interfaces with MIME filters by calling a routine
 with a specific set of arguments. The prototype of the interface
 routine is as follows: </P>
 
@@ -120,7 +146,6 @@ sub <var>filter</var> {
 <H5>Argument Descriptions</H5>
 
 <table cellspacing=1 border=0 cellpadding=4>
-<tbody>
 
 <tr valign=top>
 <td><strong><CODE>$head</CODE></strong></td>
@@ -132,20 +157,36 @@ in a multipart message).
 
 <tr valign=top>
 <td><strong><CODE>*fields</CODE></strong></td>
-<td><P>A pointer to an associative array that has broken down
-<CODE>$head</CODE> into field label/field value components. The
+<td><P>A pointer (typeglob) to an associative array that has broken down
+<strong><CODE>$head</CODE></strong>
+into field label/field value components. The
 keys are the lower-case representations of the field
 values. <STRONG>Example</STRONG>: If you would like to retrieve
 the value of the Content-Type field, then use the following:
-<CODE>$fields{`content-type'}</CODE>.
+<strong><CODE>$fields{'content-type'}</CODE></strong>.
 </P>
-<P>If a field occurs more than once in a header, <EM>MHonArc</EM>
+<P>If a field occurs more than once in a header, MHonArc
 separates the field values in the associative array by a
-`<CODE>\034</CODE>' character. To make your filter less likely to break
-due to changes in <EM>MHonArc</EM>, you may use the
-<CODE>$readmail'FieldSep</CODE>
-variable instead of `<CODE>\034</CODE>'.
+`<strong><CODE>\034</CODE></strong>' character.
+To make your filter less likely to break
+due to changes in MHonArc, you may use the
+<strong><CODE>$readmail'FieldSep</CODE></strong>
+variable instead of `<strong><CODE>\034</CODE></strong>'.
 </P>
+
+<table border=0 cellpadding=4>
+<tr valign=top>
+<td><strong>NOTE</strong></td>
+<td><p>Since the <strong><CODE>*fields</CODE></strong> argument
+is a typeglob, <strong><code>my</code></strong> cannot be used
+when assigning the typeglob from the <strong><code>@_</code></strong> array.
+<strong><code>my</code></strong> can be used for creating local copies
+of the other arguments.
+</p>
+</td>
+</tr>
+</table>
+
 </td>
 </tr>
 
@@ -159,15 +200,15 @@ a mulitpart message) body.
 
 <tr valign=top>
 <td><strong><CODE>$decoded</CODE></strong></td>
-<td><P>This flag is set to 1 if <EM>MHonArc</EM> decoded the message
-and <code>$data</code>
+<td><P>This flag is set to 1 if MHonArc decoded the message
+and <strong><code>$data</code></strong>
 represents the orginal data before encoded by the sender. If
-set to 0, <code>$data</code>
+set to 0, <strong><code>$data</code></strong>
 has not been decoded. The failure to decode occurs
-if <EM>MHonArc</EM> does not recognizeed the encoding specified in
+if MHonArc does not recognizeed the encoding specified in
 the Content-Transfer-Encoding field.
 </P>
-<P><EM>MHonArc</EM> has decoded the data for you if it was encoded
+<P>MHonArc has decoded the data for you if it was encoded
 in 7-Bit, 8-Bit, Binary, Quoted-Printable, Base64, Uuencode
 (x-uuencode, uuencode, x-uue, uue).
 </P>
@@ -184,19 +225,18 @@ itself.  The value of the string is set by the
 </td>
 </tr>
 
-</tbody>
 </table>
 
 <H5>Return Value</H5>
 
 <P>The return value is treated as an array. The first item in the array
 is a string representing the HTML markup to insert in the HTMLized
-message. An empty string may be returned to tell <EM>MHonArc</EM>
+message. An empty string may be returned to tell MHonArc
 that the routine was unable to filter data.  </P>
 
 <P>Any other array items are treated as names of any files that were
-generated by the filter. <EM>MHonArc</EM> needs to keep track if any
-extra files that a filter may generate in order for <EM>MHonArc</EM> to
+generated by the filter. MHonArc needs to keep track if any
+extra files that a filter may generate in order for MHonArc to
 delete those files if the message gets removed from the archive.
 </P>
 
@@ -205,7 +245,7 @@ delete those files if the message gets removed from the archive.
 <td><strong>NOTE</strong></td>
 <td><p>If the filter creates a subdirectory with files, the filter
 only needs to return the subdirectory in the return list.  If
-the message gets removed, <EM>MHonArc</EM> will delete the entire
+the message gets removed, MHonArc will delete the entire
 directory.
 </p>
 </td>
@@ -219,7 +259,7 @@ filters: </P>
 
 <UL>
 <LI><P>Qualify your filter in its own package. This eliminates possible 
-variable/routine conflicts with <EM>MHonArc</EM>.
+variable/routine conflicts with MHonArc.
 </P>
 
 <LI><P>If the filter creates derived files (like the image filters),
@@ -230,20 +270,20 @@ location of the mail archive.  </P>
 <table border=0 cellpadding=4>
 <tr valign=top>
 <td><strong>NOTE</strong></td>
-<td><p><strong>Do not include</strong> <CODE>$'OUTDIR</CODE> as part as the
-filename that is returned to <EM>MHonArc</EM>.  If the filter
+<td><p><strong>Do not include</strong> 
+<strong><CODE>$'OUTDIR</CODE></strong> as part as the
+filename that is returned to MHonArc.  If the filter
 does create files, just return the base name.
 </td>
 </tr>
 </table>
-</p>
 
 <LI><P>Look at the default filters contained in the distribution
-of <EM>MHonArc</EM>. You can use these as templates for writing
+of MHonArc. You can use these as templates for writing
 your own.  </P>
 
 <LI><P>Make sure your Perl source file ends with a true statement
-(like "<CODE>1;</CODE>").  <EM>MHonArc</EM> just performs a
+(like "<CODE>1;</CODE>").  MHonArc just performs a
 <strong><CODE>require</CODE></strong>
 on the file, and if the file does not return
 true, Perl will abort execution.  </P>
@@ -254,7 +294,7 @@ true, Perl will abort execution.  </P>
 
 <P>If a MIME filter requires the utilization of a C program, or
 other non-Perl executable, a Perl wrapper must be written for the
-program in-order to interface with <EM>MHonArc</EM>.
+program in-order to interface with MHonArc.
 </P>
 
 <!-- *************************************************************** -->
@@ -266,12 +306,14 @@ program in-order to interface with <EM>MHonArc</EM>.
 application/*:m2h_external'filter:mhexternal.pl
 application/x-patch:m2h_text_plain'filter:mhtxtplain.pl
 audio/*:m2h_external'filter:mhexternal.pl
+model/*:m2h_external'filter:mhexternal.pl
 image/*:m2h_external'filter:mhexternal.pl
 message/partial:m2h_text_plain'filter:mhtxtplain.pl
 text/*:m2h_text_plain'filter:mhtxtplain.pl
+text/enriched:m2h_text_enriched'filter:mhtxtenrich.pl
 text/html:m2h_text_html'filter:mhtxthtml.pl
 text/plain:m2h_text_plain'filter:mhtxtplain.pl
-text/richtext:m2h_text_plain'filter:mhtxtplain.pl
+text/richtext:m2h_text_enriched'filter:mhtxtenrich.pl
 text/setext:m2h_text_setext'filter:mhtxtsetext.pl
 text/tab-separated-values:m2h_text_plain'filter:mhtxtplain.pl
 text/x-html:m2h_text_html'filter:mhtxthtml.pl
@@ -283,6 +325,7 @@ video/*:m2h_external'filter:mhexternal.pl
 <p>The following describes the behavior of each filter.
 </p>
 
+<hr size=0 noshade width="50%">
 <H3>m2h_external'filter</h3>
 
 <P>The filter extracts the data into a separate file and puts
@@ -300,30 +343,42 @@ following
 </p>
 
 <table cellspacing=1 border=0 cellpadding=4>
-<tbody>
+
+<tr valign=top>
+<td><strong><tt>iconurl="<var>url</var>"</tt></strong></td>
+<td><p>Use "<var>url</var>" as the url for the icon to use
+if the <strong><tt>useicon</tt></strong> option is set.
+This option will override any setting defined by the
+<a href="icons.html">ICONS</a> resource.
+The double quotes are required.
+</p>
+</tr>
 
 <tr valign=top>
 <td><strong><tt>inline</tt></strong></td>
 <td><p>Inline image data by default if content-disposition not defined.
 </p>
 </tr>
+
 <tr valign=top>
 <td><strong><tt>ext=<var>ext</var></tt></strong></td>
 <td><p>Use <var>ext</var> as the filename extension.
 The filter already has a large list of extensions for various
-content-types.  Only use this argument if you process a
+content-types.  Use this argument if you process a
 content-type not recognized by the filter.
 </p>
 </tr>
+
 <tr valign=top>
 <td><strong><tt>type="<var>description</var>"</tt></strong></td>
 <td><p>Use "<var>description</var>" as type description of the
 data.  The double quotes are required.
 The filter already has a large list of descriptions for various
-content-types.  Only use this argument if you process a
+content-types.  Use this argument if you process a
 content-type not recognized by the filter.
 </p>
 </tr>
+
 <tr valign=top>
 <td><strong><tt>subdir</tt></strong></td>
 <td><p>Place derived file in a subdirectory of the archive.
@@ -332,16 +387,26 @@ This option may be useful if <strong><tt>usename</tt></strong> is
 specified to avoid security and name conflict problems.
 </p>
 </tr>
+
+<tr valign=top>
+<td><strong><tt>useicon</tt></strong></td>
+<td><p>Include a content-type icon with the hyperlink to
+the derived file.  The icon used is the value of the
+<strong><tt>iconurl</tt></strong> option or the icon
+defined by the <a href="icons.html">ICONS</a> resource.
+</p>
+</tr>
+
 <tr valign=top>
 <td><strong><tt>usename</tt></strong></td>
 <td><p>Use (file)name attribute for determining name
 of derived file.  Use this option with caution
 since it can lead to filename conflicts and
-security problems.
+security problems (however, see the <strong><tt>subdir</tt></strong>
+option).
 </p>
 </tr>
 
-</tbody>
 </table>
 
 <p>All arguments should be separated by at least one space.</p>
@@ -351,148 +416,527 @@ with descriptions, <strong><tt>m2h_external'filter</tt></strong>
 recognizes:
 </p>
 
+<!--X-Ext-CType-Start-->
 <table border=1 cellspacing=1>
-<tr align=left><th>Content-type</th><th>Description</th></tr>
-<tr><td>application/astound</td><td>Astound presentation</td></tr>
-<tr><td>application/fastman</td><td>fastman file</td></tr>
-<tr><td>application/mac-binhex40</td><td>Mac BinHex file</td></tr>
-<tr><td>application/mbedlet</td><td>mbedlet file</td></tr>
-<tr><td>application/msword</td><td>MS-Word document</td></tr>
-<tr><td>application/octet-stream</td><td>Binary data</td></tr>
-<tr><td>application/oda</td><td>ODA file</td></tr>
-<tr><td>application/pdf</td><td>PDF file</td></tr>
-<tr><td>application/pgp</td><td>PGP message</td></tr>
-<tr><td>application/pgp-signature</td><td>PGP signature</td></tr>
-<tr><td>application/postscript</td><td>PostScript document</td></tr>
-<tr><td>application/rtf</td><td>RTF file</td></tr>
-<tr><td>application/sgml</td><td>SGML document</td></tr>
-<tr><td>application/studiom</td><td>Studio M file</td></tr>
-<tr><td>application/timbuktu</td><td>timbuktu file</td></tr>
-<tr><td>application/vnd.ms-excel</td><td>MS-Excel file</td></tr>
-<tr><td>application/vnd.ms-powerpoint</td><td>MS-Powerpoint file</td></tr>
-<tr><td>application/vnd.ms-project</td><td>MS-Project file</td></tr>
-<tr><td>application/winhlp</td><td>WinHelp document</td></tr>
-<tr><td>application/wordperfect5.1</td><td>WordPerfect 5.1 document</td></tr>
-<tr><td>application/x-NET-Install</td><td>Net Install file</td></tr>
-<tr><td>application/x-asap</td><td>asap file</td></tr>
-<tr><td>application/x-bcpio</td><td>BCPIO file</td></tr>
-<tr><td>application/x-cpio</td><td>CPIO file</td></tr>
-<tr><td>application/x-csh</td><td>C-Shell script</td></tr>
-<tr><td>application/x-dot</td><td>dot file</td></tr>
-<tr><td>application/x-dvi</td><td>TeX dvi file</td></tr>
-<tr><td>application/x-earthtime</td><td>Earthtime file</td></tr>
-<tr><td>application/x-envoy</td><td>Envoy file</td></tr>
-<tr><td>application/x-excel</td><td>MS-Excel Spreadsheet</td></tr>
-<tr><td>application/x-gtar</td><td>GNU tar file</td></tr>
-<tr><td>application/x-hdf</td><td>HDF file</td></tr>
-<tr><td>application/x-javascript</td><td>JavaScript source</td></tr>
-<tr><td>application/x-ksh</td><td>Korn Shell script</td></tr>
-<tr><td>application/x-latex</td><td>LaTex document</td></tr>
-<tr><td>application/x-maker</td><td>FrameMake document</td></tr>
-<tr><td>application/x-mif</td><td>Frame MIF document</td></tr>
-<tr><td>application/x-mocha</td><td>mocha file</td></tr>
-<tr><td>application/x-msaccess</td><td>MS-Access database</td></tr>
-<tr><td>application/x-mscardfile</td><td>MS-CardFile</td></tr>
-<tr><td>application/x-msclip</td><td>MS-Clip file</td></tr>
-<tr><td>application/x-msmediaview</td><td>MS-Media View file</td></tr>
-<tr><td>application/x-msmetafile</td><td>MS-Metafile</td></tr>
-<tr><td>application/x-msmoney</td><td>MS-Money file</td></tr>
-<tr><td>application/x-mspublisher</td><td>MS-Publisher document</td></tr>
-<tr><td>application/x-msschedule</td><td>MS-Schedule file</td></tr>
-<tr><td>application/x-msterminal</td><td>MS-Terminal</td></tr>
-<tr><td>application/x-mswrite</td><td>MS-Write document</td></tr>
-<tr><td>application/x-netcdf</td><td>Cdf file</td></tr>
-<tr><td>application/x-ns-proxy-autoconfig</td><td>Netscape Proxy Auto Config</td></tr>
-<tr><td>application/x-patch</td><td>Patch file</td></tr>
-<tr><td>application/x-perl</td><td>Perl source</td></tr>
-<tr><td>application/x-pointplus</td><td>pointplus file</td></tr>
-<tr><td>application/x-salsa</td><td>salsa file</td></tr>
-<tr><td>application/x-script</td><td>A script file</td></tr>
-<tr><td>application/x-sh</td><td>Bourne shell script</td></tr>
-<tr><td>application/x-shar</td><td>Shar file</td></tr>
-<tr><td>application/x-sprite</td><td>sprite file</td></tr>
-<tr><td>application/x-sv4cpio</td><td>SV4Cpio file</td></tr>
-<tr><td>application/x-sv4crc</td><td>SV4Crc file</td></tr>
-<tr><td>application/x-tar</td><td>Tar file</td></tr>
-<tr><td>application/x-tcl</td><td>Tcl script</td></tr>
-<tr><td>application/x-tex</td><td>TeX document</td></tr>
-<tr><td>application/x-texinfo</td><td>TeXInfo document</td></tr>
-<tr><td>application/x-timbuktu</td><td>timbuktu file</td></tr>
-<tr><td>application/x-tkined</td><td>tkined file</td></tr>
-<tr><td>application/x-troff</td><td>Troff document</td></tr>
-<tr><td>application/x-troff-man</td><td>Troff manpage</td></tr>
-<tr><td>application/x-troff-me</td><td>Troff ME</td></tr>
-<tr><td>application/x-troff-ms</td><td>Troff MS</td></tr>
-<tr><td>application/x-ustar</td><td>UStar file</td></tr>
-<tr><td>application/x-wais-source</td><td>WAIS Source</td></tr>
-<tr><td>application/zip</td><td>Zip archive</td></tr>
-<tr><td>audio/basic</td><td>Basic audio</td></tr>
-<tr><td>audio/echospeech</td><td>Echospeech audio</td></tr>
-<tr><td>audio/midi</td><td>MIDI audio</td></tr>
-<tr><td>audio/x-aiff</td><td>AIF audio</td></tr>
-<tr><td>audio/x-epac</td><td>epac audio</td></tr>
-<tr><td>audio/x-midi</td><td>MIDI audio</td></tr>
-<tr><td>audio/x-pac</td><td>pac audio</td></tr>
-<tr><td>audio/x-pn-realaudio</td><td>PN Realaudio</td></tr>
-<tr><td>audio/x-wav</td><td>Wave audio</td></tr>
-<tr><td>image/bmp</td><td>Window bitmap</td></tr>
-<tr><td>image/cgm</td><td>Computer Graphics Metafile</td></tr>
-<tr><td>image/fif</td><td>FIF image</td></tr>
-<tr><td>image/gif</td><td>GIF image</td></tr>
-<tr><td>image/ief</td><td>IEF image</td></tr>
-<tr><td>image/ifs</td><td>IFS image</td></tr>
-<tr><td>image/jpeg</td><td>JPEG image</td></tr>
-<tr><td>image/png</td><td>PNG image</td></tr>
-<tr><td>image/tiff</td><td>TIFF image</td></tr>
-<tr><td>image/vnd</td><td>VND image</td></tr>
-<tr><td>image/wavelet</td><td>Wavelet image</td></tr>
-<tr><td>image/x-bmp</td><td>Windows bitmap</td></tr>
-<tr><td>image/x-cmu-raster</td><td>CMU raster</td></tr>
-<tr><td>image/x-pbm</td><td>Portable bitmap</td></tr>
-<tr><td>image/x-pcx</td><td>PCX image</td></tr>
-<tr><td>image/x-pgm</td><td>Portable graymap</td></tr>
-<tr><td>image/x-pict</td><td>Mac PICT image</td></tr>
-<tr><td>image/x-pnm</td><td>Portable anymap</td></tr>
-<tr><td>image/x-portable-anymap</td><td>Portable anymap</td></tr>
-<tr><td>image/x-portable-bitmap</td><td>Portable bitmap</td></tr>
-<tr><td>image/x-portable-graymap</td><td>Portable graymap</td></tr>
-<tr><td>image/x-portable-pixmap</td><td>Portable pixmap</td></tr>
-<tr><td>image/x-ppm</td><td>Portable pixmap</td></tr>
-<tr><td>image/x-rgb</td><td>RGB image</td></tr>
-<tr><td>image/x-xbitmap</td><td>X bitmap</td></tr>
-<tr><td>image/x-xbm</td><td>X bitmap</td></tr>
-<tr><td>image/x-xpixmap</td><td>X pixmap</td></tr>
-<tr><td>image/x-xpm</td><td>X pixmap</td></tr>
-<tr><td>image/x-xwd</td><td>X window dump</td></tr>
-<tr><td>image/x-xwindowdump</td><td>X window dump</td></tr>
-<tr><td>text/html</td><td>HTML document</td></tr>
-<tr><td>text/plain</td><td>Text document</td></tr>
-<tr><td>text/richtext</td><td>Richtext document</td></tr>
-<tr><td>text/setext</td><td>Setext document</td></tr>
-<tr><td>text/sgml</td><td>SGML document</td></tr>
-<tr><td>text/x-html</td><td>HTML document</td></tr>
-<tr><td>text/x-setext</td><td>Setext document</td></tr>
-<tr><td>text/x-speech</td><td>Speech document</td></tr>
-<tr><td>video/isivideo</td><td>isi video</td></tr>
-<tr><td>video/mpeg</td><td>MPEG movie</td></tr>
-<tr><td>video/msvideo</td><td>MS Video</td></tr>
-<tr><td>video/quicktime</td><td>QuickTime movie</td></tr>
-<tr><td>video/vivo</td><td>vivo video</td></tr>
-<tr><td>video/wavelet</td><td>Wavelet video</td></tr>
-<tr><td>video/x-msvideo</td><td>MS video</td></tr>
-<tr><td>video/x-sgi-movie</td><td>SGI movie</td></tr>
+<tr align=left>
+<th>Content-type</th><th>Description</th></tr>
+<tr valign="top">
+<td><strong>application/astound</strong></td>
+<td>Astound presentation</td></tr>
+<tr valign="top">
+<td><strong>application/fastman</strong></td>
+<td>fastman file</td></tr>
+<tr valign="top">
+<td><strong>application/fractals</strong></td>
+<td>Fractal Image Format</td></tr>
+<tr valign="top">
+<td><strong>application/iges</strong></td>
+<td>IGES file</td></tr>
+<tr valign="top">
+<td><strong>application/mac-binhex40</strong></td>
+<td>Mac BinHex archive</td></tr>
+<tr valign="top">
+<td><strong>application/mbedlet</strong></td>
+<td>mbedlet file</td></tr>
+<tr valign="top">
+<td><strong>application/msword</strong></td>
+<td>MS-Word document</td></tr>
+<tr valign="top">
+<td><strong>application/octet-stream</strong></td>
+<td>Binary data</td></tr>
+<tr valign="top">
+<td><strong>application/oda</strong></td>
+<td>ODA file</td></tr>
+<tr valign="top">
+<td><strong>application/pdf</strong></td>
+<td>PDF document</td></tr>
+<tr valign="top">
+<td><strong>application/pgp</strong></td>
+<td>PGP message</td></tr>
+<tr valign="top">
+<td><strong>application/pgp-signature</strong></td>
+<td>PGP signature</td></tr>
+<tr valign="top">
+<td><strong>application/postscript</strong></td>
+<td>PostScript document</td></tr>
+<tr valign="top">
+<td><strong>application/rtf</strong></td>
+<td>RTF file</td></tr>
+<tr valign="top">
+<td><strong>application/sgml</strong></td>
+<td>SGML document</td></tr>
+<tr valign="top">
+<td><strong>application/studiom</strong></td>
+<td>Studio M file</td></tr>
+<tr valign="top">
+<td><strong>application/timbuktu</strong></td>
+<td>timbuktu file</td></tr>
+<tr valign="top">
+<td><strong>application/vnd.ms-excel</strong></td>
+<td>MS-Excel spreadsheet</td></tr>
+<tr valign="top">
+<td><strong>application/vnd.ms-powerpoint</strong></td>
+<td>MS-Powerpoint presentation</td></tr>
+<tr valign="top">
+<td><strong>application/vnd.ms-project</strong></td>
+<td>MS-Project file</td></tr>
+<tr valign="top">
+<td><strong>application/winhlp</strong></td>
+<td>WinHelp document</td></tr>
+<tr valign="top">
+<td><strong>application/wordperfect5.1</strong></td>
+<td>WordPerfect 5.1 document</td></tr>
+<tr valign="top">
+<td><strong>application/x-NET-Install</strong></td>
+<td>Net Install file</td></tr>
+<tr valign="top">
+<td><strong>application/x-asap</strong></td>
+<td>asap file</td></tr>
+<tr valign="top">
+<td><strong>application/x-bcpio</strong></td>
+<td>BCPIO file</td></tr>
+<tr valign="top">
+<td><strong>application/x-compress</strong></td>
+<td>Unix compressed data</td></tr>
+<tr valign="top">
+<td><strong>application/x-cpio</strong></td>
+<td>CPIO file</td></tr>
+<tr valign="top">
+<td><strong>application/x-csh</strong></td>
+<td>C-Shell script</td></tr>
+<tr valign="top">
+<td><strong>application/x-dot</strong></td>
+<td>dot file</td></tr>
+<tr valign="top">
+<td><strong>application/x-dvi</strong></td>
+<td>TeX dvi file</td></tr>
+<tr valign="top">
+<td><strong>application/x-earthtime</strong></td>
+<td>Earthtime file</td></tr>
+<tr valign="top">
+<td><strong>application/x-envoy</strong></td>
+<td>Envoy file</td></tr>
+<tr valign="top">
+<td><strong>application/x-excel</strong></td>
+<td>MS-Excel spreadsheet</td></tr>
+<tr valign="top">
+<td><strong>application/x-gtar</strong></td>
+<td>GNU Unix tar archive</td></tr>
+<tr valign="top">
+<td><strong>application/x-gzip</strong></td>
+<td>GNU Zip compressed data</td></tr>
+<tr valign="top">
+<td><strong>application/x-hdf</strong></td>
+<td>HDF file</td></tr>
+<tr valign="top">
+<td><strong>application/x-javascript</strong></td>
+<td>JavaScript source</td></tr>
+<tr valign="top">
+<td><strong>application/x-ksh</strong></td>
+<td>Korn Shell script</td></tr>
+<tr valign="top">
+<td><strong>application/x-latex</strong></td>
+<td>LaTeX document</td></tr>
+<tr valign="top">
+<td><strong>application/x-maker</strong></td>
+<td>FrameMaker document</td></tr>
+<tr valign="top">
+<td><strong>application/x-mif</strong></td>
+<td>Frame MIF document</td></tr>
+<tr valign="top">
+<td><strong>application/x-mocha</strong></td>
+<td>mocha file</td></tr>
+<tr valign="top">
+<td><strong>application/x-msaccess</strong></td>
+<td>MS-Access database</td></tr>
+<tr valign="top">
+<td><strong>application/x-mscardfile</strong></td>
+<td>MS-CardFile</td></tr>
+<tr valign="top">
+<td><strong>application/x-msclip</strong></td>
+<td>MS-Clip file</td></tr>
+<tr valign="top">
+<td><strong>application/x-msmediaview</strong></td>
+<td>MS-Media View file</td></tr>
+<tr valign="top">
+<td><strong>application/x-msmetafile</strong></td>
+<td>MS-Metafile</td></tr>
+<tr valign="top">
+<td><strong>application/x-msmoney</strong></td>
+<td>MS-Money file</td></tr>
+<tr valign="top">
+<td><strong>application/x-mspublisher</strong></td>
+<td>MS-Publisher document</td></tr>
+<tr valign="top">
+<td><strong>application/x-msschedule</strong></td>
+<td>MS-Schedule file</td></tr>
+<tr valign="top">
+<td><strong>application/x-msterminal</strong></td>
+<td>MS-Terminal</td></tr>
+<tr valign="top">
+<td><strong>application/x-mswrite</strong></td>
+<td>MS-Write document</td></tr>
+<tr valign="top">
+<td><strong>application/x-netcdf</strong></td>
+<td>Cdf file</td></tr>
+<tr valign="top">
+<td><strong>application/x-ns-proxy-autoconfig</strong></td>
+<td>Netscape Proxy Auto Config</td></tr>
+<tr valign="top">
+<td><strong>application/x-patch</strong></td>
+<td>Source code patch</td></tr>
+<tr valign="top">
+<td><strong>application/x-perl</strong></td>
+<td>Perl program</td></tr>
+<tr valign="top">
+<td><strong>application/x-pointplus</strong></td>
+<td>pointplus file</td></tr>
+<tr valign="top">
+<td><strong>application/x-salsa</strong></td>
+<td>salsa file</td></tr>
+<tr valign="top">
+<td><strong>application/x-script</strong></td>
+<td>A script file</td></tr>
+<tr valign="top">
+<td><strong>application/x-sh</strong></td>
+<td>Bourne shell script</td></tr>
+<tr valign="top">
+<td><strong>application/x-shar</strong></td>
+<td>Unix shell archive</td></tr>
+<tr valign="top">
+<td><strong>application/x-sprite</strong></td>
+<td>sprite file</td></tr>
+<tr valign="top">
+<td><strong>application/x-stuffit</strong></td>
+<td>Macintosh archive</td></tr>
+<tr valign="top">
+<td><strong>application/x-sv4cpio</strong></td>
+<td>SV4Cpio file</td></tr>
+<tr valign="top">
+<td><strong>application/x-sv4crc</strong></td>
+<td>SV4Crc file</td></tr>
+<tr valign="top">
+<td><strong>application/x-tar</strong></td>
+<td>Unix tar archive</td></tr>
+<tr valign="top">
+<td><strong>application/x-tcl</strong></td>
+<td>Tcl script</td></tr>
+<tr valign="top">
+<td><strong>application/x-tex</strong></td>
+<td>TeX document</td></tr>
+<tr valign="top">
+<td><strong>application/x-texinfo</strong></td>
+<td>TeXInfo document</td></tr>
+<tr valign="top">
+<td><strong>application/x-timbuktu</strong></td>
+<td>timbuktu file</td></tr>
+<tr valign="top">
+<td><strong>application/x-tkined</strong></td>
+<td>tkined file</td></tr>
+<tr valign="top">
+<td><strong>application/x-troff</strong></td>
+<td>Troff document</td></tr>
+<tr valign="top">
+<td><strong>application/x-troff-man</strong></td>
+<td>Unix manual page</td></tr>
+<tr valign="top">
+<td><strong>application/x-troff-me</strong></td>
+<td>Troff ME-macros document</td></tr>
+<tr valign="top">
+<td><strong>application/x-troff-ms</strong></td>
+<td>Troff MS-macros document</td></tr>
+<tr valign="top">
+<td><strong>application/x-ustar</strong></td>
+<td>UStar file</td></tr>
+<tr valign="top">
+<td><strong>application/x-wais-source</strong></td>
+<td>WAIS Source</td></tr>
+<tr valign="top">
+<td><strong>application/x-zip-compressed</strong></td>
+<td>Zip compressed data</td></tr>
+<tr valign="top">
+<td><strong>application/zip</strong></td>
+<td>Zip archive</td></tr>
+<tr valign="top">
+<td><strong>audio/basic</strong></td>
+<td>Basic audio</td></tr>
+<tr valign="top">
+<td><strong>audio/echospeech</strong></td>
+<td>Echospeech audio</td></tr>
+<tr valign="top">
+<td><strong>audio/midi</strong></td>
+<td>MIDI audio</td></tr>
+<tr valign="top">
+<td><strong>audio/x-aiff</strong></td>
+<td>AIF audio</td></tr>
+<tr valign="top">
+<td><strong>audio/x-epac</strong></td>
+<td>epac audio</td></tr>
+<tr valign="top">
+<td><strong>audio/x-midi</strong></td>
+<td>MIDI audio</td></tr>
+<tr valign="top">
+<td><strong>audio/x-pac</strong></td>
+<td>pac audio</td></tr>
+<tr valign="top">
+<td><strong>audio/x-pn-realaudio</strong></td>
+<td>PN Realaudio</td></tr>
+<tr valign="top">
+<td><strong>audio/x-wav</strong></td>
+<td>Wave audio</td></tr>
+<tr valign="top">
+<td><strong>image/bmp</strong></td>
+<td>Windows bitmap</td></tr>
+<tr valign="top">
+<td><strong>image/cgm</strong></td>
+<td>Computer Graphics Metafile</td></tr>
+<tr valign="top">
+<td><strong>image/fif</strong></td>
+<td>Fractal Image Format image</td></tr>
+<tr valign="top">
+<td><strong>image/gif</strong></td>
+<td>GIF image</td></tr>
+<tr valign="top">
+<td><strong>image/ief</strong></td>
+<td>IEF image</td></tr>
+<tr valign="top">
+<td><strong>image/ifs</strong></td>
+<td>IFS image</td></tr>
+<tr valign="top">
+<td><strong>image/jpeg</strong></td>
+<td>JPEG image</td></tr>
+<tr valign="top">
+<td><strong>image/png</strong></td>
+<td>PNG image</td></tr>
+<tr valign="top">
+<td><strong>image/tiff</strong></td>
+<td>TIFF image</td></tr>
+<tr valign="top">
+<td><strong>image/vnd</strong></td>
+<td>VND image</td></tr>
+<tr valign="top">
+<td><strong>image/wavelet</strong></td>
+<td>Wavelet image</td></tr>
+<tr valign="top">
+<td><strong>image/x-bmp</strong></td>
+<td>Windows bitmap</td></tr>
+<tr valign="top">
+<td><strong>image/x-cmu-raster</strong></td>
+<td>CMU raster</td></tr>
+<tr valign="top">
+<td><strong>image/x-pbm</strong></td>
+<td>Portable bitmap</td></tr>
+<tr valign="top">
+<td><strong>image/x-pcx</strong></td>
+<td>PCX image</td></tr>
+<tr valign="top">
+<td><strong>image/x-pgm</strong></td>
+<td>Portable graymap</td></tr>
+<tr valign="top">
+<td><strong>image/x-pict</strong></td>
+<td>Mac PICT image</td></tr>
+<tr valign="top">
+<td><strong>image/x-pnm</strong></td>
+<td>Portable anymap</td></tr>
+<tr valign="top">
+<td><strong>image/x-portable-anymap</strong></td>
+<td>Portable anymap</td></tr>
+<tr valign="top">
+<td><strong>image/x-portable-bitmap</strong></td>
+<td>Portable bitmap</td></tr>
+<tr valign="top">
+<td><strong>image/x-portable-graymap</strong></td>
+<td>Portable graymap</td></tr>
+<tr valign="top">
+<td><strong>image/x-portable-pixmap</strong></td>
+<td>Portable pixmap</td></tr>
+<tr valign="top">
+<td><strong>image/x-ppm</strong></td>
+<td>Portable pixmap</td></tr>
+<tr valign="top">
+<td><strong>image/x-rgb</strong></td>
+<td>RGB image</td></tr>
+<tr valign="top">
+<td><strong>image/x-xbitmap</strong></td>
+<td>X bitmap</td></tr>
+<tr valign="top">
+<td><strong>image/x-xbm</strong></td>
+<td>X bitmap</td></tr>
+<tr valign="top">
+<td><strong>image/x-xpixmap</strong></td>
+<td>X pixmap</td></tr>
+<tr valign="top">
+<td><strong>image/x-xpm</strong></td>
+<td>X pixmap</td></tr>
+<tr valign="top">
+<td><strong>image/x-xwd</strong></td>
+<td>X window dump</td></tr>
+<tr valign="top">
+<td><strong>image/x-xwindowdump</strong></td>
+<td>X window dump</td></tr>
+<tr valign="top">
+<td><strong>model/iges</strong></td>
+<td>IGES model</td></tr>
+<tr valign="top">
+<td><strong>model/mesh</strong></td>
+<td>Mesh model</td></tr>
+<tr valign="top">
+<td><strong>model/vrml</strong></td>
+<td>VRML model</td></tr>
+<tr valign="top">
+<td><strong>text/enriched</strong></td>
+<td>Enriched document</td></tr>
+<tr valign="top">
+<td><strong>text/html</strong></td>
+<td>HTML document</td></tr>
+<tr valign="top">
+<td><strong>text/plain</strong></td>
+<td>Text document</td></tr>
+<tr valign="top">
+<td><strong>text/richtext</strong></td>
+<td>Richtext document</td></tr>
+<tr valign="top">
+<td><strong>text/setext</strong></td>
+<td>Setext document</td></tr>
+<tr valign="top">
+<td><strong>text/sgml</strong></td>
+<td>SGML document</td></tr>
+<tr valign="top">
+<td><strong>text/x-html</strong></td>
+<td>HTML document</td></tr>
+<tr valign="top">
+<td><strong>text/x-setext</strong></td>
+<td>Setext document</td></tr>
+<tr valign="top">
+<td><strong>text/x-speech</strong></td>
+<td>Speech document</td></tr>
+<tr valign="top">
+<td><strong>video/isivideo</strong></td>
+<td>isi video</td></tr>
+<tr valign="top">
+<td><strong>video/mpeg</strong></td>
+<td>MPEG movie</td></tr>
+<tr valign="top">
+<td><strong>video/msvideo</strong></td>
+<td>MS Video</td></tr>
+<tr valign="top">
+<td><strong>video/quicktime</strong></td>
+<td>QuickTime movie</td></tr>
+<tr valign="top">
+<td><strong>video/vivo</strong></td>
+<td>vivo video</td></tr>
+<tr valign="top">
+<td><strong>video/wavelet</strong></td>
+<td>Wavelet video</td></tr>
+<tr valign="top">
+<td><strong>video/x-msvideo</strong></td>
+<td>MS video</td></tr>
+<tr valign="top">
+<td><strong>video/x-sgi-movie</strong></td>
+<td>SGI movie</td></tr>
+</table>
+<!--X-Ext-CType-End-->
+
+<hr size=0 noshade width="50%">
+<H3>m2h_text_enriched'filter</h3>
+
+<p>This filter is designed to process text/enriched, or
+text/richtext, data.  The following table summarizes the
+translation of text/enriched commands to HTML tags:
+</p>
+
+<table border=1 cellspacing=1>
+<tr valign=top align=left>
+<th>Text/Enriched Command</th><th>HTML Translation</th>
+</tr>
+
+<tr valign=top>
+<td><strong>&lt;Bold></strong></td>
+<td>&lt;B></td>
+</tr>
+<tr valign=top>
+<td><strong>&lt;Italic></strong></td>
+<td>&lt;I></td>
+</tr>
+<tr valign=top>
+<td><strong>&lt;Underline></strong></td>
+<td>&lt;U></td>
+</tr>
+<tr valign=top>
+<td><strong>&lt;Fixed></strong></td>
+<td>&lt;TT></td>
+</tr>
+<tr valign=top>
+<td><strong>&lt;Smaller></strong></td>
+<td>&lt;SMALL></td>
+</tr>
+<tr valign=top>
+<td><strong>&lt;Bigger></strong></td>
+<td>&lt;BIG></td>
+</tr>
+<tr valign=top>
+<td><strong>&lt;FontFamily>&lt;Param><var>family</var>&lt;/Param></strong></td>
+<td>&lt;FONT face="<var>family</var>"></td>
+</tr>
+<tr valign=top>
+<td><strong>&lt;Color>&lt;Param><var>color</var>&lt;/Param></strong></td>
+<td>&lt;FONT color="<var>color</var>"></td>
+</tr>
+<tr valign=top>
+<td><strong>&lt;Center></strong></td>
+<td>&lt;P align="center"></td>
+</tr>
+<tr valign=top>
+<td><strong>&lt;FlushLeft></strong></td>
+<td>&lt;P align="left"></td>
+</tr>
+<tr valign=top>
+<td><strong>&lt;FlushRight></strong></td>
+<td>&lt;P align="right"></td>
+</tr>
+<tr valign=top>
+<td><strong>&lt;FlushBoth></strong></td>
+<td>&lt;P align="both"> <em>(not supported in HTML)</em></td>
+</tr>
+<tr valign=top>
+<td><strong>&lt;ParaIndent></strong></td>
+<td>&lt;BLOCKQUOTE></td>
+</tr>
+<tr valign=top>
+<td><strong>&lt;Excerpt></strong></td>
+<td>&lt;BLOCKQUOTE></td>
+</tr>
+<tr valign=top>
+<td><strong>&lt;Lang></strong></td>
+<td><em>Stripped</em></td>
+</tr>
 </table>
 
+<p>If the text/enriched contains non-ASCII character, the filter will
+convert the characters to the appropriate entity references.
+</p>
+
+<table border=0 cellpadding=4>
+<tr valign=top>
+<td><strong>NOTE</strong></td>
+<td><p>Only the ISO-8859-[1-10] character sets are recognized.
+</p>
+</td>
+</tr>
+</table>
+
+<hr size=0 noshade width="50%">
 <H3>m2h_text_html'filter</h3>
 
 <p>This filter is designed to process text/html or
-text/x-html messages.
-The filter must modify the HTML for merging into the
-final filtered HTML messages.  Modification is needed so the
-resulting filtered message is valid HTML.
+text/x-html data.
+The filter modifies the HTML so it can be
+included validly into the message page.  Any head data will be
+stripped out, but the title will be extracted and prepended
+to the body data.
 </p>
 
-
+<hr size=0 noshade width="50%">
 <H3>m2h_text_plain'filter</h3>
 
 <p>This filter is designed to process text/plain messages and
@@ -508,13 +952,23 @@ If the data contains non-ASCII character, the filter will
 convert the characters to the appropriate entity reference.
 </p>
 
+<table border=0 cellpadding=4>
+<tr valign=top>
+<td><strong>NOTE</strong></td>
+<td><p>Only the ISO-8859-[1-10] and ISO-2022-JP
+character sets are recognized.  For ISO-2022-JP data, a Web
+client with ISO-2022-JP is required to read the data.
+</p>
+</td>
+</tr>
+</table>
+
 <p><strong><tt>m2h_text_plain'filter</tt></strong> can take the
 following
 <a href="mimeargs.html">arguments</a>:
 </p>
 
 <table cellspacing=1 border=0 cellpadding=4>
-<tbody>
 
 <tr valign=top>
 <td><strong><tt>asis=</tt><var>set1</var><tt>:</tt>...</strong></td>
@@ -525,8 +979,8 @@ Only HTML special characters will be converted into entities.
 <tr valign=top>
 <td><strong><tt>keepspace</tt></strong></td>
 <td><p>Preserve all spaces if the <strong><tt>nonfixed</tt></strong>
-option is specified.  Each space will be translated to a
-<tt>&amp;nbsp;</tt> entity reference.
+option is specified.  All spaces and tabs will be translated to the
+equivalent number of <strong>&amp;nbsp;</strong> entity references.
 </p>
 </tr>
 <tr valign=top>
@@ -555,12 +1009,18 @@ of the message.
 <td><p>Italicize quoted message text.
 </p>
 </tr>
+<tr valign=top>
+<td><strong><tt>target=</tt></strong><var>name</var></td>
+<td><p>Set the TARGET attribute of an anchor links generated from
+hyperlinking URLs.  Default value is "<tt>_top</tt>".
+</p>
+</tr>
 
-</tbody>
 </table>
 
 <p>All arguments should be separated by at least one space.</p>
 
+<hr size=0 noshade width="50%">
 <H3>m2h_text_setext'filter</h3>
 
 <p>This filter converts text/setext and text/x-setext messages
@@ -599,10 +1059,10 @@ to HTML.
 <!-- *************************************************************** -->
 <hr>
 <address>
-97/05/13 17:29:38<br>
+98/02/23 16:15:38<br>
 <img align="top" src="../monicon.gif" alt="">
 <a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"><strong>MHonArc</strong></a><br>
-Copyright &#169; 1997, <a href="http://www.oac.uci.edu/indiv/ehood/">Earl Hood</a>, <a href="mailto:ehood@medusa.acs.uci.edu">ehood@medusa.acs.uci.edu</a><br>
+Copyright &#169; 1997-1998 <a href="http://www.oac.uci.edu/indiv/ehood/">Earl Hood</a>, <a href="mailto:ehood@medusa.acs.uci.edu">ehood@medusa.acs.uci.edu</a><br>
 </address>
 
 </body>
