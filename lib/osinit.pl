@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: osinit.pl,v 2.6 2001/09/17 16:09:27 ehood Exp $
+##	$Id: osinit.pl,v 2.7 2002/11/20 23:53:12 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -26,6 +26,8 @@
 ##    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
 ##    02111-1307, USA
 ##---------------------------------------------------------------------------##
+
+use File::Basename;
 
 package mhonarc;
 
@@ -61,6 +63,7 @@ sub OSinit {
         $MSDOS = 0;  $MACOS = 0;  $UNIX = 0;  $VMS = 1;
 	$DIRSEP = '/';  $CURDIR = '.';
 	$PATHSEP = ':';
+	fileparse_set_fstype('VMS');
 
     } elsif (($^O !~ /cygwin/i) &&
     	     (($^O =~ /mswin/i) ||
@@ -72,16 +75,19 @@ sub OSinit {
         $MSDOS = 1;  $MACOS = 0;  $UNIX = 0;  $VMS = 0;
 	$DIRSEP = '\\';  $CURDIR = '.';
 	$PATHSEP = ';';
+	fileparse_set_fstype(($^O =~ /mswin/i) ? 'MSWin32' : 'MSDOS');
 
     } elsif (defined($MacPerl::Version)) {
         $MSDOS = 0;  $MACOS = 1;  $UNIX = 0;  $VMS = 0;
 	$DIRSEP = ':';  $CURDIR = ':';
 	$PATHSEP = ';';
+	fileparse_set_fstype('MacOS');
 
     } else {
         $MSDOS = 0;  $MACOS = 0;  $UNIX = 1;  $VMS = 0;
 	$DIRSEP = '/';  $CURDIR = '.';
 	$PATHSEP = ':';
+	fileparse_set_fstype('UNIX');
     }
 
     ##	Store name of program

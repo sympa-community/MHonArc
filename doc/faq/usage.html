@@ -1,12 +1,11 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
 <HTML>
 <HEAD>
 <TITLE>MHonArc FAQ: General Usage</TITLE></HEAD>
+<link rel="stylesheet" type="text/css" href="../docstyles.css">
 <BODY>
 
 <!--X-NavButtons-Start-->
-<p align=center>
-[<a href="envs.html">Prev</a>][<a href="archives.html">Next</a>][<a href="faq.html">TOC</a>][<a href="http://www.mhonarc.org/">Home</a>]
+<table width="100%"><tr><td align="left"><nobr>[<a href="envs.html">Prev</a>]</nobr></td><td align="center" width="100%">[<a href="faq.html">TOC</a>][<a href="../mhonarc.html">Manual</a>][<a href="http://www.mhonarc.org/">Home</a>]</td><td align="right"><nobr>[<a href="archives.html">Next</a>]</nobr></td></tr></table>
 </p>
 <!--X-NavButtons-End-->
 
@@ -43,13 +42,14 @@
 <p>The behavior of MHonArc is controled by <em>resources</em>.
 Resources are set, or defined, by command-line options, environment
 variables, or a resource file.  For example, the MAXSIZE resource tells
-MHonArc the maximum number of messages in an archive.  To set
+MHonArc the maximum number of messages allowed in an archive.  To set
 the resource, you can use the <strong><code>-maxsize</code></strong>
 command-line option, the <strong>M2H_MAXSIZE</strong> envariable, or the
 <strong><code>&lt;MAXSIZE&gt;</code></strong> resource file element.
 </p>
 
-<p>See the documentation for more information.
+<p>See the <a href="../resources.html"><cite>Resources</cite></a>
+section of the documentation for more information.
 </p>
 
 <!-- ??????????????????????????????????????????????????????????????? -->
@@ -66,7 +66,7 @@ for MHonArc resource files is included in the examples directory
 (<b>mhonarc.vim</b>).  To use it, copy mhonarc.vim to an appropriate location
 and add something like the following to your .vimrc file:
 </p>
-<pre>
+<pre class="code">
 au BufNewFile,BufRead *.mrc     so $HOME/share/vim/syntax/mhonarc.vim
 </pre>
 <p>Of course, change the pathname to mhonarc.vim to where ever you copied
@@ -87,18 +87,19 @@ terminals.
 <p>For page layout resources, do something like the following in
 your resource file:
 </p>
-<pre>
-&lt;BotLinks&gt;
+<pre class="code">
+<b>&lt;BotLinks&gt;</b>
 
-&lt;/BotLinks&gt;
+<b>&lt;/BotLinks&gt;</b>
 </pre>
 <p>Notice the blank line.  If you specify no content, MHonArc will
 fallback to the default value of the resource.
 </p>
-<table border=0 cellpadding=4>
-<tr valign=top>
-<td><strong><font color="red">WARNING</font></strong></td>
-<td><p>Only do the above for page layout related resources.
+<table class="caution" width="100%">
+<tr valign="baseline">
+<td><strong style="color: red;">WARNING:</strong></td>
+<td width="100%"><p>
+Only do the above for page layout related resources.
 For other resources, the above technique will have no effect, or
 it may cause unexpected results.  See
 <a href="#todefaults">How do I reset an archive's resources to the default
@@ -119,11 +120,13 @@ values.
 <p>The following two commands will reset an archive to use default
 resource values:
 </p>
-<pre>
-shell&gt; <b>mha-dbedit -nosaveresources -outdir <var>/path/to/your/archive</var></b>
-shell&gt; <b>mhonarc -saveresources -editidx -outdir <var>/path/to/your/archive</var></b>
+<pre class="shell">
+prompt&gt; <b>mha-dbedit <a class="shell" href="../resources/saveresources.html">-nosaveresources</a> <a class="shell" href="../resources/outdir.html">-outdir</a> <var>/path/to/your/archive</var></b>
+prompt&gt; <b>mhonarc <a class="shell" href="../resources/saveresources.html">-saveresources</a> <a class="shell" href="../resources/editidx.html">-editidx</a> <a class="shell" href="../resources/outdir.html">-outdir</a> <var>/path/to/your/archive</var></b>
 </pre>
-<p>You could also include <tt>-rcfile</tt> option(s) to the last step if
+<p>You could also include
+<a href="../resources/rcfile.html"><tt>-rcfile</tt></a> option
+to the last step if
 you want to modify some resources from the default in case you want
 to reset some resources and not all of them.
 </p>
@@ -140,16 +143,15 @@ your sys admin on where it is located (it should be in the default Perl
 search path).
 </p>
 
-<table border=0 cellpadding=4>
-<tr valign=top>
-<td><strong>NOTE</strong></td>
-<td><p>v2.3 and later use <b>Getopt::Long</b>, which is included
+<table class="note" width="100%">
+<tr valign="baseline">
+<td><strong>NOTE:</strong></td>
+<td width="100%"><p>v2.3 and later use <b>Getopt::Long</b>, which is included
 in the Perl 5 distribution.
 </p>
 </td>
 </tr>
 </table>
-
 
 <!-- ??????????????????????????????????????????????????????????????? -->
 <hr noshade size=1>
@@ -171,18 +173,18 @@ MHonArc archives:
 <li><strong>Namazu</strong>:
 <a href="http://www.namazu.org/">&lt;http://www.namazu.org/&gt;</a>
 (MHonArc aware and supports Japanese)</li>
-<li><strong>UdmSearch</strong>:
-<a href="http://mysearch.udm.net/">&lt;http://mysearch.udm.net/&gt;</a></li>
+<li><strong>mnoGoSearch</strong>:
+<a href="http://search.mnogo.ru/">&lt;http://search.mnogo.ru/&gt;</a></li>
 </ul>
 <p>For more information, see
 the respective documentation of the search engine software of
 interest.
 </p>
 
-<table border=0 cellpadding=4>
-<tr valign=top>
-<td><strong>NOTE</strong></td>
-<td><p>You may also want to check out the following:
+<table class="note" width="100%">
+<tr valign="baseline">
+<td><strong>NOTE:</strong></td>
+<td width="100%"><p>You may also want to check out the following:
 </p>
 <ul>
 <li><strong><a href="http://www.mhonarc.org/release/mharc/">mharc</a></strong>
@@ -202,6 +204,7 @@ interest.
     archives over the web. It works very well with the archives generated
     by Majordomo's archive2.pl script.
     </li>
+<p> </p>
 </ul>
 </td>
 </tr>
@@ -215,7 +218,8 @@ interest.
 </td></tr></table>
 
 <p>No official ones.  Several users have created home-grown interfaces
-to perform various tasks.  An experimental web admin tool comes in
+to perform various tasks.  An experimental, <strong>unsecure</strong>
+web admin tool comes in
 with the MHonArc distribution under the "admin" directory.
 I recommend searching the
 MHonArc mailing list archives for discussion about web interfaces.
@@ -246,10 +250,11 @@ you to rebuild MHonArc archives in case of data corruption.
 time you need to respecify the resource file is if changes are required
 in the layout of the archive.  </P>
 
-<table border=0 cellpadding=4>
-<tr valign=top>
-<td><strong>NOTE</strong></td>
-<td><p>When utilizing the <strong>OTHERINDEXES</strong> resource,
+<table class="note" width="100%">
+<tr valign="baseline">
+<td><strong>NOTE:</strong></td>
+<td width="100%"><p>
+When utilizing the <strong>OTHERINDEXES</strong> resource,
 the resource filenames listed in the main resource file are stored
 in the database, but the resources for each additional index are
 <STRONG>NOT</STRONG>. Hence, the resource files defining the additional
@@ -276,8 +281,8 @@ the directory your message files are in when invoking MHonArc.
 <p>For example, say I want to process all files in a directory
 called "messages".  I'd do the following:
 </p>
-<pre>
-    shell&gt; <b>mhonarc -mhpattern "^[^.]" messages</b>
+<pre class="shell">
+prompt&gt; <b>mhonarc -mhpattern "^[^.]" messages</b>
 </pre>
 <p>MHPATTERN can be any Perl regular expression.  The one in
 the example matches any file not beginning with ".".  This
@@ -287,10 +292,10 @@ is to avoid the special files "." and ".." which are directories.
 <p>The other way to process individual message files is to do
 it one at a time.  For example:
 </p>
-<pre>
-    shell&gt; <b>mhonarc -add &lt; file1.822</b>
-    shell&gt; <b>mhonarc -add &lt; file2.822</b>
-    ...
+<pre class="shell">
+prompt&gt; <b>mhonarc -add &lt; file1.822</b>
+prompt&gt; <b>mhonarc -add &lt; file2.822</b>
+...
 </pre>
 
 <!-- ??????????????????????????????????????????????????????????????? -->
@@ -303,8 +308,8 @@ it one at a time.  For example:
 <p>Yes, but only in v2.0 or later (v2.0 beta releases do not have
 the capability).  The syntax is something like the following:
 </p>
-<pre>
-    shell&gt; <b>mhonarc </b><var>[options-here]</var> <b>-- -</b>
+<pre class="shell">
+prompt&gt; <b>mhonarc </b><var>[options-here]</var> <b>-- -</b>
 </pre>
 <p>The "--" tells MHonArc to terminate all command-line
 option processing and treat all following arguments as mail
@@ -317,8 +322,8 @@ allows MHonArc to be part of a pipeline where MHonArc
 takes input from some preprocessor that massages some data to
 make it suitable for processing by MHonArc.  For example:
 </p>
-<pre>
-    shell&gt; <b>mypreproc | mhonarc -- -</b>
+<pre class="shell">
+prompt&gt; <b>mypreproc | mhonarc -- -</b>
 </pre>
 
 <!-- ??????????????????????????????????????????????????????????????? -->
@@ -368,16 +373,16 @@ the message separator line.
 </td></tr></table>
 
 <p>This usually implies that you have duplicate messages.  MHonArc
-will not archive a message that has already been archived.
+skips messages that have already been archived.
 A way to check if message duplication is the culprit, try the following
 on your mailbox:
 </p>
-<pre>
-    grep -i '^message-id:' my.mbox | sort | uniq | wc -l
+<pre class="shell">
+prompt&gt; <b>grep -i '^message-id:' <var>my.mbox</var> | sort | uniq | wc -l</b>
 </pre>
 and
-<pre>
-    grep -i '^message-id:' my.mbox | sort | wc -l
+<pre class="shell">
+prompt&gt; <b>grep -i '^message-id:' <var>my.mbox</var> | sort | wc -l</b>
 </pre>
 
 <p>If numbers printed by both commands differ, you have duplicate messages.
@@ -387,14 +392,13 @@ and
 <hr>
 
 <!--X-NavButtons-Start-->
-<p align=center>
-[<a href="envs.html">Prev</a>][<a href="archives.html">Next</a>][<a href="faq.html">TOC</a>][<a href="http://www.mhonarc.org/">Home</a>]
+<table width="100%"><tr><td align="left"><nobr>[<a href="envs.html">Prev</a>]</nobr></td><td align="center" width="100%">[<a href="faq.html">TOC</a>][<a href="../mhonarc.html">Manual</a>][<a href="http://www.mhonarc.org/">Home</a>]</td><td align="right"><nobr>[<a href="archives.html">Next</a>]</nobr></td></tr></table>
 </p>
 <!--X-NavButtons-End-->
 
 <hr>
 <address>
-$Date: 2002/06/21 22:28:16 $ <br>
+$Date: 2003/01/03 04:32:32 $ <br>
 <img align="top" src="monicon.png" alt="">
 <a href="http://www.mhonarc.org/"
 ><strong>MHonArc</strong></a><br>

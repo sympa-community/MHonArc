@@ -1,12 +1,8 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
 <HTML>
 <HEAD>
-<TITLE>MHonArc v2.5 -- Quick Start</TITLE>
+<TITLE>MHonArc Reference -- Quick Start</TITLE>
+<link rel="stylesheet" type="text/css" href="docstyles.css">
 </HEAD>
-<!--
-<BODY background="ssbg75.jpg"
-      text="#000000" link="#0000ee" vlink="#551a8b" alink="ff0000">
--->
 <BODY>
 
 <!--X-NavButtons-Start-->
@@ -18,7 +14,7 @@
 
 <H1><a name="quickstart">Quick Start</a></H1>
 
-<P>This section will give you a "<EM>quick start</EM>" on using
+<P>This section gives you a "<EM>quick start</EM>" on using
 MHonArc.
 </P>
 
@@ -33,62 +29,56 @@ MHonArc.
 <hr>
 <H2><a name="folders">Converting mail</a></H2>
 
-<P>Since MHonArc supports <EM>MH</EM> mail folders and
-UUCP/Unix mailbox files, the term "<EM>mail folder</EM>" will represent
-the <EM>MH</EM> mail folder or mailbox file you want to process.
-To convert your mail folder to an HTML archive, use the following:
+<P>MHonArc supports <EM>MH</EM> mail folders and
+UUCP/Unix mailbox files, so the term "<EM>mail folder</EM>" represents
+the <EM>MH</EM> mail folder or mailbox file to process.
+To convert a mail folder to an HTML archive, use the following:
 </P>
 
-<blockquote>
-<pre>
-shell&gt; <b>mhonarc </b><VAR>path</VAR><b>/inbox</b>
-</pre>
-</blockquote>
+<table border=1 width="100%"><tr><td><pre class="shell">
+prompt&gt; <b>mhonarc </b><VAR>path</VAR><b>/inbox</b>
+</pre></td></tr></table>
 
-<P>Where <VAR>path</VAR> represents the path to the directory
-that contains the mail folder <EM>inbox</EM>. If you are in the
-directory that contains inbox, then you can leave out the
+<P>Where <VAR>path</VAR> represents the directory path
+containing the mail folder <EM>inbox</EM>. If you are in the
+directory that contains inbox, you can leave out the
 "<VAR>path</VAR><tt>/</tt>".
 </P>
 
-<table border=0 cellpadding=4>
-<tr valign=top>
-<td><strong>NOTE</strong></td>
-<td>The "<b><tt>shell&gt;</tt></b>" represents your shell's prompt.
+<p>You can specify multiple mail folders to process:</p>
+
+<table border=1 width="100%"><tr><td><pre class="shell">
+prompt&gt; <b>mhonarc </b><VAR>path</VAR><b>/inbox1</b> <VAR>path</VAR><b>/inbox2</b> ...
+</pre></td></tr></table>
+
+<p>You can also specify standard input, "<b><tt>-</tt></b>",
+as the source of mail folder:
+</p>
+
+<table border=1 width="100%"><tr><td><pre class="shell">
+prompt&gt; <b>mhonarc -- - </b><VAR>path</VAR><b>/inbox</b>
+</pre></td></tr></table>
+
+<p>The "<b><tt>--</tt></b>" (two hyphens) is required to terminate
+command-line option parsing so "<b><tt>-</tt></b>" is not
+treated as the start of an option.  The example also illustrates
+that you can specify regular mail folders along with standard
+input.  In this example, MHonArc processes standard input and
+then <tt><VAR>path</VAR>/inbox</tt>.
+</p>
+
+<table class="note" width="100%">
+<tr valign="baseline">
+<td><strong>NOTE:</strong></td>
+<td width="100%"><p>Mail folder data read in from standard input
+<strong>must</strong> be in UUCP-style mailbox format.
+</p>
 </td>
 </tr>
 </table>
 
-<P>You may specify more than one mail folder
-to process on the command-line:  </P>
-
-<blockquote>
-<pre>
-shell&gt; <b>mhonarc </b><VAR>path</VAR><b>/inbox1</b> <VAR>path</VAR><b>/inbox2</b> ...
-</pre>
-</blockquote>
-
-<p>You may also specify standard input, "<b><tt>-</tt></b>",
-as the source of mail folder.
-This is useful if want to use MHonArc in a pipe:
-</p>
-
-<blockquote>
-<pre>
-shell&gt; <b>mhonarc -- - </b><VAR>path</VAR><b>/inbox</b>
-</pre>
-</blockquote>
-
-<p>The "<b><tt>--</tt></b>" (two hyphens) is required to terminate
-command-line option parsing so "<b><tt>-</tt></b>" will not be
-treated as the start of an option.  The example also illustrates
-that you can still specify regular mail folders with standard
-input.  In this example, MHonArc will process standard input and
-then <tt><VAR>path</VAR>/inbox</tt>.
-</p>
-
-<P>When MHonArc finishes, the following
-files will be created: </P>
+<P>MHonArc creates the following files after processing the mail folders:
+</P>
 
 <UL>
 
@@ -107,54 +97,44 @@ message number from 0 to the number of message processed minus 1.
 </P>
 
 <LI><P><tt><strong>.mhonarc.db</strong></tt>
-(or <tt>MHONARC.DB</tt> under Windows):
-This database file is 
-needed inorder for MHonArc to perform additions of new mail messages 
-to the archive. Information is stored to perform mail threading updates 
-when new messages are added, as well as any defined
-<a href="resources.html">resources</a>.
+(or <tt>mhonarc.db</tt> under Windows):
+This database file contains archive information and
+<a href="resources.html">resource</a>
+settings for MHonArc to perform further updates.
 </P>
 
-<LI><P><EM>Other</EM>: Depending on the content-types of the e-mail
-messages converted, other files may be created for images, videos,
-binaries, etc.
+<LI><P><EM>Other</EM>: If messages contain attachments, other files
+may be created for images, videos, binaries, etc.
 </P>
 
 </UL>
 
-<p>The actual filenames may differ depending on the settings
-of various <a href="resources.html">resources</a>.
-</p>
-
-<P>All the files created will be put into the current
-working directory, by default. You can control the
-destination of the output location by using the
+<P>By default, all files created are put into the current
+working directory. You can control the location of archive files
+by using the
 <a href="resources/outdir.html"><strong><tt>-outdir</tt></strong></a>
 option.  </P>
 
-<DL>
-<DT><STRONG>Example</STRONG> 
+<P><STRONG>Example</STRONG></P>
 
-<DD><PRE>
-shell&gt; <b>mhonarc -outdir /home/ehood/htmlarchive /home/ehood/mail/inbox</b>
-</PRE>
-</DL>
+<table border=1 width="100%"><tr><td><pre class="shell">
+prompt&gt; <b>mhonarc -outdir /home/ehood/htmlarchive /home/ehood/mail/inbox</b>
+</pre></td></tr></table>
 
 <P>Here is a sample session converting a mail folder:
 </P>
 
-<blockquote>
-<PRE>
-shell&gt; <b>mhonarc ~/mail/inbox</b>
+<table border=1 width="100%"><tr><td><pre class="shell">
+prompt&gt; <b>mhonarc ~/mail/inbox</b>
+This is MHonArc v2.6.0, Perl 5.006001 linux
 Converting messages to .
-Reading /mnt/ehood/mail/inbox ..........
+Reading /home/ehood/mail/inbox ..........
 Writing mail ...
 Writing ./maillist.html ...
 Writing ./threads.html ...
 Writing database ...
 10 messages
-</PRE>
-</blockquote>
+</pre></td></tr></table>
 
 <p>By default, MHonArc prints out information about its progress.
 This can be disabled with the
@@ -166,95 +146,78 @@ option.
 <H2><a name="adding">Adding Messages to an Archive</a></H2>
 
 <P>If you have new messages you want to add to an existing archive,
-you must utilizing the
+you must utilize the
 <a href="resources/add.html"><strong><tt>-add</tt></strong></a>
 command-line option. With the
 <a href="resources/add.html"><strong><tt>-add</tt></strong></a>,
 you can do the following: </P>
 
 <UL>
-<LI><P>Add a mail folder to an archive, or
-</P>
-<LI><P>Add a single message to an archive.
-</P>
+<LI>Add mail folders, or
+<LI>Add a single message.
 </UL>
 
 <P>Adding a mail folder to an archive in the current working directory
 can be done like the following: </P>
 
-<blockquote>
-<PRE>
-shell&gt; <b>mhonarc -add </b><VAR>&lt;path&gt;</VAR><b>/mailfolder</b>
-</PRE>
-</blockquote>
+<table border=1 width="100%"><tr><td><pre class="shell">
+prompt&gt; <b>mhonarc -add </b><VAR>&lt;path&gt;</VAR><b>/mailfolder</b>
+</pre></td></tr></table>
 
 <P>If you are not in the same directory as the archive, then you
-can specify the location of the archive to add to with the
+can specify the location of the archive with the
 <a href="resources/outdir.html"><strong><tt>-outdir</tt></strong></a>
 option. </P>
 
-<table border=0 cellpadding=4>
+<table class="note"  width="100%">
 <tr valign=top>
-<td><strong>NOTE</strong></td>
-<td><P>MHonArc will skip any messages that already exist in
-the archive.  Therefore, MHonArc can be used to rescan the
-same mail folder and only convert any new messages it finds.
+<td><strong>NOTE:</strong></td>
+<td width="100%"><P>MHonArc skips any messages that already exist in
+the archive.  Therefore, MHonArc can be used to rescan a
+mail folder to auto-find any new messages to add.
 </P>
 </td>
 </tr>
 </table>
 
-<P>If no mail folder arguments are specified, then MHonArc
-will attempt to add a <EM>single</EM> message read in from standard
+<P>If no mail folders are specified, MHonArc
+attempts to add a <EM>single</EM> message read in from standard
 input.  </P>
 
 <P><STRONG>Example</STRONG></P>
 
-<blockquote>
-<PRE>
-shell&gt; <b>mhonarc -add &lt; single.msg</b> 
-</PRE>
-</blockquote>
+<table border=1 width="100%"><tr><td><pre class="shell">
+prompt&gt; <b>mhonarc -add &lt; single.msg</b> 
+</pre></td></tr></table>
 <P>Or, from a pipe:
 </P>
-<blockquote>
-<PRE>
-shell&gt; <b>cat single.msg | mhonarc -add</b> 
-</PRE>
-</blockquote>
+<table border=1 width="100%"><tr><td><pre class="shell">
+prompt&gt; <b>cat single.msg | mhonarc -add</b> 
+</pre></td></tr></table>
 
 <hr>
 <H2><a name="single">Converting a single message</a></H2>
 
-<P>MHonArc has the ability to process a single
-mail message independent of creating, or modifying, an
-archive. To convert a single message to HTML use the
+<P>MHonArc converts a single
+mail message, independent of creating or modifying an
+archive, if the
 <a href="resources/single.html"><strong><tt>-single</tt></strong></a>
-command-line
-option. The message to process can be specified by a filename on the
-command-line, or by reading the message from standard input if no file
-is specified. The filtered message is sent to standard output. All
-formatting options apply to the single message as with messages
-being processed for an archive, with the exception of formatting
-related specificly to archive processing, like index links and mail
-thread links.  </P>
+option is specified.
+The message to process is specified by filename,
+or piped in from standard input.
+The resulting HTML is sent to standard output.
+</P>
 
 <p><STRONG>Examples</STRONG></p>
 
-<DL>
-<DT>Input from standard input:
-
-<DD><P><tt>shell&gt; <b>mhonarc -single &lt; messagefile &gt; file.html</b></tt> 
-</P>
-</DL>
-
-<DL>
-<DT>Filename on command-line:
-
-<DD>
-<P><tt>shell&gt; <b>mhonarc -single messagefile &gt; file.html</b></tt> 
-</P>
-</DL>
+<p>Input from standard input:</p>
+<table border=1 width="100%"><tr><td><pre class="shell">
+prompt&gt; <b>mhonarc -single &lt; messagefile &gt; file.html</b>
+</pre></td></tr></table>
+<p>Filename on command-line:</p>
+<table border=1 width="100%"><tr><td><pre class="shell">
+prompt&gt; <b>mhonarc -single messagefile &gt; file.html</b>
+</pre></td></tr></table>
 
 <hr>
 <!--X-NavButtons-Start-->
@@ -265,7 +228,7 @@ thread links.  </P>
 
 <HR>
 <address>
-$Date: 2001/12/24 14:38:07 $ <br>
+$Date: 2002/11/24 04:18:35 $ <br>
 <img align="top" src="monicon.png" alt="">
 <a href="http://www.mhonarc.org"
 ><strong>MHonArc</strong></a><br>

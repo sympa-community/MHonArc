@@ -1,0 +1,89 @@
+<html>
+<body>
+<pre>
+&lt;!-- ================================================================== --&gt;
+&lt;!--  File:
+	$Id: utf-8-encode.mrc,v 1.1 2002/12/21 07:26:33 ehood Exp $
+      Author:
+	Earl Hood &lt;earl@earlhood.com&gt;
+
+      Description:
+	MHonArc, &lt;http://www.mhonarc.org/&gt;, resource file to
+	encode message text data into Unicode UTF-8.  This only
+	works with v2.6.0, or later, of MHonArc.
+
+      Notes:
+	* This is a more general version of utf-8.mrc.	Where
+	  utf-8.mrc basis its conversion via CHARSETCONVERTERS,
+	  this does it via TEXTENCODE.
+
+	  The advantage of TEXTENCODE, is that message text data,
+	  including headers, are converted to UTF-8 when read.	This
+	  provides a performance advantage over the CHARSETCONVERTERS
+	  method, and TEXTENCODE affects all text entities in a
+	  message bodies.  The CHARSETCONVERTERS method depends on
+	  individual text-based MIMEFILTERS to explicitly support
+	  CHARSETCONVERTERS.  TEXTENCODE is transparent to MIMEFILTERS.
+
+  --&gt;
+&lt;!-- ================================================================== --&gt;
+
+<b><a href="../resources/textencode.html">&lt;TextEncode&gt;</a></b>
+utf-8; MHonArc::UTF8::to_utf8; MHonArc/UTF8.pm
+<b>&lt;/TextEncode&gt;</b>
+
+&lt;-- With data translated to UTF-8, it simplifies CHARSETCONVERTERS --&gt;
+<b><a href="../resources/charsetconverters.html">&lt;CharsetConverters override&gt;</a></b>
+default; mhonarc::htmlize
+<b>&lt;/CharsetConverters&gt;</b>
+
+&lt;-- Need to also register UTF-8-aware text clipping function --&gt;
+<b><a href="../resources/textclipfunc.html">&lt;TextClipFunc&gt;</a></b>
+MHonArc::UTF8::clip; MHonArc/UTF8.pm
+<b>&lt;/TextClipFunc&gt;</b>
+
+&lt;!-- The beginning page markup of MHonArc pages need to be modified
+     to tell clients that the pages are in UTF-8 by using a
+     &lt;meta http-equiv&gt; tag.
+
+     The following resource settings are just the default settings
+     for each resource but with the appropriate &lt;meta http-equiv&gt;
+     tag added.
+  --&gt;
+
+<b><a href="../resources/idxpgbegin.html">&lt;IdxPgBegin&gt;</a></b>
+&lt;!doctype html public "-//W3C//DTD HTML//EN"&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;title&gt;<b><a href="../rcvars.html#IDXTITLE">$IDXTITLE$</a></b>&lt;/title&gt;
+&lt;meta http-equiv="Content-Type" content="text/html; charset=utf-8"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;h1&gt;<b><a href="../rcvars.html#IDXTITLE">$IDXTITLE$</a></b>&lt;/h1&gt;
+<b>&lt;/IdxPgBegin&gt;</b>
+
+<b><a href="../resources/tidxpgbegin.html">&lt;TIdxPgBegin&gt;</a></b>
+&lt;!doctype html public "-//W3C//DTD HTML//EN"&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;title&gt;<b><a href="../rcvars.html#TIDXTITLE">$TIDXTITLE$</a></b>&lt;/title&gt;
+&lt;meta http-equiv="Content-Type" content="text/html; charset=utf-8"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;h1&gt;<b><a href="../rcvars.html#TIDXTITLE">$TIDXTITLE$</a></b>&lt;/h1&gt;
+<b>&lt;/TIdxPgBegin&gt;</b>
+
+
+<b><a href="../resources/msgpgbegin.html">&lt;MsgPgBegin&gt;</a></b>
+&lt;!doctype html public "-//W3C//DTD HTML//EN"&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;title&gt;<b><a href="../rcvars.html#SUBJECTNA">$SUBJECTNA$</a></b>&lt;/title&gt;
+&lt;link rev="made" href="mailto:<b><a href="../rcvars.html#FROMADDR">$FROMADDR$</a></b>"&gt;
+&lt;meta http-equiv="Content-Type" content="text/html; charset=utf-8"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+<b>&lt;/MsgPgBegin&gt;</b>
+</pre>
+</body>
+</html>

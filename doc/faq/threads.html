@@ -1,12 +1,11 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
 <HTML>
 <HEAD>
 <TITLE>MHonArc FAQ: Threading</TITLE></HEAD>
+<link rel="stylesheet" type="text/css" href="../docstyles.css">
 <BODY>
 
 <!--X-NavButtons-Start-->
-<p align=center>
-[<a href="msgpgs.html">Prev</a>][<a href="mime.html">Next</a>][<a href="faq.html">TOC</a>][<a href="http://www.mhonarc.org/">Home</a>]
+<table width="100%"><tr><td align="left"><nobr>[<a href="msgpgs.html">Prev</a>]</nobr></td><td align="center" width="100%">[<a href="faq.html">TOC</a>][<a href="../mhonarc.html">Manual</a>][<a href="http://www.mhonarc.org/">Home</a>]</td><td align="right"><nobr>[<a href="mime.html">Next</a>]</nobr></td></tr></table>
 </p>
 <!--X-NavButtons-End-->
 
@@ -69,7 +68,7 @@ documentation of your MUA to find the answer.
 <P>For MH users, the following in your <CODE>replcomps</CODE> file will work:
 </P>
 
-<PRE>%&lt;{date}In-reply-to: Your message of "\
+<PRE class="code">%&lt;{date}In-reply-to: Your message of "\
 %&lt;(nodate{date})%{date}%|%(pretty{date})%&gt;."%&lt;{message-id}
              %{message-id}%&gt;\n%&gt;\
 
@@ -78,7 +77,7 @@ documentation of your MUA to find the answer.
 <P>Or, you can use the following if you prefer the
 <CODE>References</CODE> field format: </P>
 
-<PRE>%&lt;{message-id}References: \
+<PRE class="code">%&lt;{message-id}References: \
 %&lt;{references}%(void{references})%(trim)%(putstr) %&gt;
             %(void{message-id})%(trim)%(putstr)\n%&gt;\
 
@@ -91,14 +90,13 @@ documentation of your MUA to find the answer.
 <hr>
 
 <!--X-NavButtons-Start-->
-<p align=center>
-[<a href="msgpgs.html">Prev</a>][<a href="mime.html">Next</a>][<a href="faq.html">TOC</a>][<a href="http://www.mhonarc.org/">Home</a>]
+<table width="100%"><tr><td align="left"><nobr>[<a href="msgpgs.html">Prev</a>]</nobr></td><td align="center" width="100%">[<a href="faq.html">TOC</a>][<a href="../mhonarc.html">Manual</a>][<a href="http://www.mhonarc.org/">Home</a>]</td><td align="right"><nobr>[<a href="mime.html">Next</a>]</nobr></td></tr></table>
 </p>
 <!--X-NavButtons-End-->
 
 <HR>
 <address>
-$Date: 2001/12/24 14:38:40 $ <br>
+$Date: 2002/12/18 05:55:21 $ <br>
 <img align="top" src="monicon.png" alt="">
 <a href="http://www.mhonarc.org/"
 ><strong>MHonArc</strong></a><br>

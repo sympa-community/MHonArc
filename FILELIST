@@ -1,7 +1,9 @@
 name:MHonArc
+dep:Fcntl
+dep:File::Basename
 dep:Getopt::Long
-dep:Time::Local
 dep:Symbol
+dep:Time::Local
 bin:mhonarc
 bin:mha-dbedit
 bin:mha-dbrecover
@@ -35,14 +37,12 @@ lib:lib/mhtime.pl
 lib:lib/mhtxtenrich.pl
 lib:lib/mhtxthtml.pl
 lib:lib/mhtxtplain.pl
-lib:lib/mhtxtsetext.pl
 lib:lib/mhtxttsv.pl
 lib:lib/mhusage.pl
 lib:lib/mhutil.pl
 lib:lib/osinit.pl
 lib:lib/qprint.pl
 lib:lib/readmail.pl
-lib:lib/rfc822.pl
 lib:lib/MHonArc
 man:man/mhonarc.1
 man:man/mha-dbedit.1

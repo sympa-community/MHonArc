@@ -6,12 +6,13 @@ Installation
 
 The following section describes how to install MHonArc on your system.
 
-NOTE  Make sure to read the release notes before installing MHonArc,       
+NOTE: Make sure to read the release notes before installing MHonArc,       
       especially if you are upgrading from a previous release. If you are  
       reading the text version of this installation document, a text       
-      version of the release notes is contained in the file RELNOTES       
-      contained within the root of the MHonArc distribution.               
+      version of the release notes, RELNOTES, exists within the root of the
+      MHonArc distribution.                                                
 
+  * For the Impatient
   * System Requirements
   * Downloading MHonArc
   * Extracting the MHonArc Distribution
@@ -28,15 +29,41 @@ NOTE  Make sure to read the release notes before installing MHonArc,
 
 ---------------------------------------------------------------------------
 
+For the Impatient
+
+If you cannot wait to get going, try the following:
+
++-------------------------------------------------------------------------+
+|prompt> wget 'http://www.mhonarc.org/release/MHonArc/MHonArcX.X.X'       |
+|prompt> gzip -dc MHonArcX.X.X | tar xvf -                                |
+|prompt> cd MHonArcX.X.X                                                  |
+|prompt> perl install.me                                                  |
++-------------------------------------------------------------------------+
+
+where X.X.X represents the version number.
+
+If there were problems doing the above, then keep reading.
+
+---------------------------------------------------------------------------
+
 System Requirements
 
-The following is required inorder to use MHonArc:
+The following is required to run MHonArc:
 
   * Perl 5 is installed. If you do not have Perl 5, goto <http://
-    language.perl.com/> for download information.
+    language.perl.com/> for download information. Perl versions 5.004 and
+    later are recommended.
    
-  * Getopt::Long and Time::Local modules are installed. These modules are
-    part of the standard Perl distribution.
+  * The following standard modules are installed:
+   
+      + Fcntl
+      + File::Basename
+      + Getopt::Long
+      + Symbol
+      + Time::Local
+   
+    NOTE: The installation program will verify that required modules are   
+          installed.                                                       
    
   * The following modules are optional:
    
@@ -44,15 +71,9 @@ The following is required inorder to use MHonArc:
         message-ids. This module helps MHonArc detect already archived
         messages for messages without message-ids.
        
-      + Fcntl, Symbol: Used for flock() based archive locking (if specified
-        by the user). See LOCKMETHOD resource for more information.
-       
     MHonArc will still function if the above listed modules are not
     available.
    
-NOTE  The MHonArc installation program will check that required modules are
-      available before installing MHonArc on your system.                  
-
 ---------------------------------------------------------------------------
 
 Downloading MHonArc
@@ -83,78 +104,104 @@ systems, use one of the following commands based upon the distribution
 format you downloaded:
 
 tar-bz2
-        shell> bzip2 -dc MHonArcX.X.X.tar.bz2 | tar xvf -
+    +---------------------------------------------------------------------+
+    |prompt> bzip2 -dc MHonArcX.X.X.tar.bz2 | tar xvf -                   |
+    +---------------------------------------------------------------------+
 tar-gzip
-        shell> gzip -dc MHonArcX.X.X.tar.gz | tar xvf -
+    +---------------------------------------------------------------------+
+    |prompt> gzip -dc MHonArcX.X.X.tar.gz | tar xvf -                     |
+    +---------------------------------------------------------------------+
 zip
-        shell> unzip MHonArcX.X.X.zip
+    +---------------------------------------------------------------------+
+    |prompt> unzip MHonArcX.X.X.zip                                       |
+    +---------------------------------------------------------------------+
 
 For Win32 systems, you can use a program like WinZip to extract the
 tar-gzip or zip formats. If using Cygwin, you can use the Unix-based
 extraction methods.
 
+NOTE: If your are using Cygwin and the cygwin build of Perl, then the      
+      installation and usage of MHonArc is the same as a Unix-based        
+      environment. MHonArc treats the cygwin environment as a Unix-type    
+      environment.                                                         
+
 After extraction, the subdirectory MHonArcX.X.X will have been created
 containing all the files comprising MHonArc.
 
-IMPORTANT  Please read the release notes before continuing for any news    
-           about compatibility with previous versions and/or important     
-           usage information.                                              
+NOTE: Please read the release notes before continuing for any news about   
+      compatibility with previous versions and/or important usage          
+      information.                                                         
 
-You will now want to change your current directory to MHonArcX.X.X for the 
-next step.
+Now, change your current directory to MHonArcX.X.X for the next step. On a
+Unix-type system, the following command will do it:
 
++-------------------------------------------------------------------------+
+|prompt> cd MHonArcX.X.X                                                  |
++-------------------------------------------------------------------------+
 ---------------------------------------------------------------------------
 
 Installing with install.me
 
-Provided in the MHonArc distribution is a Perl program, install.me that
-will install MHonArc on your system. To run the program, type the following
-at your shell prompt:
+Provided in the MHonArc distribution is a Perl program, install.me, for
+installing MHonArc on your system. To run the program, type the following
+command:
 
-    shell> perl install.me
++-------------------------------------------------------------------------+
+|prompt> perl install.me                                                  |
++-------------------------------------------------------------------------+
 
-IMPORTANT  You must be in the same directory as the install.me program when
-           you run it.                                                     
+NOTE: You must be in the same directory as the install.me program when you 
+      run it.                                                              
 
 The installation program will ask you a series of questions on where the
-perl executable is and where to put MHonArc files. Just hit <CR> to accept
-the default values listed in ()'s. Note, the default values are determined
-by the configuration of perl on your system. If you choose the defaults,
-you may need to possess root/admin privileges to have a successful install.
+perl executable is and where to put MHonArc files. Just hit <Enter> to
+accept the default values listed in ()'s.
+
+NOTE: The default values are determined by the configuration of perl on    
+      your system. If you choose the defaults, you may need to possess root
+      /admin privileges.                                                   
 
 install.me can take several options on the command-line to affect what is
 done during installation. The following is the list of options available:
 
-  -afs                  : Skip permission checks (useful if AFS)
-  -batch                : Run in batch mode (do not ask questions)
-  -binpath <path>       : Directory path to install programs/scripts
-  -docpath <path>       : Directory path to install documentation
-  -help                 : A message summarizing options available
-  -libpath <path>       : Directory path to install library files
-  -filelist <file>      : List of files to install (def="FILELIST")
-  -manpath <path>       : Directory path to manpages
-  -nobin                : Do not install programs
-  -nodep                : Skip module dependency check
-  -nodoc                : Do not install documentation
-  -nolib                : Do not install library files
-  -noman                : Do not install manpages
-  -perl <pathname>      : Pathname of perl interpreter
-  -prefix <path>        : Set prefix for installation directories
++-------------------------------------------------------------------------+
+|  -afs                  : Skip permission checks (useful if AFS)         |
+|  -batch                : Run in batch mode (do not ask questions)       |
+|  -binpath <path>       : Directory path to install programs/scripts     |
+|  -docpath <path>       : Directory path to install documentation        |
+|  -help                 : A message summarizing options available        |
+|  -libpath <path>       : Directory path to install library files        |
+|  -filelist <file>      : List of files to install (def="FILELIST")      |
+|  -manpath <path>       : Directory path to manpages                     |
+|  -nobin                : Do not install programs                        |
+|  -nodep                : Skip module dependency check                   |
+|  -nodoc                : Do not install documentation                   |
+|  -nolib                : Do not install library files                   |
+|  -noman                : Do not install manpages                        |
+|  -perl <pathname>      : Pathname of perl interpreter                   |
+|  -prefix <path>        : Set prefix for installation directories        |
++-------------------------------------------------------------------------+
 
 For example, if you do not want to install the documentation, do the
 following:
 
-    shell> perl install.me -nodoc
++-------------------------------------------------------------------------+
+|prompt> perl install.me -nodoc                                           |
++-------------------------------------------------------------------------+
 
 Later on, if you decide you want to install the documentation, but not
 re-install the other files, do the following:
 
-    shell> perl install.me -nobin -nolib -noman
++-------------------------------------------------------------------------+
+|prompt> perl install.me -nobin -nolib -noman                             |
++-------------------------------------------------------------------------+
 
 If you want to install files relative to your home directory, do the
 following:
 
-    shell> perl install.me -prefix $HOME
++-------------------------------------------------------------------------+
+|prompt> perl install.me -prefix $HOME                                    |
++-------------------------------------------------------------------------+
 
 install.me Notes
 
@@ -164,20 +211,19 @@ install.me Notes
    
   * The installation lib directory is added to each program's search path
     so each program can find the libaries needed for proper execution.
-    Therefore, you should NOT have to set your PERL5LIB environment
-    variable if you install the library files in a location not in the
-    default perl library search path.
+    Therefore, you do NOT have to set your PERL5LIB environment variable if
+    you install the library files in a non-standard location.
    
-  * If you specify paths that do not exist, the install.me program will
-    create the paths for you. If running in interactive mode, you will be
-    prompted before each path is created.
+  * If you specify paths that do not exist, the install.me program creates
+    the paths for you. If running in interactive mode, install.me prompts
+    you for confirmation before creating a path.
    
   * install.me supports environment variable interpolation in pathnames
     specified during interactive installation. For example, if you want to
-    install the program files into your local bin directory, you can enter
-    the following when prompted for the location to install executables:
-    $HOME/bin. Also, if the '~' (tilde) character is the first character of
-    the pathname specified, it will be expanded to the value of the HOME
+    install program files into your local bin directory, you can enter the
+    following when prompted for the location to install executables: $HOME/
+    bin. Also, if the '~' (tilde) character is the first character of the
+    pathname specified, it will be expanded to the value of the HOME
     environment variable. Therefore, the following are equivalent: $HOME/
     bin and ~/bin.
    
@@ -186,8 +232,8 @@ install.me Notes
     5.005 or later.
    
   * If you want to abort the installation, just enter the termination
-    character. For Unix systems, it is normally Ctrl-C; for Win32 systems,
-    it is normally Ctrl-Z.
+    character, typically <Ctrl-C> for Unix systems and <Ctrl-Z> for Win32
+    systems.
    
 ---------------------------------------------------------------------------
 
@@ -195,18 +241,23 @@ The Perl 5 Way
 
 Of course, you can install MHonArc the standard way under Perl 5:
 
-    shell> perl Makefile.PL
-    shell> make
-    shell> make install
++-------------------------------------------------------------------------+
+|prompt> perl Makefile.PL                                                 |
+|prompt> make                                                             |
+|prompt> make install                                                     |
++-------------------------------------------------------------------------+
 
 If you want to install in a specific directory, try:
 
-    shell> perl Makefile.PL PREFIX=/tmp/myperl5
-    shell> make
-    shell> make install
++-------------------------------------------------------------------------+
+|prompt> perl Makefile.PL PREFIX=/tmp/myperl5                             |
+|prompt> make                                                             |
+|prompt> make install                                                     |
++-------------------------------------------------------------------------+
 
-NOTE  install.me is actually called "behind the scenes" in batch mode to   
-      install the files.                                                   
+NOTE: install.me is actually called "behind the scenes" in batch mode to   
+      install the files. Therefore, more unusually invocations methods of  
+      perl Makefile.PL may not be supported.                               
 
 ---------------------------------------------------------------------------
 
@@ -214,65 +265,72 @@ Win32 Notes
 
   * The main programs will automatically be converted to DOS batch files.
     Hence, if the path location of the main programs is in your PATH, you
-    should be able to invoke them like any other program. Note, the path to
-    the perl executable must be in your PATH, also.
+    should be able to invoke them like any other program.
+   
+    NOTE: The path to the perl executable must be in your PATH, also.      
    
   * The main programs will also be copied to ".pl" files. Therefore, if you
     have .pl associated with Perl in the registry, you can invoke the
     programs directly (if the path location of the main programs are in
     your search path). For example:
    
-        shell> mhonarc.pl ...
+    +---------------------------------------------------------------------+
+    |prompt> mhonarc.pl ...                                               |
+    +---------------------------------------------------------------------+
    
-    This is known to work under WinNT and under the Cygwin bash shell.
+    This is known to work under WinNT's command shell and under the Cygwin
+    bash shell.
    
-    This is better than going though the batch file mechanism since I/O
-    redirection does not work when invoking a batch file.
+    This is better than using the batch files since I/O redirection does
+    not work with batch files.
    
-  * In the logo directory of the distribution is a BMP file mhaicon.bmp.
-    You can copy the image into your Windows Icon directory. Then through
-    the file types editor of the file explorer, you can specify mhaicon.bmp
-    as the icon for MHonArc resource (.mrc) files.
+  * In the logo directory of the distribution contain .ico files for
+    associating the MHonArc logo with MHonArc .mrc resource files.
    
-    This method of associating the icon to MHonArc resource files is known
-    to work with Win9x systems.
-
 ---------------------------------------------------------------------------
 
 Alternate Operating Systems
 
-In many cases, the install.me program will work for other operating
-systems. Please contact the author on any success stories for other
-operating systems, and please send any patches, if required.
+In many cases, install.me works for other operating systems. Please contact
+the author on any success stories for other operating systems, and please
+send any patches, if required.
 
 ---------------------------------------------------------------------------
 
 Manual Installation
 
-If install.me will not work properly for your system, here are the steps to
-install MHonArc manually:
+If install.me does not work for your system, here is how to install MHonArc
+manually:
 
   * Copy files in the lib directory to the library location you desire.
    
   * Copy the program files to the location you want them installed. After
-    copying, you must edit the each file as follows:
+    copying, do the following:
    
-      + Edit the "#!/..." line (the first line of each file) to be the
-        complete pathname of your perl interpreter. Note, this step is only
-        required for systems (Unix) that support "#!".
+      + Edit the "#!/..." line for each program file to reference the
+        complete pathname of your perl interpreter. The line should be the
+        first line of each program file.
        
-      + Add a new line right after the "#!/..." line to contain the
-        following:
+        NOTE: This step is only needed for systems (Unix) that support "#! 
+              ".                                                           
        
-            use lib '/path/to/lib/files';
+      + Then do one of the following:
        
-        where "/path/to/lib/files/" is the path to where copied the library
-        files to.
-       
-        Note, if the location you copied the libraries are already part of
-        Perl's standard library search path, you do not need to add the
-        "use lib" statement.
-       
+          o Add a new line right after the "#!/..." line of each program
+            file to contain the following:
+           
+              use lib '/path/to/lib/files';
+           
+            where "/path/to/lib/files/" is the path to where copied the
+            library files to.
+           
+            NOTE: If the location you copied the libraries are already part
+                  of Perl's standard library search path, you do not need  
+                  to add the "use lib" statement.                          
+           
+          o Or, set your PERL5LIB environment to include the path location
+            you copied the library files to.
+           
 ---------------------------------------------------------------------------
 
 Post Installation Configuration
@@ -286,7 +344,7 @@ defaults for MHonArc. See the DEFRCFILE resource on valid pathname
 locations for the default resource file. For more information on what can
 be put in a resource file, see the Resources section.
 
-NOTE  It is advisable to create some local documentation for users         
+NOTE: It is advisable to create some local documentation for users         
       describing any settings you place in the site-wide resource file.    
       This will avoid confusion if site settings vary from default settings
       described in the documentation, and it will help avoid invalid bug   
@@ -315,7 +373,7 @@ known to run on a variety of operating systems, and is free software.
 To use mhonarc.vim, copy mhonarc.vim to an appropriate location and add
 something like the following to your .vimrc file:
 
-au BufNewFile,BufRead *.mrc     so $HOME/share/vim/syntax/mhonarc.vim
+  au BufNewFile,BufRead *.mrc   so $HOME/share/vim/syntax/mhonarc.vim
 
 Of course, change the pathname to mhonarc.vim to wherever you copied it to.
 
@@ -328,7 +386,7 @@ highlighting mode. The mode is best used with color-capable terminals.
 
 ---------------------------------------------------------------------------
 
-$Date: 2002/05/27 20:07:10 $
+$Date: 2002/12/10 04:08:02 $
 MHonArc
 Copyright © 1997-2002, Earl Hood, mhonarc@mhonarc.org
 

@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhindex.pl,v 1.10 2002/06/27 04:56:41 ehood Exp $
+##	$Id: mhindex.pl,v 1.11 2002/11/20 23:53:12 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -32,8 +32,8 @@ package mhonarc;
 ##
 sub write_main_index {
     my $onlypg = shift;
-    my($outhandle, $i, $i_p0, $filename, $tmpl, $isfirst, $tmp,
-	  $offstart, $offend);
+    my($outhandle, $tmpfile, $i, $i_p0, $tmpl, $isfirst, $tmp,
+       $offstart, $offend);
     local($PageNum, $PageSize); # XXX: Use in replace_li_vars()
     my($totalpgs);
     local(*a);
@@ -81,11 +81,9 @@ sub write_main_index {
 	    
 	## Open/create index file
 	if ($IDXONLY) {
-	   $outhandle = 'STDOUT';
-
+	   $outhandle = \*STDOUT;
 	} else {
-	    $outhandle = &file_create($IDXPATHNAME, $GzipFiles) ||
-		die("ERROR: Unable to create $IDXPATHNAME\n");
+	    ($outhandle, $tmpfile) = file_temp('midxXXXXXXXXXX', $OUTDIR);
 	}
 	print STDOUT "Writing $IDXPATHNAME ...\n"  unless $QUIET;
 
@@ -173,7 +171,11 @@ sub write_main_index {
 
 	## Print bottom part of index
 	&output_maillist_foot($outhandle);
-	close($outhandle)  unless $IDXONLY;
+	if (!$IDXONLY) {
+	    close($outhandle);
+	    file_gzip($tmpfile)  if $GzipFiles;
+	    file_chmod(file_rename($tmpfile, $IDXPATHNAME));
+	}
     }
 }
 

@@ -1,0 +1,178 @@
+<html>
+<head>
+<title>MHonArc Resources: DBFILEPERMS</title>
+<link rel="stylesheet" type="text/css" href="../docstyles.css">
+</head>
+<body>
+
+<!--x-rc-nav-->
+<table border=0><tr valign="top">
+<td align="left" width="50%">[Prev:&nbsp;<a href="dbfile.html">DBFILE</a>]</td><td><nobr>[<a href="../resources.html#dbfileperms">Resources</a>][<a href="../mhonarc.html">TOC</a>]</nobr></td><td align="right" width="50%">[Next:&nbsp;<a href="decodeheads.html">DECODEHEADS</a>]</td></tr></table>
+<!--/x-rc-nav-->
+
+<hr>
+<h1>DBFILEPERMS</h1>
+<!--X-TOC-Start-->
+<ul>
+<li><a href="#syntax">Syntax</a>
+<li><a href="#description">Description</a>
+<li><a href="#default">Default Setting</a>
+<li><a href="#rcvars">Resource Variables</a>
+<li><a href="#examples">Examples</a>
+<li><a href="#version">Version</a>
+<li><a href="#seealso">See Also</a>
+</ul>
+<!--X-TOC-End-->
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="syntax">Syntax</a></h2>
+
+<dl>
+
+<dt><strong>Envariable</strong></dt>
+<dd><p>
+<code>M2H_DBFILEPERMS=<var>octal-mode</var></code>
+</p>
+</dd>
+
+<dt><strong>Element</strong></dt>
+<dd><p>
+<code>&lt;DBFILEPERMS&gt;</code><br>
+<var>octal-mode</var><br>
+<code>&lt;/DBFILEPERMS&gt;</code><br>
+</p>
+</dd>
+
+<dt><strong>Command-line Option</strong></dt>
+<dd><p>
+<code>-dbfileperms <var>octal-mode</var></code>
+</p>
+</dd>
+
+</dl>
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="description">Description</a></h2>
+
+<table class="note" width="100%">
+<tr valign=top>
+<td><strong>NOTE:</strong></td>
+<td width="100%"><p>The use of DBFILEPERMS on non-Unix-type operating
+systems may have limited functionality.  See the <b><tt>chmod</tt></b>
+function under the
+<a href="http://www.perldoc.com/perl5.6/pod/perlport.html#FUNCTION-IMPLEMENTATIONS"><b>Function Implementations</b></a>
+of the
+<a href="http://www.perldoc.com/perl5.6/pod/perlport.html"><b>perlport</b></a>
+manpage of the <a href="http://www.perldoc.com/">Perl documentation</a>
+for specifics on how Unix-type permissions are applied to your
+operating system.
+</p>
+</td>
+</tr>
+</table>
+
+<p>DBFILEPERMS sets the permissions of
+<a href="dbfile.html">DBFILE</a>.  File permissions
+are specified as an octal number: the same format as used by the
+Unix <tt><b>chmod</b></tt>(1) command.
+The following provides common values:
+</p>
+<table>
+<tr valign="baseline"><td><tt>0666&nbsp;</tt></td>
+    <td>User, group, and other readable and writable.</td>
+    </tr>
+<tr valign="baseline"><td><tt>0660&nbsp;</tt></td>
+    <td>User and group readable and writable; no access for anyone else.</td>
+    </tr>
+<tr valign="baseline"><td><tt>0644&nbsp;</tt></td>
+    <td>User readable and writable; group and other readable.</td>
+    </tr>
+<tr valign="baseline"><td><tt>0640&nbsp;</tt></td>
+    <td>User readable and writable; group readable;
+	no access for anyone else.</td>
+    </tr>
+<tr valign="baseline"><td><tt>0600&nbsp;</tt></td>
+    <td>User readable and writable; anyone else is denied access.</td>
+    </tr>
+</table>
+<p>The <a href="umask.html">UMASK</a> resource is applied to the
+value of DBFILEPERMS as follows: <tt class="icode">DBFILEPERMS &amp;~
+UMASK</tt>.  For example, if DBFILEPERMS equals 0660 and UMASK equals
+022, archive files will have the permissions 0640, read/write for
+user and read-only for group, and no access for anyone else.
+</p>
+
+<p>DBFILEPERMS exists to provide you with the ability to have a
+more restrictive access policy to <a href="dbfile.html">DBFILE</a>
+vs other archive files for security reasons.
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="default">Default Setting</a></h2>
+
+<p><tt>0660</tt><br>
+<em>(User and group read/write; no access for anyone else)</em>
+</p>
+
+<table class="note" width="100%">
+<tr valign=top>
+<td><strong>NOTE:</strong></td>
+<td width="100%"><p>Remember, <a href="umask.html">UMASK</a> is applied
+to DBFILEPERMS, so the actual permissions of DBFILE may be less than 0660.
+</p>
+</td>
+</tr>
+</table>
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="rcvars">Resource Variables</a></h2>
+
+<p>N/A
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="examples">Examples</a></h2>
+
+<p>None.
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="version">Version</a></h2>
+
+<p>2.6.0
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="seealso">See Also</a></h2>
+
+<p>
+<a href="dbfileperms.html">DBFILE</a>,
+<a href="fileperms.html">FILEPERMS</a>,
+<a href="umask.html">UMASK</a>
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<!--x-rc-nav-->
+<table border=0><tr valign="top">
+<td align="left" width="50%">[Prev:&nbsp;<a href="dbfile.html">DBFILE</a>]</td><td><nobr>[<a href="../resources.html#dbfileperms">Resources</a>][<a href="../mhonarc.html">TOC</a>]</nobr></td><td align="right" width="50%">[Next:&nbsp;<a href="decodeheads.html">DECODEHEADS</a>]</td></tr></table>
+<!--/x-rc-nav-->
+<hr>
+<address>
+$Date: 2003/01/03 21:56:45 $<br>
+<img align="top" src="../monicon.png" alt="">
+<a href="http://www.mhonarc.org/"><strong>MHonArc</strong></a><br>
+Copyright &#169; 2002, <a href="http://www.earlhood.com/"
+>Earl Hood</a>, <a href="mailto:mhonarc@mhonarc.org"
+>mhonarc@mhonarc.org</a><br>
+</address>
+
+</body>
+</html>

@@ -1,7 +1,7 @@
 #!/usr/local/bin/perl
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhonarc,v 2.7 2001/09/05 16:01:54 ehood Exp $
+##	$Id: mhonarc,v 2.9 2003/01/04 04:44:21 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -69,13 +69,15 @@ options available.
 
 =head1 PREREQUISITES
 
-B<Getopt::Long>, B<Time::Local>
+B<Fcntl>,
+B<File::Basename>,
+B<Getopt::Long>,
+B<Symbol>,
+B<Time::Local>
 
 =head1 COREQUISITES
 
 B<Digest::MD5>,
-B<Fcntl>,
-B<Symbol>
 
 =head1 OSNAMES
 
@@ -92,6 +94,10 @@ Mail
 =head1 AUTHOR
 
 Earl Hood, mhonarc@mhonarc.org
+
+MHonArc comes with ABSOLUTELY NO WARRANTY and MHonArc may be copied only
+under the terms of the GNU General Public License, which may be found in
+the MHonArc distribution.
 
 =cut
 

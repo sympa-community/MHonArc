@@ -1,0 +1,174 @@
+<html>
+<head>
+<title>MHonArc Resources: FILEPERMS</title>
+<link rel="stylesheet" type="text/css" href="../docstyles.css">
+</head>
+<body>
+
+<!--x-rc-nav-->
+<table border=0><tr valign="top">
+<td align="left" width="50%">[Prev:&nbsp;<a href="fieldstyles.html">FIELDSTYLES</a>]</td><td><nobr>[<a href="../resources.html#fileperms">Resources</a>][<a href="../mhonarc.html">TOC</a>]</nobr></td><td align="right" width="50%">[Next:&nbsp;<a href="firstpglink.html">FIRSTPGLINK</a>]</td></tr></table>
+<!--/x-rc-nav-->
+
+<hr>
+<h1>FILEPERMS</h1>
+<!--X-TOC-Start-->
+<ul>
+<li><a href="#syntax">Syntax</a>
+<li><a href="#description">Description</a>
+<li><a href="#default">Default Setting</a>
+<li><a href="#rcvars">Resource Variables</a>
+<li><a href="#examples">Examples</a>
+<li><a href="#version">Version</a>
+<li><a href="#seealso">See Also</a>
+</ul>
+<!--X-TOC-End-->
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="syntax">Syntax</a></h2>
+
+<dl>
+
+<dt><strong>Envariable</strong></dt>
+<dd><p>
+<code>M2H_FILEPERMS=<var>octal-mode</var></code>
+</p>
+</dd>
+
+<dt><strong>Element</strong></dt>
+<dd><p>
+<code>&lt;FILEPERMS&gt;</code><br>
+<var>octal-mode</var><br>
+<code>&lt;/FILEPERMS&gt;</code><br>
+</p>
+</dd>
+
+<dt><strong>Command-line Option</strong></dt>
+<dd><p>
+<code>-fileperms <var>octal-mode</var></code>
+</p>
+</dd>
+
+</dl>
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="description">Description</a></h2>
+
+<table class="note" width="100%">
+<tr valign=top>
+<td><strong>NOTE</strong></td>
+<td width="100%"><p>The use of FILEPERMS on non-Unix-type operating
+systems may have limited functionality.  See the <b><tt>chmod</tt></b>
+function under the
+<a href="http://www.perldoc.com/perl5.6/pod/perlport.html#FUNCTION-IMPLEMENTATIONS"><b>Function Implementations</b></a>
+of the
+<a href="http://www.perldoc.com/perl5.6/pod/perlport.html"><b>perlport</b></a>
+manpage of the <a href="http://www.perldoc.com/">Perl documentation</a>
+for specifics on how Unix-type permissions are applied to your
+operating system.
+</p>
+</td>
+</tr>
+</table>
+
+<p>FILEPERMS sets the permissions of archive files.  File permissions
+are specified as an octal number: the same format as used by the
+Unix <tt><b>chmod</b></tt>(1) command.
+The following provides common values:
+</p>
+<table>
+<tr valign="baseline"><td><tt>0666&nbsp;</tt></td>
+    <td>User, group, and other readable and writable.</td>
+    </tr>
+<tr valign="baseline"><td><tt>0644&nbsp;</tt></td>
+    <td>User readable and writable; group and other readable.</td>
+    </tr>
+<tr valign="baseline"><td><tt>0600&nbsp;</tt></td>
+    <td>User readable and writable; anyone else is denied access.</td>
+    </tr>
+</table>
+<p>The <a href="umask.html">UMASK</a> resource is applied to the
+value of FILEPERMS as follows: <tt class="icode">FILEPERMS &amp;~
+UMASK</tt>.  For example, if FILEPERMS equals 0666 and UMASK equals
+022, archive files will have the permissions 0644, read/write for
+user and read-only access to all others.
+</p>
+
+<table class="note" width="100%">
+<tr valign=top>
+<td><strong>NOTE</strong></td>
+<td width="100%"><p>To explicitly control the permissions of
+the <a href="dbfile.html">DBFILE</a> use 
+<a href="dbfileperms.html">DBFILEPERMS</a>.
+</p>
+</td>
+</tr>
+</table>
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="default">Default Setting</a></h2>
+
+<pre>0666</pre>
+
+<table class="note" width="100%">
+<tr valign=top>
+<td><strong>NOTE</strong></td>
+<td width="100%"><p>Remember, <a href="umask.html">UMASK</a> is applied
+to FILEPERMS, so the actual permissions of archive files will generally
+be less than 0666.
+</p>
+</td>
+</tr>
+</table>
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="rcvars">Resource Variables</a></h2>
+
+<p>N/A
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="examples">Examples</a></h2>
+
+<p>None.
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="version">Version</a></h2>
+
+<p>2.6.0
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="seealso">See Also</a></h2>
+
+<p>
+<a href="dbfileperms.html">DBFILEPERMS</a>,
+<a href="umask.html">UMASK</a>
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<!--x-rc-nav-->
+<table border=0><tr valign="top">
+<td align="left" width="50%">[Prev:&nbsp;<a href="fieldstyles.html">FIELDSTYLES</a>]</td><td><nobr>[<a href="../resources.html#fileperms">Resources</a>][<a href="../mhonarc.html">TOC</a>]</nobr></td><td align="right" width="50%">[Next:&nbsp;<a href="firstpglink.html">FIRSTPGLINK</a>]</td></tr></table>
+<!--/x-rc-nav-->
+<hr>
+<address>
+$Date: 2002/12/10 04:08:02 $<br>
+<img align="top" src="../monicon.png" alt="">
+<a href="http://www.mhonarc.org/"><strong>MHonArc</strong></a><br>
+Copyright &#169; 2002, <a href="http://www.earlhood.com/"
+>Earl Hood</a>, <a href="mailto:mhonarc@mhonarc.org"
+>mhonarc@mhonarc.org</a><br>
+</address>
+
+</body>
+</html>

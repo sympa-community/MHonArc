@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhnull.pl,v 1.7 2001/09/17 16:10:30 ehood Exp $
+##	$Id: mhnull.pl,v 1.8 2003/02/04 23:31:19 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -35,10 +35,11 @@ package m2h_null;
 sub filter {
     my($fields, $data, $isdecode, $args) = @_;
     my($ctype) = $fields->{'content-type'}[0] =~ m%^\s*([\w\-\./]+)%;
-    my($disp, $nameparm) = readmail::MAILhead_get_disposition($fields);
+    my($disp, $nameparm, $raw_name, $html_name) =
+	readmail::MAILhead_get_disposition($fields, 1);
     join("", '<p><tt>&lt;&lt;',
 	     ($disp ? "$disp: " : ""),
-	     ($nameparm ? $nameparm : $ctype),
+	     ($html_name ? $html_name : $ctype),
 	     '&gt;&gt;</tt></p>');
 }
 

@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##      $Id: mhusage.pl,v 2.19 2002/06/07 17:45:09 ehood Exp $
+##      $Id: mhusage.pl,v 2.22 2003/01/09 23:42:28 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -33,8 +33,9 @@ sub mhusage {
     local(*PAGER);
     PAGERCHECK: {
 	if ($UNIX &&
-	    (($ENV{'PAGER'} && open(PAGER, "| $ENV{'PAGER'}")) ||
-	     (open(PAGER, "| more")))) {
+		(-t STDOUT) &&
+		(($ENV{'PAGER'} && open(PAGER, "| $ENV{'PAGER'}")) ||
+		 (open(PAGER, '| more')))) {
 	    $usefh = \*PAGER;
 	    $close = 1;
 	    last PAGERCHECK;
@@ -59,6 +60,9 @@ Description:
   <http://www.mhonarc.org/>, for more complete usage information.
 
 Options:
+  Only command-line options are summarized here.  See documentation
+  for information about resource file elements and environment variables.
+
   -add                     : Add message(s) to archive
   -afs                     : Skip archive directory permission check
   -addressmodifycode <exp> : Perl expressions for modifying addresses
@@ -71,13 +75,16 @@ Options:
   -decodeheads             : Decode decode-only charset data when reading mail
   -definevar <varlist>     : Define custom resource variables
   -dbfile <name>           : Name of MHonArc database file
-                             (def: ".mhonarc.db")
+  -dbfileperms <octal>     : File permissions for database file
+                             (def: "0660" -- UMASK is still applied)
   -doc                     : Print link to doc at end of index page
   -docurl <url>            : URL to MHonArc documentation
                              (def: "http://www.mhonarc.org/")
   -editidx                 : Edit/change index page(s) and messages, only
   -expiredate <date>       : Message cut-off date
   -expireage <secs>        : Time from current when messages expire
+  -fileperms <octal>       : File permissions for archive files
+                             (def: "0666" -- UMASK is still applied)
   -folrefs                 : Print links to follow-ups/references
   -force                   : Perform archive operations even if unable to lock
   -fromfields <list>       : Fields to detemine whom the message is from
@@ -90,6 +97,8 @@ Options:
   -help                    : This message
   -htmlext <ext>           : Filename extension for generated HTML files
                              (def: "html")
+  -iconurlprefix <url>     : Prefix for icon URLs
+			     (def: "")
   -idxfname <name>         : Name of index page
                              (def: "maillist.html")
   -idxprefix <string>      : Filename prefix for multi-page main index
@@ -109,6 +118,7 @@ Options:
   -maxsize <#>             : Maximum number of messages allowed in archive
   -mhpattern <exp>         : Perl expression for message files in a directory
                              (def: "^\\d+\$")
+  -modifybodyaddresses     : ADDRESSMODIFYCODE applies to text entities
   -modtime                 : Set modification time on files to message date
   -months <list>           : Month names
   -monthsabr <list>        : Abbreviated month names
@@ -140,6 +150,7 @@ Options:
   -nonews                  : Do not add links to newsgroups
   -noposixstrftime         : Do not use POSIX::strftime() to process time
                              format (the default)
+  -noreconvert             : Do not reconvert existing messages (the default)
   -noreverse               : List messages in normal order (the default)
   -nosaveresources         : Do not save resource values in DB
   -nosort                  : Do not sort messages
@@ -161,6 +172,7 @@ Options:
   -posixstrftime           : Use POSIX::strftime() to process time formats
   -quiet                   : Suppress status messages during execution
   -rcfile <file>           : Resource file for MHonArc
+  -reconvert               : Reconvert existing messages
   -reverse                 : List messages in reverse order
   -rmm                     : Remove messages from archive
   -savemem                 : Write message data while processing

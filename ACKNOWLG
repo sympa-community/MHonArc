@@ -12,8 +12,9 @@ the following:
 ---------------------------------------------------------------------------
 
  A. P. Barrett <barrett AT ee DOT und DOT ac DOT za>
-	For developing a base64 library in pure Perl.  The library
-	has been adapted to decode base64 messages by MHonArc.
+	For developing a base64 library in pure Perl.  The library has
+	been adapted (with optimizations) to decode base64 messages
+	by MHonArc.
 
  A.R. Burgers <burgers AT ecn DOT nl>
 	For contributing the prsfrom.pl program (included in the
@@ -30,31 +31,37 @@ the following:
 	a very useful archive of the list.
 
  Jeff Breidenbach <jeff AT jab DOT org>
-	For his feedback and his usage of MHonArc at a scale that
-	it was really never designed for,
-	<http://www.mail-archive.com/>, to influence the development
-	MHonArc (which still has scalability problems :-)
+	For his feedback and his usage of MHonArc at a scale that it
+	was really never designed for, <http://www.mail-archive.com/>,
+	that influenced the development MHonArc (which still has
+	scalability problems :-)
+
+ Steven M. Christey <coley AT linus DOT mitre DOT org>
+	For performing a security audit on MHonArc source to help
+	improve the security of MHonArc and to increase the awareness
+	of security issues when developing MHonArc.
 
  Roman Czyborra <czyborra AT cs DOT tu-berlin DOT de>
-	For his help with the MosaicMail script.
+	For his help with the MosaicMail script (which has been
+	removed later releases since Mosaic is dead software).
 
  Brian Foster <Brian.Foster AT ireland DOT sun DOT com>
 	For his useful, detailed, bug reports.
 
  Timothy Finin <Tim.Finin AT cs DOT umbc DOT edu>
 	Whose initial feedback on mbox2html (my first mail->HTML
-	program) caused the ball rolling on developing a more complete
-	mail-to-HTML program.
+	program) which caused the ball rolling on developing a more
+	complete mail-to-HTML program.
 
  Stephen Franklin <franklin AT uci DOT edu>
-	For providing the machine facilities for housing the first
-	MHonArc home page:
-	<http://www.nacs.uci.edu/indiv/ehood/mhonarc.html>.  Location
-	still functions a primary mirror/backup for MHonArc.
+	For providing the machine facilities
+	for housing the first MHonArc home page:
+	<http://www.nacs.uci.edu/indiv/ehood/mhonarc.html>.
+	Location still functions a primary mirror/backup for MHonArc.
 
- Ken Harward <harward AT convex DOT com>
+ Ken Harward
 	For helping me tackle Perl problems and for bouncing ideas
-	off.
+	off during the early days.
 
  Phyllis Imperatrice <mymom AT home>
 	For the initial sketch of the MHonArc logo.
@@ -77,12 +84,11 @@ the following:
 	for his help in trouble-shooting.
 
  Achille Petrilli <Achille.Petrilli AT MACMAIL DOT CERN DOT CH>
-	For his initial patches for MacPerl support to get the
-	ball rolling for MacPerl usage.
+	For his initial patches for MacPerl support.
 
  John C. Ring, Jr. <jcring AT switch DOT com>
 	For tipping me off on how <img src> can be used by spammers,
-	which lead me to update mhtxthtml.pl to address this abuse.
+	which lead to updates in mhtxthtml.pl to address this abuse.
 
  Olivier Salaün <olivier.salaun AT cru DOT fr>
 	For providing test case that consistantly caused perl
@@ -93,9 +99,10 @@ the following:
 	in the past.  Code changed to avoid bug.
 
  NIIBE Yutaka <gniibe AT mri DOT co DOT jp>
-	For the contribution of a text/plain filter to process
-	ISO-2022 encoded mail messages (ie. Japanese character set).
+	For the initial contribution of a text/plain filter,
+	iso2022jp.pl to process ISO-2022 encoded mail messages
+	(ie. Japanese character set).
 
 ---------------------------------------------------------------------------
-$Date: 2001/11/23 21:08:29 $ 
+$Date: 2003/01/01 23:41:42 $ 
 Earl Hood, mhonarc@mhonarc.org

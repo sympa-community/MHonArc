@@ -1,7 +1,7 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
 <html>
 <head>
 <title>MHonArc Resources: SUBJECTBEGIN</title>
+<link rel="stylesheet" type="text/css" href="../docstyles.css">
 </head>
 <body>
 <!--x-rc-nav-->
@@ -10,10 +10,21 @@
 <!--/x-rc-nav-->
 <hr>
 <h1>SUBJECTBEGIN</h1>
+<!--X-TOC-Start-->
+<ul>
+<li><a href="#syntax">Syntax</a>
+<li><a href="#description">Description</a>
+<li><a href="#default">Default Setting</a>
+<li><a href="#rcvars">Resource Variables</a>
+<li><a href="#examples">Examples</a>
+<li><a href="#version">Version</a>
+<li><a href="#seealso">See Also</a>
+</ul>
+<!--X-TOC-End-->
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Syntax</h2>
+<h2><a name="syntax">Syntax</a></h2>
 
 <dl>
 
@@ -41,7 +52,7 @@ N/A
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Description</h2>
+<h2><a name="description">Description</a></h2>
 
 <p>SUBJECTBEGIN defines the beginning markup of a subject group
 in the main index if the
@@ -56,14 +67,14 @@ evaluate based on information from the first message in the group.
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Default Setting</h2>
+<h2><a name="default">Default Setting</a></h2>
 
 <p>Nil.
 </p>
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Resource Variables</h2>
+<h2><a name="rcvars">Resource Variables</a></h2>
 
 <table border=1>
 <tr bgcolor="#C0C0C0">
@@ -115,11 +126,15 @@ evaluate based on information from the first message in the group.
 </tr>
 <tr valign=top>
 <td align=center><a name="ICON" href="../rcvars.html#ICON"><strong><code>$ICON$</code></strong></a></td>
-<td>The context-type sensitive icon.</td>
+<td>The content-type sensitive icon.</td>
 </tr>
 <tr valign=top>
 <td align=center><a name="ICONURL" href="../rcvars.html#ICONURL"><strong><code>$ICONURL$</code></strong></a></td>
-<td>The URL to the context-type sensitive icon.</td>
+<td>URL to the content-type sensitive icon.</td>
+</tr>
+<tr valign=top>
+<td align=center><a name="ICONURLPREFIX" href="../rcvars.html#ICONURLPREFIX"><strong><code>$ICONURLPREFIX$</code></strong></a></td>
+<td>Value of ICONURLPREFIX resource.</td>
 </tr>
 <tr valign=top>
 <td align=center><a name="MMDDYYYY" href="../rcvars.html#MMDDYYYY"><strong><code>$MMDDYYYY$</code></strong></a></td>
@@ -128,6 +143,10 @@ evaluate based on information from the first message in the group.
 <tr valign=top>
 <td align=center><a name="MSGGMTDATE" href="../rcvars.html#MSGGMTDATE"><strong><code>$MSGGMTDATE$</code></strong></a></td>
 <td>GMT date of current message.</td>
+</tr>
+<tr valign=top>
+<td align=center><a name="MSGHFIELD" href="../rcvars.html#MSGHFIELD"><strong><code>$MSGHFIELD$</code></strong></a></td>
+<td>Message header field</td>
 </tr>
 <tr valign=top>
 <td align=center><a name="MSGID" href="../rcvars.html#MSGID"><strong><code>$MSGID$</code></strong></a></td>
@@ -177,7 +196,7 @@ evaluate based on information from the first message in the group.
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Examples</h2>
+<h2><a name="examples">Examples</a></h2>
 
 <p>The following example resource settings cause the main index
 to be sorted by subject.  The listing will contain each subject
@@ -203,14 +222,14 @@ followed by an author sub-listing:
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Version</h2>
+<h2><a name="version">Version</a></h2>
 
 <p>2.0
 </p>
 
 <!-- *************************************************************** -->
 <hr>
-<h2>See Also</h2>
+<h2><a name="seealso">See Also</a></h2>
 
 <p>
 <a href="subjectend.html">SUBJECTEND</a>,
@@ -225,7 +244,7 @@ followed by an author sub-listing:
 <!--/x-rc-nav-->
 <hr>
 <address>
-$Date: 2002/07/27 05:13:11 $ <br>
+$Date: 2003/01/09 23:42:26 $ <br>
 <img align="top" src="../monicon.png" alt="">
 <a href="http://www.mhonarc.org/"
 ><strong>MHonArc</strong></a><br>

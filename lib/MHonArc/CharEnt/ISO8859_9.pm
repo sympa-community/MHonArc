@@ -1,150 +1,106 @@
-##---------------------------------------------------------------------------##
-##  File:
-##      $Id: ISO8859_9.pm,v 1.1 2001/08/19 09:53:56 ehood Exp $
-##  Author:
-##      Earl Hood       earl@earlhood.com
-##  Description:
-##      Mappings for ISO-8859-9.
-##---------------------------------------------------------------------------##
-##    Copyright (C) 1997,2001	Earl Hood, earl@earlhood.com
-##
-##    This program is free software; you can redistribute it and/or modify
-##    it under the terms of the GNU General Public License as published by
-##    the Free Software Foundation; either version 2 of the License, or
-##    (at your option) any later version.
-##
-##    This program is distributed in the hope that it will be useful,
-##    but WITHOUT ANY WARRANTY; without even the implied warranty of
-##    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-##    GNU General Public License for more details.
-##
-##    You should have received a copy of the GNU General Public License
-##    along with this program; if not, write to the Free Software
-##    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
-##    02111-1307, USA
-##---------------------------------------------------------------------------##
-
-###############################################################################
-##	Mapping arrays for characters to entity references
-###############################################################################
 
 package MHonArc::CharEnt::ISO8859_9;
 
 ##---------------------------------------------------------------------------
 ##      ISO-8859-9: Latin-5
 ##---------------------------------------------------------------------------
-
 +{
-  #--------------------------------------------------------------------------
-  # Hex Code	Entity Ref	# ISO external entity and description
-  #--------------------------------------------------------------------------
-    0xA1,	'iexcl',	# ISOnum : INVERTED EXCLAMATION MARK
-    0xA2,	'cent', 	# ISOnum : CENT SIGN
-    0xA3,	'pound',	# ISOnum : POUND SIGN
-    0xA4,	'curren',	# ISOnum : CURRENCY SIGN
-    0xA5,	'yen',  	# ISOnum : YEN SIGN
-    0xA6,	'brvbar',	# ISOnum : BROKEN BAR
-    0xA7,	'sect', 	# ISOnum : SECTION SIGN
-    0xA8,	'die',  	# ISOdia : DIAERESIS
-    0xA9,	'copy', 	# ISOnum : COPYRIGHT SIGN
-    0xAA,	'ordf', 	# ISOnum : FEMININE ORDINAL INDICATOR
-    0xAB,	'laquo',	# ISOnum : LEFT-POINTING DOUBLE ANGLE
-				#	   QUOTATION MARK
-    0xAC,	'not',  	# ISOnum : NOT SIGN
-    0xAD,	'shy',  	# ISOnum : SOFT HYPHEN
-    0xAE,	'reg',  	# ISOnum : REGISTERED SIGN
-    0xAF,	'macr', 	# ISOdia : OVERLINE (MACRON)
-    0xB0,	'deg',  	# ISOnum : DEGREE SIGN
-    0xB1,	'plusmn',	# ISOnum : PLUS-MINUS SIGN
-    0xB2,	'sup2', 	# ISOnum : SUPERSCRIPT TWO
-    0xB3,	'sup3', 	# ISOnum : SUPERSCRIPT THREE
-    0xB4,	'acute',	# ISOdia : ACUTE ACCENT
-    0xB5,	'micro',	# ISOnum : MICRO SIGN
-    0xB6,	'para', 	# ISOnum : PILCROW SIGN
-    0xB7,	'middot',	# ISOnum : MIDDLE DOT
-    0xB8,	'cedil',	# ISOdia : CEDILLA
-    0xB9,	'sup1', 	# ISOnum : SUPERSCRIPT ONE
-    0xBA,	'ordm', 	# ISOnum : MASCULINE ORDINAL INDICATOR
-    0xBB,	'raquo',	# ISOnum : RIGHT-POINTING DOUBLE ANGLE
-				#	   QUOTATION MARK
-    0xBC,	'frac14',	# ISOnum : VULGAR FRACTION ONE QUARTER
-    0xBD,	'frac12', 	# ISOnum : VULGAR FRACTION ONE HALF
-    0xBE,	'frac34',	# ISOnum : VULGAR FRACTION THREE QUARTERS
-    0xBF,	'iquest',	# ISOnum : INVERTED QUESTION MARK
-    0xC0,	'Agrave',	# ISOlat1: LATIN CAPITAL LETTER A WITH GRAVE
-    0xC1,	'Aacute',	# ISOlat1: LATIN CAPITAL LETTER A WITH ACUTE
-    0xC2,	'Acirc',	# ISOlat1: LATIN CAPITAL LETTER A WITH
-				#	   CIRCUMFLEX
-    0xC3,	'Atilde',	# ISOlat1: LATIN CAPITAL LETTER A WITH TILDE
-    0xC4,	'Auml', 	# ISOlat1: LATIN CAPITAL LETTER A WITH
-				#	   DIAERESIS
-    0xC5,	'Aring',	# ISOlat1: LATIN CAPITAL LETTER A WITH RING
-				#	   ABOVE
-    0xC6,	'AElig',	# ISOlat1: LATIN CAPITAL LETTER AE
-    0xC7,	'Ccedil',	# ISOlat1: LATIN CAPITAL LETTER C WITH CEDILLA
-    0xC8,	'Egrave',	# ISOlat1: LATIN CAPITAL LETTER E WITH GRAVE
-    0xC9,	'Eacute',	# ISOlat1: LATIN CAPITAL LETTER E WITH ACUTE
-    0xCA,	'Ecirc',	# ISOlat1: LATIN CAPITAL LETTER E WITH
-				#	   CIRCUMFLEX
-    0xCB,	'Euml', 	# ISOlat1: LATIN CAPITAL LETTER E WITH
-				#	   DIAERESIS
-    0xCC,	'Igrave',	# ISOlat1: LATIN CAPITAL LETTER I WITH GRAVE
-    0xCD,	'Iacute',	# ISOlat1: LATIN CAPITAL LETTER I WITH ACUTE
-    0xCE,	'Icirc',	# ISOlat1: LATIN CAPITAL LETTER I WITH
-				#	   CIRCUMFLEX
-    0xCF,	'Iuml', 	# ISOlat1: LATIN CAPITAL LETTER I WITH
-				#	   DIAERESIS
-    0xD0,	'Gbreve',	# ISOlat2: LATIN CAPITAL LETTER G WITH BREVE
-    0xD1,	'Ntilde',	# ISOlat1: LATIN CAPITAL LETTER N WITH TILDE
-    0xD2,	'Ograve',	# ISOlat1: LATIN CAPITAL LETTER O WITH GRAVE
-    0xD3,	'Oacute',	# ISOlat1: LATIN CAPITAL LETTER O WITH ACUTE
-    0xD4,	'Ocirc',	# ISOlat1: LATIN CAPITAL LETTER O WITH
-				#	   CIRCUMFLEX
-    0xD5,	'Otilde',	# ISOlat1: LATIN CAPITAL LETTER O WITH TILDE
-    0xD6,	'Ouml', 	# ISOlat1: LATIN CAPITAL LETTER O WITH
-				#	   DIAERESIS
-    0xD7,	'times',	# ISOnum : MULTIPLICATION SIGN
-    0xD8,	'Oslash',	# ISOlat1: LATIN CAPITAL LETTER O WITH STROKE
-    0xD9,	'Ugrave',	# ISOlat1: LATIN CAPITAL LETTER U WITH GRAVE
-    0xDA,	'Uacute',	# ISOlat1: LATIN CAPITAL LETTER U WITH ACUTE
-    0xDB,	'Ucirc',	# ISOlat1: LATIN CAPITAL LETTER U WITH
-				#	   CIRCUMFLEX
-    0xDC,	'Uuml', 	# ISOlat1: LATIN CAPITAL LETTER U WITH
-				#	   DIAERESIS
-    0xDD,	'Idot', 	# ISOlat2: LATIN CAPITAL LETTER I WITH DOT
-				#	   ABOVE
-    0xDE,	'Scedil',	# ISOlat2: LATIN CAPITAL LETTER S WITH CEDILLA
-    0xDF,	'szlig',	# ISOlat1: LATIN SMALL LETTER SHARP S (German)
-    0xE0,	'agrave',	# ISOlat1: LATIN SMALL LETTER A WITH GRAVE
-    0xE1,	'aacute',	# ISOlat1: LATIN SMALL LETTER A WITH ACUTE
-    0xE2,	'acirc',	# ISOlat1: LATIN SMALL LETTER A WITH CIRCUMFLEX
-    0xE3,	'atilde',	# ISOlat1: LATIN SMALL LETTER A WITH TILDE
-    0xE4,	'auml', 	# ISOlat1: LATIN SMALL LETTER A WITH DIAERESIS
-    0xE5,	'aring',	# ISOlat1: LATIN SMALL LETTER A WITH RING ABOVE
-    0xE6,	'aelig',	# ISOlat1: LATIN SMALL LETTER AE
-    0xE7,	'ccedil',	# ISOlat1: LATIN SMALL LETTER C WITH CEDILLA
-    0xE8,	'egrave',	# ISOlat1: LATIN SMALL LETTER E WITH GRAVE
-    0xE9,	'eacute',	# ISOlat1: LATIN SMALL LETTER E WITH ACUTE
-    0xEA,	'eogon',	# ISOlat2: LATIN SMALL LETTER E WITH OGONEK
-    0xEB,	'euml', 	# ISOlat1: LATIN SMALL LETTER E WITH DIAERESIS
-    0xEC,	'edot', 	# ISOlat2: LATIN SMALL LETTER E WITH DOT ABOVE
-    0xED,	'iacute',	# ISOlat1: LATIN SMALL LETTER I WITH ACUTE
-    0xEE,	'icirc',	# ISOlat1: LATIN SMALL LETTER I WITH CIRCUMFLEX
-    0xEF,	'imacr',	# ISOlat2: LATIN SMALL LETTER I WITH MACRON
-    0xF0,	'gbreve',	# ISOlat2: LATIN SMALL LETTER G WITH BREVE
-    0xF1,	'ntilde',	# ISOlat1: LATIN SMALL LETTER N WITH TILDE
-    0xF2,	'ograve',	# ISOlat1: LATIN SMALL LETTER O WITH GRAVE
-    0xF3,	'oacute',	# ISOlat1: LATIN SMALL LETTER O WITH ACUTE
-    0xF4,	'ocirc',	# ISOlat1: LATIN SMALL LETTER O WITH CIRCUMFLEX
-    0xF5,	'otilde',	# ISOlat1: LATIN SMALL LETTER O WITH TILDE
-    0xF6,	'ouml', 	# ISOlat1: LATIN SMALL LETTER O WITH DIAERESIS
-    0xF7,	'divide',	# ISOlat1: DIVISION SIGN
-    0xF8,	'oslash',	# ISOlat1: LATIN SMALL LETTER O WITH STROKE
-    0xF9,	'ugrave',	# ISOlat1: LATIN SMALL LETTER U WITH GRAVE
-    0xFA,	'uacute',	# ISOlat1: LATIN SMALL LETTER U WITH ACUTE
-    0xFB,	'ucirc',	# ISOlat1: LATIN SMALL LETTER U WITH CIRCUMFLEX
-    0xFC,	'uuml', 	# ISOlat1: LATIN SMALL LETTER U WITH DIAERESIS
-    0xFD,	'inodot',    	# ISOlat2: LATIN SMALL LETTER I DOTLESS
-    0xFE,	'scedil',	# ISOlat2: LATIN SMALL LETTER S WITH CEDILLA
-    0xFF,	'yuml', 	# ISOlat1: LATIN SMALL LETTER Y WITH DIAERESIS
+
+  # Hex Code    Entity Ref
+
+    '¡' =>	'&#xA1;',
+    '¢' =>	'&#xA2;',
+    '£' =>	'&#xA3;',
+    '¤' =>	'&#xA4;',
+    '¥' =>	'&#xA5;',
+    '¦' =>	'&#xA6;',
+    '§' =>	'&#xA7;',
+    '¨' =>	'&#xA8;',
+    '©' =>	'&#xA9;',
+    'ª' =>	'&#xAA;',
+    '«' =>	'&#xAB;',
+    '¬' =>	'&#xAC;',
+    '­' =>	'&#xAD;',
+    '®' =>	'&#xAE;',
+    '¯' =>	'&#xAF;',
+    '°' =>	'&#xB0;',
+    '±' =>	'&#xB1;',
+    '²' =>	'&#xB2;',
+    '³' =>	'&#xB3;',
+    '´' =>	'&#xB4;',
+    'µ' =>	'&#xB5;',
+    '¶' =>	'&#xB6;',
+    '·' =>	'&#xB7;',
+    '¸' =>	'&#xB8;',
+    '¹' =>	'&#xB9;',
+    'º' =>	'&#xBA;',
+    '»' =>	'&#xBB;',
+    '¼' =>	'&#xBC;',
+    '½' =>	'&#xBD;',
+    '¾' =>	'&#xBE;',
+    '¿' =>	'&#xBF;',
+    'À' =>	'&#xC0;',
+    'Á' =>	'&#xC1;',
+    'Â' =>	'&#xC2;',
+    'Ã' =>	'&#xC3;',
+    'Ä' =>	'&#xC4;',
+    'Å' =>	'&#xC5;',
+    'Æ' =>	'&#xC6;',
+    'Ç' =>	'&#xC7;',
+    'È' =>	'&#xC8;',
+    'É' =>	'&#xC9;',
+    'Ê' =>	'&#xCA;',
+    'Ë' =>	'&#xCB;',
+    'Ì' =>	'&#xCC;',
+    'Í' =>	'&#xCD;',
+    'Î' =>	'&#xCE;',
+    'Ï' =>	'&#xCF;',
+    'Ð' =>	'&#x11E;',
+    'Ñ' =>	'&#xD1;',
+    'Ò' =>	'&#xD2;',
+    'Ó' =>	'&#xD3;',
+    'Ô' =>	'&#xD4;',
+    'Õ' =>	'&#xD5;',
+    'Ö' =>	'&#xD6;',
+    '×' =>	'&#xD7;',
+    'Ø' =>	'&#xD8;',
+    'Ù' =>	'&#xD9;',
+    'Ú' =>	'&#xDA;',
+    'Û' =>	'&#xDB;',
+    'Ü' =>	'&#xDC;',
+    'Ý' =>	'&#x130;',
+    'Þ' =>	'&#x15E;',
+    'ß' =>	'&#xDF;',
+    'à' =>	'&#xE0;',
+    'á' =>	'&#xE1;',
+    'â' =>	'&#xE2;',
+    'ã' =>	'&#xE3;',
+    'ä' =>	'&#xE4;',
+    'å' =>	'&#xE5;',
+    'æ' =>	'&#xE6;',
+    'ç' =>	'&#xE7;',
+    'è' =>	'&#xE8;',
+    'é' =>	'&#xE9;',
+    'ê' =>	'&#xEA;',
+    'ë' =>	'&#xEB;',
+    'ì' =>	'&#xEC;',
+    'í' =>	'&#xED;',
+    'î' =>	'&#xEE;',
+    'ï' =>	'&#xEF;',
+    'ð' =>	'&#x11F;',
+    'ñ' =>	'&#xF1;',
+    'ò' =>	'&#xF2;',
+    'ó' =>	'&#xF3;',
+    'ô' =>	'&#xF4;',
+    'õ' =>	'&#xF5;',
+    'ö' =>	'&#xF6;',
+    '÷' =>	'&#xF7;',
+    'ø' =>	'&#xF8;',
+    'ù' =>	'&#xF9;',
+    'ú' =>	'&#xFA;',
+    'û' =>	'&#xFB;',
+    'ü' =>	'&#xFC;',
+    'ý' =>	'&#x131;',
+    'þ' =>	'&#x15F;',
+    'ÿ' =>	'&#xFF;',
 };

@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhinit.pl,v 2.37 2002/09/04 04:09:30 ehood Exp $
+##	$Id: mhinit.pl,v 2.46 2003/02/04 23:31:19 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -193,27 +193,30 @@ sub mhinit_vars {
     'x-', 1,    		# Non-standard headers
 );
 
-##	Asocc arrays defining HTML formats to apply to header fields
-
-%HeadFields = (
-    "-default-", "",		# Nothing
+##	Hash defining HTML formats to apply to header fields
+%HeadFields = (		# Nothing
+    "-default-", "",
 );
-%HeadHeads = (
-    "-default-", "em",		# Empasize field labels
+%HeadHeads = (		# Empasize field labels
+    "-default-", "em",
 );
-@FieldOrder = (			# Order fields are listed
+@FieldOrder = (		# Order fields are listed
     'to',
     'subject',
     'from',
     'date',
     '-extra-',
 );
-%FieldODefs = (			# Fields not to slurp up in "-extra-"
+%FieldODefs = (		# Fields not to slurp up in "-extra-"
     'to', 1,
     'subject', 1,
     'from', 1,
     'date', 1,
 );
+
+##	Extra header fields to store
+@ExtraHFields = ();
+%ExtraHFields = ();
 
 ##	Message information variables
 
@@ -274,9 +277,6 @@ $TIdxMinPg	= -1;	# Starting page of thread index for updating
 $IdxPageNum	= 0;	# Page to output if genidx
 $DBPathName	= '';	# Full pathname of database file
 
-##  Initialize readmail variables
-mhinit_readmail_vars();
-
 ##  Variable to hold function for converting message header text.
 $MHeadCnvFunc	= "mhonarc::htmlize";
 
@@ -285,7 +285,8 @@ $VarExp    = $ENV{'M2H_VARREGEX'};
 $VarExp    = '\$([^\$]*)\$'  if !defined($VarExp) || $VarExp !~ /\S/;
 
 ##  Regexp for address/msg-id detection (looks like cussing in cartoons)
-$AddrExp = '[^()<>@,;:\/\s"\'&|]+@[^()<>@,;:\/\s"\'&|]+';
+$AddrExp  = '[^()<>@,;:\/\s"\'&|]+@[^()<>@,;:\/\s"\'&|]+';
+$HAddrExp = '[^()<>@,;:\/\s"\'&|]+(?:@|&\#[xX]0*40;|&64;)[^()<>@,;:\/\s"\'&|]+';
 
 ##  Text clipping function and source file: Set in mhopt.pl.
 $TextClipFunc	= undef;
@@ -372,6 +373,10 @@ $SaveRsrcs   = defined($ENV{'M2H_SAVERESOURCES'}) ?
 		       $ENV{'M2H_SAVERESOURCES'} : 1;
 $POSIXstrftime = defined($ENV{'M2H_POSIXSTRFTIME'}) ?
 			 $ENV{'M2H_POSIXSTRFTIME'} : 0;
+$AddrModifyBodies  = defined($ENV{'M2H_MODIFYBODYADDRESSES'}) ?
+			     $ENV{'M2H_MODIFYBODYADDRESSES'} : undef;
+$IconURLPrefix  = defined($ENV{'M2H_ICONURLPREFIX'}) ?
+			  $ENV{'M2H_ICONURLPREFIX'} : '';
 
 if ($UNIX) {
     eval {
@@ -379,12 +384,17 @@ if ($UNIX) {
 		    $ENV{'M2H_UMASK'} : sprintf("%o",umask);
     };
 }
+$FilePerms      = $ENV{'M2H_FILEPERMS'} || '0666';
+$FilePermsOct   = 0666;
+$DbFilePerms    = $ENV{'M2H_DBFILEPERMS'} || '0660';
+$DbFilePermsOct = 0660;
 
 $CheckNoArchive = defined($ENV{'M2H_CHECKNOARCHIVE'}) ?
 			  $ENV{'M2H_CHECKNOARCHIVE'} : 0;
 $DecodeHeads = defined($ENV{'M2H_DECODEHEADS'}) ? $ENV{'M2H_DECODEHEADS'} : 0;
 $DoArchive   = defined($ENV{'M2H_ARCHIVE'})     ? $ENV{'M2H_ARCHIVE'}     : 1;
 $DoFolRefs   = defined($ENV{'M2H_FOLREFS'})     ? $ENV{'M2H_FOLREFS'}     : 1;
+$Reconvert   = defined($ENV{'M2H_RECONVERT'})   ? $ENV{'M2H_RECONVERT'}   : 0;
 $UsingLASTPG = defined($ENV{'M2H_USINGLASTPG'}) ? $ENV{'M2H_USINGLASTPG'} : 1;
 
 @FMTFILE     = defined($ENV{'M2H_RCFILE'}) ?
@@ -527,6 +537,11 @@ $TNEXTBUTTONIA	= '';  	# Thread Next inactive button template
 $TPREVBUTTON	= '';  	# Thread Previous button template
 $TPREVBUTTONIA	= '';  	# Thread Previous inactive button template
 
+$TTOPBUTTON	  = ''; # Top of thread button template
+$TTOPBUTTONIA	  = ''; # Top of thread inactive button template
+$TENDBUTTON	  = ''; # End of thread button template
+$TENDBUTTONIA	  = ''; # End of thread inactive button template
+
 $TNEXTTOPBUTTON	  = ''; # Next Thread button template
 $TNEXTTOPBUTTONIA = ''; # Next Thread inactive button template
 $TPREVTOPBUTTON	  = ''; # Previous Thread button template
@@ -541,6 +556,11 @@ $TNEXTLINK	= '';  	# Thread Next link template
 $TNEXTLINKIA	= '';  	# Thread Next inactive link template
 $TPREVLINK	= '';  	# Thread Previous link template
 $TPREVLINKIA	= '';  	# Thread Previous inactive link template
+
+$TTOPLINK	= ''; # Top of thread link template
+$TTOPLINKIA	= ''; # Top of thread inactive link template
+$TENDLINK	= ''; # End of thread link template
+$TENDLINKIA	= ''; # End of thread inactive link template
 
 $TNEXTTOPLINK	= '';	# Next Thread link template
 $TNEXTTOPLINKIA = '';	# Next Thread inactive link template
@@ -598,156 +618,6 @@ $X = "\034";	# Value separator (should equal $;)
 		#	now only be for extracting time from
 		#	indexes of messages or for processing
 		#	old version data.
-
-}
-
-##---------------------------------------------------------------------------##
-
-sub mhinit_readmail_vars {
-
-##----------------------------------------------------------------------
-##	Default filters
-##
-%readmail::MIMEFilters = (
-    # Content-type			Filter
-    #-------------------------------------------------------------------
-    "application/ms-tnef",		"m2h_null::filter",
-    "application/octet-stream",		"m2h_external::filter",
-    "application/x-patch",		"m2h_text_plain::filter",
-    "message/delivery-status",  	"m2h_text_plain::filter",
-    "message/external-body",   		"m2h_msg_extbody::filter",
-    "message/partial",   		"m2h_text_plain::filter",
-    "text/enriched",    		"m2h_text_enriched::filter",
-    "text/html",			"m2h_text_html::filter",
-    "text/plain",			"m2h_text_plain::filter",
-    "text/richtext",    		"m2h_text_enriched::filter",
-    "text/setext",			"m2h_text_setext::filter",
-    "text/tab-separated-values",	"m2h_text_tsv::filter",
-    "text/x-html",			"m2h_text_html::filter",
-    "text/x-setext",    		"m2h_text_setext::filter",
-
-    "application/*",		 	"m2h_external::filter",
-    "audio/*",				"m2h_external::filter",
-    "chemical/*",  			"m2h_external::filter",
-    "image/*",  			"m2h_external::filter",
-    "model/*",  			"m2h_external::filter",
-    "text/*",   			"m2h_text_plain::filter",
-    "video/*",  			"m2h_external::filter",
-
-    "x-sun-attachment",			"m2h_text_plain::filter",
-);
-%readmail::MIMEFiltersSrc = (
-    # Content-type			Filter
-    #-------------------------------------------------------------------
-    "application/ms-tnef",		"mhnull.pl",
-    "application/octet-stream",		"mhexternal.pl",
-    "application/x-patch",		"mhtxtplain.pl",
-    "message/delivery-status",  	"mhtxtplain.pl",
-    "message/external-body",   		"mhmsgextbody.pl",
-    "message/partial",   		"mhtxtplain.pl",
-    "text/enriched",    		"mhtxtenrich.pl",
-    "text/html",			"mhtxthtml.pl",
-    "text/plain",			"mhtxtplain.pl",
-    "text/richtext",    		"mhtxtenrich.pl",
-    "text/setext",			"mhtxtsetext.pl",
-    "text/tab-separated-values",	"mhtxttsv.pl",
-    "text/x-html",			"mhtxthtml.pl",
-    "text/x-setext",    		"mhtxtsetext.pl",
-
-    "application/*",		 	"mhexternal.pl",
-    "audio/*",				"mhexternal.pl",
-    "chemical/*",  			"mhexternal.pl",
-    "image/*",  			"mhexternal.pl",
-    "model/*",  			"mhexternal.pl",
-    "text/*",   			"mhtxtplain.pl",
-    "video/*",  			"mhexternal.pl",
-
-    "x-sun-attachment",			"mhtxtplain.pl",
-);
-$IsDefault{'MIMEFILTERS'} = 1;
-
-##  Default filter arguments
-##
-%readmail::MIMEFiltersArgs = (
-    # Content-type			Arguments
-    #-------------------------------------------------------------------
-    'm2h_external::filter',		'inline',
-);
-$IsDefault{'MIMEARGS'} = 1;
-
-##  Charset filters
-##
-%readmail::MIMECharSetConverters = (
-    # Character set			Converter Function
-    #-------------------------------------------------------------------
-    "plain",     			"mhonarc::htmlize",
-    "us-ascii",   			"mhonarc::htmlize",
-    "iso-8859-1",   			"mhonarc::htmlize",
-    "iso-8859-2",   			"MHonArc::CharEnt::str2sgml",
-    "iso-8859-3",   			"MHonArc::CharEnt::str2sgml",
-    "iso-8859-4",   			"MHonArc::CharEnt::str2sgml",
-    "iso-8859-5",   			"MHonArc::CharEnt::str2sgml",
-    "iso-8859-6",   			"MHonArc::CharEnt::str2sgml",
-    "iso-8859-7",   			"MHonArc::CharEnt::str2sgml",
-    "iso-8859-8",   			"MHonArc::CharEnt::str2sgml",
-    "iso-8859-9",   			"MHonArc::CharEnt::str2sgml",
-    "iso-8859-10",   			"MHonArc::CharEnt::str2sgml",
-    "iso-8859-15",   			"MHonArc::CharEnt::str2sgml",
-    "iso-2022-jp",   			"iso_2022_jp::str2html",
-    "latin1",   			"mhonarc::htmlize",
-    "latin2",   			"MHonArc::CharEnt::str2sgml",
-    "latin3",   			"MHonArc::CharEnt::str2sgml",
-    "latin4",   			"MHonArc::CharEnt::str2sgml",
-    "latin5",   			"MHonArc::CharEnt::str2sgml",
-    "latin6",   			"MHonArc::CharEnt::str2sgml",
-    "latin9",   			"MHonArc::CharEnt::str2sgml",
-    "windows-1250",   			"MHonArc::CharEnt::str2sgml",
-    "windows-1252",   			"MHonArc::CharEnt::str2sgml",
-    "default",     			"-ignore-",
-);
-%readmail::MIMECharSetConvertersSrc = (
-    # Character set			Converter Function
-    #-------------------------------------------------------------------
-    "plain",     			undef,
-    "us-ascii",   			undef,
-    "iso-8859-1",   			undef,
-    "iso-8859-2",   			"MHonArc/CharEnt.pm",
-    "iso-8859-3",   			"MHonArc/CharEnt.pm",
-    "iso-8859-4",   			"MHonArc/CharEnt.pm",
-    "iso-8859-5",   			"MHonArc/CharEnt.pm",
-    "iso-8859-6",   			"MHonArc/CharEnt.pm",
-    "iso-8859-7",   			"MHonArc/CharEnt.pm",
-    "iso-8859-8",   			"MHonArc/CharEnt.pm",
-    "iso-8859-9",   			"MHonArc/CharEnt.pm",
-    "iso-8859-10",   			"MHonArc/CharEnt.pm",
-    "iso-8859-15",   			"MHonArc/CharEnt.pm",
-    "iso-2022-jp",   			"iso2022jp.pl",
-    "latin1",   			undef,
-    "latin2",   			"MHonArc/CharEnt.pm",
-    "latin3",   			"MHonArc/CharEnt.pm",
-    "latin4",   			"MHonArc/CharEnt.pm",
-    "latin5",   			"MHonArc/CharEnt.pm",
-    "latin6",   			"MHonArc/CharEnt.pm",
-    "latin9",   			"MHonArc/CharEnt.pm",
-    "windows-1250",   			"MHonArc/CharEnt.pm",
-    "windows-1252",   			"MHonArc/CharEnt.pm",
-    "default",     			undef,
-);
-$IsDefault{'CHARSETCONVERTERS'} = 1;
-
-##  Content-Transfer-Encoding decoders:
-##    readmail.pl has a default set, so we just use it.
-$IsDefault{'MIMEDECODERS'} = 1;
-
-##  Content-Types to exclude:
-##    Nothing is excluded by default.
-$IsDefault{'MIMEEXCS'} = 1;
-
-##  Content-type multipart/alternative preferences
-##    Note: The variable is not a readmail package variable, but it
-##	    is used to set readmail package properties.
-@MIMEAltPrefs = ( );
-$IsDefault{'MIMEALTPREFS'} = 1;
 
 }
 

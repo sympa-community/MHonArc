@@ -1,7 +1,7 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
 <html>
 <head>
 <title>MHonArc Resources: TNEXTINBUTTON</title>
+<link rel="stylesheet" type="text/css" href="../docstyles.css">
 </head>
 <body>
 <!--x-rc-nav-->
@@ -10,10 +10,21 @@
 <!--/x-rc-nav-->
 <hr>
 <h1>TNEXTINBUTTON</h1>
+<!--X-TOC-Start-->
+<ul>
+<li><a href="#syntax">Syntax</a>
+<li><a href="#description">Description</a>
+<li><a href="#default">Default Setting</a>
+<li><a href="#rcvars">Resource Variables</a>
+<li><a href="#examples">Examples</a>
+<li><a href="#version">Version</a>
+<li><a href="#seealso">See Also</a>
+</ul>
+<!--X-TOC-End-->
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Syntax</h2>
+<h2><a name="syntax">Syntax</a></h2>
 
 <dl>
 
@@ -39,7 +50,7 @@
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Description</h2>
+<h2><a name="description">Description</a></h2>
 
 <p>TNEXTINBUTTON defines the replacement markup for the
 resource variable <tt>$BUTTON(TNEXTIN)$</tt> when there exists
@@ -55,7 +66,7 @@ not cross discussion thread boundaries.
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Default Setting</h2>
+<h2><a name="default">Default Setting</a></h2>
 
 <pre>
 [&lt;a href="$MSG(TNEXTIN)$"&gt;Next in Thread&lt;/a&gt;]
@@ -63,7 +74,7 @@ not cross discussion thread boundaries.
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Resource Variables</h2>
+<h2><a name="rcvars">Resource Variables</a></h2>
 
 <table border=1>
 <tr bgcolor="#C0C0C0">
@@ -115,11 +126,15 @@ not cross discussion thread boundaries.
 </tr>
 <tr valign=top>
 <td align=center><a name="ICON" href="../rcvars.html#ICON"><strong><code>$ICON$</code></strong></a></td>
-<td>The context-type sensitive icon.</td>
+<td>The content-type sensitive icon.</td>
 </tr>
 <tr valign=top>
 <td align=center><a name="ICONURL" href="../rcvars.html#ICONURL"><strong><code>$ICONURL$</code></strong></a></td>
-<td>The URL to the context-type sensitive icon.</td>
+<td>URL to the content-type sensitive icon.</td>
+</tr>
+<tr valign=top>
+<td align=center><a name="ICONURLPREFIX" href="../rcvars.html#ICONURLPREFIX"><strong><code>$ICONURLPREFIX$</code></strong></a></td>
+<td>Value of ICONURLPREFIX resource.</td>
 </tr>
 <tr valign=top>
 <td align=center><a name="IDXFNAME" href="../rcvars.html#IDXFNAME"><strong><code>$IDXFNAME$</code></strong></a></td>
@@ -160,6 +175,10 @@ not cross discussion thread boundaries.
 <tr valign=top>
 <td align=center><a name="MSGGMTDATE" href="../rcvars.html#MSGGMTDATE"><strong><code>$MSGGMTDATE$</code></strong></a></td>
 <td>GMT date of current message.</td>
+</tr>
+<tr valign=top>
+<td align=center><a name="MSGHFIELD" href="../rcvars.html#MSGHFIELD"><strong><code>$MSGHFIELD$</code></strong></a></td>
+<td>Message header field</td>
 </tr>
 <tr valign=top>
 <td align=center><a name="MSGID" href="../rcvars.html#MSGID"><strong><code>$MSGID$</code></strong></a></td>
@@ -253,21 +272,21 @@ not cross discussion thread boundaries.
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Examples</h2>
+<h2><a name="examples">Examples</a></h2>
 
 <p>None.
 </p>
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Version</h2>
+<h2><a name="version">Version</a></h2>
 
 <p>2.5.0
 </p>
 
 <!-- *************************************************************** -->
 <hr>
-<h2>See Also</h2>
+<h2><a name="seealso">See Also</a></h2>
 
 <p>
 
@@ -290,7 +309,7 @@ not cross discussion thread boundaries.
 <!--/x-rc-nav-->
 <hr>
 <address>
-$Date: 2002/07/27 05:13:11 $ <br>
+$Date: 2003/01/09 23:42:26 $ <br>
 <img align="top" src="../monicon.png" alt="">
 <a href="http://www.mhonarc.org/"><strong>MHonArc</strong></a><br>
 Copyright &#169; 2001, <a href="http://www.earlhood.com/"

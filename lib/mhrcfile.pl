@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhrcfile.pl,v 2.25 2002/07/27 05:13:13 ehood Exp $
+##	$Id: mhrcfile.pl,v 2.34 2003/02/04 23:31:19 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -80,6 +80,19 @@ sub read_resource_file {
 	    $BOTLINKS = &get_elem_content($handle, $elem, $chop);
 	    last FMTSW;
 	}
+	if ($elem eq 'charsetaliases') {	# Charset aliases
+	    $IsDefault{'CHARSETALIASES'} = 0;
+	    readmail::MAILset_charset_aliases({ }, $override);
+	    while (defined($line = <$handle>)) {
+		last  if $line =~ /^\s*<\/charsetaliases\s*>/i;
+		next  unless $line =~ /\S/;
+		$line =~ s/\s//g;
+		($name, $aliases) = split(/;/, $line, 2);
+		readmail::MAILset_charset_aliases({
+		    $name => [ split(/,/, $aliases) ] });
+	    }
+	    last FMTSW;
+	}
 	if ($elem eq 'charsetconverters') {	# Charset filters
 	    $IsDefault{'CHARSETCONVERTERS'} = 0;
 	    if ($override) {
@@ -90,12 +103,8 @@ sub read_resource_file {
 		last  if $line =~ /^\s*<\/charsetconverters\s*>/i;
 		next  if $line =~ /^\s*$/;
 		$line =~ s/\s//g;
-		if ($line =~ /;/) {	# using Perl 5 qualification
-		    ($type,$routine,$plfile) = split(/;/,$line,3);
-		} else {
-		    ($type,$routine,$plfile) = split(/:/,$line,3);
-		}
-		$type =~ tr/A-Z/a-z/;
+		($type,$routine,$plfile) = split(/;/,$line,3);
+		$type = lc($type);
 		$readmail::MIMECharSetConverters{$type}    = $routine;
 		$readmail::MIMECharSetConvertersSrc{$type} = $plfile
 		    if defined($plfile) and $plfile =~ /\S/;
@@ -119,6 +128,13 @@ sub read_resource_file {
 	}
 	if ($elem eq 'dayend') {		# End for day group
 	    $DAYEND = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq 'dbfileperms') {		# DBFILE creation permissions
+	    if ($line = &get_elem_last_line($handle, $elem)) {
+		$line =~ s/\s//g;
+		$DbFilePerms = $line;
+	    }
 	    last FMTSW;
 	}
 	if ($elem eq 'decodeheads') {
@@ -153,6 +169,7 @@ sub read_resource_file {
 	    %HFieldsExc = ()  if $override;
 	    while (defined($line = <$handle>)) {
 		last  if $line =~ /^\s*<\/excs\s*>/i;
+		next  unless $line =~ /\S/;
 		$line =~ s/\s//g;  $line =~ tr/A-Z/a-z/;
 		$HFieldsExc{$line} = 1  if $line;
 	    }
@@ -167,6 +184,16 @@ sub read_resource_file {
 	if ($elem eq 'expiredate') {		# Expiration date
 	    if ($line = &get_elem_last_line($handle, $elem)) {
 		$ExpireDate = $line;
+	    }
+	    last FMTSW;
+	}
+	if ($elem eq 'fieldstore') {		# Fields to store
+	    @ExtraHFields = ()  if $override;
+	    while (defined($line = <$handle>)) {
+		last  if     $line =~ /^\s*<\/fieldstore\s*>/i;
+		next  unless $line =~ /\S/;
+		$line =~ s/\s+//g;  $line =~ tr/A-Z/a-z/;
+		push(@ExtraHFields, $line);
 	    }
 	    last FMTSW;
 	}
@@ -198,6 +225,13 @@ sub read_resource_file {
 	}
 	if ($elem eq 'fieldsend') {		# End markup of mail head
 	    $FIELDSEND = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq 'fileperms') {		# File creation permissions
+	    if ($line = &get_elem_last_line($handle, $elem)) {
+		$line =~ s/\s//g;
+		$FilePerms = $line;
+	    }
 	    last FMTSW;
 	}
 	if ($elem eq 'firstpglink') {		# First page link in index
@@ -271,6 +305,13 @@ sub read_resource_file {
 		($type, $url) = split(/[;:]/,$line,2);
 		$type =~ tr/A-Z/a-z/;
 		$Icons{$type} = $url;
+	    }
+	    last FMTSW;
+	}
+	if ($elem eq 'iconurlprefix') {		# Prefix for ICON urls
+	    if ($line = &get_elem_last_line($handle, $elem)) {
+		$line =~ s/\s+//g;
+		$IconURLPrefix = $line;
 	    }
 	    last FMTSW;
 	}
@@ -431,11 +472,7 @@ sub read_resource_file {
 		last  if     $line =~ /^\s*<\/mimedecoders\s*>/i;
 		next  unless $line =~ /\S/;
 		$line =~ s/\s//g;
-		if ($line =~ /;/) {	# using Perl 5 qualification
-		    ($type,$routine,$plfile) = split(/;/,$line,3);
-		} else {
-		    ($type,$routine,$plfile) = split(/:/,$line,3);
-		}
+		($type,$routine,$plfile) = split(/;/,$line,3);
 		$type =~ tr/A-Z/a-z/;
 		$readmail::MIMEDecoders{$type}    = $routine;
 		$readmail::MIMEDecodersSrc{$type} = $plfile  if $plfile =~ /\S/;
@@ -452,11 +489,7 @@ sub read_resource_file {
 		last  if $line =~ /^\s*<\/mimefilters\s*>/i;
 		next  if $line =~ /^\s*$/;
 		$line =~ s/\s//g;
-		if ($line =~ /;/) {	# using Perl 5 qualification
-		    ($type,$routine,$plfile) = split(/;/,$line,3);
-		} else {
-		    ($type,$routine,$plfile) = split(/:/,$line,3);
-		}
+		($type,$routine,$plfile) = split(/;/,$line,3);
 		$type =~ tr/A-Z/a-z/;
 		$readmail::MIMEFilters{$type}    = $routine;
 		$readmail::MIMEFiltersSrc{$type} = $plfile  if $plfile =~ /\S/;
@@ -470,7 +503,7 @@ sub read_resource_file {
 		last  if     $line =~ /^\s*<\/mimeargs\s*>/i;
 		next  unless $line =~ /\S/;
 		$line =~ s/^\s+//;
-		if ($line =~ /;/) {	# using Perl 5 qualification
+		if ($line =~ /;/) {
 		    ($type, $arg) = split(/;/,$line,2);
 		} else {
 		    ($type, $arg) = split(/:/,$line,2);
@@ -489,6 +522,9 @@ sub read_resource_file {
 		$readmail::MIMEExcs{$line} = 1  if $line;
 	    }
 	    last FMTSW;
+	}
+	if ($elem eq 'modifybodyaddresses') {	# Modify addresses in bodies
+	    $AddrModifyBodies = 1; last FMTSW;
 	}
 	if ($elem eq 'months') {		# Full month names
 	    @a = &get_list_content($handle, $elem);
@@ -593,6 +629,9 @@ sub read_resource_file {
 	}
 	if ($elem eq 'nofolrefs') {		# Don't print explicit fol/refs
 	    $DoFolRefs = 0; last FMTSW;
+	}
+	if ($elem eq 'nomodifybodyaddresses') {	# Don't modify addresses
+	    $AddrModifyBodies = 0; last FMTSW;
 	}
 	if ($elem eq 'nogzipfiles') {		# Don't gzip files
 	    $GzipFiles = 0;  last FMTSW;
@@ -835,6 +874,47 @@ sub read_resource_file {
 		$line =~ s/\s//g;
 		($TextClipFunc,$TextClipSrc) = split(/;/,$line,2);
 	    }
+	}
+	if ($elem eq 'defcharset') {		# Default charset
+	    $readmail::TextDefCharset = lc get_elem_last_line($handle, $elem);
+	    $readmail::TextDefCharset = s/\s//g;
+	    $readmail::TextDefCharset = 'us-ascii'
+		if $readmail::TextDefCharset eq '';
+	}
+	if ($elem eq 'tendbutton') {		# End of thread button
+	    $TENDBUTTON = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq 'tendbuttonia') {
+	    $TENDBUTTONIA = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq 'tendlink') {		# End of thread link
+	    $TENDLINK = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq 'tendlinkia') {
+	    $TENDLINKIA = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq 'textencode') {		# Text encoder
+	    $readmail::TextEncode      = undef;
+	    $readmail::TextEncoderFunc = undef;
+	    $readmail::TextEncoderSrc  = undef;
+	    while (defined($line = <$handle>)) {
+		last  if     $line =~ /^\s*<\/textencode\s*>/i;
+		next  unless $line =~ /\S/;
+		($type,$routine,$plfile)   = split(/;/,$line,3);
+		$type    =~ s/\s//g;
+		$routine =~ s/\s//g;
+		$plfile  =~ s/^\s+//;  $plfile =~ s/\s+\z//g;
+		$readmail::TextEncode      = lc $type;
+		$readmail::TextEncoderFunc = $routine;
+		$readmail::TextEncoderSrc  = $plfile
+		    if defined($plfile) and $plfile =~ /\S/;
+		$IsDefault{'TEXTENCODE'} = 0;
+	    }
+	    last FMTSW;
 	}
 	if ($elem eq 'tfirstpglink') {		# First thread page link
 	    $TFIRSTPGLINK = &get_elem_content($handle, $elem, $chop);
@@ -1182,6 +1262,22 @@ sub read_resource_file {
 	}
 	if ($elem eq 'tprevtoplinkia') {
 	    $TPREVTOPLINKIA = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq 'ttopbutton') {		# Top of thread button
+	    $TTOPBUTTON = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq 'ttopbuttonia') {
+	    $TTOPBUTTONIA = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq 'ttoplink') {		# Top of thread link
+	    $TTOPLINK = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq 'ttoplinkia') {
+	    $TTOPLINKIA = &get_elem_content($handle, $elem, $chop);
 	    last FMTSW;
 	}
 	if ($elem eq 'umask') {		# Umask of process

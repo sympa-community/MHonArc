@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhidxrc.pl,v 2.12 2002/09/04 04:09:30 ehood Exp $
+##	$Id: mhidxrc.pl,v 2.14 2003/02/04 23:31:19 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -501,6 +501,15 @@ $TPREVTOPBUTTON = '[<a href="$MSG(TPREVTOP)$">Prev Thread</a>]',
 $TPREVTOPBUTTONIA = '[Prev Thread]',
     $IsDefault{'TPREVTOPBUTTONIA'} = 1	unless $TPREVTOPBUTTONIA;
 
+$TTOPBUTTON = '[<a href="$MSG(TTOP)$">First in Thread</a>]',
+    $IsDefault{'TTOPBUTTON'} = 1	unless $TTOPBUTTON;
+$TTOPBUTTONIA = '[First in Thread]',
+    $IsDefault{'TTOPBUTTONIA'} = 1	unless $TTOPBUTTONIA;
+$TENDBUTTON = '[<a href="$MSG(TEND)$">Last in Thread</a>]',
+    $IsDefault{'TENDBUTTON'} = 1	unless $TENDBUTTON;
+$TENDBUTTONIA = '[Last in Thread]',
+    $IsDefault{'TENDBUTTONIA'} = 1	unless $TENDBUTTONIA;
+
 ## Next message by thread link
 unless ($TNEXTLINK) {
     $TNEXTLINK =<<'EndOfStr';
@@ -572,6 +581,30 @@ EndOfStr
 }
 ## Inactive prev thread
 $TPREVTOPLINKIA = '', $IsDefault{'TPREVTOPLINKIA'} = 1  unless $TPREVTOPLINKIA;
+
+## First in thread
+unless ($TTOPLINK) {
+    $TTOPLINK =<<'EndOfStr';
+<li>First in thread:
+<strong><a href="$MSG(TTOP)$">$SUBJECT(TTOP)$</a></strong>
+</li>
+EndOfStr
+    $IsDefault{'TTOPLINK'} = 1;
+}
+## Inactive first in thread
+$TTOPLINKIA = '', $IsDefault{'TTOPLINKIA'} = 1  unless $TTOPLINKIA;
+
+## Last in thread
+unless ($TENDLINK) {
+    $TENDLINK =<<'EndOfStr';
+<li>Last in thread:
+<strong><a href="$MSG(TEND)$">$SUBJECT(TEND)$</a></strong>
+</li>
+EndOfStr
+    $IsDefault{'TENDLINK'} = 1;
+}
+## Inactive last in thread
+$TENDLINKIA = '', $IsDefault{'TENDLINKIA'} = 1  unless $TENDLINKIA;
 
 ## Top links in message
 if (!$TOPLINKS) {
@@ -725,6 +758,10 @@ if ($MAILTOURL eq "") {
 	$MAILTOURL = 'mailto:$TO$';
     }
     $IsDefault{'MAILTOURL'} = 1;
+}
+
+if (!defined($AddrModifyBodies)) {
+    $AddrModifyBodies  = 1  if $SpamMode;
 }
 
 }

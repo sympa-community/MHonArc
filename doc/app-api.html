@@ -1,11 +1,11 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
 <html>
 <head>
-<title>MHonArc v2.5 -- Appendix: Application Programming Interface
-</title>
+<title>MHonArc Reference -- Appendix: Application Programming Interface</title>
+<link rel="stylesheet" type="text/css" href="docstyles.css">
 <style>
 .cb_head {
   font-family: monospace;
+  padding-top: 1em;
   border-color: black;
   border-style: solid none none none;
   border-top-width: thin;
@@ -15,10 +15,6 @@
 }
 </style>
 </head>
-<!--
-<BODY background="ssbg75.jpg"
-      text="#000000" link="#0000ee" vlink="#551a8b" alink="ff0000">
--->
 <body>
 
 <!--X-NavButtons-Start-->
@@ -30,8 +26,8 @@
 
 <h1><a name="appendixA">Appendix: Application Programming Interface</a></h1>
 
-<p>This appendix describes the simple API available to allow the
-embedding of MHonArc within other Perl programs.
+<p>A simple API is available to allow for embedded usage
+of MHonArc within other Perl programs.
 </p>
 
 <!--X-TOC-Start-->
@@ -60,25 +56,26 @@ embedding of MHonArc within other Perl programs.
 library.  The following code snippet shows you how to initialize
 MHonArc:
 </p>
-<pre>
-    <i># Require MHonArc library</i>
-    <b>require 'mhamain.pl';</b>
-    <i># Initialize MHonArc</i>
-    <b>mhonarc::initialize();</b>
+<pre class="code">
+<i># Require MHonArc library</i>
+<b>require 'mhamain.pl';</b>
+<i># Initialize MHonArc</i>
+<b>mhonarc::initialize();</b>
 </pre>
-<table border=0 cellpadding=4>
+<table class="note" width="100%">
 <tr valign=top>
-<td><strong>NOTE</strong></td>
-<td><p>The <tt>mhonarc::initialize()</tt> routine should only be
+<td><strong>NOTE:</strong></td>
+<td width="100%"><p>The <tt>mhonarc::initialize()</tt> routine should only be
 called once within your program.
 </p>
 </td>
 </tr>
 </table>
-<table border=0 cellpadding=4>
+<p> </p>
+<table class="note" width="100%">
 <tr valign=top>
-<td><strong>NOTE</strong></td>
-<td><p>If <tt>mhamain.pl</tt> is not in perl's library search path, you
+<td><strong>NOTE:</strong></td>
+<td width="100%"><p>If <tt>mhamain.pl</tt> is not in perl's library search path, you
 will need to add the directory path to perl's search path before
 calling <tt>require</tt>.
 </p>
@@ -93,9 +90,9 @@ calling <tt>require</tt>.
 <p>To instruct MHonArc to process input, use the following
 routine:
 </p>
-<pre>
-    <i># Tell MHonArc to start processing</i>
-    <b>mhonarc::process_input();</b>
+<pre class="code">
+<i># Tell MHonArc to start processing</i>
+<b>mhonarc::process_input();</b>
 </pre>
 <p>When <tt>mhonarc::process_input()</tt> is called with no
 arguments, it parses <tt>@ARGV</tt> for command-line arguments.
@@ -103,19 +100,19 @@ If you pass a list of arguments into <tt>mhonarc::process_input()</tt>
 then that list will be processed for the command-line arguments.
 For example:
 </p>
-<pre>
-    mhonarc::process_input(
-	'-quiet',
-	'-outdir', $archive_path,
-	'-rcfile', $rcfile,
-	$mailbox_filename
-    );
+<pre class="code">
+mhonarc::process_input(
+    '-quiet',
+    '-outdir', $archive_path,
+    '-rcfile', $rcfile,
+    $mailbox_filename
+);
 </pre>
 <p>The return value of <tt>mhonarc::process_input()</tt> will be
 the CPU time, in seconds, MHonArc used.  Example usage:
 </p>
-<pre>
-    $cpu_time = mhonarc::process_input();
+<pre class="code">
+$cpu_time = mhonarc::process_input();
 </pre>
 <p>To determine what the status of the processing was, you
 can query the <tt>$mhonarc::CODE</tt> variable.  The value
@@ -124,21 +121,21 @@ be if invoked from the shell.  I.e.  If <tt>$mhonarc::CODE</tt>
 is equal to 0, then no errors occured during processing.  A
 non-zero value indicates some error occured.  Example usage:
 </p>
-<pre>
-    mhonarc::process_input(
-	'-quiet',
-	'-outdir', $archive_path,
-	'-rcfile', $rcfile,
-	$mailbox_filename
-    );
-    if ($mhonarc::CODE) {
-	# error code here
-    }
+<pre class="code">
+mhonarc::process_input(
+    '-quiet',
+    '-outdir', $archive_path,
+    '-rcfile', $rcfile,
+    $mailbox_filename
+);
+if ($mhonarc::CODE) {
+    # error code here
+}
 </pre>
-<table border=0 cellpadding=4>
+<table class="note" width="100%">
 <tr valign=top>
-<td><strong>NOTE</strong></td>
-<td><p>If <tt>$mhonarc::CODE</tt> is equal to <tt>75</tt>, this
+<td><strong>NOTE:</strong></td>
+<td width="100%"><p>If <tt>$mhonarc::CODE</tt> is equal to <tt>75</tt>, this
 indicates that MHonArc was unable to obtain a lock on the archive.
 This exit code is recognized by MTAs like <tt>sendmail</tt> to
 requeue a message and try to deliver it again later.  This is
@@ -164,13 +161,13 @@ variable to a routine reference (hard or symbolic).  For example,
 to set the callback when a message header is read, you can do
 something like the following:
 </p>
-<pre>
-    $mhonarc::CBMessageHeadRead = \&amp;my_callback_routine;
+<pre class="code">
+$mhonarc::CBMessageHeadRead = \&amp;my_callback_routine;
 </pre>
-<table border=0 cellpadding=4>
+<table class="note" width="100%">
 <tr valign=top>
-<td><strong>NOTE</strong></td>
-<td><p>The
+<td><strong>NOTE:</strong></td>
+<td width="100%"><p>The
 <a href="install.html#sitelib"><b><tt>mhasiteinit.pl</tt></b></a>
 site initialization library can be used to register callbacks.
 The advantages for using <tt>mhasiteinit.pl</tt> is that it is
@@ -198,7 +195,7 @@ information about <tt>mhasiteinit.pl</tt>.
 </p>
 
 <p><b>Synopsis:</b></p>
-<pre>
+<pre class="code">
 $do_load = &amp;$mhonarc::CBDbPreLoad($pathname);
 </pre>
 
@@ -235,7 +232,7 @@ $do_load = &amp;$mhonarc::CBDbPreLoad($pathname);
 </p>
 
 <p><b>Synopsis:</b></p>
-<pre>
+<pre class="code">
 $do_save = &amp;$mhonarc::CBDbPreSave($pathname, $tmp_pathname);
 </pre>
 
@@ -283,7 +280,7 @@ $do_save = &amp;$mhonarc::CBDbPreSave($pathname, $tmp_pathname);
 </p>
 
 <p><b>Synopsis:</b></p>
-<pre>
+<pre class="code">
 &amp;$mhonarc::CBDbSave($db_fh);
 </pre>
 
@@ -311,7 +308,7 @@ $do_save = &amp;$mhonarc::CBDbPreSave($pathname, $tmp_pathname);
 </p>
 
 <p><b>Synopsis:</b></p>
-<pre>
+<pre class="code">
 &amp;$mhonarc::CBMessageBodyRead(
 		$fields_hash_ref, $html_text_ref, $files_array_ref);
 </pre>
@@ -335,8 +332,7 @@ $do_save = &amp;$mhonarc::CBDbPreSave($pathname, $tmp_pathname);
     message, the following expression will evaluate to
     true:
     </p>
-    <pre>
-      $$html_text_ref eq ""</pre>
+    <pre class="code">$$html_text_ref eq ""</pre>
     <p>If this is the case, you could set the value
     of $$html_text_ref to something else to customize
     the warning text MHonArc uses in the message page
@@ -376,12 +372,12 @@ $do_save = &amp;$mhonarc::CBDbPreSave($pathname, $tmp_pathname);
     archive operation mode, you can check the <tt>$mhonarc::SINGLE</tt>
     variable.  For example:
     </p>
-    <pre>
-    if ($mhonarc::SINGLE) {
-	# single message-based processing here
-    } else {
-	# archive-based processing here
-    }
+    <pre class="code">
+if ($mhonarc::SINGLE) {
+    # single message-based processing here
+} else {
+    # archive-based processing here
+}
     </pre>
 
 <li><p>The <tt>$mhonarc::CBMessageBodyRead</tt> routine can be used
@@ -403,7 +399,7 @@ are
 performed by MHonArc.
 </p>
 <p><b>Synopsis:</b></p>
-<pre>
+<pre class="code">
 $boolean = &amp;$mhonarc::CBMessageHeadRead(
 			    $fields_hash_ref, $raw_header_txt);
 </pre>
@@ -482,12 +478,12 @@ $boolean = &amp;$mhonarc::CBMessageHeadRead(
     archive operation mode, you can check the <tt>$mhonarc::SINGLE</tt>
     variable.  For example:
     </p>
-    <pre>
-    if ($mhonarc::SINGLE) {
-	# single message-based processing here
-    } else {
-	# archive-based processing here
-    }
+    <pre class="code">
+if ($mhonarc::SINGLE) {
+    # single message-based processing here
+} else {
+    # archive-based processing here
+}
     </pre>
 
 <li><p>MHonArc resources exist that allow message exclusion
@@ -511,7 +507,7 @@ The message body has not been converted.
 </p>
 
 <p><b>Synopsis:</b></p>
-<pre>
+<pre class="code">
 &amp;$mhonarc::CBRawMessageBodyRead($fields_hash_ref, $body_data_ref);
 </pre>
 
@@ -547,7 +543,7 @@ expansion support.
 </p>
 
 <p><b>Synopsis:</b></p>
-<pre>
+<pre class="code">
 ($result, $do_expand_again, $can_clip) =
     &amp;$mhonarc::CBRcVarExpand($mha_index, $var_name, $arg_string);
 </pre>
@@ -650,7 +646,7 @@ expansion support.
 
 <hr>
 <address>
-$Date: 2002/05/02 01:34:30 $ <br>
+$Date: 2003/01/02 05:46:01 $ <br>
 <img align="top" src="monicon.png" alt="">
 <a href="http://www.mhonarc.org/"
 ><strong>MHonArc</strong></a><br>

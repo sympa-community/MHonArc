@@ -46,35 +46,17 @@ Items are in no particular order:
    attachment disposition.  Would also require changes to how base
    parsing cooperates with content filters.
 
-=> Unicode support (waiting for Perl to be mature enough).
-    (related to "UTF8 charsetconverter below").
-
-=> Make Content-Disposition check at the readmail.pl level so
-   each filter does not have to handle it.
-
 => Subject-based threading enhancements:
       . Messages with no "Re:" are in different threads.  Related to
 	this is grouping follow-ups under proper message based upon
 	date.
 
-=> Use the link tag to specify the first, prev, next, and last
-   relationships among indices and messages.  These are specified in
-   the standard and supported by Mozilla's Site Navigation Toolbar.
-   (see http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=115991)
-
-=> Add a reasource (ICONURLPREFIX?) to prepend to icon url to support
-   relative-based archives (see message from Oliver Creighton).
-
-=> Add ability to decode all non-ASCII encoded headers.  Maybe useful
-   for sites that want to force everything to be treated as a single
-   character set and not mess with multiple encoding headache.
-
 => Support filter chains: pre- and port-filters to MIMEFILTERS.
 
-=> Hashify all resources.
+=> Hashify all resources (part of code redesign).
 
 => Use message-IDs as filenames: Internal impacts, OS support problems.
    Should be configurable?
 
 ===========================================================================
-$Id: TODO,v 1.22 2002/07/28 23:25:39 ehood Exp $
+$Id: TODO,v 1.24 2003/01/09 23:42:25 ehood Exp $

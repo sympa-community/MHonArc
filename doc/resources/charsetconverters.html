@@ -1,19 +1,37 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
 <html>
 <head>
 <title>MHonArc Resources: CHARSETCONVERTERS</title>
+<link rel="stylesheet" type="text/css" href="../docstyles.css">
 </head>
 <body>
 <!--x-rc-nav-->
 <table border=0><tr valign="top">
-<td align="left" width="50%">[Prev:&nbsp;<a href="botlinks.html">BOTLINKS</a>]</td><td><nobr>[<a href="../resources.html#charsetconverters">Resources</a>][<a href="../mhonarc.html">TOC</a>]</nobr></td><td align="right" width="50%">[Next:&nbsp;<a href="checknoarchive.html">CHECKNOARCHIVE</a>]</td></tr></table>
+<td align="left" width="50%">[Prev:&nbsp;<a href="charsetaliases.html">CHARSETALIASES</a>]</td><td><nobr>[<a href="../resources.html#charsetconverters">Resources</a>][<a href="../mhonarc.html">TOC</a>]</nobr></td><td align="right" width="50%">[Next:&nbsp;<a href="checknoarchive.html">CHECKNOARCHIVE</a>]</td></tr></table>
 <!--/x-rc-nav-->
 <hr>
 <h1>CHARSETCONVERTERS</h1>
+<!--X-TOC-Start-->
+<ul>
+<li><a href="#syntax">Syntax</a>
+<li><a href="#description">Description</a>
+<li><a href="#converters">Available Converters</a>
+<ul>
+<li><small><a href="#mhonarc::htmlize"><tt>mhonarc::htmlize</tt></a></small>
+<li><small><a href="#MHonArc::CharEnt"><tt>MHonArc::CharEnt::str2sgml</tt></a></small>
+<li><small><a href="#MHonArc::UTF8"><tt>MHonArc::UTF8::str2sgml</tt></a></small>
+<li><small><a href="#iso2022jp"><tt>iso_2022_jp::str2html</tt></a></small>
+</ul>
+<li><a href="#default">Default Setting</a>
+<li><a href="#rcvars">Resource Variables</a>
+<li><a href="#examples">Examples</a>
+<li><a href="#version">Version</a>
+<li><a href="#seealso">See Also</a>
+</ul>
+<!--X-TOC-End-->
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Syntax</h2>
+<h2><a name="syntax">Syntax</a></h2>
 
 <dl>
 
@@ -39,7 +57,7 @@
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Description</h2>
+<h2><a name="description">Description</a></h2>
 
 <p>The CHARSETCONVERTERS resource specifies Perl routines to call
 for filtering characters of a character set to HTML legal characters.
@@ -48,7 +66,7 @@ according to the MIME standard.
 The following example shows a header with encoded data:
 </p>
 
-<pre>
+<pre class="code">
 From: =?US-ASCII?Q?Keith_Moore?= &lt;moore@cs.utk.edu&gt;
 To: =?ISO-8859-1?Q?Keld_J=F8rn_Simonsen?= &lt;keld@dkuug.dk&gt;
 CC: =?ISO-8859-1?Q?Andr=E9_?= Pirard &lt;PIRARD@vm1.ulg.ac.be&gt;
@@ -56,24 +74,29 @@ Subject: =?ISO-8859-1?B?SWYgeW91IGNhbiByZWFkIHRoaXMgeW8=?=
  =?ISO-8859-2?B?dSB1bmRlcnN0YW5kIHRoZSBleGFtcGxlLg==?=
 </pre>
 
-<p>This CHARSETCONVERTERS resource can only be defined via the
+<p>CHARSETCONVERTERS resource is also used by text-based
+<a href="mimefilters.html">MIMEFILTERS</a>
+for message body text.
+</p>
+
+<p>The CHARSETCONVERTERS resource can only be defined via the
 resource file.  Each line of the element specifies a character set,
 the Perl routine for filtering the character set, and the Perl source
 file containing the routine.
 </p>
 
 <p>Example:</p>
-<pre>
+<pre class="code">
 <b>&lt;CharsetConverters&gt;</b>
-iso-8859-1;MHonArc::CharEnt::str2sgml;MHonArc/CharEnt.pm
+iso-8859-1; <a href="#MHonArc::CharEnt">MHonArc::CharEnt::str2sgml</a>; MHonArc/CharEnt.pm
 <b>&lt;/CharsetConverters&gt;</b>
 </pre>
 
 <p>The first field is the character set specification.  The second field
 is the routine name (which should contain a package qualifier).
 The third field is the source file the routine is defined.  The
-source file is optional if the routine is known to be define in
-an already listed source file.
+source file is searched for as defined by the
+<a href="perlinc.html">PERLINC</a> resource.
 </p>
 
 <p>There are some special character set specifications.  They are
@@ -82,15 +105,17 @@ as follows:
  
 <dl>
  
-<dt><em>plain</em></dt>
+<dt><strong><tt>plain</tt></strong></dt>
 <dd><p>This specifies text that is not explicitly encoded in a
-specific character set.
+specific character set.  The MIME RFCs specify that unencoded data
+should be treated as <tt>us-ascii</tt>.  However, in some locales,
+this may not be the case.
 </p>
 </dd>
 
-<dt><em>default</em></dt>
-<dd><p>This specifies the default routine to invoke for encoded
-data is no specific character specification exists for the data.
+<dt><strong><tt>default</tt></strong></dt>
+<dd><p>The default routine to invoke for encoded
+data if no converter is defined for the given character set.
 </p>
 </dd>
  
@@ -102,23 +127,27 @@ values.  They are as follows:
  
 <dl>
  
-<dt><em>-ignore-</em></dt>
-<dd><p>Leave the data "as-is".  I.e.  The MIME encoding will be
+<dt><strong><tt>-ignore-</tt></strong></dt>
+<dd><p>Leave the data "as-is".  I.e. The MIME encoding will be
 preserved.
 </p>
 </dd>
 
-<dt><em>-decode-</em></dt>
+<dt><strong><tt>-decode-</tt></strong></dt>
 <dd><p>Just decode the data.  This is useful if it is known that
 the characters set is the native character set for the system.
 </p>
-<table border=0 cellpadding=4>
-<tr valign=top>
-<td><strong><font color=red>WARNING</font></strong></td>
-<td><p>If the decoded data contains the characters '&lt;', '&gt;',
-and '&amp;', this may conflict with HTML markup.  See
-<a href="decodeheads.html">DECODEHEADS</a>
-when "-decode-" can be used.
+
+<table class="caution" width="100%">
+<tr valign="baseline">
+<td><strong style="color: red;">WARNING:</strong></td>
+<td width="100%"><p>If the decoded data contains the characters '&lt;', '&gt;',
+and '&amp;', this may conflict with HTML markup.  <tt>-decode-</tt> should
+only be used if <a href="decodeheads.html">DECODEHEADS</a> is active.
+See <a href="#examples"><cite>Examples</cite></a> below and
+<a href="decodeheads.html">DECODEHEADS</a> 
+for example uses of <tt>-decode-</tt>.
+</p>
 </td>
 </tr>
 </table>
@@ -129,8 +158,8 @@ when "-decode-" can be used.
 <p>Each charset converter function is invoked as follows:
 </p>
 
-<pre>
-    $converted_data = &amp;function($data, $charset);
+<pre class="code">
+$converted_data = &amp;function($data, $charset);
 </pre>
  
 <p>The data passed in will already be decoded from quoted-printable
@@ -140,88 +169,368 @@ that the routine convert the data into a format suitable to be
 included in HTML markup.
 </p>
 
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="converters">Available Converters</a></h2>
+
+<p>The standard MHonArc distribution provides the following converters:
+</p>
+
+<h3><a name="mhonarc::htmlize"><tt>mhonarc::htmlize</tt></a></h3>
+<dl>
+<dt><strong>Usage</strong></dt>
+<dd><pre class="code">
+<b>&lt;CharsetConverters&gt;</b>
+<var>charset-name</var>; mhonarc::htmlize
+<b>&lt;/CharsetConverters&gt;</b></pre>
+    <p><tt>mhonarc::htmlize</tt> is provided by the MHonArc core
+    code base, so no source file specification is required.
+    </p>
+    </dd>
+<dt><strong>Description</strong></dt>
+    <dd><p><tt>mhonarc::htmlize</tt> does a simple replacement of HTML
+    special characters into entity references.  The characters
+    '<tt class="icode">&lt;</tt>',
+    '<tt class="icode">&gt;</tt>',
+    '<tt class="icode">&amp;</tt>', and
+    '<tt class="icode">&quot;</tt>' are converted to
+    '<tt class="icode">&amp;lt;</tt>',
+    '<tt class="icode">&amp;gt;</tt>',
+    '<tt class="icode">&amp;amp;</tt>', and
+    '<tt class="icode">&amp;quot;</tt>', respectively.
+    </p>
+    <p>This converter is appropriate for <tt>us-ascii</tt> data
+    and for situations where the given character set is an 8-bit
+    set that matches the locale settings for the archives.
+    For example, if an archive contains
+    <tt>iso-8859-7</tt> (Greek) text data and archive readers'
+    browsers are set to <tt>iso-8859-7</tt> as the default encoding,
+    then <tt>mhonarc::htmlize</tt> can be used to prevent the
+    overhead of Greek characters being converted to entity references.
+    </p>
+    <p>If you will be managing archives that will include messages
+    with multiple character encodings, it is recommend to
+    limit the use of <tt>mhonarc::htmlize</tt> to <tt>us-ascii</tt>
+    only.
+    </p>
+    </dd>
+</dl>
+
+<h3><a name="MHonArc::CharEnt"><tt>MHonArc::CharEnt::str2sgml</tt></a></h3>
+<dl>
+<dt><strong>Usage</strong></dt>
+<dd><pre class="code">
+<b>&lt;CharsetConverters&gt;</b>
+<var>charset-name</var>; MHonArc::CharEnt::str2sgml; MHonArc/CharEnt.pm
+<b>&lt;/CharsetConverters&gt;</b></pre>
+    </dd>
+<dt><strong>Description</strong></dt>
+    <dd><p><tt>MHonArc::CharEnt::str2sgml</tt> converts a variety of
+    character encodings into HTML 4 standard character entity references
+    (e.g. <tt class="icode">&amp;#Aelig;</tt>) and/or Unicode character
+    entity references (e.g. <tt class="icode">&amp;#x017D;</tt>).
+    Characters in the <tt>us-ascii</tt> domain are left as-is, with
+    the exception of HTML specials, which are converted like
+    <a href="#mhonarc::htmlize"><tt>mhonarc::htmlize</tt></a>.
+    <tt>MHonArc::CharEnt::str2sgml</tt> attempts to be locale neutral
+    and should be sufficient for most locales.
+    </p>
+    <p>The following character sets/encodings are supported:
+    </p>
+    <div style="margin-left: 2.0em;">
+    <table class="tip">
+    <tr><td><b>Charset/encoding</b></td><td><b>Description</b></td></tr>
+    <tr><td><b><tt>us-ascii</tt></b></td><td>US ASCII</td></tr>
+    <tr><td><b><tt>iso-8859-1</tt></b></td><td>Latin 1</td></tr>
+    <tr><td><b><tt>iso-8859-2</tt></b></td><td>Latin 2</td></tr>
+    <tr><td><b><tt>iso-8859-3</tt></b></td><td>Latin 3</td></tr>
+    <tr><td><b><tt>iso-8859-4</tt></b></td><td>Latin 4</td></tr>
+    <tr><td><b><tt>iso-8859-5</tt></b></td><td>Cyrillic</td></tr>
+    <tr><td><b><tt>iso-8859-6</tt></b></td><td>Arabic</td></tr>
+    <tr><td><b><tt>iso-8859-7</tt></b></td><td>Greek</td></tr>
+    <tr><td><b><tt>iso-8859-8</tt></b></td><td>Hebrew</td></tr>
+    <tr><td><b><tt>iso-8859-9</tt></b></td><td>Latin 5</td></tr>
+    <tr><td><b><tt>iso-8859-10</tt></b></td><td>Latin 6</td></tr>
+    <tr><td><b><tt>iso-8859-11</tt></b></td><td>Thai</td></tr>
+    <tr><td><b><tt>iso-8859-13</tt></b></td><td>Latin 7 (Baltic Rim)</td></tr>
+    <tr><td><b><tt>iso-8859-14</tt></b></td><td>Latin 8 (Celtic)</td></tr>
+    <tr><td><b><tt>iso-8859-15</tt></b></td><td>Latin 9 (aka Latin 0)</td></tr>
+    <tr><td><b><tt>iso-8859-16</tt></b></td><td>Latin 10</td></tr>
+    <tr><td><b><tt>iso-2022-jp</tt></b></td><td>Japanese</td></tr>
+    <tr><td><b><tt>iso-2022-kr</tt></b></td><td>Korean</td></tr>
+    <tr><td><b><tt>euc-jp</tt></b></td><td>Japanese</td></tr>
+    <tr><td><b><tt>utf-8</tt></b></td><td>Unicode UTF-8</td></tr>
+    <tr><td><b><tt>cp866</tt></b></td><td>MS-DOS Cyrillic</td></tr>
+    <tr><td><b><tt>cp932</tt></b></td><td>Japanese (Shift-JIS)</td></tr>
+    <tr><td><b><tt>cp936</tt></b></td><td>Chinese (GBK)</td></tr>
+    <tr><td><b><tt>cp949</tt></b></td><td>Korean</td></tr>
+    <tr><td><b><tt>cp950</tt></b></td><td>Windows Chinese</td></tr>
+    <tr><td><b><tt>cp1250</tt></b></td><td>Windows Latin 2</td></tr>
+    <tr><td><b><tt>cp1251</tt></b></td><td>Windows Cyrillic</td></tr>
+    <tr><td><b><tt>cp1252</tt></b></td><td>Windows Latin 1</td></tr>
+    <tr><td><b><tt>cp1253</tt></b></td><td>Windows Greek</td></tr>
+    <tr><td><b><tt>cp1254</tt></b></td><td>Windows Turkish</td></tr>
+    <tr><td><b><tt>cp1255</tt></b></td><td>Windows Hebrew</td></tr>
+    <tr><td><b><tt>cp1256</tt></b></td><td>Windows Arabic</td></tr>
+    <tr><td><b><tt>cp1257</tt></b></td><td>Windows Baltic</td></tr>
+    <tr><td><b><tt>cp1258</tt></b></td><td>Windows Vietnamese</td></tr>
+    <tr><td><b><tt>koi-0</tt></b></td><td>Cyrillic</td></tr>
+    <tr><td><b><tt>koi-7</tt></b></td><td>Cyrillic</td></tr>
+    <tr><td><b><tt>koi8-a</tt></b></td><td>Cyrillic</td></tr>
+    <tr><td><b><tt>koi8-b</tt></b></td><td>Cyrillic</td></tr>
+    <tr><td><b><tt>koi8-e</tt></b></td><td>Cyrillic</td></tr>
+    <tr><td><b><tt>koi8-f</tt></b></td><td>Cyrillic</td></tr>
+    <tr><td><b><tt>koi8-r</tt></b></td><td>Cyrillic</td></tr>
+    <tr><td><b><tt>koi8-u</tt></b></td><td>Cyrillic</td></tr>
+    <tr><td><b><tt>gost-19768-87</tt></b></td><td>Cyrillic</td></tr>
+    <tr><td><b><tt>viscii</tt></b></td><td>Vietnamese</td></tr>
+    <tr><td><b><tt>big5-eten</tt></b></td><td>Chinese (Taiwan)</td></tr>
+    <tr><td><b><tt>big5-hkscs</tt></b></td><td>Chinese (Hong Kong)</td></tr>
+    <tr><td><b><tt>gb2312</tt></b></td><td>Chinese</td></tr>
+    <tr><td><b><tt>macarabic</tt></b></td><td>Apple Arabic</td></tr>
+    <tr><td><b><tt>maccentraleurroman</tt></b></td><td>Apple Central Europe</td></tr>
+    <tr><td><b><tt>maccroatian</tt></b></td><td>Apple Croatian</td></tr>
+    <tr><td><b><tt>maccyrillic</tt></b></td><td>Apple Cyrillic</td></tr>
+    <tr><td><b><tt>macgreek</tt></b></td><td>Apple Greek</td></tr>
+    <tr><td><b><tt>machebrew</tt></b></td><td>Apple Hebrew</td></tr>
+    <tr><td><b><tt>macicelandic</tt></b></td><td>Apple Icelandic</td></tr>
+    <tr><td><b><tt>macromanian</tt></b></td><td>Apple Romanian</td></tr>
+    <tr><td><b><tt>macroman</tt></b></td><td>Apple Roman (Latin)</td></tr>
+    <tr><td><b><tt>macthai</tt></b></td><td>Apple Thai</td></tr>
+    <tr><td><b><tt>macturkish</tt></b></td><td>Apple Turkish</td></tr>
+    <tr><td><b><tt>hp-roman8</tt></b></td><td>HP Roman (Latin)</td></tr>
+    </table>
+    </div>
+    <p>Most of the above listed charsets are also known by different names.
+    See the <a href="charsetaliases.html">CHARSETALIASES</a> resource
+    for details.
+    </p>
+    </dd>
+</dl>
+
+<h3><a name="MHonArc::UTF8"><tt>MHonArc::UTF8::str2sgml</tt></a></h3>
+<dl>
+<dt><strong>Usage</strong></dt>
+<dd><pre class="code">
+<b>&lt;CharsetConverters override&gt;</b>
+plain;    mhonarc::htmlize
+default;  MHonArc::UTF8::str2sgml; MHonArc/UTF8.pm
+<b>&lt;/CharsetConverters&gt;</b>
+
+&lt;-- Need to also register UTF-8-aware text clipping function --&gt;
+&lt;<a href="textclipfunc.html">TextClipFunc</a>&gt;
+MHonArc::UTF8::clip; MHonArc/UTF8.pm
+&lt;/TextClipFunc&gt;
+</pre>
+    </dd>
+<dt><strong>Description</strong></dt>
+    <dd><p><tt>MHonArc::UTF8::str2sgml</tt> converts data to
+    UTF-8.  With HTML specials converted to entity references like
+    <a href="#mhonarc::htmlize"><tt>mhonarc::htmlize</tt></a>.
+    </p>
+    <p>Typical usages is to have it registered for all charsets,
+    since only one <a href="textclipfunc.html">TEXTCLIPFUNC</a>
+    can be specified.  Having a mixture of UTF-8 and non-UTF-8 data
+    can cause clipping problems in resource variables that specify
+    a length specifier.
+    </p>
+    <p>See the
+    <a href="../rcfileexs/utf-8.mrc.html"><tt>utf-8.mrc</tt></a> example
+    resource file more details on how this converter can be
+    used.
+    </p>
+    </dd>
+</dl>
+
+<h3><a name="iso2022jp"><tt>iso_2022_jp::str2html</tt></a></h3>
+<dl>
+<dt><strong>Usage</strong></dt>
+<dd><pre class="code">
+<b>&lt;CharsetConverters&gt;</b>
+iso-2022-jp; iso_2022_jp::str2html; iso2022jp.pl
+<b>&lt;/CharsetConverters&gt;</b></pre>
+    </dd>
+<dt><strong>Description</strong></dt>
+    <dd><p><tt>iso_2022_jp::str2html</tt> is designed to work
+    with <tt>iso-2022-jp</tt> within a Japanese locale.
+    <tt>iso_2022_jp::str2html</tt> preserves the
+    iso-2022-jp encoding format, but converts HTML specials into
+    character entity references similiar to
+    <a href="#mhonarc::htmlize"><tt>mhonarc::htmlize</tt></a>.
+    </p>
+    <table class="note" width="100%">
+    <tr valign="baseline">
+    <td><strong>NOTE:</strong></td>
+    <td width="100%"><p>If using <tt>iso_2022_jp::str2html</tt>,
+    you should also use the <tt>iso-2022-jp</tt>
+    <a href="textclipfunc.html">text clipping function</a>:
+    </p>
+    <pre class="code">
+&lt;<a href="textclipfunc.html">TextClipFunc</a>&gt;
+iso_2022_jp::clip; iso2022jp.pl
+&lt;/TextClipFunc&gt;</pre>
+    </td>
+    </tr>
+    </table>
+    <p>Some Japanese-aware processing tools do not support Unicode
+    character entity references, like those generated by
+    <a href="#MHonArc::CharEnt"><tt>MHonArc::CharEnt::str2sgml</tt></a>,
+    so the <tt>iso_2022_jp::str2html</tt> may be prefered over
+    <a href="#MHonArc::CharEnt"><tt>MHonArc::CharEnt::str2sgml</tt></a> for
+    handling <tt>iso-2022-jp</tt> data.
+    </p>
+    <p>For more information about using MHonArc in a Japanese locale,
+    see (documents in Japanese):<br>
+    <a href="http://www.shiratori.riec.tohoku.ac.jp/~p-katoh/Hack/Docs/mhonarc-jp/index.html">&lt;http://www.shiratori.riec.tohoku.ac.jp/~p-katoh/Hack/Docs/mhonarc-jp/index.html&gt;</a><br>
+    <a href="http://www.shiratori.riec.tohoku.ac.jp/~p-katoh/Hack/Docs/mhonarc-jp/mhonarc-jp-2_4.html">&lt;http://www.shiratori.riec.tohoku.ac.jp/~p-katoh/Hack/Docs/mhonarc-jp/mhonarc-jp-2_4.html&gt;</a>
+    </p>
+    </dd>
+</dl>
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Default Setting</h2>
+<h2><a name="default">Default Setting</a></h2>
 
-<pre>
+<table class="note" width="100%">
+<tr valign=top>
+<td><strong>NOTE:</strong></td>
+<td width="100%"><p>As of MHonArc v2.6.0, filters should only be defined for
+base charsets.  The
+<a href="charsetaliases.html">CHARSETALIASES</a> resource can
+be used to map alternate names for base charsets.
+</p>
+</td>
+</tr>
+</table>
+
+<pre class="code">
 <b>&lt;CharsetConverters&gt;</b>
-plain;          mhonarc::htmlize;
-us-ascii;       mhonarc::htmlize;
-iso-8859-1;     mhonarc::htmlize;
-iso-8859-2;     MHonArc::CharEnt::str2sgml;     MHonArc/CharEnt.pm
-iso-8859-3;     MHonArc::CharEnt::str2sgml;     MHonArc/CharEnt.pm
-iso-8859-4;     MHonArc::CharEnt::str2sgml;     MHonArc/CharEnt.pm
-iso-8859-5;     MHonArc::CharEnt::str2sgml;     MHonArc/CharEnt.pm
-iso-8859-6;     MHonArc::CharEnt::str2sgml;     MHonArc/CharEnt.pm
-iso-8859-7;     MHonArc::CharEnt::str2sgml;     MHonArc/CharEnt.pm
-iso-8859-8;     MHonArc::CharEnt::str2sgml;     MHonArc/CharEnt.pm
-iso-8859-9;     MHonArc::CharEnt::str2sgml;     MHonArc/CharEnt.pm
-iso-8859-10;    MHonArc::CharEnt::str2sgml;     MHonArc/CharEnt.pm
-iso-2022-jp;    iso_2022_jp::str2html;  iso2022jp.pl
-latin1;         mhonarc::htmlize;
-latin2;         MHonArc::CharEnt::str2sgml;     MHonArc/CharEnt.pm
-latin3;         MHonArc::CharEnt::str2sgml;     MHonArc/CharEnt.pm
-latin4;         MHonArc::CharEnt::str2sgml;     MHonArc/CharEnt.pm
-latin5;         MHonArc::CharEnt::str2sgml;     MHonArc/CharEnt.pm
-latin6;         MHonArc::CharEnt::str2sgml;     MHonArc/CharEnt.pm
-windows-1250;   MHonArc::CharEnt::str2sgml;     MHonArc/CharEnt.pm
-windows-1252;   MHonArc::CharEnt::str2sgml;     MHonArc/CharEnt.pm
-default;        -ignore-
+plain;		    <a href="#mhonarc::htmlize">mhonarc::htmlize</a>;
+us-ascii;	    <a href="#mhonarc::htmlize">mhonarc::htmlize</a>;
+iso-8859-1;	    <a href="#MHonArc::CharEnt">MHonArc::CharEnt::str2sgml</a>;     MHonArc/CharEnt.pm
+iso-8859-2;	    <a href="#MHonArc::CharEnt">MHonArc::CharEnt::str2sgml</a>;     MHonArc/CharEnt.pm
+iso-8859-3;	    <a href="#MHonArc::CharEnt">MHonArc::CharEnt::str2sgml</a>;     MHonArc/CharEnt.pm
+iso-8859-4;	    <a href="#MHonArc::CharEnt">MHonArc::CharEnt::str2sgml</a>;     MHonArc/CharEnt.pm
+iso-8859-5;	    <a href="#MHonArc::CharEnt">MHonArc::CharEnt::str2sgml</a>;     MHonArc/CharEnt.pm
+iso-8859-6;	    <a href="#MHonArc::CharEnt">MHonArc::CharEnt::str2sgml</a>;     MHonArc/CharEnt.pm
+iso-8859-7;	    <a href="#MHonArc::CharEnt">MHonArc::CharEnt::str2sgml</a>;     MHonArc/CharEnt.pm
+iso-8859-8;	    <a href="#MHonArc::CharEnt">MHonArc::CharEnt::str2sgml</a>;     MHonArc/CharEnt.pm
+iso-8859-9;	    <a href="#MHonArc::CharEnt">MHonArc::CharEnt::str2sgml</a>;     MHonArc/CharEnt.pm
+iso-8859-10;	    <a href="#MHonArc::CharEnt">MHonArc::CharEnt::str2sgml</a>;     MHonArc/CharEnt.pm
+iso-8859-11;	    <a href="#MHonArc::CharEnt">MHonArc::CharEnt::str2sgml</a>;     MHonArc/CharEnt.pm
+iso-8859-13;	    <a href="#MHonArc::CharEnt">MHonArc::CharEnt::str2sgml</a>;     MHonArc/CharEnt.pm
+iso-8859-14;	    <a href="#MHonArc::CharEnt">MHonArc::CharEnt::str2sgml</a>;     MHonArc/CharEnt.pm
+iso-8859-15;	    <a href="#MHonArc::CharEnt">MHonArc::CharEnt::str2sgml</a>;     MHonArc/CharEnt.pm
+iso-8859-16;	    <a href="#MHonArc::CharEnt">MHonArc::CharEnt::str2sgml</a>;     MHonArc/CharEnt.pm
+iso-2022-jp;	    <a href="#MHonArc::CharEnt">MHonArc::CharEnt::str2sgml</a>;     MHonArc/CharEnt.pm
+iso-2022-kr;	    <a href="#MHonArc::CharEnt">MHonArc::CharEnt::str2sgml</a>;     MHonArc/CharEnt.pm
+euc-jp;		    <a href="#MHonArc::CharEnt">MHonArc::CharEnt::str2sgml</a>;     MHonArc/CharEnt.pm
+utf-8;		    <a href="#MHonArc::CharEnt">MHonArc::CharEnt::str2sgml</a>;     MHonArc/CharEnt.pm
+cp866;		    <a href="#MHonArc::CharEnt">MHonArc::CharEnt::str2sgml</a>;     MHonArc/CharEnt.pm
+cp936;		    <a href="#MHonArc::CharEnt">MHonArc::CharEnt::str2sgml</a>;     MHonArc/CharEnt.pm
+cp949;		    <a href="#MHonArc::CharEnt">MHonArc::CharEnt::str2sgml</a>;     MHonArc/CharEnt.pm
+cp950;		    <a href="#MHonArc::CharEnt">MHonArc::CharEnt::str2sgml</a>;     MHonArc/CharEnt.pm
+cp1250;		    <a href="#MHonArc::CharEnt">MHonArc::CharEnt::str2sgml</a>;     MHonArc/CharEnt.pm
+cp1251;		    <a href="#MHonArc::CharEnt">MHonArc::CharEnt::str2sgml</a>;     MHonArc/CharEnt.pm
+cp1252;		    <a href="#MHonArc::CharEnt">MHonArc::CharEnt::str2sgml</a>;     MHonArc/CharEnt.pm
+cp1253;		    <a href="#MHonArc::CharEnt">MHonArc::CharEnt::str2sgml</a>;     MHonArc/CharEnt.pm
+cp1254;		    <a href="#MHonArc::CharEnt">MHonArc::CharEnt::str2sgml</a>;     MHonArc/CharEnt.pm
+cp1255;		    <a href="#MHonArc::CharEnt">MHonArc::CharEnt::str2sgml</a>;     MHonArc/CharEnt.pm
+cp1256;		    <a href="#MHonArc::CharEnt">MHonArc::CharEnt::str2sgml</a>;     MHonArc/CharEnt.pm
+cp1257;		    <a href="#MHonArc::CharEnt">MHonArc::CharEnt::str2sgml</a>;     MHonArc/CharEnt.pm
+cp1258;		    <a href="#MHonArc::CharEnt">MHonArc::CharEnt::str2sgml</a>;     MHonArc/CharEnt.pm
+koi-0;		    <a href="#MHonArc::CharEnt">MHonArc::CharEnt::str2sgml</a>;     MHonArc/CharEnt.pm
+koi-7;		    <a href="#MHonArc::CharEnt">MHonArc::CharEnt::str2sgml</a>;     MHonArc/CharEnt.pm
+koi8-a;		    <a href="#MHonArc::CharEnt">MHonArc::CharEnt::str2sgml</a>;     MHonArc/CharEnt.pm
+koi8-b;		    <a href="#MHonArc::CharEnt">MHonArc::CharEnt::str2sgml</a>;     MHonArc/CharEnt.pm
+koi8-e;		    <a href="#MHonArc::CharEnt">MHonArc::CharEnt::str2sgml</a>;     MHonArc/CharEnt.pm
+koi8-f;		    <a href="#MHonArc::CharEnt">MHonArc::CharEnt::str2sgml</a>;     MHonArc/CharEnt.pm
+koi8-r;		    <a href="#MHonArc::CharEnt">MHonArc::CharEnt::str2sgml</a>;     MHonArc/CharEnt.pm
+koi8-u;		    <a href="#MHonArc::CharEnt">MHonArc::CharEnt::str2sgml</a>;     MHonArc/CharEnt.pm
+gost-19768-87;	    <a href="#MHonArc::CharEnt">MHonArc::CharEnt::str2sgml</a>;     MHonArc/CharEnt.pm
+viscii;		    <a href="#MHonArc::CharEnt">MHonArc::CharEnt::str2sgml</a>;     MHonArc/CharEnt.pm
+big5-eten;	    <a href="#MHonArc::CharEnt">MHonArc::CharEnt::str2sgml</a>;     MHonArc/CharEnt.pm
+big5-hkscs;	    <a href="#MHonArc::CharEnt">MHonArc::CharEnt::str2sgml</a>;     MHonArc/CharEnt.pm
+gb2312;		    <a href="#MHonArc::CharEnt">MHonArc::CharEnt::str2sgml</a>;     MHonArc/CharEnt.pm
+macarabic;	    <a href="#MHonArc::CharEnt">MHonArc::CharEnt::str2sgml</a>;     MHonArc/CharEnt.pm
+maccentraleurroman; <a href="#MHonArc::CharEnt">MHonArc::CharEnt::str2sgml</a>;     MHonArc/CharEnt.pm
+maccroatian;	    <a href="#MHonArc::CharEnt">MHonArc::CharEnt::str2sgml</a>;     MHonArc/CharEnt.pm
+maccyrillic;	    <a href="#MHonArc::CharEnt">MHonArc::CharEnt::str2sgml</a>;     MHonArc/CharEnt.pm
+macgreek;	    <a href="#MHonArc::CharEnt">MHonArc::CharEnt::str2sgml</a>;     MHonArc/CharEnt.pm
+machebrew;	    <a href="#MHonArc::CharEnt">MHonArc::CharEnt::str2sgml</a>;     MHonArc/CharEnt.pm
+macicelandic;	    <a href="#MHonArc::CharEnt">MHonArc::CharEnt::str2sgml</a>;     MHonArc/CharEnt.pm
+macromanian;	    <a href="#MHonArc::CharEnt">MHonArc::CharEnt::str2sgml</a>;     MHonArc/CharEnt.pm
+macroman;	    <a href="#MHonArc::CharEnt">MHonArc::CharEnt::str2sgml</a>;     MHonArc/CharEnt.pm
+macthai;	    <a href="#MHonArc::CharEnt">MHonArc::CharEnt::str2sgml</a>;     MHonArc/CharEnt.pm
+macturkish;	    <a href="#MHonArc::CharEnt">MHonArc::CharEnt::str2sgml</a>;     MHonArc/CharEnt.pm
+hp-roman8;          <a href="#MHonArc::CharEnt">MHonArc::CharEnt::str2sgml</a>;     MHonArc/CharEnt.pm
+default;            -ignore-
 <b>&lt;/CharsetConverters&gt;</b>
 </pre>
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Resource Variables</h2>
+<h2><a name="rcvars">Resource Variables</a></h2>
 
 <p>N/A
 </p>
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Examples</h2>
+<h2><a name="examples">Examples</a></h2>
 
-<p>The following example specifies to just decode iso-8859-1
+<p>The following example tells MHonArc to just decode iso-8859-1
 character data since it is the default character set used by most
 browsers:
 </p>
 
-<pre>
+<pre class="code">
 <b><a href="decodeheads.html">&lt;DecodeHeads&gt;</a></b>
 <b>&lt;CharsetConverters&gt;</b>
 iso-8859-1;-decode-
 <b>&lt;/CharsetConverters&gt;</b>
 </pre>
 
+<p>MHonArc's <tt>MHonArc::CharEnt</tt> module supports the
+conversion of many major character sets, including UTF-8 data,
+into standard HTML character entity references (e.g.
+<tt class="icode">&amp;Aelig;</tt>) and numeric Unicode character references
+(e.g. <tt class="icode">&amp;#x203E;</tt>).  However, if you want
+archive pages to be in native UTF-8, see the
+<a href="../rcfileexs/utf-8.mrc.html"><tt>utf-8.mrc</tt></a> resource
+file example.
+</p>
+
 <!-- *************************************************************** -->
 <hr>
-<h2>Version</h2>
+<h2><a name="version">Version</a></h2>
 
 <p>2.0
 </p>
 
 <!-- *************************************************************** -->
 <hr>
-<h2>See Also</h2>
+<h2><a name="seealso">See Also</a></h2>
 
 <p>
+<a href="charsetaliases.html">CHARSETALIASES</a>,
 <a href="decodeheads.html">DECODEHEADS</a>,
 <a href="mimedecoders.html">MIMEDECODERS</a>,
 <a href="mimefilters.html">MIMEFILTERS</a>,
-<a href="perlinc.html">PERLINC</a>
+<a href="perlinc.html">PERLINC</a>,
+<a href="textclipfunc.html">TEXTCLIPFUNC</a>,
+<a href="textencode.html">TEXTENCODE</a>
 </p>
 
 <!-- *************************************************************** -->
 <hr>
 <!--x-rc-nav-->
 <table border=0><tr valign="top">
-<td align="left" width="50%">[Prev:&nbsp;<a href="botlinks.html">BOTLINKS</a>]</td><td><nobr>[<a href="../resources.html#charsetconverters">Resources</a>][<a href="../mhonarc.html">TOC</a>]</nobr></td><td align="right" width="50%">[Next:&nbsp;<a href="checknoarchive.html">CHECKNOARCHIVE</a>]</td></tr></table>
+<td align="left" width="50%">[Prev:&nbsp;<a href="charsetaliases.html">CHARSETALIASES</a>]</td><td><nobr>[<a href="../resources.html#charsetconverters">Resources</a>][<a href="../mhonarc.html">TOC</a>]</nobr></td><td align="right" width="50%">[Next:&nbsp;<a href="checknoarchive.html">CHECKNOARCHIVE</a>]</td></tr></table>
 <!--/x-rc-nav-->
 <hr>
 <address>
-$Date: 2002/07/27 05:13:10 $ <br>
+$Date: 2002/12/26 21:57:04 $ <br>
 <img align="top" src="../monicon.png" alt="">
 <a href="http://www.mhonarc.org/"><strong>MHonArc</strong></a><br>
 Copyright &#169; 1997-2001, <a href="http://www.earlhood.com/">Earl Hood</a>, <a href="mailto:mhonarc@mhonarc.org">mhonarc@mhonarc.org</a><br>

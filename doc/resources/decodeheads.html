@@ -1,19 +1,30 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
 <html>
 <head>
 <title>MHonArc Resources: DECODEHEADS</title>
+<link rel="stylesheet" type="text/css" href="../docstyles.css">
 </head>
 <body>
 <!--x-rc-nav-->
 <table border=0><tr valign="top">
-<td align="left" width="50%">[Prev:&nbsp;<a href="dbfile.html">DBFILE</a>]</td><td><nobr>[<a href="../resources.html#decodeheads">Resources</a>][<a href="../mhonarc.html">TOC</a>]</nobr></td><td align="right" width="50%">[Next:&nbsp;<a href="definederived.html">DEFINEDERIVED</a>]</td></tr></table>
+<td align="left" width="50%">[Prev:&nbsp;<a href="dbfileperms.html">DBFILEPERMS</a>]</td><td><nobr>[<a href="../resources.html#decodeheads">Resources</a>][<a href="../mhonarc.html">TOC</a>]</nobr></td><td align="right" width="50%">[Next:&nbsp;<a href="defcharset.html">DEFCHARSET</a>]</td></tr></table>
 <!--/x-rc-nav-->
 <hr>
 <h1>DECODEHEADS</h1>
+<!--X-TOC-Start-->
+<ul>
+<li><a href="#syntax">Syntax</a>
+<li><a href="#description">Description</a>
+<li><a href="#default">Default Setting</a>
+<li><a href="#rcvars">Resource Variables</a>
+<li><a href="#examples">Examples</a>
+<li><a href="#version">Version</a>
+<li><a href="#seealso">See Also</a>
+</ul>
+<!--X-TOC-End-->
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Syntax</h2>
+<h2><a name="syntax">Syntax</a></h2>
 
 <dl>
 
@@ -41,7 +52,7 @@
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Description</h2>
+<h2><a name="description">Description</a></h2>
 
 <p>MIME encoded message header data is decoded when creating
 HTML output and the (relevant) data stored in the database stays
@@ -61,27 +72,27 @@ data for inclusion in generated pages.
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Default Setting</h2>
+<h2><a name="default">Default Setting</a></h2>
 
 <p>Off
 </p>
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Resource Variables</h2>
+<h2><a name="rcvars">Resource Variables</a></h2>
 
 <p>N/A
 </p>
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Examples</h2>
+<h2><a name="examples">Examples</a></h2>
 
 <p>The following will tell MHonArc to just decode all non-ASCII
 encoded data, causing all character data to be treated by the
 default locale setting:
 </p>
-<pre>
+<pre class="code">
 <b>&lt;DecodeHeads&gt;</b>
 <b><a href="charsetconverters.html">&lt;CharsetConverters override&gt;</a></b>
 plain;          mhonarc::htmlize;
@@ -92,14 +103,14 @@ default;        -decode-
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Version</h2>
+<h2><a name="version">Version</a></h2>
 
 <p>2.0
 </p>
 
 <!-- *************************************************************** -->
 <hr>
-<h2>See Also</h2>
+<h2><a name="seealso">See Also</a></h2>
 
 <p>
 <a href="charsetconverters.html">CHARSETCONVERTERS</a>
@@ -109,11 +120,11 @@ default;        -decode-
 <hr>
 <!--x-rc-nav-->
 <table border=0><tr valign="top">
-<td align="left" width="50%">[Prev:&nbsp;<a href="dbfile.html">DBFILE</a>]</td><td><nobr>[<a href="../resources.html#decodeheads">Resources</a>][<a href="../mhonarc.html">TOC</a>]</nobr></td><td align="right" width="50%">[Next:&nbsp;<a href="definederived.html">DEFINEDERIVED</a>]</td></tr></table>
+<td align="left" width="50%">[Prev:&nbsp;<a href="dbfileperms.html">DBFILEPERMS</a>]</td><td><nobr>[<a href="../resources.html#decodeheads">Resources</a>][<a href="../mhonarc.html">TOC</a>]</nobr></td><td align="right" width="50%">[Next:&nbsp;<a href="defcharset.html">DEFCHARSET</a>]</td></tr></table>
 <!--/x-rc-nav-->
 <hr>
 <address>
-$Date: 2002/07/27 05:13:10 $ <br>
+$Date: 2002/12/21 07:26:33 $ <br>
 <img align="top" src="../monicon.png" alt="">
 <a href="http://www.mhonarc.org/"><strong>MHonArc</strong></a><br>
 Copyright &#169; 1997-1998, <a href="http://www.earlhood.com/">Earl Hood</a>, <a href="mailto:mhonarc@mhonarc.org">mhonarc@mhonarc.org</a><br>

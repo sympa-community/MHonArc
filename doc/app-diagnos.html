@@ -1,11 +1,8 @@
 <HTML>
 <HEAD>
-<TITLE>MHonArc v2.5 -- Appendix: Diagnostics</TITLE>
+<TITLE>MHonArc Reference -- Appendix: Diagnostics</TITLE>
+<link rel="stylesheet" type="text/css" href="docstyles.css">
 </HEAD>
-<!--
-<BODY background="ssbg75.jpg"
-      text="#000000" link="#0000ee" vlink="#551a8b" alink="ff0000">
--->
 <BODY>
 
 <!--X-NavButtons-Start-->
@@ -76,10 +73,10 @@ other MHonArc process is editing the archive you are
 try to modify, then manually remove the lock file or use the
 <A HREF="force.html">FORCE</A> resource.
 </P>
-<table border=0 cellpadding=4>
+<table class="caution" width="100%">
 <tr valign=top>
-<td><strong><font color="red">WARNING</font></strong></td>
-<td><p>If <a href="resources/lockmethod.html">LOCKMETHOD</a>
+<td><strong style="color: red">WARNING</strong></td>
+<td width="100%"><p>If <a href="resources/lockmethod.html">LOCKMETHOD</a>
 is set to <tt>flock</tt>, then the lock file should never be
 manually deleted.  When MHonArc abnormally terminates, then the
 lock will be automatically released when the <tt>flock</tt> method
@@ -215,10 +212,10 @@ try to modify, then manually remove the lock file or use the
 <a href="resources/force.html">FORCE</a> resource.
 </P>
 
-<table border=0 cellpadding=4>
+<table class="caution" width="100%">
 <tr valign=top>
-<td><strong><font color="red">WARNING</font></strong></td>
-<td><p>If <a href="resources/lockmethod.html">LOCKMETHOD</a>
+<td><strong style="color: red">WARNING</strong></td>
+<td width="100%"><p>If <a href="resources/lockmethod.html">LOCKMETHOD</a>
 is set to <tt>flock</tt>, then the lock file should never be
 manually deleted.  When MHonArc abnormally terminates, then the
 lock will be automatically released when the <tt>flock</tt> method
@@ -273,7 +270,7 @@ sure the library files return a true value, like <tt>1</tt>.  </P>
 
 <HR>
 <address>
-$Date: 2001/12/24 14:38:07 $ <br>
+$Date: 2002/11/24 04:18:35 $ <br>
 <img align="top" src="monicon.png" alt="">
 <a href="http://www.mhonarc.org"
 ><strong>MHonArc</strong></a><br>

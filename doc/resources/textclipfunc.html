@@ -1,19 +1,33 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
 <html>
 <head>
 <title>MHonArc Resources: TEXTCLIPFUNC</title>
+<link rel="stylesheet" type="text/css" href="../docstyles.css">
 </head>
 <body>
 <!--x-rc-nav-->
 <table border=0><tr valign="top">
-<td align="left" width="50%">[Prev:&nbsp;<a href="tcontend.html">TCONTEND</a>]</td><td><nobr>[<a href="../resources.html#textclipfunc">Resources</a>][<a href="../mhonarc.html">TOC</a>]</nobr></td><td align="right" width="50%">[Next:&nbsp;<a href="tfirstpglink.html">TFIRSTPGLINK</a>]</td></tr></table>
+<td align="left" width="50%">[Prev:&nbsp;<a href="tendlinkia.html">TENDLINKIA</a>]</td><td><nobr>[<a href="../resources.html#textclipfunc">Resources</a>][<a href="../mhonarc.html">TOC</a>]</nobr></td><td align="right" width="50%">[Next:&nbsp;<a href="textencode.html">TEXTENCODE</a>]</td></tr></table>
 <!--/x-rc-nav-->
 <hr>
 <h1>TEXTCLIPFUNC</h1>
+<!--X-TOC-Start-->
+<ul>
+<li><a href="#syntax">Syntax</a>
+<li><a href="#description">Description</a>
+<ul>
+<li><small><a href="#writing">Writing a Clipping Function</a></small>
+</ul>
+<li><a href="#default">Default Setting</a>
+<li><a href="#rcvars">Resource Variables</a>
+<li><a href="#examples">Examples</a>
+<li><a href="#version">Version</a>
+<li><a href="#seealso">See Also</a>
+</ul>
+<!--X-TOC-End-->
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Syntax</h2>
+<h2><a name="syntax">Syntax</a></h2>
 
 <dl>
 
@@ -39,7 +53,7 @@
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Description</h2>
+<h2><a name="description">Description</a></h2>
 
 <p>TEXTCLIPFUNC defines the the Perl function to invoke when
 MHonArc clips text.  For example, the function specified would
@@ -180,7 +194,7 @@ true, MHonArc will revert to the default value for TEXTCLIPFUNC.
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Default Setting</h2>
+<h2><a name="default">Default Setting</a></h2>
 
 <pre>
 mhonarc::clip_text;
@@ -188,96 +202,40 @@ mhonarc::clip_text;
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Resource Variables</h2>
+<h2><a name="rcvars">Resource Variables</a></h2>
 
 <p>N/A
 </p>
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Examples</h2>
+<h2><a name="examples">Examples</a></h2>
 
-<p>The <a href="../rcfileexs/utf-8.mrc.html">Unicode</a> example
+<p>See <a href="charsetconverters.html">CHARSETCONVERTERS</a> and
+<a href="textencode.html">TEXTENCODE</a> resources for example usages
+of TEXTCLIPFUNC.
+</p>
+
+<p>The <a href="../rcfileexs/utf-8.mrc.html">utf-8.mrc</a> example
 resource file sets TEXTCLIPFUNC to a routine that understands UTF-8
 text.
 </p>
 
-<p>The following is the implementation (as of this writing) of
-MHonArc's default clipping function:
-</p>
-
-<pre>
-sub clip_text {
-    my $str      = \shift;  # Prevent unnecessary copy.
-    my $len      = shift;   # Clip length
-    my $is_html  = shift;   # If entity references should be considered
-    my $has_tags = shift;   # If html tags should be stripped
-
-    if (!$is_html) {
-      return substr($$str, 0, $len);
-    }
-
-    my $text = "";
-    my $subtext = "";
-    my $html_len = length($$str);
-    my($pos, $sublen, $erlen, $real_len);
-    my $er_len = 0;
-    
-    for ( $pos=0, $sublen=$len; $pos &lt; $html_len; ) {
-	$subtext = substr($$str, $pos, $sublen);
-	$pos += $sublen;
-
-	# strip tags
-	if ($has_tags) {
-	    $subtext =~ s/\A[^&lt;]*&gt;//; # clipped tag
-	    $subtext =~ s/&lt;[^&gt;]*&gt;//g;
-	    $subtext =~ s/&lt;[^&gt;]*\Z//; # clipped tag
-	}
-
-	# check for clipped entity reference
-	if (($pos &lt; $html_len) &amp;&amp; ($subtext =~ /\&amp;[^;]*\Z/)) {
-	    my $semi = index($$str, ';', $pos);
-	    if ($semi &lt; 0) {
-		# malformed entity reference
-		$subtext .= substr($$str, $pos);
-		$pos = $html_len;
-	    } else {
-		$subtext .= substr($$str, $pos, $semi-$pos+1)
-		    if $semi &gt; $pos;
-		$pos = $semi+1;
-	    }
-	}
-
-	# compute entity reference lengths to determine "real" character
-	# count and not raw character count.
-	while ($subtext =~ /(\&amp;[^;]+);/g) {
-	    $er_len += length($1);
-	}
-
-	$text .= $subtext;
-
-	# done if we have enough
-	$real_len = length($text)-$er_len;
-	if ($real_len &gt;= $len) {
-	    last;
-	}
-	$sublen = $len - (length($text)-$er_len);
-    }
-    $text;
-}
-</pre>
-
 <!-- *************************************************************** -->
 <hr>
-<h2>Version</h2>
+<h2><a name="version">Version</a></h2>
 
 <p>2.5.10
 </p>
 
 <!-- *************************************************************** -->
 <hr>
-<h2>See Also</h2>
+<h2><a name="seealso">See Also</a></h2>
 
+<p>
+<a href="charsetconverters.html">CHARSETCONVERTERS</a>,
+<a href="textencode.html">TEXTENCODE</a>
+</p>
 <p><a href="../rcvars.html"><cite>Resource Variables</cite></a>
 </p>
 
@@ -285,11 +243,11 @@ sub clip_text {
 <hr>
 <!--x-rc-nav-->
 <table border=0><tr valign="top">
-<td align="left" width="50%">[Prev:&nbsp;<a href="tcontend.html">TCONTEND</a>]</td><td><nobr>[<a href="../resources.html#textclipfunc">Resources</a>][<a href="../mhonarc.html">TOC</a>]</nobr></td><td align="right" width="50%">[Next:&nbsp;<a href="tfirstpglink.html">TFIRSTPGLINK</a>]</td></tr></table>
+<td align="left" width="50%">[Prev:&nbsp;<a href="tendlinkia.html">TENDLINKIA</a>]</td><td><nobr>[<a href="../resources.html#textclipfunc">Resources</a>][<a href="../mhonarc.html">TOC</a>]</nobr></td><td align="right" width="50%">[Next:&nbsp;<a href="textencode.html">TEXTENCODE</a>]</td></tr></table>
 <!--/x-rc-nav-->
 <hr>
 <address>
-$Date: 2002/08/04 03:58:27 $<br>
+$Date: 2003/02/04 23:31:19 $<br>
 <img align="top" src="../monicon.png" alt="">
 <a href="http://www.mhonarc.org/"><strong>MHonArc</strong></a><br>
 Copyright &#169; 2002, <a href="http://www.earlhood.com/"

@@ -1,7 +1,7 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
 <html>
 <head>
 <title>MHonArc Resources: DEFINEVAR</title>
+<link rel="stylesheet" type="text/css" href="../docstyles.css">
 </head>
 <body>
 <!--x-rc-nav-->
@@ -10,10 +10,21 @@
 <!--/x-rc-nav-->
 <hr>
 <h1>DEFINEVAR</h1>
+<!--X-TOC-Start-->
+<ul>
+<li><a href="#syntax">Syntax</a>
+<li><a href="#description">Description</a>
+<li><a href="#default">Default Setting</a>
+<li><a href="#rcvars">Resource Variables</a>
+<li><a href="#examples">Examples</a>
+<li><a href="#version">Version</a>
+<li><a href="#seealso">See Also</a>
+</ul>
+<!--X-TOC-End-->
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Syntax</h2>
+<h2><a name="syntax">Syntax</a></h2>
 
 <dl>
 
@@ -32,7 +43,7 @@
 </dd>
 
 <dt><strong>Command-line Option</strong></dt>
-<dd><p><br>
+<dd><p>
 <code>-definevar </code><var>variable-specification-list</var>
 </p>
 </dd>
@@ -41,7 +52,7 @@
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Description</h2>
+<h2><a name="description">Description</a></h2>
 
 <p>DEFINEVAR is used for creating user-defined resource variables.
 DEFINEVAR can be defined on the command-line or in the resource file.
@@ -64,10 +75,10 @@ command-line.  This can help reduce the ugliness of specify mutliple
 variable definitions with a single option.
 </p>
 
-<table border=0 cellpadding=4>
+<table class="note" width="100%">
 <tr valign=top>
-<td><strong>NOTE</strong></td>
-<td><p>If you intend to include resource variables as part of the
+<td><strong>NOTE:</strong></td>
+<td width="100%"><p>If you intend to include resource variables as part of the
 <var>VALUE</var>, you may need to escape the '$' characters (and possible
 other characters) to
 prevent interpolation by the command shell.  See your command
@@ -88,27 +99,27 @@ variable content, then specify the <b><tt>chop</tt></b> attribute.
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Default Setting</h2>
+<h2><a name="default">Default Setting</a></h2>
 
 <p>N/A
 </p>
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Resource Variables</h2>
+<h2><a name="rcvars">Resource Variables</a></h2>
 
 <p>N/A
 </p>
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Examples</h2>
+<h2><a name="examples">Examples</a></h2>
 
 <p>The following is a simple example of defining a variable to
 represent the base text for the title of an archive:
 </p>
  
-<pre>
+<pre class="code">
 <b>&lt;DefineVar chop&gt;</b>
 MAIN-TITLE
 Comp.lang.perl.misc 
@@ -118,7 +129,7 @@ Comp.lang.perl.misc
 <p>Now, the variable can be refernced as follows:
 </p>
 
-<pre>
+<pre class="code">
 <b>&lt;<a href="ttitle.html">TTitle</a> chop&gt;</b>
 $MAIN-TITLE$ (thread)
 <b>&lt;/TTitle&gt;</b>
@@ -129,20 +140,20 @@ it may better to define <code>$MAIN-TITLE$</code> on the command-line
 as follows:
 </p>
 
-<pre>
-    % <b>mhonarc -definevar MAIN-TITLE='mhonarc mailing list'</b> ...
-</pre>
+<table border=1 width="100%"><tr><td><pre class="shell">
+prompt&gt; <b>mhonarc -definevar MAIN-TITLE='mhonarc mailing list'</b> ...
+</pre></td></tr></table>
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Version</h2>
+<h2><a name="version">Version</a></h2>
 
 <p>2.0
 </p>
 
 <!-- *************************************************************** -->
 <hr>
-<h2>See Also</h2>
+<h2><a name="seealso">See Also</a></h2>
 
 <p>
 </p>
@@ -155,7 +166,7 @@ as follows:
 <!--/x-rc-nav-->
 <hr>
 <address>
-$Date: 2002/07/27 05:13:10 $ <br>
+$Date: 2002/12/10 04:08:02 $ <br>
 <img align="top" src="../monicon.png" alt="">
 <a href="http://www.mhonarc.org/"><strong>MHonArc</strong></a><br>
 Copyright &#169; 1997-1998, <a href="http://www.earlhood.com/">Earl Hood</a>, <a href="mailto:mhonarc@mhonarc.org">mhonarc@mhonarc.org</a><br>

@@ -1,0 +1,358 @@
+<html>
+<head>
+<title>MHonArc Resources: CHARSETALIASES</title>
+<link rel="stylesheet" type="text/css" href="../docstyles.css">
+</head>
+<body>
+
+<!--x-rc-nav-->
+<table border=0><tr valign="top">
+<td align="left" width="50%">[Prev:&nbsp;<a href="botlinks.html">BOTLINKS</a>]</td><td><nobr>[<a href="../resources.html#charsetaliases">Resources</a>][<a href="../mhonarc.html">TOC</a>]</nobr></td><td align="right" width="50%">[Next:&nbsp;<a href="charsetconverters.html">CHARSETCONVERTERS</a>]</td></tr></table>
+<!--/x-rc-nav-->
+
+<hr>
+<h1>CHARSETALIASES</h1>
+<!--X-TOC-Start-->
+<ul>
+<li><a href="#syntax">Syntax</a>
+<li><a href="#description">Description</a>
+<li><a href="#default">Default Setting</a>
+<li><a href="#rcvars">Resource Variables</a>
+<li><a href="#examples">Examples</a>
+<li><a href="#version">Version</a>
+<li><a href="#seealso">See Also</a>
+</ul>
+<!--X-TOC-End-->
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="syntax">Syntax</a></h2>
+
+<dl>
+
+<dt><strong>Envariable</strong></dt>
+<dd><p>N/A.
+</p>
+</dd>
+
+<dt><strong>Element</strong></dt>
+<dd><p>
+<code>&lt;CHARSETALIASES&gt;</code><br>
+<var>charset-name; alias, ...<br>
+...</var><br>
+<code>&lt;/CHARSETALIASES&gt;</code><br>
+</p>
+</dd>
+
+<dt><strong>Command-line Option</strong></dt>
+<dd><p>N/A.
+</p>
+</dd>
+
+</dl>
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="description">Description</a></h2>
+
+<p>CHARSETALIASES defines aliases for character set names.
+For example, the charset <tt>iso-8859-1</tt> is also known
+by <tt>latin1</tt>.  Hence, <tt>latin1</tt> is an alias for
+<tt>iso-8859-1</tt> and can be defined as follows:  </p>
+<pre class="code">
+<b>&lt;CharsetAliases&gt;</b>
+iso-8859-1; latin1
+<b>&lt;/CharsetAliases&gt;</b>
+</pre>
+
+<p>Each line of the CHARSETALIASES element defines an alias definition.
+The syntax of an alias definition is as follows,
+</p>
+<pre class="code">
+<var>charset-name</var>; <var>alias</var>, ...
+</pre>
+<p>i.e. the character set name followed by a semi-colon followed by
+a comma separated list of aliases.
+</p>
+<p>Specifying a character set multiple times is allowed.  For example,
+the following are equivalent:
+</p>
+<pre class="code">
+<b>&lt;CharsetAliases&gt;</b>
+iso-8859-1; latin1, l1, iso_8859_1
+<b>&lt;/CharsetAliases&gt;</b>
+
+<b>&lt;CharsetAliases&gt;</b>
+iso-8859-1; latin1
+iso-8859-1; l1
+iso-8859-1; iso_8859_1
+<b>&lt;/CharsetAliases&gt;</b>
+</pre>
+
+<p>If the same alias is specified for two different charsets, then
+the last one defined is use.  For example, if the following is defined,
+</p>
+<pre class="code">
+<b>&lt;CharsetAliases&gt;</b>
+iso-8859-1; x-foo
+koi8-u; x-foo
+<b>&lt;/CharsetAliases&gt;</b>
+</pre>
+<p>then <tt>x-foo</tt> will be an alias for <tt>koi8-u</tt>.
+</p>
+
+<p>When MHonArc invokes
+<a href="charsetconverters.html">CHARSETCONVERTERS</a> filters, MHonArc
+maps aliases to real names before invoking the filters.  Therefore,
+it is not necessary for a filter to know all possible names for a given
+character set.
+</p>
+
+<p>If the <tt>override</tt> attribute is specified for CHARSETALIASES,
+then any previous settings will be cleared.  Otherwise, each occurance
+of CHARSETALIASES will augment existing settings.
+</p>
+
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="default">Default Setting</a></h2>
+
+<pre class="code">
+<b>&lt;CharsetAliases&gt;</b>
+us-ascii;	    ascii
+us-ascii;	    ansi_x3.4-1968
+us-ascii;	    iso646
+us-ascii;	    iso646-us
+us-ascii;	    iso646.irv:1991
+us-ascii;	    cp367
+us-ascii;	    ibm367
+us-ascii;	    csascii
+us-ascii;	    iso-ir-6
+us-ascii;	    us
+iso-8859-1;	    latin1
+iso-8859-1;	    l1
+iso-8859-1;	    iso_8859_1
+iso-8859-1;	    iso_8859-1:1987
+iso-8859-1;	    iso8859-1
+iso-8859-1;	    iso8859_1
+iso-8859-1;	    8859-1
+iso-8859-1;	    8859_1
+iso-8859-1;	    cp819
+iso-8859-1;	    ibm819
+iso-8859-1;	    x-mac-latin1
+iso-8859-1;	    iso-ir-100
+iso-8859-2;	    latin2
+iso-8859-2;	    l2
+iso-8859-2;	    iso_8859_2
+iso-8859-2;	    iso_8859-2:1987
+iso-8859-2;	    iso8859-2
+iso-8859-2;	    iso8859_2
+iso-8859-2;	    8859-2
+iso-8859-2;	    8859_2
+iso-8859-2;	    iso-ir-101
+iso-8859-3;	    latin3
+iso-8859-3;	    l3
+iso-8859-3;	    iso_8859_3
+iso-8859-3;	    iso_8859-3:1988
+iso-8859-3;	    iso8859-3
+iso-8859-3;	    iso8859_3
+iso-8859-3;	    8859-3
+iso-8859-3;	    8859_3
+iso-8859-3;	    iso-ir-109
+iso-8859-4;	    latin4
+iso-8859-4;	    l4
+iso-8859-4;	    iso_8859_4
+iso-8859-4;	    iso_8859-4:1988
+iso-8859-4;	    iso8859-4
+iso-8859-4;	    iso8859_4
+iso-8859-4;	    8859-4
+iso-8859-4;	    8859_4
+iso-8859-4;	    iso-ir-110
+iso-8859-5;	    iso_8859-5:1988
+iso-8859-5;	    cyrillic
+iso-8859-5;	    iso-ir-144
+iso-8859-6;	    iso_8859-6:1987
+iso-8859-6;	    arabic
+iso-8859-6;	    asmo-708
+iso-8859-6;	    ecma-114
+iso-8859-6;	    iso-ir-127
+iso-8859-7;	    iso_8859-7:1987
+iso-8859-7;	    greek
+iso-8859-7;	    greek8
+iso-8859-7;	    ecma-118
+iso-8859-7;	    elot_928
+iso-8859-7;	    iso-ir-126
+iso-8859-8;	    iso-8859-8-i
+iso-8859-8;	    iso_8859-8:1988
+iso-8859-8;	    hebrew
+iso-8859-8;	    iso-ir-138
+iso-8859-9;	    latin5
+iso-8859-9;	    l5
+iso-8859-9;	    iso_8859_9
+iso-8859-9;	    iso-8859_9:1989
+iso-8859-9;	    iso8859-9
+iso-8859-9;	    iso8859_9
+iso-8859-9;	    8859-9
+iso-8859-9;	    8859_9
+iso-8859-9;	    iso-ir-148
+iso-8859-10;	    latin6
+iso-8859-10;	    l6
+iso-8859-10;	    iso_8859_10
+iso-8859-10;	    iso_8859-10:1993
+iso-8859-10;	    iso8859-10
+iso-8859-10;	    iso8859_10
+iso-8859-10;	    8859-10
+iso-8859-10;	    8859_10
+iso-8859-10;	    iso-ir-157
+iso-8859-13;	    latin7 ,l7
+iso-8859-14;	    latin8 ,l8
+iso-8859-15;	    latin9
+iso-8859-15;	    latin0
+iso-8859-15;	    l9
+iso-8859-15;	    l0
+iso-8859-15;	    iso_8859_15
+iso-8859-15;	    iso8859-15
+iso-8859-15;	    iso8859_15
+iso-8859-15;	    8859-15
+iso-8859-15;	    8859_15
+iso-2022-jp;	    iso-2022-jp-1
+utf-8;		    utf8
+cp932;		    shiftjis
+cp932;		    shift_jis
+cp932;		    shift-jis
+cp932;		    x-sjis
+cp932;		    ms_kanji
+cp932;		    csshiftjis
+cp936;		    gbk
+cp936;		    ms936
+cp936;		    windows-936
+cp949:		    euc-kr
+cp949:		    ks_c_5601-1987
+cp949:		    ks_c_5601-1989
+cp949:		    ksc_5601
+cp949:		    iso-ir-149
+cp949:		    windows-949
+cp949:		    ms949
+cp949:		    korean
+cp950;		    windows-950
+cp1250;		    windows-1250
+cp1251;		    windows-1251
+cp1252;		    windows-1252
+cp1253;		    windows-1253
+cp1254;		    windows-1254
+cp1255;		    windows-1255
+cp1256;		    windows-1256
+cp1257;		    windows-1257
+cp1258;		    windows-1258
+koi-0;		    gost-13052
+koi8-e;		    iso-ir-111
+koi8-e;		    ecma-113:1986
+koi8-r;		    cp878
+gost-19768-87;	    ecma-cyrillic
+gost-19768-87;	    ecma-113
+gost-19768-87;	    ecma-113:1988
+big5-eten;	    big5
+big5-eten;	    csbig5
+big5-eten;	    tcs-big5
+big5-eten;	    tcsbig5
+big5-hkscs;	    big5hk
+big5-hkscs;	    big5hkscs
+big5-hkscs;	    hkscs-big5
+big5-hkscs;	    hk-big5
+gb2312;		    gb_2312-80
+gb2312;		    csgb2312
+gb2312;		    hz-gb-2312
+gb2312;		    iso-ir-58
+gb2312;		    euc-cn
+gb2312;		    chinese
+gb2312;		    csiso58gb231280
+macarabic;          apple-arabic
+maccentraleurroman; apple-centeuro
+maccroatian;        apple-croatian
+maccyrillic;        apple-cyrillic
+macgreek;           apple-greek
+machebrew;          apple-hebrew
+macicelandic;       apple-iceland
+macromanian;        apple-romanian
+macroman;           apple-roman
+macthai;            apple-thai
+macturkish;         apple-turkish
+macarabic;          x-mac-arabic
+maccentraleurroman; x-mac-centraleurroman
+maccroatian;        x-mac-croatian
+maccyrillic;        x-mac-cyrillic
+macgreek;           x-mac-greek
+machebrew;          x-mac-hebrew
+macicelandic;       x-mac-icelandic
+macromanian;        x-mac-romanian
+macroman;           x-mac-roman
+macthai;            x-mac-thai
+macturkish;         x-mac-turkish
+<b>&lt;/CharsetAliases&gt;</b>
+</pre>
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="rcvars">Resource Variables</a></h2>
+
+<p>N/A
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="examples">Examples</a></h2>
+
+<p>CHARSETALIASES is generally useful for resolving
+"<tt>unknown&nbsp;charset</tt>" warnings that MHonArc generates since
+some MUAs can specify non-standard names for charsets.
+</p>
+
+<p>Another use is to fool MHonArc into thinking that data labeled
+with one charset is actual data in another charset.  For example, in
+some locales, MUAs improperly set the <tt>charset="..."</tt> parameter
+in text messages.  CHARSETALIASES can be used to tell MHonArc to treat
+the improperly labeled data in another charset during conversion.
+For example,
+</p>
+<pre class="code">
+<b>&lt;CharsetAliases&gt;</b>
+iso-8859-8; us-ascii
+<b>&lt;/CharsetAliases&gt;</b>
+</pre>
+<p>tells MHonArc to treat US-ASCII data as Hebrew.
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="version">Version</a></h2>
+
+<p>2.6.0
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="seealso">See Also</a></h2>
+
+<p>
+<a href="charsetconverters.html">CHARSETCONVERTERS</a>
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<!--x-rc-nav-->
+<table border=0><tr valign="top">
+<td align="left" width="50%">[Prev:&nbsp;<a href="botlinks.html">BOTLINKS</a>]</td><td><nobr>[<a href="../resources.html#charsetaliases">Resources</a>][<a href="../mhonarc.html">TOC</a>]</nobr></td><td align="right" width="50%">[Next:&nbsp;<a href="charsetconverters.html">CHARSETCONVERTERS</a>]</td></tr></table>
+<!--/x-rc-nav-->
+<hr>
+<address>
+$Date: 2002/12/26 21:57:04 $<br>
+<img align="top" src="../monicon.png" alt="">
+<a href="http://www.mhonarc.org/"><strong>MHonArc</strong></a><br>
+Copyright &#169; 2002, <a href="http://www.earlhood.com/"
+>Earl Hood</a>, <a href="mailto:mhonarc@mhonarc.org"
+>mhonarc@mhonarc.org</a><br>
+</address>
+
+</body>
+</html>

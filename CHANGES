@@ -13,6 +13,202 @@
 
 YYYY/MM/DD
 ============================================================================
+2002/02/10	(2.6.0)
+
+* Bug Fixes: See
+    <http://savannah.gnu.org/bugs/index.php?group_id=1968
+     &set=custom&advsrch=0&msort=0&report_id=105&go_report=Go
+     &fix_release=2.6.0&chunksz=50>
+
+* New resources:
+
+    DEFCHARSET		Default character set of message text data.
+    CHARSETALIASES	Define aliases for base charset names.
+    DBFILEPERMS		File permissions for DBFILE.
+    FIELDSTORE		Message header fields to store in database.
+    FILEPERMS		File permissions for archive files.
+    ICONURLPREFIX	URL string to prepend to ICONS URLs.
+    MODIFYBODYADDRESSES	Apply ADDRESSMODIFYCODE to text message bodies.
+    RECONVERT		Reconvert existing messages.
+    TENDBUTTON		Button to last message in thread.
+    TENDBUTTONIA	Inactive button to last message in thread.
+    TENDLINKIA		Inactive link to last message in thread.
+    TENDLINK		Link to last message in thread.
+    TEXTENCODE		Encode message text to given character encoding.
+    TTOPBUTTON		Button to first message in thread.
+    TTOPBUTTONIA	Inactive button to first message in thread.
+    TTOPLINKIA		Inactive link to first message in thread.
+    TTOPLINK		Link to first message in thread.
+
+* New resource variables:
+
+    $ICONURLPREFIX$	Value of ICONURLPREFIX resource.
+    $MSGHFIELD$		Retrieve header field value stored via
+			FIELDSTORE.
+
+* MHonArc::CharEnt:
+  + Several charset mappings added to MHonArc::CharEnt with the
+    default value for CHARSETCONVERTERS updated to reflect the new
+    mappings.  New charset supported include UTF-8, various Cyrillic
+    sets, VISCII, Chinese sets, Japanese (iso-2022-jp and euc-jp),
+    Korean, Apple-based charsets, etc.  See the documentation for
+    the CHARSETCONVERTERS and CHARSETALIASES for complete list of
+    character sets supported.
+
+    Note: Sets that have bidirectional rendering (Hebrew, Arabic)
+    exist, but automatic directional re-ording for rendering is
+    currently not supported.
+
+  . Some existing mappings have been updated to use Unicode numeric
+    character entity references (&#xHHHH;) instead of standard SGML
+    character entity references (eg. &Aelig;).  Most, if not all,
+    web browsers only support the set of SGML entity references
+    defined in the HTML 4.0 specification.
+
+    All existing tables should now generate entity references
+    recognized by all HTML 4.0 compliant browsers.
+
+* MHonArc::UTF8:
+  . Module completely redone to support various versions of Perl.
+    utf8 support code added to all conversion to utf8 with perl
+    installations that do not have utf8 support, but to also
+    leverage perl installations with utf8-related modules.
+
+* Default filter for iso-8859-1 and iso-2022-jp changed to
+  MHonArc::CharEnt::str2sgml.  This helps keep MHonArc locale
+  neutral in its default configuration.  Special note added
+  to release notes for Japanese users about the change.
+  
+* m2h_text_plain::filter (mhtxtplain.pl):
+  + Added more robust handling of format=flowed data.  By default,
+    all text is rendered in a monospaced font to provide visual
+    consistency between flowed and fixed text.  Proportional spaced
+    font can be generated using the "nonfixed" option (where
+    "keepspace" option should also be used to help preserve the
+    formatting characteristics of the data).
+
+  + Added "fancyquote" option to provide highlight of quoted text
+    similiar to text/plain;format=flowed data.
+
+  + Added "disableflowed" option to disable the flowed data
+    conversion.  Data will be converted as regular text/plain.
+    This option is useful for archives that cater to text-based
+    browsers.
+
+  + Added "quoteclass=<classname>" option to specify a CSS classname
+    to assign to BLOCKQUOTE elements added when processing flowed
+    data or when "fancyquote" is active.  This suppresses inline
+    style generation.
+
+  + Added "subdir" option for use when "uudecode" is enabled.
+
+  - Reduced set of quote characters to just '>'.  Other characters
+    are used by some people (eg. '}', '|', '+'), especially on the
+    USENET, but supporting them tends to produce undesirable
+    results, especially when using fancyquote.
+    (Maybe make it configurable?)
+
+  + If uudecode and usename specified, check if file ends in
+    .s?html?, and if so, pass data to HTML filter.
+
+  . Make sure to return a non-empty string for an empty body
+    when in uudecode mode.  Avoids bogus warning message that
+    data could not be converted.
+
+* MIMEEXCS automatically handles unofficial version of a media type.
+  For example:
+
+    <MIMEEXCS>
+    text/html
+    </MIMEEXCS>
+
+  Will exclude text/html and text/x-html data.
+
+* m2h_text_html::filter (mhtxthtml.pl):
+  + CHARSETCONVERTERS is used for converting character data.
+  
+  - Removed default=charset option.  This option is no longer
+    needed with new character encoding processing features and
+    CHARSETALIASES resource.
+
+  + Convert javascript:... URLs to "_javascript_:..." when scripting
+    is disabled (the default).  This is an extra measure ontop of
+    element and attribute stripping.
+
+  * <a href>'s are now preserved when cid: only URLs enabled (the
+    default).  This prevents regular hyperlinks in HTML messages from
+    getting stripped, which I think most people desire.  Otherwise,
+    the allownoncidurls option must be used, and then this opens one
+    up to potential XSS attacks.
+
+    Due to the javascript: URL munging, preserving <a href>'s should
+    be safe from auto-XSS attacks.  Readers should still be careful
+    about any links they activate.
+
+  + Added "subdir" option to specify that MHTML referenced data
+    (e.g. images) are saved in a subdirectory.
+
+  + Added "disablerelated" to disable cid: URL resolution.
+
+  . STYLE and CLASS attributes stripped if nofont argument specified.
+
+* m2h_text_enriched::filter (mhtxtenrich.pl):
+  + CHARSETCONVERTERS is used for converting character data.
+  + <lang><param>lang</param> is now mapped to <dir lang="lang">.
+  + Added handling of some text/richtext tags.
+  . Escape unrecognized tags.
+
+* Archive file creation modified to minimize the local symlink exploits:
+
+  1.  A temp file with a random name is first created and written to.
+  2.  Temp file is compressed if GZIPFILES is active.
+  3.  Temp file is renamed to final filename.
+  4.  File permissions are set according to FILEPERMS/DBFILEPERMS.
+
+  Using a random temp filename makes it difficult for someone to
+  predict filenames to execute a symlink exploit.  The rename operation
+  is immune to symlink exploits, hence trying to using well-known names
+  (e.g. maillist.html, threads.html) for exploitation will not work.
+
+  A similiar technique is used for directory creation for filters
+  that support the "subdir" option.
+
+  Generation of temp files is done via the File::Temp module, if
+  installed.  If not installed, a homegrown implementation is used.
+  Although not as secure and robust as File::Temp, it's better than
+  nothing and should provide a decent deterrent.
+
+* Setuid/setgid execution causes mhonarc to terminate with an error.
+  Mhonarc does not pass taint checks, so we abort with an error that
+  setuid/setgid execution is not supported.  MHonArc is too insecure
+  for setuid operation and trying to make it setuid-safe would require
+  alot of work and potentially limit a large amount of functionality.
+
+* More robust parsing used for determining $FROMNAME$ and $FROMADDR*$
+  resource variables.
+
+* rfc822.pl library removed and replaced with MHonArc::RFC822 module.
+
+* Warning message, "Unable to process data..." removed from message
+  page when unable to convert any part of a message (usually due to
+  user-defined MIMEFILTERS settings).  Instead, a warning message
+  is generated to standard error (like other mhonarc warnings) and
+  the resulting message page will have a blank message body.
+
+* m2h_msg_extbody::filter: (mhmsgextbody.pl)
+  + Added support for http/x-http access type.  This appears to
+    be an experimental access type since the general URI type can be
+    used instead.
+  . Properly sanitize parameter data.
+  . Some minor cosmetic changes in the HTML generated.
+
+* m2h_text_tsv::filter (mhtxttsv.pl):
+  . Sanitize field data.
+
+* m2h_text_setext::filter (mhtxtsetext.pl) has been removed.  It
+  appears this media-type is part of document history.
+
+============================================================================
 2002/12/21	(2.5.14)
 
 * Security patch release: This release fixes a cross-site scripting
@@ -2217,4 +2413,4 @@ YYYY/MM/DD
 
 =======================================================================
 Earl Hood, mhonarc@mhonarc.org
-$Id: CHANGES,v 1.84.2.1 2002/12/22 00:43:56 ehood Exp $
+$Id: CHANGES,v 1.104 2003/02/10 05:00:41 ehood Exp $

@@ -1,19 +1,30 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
 <html>
 <head>
 <title>MHonArc Resources: DBFILE</title>
+<link rel="stylesheet" type="text/css" href="../docstyles.css">
 </head>
 <body>
 <!--x-rc-nav-->
 <table border=0><tr valign="top">
-<td align="left" width="50%">[Prev:&nbsp;<a href="dayend.html">DAYEND</a>]</td><td><nobr>[<a href="../resources.html#dbfile">Resources</a>][<a href="../mhonarc.html">TOC</a>]</nobr></td><td align="right" width="50%">[Next:&nbsp;<a href="decodeheads.html">DECODEHEADS</a>]</td></tr></table>
+<td align="left" width="50%">[Prev:&nbsp;<a href="dayend.html">DAYEND</a>]</td><td><nobr>[<a href="../resources.html#dbfile">Resources</a>][<a href="../mhonarc.html">TOC</a>]</nobr></td><td align="right" width="50%">[Next:&nbsp;<a href="dbfileperms.html">DBFILEPERMS</a>]</td></tr></table>
 <!--/x-rc-nav-->
 <hr>
 <h1>DBFILE</h1>
+<!--X-TOC-Start-->
+<ul>
+<li><a href="#syntax">Syntax</a>
+<li><a href="#description">Description</a>
+<li><a href="#default">Default Setting</a>
+<li><a href="#rcvars">Resource Variables</a>
+<li><a href="#examples">Examples</a>
+<li><a href="#version">Version</a>
+<li><a href="#seealso">See Also</a>
+</ul>
+<!--X-TOC-End-->
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Syntax</h2>
+<h2><a name="syntax">Syntax</a></h2>
 
 <dl>
 
@@ -38,60 +49,67 @@
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Description</h2>
+<h2><a name="description">Description</a></h2>
 
 <p>DBFILE is the filename to use for the MHonArc database
 file.
 </p>
 
-<DL>
-<DT><STRONG>NOTE</STRONG> 
-<DD><P>You should not override the default name unless
+<table class="note" width="100%">
+<tr valign="baseline">
+<td><strong>NOTE:</strong></td>
+<td width="100%"><p>You should not override the default name unless
 absolutely necessary, and you are confident about what you are doing.
-</P>
-</dd>
-</DL>
+</p>
+</td>
+</tr>
+</table>
 
 <p>DBFILE resource can be set to an absolute pathname.  This
 allows the database file to be located in a separate location than
 in the archive directory.  If not an absolute pathname, then the
 value is treated relative to
 <a href="outdir.html">OUTDIR</a>.  If directory path components
-are included in the value, then the directory path must already exist.
+are included in the value, then the directory path <b>must</b> already exist.
 </p>
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Default Setting</h2>
+<h2><a name="default">Default Setting</a></h2>
 
-<p>"<code>.mhonarc.db</code>" ("<code>MHONARC.DB</code>" for MS-DOS
-users).
+<pre class="code">
+.mhonarc.db
+</pre>
+<p>Or, under Windows and VMS:
 </p>
+<pre class="code">
+mhonarc.db
+</pre>
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Resource Variables</h2>
+<h2><a name="rcvars">Resource Variables</a></h2>
 
 <p>N/A
 </p>
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Examples</h2>
+<h2><a name="examples">Examples</a></h2>
 
 <p>None
 </p>
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Version</h2>
+<h2><a name="version">Version</a></h2>
 
 <p>1.0
 </p>
 
 <!-- *************************************************************** -->
 <hr>
-<h2>See Also</h2>
+<h2><a name="seealso">See Also</a></h2>
 
 <p>
 <a href="outdir.html">OUTDIR</a>
@@ -101,11 +119,11 @@ users).
 <hr>
 <!--x-rc-nav-->
 <table border=0><tr valign="top">
-<td align="left" width="50%">[Prev:&nbsp;<a href="dayend.html">DAYEND</a>]</td><td><nobr>[<a href="../resources.html#dbfile">Resources</a>][<a href="../mhonarc.html">TOC</a>]</nobr></td><td align="right" width="50%">[Next:&nbsp;<a href="decodeheads.html">DECODEHEADS</a>]</td></tr></table>
+<td align="left" width="50%">[Prev:&nbsp;<a href="dayend.html">DAYEND</a>]</td><td><nobr>[<a href="../resources.html#dbfile">Resources</a>][<a href="../mhonarc.html">TOC</a>]</nobr></td><td align="right" width="50%">[Next:&nbsp;<a href="dbfileperms.html">DBFILEPERMS</a>]</td></tr></table>
 <!--/x-rc-nav-->
 <hr>
 <address>
-$Date: 2002/10/20 03:49:22 $ <br>
+$Date: 2002/12/10 04:08:02 $ <br>
 <img align="top" src="../monicon.png" alt="">
 <a href="http://www.mhonarc.org/"><strong>MHonArc</strong></a><br>
 Copyright &#169; 1997,1998,2002 <a href="http://www.earlhood.com/">Earl Hood</a>, <a href="mailto:mhonarc@mhonarc.org">mhonarc@mhonarc.org</a><br>

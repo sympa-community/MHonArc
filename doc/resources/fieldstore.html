@@ -1,0 +1,167 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
+<html>
+<head>
+<title>MHonArc Resources: FIELDSTORE</title>
+<link rel="stylesheet" type="text/css" href="../docstyles.css">
+</head>
+<body>
+
+<!--x-rc-nav-->
+<table border=0><tr valign="top">
+<td align="left" width="50%">[Prev:&nbsp;<a href="fieldsend.html">FIELDSEND</a>]</td><td><nobr>[<a href="../resources.html#fieldstore">Resources</a>][<a href="../mhonarc.html">TOC</a>]</nobr></td><td align="right" width="50%">[Next:&nbsp;<a href="fieldstyles.html">FIELDSTYLES</a>]</td></tr></table>
+<!--/x-rc-nav-->
+
+<hr>
+<h1>FIELDSTORE</h1>
+<!--X-TOC-Start-->
+<ul>
+<li><a href="#syntax">Syntax</a>
+<li><a href="#description">Description</a>
+<li><a href="#default">Default Setting</a>
+<li><a href="#rcvars">Resource Variables</a>
+<li><a href="#examples">Examples</a>
+<li><a href="#version">Version</a>
+<li><a href="#seealso">See Also</a>
+</ul>
+<!--X-TOC-End-->
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="syntax">Syntax</a></h2>
+
+<dl>
+
+<dt><strong>Envariable</strong></dt>
+<dd><p>N/A
+</p>
+</dd>
+
+<dt><strong>Element</strong></dt>
+<dd><p>
+<code>&lt;FIELDSTORE&gt;</code><br>
+<var>field-name</var><br>
+<var>field-name</var><br>
+<var>...</var><br>
+<code>&lt;/FIELDSTORE&gt;</code><br>
+</p>
+</dd>
+
+<dt><strong>Command-line Option</strong></dt>
+<dd><p>N/A
+</p>
+</dd>
+
+</dl>
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="description">Description</a></h2>
+
+<p>FIELDSTORE specifies the additional message header fields
+to store in the <a href="dbfile.html">database</a>.  Header
+fields stored can be retrieved via the
+<a href="../rcvars.html#MSGHFIELD"><tt>$MSGHFIELD$</tt></a>
+resource variable.
+</p>
+
+<p>Each line of the FIELDSTORE element is the exact
+case-insensitive name of a message header field to store.
+If a field occurs multiple times in a message header, then
+all values for the field are concatenated when stored.
+</p>
+
+<p>If a field name is an address field, then the resources
+<a href="resources/addressmodifycode.html">ADDRESSMODIFYCODE</a>,
+<a href="resources/mailto.html">MAILTO</a>,
+<a href="resources/mailtourl.html">MAILTOURL</a>, and
+<a href="resources/spammode.html">SPAMMODE</a>
+apply to the value when referenced by the
+<a href="../rcvars.html#MSGHFIELD"><tt>$MSGHFIELD$</tt></a> resource variable.
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="default">Default Setting</a></h2>
+
+<p>Nil
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="rcvars">Resource Variables</a></h2>
+
+<p>N/A
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="examples">Examples</a></h2>
+
+<p>MHonArc already stores some message header information
+(e.g. <tt>Subject</tt>, <tt>Date</tt>, <tt>From</tt>, and
+<tt>Message-Id</tt>) and provides resource variables to access the
+information (e.g.
+<a href="../rcvars.html#SUBJECT"><tt>$SUBJECT$</tt></a>,
+<a href="../rcvars.html#DATE"><tt>$DATE$</tt></a>,
+<a href="../rcvars.html#FROM"><tt>$FROM$</tt></a>, and
+<a href="../rcvars.html#MSGID"><tt>$MSGID$</tt></a>, respectively).
+But it is sometimes useful to capture fields like <tt>To</tt> or
+<tt>Cc</tt> for use in page layout.
+</p>
+
+<p>The following resource settings capture the <tt>To</tt> and
+<tt>Cc</tt> fields and then displays the information
+in the main index:
+</p>
+<pre class="code">
+<b>&lt;FieldStore&gt;</b>
+to
+cc
+<b>&lt;/FieldStore&gt;</b>
+
+<a href="litemplate.html"><b>&lt;LiTemplate&gt;</b></a>
+&lt;li&gt;&lt;strong&gt;<a href="../rcvars.html#SUBJECT">$SUBJECT$</a>&lt;/strong&gt;
+&lt;ul&gt;
+    &lt;li&gt;&lt;em&gt;To&lt;/em&gt;: <a href="../rcvars.html#MSGHFIELD">$MSGHFIELD(CUR;to)$</a>&lt;/li&gt;
+    &lt;li&gt;&lt;em&gt;Cc&lt;/em&gt;: <a href="../rcvars.html#MSGHFIELD">$MSGHFIELD(CUR;cc)$</a>&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+<b>&lt;/LiTemplate&gt;</b>
+</pre>
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="version">Version</a></h2>
+
+<p>2.6.0
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="seealso">See Also</a></h2>
+
+<p>
+<a href="addressmodifycode.html">ADDRESSMODIFYCODE</a>,
+<a href="mailto.html">MAILTO</a>,
+<a href="mailtourl.html">MAILTOURL</a>,
+<a href="spammode.html">SPAMMODE</a>
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<!--x-rc-nav-->
+<table border=0><tr valign="top">
+<td align="left" width="50%">[Prev:&nbsp;<a href="fieldsend.html">FIELDSEND</a>]</td><td><nobr>[<a href="../resources.html#fieldstore">Resources</a>][<a href="../mhonarc.html">TOC</a>]</nobr></td><td align="right" width="50%">[Next:&nbsp;<a href="fieldstyles.html">FIELDSTYLES</a>]</td></tr></table>
+<!--/x-rc-nav-->
+<hr>
+<address>
+$Date: 2003/01/01 23:40:37 $<br>
+<img align="top" src="../monicon.png" alt="">
+<a href="http://www.mhonarc.org/"><strong>MHonArc</strong></a><br>
+Copyright &#169; 2002, <a href="http://www.earlhood.com/"
+>Earl Hood</a>, <a href="mailto:mhonarc@mhonarc.org"
+>mhonarc@mhonarc.org</a><br>
+</address>
+
+</body>
+</html>

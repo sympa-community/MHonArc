@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "MHONARC 1"
-.TH MHONARC 1 "2001-09-05" "MHonArc v2.5" "MHonArc Documentation"
+.TH MHONARC 1 "2003-01-03" "MHonArc v2.6" "MHonArc Documentation"
 .SH "NAME"
 mhonarc \- convert mail/news messages to HTML
 .SH "SYNOPSIS"
@@ -151,12 +151,14 @@ Running "\f(CW\*(C`mhonarc \-help\*(C'\fR" will give a summary of the command-li
 options available.
 .SH "PREREQUISITES"
 .IX Header "PREREQUISITES"
-\&\fBGetopt::Long\fR, \fBTime::Local\fR
+\&\fBFcntl\fR,
+\&\fBFile::Basename\fR,
+\&\fBGetopt::Long\fR,
+\&\fBSymbol\fR,
+\&\fBTime::Local\fR
 .SH "COREQUISITES"
 .IX Header "COREQUISITES"
 \&\fBDigest::MD5\fR,
-\&\fBFcntl\fR,
-\&\fBSymbol\fR
 .SH "OSNAMES"
 .IX Header "OSNAMES"
 any
@@ -169,3 +171,7 @@ Mail
 .SH "AUTHOR"
 .IX Header "AUTHOR"
 Earl Hood, mhonarc@mhonarc.org
+.PP
+MHonArc comes with \s-1ABSOLUTELY\s0 \s-1NO\s0 \s-1WARRANTY\s0 and MHonArc may be copied only
+under the terms of the \s-1GNU\s0 General Public License, which may be found in
+the MHonArc distribution.

@@ -1,7 +1,7 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
 <html>
 <head>
 <title>MHonArc Resources: ADDRESSMODIFYCODE</title>
+<link rel="stylesheet" type="text/css" href="../docstyles.css">
 </head>
 <body>
 <!--x-rc-nav-->
@@ -10,10 +10,21 @@
 <!--/x-rc-nav-->
 <hr>
 <h1>ADDRESSMODIFYCODE</h1>
+<!--X-TOC-Start-->
+<ul>
+<li><a href="#syntax">Syntax</a>
+<li><a href="#description">Description</a>
+<li><a href="#default">Default Setting</a>
+<li><a href="#rcvars">Resource Variables</a>
+<li><a href="#examples">Examples</a>
+<li><a href="#version">Version</a>
+<li><a href="#seealso">See Also</a>
+</ul>
+<!--X-TOC-End-->
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Syntax</h2>
+<h2><a name="syntax">Syntax</a></h2>
 
 <dl>
 
@@ -41,21 +52,24 @@
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Description</h2>
+<h2><a name="description">Description</a></h2>
 
-<p>ADDRESSMODIFYCODE may be used to define Perl expressions to
-apply to addresses in message headers during conversion.
+<p>ADDRESSMODIFYCODE defines Perl expressions to
+apply to addresses in message headers and to
+addresses in text bodies of messages if the
+<a href="modifybodyaddresses.html">MODIFYBODYADDRESSES</a> is active.
 </p>
 <p>When defining the expressions, the mail address will be in
 the <b><tt>$_</tt></b> variable.  The value of <b><tt>$_</tt></b>
 after all expressions are evaluated is the address MHonArc will
 print.
 </p>
-<table border=0 cellpadding=4>
+<table class="note" width="100%">
 <tr valign=top>
-<td><a name="note1"><strong>NOTE</strong></a></td>
-<td><p>ADDRESSMODIFYCODE only affects the display text of the
-address.  If <a href="mailto.html">MAILTO</a> is active, the
+<td><a name="note1"><strong>NOTE:</strong></a></td>
+<td width="100%"><p>ADDRESSMODIFYCODE only affects the display text of the
+address.  For <strong>message headers</strong>, when
+<a href="mailto.html">MAILTO</a> is active, the
 URL of the link is <b>NOT</b> affected by ADDRESSMODIFYCODE.
 <a href="mailtourl.html">MAILTOURL</a> can be used to modify the
 URL.
@@ -66,21 +80,21 @@ URL.
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Default Setting</h2>
+<h2><a name="default">Default Setting</a></h2>
 
 <p>Nil.
 </p>
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Resource Variables</h2>
+<h2><a name="rcvars">Resource Variables</a></h2>
 
 <p>N/A
 </p>
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Examples</h2>
+<h2><a name="examples">Examples</a></h2>
 
 <p>ADDRESSMODIFYCODE main use is to obfuscate addresses,
 or hide them entirely, to
@@ -88,19 +102,19 @@ prevent spam address harvesters from getting user addresses from
 MHonArc archives.  Here is an example that performs a ROT13 to
 provide some simple obfuscation:
 </p>
-<pre>
-&lt;AddressModifyCode&gt;
+<pre class="code">
+<b>&lt;AddressModifyCode&gt;</b>
 tr/A-Za-z/N-ZA-Mn-za-m/;
-&lt;/AddressModifyCode&gt;
+<b>&lt;/AddressModifyCode&gt;</b>
 </pre>
 <p>However, this may not be enough since an intelligent harvester
 may try a ROT13.  To completely hide the address, do something like
 this:
 </p>
-<pre>
-&lt;AddressModifyCode&gt;
+<pre class="code">
+<b>&lt;AddressModifyCode&gt;</b>
 $_ = 'address@hidden';
-&lt;/AddressModifyCode&gt;
+<b>&lt;/AddressModifyCode&gt;</b>
 </pre>
 <p>You cannot rely on ADDRESSMODIFYCODE alone to
 hide/obfuscate addresses (see <a href="#note1">NOTE</a> above).
@@ -110,19 +124,20 @@ interested in fighting address harvesting.
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Version</h2>
+<h2><a name="version">Version</a></h2>
 
 <p>2.4.0
 </p>
 
 <!-- *************************************************************** -->
 <hr>
-<h2>See Also</h2>
+<h2><a name="seealso">See Also</a></h2>
 
 <p>
 <a href="mailto.html">MAILTO</a>,
 <a href="mailtourl.html">MAILTOURL</a>,
-<a href="spammode.html">SPAMMODE</a>,
+<a href="modifybodyaddresses.html">MODIFYBODYADDRESSES</a>,
+<a href="spammode.html">SPAMMODE</a>
 </p>
 
 <!-- *************************************************************** -->
@@ -133,7 +148,7 @@ interested in fighting address harvesting.
 <!--/x-rc-nav-->
 <hr>
 <address>
-$Date: 2002/07/27 05:13:10 $ <br>
+$Date: 2002/12/31 20:01:37 $ <br>
 <img align="top" src="../monicon.png" alt="">
 <a href="http://www.mhonarc.org/"
 ><strong>MHonArc</strong></a><br>

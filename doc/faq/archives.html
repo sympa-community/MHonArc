@@ -1,12 +1,11 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
 <HTML>
 <HEAD>
 <TITLE>MHonArc FAQ: Archives</TITLE></HEAD>
+<link rel="stylesheet" type="text/css" href="../docstyles.css">
 <BODY>
 
 <!--X-NavButtons-Start-->
-<p align=center>
-[<a href="usage.html">Prev</a>][<a href="indexpgs.html">Next</a>][<a href="faq.html">TOC</a>][<a href="http://www.mhonarc.org/">Home</a>]
+<table width="100%"><tr><td align="left"><nobr>[<a href="usage.html">Prev</a>]</nobr></td><td align="center" width="100%">[<a href="faq.html">TOC</a>][<a href="../mhonarc.html">Manual</a>][<a href="http://www.mhonarc.org/">Home</a>]</td><td align="right"><nobr>[<a href="indexpgs.html">Next</a>]</nobr></td></tr></table>
 </p>
 <!--X-NavButtons-End-->
 
@@ -53,12 +52,14 @@ with "<code>From </code>" as a message separator, which can lead to
 incorrect message termination if the From line has not been escaped
 with a `<code>&gt;</code>'.  </P>
 
-<P>To fix the problem, use the <strong>MSGSEP</strong> resource to
+<P>To fix the problem, use the
+<a href="../resources/msgsep.html">MSGSEP</a> resource to
 instruct MHonArc to use a stricter test detecting a message
-separator. The following <strong>MSGSEP</strong> resource setting is
+separator. The following <a href="../resources/msgsep.html">MSGSEP</a>
+resource setting is
 known to work well: </P>
 
-<pre>
+<pre class="code">
 <b>&lt;MsgSep&gt;</b>
 ^From \S+\s+\S+\s+\S+\s+\d+\s+\d+:\d+:\d+\s+\d+
 <b>&lt;/MsgSep&gt;</b>
@@ -68,7 +69,7 @@ known to work well: </P>
 the address part of the separator, you can use the following:
 </p>
 
-<pre>
+<pre class="code">
 <b>&lt;MsgSep></b>
 ^From\s+(?:"[^"]+"@\S+|\S+)\s+\S+\s+\S+\s+\d+\s+\d+:\d+:\d+\s+\d+
 <b>&lt;/MsgSep></b>
@@ -78,8 +79,10 @@ the address part of the separator, you can use the following:
 environments.
 </p>
 
-<p>If this fails, you can try the <strong>CONLEN</strong>
-resource available in v2.0 and later.  The CONLEN resource, when set, tells
+<p>If this fails, you can try the
+<a href="../resources/conlen.html">CONLEN</a>
+resource available in v2.0 and later.  The
+<a href="../resources/conlen.html">CONLEN</a> resource, when set, tells
 MHonArc to utilize the <code>Content-Length</code> fields
 in the message head.  If your MTA defines this field accurately,
 then you can utilize this feature.
@@ -95,7 +98,7 @@ you can try the following Procmail recipe (contributed by
 tool, procmail.  :)  Here's a recipe borrowed from David Tamkin about
 9 moons ago:
 </p>
-<pre>
+<pre class="code">
   :0fhw # B won't help; size conditions ignore H and B flags on the :0 line
   * ! ^Content-Length:.*[0-9]
   * 1^1 B ?? &gt;1
@@ -120,7 +123,7 @@ disgusting settings in my .mc (M4 config) file to add in a Content-Length:
 header, <u>but I'm <b>not</b> sure if I would recommend that anyone
 actually think of using this</u>:
 </p>
-<pre>
+<pre class="code">
 define(`LOCAL_MAILER_FLAGS',`SPfhn9Z')
 define(`LOCAL_MAILER_ARGS',`procmail -a $h -d $u')
 
@@ -136,11 +139,14 @@ H?Z?Content-Length: 0000000000
 
 <p>If possible, try to avoid relying on the use of
 <tt>Content-Length</tt> since it is hard to guarantee that it is
-set properly.  When <b>CONLEN</b> is specified, MHonArc will read at
+set properly.  When
+<a href="../resources/conlen.html">CONLEN</a>
+is specified, MHonArc will read at
 least the number of bytes specified by <tt>Content-Length</tt> before
-checking for the message separator, as defined by the <b>MSGSEP</b>
+checking for the message separator, as defined by the
+<a href="../resources/msgsep.html">MSGSEP</a>
 resource.  Therefore, the value of <tt>Content-Length</tt> can be less
-than the actual message size, and message extraction will probably
+than the actual message size, and message extraction will
 work as expected.  However, if <tt>Content-Length</tt> for a message
 has a value that is larger than the actual size, MHonArc may include
 the content of the next message as part of the current message.
@@ -184,10 +190,11 @@ at the same time.  This locking allows MHonArc to safely
 be used to add messages as they are received.
 </p>
 
-<table border=0 cellpadding=4>
-<tr valign=top>
-<td><strong>NOTE</strong></td>
-<td><p>As an archive increases in size, performing updates as
+<table class="note" width="100%">
+<tr valign="baseline">
+<td><strong>NOTE:</strong></td>
+<td width="100%"><p>
+As an archive increases in size, performing updates as
 a message is received takes more processing time.  Therefore, for
 large archives, you may need to do updates through a periodic
 batch process (like via <b>cron</b>(8)) to avoid time-out problems
@@ -197,7 +204,6 @@ from MHonArc.
 </tr>
 </table>
 
-
 <!-- ??????????????????????????????????????????????????????????????? -->
 <hr noshade size=1>
 <table border=0>
@@ -206,8 +212,8 @@ from MHonArc.
 </td></tr></table>
 
 <p>Many users use <b>Procmail</b>
-<a href="http://www.ii.com/internet/robots/procmail/"
->&lt;http://www.ii.com/internet/robots/procmail/&gt;</a> to call MHonArc
+<a href="http://www.procmail.org/"
+>&lt;http://www.procmail.org/&gt;</a> to call MHonArc
 to archive messages.  Procmail provides the ability to preprocess
 mail as it arrives to do selective processing and automated tasks
 with your mail.
@@ -217,7 +223,8 @@ with your mail.
 a possible way of archiving messages as it arrives w/o using a tool
 like Procmail.
 This example assumes you are on a Unix-based system
-using <b>sendmail</b> as the mail transfer agent.
+using <a href="http://www.sendmail.org/"><b>sendmail</b></a>
+as the mail transfer agent.
 Please refer to documentation about <b>sendmail</b> if you
 are not familiar with it
 (<cite><a href="http://www.ora.com/catalog/sendmail2/noframes.html"
@@ -231,18 +238,23 @@ assume it is my account.
 Here is how to set up the <tt>.forward</tt> file
 to invoke MHonArc on incoming mail: </P>
 
-<pre>
+<pre class="code">
 \ehood, "|/home/ehood/bin/webnewmail #ehood"
 </pre>
 
-<DL>
-<DT><strong>NOTE</strong> on <tt>.forward</tt> entry:
-<DD><P> The "<code>\ehood</code>" tells <tt>sendmail</tt>
+<table class="note" width="100%">
+<tr valign="baseline">
+<td><strong>NOTE:</strong></td>
+<td width="100%"><p>
+The "<code>\ehood</code>" tells <tt>sendmail</tt>
 to still deposit the incoming message to my mail spool file. The
 "<code>#ehood</code>" Bourne shell comment is needed to insure the
 command is unique from another user. Otherwise, <tt>sendmail</tt>
 may not invoke the program for you or the other user.
-</P></DL>
+</p>
+</td>
+</tr>
+</table>
 
 <P><tt>webnewmail</tt> is a Perl program that calls
 MHonArc with the appropriate arguments. A wrapper program
@@ -251,7 +263,7 @@ the <tt>.forward</tt> file simple, but you can call MHonArc
 directly if you want. Here is the code to the
 <tt>webnewmail</tt> program: </P>
 
-<pre>
+<pre class="code">
 #!/usr/local/bin/perl
 # Edit above path to point to where perl is on your system.
 
@@ -281,10 +293,11 @@ require $MHonArc;
 bit set.  This is achieved by using "<tt><b>chmod a+x webnewmail</b></tt>".
 </p>
 
-<table border=0 cellpadding=4>
-<tr valign=top>
-<td><strong>NOTE</strong></td>
-<td><p>For better scalability and resource usage, the author
+<table class="note" width="100%">
+<tr valign="baseline">
+<td><strong>NOTE:</strong></td>
+<td width="100%"><p>
+For better scalability and resource usage, the author
 recommends calling MHonArc from a facility like <b><tt>cron</tt></b>,
 which is provided on Unix-based operating systems.
 For those unfamiliar cron, it is a daemon that allows the execution
@@ -305,7 +318,7 @@ of commands on scheduled basis.
 template for archiving messages as they arrive for a
 Majordomo list to include in sendmail's <tt>aliases</tt> file:
 </p>
-<pre>
+<pre class="code">
 <em>xxxx</em>:                "|<em>/usr/lib/majordomo/</em>wrapper resend -l <em>xxxx</em> <em>xxxx</em>-outgoing"
 <em>xxxx</em>-outgoing:       :include:<em>/var/lib/majordomo/lists/</em><em>xxxx</em>, <em>xxxx</em>-mhonarc
 <em>xxxx</em>-request:        <em>list-admin-address</em>
@@ -315,7 +328,7 @@ owner-<em>xxxx</em>:          <em>list-admin-address</em>
 <em>xxxx</em>-mhonarc:        "|<em>/usr/lib/majordomo/</em>wrapper mhonarc -add -quiet -outdir <em>/home/httpd/html/yyyyyyy</em> <em>-rcfile rcs.mrc</em> <em>-stderr /var/log/mhonarc</em>" 
 </pre>
 
-<p>Replace text that <em>is rendered like this</em> with
+<p>Replace text that <tt class="icode"><em>is rendered like this</em></tt> with
 what is appropriate for your configuration.
 </p>
 <p>In order to run MHonArc with Majordomo's wrapper, the program has to 
@@ -323,15 +336,15 @@ be in the same directory where the Majordomo programs are located.
 An easy way to insure this is to create a symbolic link to in Majordomo's
 program directory to where MHonArc is installed.  For example:
 </p>
-<pre>
-    shell&gt; <b>ln -s <em>/usr/bin/mhonarc</em> <em>/usr/lib/majordomo/mhonarc</em></b>
+<pre class="shell">
+prompt&gt; <b>ln -s <em>/usr/bin/mhonarc</em> <em>/usr/lib/majordomo/mhonarc</em></b>
 </pre>
 <p>Make sure <em><tt>/usr/bin/mhonarc</tt></em> is readable and executable
 by the majordomo user.  Something like the following can be done
 to insure this:
 </p>
-<pre>
-    shell&gt; <b>chmod <em>755</em> <em>/usr/bin/mhonarc</em></b>
+<pre class="shell">
+prompt&gt; <b>chmod <em>755</em> <em>/usr/bin/mhonarc</em></b>
 </pre>
 <p>If you redirect stderr to a logfile, the logfile must 
 be owned by the majordomo user and be writable by the majordomo user.
@@ -355,26 +368,28 @@ own filter, using the method described in the
 scan the message header an invoke MHonArc with the proper arguments.
 Or. you can use a tool like
 <b>Procmail</b>
-<a href="http://www.ii.com/internet/robots/procmail/"
->&lt;http://www.ii.com/internet/robots/procmail/&gt;</a>.
+<a href="http://www.procmail.org/"
+>&lt;http://www.procmail.org/&gt;</a>.
 </p>
 
-<table border=0 cellpadding=4>
-<tr valign=top>
-<td><strong>NOTE</strong></td>
-<td><p>You may want to check out the following:
+<table class="note" width="100%">
+<tr valign="baseline">
+<td><strong>NOTE:</strong></td>
+<td width="100%"><p>You may want to check out the following:
 <strong><a href="http://www.mhonarc.org/release/mharc/">mharc</a></strong>
 at <a href="http://www.mhonarc.org/release/mharc/"
 >&lt;http://www.mhonarc.org/release/mharc/&gt;</a>:
 Mharc is a web-based mail archiving system for multiple mailing
 lists using Procmail, MHonArc, and Namazu.
 </p>
-</td><tr></table>
+</td>
+</tr>
+</table>
 
 <p>Here are a some messages from users about using Procmail:
 </p>
 
-<blockquote>
+<blockquote class="mail">
 <UL>
 <LI><em>From</em>: Achim Bohnet &lt;<A HREF="mailto:ach@rosat.mpe-garching.mpg.de">ach@rosat.mpe-garching.mpg.de</A>&gt;</LI>
 <LI><em>Date</em>: Wed, 13 Nov 1996 13:56:08 +0100</LI>
@@ -406,8 +421,7 @@ P.S. Procmail itself comes with an example manual page. It's worth
 </pre>
 </blockquote>
 
-<blockquote>
-<hr noshade size=1>
+<blockquote class="mail">
 <UL>
 <LI><em>From</em>: "Eric D. Friedman" &lt;<A HREF="mailto:friedman@hydra.acs.uci.edu">friedman@hydra.acs.uci.edu</A>&gt;</LI>
 <LI><em>Date</em>: Wed, 13 Nov 1996 06:38:42 -0800</LI>
@@ -461,8 +475,7 @@ friedman@uci.edu
 </pre>
 </blockquote>
 
-<blockquote>
-<hr noshade size=1>
+<blockquote class="mail">
 <UL>
 <LI><em>From</em>: Paul McKinley &lt;<A HREF="mailto:mckinley@austin.asc.slb.com">mckinley@austin.asc.slb.com</A>&gt;</LI>
 <LI><em>Date</em>: Mon, 21 Apr 1997 15:29:08 -0500</LI>
@@ -554,7 +567,9 @@ Unix SysAdmin Contractor
 <h3><b><a name="exclude">Does MHonArc support the "no archive" flag in messages?</a></b></h3>
 </td></tr></table>
 
-<p>Version 2.4, or later, does via the <b>CHECKNOARCHIVE</b> resource.
+<p>Version 2.4, or later, does via the
+<a href="../resources/checknoarchive.html">CHECKNOARCHIVE</a>
+resource.
 </p>
 
 <p>If using an earlier version, or if you are already doing some preprocessing,
@@ -563,7 +578,7 @@ to do the filtering.  Here is a message sent to the
 <a href="mailto:mhonarc-users@mhonarc.org">MHonArc mailing list</a>:
 </p>
 
-<blockquote>
+<blockquote class="mail">
 <UL>
 <LI><em>Subject</em>: Re: No archive</LI>
 <LI><em>From</em>: Christopher Lindsey &lt;<A HREF="mailto:lindsey@ncsa.uiuc.edu">lindsey@ncsa.uiuc.edu</A>&gt;</LI>
@@ -602,10 +617,11 @@ Chris
 an add, it will automatically create the archive.
 </p>
 
-<table border=0 cellpadding=4>
-<tr valign=top>
-<td><strong><font color="red">WARNING</font></strong></td>
-<td><p>If using MHonArc versions 2.4, or earlier, make sure the file
+<table class="caution" width="100%">
+<tr valign="baseline">
+<td><strong style="color: red;">WARNING:</strong></td>
+<td width="100%"><p>
+If using MHonArc versions 2.4, or earlier, make sure the file
 <tt>maillist.html</tt> (or the value
 of the IDXFNAME resource) does not exist if no archive exists and
 <tt>-add</tt> has been specified.  Otherwise, unpredictable output
@@ -616,7 +632,6 @@ is not in the proper format.
 </tr>
 </table>
 
-
 <!-- ??????????????????????????????????????????????????????????????? -->
 <hr noshade size=1>
 <table border=0>
@@ -625,11 +640,15 @@ is not in the proper format.
 </td></tr></table>
 
 <p>Big gaps in the message number sequence may occur if you
-defined the <strong>MAXSIZE</strong> resource and you have
+defined the
+<a href="../resources/maxsize.html">MAXSIZE</a>
+resource and you have
 MHonArc rescanning a mail folder for adding new messages.
 The problem occurs when MHonArc
 reads in messages that will automatically get deleted due
-to MAXSIZE.  Ie.  Messages subject to automatic deletion are
+to
+<a href="../resources/maxsize.html">MAXSIZE</a>.
+Ie.  Messages subject to automatic deletion are
 the oldest ones.  If the input contains old messages that will
 get deleted at the end of processing, the old messages will
 still use up message numbers since messages to be deleted are not
@@ -642,9 +661,13 @@ again (and the jump will get larger for each additional update).
 <p>To avoid the problem, try to pass only new, never processed,
 messages to MHonArc instead of having MHonArc
 rescanning the same mail folder for new messages.  Another
-approach is to set either the <strong>EXPIREAGE</strong> or
-<strong>EXPIREDATE</strong> resources (available in v2.0 beta 2,
-or later).  These work as an alternative to MAXSIZE and will help in
+approach is to set either the
+<a href="../resources/expireage.html">EXPIREAGE</a> or
+<a href="../resources/expiredate.html">EXPIREDATE</a>
+resources (available in v2.0 beta 2,
+or later).  These work as an alternative to
+<a href="../resources/maxsize.html">MAXSIZE</a>
+and will help in
 preventing message number jumping since expiration of a message is
 checked when it is initially read (bypassing the assignment of
 a message number).  </p>
@@ -675,10 +698,11 @@ to move already-processed messages into a different area so
 MHonArc does not read them again.
 </p>
 
-<table border=0 cellpadding=4>
-<tr valign=top>
-<td><strong>NOTE</strong></td>
-<td><p>In MHonArc v2.4 and later, and if you have
+<table class="note" width="100%">
+<tr valign="baseline">
+<td><strong>NOTE:</strong></td>
+<td width="100%"><p>
+In MHonArc v2.4 and later, and if you have
 the <b>Digest::MD5</b> module installed, MHonArc will compute
 the MD5 digest of message headers without message-ids.  This
 allows MHonArc to skip the message in subsequent add operations.
@@ -701,11 +725,16 @@ via RMM, make sure to remove the message from input source.
 <h3><b><a name="remove">How do I remove messages from an archive?</a></b></h3>
 </td></tr></table>
 
-<p>Automatic removal can be done via the <strong>EXPIREAGE</strong> or
-<strong>EXPIREDATE</strong> resources (available in v2.0 beta 2,
-or later) or the <strong>MAXSIZE</strong> resource.
+<p>Automatic removal can be done via the
+<a href="../resources/expireage.html">EXPIREAGE</a> or
+<a href="../resources/expiredate.html">EXPIREDATE</a>
+resources (available in v2.0 beta 2,
+or later) or the
+<a href="../resources/maxsize.html">MAXSIZE</a>
+resource.
 </p>
-<p>Explicit message removal can be done with the <strong>RMM</strong>
+<p>Explicit message removal can be done with the
+<a href="../resources/rmm.html">RMM</a>
 resource.  Please read the RMM resource page for more information
 and examples.
 </p>
@@ -729,14 +758,13 @@ the program, goto
 <hr>
 
 <!--X-NavButtons-Start-->
-<p align=center>
-[<a href="usage.html">Prev</a>][<a href="indexpgs.html">Next</a>][<a href="faq.html">TOC</a>][<a href="http://www.mhonarc.org/">Home</a>]
+<table width="100%"><tr><td align="left"><nobr>[<a href="usage.html">Prev</a>]</nobr></td><td align="center" width="100%">[<a href="faq.html">TOC</a>][<a href="../mhonarc.html">Manual</a>][<a href="http://www.mhonarc.org/">Home</a>]</td><td align="right"><nobr>[<a href="indexpgs.html">Next</a>]</nobr></td></tr></table>
 </p>
 <!--X-NavButtons-End-->
 
 <hr>
 <address>
-$Date: 2002/06/21 22:28:16 $ <br>
+$Date: 2003/01/03 04:32:32 $ <br>
 <img align="top" src="monicon.png" alt="">
 <a href="http://www.mhonarc.org/"
 ><strong>MHonArc</strong></a><br>

@@ -1,7 +1,7 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
 <html>
 <head>
 <title>MHonArc Resources: EXPIREAGE</title>
+<link rel="stylesheet" type="text/css" href="../docstyles.css">
 </head>
 <body>
 <!--x-rc-nav-->
@@ -10,10 +10,21 @@
 <!--/x-rc-nav-->
 <hr>
 <h1>EXPIREAGE</h1>
+<!--X-TOC-Start-->
+<ul>
+<li><a href="#syntax">Syntax</a>
+<li><a href="#description">Description</a>
+<li><a href="#default">Default Setting</a>
+<li><a href="#rcvars">Resource Variables</a>
+<li><a href="#examples">Examples</a>
+<li><a href="#version">Version</a>
+<li><a href="#seealso">See Also</a>
+</ul>
+<!--X-TOC-End-->
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Syntax</h2>
+<h2><a name="syntax">Syntax</a></h2>
 
 <dl>
 
@@ -41,7 +52,7 @@
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Description</h2>
+<h2><a name="description">Description</a></h2>
 
 <p>EXPIREAGE specifies the time in seconds from the current 
 time to determine if a message has expired.  I.e.  If the difference
@@ -89,28 +100,28 @@ on a specific date, then see
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Default Setting</h2>
+<h2><a name="default">Default Setting</a></h2>
 
 <p>0
 </p>
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Resource Variables</h2>
+<h2><a name="rcvars">Resource Variables</a></h2>
 
 <p>N/A
 </p>
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Examples</h2>
+<h2><a name="examples">Examples</a></h2>
 
 <p>EXPIREAGE is useful for "message from the last ..." archives.
 For example, if you are archiving a mailing list with much traffic,
 you may want to have an archive that shows only messages from the
 last 7 days (week).  Set set EXPIREAGE as follows: </p>
 
-<pre>
+<pre class="code">
 <b>&lt;ExpireAge&gt;</b>
 604800
 <b>&lt;/ExpireAge&gt;</b>
@@ -118,14 +129,14 @@ last 7 days (week).  Set set EXPIREAGE as follows: </p>
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Version</h2>
+<h2><a name="version">Version</a></h2>
 
 <p>2.0
 </p>
 
 <!-- *************************************************************** -->
 <hr>
-<h2>See Also</h2>
+<h2><a name="seealso">See Also</a></h2>
 
 <p>
 <a href="expiredate.html">EXPIREDATE</a>
@@ -139,7 +150,7 @@ last 7 days (week).  Set set EXPIREAGE as follows: </p>
 <!--/x-rc-nav-->
 <hr>
 <address>
-$Date: 2002/07/27 05:13:10 $ <br>
+$Date: 2002/12/10 04:08:02 $ <br>
 <img align="top" src="../monicon.png" alt="">
 <a href="http://www.mhonarc.org/"
 ><strong>MHonArc</strong></a><br>

@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhutil.pl,v 2.20 2002/10/20 02:53:00 ehood Exp $
+##	$Id: mhutil.pl,v 2.27 2003/01/09 23:42:28 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -27,8 +27,10 @@
 
 package mhonarc;
 
+use MHonArc::RFC822;
+
 ## RFC 2369 header fields to check for URLs
-my %HFieldsList = (
+%HFieldsList = (
     'list-archive'  	=> 1,
     'list-help'  	=> 1,
     'list-owner'  	=> 1,
@@ -38,7 +40,7 @@ my %HFieldsList = (
 );
 
 ## Header fields that contain addresses
-my %HFieldsAddr = (
+%HFieldsAddr = (
     'apparently-from'	=> 1,
     'apparently-to'	=> 1,
     'bcc'		=> 1,
@@ -63,6 +65,17 @@ my %HFieldsAddr = (
     'x-envelope'	=> 1,
 );
 
+##---------------------------------------------------------------------------
+##    Convert message header string to HTML encoded in
+##    $readmail::TextEncode encoding.
+##
+sub htmlize_enc_head {
+    my($cnvfunc, $charset) =
+	readmail::MAILload_charset_converter($readmail::TextEncode);
+    return htmlize($_[0])
+	if ($cnvfunc eq '-decode-' || $cnvfunc eq '-ignore-');
+    return &$cnvfunc($_[0], $charset);
+}
 
 ##---------------------------------------------------------------------------
 ##    Clip text to specified length.
@@ -80,7 +93,7 @@ sub clip_text {
     my $text = "";
     my $subtext = "";
     my $html_len = length($$str);
-    my($pos, $sublen, $erlen, $real_len);
+    my($pos, $sublen, $real_len, $semi);
     my $er_len = 0;
     
     for ( $pos=0, $sublen=$len; $pos < $html_len; ) {
@@ -134,45 +147,50 @@ sub clip_text {
 ##
 sub extract_email_address {
     return ''  unless defined $_[0];
-    my $str = shift;
-
-    if ($str =~ /($AddrExp)/o) {
-	return $1;
-    }
-    if ($str =~ /<(\S+)>/) {
-	return $1;
-    }
-    if ($str =~ s/\([^\)]+\)//) {
-	$str =~ /\s*(\S+)\s*/;
-	return $1;
-    }
-    $str =~ /\s*(\S+)\s*/;
-    return $1;
+    scalar(MHonArc::RFC822::first_addr_spec(shift));
 }
 
 ##---------------------------------------------------------------------------
 ##	Get an e-mail name from $str.
 ##
 sub extract_email_name {
-    my($str) = shift;
-    my($ret);
+    my @tokens   = MHonArc::RFC822::tokenise(shift);
+    my @bare     = ( );
+    my $possible = undef;
+    my $skip	 = 0;
 
-    if ($str =~ s/<(\S+)>//) {		# Check for: name <addr>
-	$ret = $1;
-	if ($str =~ /\S/) {
-	    $ret = $str;
-	} else {			# no name
-	    $ret =~ s/@.*//;
+    my $tok;
+    foreach $tok (@tokens) {
+	next  if $skip;
+	if ($tok =~ /^"/) {   # Quoted string
+	    $tok =~ s/^"//;  $tok =~ s/"$//;
+	    return $tok;
 	}
-    } elsif ($str =~ /"([^"]+)"/) {		# Name in ""'s
-	$ret = $1;
-    } elsif ($str =~ /\(([^\)]+)\)/) {		# Name in ()'s
-	$ret = $1;
-    } else {					# Just address
-	($ret = $str) =~ s/@.*//;
+	if ($tok =~ /^\(/) {  # Comment
+	    $tok =~ s/^\(//; $tok =~ s/\)$//;
+	    return $tok;
+	}
+	if ($tok =~ /^<$/) {  # Address spec, skip
+	    $skip = 1;
+	    next;
+	}
+	if ($tok =~ /^>$/) {
+	    $skip = 0;
+	    next;
+	}
+	push(@bare, $tok);    # Bare name
     }
-    $ret =~ s/^["\s]+//g; $ret =~ s/["\s]+$//g;
-    $ret;
+
+    my $str;
+    if (@bare) {
+	$str = join(' ', @bare);
+	$str =~ s/@.*//;
+	$str =~ s/^\s+//; $str =~ s/\s+$//;
+	return $str;
+    }
+    $str = MHonArc::RFC822::first_addr_spec(@tokens);
+    $str =~ s/@.*//;
+    $str;
 }
 
 ##---------------------------------------------------------------------------
@@ -496,20 +514,20 @@ sub field_add_links {
     LBLSW: {
 	if ($HFieldsAddr{$label}) {
 	    if (!$NOMAILTO) {
-		$fld_text =~ s|([\!\%\w\.\-+=/]+@[\w\.\-]+)
-			      |&mailUrl($1, $fields->{'x-mha-message-id'},
+		$fld_text =~ s{($HAddrExp)}
+			      {&mailUrl($1, $fields->{'x-mha-message-id'},
 					    $fields->{'x-mha-subject'},
 					    $fields->{'x-mha-from'});
-			      |gex;
+			      }gexo;
 	    } else {
-		$fld_text =~ s|([\!\%\w\.\-+=/]+@[\w\.\-]+)
-			      |&htmlize(&rewrite_address($1))
-			      |gex;
+		$fld_text =~ s{($HAddrExp)}
+			      {&htmlize(&rewrite_address($1))
+			      }gexo;
 	    }
 	    last LBLSW;
 	}
-	if ($label eq 'newsgroup') {
-	    $fld_text = newsurl($fld_text)  unless $NONEWS;
+	if (!$NONEWS && ($label eq 'newsgroup' || $label eq 'newsgroups')) {
+	    $fld_text = newsurl($fld_text);
 	    last LBLSW;
 	}
 	last LBLSW;
@@ -544,6 +562,7 @@ sub mailUrl {
     my $msgid = shift || '';
     my $sub = shift || '';
     my $from = shift || '';
+    dehtmlize(\$eaddr);
 
     local $_;
     my($url) = ($MAILTOURL);
@@ -666,9 +685,9 @@ sub get_icon_url {
 	return (undef, undef, undef);
     }
     if ($icon =~ s/\[(\d+)x(\d+)\]//) {
-	return ($icon, $1, $2);
+	return ($IconURLPrefix.$icon, $1, $2);
     }
-    ($icon, undef, undef);
+    ($IconURLPrefix.$icon, undef, undef);
 }
 
 ##---------------------------------------------------------------------------##

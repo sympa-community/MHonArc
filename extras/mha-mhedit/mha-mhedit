@@ -1,0 +1,564 @@
+#!/usr/bin/perl
+##------------------------------------------------------------------------##
+##  File:
+##      $Id: mha-mhedit,v 1.2 2003/01/04 21:11:26 ehood Exp $
+##  Author:
+##      Earl Hood       earl@earlhood.com
+##  Description:
+##	Program to help replying to MIME messages in MH/nmh.
+##	POD at __END__.
+##------------------------------------------------------------------------##
+##    Copyright (C) 2002   Earl Hood, earl@earlhood.com
+##
+##    This program is free software; you can redistribute it and/or modify
+##    it under the terms of the GNU General Public License as published by
+##    the Free Software Foundation; either version 2 of the License, or
+##    (at your option) any later version.
+##
+##    This program is distributed in the hope that it will be useful,
+##    but WITHOUT ANY WARRANTY; without even the implied warranty of
+##    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+##    GNU General Public License for more details.
+##
+##    You should have received a copy of the GNU General Public License
+##    along with this program; if not, write to the Free Software
+##    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+##    02111-1307, USA
+##------------------------------------------------------------------------##
+
+package mha_mhedit;
+
+use Getopt::Long;
+use IPC::Open2;
+require 'shellwords.pl';
+
+my $QuoteChars = q/>/;
+
+##-----------------------------------------------------------------------##
+
+MAIN: {
+  my $mhpath   = `mhpath +`;  chomp $mhpath;
+  my $drafts   = `mhparam Draft-Folder`;  chomp $drafts;
+     $drafts   = join('/', $mhpath, $drafts);
+  my $mheditor = `mhparam Editor`;  chomp $mheditor;
+  my @defargs  = shellwords(`mhparam mha-mhedit`);
+  unshift(@ARGV, @defargs);
+
+  my %opt = ( );
+  GetOptions(\%opt,
+
+    'editor=s',
+    'htmlconv=s',
+    'linelen=i',
+    'mharc=s',
+    'mhonarc=s',
+    'quotechars=s',
+    'quoteprefix=s',
+    'tmpdir=s',
+
+    'help',
+    'man'
+  ) || die qq/ERROR: Use -help for usage information\n/;
+  usage(1, 0)  if ($opt{'help'});
+  usage(2, 0)  if ($opt{'man'});
+
+  my $file = shift @ARGV;
+  my $orgmesg = $ENV{'editalt'};
+  my $editor  = $opt{'editor'}   || $mheditor || $ENV{'EDITOR'} || 'vi';
+  my $mharc   = $opt{'mharc'}    || join('/', $mhpath, 'mha-repl.mrc');
+  my $tmpdir  = $opt{'tmpdir'}   || $ENV{'TMPDIR'} || $drafts;
+  my $mhonarc = $opt{'mhonarc'}  || 'mhonarc';
+  my $w3m     = $opt{'htmlconv'} || 'w3m';
+  my $maxlen  = $opt{'linelen'}  || 76;
+  my $qprefix = $opt{'quoteprefix'} || '> ';
+  my @w3margs = shellwords(`mhparam mha-mhedit-$w3m`);
+  my @edargs  = shellwords(`mhparam mha-mhedit-$editor`);
+  my @mhaargs = shellwords(`mhparam mha-mhedit-mhonarc`);
+
+  $QuoteChars = $opt{'quotechars'} || '<';
+  $QuoteChars = "\Q$QuoteChars\E";
+
+  if (!@w3margs && $w3m eq 'w3m') {
+    @w3margs = qw(-dump -cols 76 -T text/html);
+  }
+
+  if (! -r $mharc) {
+    die qq/ERROR: "$mharc" does not exist or is not readable!/;
+  }
+
+  my $header  = get_header_components($file);
+  my @mhacmd  = ($mhonarc,
+		 '-single',
+		 '-rcfile', $mharc,
+		 '-outdir', $tmpdir,
+		 @mhaargs,
+		 $orgmesg);
+
+  local(*DRAFT, *MHA, *W3M_IN, *W3M_OUT);
+  open(DRAFT, '>'.$file) || die qq/ERROR: Unable to write to "$file": $!/;
+  cmd_pipe_open(\*MHA, @mhacmd);
+  $/ = undef;
+  my $html = <MHA>;
+  close(MHA);
+
+  my $pid = open2(\*W3M_OUT, \*W3M_IN, $w3m, @w3margs);
+  print W3M_IN $html;
+  close(W3M_IN);
+  my $text = <W3M_OUT>;
+  close(W3M_OUT);
+
+  if ($maxlen > 0) {
+    $text =~ s/^(.*)$/break_line($1, $maxlen-length($qprefix))/gem;
+  }
+  $text =~ s/^/$qprefix/gm;
+  print DRAFT $header;
+  print DRAFT $text;
+  close(DRAFT);
+
+  exec($editor, @edargs, $file);
+}
+
+##-----------------------------------------------------------------------##
+
+sub get_header_components {
+  my $file = shift;
+  local(*DRAFT);
+
+  my $header = '';
+  open(DRAFT, $file) || die qq/ERROR: Unable to open "$file": $!/;
+  while (<DRAFT>) {
+    $header .= $_;
+    last  if /^--------/ || /^$/;
+  }
+  my $cache = '';
+  my $n = 0;
+  while (defined($_ = <DRAFT>) && ($n < 5)) {
+    last  if /^>/;
+    $cache .= $_;
+  }
+  close(DRAFT);
+  $header .= $cache  if ($n < 5);
+  $header;
+}
+
+sub cmd_pipe_open {
+  my $handle  = shift;
+  my @cmd     = @_;
+  my $child_pid = open($handle, '-|');
+  if ($child_pid) {   # parent
+    return $handle;
+  } else {            # child
+    #open(STDERR, '>&STDOUT');
+    exec(@cmd) || die qq/ERROR: Cannot exec "@cmd": $!\n/;
+  }
+}
+
+sub cmd_pipe_write {
+  my $handle  = shift;
+  my @cmd     = @_;
+  my $child_pid = open($handle, '|-');
+  if ($child_pid) {   # parent
+    return $handle;
+  } else {            # child
+    #open(STDERR, '>&STDOUT');
+    exec(@cmd) || die qq/ERROR: Cannot exec "@cmd": $!\n/;
+  }
+}
+
+sub break_line {
+  my($str) = shift;
+  my($width) = shift;
+  my($q, $new) = ('', '');
+  my($try, $trywidth, $len);
+
+  ## Translate tabs to spaces
+  1 while
+  $str =~ s/^([^\t]*)(\t+)/$1 . ' ' x (length($2) * 8 - length($1) % 8)/e;
+
+  ## Do nothing if str <= width
+  return $str  if length($str) <= $width;
+
+  ## See if str begins with a quote char
+  if ($str =~ s/^([ ]?(?:[$QuoteChars][ ]?)+)//o) {
+    $q = $1;
+    $width -= length($q);
+  }
+
+  ## Create new string by breaking up str
+  while ($str ne "") {
+    # If $str less than width, break out
+    if (length($str) <= $width) {
+      $new .= $q . $str;
+      last;
+    }
+
+    # handle case where no-whitespace line larger than width
+    if (($str =~ /^(\S+)/) && (($len = length($1)) >= $width)) {
+      $new .= $q . $1;
+      substr($str, 0, $len) = "";
+      next;
+    }
+
+    # Break string at whitespace
+    $try = '';
+    $trywidth = $width;
+    $try = substr($str, 0, $trywidth);
+    if ($try =~ /(\S+)$/) {
+      $trywidth -= length($1);
+      $new .= $q . substr($str, 0, $trywidth);
+    } else {
+      $new .= $q . $try;
+    }
+    substr($str, 0, $trywidth) = '';
+
+  } continue {
+      $new .= "\n"  if $str;
+  }
+  $new;
+}
+
+sub usage {
+  require Pod::Usage;
+  my $verbose   = shift || 0;
+  my $exit_code	= shift;
+
+  if ($verbose == 0) {
+    Pod::Usage::pod2usage(-verbose => $verbose);
+  } else {
+    my $pager = $ENV{'PAGER'} || 'more';
+    local(*PAGER);
+    my $fh = (-t STDOUT && open(PAGER, "|$pager")) ? \*PAGER : \*STDOUT;
+    Pod::Usage::pod2usage(-verbose => $verbose,
+                          -output  => $fh);
+    close(PAGER)  if ($fh == \*PAGER);
+  }
+  defined($exit_code) && exit($exit_code);
+}
+
+__END__
+
+=head1 NAME
+
+mha-mhedit - MH/nmh reply editor for multipart, non-text/plain messages
+
+=head1 SYNOPSIS
+
+  repl -editor mha-mhedit
+
+=head1 DESCRIPTION
+
+mha-mhedit nicely formats MIME messages for use with MH/nmh's repl(1)
+command.
+
+A big deficiency with MH/nmh's C<repl> is that it is not MIME aware,
+or more technically, repl filters are not MIME aware.  Consequently,
+if replying to a multipart, non-plain text message, and your repl
+filter includes the body of the message being replied to, all the
+MIME formatting is included, which can be messing for binary data,
+like images, and for quoted-printable text.
+
+mha-mhedit is designed to be used as the C<repl> editor:
+
+  repl -editor mha-mhedit
+
+mha-mhedit is designed to functional transparently.  mha-mhedit formats
+and quotes the reply-to message body for editing in the message draft.
+After the formatting is complete, mha-mhedit invokes your regular
+editor for final composition.
+
+mha-mhedit does its job by using MHonArc,
+E<lt>http://www.mhonarc.orgE<gt>, with a specially crafted MHonArc
+resource file, and by using a text-based HTML viewer, like w3m,
+E<lt>http://w3m.sourceforge.net/E<gt>.  Of course, a tool can be
+developed that does not depend on these types of tools, but I did
+not feel like developing one and these work well for what I wanted.
+
+mha-mhedit can be invoke by default when using C<repl> by
+having the following in your C<.mh_profile>:
+
+  repl: -editor mha-mhedit
+
+However, since using mha-mhedit adds some extra initial overhead
+before your regular editor is invoked, you may choose to define a
+shell alias instead:
+
+  (t)csh:
+      alias mrepl repl -editor mha-mhedit
+
+  bash:
+      alias mrepl="repl -editor mha-mhedit"
+
+Therefore, if replying to a MIME messages, you enter C<mrepl> at your
+shell prompt and continue to use C<repl> for plain text messages.
+
+B<Note:> It is recommended to have something like the following
+in your C<.mh_profile>:
+
+  mha-mhedit-next: <your-editor>
+
+This way, at the C<What now?> prompt, if you enter C<edit>, it
+will invoke your regular editor again instead of calling
+mha-mhedit, which will cause all your edits to be lost.
+
+=head1 OPTIONS
+
+Options can be defined in your C<.mh_profile> like any other
+MH/nmh component.  For example:
+
+  mha-mhedit: -editor vim
+
+The following options are available:
+
+=over
+
+=item -editor I<editor>
+
+Text editor to invoke at the end.  If not specified, the
+value of the Editor profile component, the EDITOR environment variable,
+or C<vi> is used.
+
+Arguments to the editor can be defined by setting the C<mha-mhedit-I<editor>>
+profile component.  For example, if your editor is set to C<vim>, the
+following can be added to your C<.mh_profile> to have vim start at the
+end of your reply:
+
+  mha-mhedit-vim: +
+
+=item -htmlconv I<command>
+
+Command that converts HTML to plain text.  The command must be able
+to take HTML from stdin and dump plain text to stdout.  If the command
+requires arguments.  If not specified, then C<w3m> is used.
+
+You can define arguments to give the specified converter by defining the
+C<mha-mhedit-I<htmlconv>> profile component in your C<.mh_profile>.  For
+example, the following represents the default arguments used if
+C<-htmlconv> is C<w3m>:
+
+  mha-mhedit-w3m: -dump -cols 76 -T text/html
+
+The following works well if C<-htmlconv> is set to C<lynx>:
+
+  mha-mhedit-lynx: -stdin -dump -force_html -nolist -width=76
+
+=item -linelen I<number>
+
+Maxium line length of formated reply text.  If the orginal message
+contains lines longer then C<-linelen>, the lines will be wrapped.
+Default value is 76.
+
+=item -mharc I<pathname>
+
+Pathname to mhonarc resource file.  If not specified, the file
+C<mha-repl.mrc> in your MH/nmh directory.
+
+B<Note:> If a resource file is not found, mha-mhedit aborts execution.
+If using a custom resource file, be careful of settings that could
+create extra files during mail-to-html conversion.
+
+=item -mhonarc I<pathname>
+
+Pathname to mhonarc program.  If not specified, C<mhonarc> is used.
+
+You can define extra arguments to give C<mhonarc> by defining the
+C<mha-mhedit-mhonarc> profile component in your C<.mh_profile>.  However,
+I'm unsure if you will ever need to.
+
+=item -quotechars I<chars>
+
+List of characters denoting the start of a quoted line in a message.
+This option affects is used during line wrapping when detecting for
+quoted lines.
+
+The default value is C<E<gt>>.
+
+=item -quoteprefix I<string>
+
+String to prepend to each line of text being responded to.  The default
+value is "C<E<gt> >" (greater-than sign followed by a space).
+
+=item -tmpdir I<pathname>
+
+Pathname to directory to use for temporary files.  If not
+specified, then the TMPDIR environment variable is used or
+the path location of Draft-Folder profile component.
+
+=item -help
+
+Display help information.
+
+=item -man
+
+Display entire manpage.
+
+=back
+
+=head1 INSTALLATION
+
+Copy the mha-mhedit program to somewhere in your search path.
+Copy mha-repl.mrc into your MH/nmh directory.
+
+=head1 NOTES
+
+=over
+
+=item *
+
+mha-mhedit is designed to work friendly with your normal replcomps
+and repl filter.  mha-mhedit reads the head of the draft created
+by repl in order to preserve it after formatting the initial
+message body.  mha-mhedit preserves the replcomps message header
+and up-to the next 5 lines afterwards that does not look like
+quoted reply text generated from the repl filter (mha-mhedit assumes
+that the a line starting with a '>' denotes the begining of
+quoted reply text).
+
+If I have lost you, here is the replcomps I have:
+
+  %(lit)%(formataddr %<{reply-to}%?{from}%?{sender}%?{return-path}%>)\
+  %<(nonnull)%(void(width))%(putaddr To: )\n%>\
+  %(lit)%(formataddr{to})%(formataddr{cc})%(formataddr(me))\
+  %<(nonnull)%(void(width))%(putaddr cc: )\n%>\
+  %<{fcc}Fcc: %{fcc}\n%>\
+  %<{subject}Subject: Re: %(putstr(trim{subject}))\n%>\
+  From: Earl Hood \<earl@earlhood.com\>
+  Reply-To: Earl Hood \<earl@earlhood.com\>
+  %<{date}In-reply-to: %<{message-id}%{message-id}%>\n%>\
+  %<{message-id}References: %<{references}%(void{references})%(trim)%(putstr) %>
+	      %(void{message-id})%(trim)%(putstr)\n%>\
+  --------
+  On %(lmonth{date}) %(mday{date}), %(year{date}) at \
+  %02(putnumf(hour{date})):%02(putnumf(min{date})), \
+  %<{from}%(friendly{from})%|you%> wrote:
+
+
+And the repl filter (repl.filter) I use for quoting the body of the
+reply-to message:
+
+  leftadjust,compwidth=14
+  body:component=> ,overflowtext=> ,noleftadjust
+
+The replcomps file includes a preamble in the message body providing the
+date and person who wrote the message I am replying to.
+
+My repl.filter causes the reply-to message body to be included in
+the composition draft quoted with "> " before each line.
+
+mha-mhedit automatically reads the initial draft header (everything
+up to the C<-------->).  After that, mha-mhedit reads up-to the
+next 5 lines for potential inclusion.  The body preamble in my
+replcomps takes up 2 lines (there is a trailing blank line that
+may not be easily noticed above).  Therefore, mha-mhedit will
+preserve it.  The third line will be the start of quoted text.
+mha-mhedit sees this, and stops reading the draft.
+
+Now, if I plan to make mha-mhedit my default repl editor, it will be
+more efficient if I remove the message body quoting since mha-mhedit
+will ignore and overwrite anyway.
+
+=item *
+
+Currently, no temporary files should be generated.  However, this
+depends on the version of mhonarc you are using, the type
+of message being replied to, and any edits you may make to the
+mhonarc resource file.
+
+It may be possible that by-product files, like attachments, could
+be created.  If so, manual deletion of the files in C<-tmpdir> will
+be required.
+
+=back
+
+=head1 FILES
+
+=over
+
+=item C<$HOME/.mh_profile>
+
+Profile definitions.
+
+=item C<E<lt>mh-dirE<gt>/mha-repl.mrc>
+
+MHonArc resource file.  The resource file can be explicitly
+defined via the C<-mharc> command-line option.
+
+=back
+
+=head1 MH/nmh PROFILE COMPONENTS
+
+=over
+
+=item C<mha-mhedit>
+
+Arguments to mha-mhedit.
+
+=item C<mha-mhedit-I<editor>>
+
+Arguments to pass to editor invoked by mha-mhedit, where
+I<editor> is the name of the editor.
+
+=item C<mha-mhedit-I<htmlconv>>
+
+Arguments to pass to html-to-text converter, where
+I<htmlconv> is the name of the html-to-text converter program.
+
+=item C<mha-mhedit-mhonarc>
+
+Extra arguments to pass to mhonarc.
+
+=item C<Editor>
+
+Text editor.
+
+=back
+
+=head1 ENVIRONMENT
+
+=over
+
+=item C<EDITOR>
+
+Default editor.
+
+=item C<TMPDIR>
+
+Location of temporary files.
+
+=back
+
+=head1 DEPENDENCIES
+
+=over
+
+=item MHonArc
+
+MHonArc, E<lt>http://www.mhonarc.org/E<gt>, is used to translate
+the raw message into HTML.  MHonArc is used since it conveniently
+combines multipart, non-plain text, messages into a singe HTML
+document.
+
+=item w3m
+
+w3m, E<lt>http://w3m.sourceforge.net/E<gt>, is used to translate HTML
+generated by mhonarc into format plain text.
+
+An alternate converter program can be used via the C<-htmlconv> option.
+It must be able to take HTML as standard input and dump formated text
+to standard out.
+
+=back
+
+=head1 VERSION
+
+C<$Id: mha-mhedit,v 1.2 2003/01/04 21:11:26 ehood Exp $>
+
+=head1 AUTHOR
+
+Earl Hood, earl@earlhood.com
+
+Copyright (C), 2002.
+This program comes with ABSOLUTELY NO WARRANTY and may be copied only
+under the terms of the GNU General Public License.
+
+=cut
+

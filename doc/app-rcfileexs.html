@@ -1,11 +1,8 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
 <HTML>
 <HEAD>
-<TITLE>MHonArc v2.5 -- Appendix: Resource File Examples</TITLE></HEAD>
-<!--
-<BODY background="ssbg75.jpg"
-      text="#000000" link="#0000ee" vlink="#551a8b" alink="ff0000">
--->
+<TITLE>MHonArc Reference -- Appendix: Resource File Examples</TITLE>
+<link rel="stylesheet" type="text/css" href="docstyles.css">
+</HEAD>
 <BODY>
 
 <!--X-NavButtons-Start-->
@@ -50,9 +47,14 @@ to format the main index.
 <dd><p>This resource file utilizes the subject grouping feature of MHonArc
 to format the main index.
 </p></dd>
-<dt><b><a href="rcfileexs/utf-8.mrc.html">Unicode</a></b></dt>
-<dd><p>This resource file has MHonArc convert message character
-data to UTF-8.
+<dt><b>Unicode UTF-8</b></dt>
+<dd><p>Two example resource files are provided for generating UTF-8-based
+archvies.  The older example, <a href="rcfileexs/utf-8.mrc.html">utf-8.mrc</a>,
+uses <a href="resources/charsetconverters.html">CHARSETCONVERTERS</a>
+as the main method of converting text data into UTF-8.  But, with
+v2.6.0 and the <a href="resources/textencode.html">TEXTENCODE</a> resource,
+an alternative, more efficient, method is available as shown
+in <a href="rcfileexs/utf-8-encode.mrc.html">utf-8-encode.mrc</a>.
 </p></dd>
 </dl>
 
@@ -67,7 +69,7 @@ data to UTF-8.
 <!-- *************************************************************** -->
 <hr>
 <address>
-$Date: 2002/07/20 00:48:48 $ <br>
+$Date: 2002/12/21 07:26:33 $ <br>
 <img align="top" src="monicon.png" alt="">
 <a href="http://www.mhonarc.org/"><strong>MHonArc</strong></a><br>
 Copyright &#169; 1999, <a href="http://www.mhonarc.org/~ehood/"

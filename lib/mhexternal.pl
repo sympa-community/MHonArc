@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhexternal.pl,v 2.12 2002/10/11 01:57:53 ehood Exp $
+##	$Id: mhexternal.pl,v 2.14 2003/02/04 23:31:19 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -105,13 +105,12 @@ package m2h_external;
 ##
 sub filter {
     my($fields, $data, $isdecode, $args) = @_;
-    my($ret, $filename, $urlfile, $disp);
+    my($ret, $filename, $urlfile);
     require 'mhmimetypes.pl';
 
     ## Init variables
     $args	   = ''  unless defined($args);
     my $name	   = '';
-    my $nameparm   = '';
     my $ctype	   = '';
     my $type	   = '';
     my $ext	   = '';
@@ -142,7 +141,8 @@ sub filter {
     $type = (mhonarc::get_mime_ext($ctype))[1];
 
     ## Get disposition
-    ($disp, $nameparm) = readmail::MAILhead_get_disposition($fields);
+    my($disp, $nameparm, $raw_name, $html_name) =
+	readmail::MAILhead_get_disposition($fields, 1);
     $name = $nameparm  if $usename;
     &debug("Content-type: $ctype",
 	   "Disposition: $disp; filename=$nameparm",
@@ -229,12 +229,20 @@ sub filter {
 	my $namelabel;
 
 	if ($is_mesg && ($$data =~ /^subject:\s(.+)$/mi)) {
-	    $namelabel = mhonarc::htmlize($1);
+	    #$namelabel = mhonarc::htmlize($1);
+	    $namelabel = readmail::MAILdecode_1522_str($1);
 	    $desc .= 'Message attachment';
 	} else {
 	    $desc .= mhonarc::htmlize($fields->{'content-description'}[0]) ||
 		     $type;
-	    $namelabel = mhonarc::htmlize($nameparm || $urlfile);
+	    if ($nameparm) {
+		#$namelabel = mhonarc::htmlize($nameparm);
+		$namelabel = $html_name;
+	    } else {
+		$namelabel = $filename;
+		$namelabel =~ s/^.*$mhonarc::DIRSEP//o;
+		mhonarc::htmlize(\$namelabel);
+	    }
 	}
 
 	# check if using icon

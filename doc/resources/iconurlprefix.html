@@ -1,0 +1,159 @@
+<html>
+<head>
+<title>MHonArc Resources: ICONURLPREFIX</title>
+<link rel="stylesheet" type="text/css" href="../docstyles.css">
+</head>
+<body>
+
+<!--x-rc-nav-->
+<table border=0><tr valign="top">
+<td align="left" width="50%">[Prev:&nbsp;<a href="icons.html">ICONS</a>]</td><td><nobr>[<a href="../resources.html#iconurlprefix">Resources</a>][<a href="../mhonarc.html">TOC</a>]</nobr></td><td align="right" width="50%">[Next:&nbsp;<a href="idxfname.html">IDXFNAME</a>]</td></tr></table>
+<!--/x-rc-nav-->
+
+<hr>
+<h1>ICONURLPREFIX</h1>
+<!--X-TOC-Start-->
+<ul>
+<li><a href="#syntax">Syntax</a>
+<li><a href="#description">Description</a>
+<li><a href="#default">Default Setting</a>
+<li><a href="#rcvars">Resource Variables</a>
+<li><a href="#examples">Examples</a>
+<li><a href="#version">Version</a>
+<li><a href="#seealso">See Also</a>
+</ul>
+<!--X-TOC-End-->
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="syntax">Syntax</a></h2>
+
+<dl>
+
+<dt><strong>Envariable</strong></dt>
+<dd><p>
+<code>M2H_ICONURLPREFIX=</code><var>url</var>
+</p>
+</dd>
+
+<dt><strong>Element</strong></dt>
+<dd><p>
+<code>&lt;ICONURLPREFIX&gt;</code><br>
+<var>url</var><br>
+<code>&lt;/ICONURLPREFIX&gt;</code><br>
+</p>
+</dd>
+
+<dt><strong>Command-line Option</strong></dt>
+<dd><p>
+<code>-iconurlprefix </code><var>url</var>
+</p>
+</dd>
+
+</dl>
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="description">Description</a></h2>
+
+<p>ICONURLPREFIX defines the URL string to prepend to icon URLs
+defined by the
+<a href="icons.html">ICONS</a>
+resource.
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="default">Default Setting</a></h2>
+
+<p>Nil.
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="rcvars">Resource Variables</a></h2>
+
+<p>N/A
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="examples">Examples</a></h2>
+
+<p>ICONURLPREFIX helps in maintain relative-based archives that
+use icons.  For example, we have a file called <tt>icons.mrc</tt>
+which has the following
+<a href="icons.html">ICONS</a>
+setting:
+</p>
+<pre class="code">
+<b>&lt;<a href="icons.html">Icons</a>&gt;</b>
+application/*;[20x22]generic.gif
+application/postscript;[20x22]ps.gif
+application/octet-stream;[20x22]binary.gif
+application/pdf;[20x22]pdf.gif
+application/zip;[20x22]compressed.gif
+audio/*;[20x22]sound1.gif
+chemical/*;[20x22]sphere2.gif
+image/*;[20x22]image2.gif
+message/external-body;[20x22]link.gif
+multipart/*;[20x22]layout.gif
+text/*;[20x22]text.gif
+video/*;[20x22]movie.gif
+*/*;[20x22]generic.gif
+<b>&lt;/Icons&gt;</b>
+</pre>
+<p>All the icon URLs are specified by their basename.  Now, for
+the various archives, we specify <tt>icons.mrc</tt>, but then
+define ICONURLPREFIX to give the relative location of the archive
+to the icon files:
+</p>
+<table border="1" width="100%"><tr><td><pre class="shell">
+prompt&gt; <b>mhonarc -rcfile icons.mrc -iconurlprefix ../icons/</b> ...
+</pre></td></tr></table>
+<p>And another archive may have:
+</p>
+<table border="1" width="100%"><tr><td><pre class="shell">
+prompt&gt; <b>mhonarc -rcfile icons.mrc -iconurlprefix ../../icons/</b> ...
+</pre></td></tr></table>
+
+<p>The use of ICONURLPREFIX avoids the need to redefine the ICONS
+resource for each archive and helps support archive relocatability.
+For example, if the archives were to be copied to a new server under
+a different URL root, we avoid regeneration of the archives since
+the URLs used for icons is relative and not absolute.
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="version">Version</a></h2>
+
+<p>2.6.0
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="seealso">See Also</a></h2>
+
+<p>
+<a href="icons.html">ICONS</a>
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<!--x-rc-nav-->
+<table border=0><tr valign="top">
+<td align="left" width="50%">[Prev:&nbsp;<a href="icons.html">ICONS</a>]</td><td><nobr>[<a href="../resources.html#iconurlprefix">Resources</a>][<a href="../mhonarc.html">TOC</a>]</nobr></td><td align="right" width="50%">[Next:&nbsp;<a href="idxfname.html">IDXFNAME</a>]</td></tr></table>
+<!--/x-rc-nav-->
+<hr>
+<address>
+$Date: 2003/01/10 03:27:11 $<br>
+<img align="top" src="../monicon.png" alt="">
+<a href="http://www.mhonarc.org/"><strong>MHonArc</strong></a><br>
+Copyright &#169; 2002, <a href="http://www.earlhood.com/"
+>Earl Hood</a>, <a href="mailto:mhonarc@mhonarc.org"
+>mhonarc@mhonarc.org</a><br>
+</address>
+
+</body>
+</html>

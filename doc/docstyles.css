@@ -1,0 +1,87 @@
+/* $Id: docstyles.css,v 1.3 2002/12/18 05:55:21 ehood Exp $
+ */
+
+body {
+  font-family: verdana, sans-serif;
+  background: #DDDDDD;
+  color: #000000;
+}
+
+a:link { color: #0000EE; }
+a:visited { color: #551A8B; }
+a[href]:hover { color: #009900; }
+a:active { color: #FF0000; }
+
+h1, h2 {
+  margin-top: 0.0em;
+}
+
+hr {
+  background: #0000CC;
+  padding: 0em;
+  margin: 0em;
+}
+
+pre.code {
+  background: #EEEEEE;
+  border-color: black;
+  border-style: solid;
+  border-width: thin;
+  padding: 0.25em;
+}
+tt.icode {
+  background: #EEEEEE;
+  padding-left: 0.25em;
+  padding-right: 0.25em;
+}
+
+pre.shell {
+  background: #337733;
+  color: white;
+  padding: 0.25em;
+}
+tt.ishell {
+  background: #337733;
+  color: white;
+  padding-left: 0.25em;
+  padding-right: 0.25em;
+}
+a.shell:link { color: #FFFF88; }
+a.shell:visited { color: #88FFFF; }
+a.shell[href]:hover { color: #00EEEE; }
+a.shell:active { color: #FF0000; }
+
+table.note {
+  padding-left: 0.25em;
+  background: #EEEEDD;
+  border-color: black;
+  border-style: solid;
+  border-width: thin;
+}
+table.caution {
+  margin-top: 0.25em;
+  margin-bottom: 0.25em;
+  padding-left: 0.25em;
+  background: #FFFF99;
+  border-color: black;
+  border-style: solid;
+  border-width: thin;
+}
+table.tip {
+  padding-left: 0.25em;
+  background: #CCDDEE;
+  border-color: black;
+  border-style: solid;
+  border-width: thin;
+}
+
+blockquote.mail {
+  background: #EEEEEE;
+  font-size: smaller;
+  padding-left: 0.25em;
+  padding-right: 0.25em;
+  margin-right: 0em;
+  border-color: black;
+  border-style: solid;
+  border-width: thin;
+}

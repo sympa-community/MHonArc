@@ -1,0 +1,322 @@
+<html>
+<head>
+<title>MHonArc Resources: TENDBUTTON</title>
+<link rel="stylesheet" type="text/css" href="../docstyles.css">
+</head>
+<body>
+
+<!--x-rc-nav-->
+<table border=0><tr valign="top">
+<td align="left" width="50%">[Prev:&nbsp;<a href="tcontend.html">TCONTEND</a>]</td><td><nobr>[<a href="../resources.html#tendbutton">Resources</a>][<a href="../mhonarc.html">TOC</a>]</nobr></td><td align="right" width="50%">[Next:&nbsp;<a href="tendbuttonia.html">TENDBUTTONIA</a>]</td></tr></table>
+<!--/x-rc-nav-->
+
+<hr>
+<h1>TENDBUTTON</h1>
+<!--X-TOC-Start-->
+<ul>
+<li><a href="#syntax">Syntax</a>
+<li><a href="#description">Description</a>
+<li><a href="#default">Default Setting</a>
+<li><a href="#rcvars">Resource Variables</a>
+<li><a href="#examples">Examples</a>
+<li><a href="#version">Version</a>
+<li><a href="#seealso">See Also</a>
+</ul>
+<!--X-TOC-End-->
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="syntax">Syntax</a></h2>
+
+<dl>
+
+<dt><strong>Envariable</strong></dt>
+<dd><p>N/A
+</p>
+</dd>
+
+<dt><strong>Element</strong></dt>
+<dd><p>
+<code>&lt;TENDBUTTON&gt;</code><br>
+<var>markup</var><br>
+<code>&lt;/TENDBUTTON&gt;</code><br>
+</p>
+</dd>
+
+<dt><strong>Command-line Option</strong></dt>
+<dd><p>N/A
+</p>
+</dd>
+
+</dl>
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="description">Description</a></h2>
+
+<p>TENDBUTTON defines the replacement markup for the resource
+variable <a href="../rcvars.html#BUTTON"><tt>$BUTTON(TEND)$</tt></a>:
+button markup for the last message in the current discussion thread. See
+<a href="tendbuttonia.html">TENDBUTTONIA</a>
+for the markup used when the current message is the last
+message in the thread.
+</p>
+
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="default">Default Setting</a></h2>
+
+<pre class="code">
+<b>&lt;TEndButton chop&gt;</b>
+[&lt;a href="$MSG(TEND)$"&gt;Last in Thread&lt;/a&gt;]
+<b>&lt;/TEndButton&gt;</b>
+</pre>
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="rcvars">Resource Variables</a></h2>
+
+<table border=1>
+<tr bgcolor="#C0C0C0">
+<th>Variable</th><th>Value</th>
+</tr>
+<tr valign=top>
+<td align=center><a name="BUTTON" href="../rcvars.html#BUTTON"><strong><code>$BUTTON$</code></strong></a></td>
+<td>Button markup linking to a message.</td>
+</tr>
+<tr valign=top>
+<td align=center><a name="DATE" href="../rcvars.html#DATE"><strong><code>$DATE$</code></strong></a></td>
+<td>The date of the message.</td>
+</tr>
+<tr valign=top>
+<td align=center><a name="DDMMYYYY" href="../rcvars.html#DDMMYYYY"><strong><code>$DDMMYYYY$</code></strong></a></td>
+<td>Message date in dd/mm/yyyy format.</td>
+</tr>
+<tr valign=top>
+<td align=center><a name="DOCURL" href="../rcvars.html#DOCURL"><strong><code>$DOCURL$</code></strong></a></td>
+<td>URL to documentation.</td>
+</tr>
+<tr valign=top>
+<td align=center><a name="ENV" href="../rcvars.html#ENV"><strong><code>$ENV$</code></strong></a></td>
+<td>Value of an environment variable.</td>
+</tr>
+<tr valign=top>
+<td align=center><a name="FROM" href="../rcvars.html#FROM"><strong><code>$FROM$</code></strong></a></td>
+<td>The complete text in the <tt>From:</tt> field of the message.</td>
+</tr>
+<tr valign=top>
+<td align=center><a name="FROMADDR" href="../rcvars.html#FROMADDR"><strong><code>$FROMADDR$</code></strong></a></td>
+<td>The e-mail address in the <tt>From:</tt> field of the message.</td>
+</tr>
+<tr valign=top>
+<td align=center><a name="FROMADDRDOMAIN" href="../rcvars.html#FROMADDRDOMAIN"><strong><code>$FROMADDRDOMAIN$</code></strong></a></td>
+<td>The e-mail address domain of the <tt>From:</tt> field of the message.</td>
+</tr>
+<tr valign=top>
+<td align=center><a name="FROMADDRNAME" href="../rcvars.html#FROMADDRNAME"><strong><code>$FROMADDRNAME$</code></strong></a></td>
+<td>The e-mail address "username" (or local-part) of the <tt>From:</tt> field of the message.</td>
+</tr>
+<tr valign=top>
+<td align=center><a name="FROMNAME" href="../rcvars.html#FROMNAME"><strong><code>$FROMNAME$</code></strong></a></td>
+<td>The human name of the person in the <tt>From:</tt> field of the message. If no human name is found, the username specified in the e-mail address is used.</td>
+</tr>
+<tr valign=top>
+<td align=center><a name="GMTDATE" href="../rcvars.html#GMTDATE"><strong><code>$GMTDATE$</code></strong></a></td>
+<td>Current GMT date.</td>
+</tr>
+<tr valign=top>
+<td align=center><a name="ICON" href="../rcvars.html#ICON"><strong><code>$ICON$</code></strong></a></td>
+<td>The content-type sensitive icon.</td>
+</tr>
+<tr valign=top>
+<td align=center><a name="ICONURL" href="../rcvars.html#ICONURL"><strong><code>$ICONURL$</code></strong></a></td>
+<td>URL to the content-type sensitive icon.</td>
+</tr>
+<tr valign=top>
+<td align=center><a name="ICONURLPREFIX" href="../rcvars.html#ICONURLPREFIX"><strong><code>$ICONURLPREFIX$</code></strong></a></td>
+<td>Value of ICONURLPREFIX resource.</td>
+</tr>
+<tr valign=top>
+<td align=center><a name="IDXFNAME" href="../rcvars.html#IDXFNAME"><strong><code>$IDXFNAME$</code></strong></a></td>
+<td>Filename of main index page.</td>
+</tr>
+<tr valign=top>
+<td align=center><a name="IDXLABEL" href="../rcvars.html#IDXLABEL"><strong><code>$IDXLABEL$</code></strong></a></td>
+<td>Label for main index page.</td>
+</tr>
+<tr valign=top>
+<td align=center><a name="IDXPREFIX" href="../rcvars.html#IDXPREFIX"><strong><code>$IDXPREFIX$</code></strong></a></td>
+<td>Prefix of filenames of main index pages.</td>
+</tr>
+<tr valign=top>
+<td align=center><a name="IDXSIZE" href="../rcvars.html#IDXSIZE"><strong><code>$IDXSIZE$</code></strong></a></td>
+<td>Max number of messages that may be listed in index page.</td>
+</tr>
+<tr valign=top>
+<td align=center><a name="IDXTITLE" href="../rcvars.html#IDXTITLE"><strong><code>$IDXTITLE$</code></strong></a></td>
+<td>The title of the main index page.</td>
+</tr>
+<tr valign=top>
+<td align=center><a name="LINK" href="../rcvars.html#LINK"><strong><code>$LINK$</code></strong></a></td>
+<td>Link markup linking to a message.</td>
+</tr>
+<tr valign=top>
+<td align=center><a name="LOCALDATE" href="../rcvars.html#LOCALDATE"><strong><code>$LOCALDATE$</code></strong></a></td>
+<td>Current local date.</td>
+</tr>
+<tr valign=top>
+<td align=center><a name="MMDDYYYY" href="../rcvars.html#MMDDYYYY"><strong><code>$MMDDYYYY$</code></strong></a></td>
+<td>Message date in mm/dd/yyyy format.</td>
+</tr>
+<tr valign=top>
+<td align=center><a name="MSG" href="../rcvars.html#MSG"><strong><code>$MSG$</code></strong></a></td>
+<td>Filename of message.</td>
+</tr>
+<tr valign=top>
+<td align=center><a name="MSGGMTDATE" href="../rcvars.html#MSGGMTDATE"><strong><code>$MSGGMTDATE$</code></strong></a></td>
+<td>GMT date of current message.</td>
+</tr>
+<tr valign=top>
+<td align=center><a name="MSGHFIELD" href="../rcvars.html#MSGHFIELD"><strong><code>$MSGHFIELD$</code></strong></a></td>
+<td>Message header field</td>
+</tr>
+<tr valign=top>
+<td align=center><a name="MSGID" href="../rcvars.html#MSGID"><strong><code>$MSGID$</code></strong></a></td>
+<td>The message-id of the message.</td>
+</tr>
+<tr valign=top>
+<td align=center><a name="MSGLOCALDATE" href="../rcvars.html#MSGLOCALDATE"><strong><code>$MSGLOCALDATE$</code></strong></a></td>
+<td>Local date of current message.</td>
+</tr>
+<tr valign=top>
+<td align=center><a name="MSGNUM" href="../rcvars.html#MSGNUM"><strong><code>$MSGNUM$</code></strong></a></td>
+<td>The message number assigned to the message by MHonArc (includes leading zeros).</td>
+</tr>
+<tr valign=top>
+<td align=center><a name="MSGPREFIX" href="../rcvars.html#MSGPREFIX"><strong><code>$MSGPREFIX$</code></strong></a></td>
+<td>Filename prefix for message files.</td>
+</tr>
+<tr valign=top>
+<td align=center><a name="MSGTORDNUM" href="../rcvars.html#MSGTORDNUM"><strong><code>$MSGTORDNUM$</code></strong></a></td>
+<td>The ordinal message number of the current discussion thread.</td>
+</tr>
+<tr valign=top>
+<td align=center><a name="NOTE" href="../rcvars.html#NOTE"><strong><code>$NOTE$</code></strong></a></td>
+<td>Message annotation.</td>
+</tr>
+<tr valign=top>
+<td align=center><a name="NUMFOLUP" href="../rcvars.html#NUMFOLUP"><strong><code>$NUMFOLUP$</code></strong></a></td>
+<td>Number of explicit follow-ups to the message.</td>
+</tr>
+<tr valign=top>
+<td align=center><a name="NUMOFMSG" href="../rcvars.html#NUMOFMSG"><strong><code>$NUMOFMSG$</code></strong></a></td>
+<td>Number of messages in the archive.</td>
+</tr>
+<tr valign=top>
+<td align=center><a name="NUMOFPAGES" href="../rcvars.html#NUMOFPAGES"><strong><code>$NUMOFPAGES$</code></strong></a></td>
+<td>Number of index pages.</td>
+</tr>
+<tr valign=top>
+<td align=center><a name="ORDNUM" href="../rcvars.html#ORDNUM"><strong><code>$ORDNUM$</code></strong></a></td>
+<td>The current listing number of the message.</td>
+</tr>
+<tr valign=top>
+<td align=center><a name="OUTDIR" href="../rcvars.html#OUTDIR"><strong><code>$OUTDIR$</code></strong></a></td>
+<td>Pathname of archive.</td>
+</tr>
+<tr valign=top>
+<td align=center><a name="PROG" href="../rcvars.html#PROG"><strong><code>$PROG$</code></strong></a></td>
+<td>Program name</td>
+</tr>
+<tr valign=top>
+<td align=center><a name="SUBJECT" href="../rcvars.html#SUBJECT"><strong><code>$SUBJECT$</code></strong></a></td>
+<td>The subject text of the message, and if no arguments, wrapped in an anchor element that hyperlinks to the message.</td>
+</tr>
+<tr valign=top>
+<td align=center><a name="SUBJECTNA" href="../rcvars.html#SUBJECTNA"><strong><code>$SUBJECTNA$</code></strong></a></td>
+<td>The subject text of the message without the anchor element.</td>
+</tr>
+<tr valign=top>
+<td align=center><a name="TIDXFNAME" href="../rcvars.html#TIDXFNAME"><strong><code>$TIDXFNAME$</code></strong></a></td>
+<td>Filename of thread index page.</td>
+</tr>
+<tr valign=top>
+<td align=center><a name="TIDXLABEL" href="../rcvars.html#TIDXLABEL"><strong><code>$TIDXLABEL$</code></strong></a></td>
+<td>Label for thread index page.</td>
+</tr>
+<tr valign=top>
+<td align=center><a name="TIDXPREFIX" href="../rcvars.html#TIDXPREFIX"><strong><code>$TIDXPREFIX$</code></strong></a></td>
+<td>Prefix of filenames of thread index pages.</td>
+</tr>
+<tr valign=top>
+<td align=center><a name="TIDXTITLE" href="../rcvars.html#TIDXTITLE"><strong><code>$TIDXTITLE$</code></strong></a></td>
+<td>Title of thread index.</td>
+</tr>
+<tr valign=top>
+<td align=center><a name="TLEVEL" href="../rcvars.html#TLEVEL"><strong><code>$TLEVEL$</code></strong></a></td>
+<td>Numeric level of message in thread, starting with 0.</td>
+</tr>
+<tr valign=top>
+<td align=center><a name="TSLICE" href="../rcvars.html#TSLICE"><strong><code>$TSLICE$</code></strong></a></td>
+<td>A <em>slice</em> of the thread listing relative to the current message.  Size of slice determined by the TSLICE resource.</td>
+</tr>
+<tr valign=top>
+<td align=center><a name="VERSION" href="../rcvars.html#VERSION"><strong><code>$VERSION$</code></strong></a></td>
+<td>Program version.</td>
+</tr>
+<tr valign=top>
+<td align=center><a name="YYYYMMDD" href="../rcvars.html#YYYYMMDD"><strong><code>$YYYYMMDD$</code></strong></a></td>
+<td>Message date in yyyy/mm/dd format.</td>
+</tr>
+</table>
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="examples">Examples</a></h2>
+
+<p>None.
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="version">Version</a></h2>
+
+<p>2.6.0
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="seealso">See Also</a></h2>
+
+<p>
+<a href="tendbuttonia.html">TENDBUTTONIA</a>,
+<a href="tendlink.html">TENDLINK</a>,
+<a href="tnextbutton.html">TNEXTBUTTON</a>,
+<a href="tnextinlink.html">TNEXTINLINK</a>,
+<a href="tnexttopbutton.html">TNEXTTOPBUTTON</a>,
+<a href="tprevbutton.html">TPREVBUTTON</a>,
+<a href="tprevinbutton.html">TPREVINBUTTON</a>,
+<a href="tprevtopbutton.html">TPREVTOPBUTTON</a>,
+<a href="ttopbutton.html">TTOPBUTTON</a>,
+<a href="ttoplinks.html">TTOPLINKS</a>
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<!--x-rc-nav-->
+<table border=0><tr valign="top">
+<td align="left" width="50%">[Prev:&nbsp;<a href="tcontend.html">TCONTEND</a>]</td><td><nobr>[<a href="../resources.html#tendbutton">Resources</a>][<a href="../mhonarc.html">TOC</a>]</nobr></td><td align="right" width="50%">[Next:&nbsp;<a href="tendbuttonia.html">TENDBUTTONIA</a>]</td></tr></table>
+<!--/x-rc-nav-->
+<hr>
+<address>
+$Date: 2003/02/04 23:31:19 $<br>
+<img align="top" src="../monicon.png" alt="">
+<a href="http://www.mhonarc.org/"><strong>MHonArc</strong></a><br>
+Copyright &#169; 2003, <a href="http://www.earlhood.com/"
+>Earl Hood</a>, <a href="mailto:mhonarc@mhonarc.org"
+>mhonarc@mhonarc.org</a><br>
+</address>
+
+</body>
+</html>

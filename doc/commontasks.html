@@ -1,13 +1,9 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
-<HTML>
-<HEAD>
-<TITLE>MHonArc v2.5 -- Common Tasks</TITLE>
-</HEAD>
-<!--
-<BODY background="ssbg75.jpg"
-      text="#000000" link="#0000ee" vlink="#551a8b" alink="ff0000">
--->
-<BODY>
+<html>
+<head>
+<title>MHonArc Reference -- Common Tasks</title>
+<link rel="stylesheet" type="text/css" href="docstyles.css">
+</head>
+<body>
 
 <!--X-NavButtons-Start-->
 <table width="100%">
@@ -20,10 +16,10 @@
 <H1><a name="commontasks">Common Tasks</a></H1>
 
 <p>The following section describes how to perform some common tasks with
-MHonArc archives beyond those mentioned in
-<a href="quickstart.html">Quick Start</a>.  To get a complete picture
-of what you can do with MHonArc, see the section
-on <a href="resources.html">Resources</a>.
+MHonArc, beyond those mentioned in
+<a href="quickstart.html"><cite>Quick Start</cite></a>.
+To get a complete picture of the capabilities of MHonArc, see the
+<a href="resources.html"><cite>Resources</cite></a> section.
 </p>
 
 <!--X-TOC-Start-->
@@ -43,14 +39,11 @@ on <a href="resources.html">Resources</a>.
 <hr>
 <h2><a name="chgtitle">Setting the Index Title</a></h2>
 
-<p>If you read the <a href="quickstart.html">Quick Start</a>
-section and ran MHonArc on some of your mail, 
-you have may have noticed that the titles of the main (date)
+<p>If you tested MHonArc out on some of your mail,
+you may have noticed that the titles of the main (date)
 and thread index pages are not very descriptive: "Mail Index"
 and "Mail Thread Index".  It would be much nicer if the the
-titles reflect what type of mail is in the archive.  For example,
-if the archive contains messages from a mailing list, the name
-of the list should probably be in the title.
+titles reflect what type of mail is in the archive.
 </p>
 <p>MHonArc allows you to change the titles via the
 <a href="resources/title.html"><tt>-title</tt></a> and
@@ -60,22 +53,22 @@ main index title, and the
 <a href="resources/ttitle.html"><tt>-ttitle</tt></a> option sets
 the thread index title.  Example:
 </p>
-<pre>
-    shell&gt; <b>mhonarc <a href="resources/title.html">-title</a> "The Widget List Archive" \
-                   <a href="resources/ttitle.html">-ttitle</a> "The Widget List Thread Archive"</b> ...
-</pre>
+<table border=1 width="100%"><tr><td><pre class="shell">
+prompt&gt; <b>mhonarc <a class="shell" href="resources/title.html">-title</a> "The Widget List Archive" \
+	       <a class="shell" href="resources/ttitle.html">-ttitle</a> "The Widget List Thread Archive"</b> ...
+</pre></td></tr></table>
 
 <!-- *************************************************************** -->
 <hr>
 <h2><a name="chg-idx-order">Changing Index Listing Order</a></h2>
 
-<p>By default, messages get listed in chronological order on
-the main/non-thread and thread index pages.
+<p>By default, messages are listed in chronological order on
+the main and thread index pages.
 </p>
-<table border=0 cellpadding=4>
+<table class="note" width="100%">
 <tr valign=top>
-<td><strong>NOTE</strong></td>
-<td><p>The chronological order in the thread index is based on
+<td><strong>NOTE:</strong></td>
+<td width="100%"><p>The chronological order in the thread index is based on
 the root messages of each thread.
 </p>
 </td>
@@ -109,9 +102,9 @@ listing order on index pages:
 <p>For example, to get a reverse chronological listing,
 do something like the following:
 </p>
-<pre>
-    shell&gt; <b>mhonarc <a href="resources/sort.html">-sort</a> <a href="resources/reverse.html">-reverse</a></b> ...
-</pre>
+<table border=1 width="100%"><tr><td><pre class="shell">
+prompt&gt; <b>mhonarc <a class="shell" href="resources/sort.html">-sort</a> <a class="shell" href="resources/reverse.html">-reverse</a></b> ...
+</pre></td></tr></table>
 
 <!-- *************************************************************** -->
 <hr>
@@ -133,16 +126,16 @@ number specified.
 contain messages that are less than a month, you can do something
 like the following:
 </p>
-<pre>
-    shell&gt; <b>mhonarc <a href="resources/expireage.html">-expireage</a> 2635200 <a href="resources/add.html">-add</a> <a href="resources/outdir.html">-outdir</a> /path/to/archive mailbox</b>
-</pre>
+<table border=1 width="100%"><tr><td><pre class="shell">
+prompt&gt; <b>mhonarc <a class="shell" href="resources/expireage.html">-expireage</a> 2635200 <a class="shell" href="resources/add.html">-add</a> <a class="shell" href="resources/outdir.html">-outdir</a> /path/to/archive mailbox</b>
+</pre></td></tr></table>
 <p>Here, we used the <a href="resources/expireage.html"><tt>-expireage</tt></a>
 option
 to tell MHonArc to remove messages older than 2635200 seconds (30.5 days) when
 adding new messages.
 I know, having to use seconds to specify the expiration age seems cumbersome.
 A table is provided in the <a href="resources/expireage.html">EXPIREAGE</a>
-reference page listing common time periods to their equivalence in seconds.
+reference page listing common time periods and their equivalence in seconds.
 </p>
 
 <p>A less used option that will cause automatic deletion is the
@@ -151,9 +144,9 @@ This allows
 you to specify an exact date/time where any messages older than the
 given date/time, will be automatically removed.  For example:
 </p>
-<pre>
-    shell&gt; <b>mhonarc <a href="resources/expiredate.html">-expiredate</a> "1 Jan 1999 00:00:00" <a href="resources/add.html">-add</a> <a href="resources/outdir.html">-outdir</a> /path/to/archive mailbox</b>
-</pre>
+<table border=1 width="100%"><tr><td><pre class="shell">
+prompt&gt; <b>mhonarc <a class="shell" href="resources/expiredate.html">-expiredate</a> "1 Jan 1999 00:00:00" <a class="shell" href="resources/add.html">-add</a> <a class="shell" href="resources/outdir.html">-outdir</a> /path/to/archive mailbox</b>
+</pre></td></tr></table>
 <p>In this example, before MHonArc adds any new messages, it will delete
 any messages with a date earlier than January 1, 1999.  See the
 <a href="resources/expiredate.html">EXPIREDATE</a> reference page for
@@ -165,9 +158,9 @@ When the maximum number is reached, the oldest messages are automatically
 removed.  The following is an example of setting the maximum size
 of an archive:
 </p>
-<pre>
-    shell&gt; <b>mhonarc <a href="resources/maxsize.html">-maxsize</a> 500 <a href="resources/add.html">-add</a> <a href="resources/outdir.html">-outdir</a> /path/to/archive mailbox</b>
-</pre>
+<table border=1 width="100%"><tr><td><pre class="shell">
+prompt&gt; <b>mhonarc <a class="shell" href="resources/maxsize.html">-maxsize</a> 500 <a class="shell" href="resources/add.html">-add</a> <a class="shell" href="resources/outdir.html">-outdir</a> /path/to/archive mailbox</b>
+</pre></td></tr></table>
 
 <h3><a name="manualrmm">Manual Removal</a></h3>
 
@@ -180,9 +173,9 @@ the archive's intended audience.
 <p>To remove specific messages, use the
 <a href="resources/rmm.html"><tt>-rmm</tt></a> option.  For example:
 </p>
-<pre>
-    shell&gt; <b>mhonarc <a href="resources/rmm.html">-rmm</a> 24 28 39 48</b>
-</pre>
+<table border=1 width="100%"><tr><td><pre class="shell">
+prompt&gt; <b>mhonarc <a class="shell" href="resources/rmm.html">-rmm</a> 24 28 39 48</b>
+</pre></td></tr></table>
 <p>will delete messages 24, 28, 39, and 48.
 </p>
 <p>You are now asking, "How do I know what a message's number is?".  One
@@ -195,30 +188,30 @@ denote messages 24, 28, 39, and 48.
 <p>Checking filenames can be awkward, so one alternative is to use
 the <a href="resources/scan.html"><tt>-scan</tt></a> option.  For example:
 </p>
-<pre>
-    shell&gt; <b>mhonarc <a href="resources/scan.html">-scan</a> <a href="resources/outdir.html">-outdir</a> /home/ehood/html/archive</b>
-    Reading database ...
-    117 messages in /home/ehood/html/archive:
-     
-    Msg #  YYYY/MM/DD  From             Subject                                    
-    -----  ----------  ---------------  -------------------------------------------
-       62  1996/07/30  Kwin Kramer      Reading STDIN not from keyboard -- or, Syst
-       23  1996/07/31  Christopher M.   Re: Setting @INC to include my own modules 
-	9  1996/08/01  Dan Kirkwood     object as hash key loses methods           
-	2  1996/08/01  James F'jord Ly  Re: We're HIRING hot hackers!              
-	1  1996/08/01  Christopher Cha  Curious Multi-Dimensional array behavior   
-       14  1996/08/01  I R A Aggie      Re: Patch for arithmetic bug in 5.003 ?    
-	3  1996/08/01  Bernard Bellon   Re: How do you grab a URL in perl?         
-       38  1996/08/01  Mohammed Dewan   Help needed badly win3.1 and perl.         
-       59  1996/08/01  Mohammed Dewan   Using file in perl.                        
-	4  1996/08/01  Dan Gildor       Re: Threaded Discusion groups embeded in We
-	5  1996/08/01  kendall shaw     addicted to emacs lisp                     
-	6  1996/08/01  Ye He            Q: Sybase extension to Perl                
-       83  1996/08/01  I R A Aggie      Re: Browser/Page matching CGI script       
-	7  1996/08/01  Chris Schleiche  Re: Simple program looks good, but gives er
-       13  1996/08/01  Steve McCullagh  Perl 5.002 and $| errors                   
-    ...
-</pre>
+<table border=1 width="100%"><tr><td><pre class="shell">
+prompt&gt; <b>mhonarc <a class="shell" href="resources/scan.html">-scan</a> <a class="shell" href="resources/outdir.html">-outdir</a> /home/ehood/html/archive</b>
+Reading database ...
+117 messages in /home/ehood/html/archive:
+ 
+Msg #  YYYY/MM/DD  From             Subject                                    
+-----  ----------  ---------------  -------------------------------------------
+   62  1996/07/30  Kwin Kramer      Reading STDIN not from keyboard -- or, Syst
+   23  1996/07/31  Christopher M.   Re: Setting @INC to include my own modules 
+    9  1996/08/01  Dan Kirkwood     object as hash key loses methods           
+    2  1996/08/01  James F'jord Ly  Re: We're HIRING hot hackers!              
+    1  1996/08/01  Christopher Cha  Curious Multi-Dimensional array behavior   
+   14  1996/08/01  I R A Aggie      Re: Patch for arithmetic bug in 5.003 ?    
+    3  1996/08/01  Bernard Bellon   Re: How do you grab a URL in perl?         
+   38  1996/08/01  Mohammed Dewan   Help needed badly win3.1 and perl.         
+   59  1996/08/01  Mohammed Dewan   Using file in perl.                        
+    4  1996/08/01  Dan Gildor       Re: Threaded Discusion groups embeded in We
+    5  1996/08/01  kendall shaw     addicted to emacs lisp                     
+    6  1996/08/01  Ye He            Q: Sybase extension to Perl                
+   83  1996/08/01  I R A Aggie      Re: Browser/Page matching CGI script       
+    7  1996/08/01  Chris Schleiche  Re: Simple program looks good, but gives er
+   13  1996/08/01  Steve McCullagh  Perl 5.002 and $| errors                   
+...
+</pre></td></tr></table>
 
 <p>With <a href="resources/scan.html">-scan</a>, you can get a listing
 of an archive to your terminal.  The listing can be used to determine
@@ -248,7 +241,7 @@ section.
 add a footer at the bottom of each page in the archive to
 contain the following markup:
 </p>
-<pre>
+<pre class="code">
 &lt;hr&gt;
 Please visit &lt;a href="http://www.mhonarc.org"&gt;www.mhonarc.org&lt;/a&gt;.
 </pre>
@@ -264,7 +257,7 @@ completely arbitrary.  There is nothing special about the name
 we add the following to tell MHonArc to include our footer at the
 bottom of each page:
 </p>
-<blockquote><pre>
+<pre class="code">
 &lt;!-- Define a custom resource variable representing our link. --&gt;
 <b><a href="resources/definevar.html">&lt;DefineVar&gt;</a></b>
 MY-FOOTER-LINK
@@ -296,14 +289,14 @@ $MY-FOOTER-LINK$
 &lt;/body&gt;
 &lt;/html&gt;
 <b>&lt;/MsgPgEnd&gt;</b>
-</pre></blockquote>
+</pre>
 
 <p>Now, when we invoke <tt>mhonarc</tt>, we tell it about our resource
 file so our footer will show up:
 </p>
-<pre>
-    shell&gt; <b>mhonarc <a href="resources/rcfile.html">-rcfile</a> myresource.mrc</b> ...
-</pre>
+<table border=1 width="100%"><tr><td><pre class="shell">
+prompt&gt; <b>mhonarc <a class="shell" href="resources/rcfile.html">-rcfile</a> myresource.mrc</b> ...
+</pre></td></tr></table>
 
 <!-- *************************************************************** -->
 <HR>
@@ -316,7 +309,7 @@ file so our footer will show up:
 <!-- *************************************************************** -->
 <hr>
 <address>
-$Date: 2002/06/07 17:38:04 $ <br>
+$Date: 2002/11/24 04:18:35 $ <br>
 <img align="top" src="monicon.png" alt="">
 <a href="http://www.mhonarc.org/"><strong>MHonArc</strong></a><br>
 Copyright &#169; 1997-1999, <a href="http://www.mhonarc.org/~ehood/"

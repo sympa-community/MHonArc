@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhmsgextbody.pl,v 1.3 2001/09/05 15:48:15 ehood Exp $
+##	$Id: mhmsgextbody.pl,v 1.4 2003/01/18 02:58:12 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -52,39 +52,51 @@ sub filter {
     # parse argument string
     my $b_lfile = $args =~ /\blocal-file\b/i;
 
-    my $ret = "";
+    my $ret = '';
     my $parms = readmail::MAILparse_parameter_str($ctype, 1);
     my $access_type = lc $parms->{'access-type'}{'value'};
        $access_type =~ s/\s//g;
-    my $cdesc = $fields->{'content-description'}[0] || "";
+    my $cdesc = mhonarc::htmlize($fields->{'content-description'}[0]) || '';
 
     $$data =~ s/\A\s+//;
     my $dfields = readmail::MAILread_header($data);
-    my $dctype  = $dfields->{'content-type'}[0] || "";
-    my $dcte 	= $dfields->{'content-transfer-encoding'}[0] || "";
-    my $dmd5 	= $dfields->{'content-md5'}[0] || "";
-    my $size 	= $parms->{'size'}{'value'} || "";
-    my $perms 	= $parms->{'permission'}{'value'} || "";
-    my $expires	= $parms->{'expiration'}{'value'} || "";
-    my $name	= $parms->{'name'}{'value'} || "";
+    my $dctype  = mhonarc::htmlize($dfields->{'content-type'}[0]) || '';
+    my $dmd5 	= mhonarc::htmlize($dfields->{'content-md5'}[0]) || '';
+    my $size 	= mhonarc::htmlize($parms->{'size'}{'value'}) || '';
+    my $expires	= mhonarc::htmlize($parms->{'expiration'}{'value'}) || '';
+    my $name	= $parms->{'name'}{'value'} || '';
 
     ATYPE: {
 	## FTP, TFTP, ANON-FTP
 	if ( $access_type eq 'ftp' ||
 	     $access_type eq 'anon-ftp' ||
-	     $access_type eq 'tftp' ) {
-	    my $site 	 = $parms->{'site'}{'value'};
-	    my $dir 	 = $parms->{'directory'}{'value'} || "";
-	       $dir	 = '/'.$dir  unless $dir =~ m|^/| || $dir eq "";
-	    my $mode 	 = $parms->{'mode'}{'value'} || "";
-	    my $proto	 = $access_type eq 'tftp' ? 'tftp' : 'ftp';
-	    my $url	 = "$proto://" .
-			   mhonarc::urlize($site) .
+	     $access_type eq 'tftp' ||
+	     $access_type eq 'http' ||
+	     $access_type eq 'x-http' ) {
+
+	    my $site 	 = $parms->{'site'}{'value'} ||
+			   $parms->{'host'}{'value'} || '';
+
+	    my $port 	 = $parms->{'port'}{'value'} || '';
+	       $port	 = ':'.$port  if $port ne '';
+
+	    my $dir 	 = $parms->{'directory'}{'value'} ||
+			   $parms->{'path'}{'value'} || '';
+	       $dir	 = '/'.$dir  unless $dir =~ m|^/| || $dir eq '';
+
+	    my $mode 	 = $parms->{'mode'}{'value'} || '';
+
+	    my $proto	 = ($access_type eq 'x-http' || $access_type eq 'http')
+			   ? 'http'
+			   : ($access_type eq 'tftp')
+			     ? 'tftp'
+			     : 'ftp';
+	    my $url	 = $proto . '://' .
+			   mhonarc::urlize($site.$port) .
 			   $dir . '/' .
-			   mhonarc::urlize($name);
+			   mhonarc::urlize_path($name);
 	    $ret	 = '<dl><dt>';
-	    $ret	.= qq|<a href="$url">$cdesc</a><br>\n|
-			    if $cdesc;
+	    $ret	.= qq|<em>$cdesc</em><br>\n| if $cdesc;
 	    $ret	.= qq|<a href="$url">&lt;$url&gt;</a></dt><dd>\n|;
 	    $ret	.= qq|Content-type: <tt>$dctype</tt><br>\n|
 			    if $dctype;
@@ -105,10 +117,10 @@ sub filter {
 	## Local file
 	if ($access_type eq 'local-file') {
 	    last ATYPE  unless $b_lfile;
-	    my $site 	 = $parms->{'site'}{'value'} || "";
-	    my $url	 = mhonarc::urlize("file://$name");
+	    my $site 	 = $parms->{'site'}{'value'} || '';
+	    my $url	 = 'file://' . mhonarc::urlize_path($name);
 	    $ret	 = '<dl><dt>';
-	    $ret	.= qq|<a href="$url">$cdesc</a><br>\n|  if $cdesc;
+	    $ret	.= qq|<em>$cdesc</em><br>\n|  if $cdesc;
 	    $ret	.= qq|<a href="$url">&lt;$url&gt;</a></dt><dd>\n|;
 	    $ret	.= qq|Content-type: <tt>$dctype</tt><br>\n|
 			    if $dctype;
@@ -132,9 +144,10 @@ sub filter {
 	## URL
 	if ($access_type eq 'url') {
 	    my $url 	 = $parms->{'url'}{'value'};
-	       $url =~ s/\s+//g;
+	       $url =~ s/[\s<>]+//g;
+	       $url =~ s/javascript/_javascript_/ig;
 	    $ret	 = '<dl><dt>';
-	    $ret	.= qq|<a href="$url">$cdesc</a><br>\n|  if $cdesc;
+	    $ret	.= qq|<em>$cdesc</em><br>\n|  if $cdesc;
 	    $ret	.= qq|<a href="$url">&lt;$url&gt;</a></dt><dd>\n|;
 	    $ret	.= qq|Content-type: <tt>$dctype</tt><br>\n|
 			    if $dctype;

@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: readmail.pl,v 2.21 2002/10/15 22:06:53 ehood Exp $
+##	$Id: readmail.pl,v 2.32 2003/02/04 23:31:20 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -17,13 +17,14 @@
 ##	$hash_ref 	= MAILread_file_header($handle);
 ##	$hash_ref 	= MAILread_header($mesg_str_ref);
 ##
-##	($disp, $file)  = MAILhead_get_disposition($fields_hash_ref);
+##	($disp, $file, $raw, $html_name)  =
+##			  MAILhead_get_disposition($fields_hash_ref, $do_html);
 ##	$boolean 	= MAILis_excluded($content_type);
 ##	$parm_hash_ref  = MAILparse_parameter_str($header_field);
 ##	$parm_hash_ref  = MAILparse_parameter_str($header_field, 1);
 ##
 ##---------------------------------------------------------------------------##
-##    Copyright (C) 1996-2001	Earl Hood, mhonarc@mhonarc.org
+##    Copyright (C) 1996-2002	Earl Hood, mhonarc@mhonarc.org
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by
@@ -63,6 +64,7 @@ my %_MIMEAltPrefs = ();
 ##  Constants for use as second argument to MAILdecode_1522_str().
 sub JUST_DECODE() { 1; }
 sub DECODE_ALL()  { 2; }
+sub TEXT_ENCODE() { 3; }
 
 ##---------------------------------------------------------------------------##
 
@@ -106,35 +108,6 @@ $DecodeHeader	= 0;
 %MIMEDecodersSrc		= ()
     unless defined(%MIMEDecodersSrc);
 
-##	Default settings:
-$MIMEDecoders{"7bit"}		  = "as-is"
-    unless defined($MIMEDecoders{"7bit"});
-$MIMEDecoders{"8bit"}		  = "as-is"
-    unless defined($MIMEDecoders{"8bit"});
-$MIMEDecoders{"binary"}		  = "as-is"
-    unless defined($MIMEDecoders{"binary"});
-$MIMEDecoders{"base64"}		  = "base64::b64decode"
-    unless defined($MIMEDecoders{"base64"});
-$MIMEDecoders{"quoted-printable"} = "quoted_printable::qprdecode"
-    unless defined($MIMEDecoders{"quoted-printable"});
-$MIMEDecoders{"x-uuencode"}	  = "base64::uudecode"
-    unless defined($MIMEDecoders{"x-uuencode"});
-$MIMEDecoders{"x-uue"}     	  = "base64::uudecode"
-    unless defined($MIMEDecoders{"x-uue"});
-$MIMEDecoders{"uuencode"}  	  = "base64::uudecode"
-    unless defined($MIMEDecoders{"uuencode"});
-
-$MIMEDecodersSrc{"base64"}	  	= "base64.pl"
-    unless defined($MIMEDecodersSrc{"base64"});
-$MIMEDecodersSrc{"quoted-printable"}	= "qprint.pl"
-    unless defined($MIMEDecodersSrc{"quoted-printable"});
-$MIMEDecodersSrc{"x-uuencode"}	 	= "base64.pl"
-    unless defined($MIMEDecodersSrc{"x-uuencode"});
-$MIMEDecodersSrc{"x-uue"}     	 	= "base64.pl"
-    unless defined($MIMEDecodersSrc{"x-uue"});
-$MIMEDecodersSrc{"uuencode"}  	 	= "base64.pl"
-    unless defined($MIMEDecodersSrc{"uuencode"});
-
 ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ##  %MIMECharSetConverters is the associative array for storing functions
 ##  for converting data in a particular charset to a destination format
@@ -170,10 +143,6 @@ $MIMEDecodersSrc{"uuencode"}  	 	= "base64.pl"
     unless defined(%MIMECharSetConverters);
 %MIMECharSetConvertersSrc		= ()
     unless defined(%MIMECharSetConvertersSrc);
-
-##	Default settings:
-$MIMECharSetConverters{"default"}	= "-ignore-"
-    unless defined($MIMECharSetConverters{"default"});
 
 ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ##  %MIMEFilters is the associative array for storing functions that
@@ -239,6 +208,28 @@ $MIMECharSetConverters{"default"}	= "-ignore-"
 ##
 %MIMECharsetAliases = ()
     unless defined(%MIMECharsetAliases);
+
+##---------------------------------------------------------------------------
+##	Text entity-related variables
+##
+
+##  Default character set if none specified.
+$TextDefCharset = 'us-ascii'
+    unless defined($TextDefCharset);
+
+##  Destination character encoding for text entities.
+$TextEncode = undef
+    unless defined($TextEncode);
+##  Text encoding function.
+$TextEncoderFunc = undef
+    unless defined($TextEncodingFunc);
+##  Text encoding function source file.
+$TextEncoderSrc = undef
+    unless defined($TextEncodingSrc);
+
+##  Prefilter function
+$TextPreFilter  = undef
+    unless defined($TextPreFilter);
 
 ##---------------------------------------------------------------------------
 ##	Variables holding functions for generating processed output
@@ -310,17 +301,22 @@ $FormatHeaderFunc		= undef
 ##
 ##	Usage:
 ##
-##	    $ret_data = &MAILdecode_1522_str($str, $decoding_flag);
+##	    $ret_data = &MAILdecode_1522_str($str, $dec_flag);
 ##
-##	If $decoding_flag is JUST_DECODE, $str will be decoded for only
+##	If $dec_flag is JUST_DECODE, $str will be decoded for only
 ##	the charsets specified as "-decode-".  If it is equal to
 ##	DECODE_ALL, all encoded data is decoded without any conversion.
+##	If $dec_flag is TEXT_ENCODE, then all data will be converted
+##	and encoded according to $readmail::TextEncode and
+##	$readmail::TextEncoderFunc.
 ##
 sub MAILdecode_1522_str {
-    my($str) = shift;
-    my($decoding_flag) = shift || 0;
+    my $str      = shift;
+    my $dec_flag = shift || 0;
+    my $ret      = ('');
     my($charset,
        $encoding,
+       $pos,
        $dec,
        $charcnv,
        $real_charset,
@@ -328,28 +324,42 @@ sub MAILdecode_1522_str {
        $plain_real_charset,
        $strtxt,
        $str_before);
-    my($ret) = ('');
+
+    # Get text encoder
+    my $encfunc  = undef;
+    if ($dec_flag == TEXT_ENCODE) {
+	$encfunc = load_textencoder();
+	if (!defined($encfunc)) {
+	    $encfunc = undef  unless defined($encfunc);
+	    $dec_flag = 0;
+	}
+    }
 
     # Get plain converter
     ($plaincnv, $plain_real_charset) = MAILload_charset_converter('plain');
     $plain_real_charset = 'us-ascii'  if $plain_real_charset eq 'plain';
 
     # Decode string
-    while ($str =~ /=\?([^?]+)\?(.)\?([^?]*)\?=/) {
-
+    while ($str =~ /(=\?([^?]+)\?(.)\?([^?]*)\?=)/g) {
 	# Grab components
-	($charset, $encoding) = ($1, $2);
-	$strtxt = $3; $str_before = $`; $str = $';
+	$pos = pos($str);
+	($charset, $encoding, $strtxt) = (lc($2), lc($3), $4);
+	$str_before = substr($str, 0, $pos-length($1));
+	substr($str, 0, $pos) = '';
+	pos($str) = 0;
 
 	# Check encoding method and grab proper decoder
-	if ($encoding =~ /b/i) {
+	if ($encoding eq 'b') {
 	    $dec = &load_decoder('base64');
 	} else {
 	    $dec = &load_decoder('quoted-printable');
 	}
 
 	# Convert before (unencoded) text
-	if ($decoding_flag) {				# ignore if just decode
+	if (defined($encfunc)) {			# encoding
+	    &$encfunc(\$str_before, $plain_real_charset, $TextEncode);
+	    $ret .= $str_before;
+	} elsif ($dec_flag) {				# ignore if just decode
 	    $ret .= $str_before;
 	} elsif (defined(&$plaincnv)) {			# decode and convert
 	    $ret .= &$plaincnv($str_before, $plain_real_charset);
@@ -357,35 +367,49 @@ sub MAILdecode_1522_str {
 	    $ret .= $str_before;
 	}
 
-	# Convert encoded text
-	if ($decoding_flag == DECODE_ALL) {
-	    $charcnv = '-decode-';
-	} else {
-	    ($charcnv, $real_charset) = MAILload_charset_converter($charset);
-	}
-
-	# Decode only
-	if ($charcnv eq '-decode-') {
+	# Encoding text
+	if (defined($encfunc)) {
+	    $real_charset = $MIMECharsetAliases{$charset}
+			    ? $MIMECharsetAliases{$charset} : $charset;
 	    $strtxt =~ s/_/ /g;
-	    $ret .= &$dec($strtxt);
+	    $strtxt =  &$dec($strtxt);
+	    &$encfunc(\$strtxt, $charset, $TextEncode);
+	    $ret   .= $strtxt;
 
-	# Ignore if just decoding
-	} elsif ($decoding_flag) {
-	    $ret .= "=?$charset?$encoding?$strtxt?=";
-
-	# Decode and convert
-	} elsif (defined(&$charcnv)) {
-	    $strtxt =~ s/_/ /g;
-	    $ret .= &$charcnv(&$dec($strtxt), $real_charset);
-
-	# Fallback is to ignore
+	# Regular conversion
 	} else {
-	    $ret .= "=?$charset?$encoding?$strtxt?=";
+	    if ($dec_flag == DECODE_ALL) {
+		$charcnv = '-decode-';
+	    } else {
+		($charcnv, $real_charset) =
+		    MAILload_charset_converter($charset);
+	    }
+	    # Decode only
+	    if ($charcnv eq '-decode-') {
+		$strtxt =~ s/_/ /g;
+		$ret .= &$dec($strtxt);
+
+	    # Ignore if just decoding
+	    } elsif ($dec_flag) {
+		$ret .= "=?$charset?$encoding?$strtxt?=";
+
+	    # Decode and convert
+	    } elsif (defined(&$charcnv)) {
+		$strtxt =~ s/_/ /g;
+		$ret .= &$charcnv(&$dec($strtxt), $real_charset);
+
+	    # Fallback is to ignore
+	    } else {
+		$ret .= "=?$charset?$encoding?$strtxt?=";
+	    }
 	}
     }
 
     # Convert left-over unencoded text
-    if ($decoding_flag) {			# ignore if just decode
+    if (defined($encfunc)) {			# encoding
+	&$encfunc(\$str, $plain_real_charset, $TextEncode);
+	$ret .= $str;
+    } elsif ($dec_flag) {			# ignore if just decode
 	$ret .= $str;
     } elsif (defined(&$plaincnv)) {		# decode and convert
 	$ret .= &$plaincnv($str, $plain_real_charset);
@@ -460,7 +484,7 @@ sub MAILread_body {
     }
 
     ## Check if type is excluded
-    if ($MIMEExcs{$ctype} || $MIMEExcs{$type}) {
+    if (MAILis_excluded($ctype)) {
 	return (&$ExcludedPartFunc($ctype));
     }
 
@@ -498,22 +522,35 @@ sub MAILread_body {
 	$encoding = undef;
 	$decodefunc = undef;
     }
+    my $decoded = 0;
+    if (defined($decodefunc) && defined(&$decodefunc)) {
+	$$body = &$decodefunc($$body);
+	$decoded = 1;
+    } elsif ($decodefunc =~ /as-is/i) {
+	$decoded = 1;
+    }
+
+    ## Convert text encoding
+    if ($type eq 'text') {
+	my $charset = extract_charset($content, $subtype, $body);
+	$fields->{'x-mha-charset'} = $charset;
+	my $textfunc = load_textencoder();
+	if (defined($textfunc)) {
+	    $fields->{'x-mha-charset'} = $TextEncode
+		if defined(&$textfunc($body, $charset, $TextEncode));
+	}
+	if (defined($TextPreFilter) && defined(&$TextPreFilter)) {
+	    &$TextPreFilter($fields, $body);
+	}
+    } else {
+	# define x-mha-charset in case text filter associated with
+	# a non-text type
+	$fields->{'x-mha-charset'} = $TextDefCharset;
+    }
 
     ## A filter is defined for given content-type
     if ($filter && defined(&$filter)) {
-	## decode data
-	if (defined($decodefunc)) {
-	    if (defined(&$decodefunc)) {
-		$decoded = &$decodefunc($$body);
-		@array = &$filter($fields, \$decoded, 1, $args);
-	    } else {
-		@array = &$filter($fields, $body,
-				  $decodefunc =~ /as-is/i, $args);
-	    }
-	} else {
-	    @array = &$filter($fields, $body, 0, $args);
-	}
-
+	@array = &$filter($fields, $body, $decoded, $args);
 	## Setup return variables
 	$ret = shift @array;				# Return string
 	push(@files, @array);				# Derived files
@@ -570,16 +607,17 @@ sub MAILread_body {
 		    $$body =~ s/\A\r?\n//;
 		    $start_pos = 0;
 		}
-		if (!$have_end) {
-		    warn qq/Warning: No end boundary delimiter found in /,
-			 qq/message body\n/;
-		    push(@parts, $$body);
-		    $parts[$#parts] =~ s/^\r//;
-		    $$body = "";
-		}
 		if ($found) {
-		    # discard front-matter
-		    shift(@parts);
+		    if (!$have_end) {
+			warn qq/Warning: No end boundary delimiter found in /,
+			     qq/message body\n/;
+			push(@parts, $$body);
+			$parts[$#parts] =~ s/^\r//;
+			$$body = "";
+		    } else {
+			# discard front-matter
+			shift(@parts);
+		    }
 		} else {
 		    # no boundary separators in message!
 		    warn qq/Warning: No boundary delimiters found in /,
@@ -752,12 +790,14 @@ sub MAILread_body {
 ##	($fields_hash_ref, $header_txt) = MAILread_header($mesg_data);
 ##
 sub MAILread_header {
-    my($mesg) = shift;
+    my $mesg   = shift;
 
     my $fields = { };
     my $label = '';
     my $header = '';
     my($value, $tmp, $pos);
+
+    my $encfunc = load_textencoder();
 
     ## Read a line at a time.
     for ($pos=0; $pos >= 0; ) {
@@ -776,7 +816,11 @@ sub MAILread_header {
 	}
 
 	## Decode text if requested
-	$tmp = &MAILdecode_1522_str($tmp,JUST_DECODE)  if $DecodeHeader;
+	if (defined($encfunc)) {
+	    $tmp = &MAILdecode_1522_str($tmp,TEXT_ENCODE);
+	} elsif ($DecodeHeader) {
+	    $tmp = &MAILdecode_1522_str($tmp,JUST_DECODE);
+	}
 
 	## Check for continuation of a field
 	if ($tmp =~ s/^\s//) {
@@ -805,7 +849,11 @@ sub MAILread_header {
 ##	($fields_hash, $header_text) = MAILread_file_header($filehandle);
 ##	
 sub MAILread_file_header {
-    my($handle) = @_;
+    my $handle = shift;
+    my $encode = shift;
+
+    my $encfunc = load_textencoder();
+
     my $label  = '';
     my $header = '';
     my $fields = { };
@@ -820,7 +868,11 @@ sub MAILread_file_header {
 	$tmp =~ s/[\r\n]//g;
 
 	## Decode text if requested
-	$tmp = &MAILdecode_1522_str($tmp,JUST_DECODE)  if $DecodeHeader;
+	if (defined($encfunc)) {
+	    $tmp = &MAILdecode_1522_str($tmp,TEXT_ENCODE);
+	} elsif ($DecodeHeader) {
+	    $tmp = &MAILdecode_1522_str($tmp,JUST_DECODE);
+	}
 
 	## Check for continuation of a field
 	if ($tmp =~ s/^\s//) {
@@ -850,6 +902,9 @@ sub MAILis_excluded {
     if ($MIMEExcs{$ctype}) {
 	return 1;
     }
+    if ($ctype =~ s/\/x-/\//) {
+	return 1  if $MIMEExcs{$ctype};
+    }
     if ($ctype =~ m|([^/]+)/|) {
 	return $MIMEExcs{$1};
     }
@@ -862,31 +917,40 @@ sub MAILis_excluded {
 ##	MAILread_header and MAILread_file_header routines.
 ##
 sub MAILhead_get_disposition {
-    my($hfields) = shift;
-    my($disp, $filename) = ('', '');
+    my $hfields = shift;
+    my $do_html = shift;
+
+    my($disp, $filename, $raw) = ('', '', '');
+    my $html_name = undef;
     local($_);
 
     if (defined($hfields->{'content-disposition'}) &&
 	    ($_ = $hfields->{'content-disposition'}->[0])) {
 	($disp)	= /^\s*([^\s;]+)/;
 	if (/filename="([^"]+)"/i) {
-	    $filename = $1;
+	    $raw = $1;
 	} elsif (/filename=(\S+)/i) {
-	    ($filename = $1) =~ s/;\s*$//g;
+	    ($raw = $1) =~ s/;\s*$//g;
 	}
     }
-    if (!$filename && defined($_ = $hfields->{'content-type'}[0])) {
+    if (!$raw && defined($_ = $hfields->{'content-type'}[0])) {
 	if (/name="([^"]+)"/i) {
-	    $filename = $1;
+	    $raw = $1;
 	} elsif (/name=(\S+)/i) {
-	    ($filename = $1) =~ s/;\s*$//g;
+	    ($raw = $1) =~ s/;\s*$//g;
 	}
     }
-    $filename = MAILdecode_1522_str($filename, DECODE_ALL);
+    $filename = MAILdecode_1522_str($raw, DECODE_ALL);
     $filename =~ s%.*[/\\:]%%;	# Remove any path component
     $filename =~ s/^\s+//;	# Remove leading whitespace
     $filename =~ s/\s+$//;	# Remove trailing whitespace
-    ($disp, $filename);
+    $filename =~ tr/\0-\40\t\n\r?:*"'<>|\177-\377/_/;
+				# Remove questionable/invalid characters
+
+    # Only provide HTML display version if requested
+    $html_name = MAILdecode_1522_str($raw)  if $do_html;
+
+    ($disp, $filename, $raw, $html_name);
 }
 
 ##---------------------------------------------------------------------------##
@@ -923,10 +987,10 @@ sub MAILparse_parameter_str {
     my $str     = shift;        # Input string
     my $hasmain = shift;        # Flag if there is a main value to extract
 
-    require 'rfc822.pl';
+    require MHonArc::RFC822;
 
     my $parm	= { };
-    my(@toks)   = (rfc822::uncomment($str));
+    my @toks    = MHonArc::RFC822::uncomment($str);
     my($tok, $name, $value, $charset, $lang, $part);
 
     $parm->{'x-main'} = shift @toks  if $hasmain;
@@ -1085,7 +1149,7 @@ qq|<blockquote><small>---&nbsp;<i>Begin&nbsp;Message</i>&nbsp;---</small>\n|;
 ##	(ie message/rfc822 or message/news).
 ##
 sub endEmbeddedMesg {
-qq|<small>---&nbsp;<i>End Message</i>&nbsp;---</small></blockquote>\n|;
+qq|<br><small>---&nbsp;<i>End Message</i>&nbsp;---</small></blockquote>\n|;
 }
 
 ##---------------------------------------------------------------------------##
@@ -1118,6 +1182,28 @@ sub get_filter_args {
 	last  if defined($args) && ($args ne '');
     }
     $args;
+}
+sub load_textencoder {
+    return undef  unless $TextEncode;
+    TRY: {
+	if (!defined($TextEncoderFunc)) {
+	    last TRY;
+	}
+	if (defined(&$TextEncoderFunc)) {
+	    return $TextEncoderFunc;
+	}
+	if (!defined($TextEncoderSrc)) {
+	    last TRY;
+	}
+	require $TextEncoderSrc;
+	if (defined(&$TextEncoderFunc)) {
+	    return $TextEncoderFunc;
+	}
+    }
+    warn qq/Warning: Unable to load text encode for "$TextEncode"\n/;
+    $TextEncode = undef;
+    $TextEncoderFunc = undef;
+    $TextEncoderSrc = undef;
 }
 
 ##---------------------------------------------------------------------------##
@@ -1171,6 +1257,38 @@ sub apply_base_url {
         $ret = $b . $u;
     }
     $ret;
+}
+##---------------------------------------------------------------------------##
+
+sub extract_charset {
+    my $content = shift;  # Content-type string of entity
+    my $subtype = shift;  # Text sub-type
+    my $body    = shift;  # Reference to entity text
+    my $charset = $TextDefCharset;
+
+    if ($content =~ /\bcharset\s*=\s*([^\s;]+)/i) {
+	$charset =  lc $1;
+	$charset =~ s/['";\s]//g;
+    }
+
+    # If HTML, check <meta http-equiv=content-type> tag since it
+    # can be different than what is specified in the entity header.
+    if (($subtype eq 'html' || $subtype eq 'x-html') &&
+	($body =~ m/(<meta\s+http-equiv\s*=\s*['"]?
+		     content-type\b[^>]*>)/xi)) {
+	my $meta = $1;
+	if ($meta =~ m/\bcharset\s*=\s*['"]?([\w\.\-]+)/i) {
+	    $charset = lc $1;
+	}
+    }
+    $charset = $MIMECharsetAliases{$charset}
+	if $MIMECharsetAliases{$charset};
+
+    # If us-ascii, but 8-bit chars in body, we change to iso-8859-1
+    if ($charset eq 'us-ascii') {
+	$charset = 'iso-8859-1'  if $$body =~ /[\x80-\xFF]/;
+    }
+    $charset;
 }
 
 ##---------------------------------------------------------------------------##

@@ -1,12 +1,8 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
 <html>
 <head>
-<title>MHonArc v2.5 -- Resources</title>
+<title>MHonArc Reference -- Resources</title>
+<link rel="stylesheet" type="text/css" href="docstyles.css">
 </head>
-<!--
-<BODY background="ssbg75.jpg"
-      text="#000000" link="#0000ee" vlink="#551a8b" alink="ff0000">
--->
 <BODY>
 
 <!--X-NavButtons-Start-->
@@ -150,7 +146,7 @@ command-line option, see
 </p>
 
 <!--X-Resource-Index-Start-->
-<table border=0>
+<table class="tip" border=0>
 <tr>
 <td align="right"><b>Resource</b></td><td><b>Description</b></td>
 </tr>
@@ -163,6 +159,7 @@ command-line option, see
 <tr valign="top"><td align="right"><b><a name="authorend" href="resources/authorend.html">AUTHOREND</a></b></td><td>&nbsp;Markup at the end of a author group.</td></tr>
 <tr valign="top"><td align="right"><b><a name="authsort" href="resources/authsort.html">AUTHSORT</a></b></td><td>&nbsp;Sort main index by author.</td></tr>
 <tr valign="top"><td align="right"><b><a name="botlinks" href="resources/botlinks.html">BOTLINKS</a></b></td><td>&nbsp;Links markup at the bottom of message pages.</td></tr>
+<tr valign="top"><td align="right"><b><a name="charsetaliases" href="resources/charsetaliases.html">CHARSETALIASES</a></b></td><td>&nbsp;Charater set aliases.</td></tr>
 <tr valign="top"><td align="right"><b><a name="charsetconverters" href="resources/charsetconverters.html">CHARSETCONVERTERS</a></b></td><td>&nbsp;Charater set filter functions.</td></tr>
 <tr valign="top"><td align="right"><b><a name="checknoarchive" href="resources/checknoarchive.html">CHECKNOARCHIVE</a></b></td><td>&nbsp;Honor "no archive" flag in messages.</td></tr>
 <tr valign="top"><td align="right"><b><a name="conlen" href="resources/conlen.html">CONLEN</a></b></td><td>&nbsp;Use Content-Length value.</td></tr>
@@ -170,7 +167,9 @@ command-line option, see
 <tr valign="top"><td align="right"><b><a name="daybegin" href="resources/daybegin.html">DAYBEGIN</a></b></td><td>&nbsp;Markup at the start of a day group.</td></tr>
 <tr valign="top"><td align="right"><b><a name="dayend" href="resources/dayend.html">DAYEND</a></b></td><td>&nbsp;Markup at the end of a day group.</td></tr>
 <tr valign="top"><td align="right"><b><a name="dbfile" href="resources/dbfile.html">DBFILE</a></b></td><td>&nbsp;Name of archive database file.</td></tr>
+<tr valign="top"><td align="right"><b><a name="dbfileperms" href="resources/dbfileperms.html">DBFILEPERMS</a></b></td><td>&nbsp;File permissions for DBFILE.</td></tr>
 <tr valign="top"><td align="right"><b><a name="decodeheads" href="resources/decodeheads.html">DECODEHEADS</a></b></td><td>&nbsp;Store "decode-only" characters sets in raw form.</td></tr>
+<tr valign="top"><td align="right"><b><a name="defcharset" href="resources/defcharset.html">DEFCHARSET</a></b></td><td>&nbsp;Default character set for text data.</td></tr>
 <tr valign="top"><td align="right"><b><a name="definederived" href="resources/definederived.html">DEFINEDERIVED</a></b></td><td>&nbsp;Define extra file(s) to generate for each message page.</td></tr>
 <tr valign="top"><td align="right"><b><a name="definevar" href="resources/definevar.html">DEFINEVAR</a></b></td><td>&nbsp;Define a custom resource variable.</td></tr>
 <tr valign="top"><td align="right"><b><a name="defrcfile" href="resources/defrcfile.html">DEFRCFILE</a></b></td><td>&nbsp;Pathname of default resource file.</td></tr>
@@ -184,7 +183,9 @@ command-line option, see
 <tr valign="top"><td align="right"><b><a name="fieldorder" href="resources/fieldorder.html">FIELDORDER</a></b></td><td>&nbsp;Order to display message header fields.</td></tr>
 <tr valign="top"><td align="right"><b><a name="fieldsbeg" href="resources/fieldsbeg.html">FIELDSBEG</a></b></td><td>&nbsp;Beginning markup of message header.</td></tr>
 <tr valign="top"><td align="right"><b><a name="fieldsend" href="resources/fieldsend.html">FIELDSEND</a></b></td><td>&nbsp;Ending markup of message header.</td></tr>
+<tr valign="top"><td align="right"><b><a name="fieldstore" href="resources/fieldstore.html">FIELDSTORE</a></b></td><td>&nbsp;Message header fields to store in database.</td></tr>
 <tr valign="top"><td align="right"><b><a name="fieldstyles" href="resources/fieldstyles.html">FIELDSTYLES</a></b></td><td>&nbsp;Define HTML elements that wrap field text of message headers.</td></tr>
+<tr valign="top"><td align="right"><b><a name="fileperms" href="resources/fileperms.html">FILEPERMS</a></b></td><td>&nbsp;File permissions for archive files.</td></tr>
 <tr valign="top"><td align="right"><b><a name="firstpglink" href="resources/firstpglink.html">FIRSTPGLINK</a></b></td><td>&nbsp;Link markup for first page of main index.</td></tr>
 <tr valign="top"><td align="right"><b><a name="fldbeg" href="resources/fldbeg.html">FLDBEG</a></b></td><td>&nbsp;Markup before field text.</td></tr>
 <tr valign="top"><td align="right"><b><a name="fldend" href="resources/fldend.html">FLDEND</a></b></td><td>&nbsp;Markup after field text.</td></tr>
@@ -202,6 +203,7 @@ command-line option, see
 <tr valign="top"><td align="right"><b><a name="headbodysep" href="resources/headbodysep.html">HEADBODYSEP</a></b></td><td>&nbsp;Markup separating the message head from the body.</td></tr>
 <tr valign="top"><td align="right"><b><a name="htmlext" href="resources/htmlext.html">HTMLEXT</a></b></td><td>&nbsp;Extension to use for HTML files.</td></tr>
 <tr valign="top"><td align="right"><b><a name="icons" href="resources/icons.html">ICONS</a></b></td><td>&nbsp;Content-type to icon mapping.</td></tr>
+<tr valign="top"><td align="right"><b><a name="iconurlprefix" href="resources/iconurlprefix.html">ICONURLPREFIX</a></b></td><td>&nbsp;Prefix for icon URLs.</td></tr>
 <tr valign="top"><td align="right"><b><a name="idxfname" href="resources/idxfname.html">IDXFNAME</a></b></td><td>&nbsp;Filename for main (first) index page.</td></tr>
 <tr valign="top"><td align="right"><b><a name="idxlabel" href="resources/idxlabel.html">IDXLABEL</a></b></td><td>&nbsp;Label for main index.</td></tr>
 <tr valign="top"><td align="right"><b><a name="idxpgbegin" href="resources/idxpgbegin.html">IDXPGBEGIN</a></b></td><td>&nbsp;Beginning markup for main index pages.</td></tr>
@@ -234,6 +236,7 @@ command-line option, see
 <tr valign="top"><td align="right"><b><a name="mimedecoders" href="resources/mimedecoders.html">MIMEDECODERS</a></b></td><td>&nbsp;Content-Transfer-Encoding decoding functions.</td></tr>
 <tr valign="top"><td align="right"><b><a name="mimeexcs" href="resources/mimeexcs.html">MIMEEXCS</a></b></td><td>&nbsp;Content-types to exclude.</td></tr>
 <tr valign="top"><td align="right"><b><a name="mimefilters" href="resources/mimefilters.html">MIMEFILTERS</a></b></td><td>&nbsp;Mapping of MIME filters to content-types.</td></tr>
+<tr valign="top"><td align="right"><b><a name="modifybodyaddresses" href="resources/modifybodyaddresses.html">MODIFYBODYADDRESSES</a></b></td><td>&nbsp;Apply ADDRESSMODIFYCODE to text message bodies.</td></tr>
 <tr valign="top"><td align="right"><b><a name="modtime" href="resources/modtime.html">MODTIME</a></b></td><td>&nbsp;Set modification time on message files to message dates.</td></tr>
 <tr valign="top"><td align="right"><b><a name="months" href="resources/months.html">MONTHS</a></b></td><td>&nbsp;Month names.</td></tr>
 <tr valign="top"><td align="right"><b><a name="monthsabr" href="resources/monthsabr.html">MONTHSABR</a></b></td><td>&nbsp;Abbreviated month names.</td></tr>
@@ -275,6 +278,7 @@ command-line option, see
 <tr valign="top"><td align="right"><b><a name="prevpglinkia" href="resources/prevpglinkia.html">PREVPGLINKIA</a></b></td><td>&nbsp;Inactive link markup for previous page of main index.</td></tr>
 <tr valign="top"><td align="right"><b><a name="quiet" href="resources/quiet.html">QUIET</a></b></td><td>&nbsp;Do not output status.</td></tr>
 <tr valign="top"><td align="right"><b><a name="rcfile" href="resources/rcfile.html">RCFILE</a></b></td><td>&nbsp;Resource file to read before processing input.</td></tr>
+<tr valign="top"><td align="right"><b><a name="reconvert" href="resources/reconvert.html">RECONVERT</a></b></td><td>&nbsp;Reconvert existing messages.</td></tr>
 <tr valign="top"><td align="right"><b><a name="refsbegin" href="resources/refsbegin.html">REFSBEGIN</a></b></td><td>&nbsp;Beginning markup for explicit reference links in message pages.</td></tr>
 <tr valign="top"><td align="right"><b><a name="refsend" href="resources/refsend.html">REFSEND</a></b></td><td>&nbsp;Ending markup for explicit reference links in message pages.</td></tr>
 <tr valign="top"><td align="right"><b><a name="refslitxt" href="resources/refslitxt.html">REFSLITXT</a></b></td><td>&nbsp;Markup representing a reference entry in explicit reference links.</td></tr>
@@ -299,7 +303,12 @@ command-line option, see
 <tr valign="top"><td align="right"><b><a name="subsort" href="resources/subsort.html">SUBSORT</a></b></td><td>&nbsp;List messages by subjext in main index.</td></tr>
 <tr valign="top"><td align="right"><b><a name="tcontbegin" href="resources/tcontbegin.html">TCONTBEGIN</a></b></td><td>&nbsp;Markup before the continuation of a broken thread.</td></tr>
 <tr valign="top"><td align="right"><b><a name="tcontend" href="resources/tcontend.html">TCONTEND</a></b></td><td>&nbsp;Markup after the continuation of a broken thread.</td></tr>
+<tr valign="top"><td align="right"><b><a name="tendbutton" href="resources/tendbutton.html">TENDBUTTON</a></b></td><td>&nbsp;Button markup for last message in thread.</td></tr>
+<tr valign="top"><td align="right"><b><a name="tendbuttonia" href="resources/tendbuttonia.html">TENDBUTTONIA</a></b></td><td>&nbsp;Inactive button markup for last message in thread.</td></tr>
+<tr valign="top"><td align="right"><b><a name="tendlink" href="resources/tendlink.html">TENDLINK</a></b></td><td>&nbsp;Link markup for last message in thread.</td></tr>
+<tr valign="top"><td align="right"><b><a name="tendlinkia" href="resources/tendlinkia.html">TENDLINKIA</a></b></td><td>&nbsp;Inactive link markup for last message in thread.</td></tr>
 <tr valign="top"><td align="right"><b><a name="textclipfunc" href="resources/textclipfunc.html">TEXTCLIPFUNC</a></b></td><td>&nbsp;Perl function to use for text clipping operations.</td></tr>
+<tr valign="top"><td align="right"><b><a name="textencode" href="resources/textencode.html">TEXTENCODE</a></b></td><td>&nbsp;Encode message text to given character encoding.</td></tr>
 <tr valign="top"><td align="right"><b><a name="tfirstpglink" href="resources/tfirstpglink.html">TFIRSTPGLINK</a></b></td><td>&nbsp;Link markup for first page of thread index.</td></tr>
 <tr valign="top"><td align="right"><b><a name="tfoot" href="resources/tfoot.html">TFOOT</a></b></td><td>&nbsp;Footer markup for thread index page.</td></tr>
 <tr valign="top"><td align="right"><b><a name="thead" href="resources/thead.html">THEAD</a></b></td><td>&nbsp;Header markup for thread index page.</td></tr>
@@ -383,7 +392,11 @@ command-line option, see
 <tr valign="top"><td align="right"><b><a name="tsubsort" href="resources/tsubsort.html">TSUBSORT</a></b></td><td>&nbsp;List threads by subject.</td></tr>
 <tr valign="top"><td align="right"><b><a name="ttitle" href="resources/ttitle.html">TTITLE</a></b></td><td>&nbsp;Title of thread index.</td></tr>
 <tr valign="top"><td align="right"><b><a name="ttopbegin" href="resources/ttopbegin.html">TTOPBEGIN</a></b></td><td>&nbsp;Markup for the root/start of a thread.</td></tr>
+<tr valign="top"><td align="right"><b><a name="ttopbutton" href="resources/ttopbutton.html">TTOPBUTTON</a></b></td><td>&nbsp;Button markup for first message in thread.</td></tr>
+<tr valign="top"><td align="right"><b><a name="ttopbuttonia" href="resources/ttopbuttonia.html">TTOPBUTTONIA</a></b></td><td>&nbsp;Inactive button markup for first message in thread.</td></tr>
 <tr valign="top"><td align="right"><b><a name="ttopend" href="resources/ttopend.html">TTOPEND</a></b></td><td>&nbsp;Markup for the end of a thread.</td></tr>
+<tr valign="top"><td align="right"><b><a name="ttoplink" href="resources/ttoplink.html">TTOPLINK</a></b></td><td>&nbsp;Link markup for first message in thread.</td></tr>
+<tr valign="top"><td align="right"><b><a name="ttoplinkia" href="resources/ttoplinkia.html">TTOPLINKIA</a></b></td><td>&nbsp;Inactive link markup for first message in thread.</td></tr>
 <tr valign="top"><td align="right"><b><a name="umask" href="resources/umask.html">UMASK</a></b></td><td>&nbsp;Umask value for the MHonArc process.</td></tr>
 <tr valign="top"><td align="right"><b><a name="uselocaltime" href="resources/uselocaltime.html">USELOCALTIME</a></b></td><td>&nbsp;Use local time to determine day groups in main index listing.</td></tr>
 <tr valign="top"><td align="right"><b><a name="usinglastpg" href="resources/usinglastpg.html">USINGLASTPG</a></b></td><td>&nbsp;$LASTPG$ is used in resource values.</td></tr>
@@ -404,7 +417,7 @@ command-line option, see
 <!-- *************************************************************** -->
 <hr>
 <address>
-$Date: 2002/07/27 05:13:10 $ <br>
+$Date: 2003/02/04 23:31:19 $ <br>
 <img align="top" src="monicon.png" alt="">
 <a href="http://www.mhonarc.org"
 ><strong>MHonArc</strong></a><br>

@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhmimetypes.pl,v 1.11 2002/09/26 02:52:53 ehood Exp $
+##	$Id: mhmimetypes.pl,v 1.18 2003/01/18 03:00:41 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -51,7 +51,9 @@ $UnknownExt     = 'bin';
     'application/pdf', 			'pdf:Adobe PDF document',
     'application/pgp',  		'pgp:PGP message',
     'application/pgp-signature',	'pgp:PGP signature',
-    'application/postscript', 		'ps,eps,ai:PostScript document',
+    'application/pkcs7-mime', 		'p7m:S/MIME encrypted message',
+    'application/pkcs7-signature', 	'p7s:S/MIME cryptographic signature',
+    'application/postscript',		'ps,eps,ai:PostScript document',
     'application/rtf', 			'rtf:RTF file',
     'application/sgml',			'sgml:SGML document',
     'application/studiom',		'smp:Studio M file',
@@ -188,6 +190,7 @@ $UnknownExt     = 'bin';
     'chemical/mmd',			'mmd:Macromodel data',
     'chemical/mopac-input',		'mop:MOPAC data ',
     'chemical/ncbi-asn1',		'asn:NCBI data',
+    'chemical/ncbi-asn1-binary',	'val:NCBI data',
     'chemical/pdb',			'pdb:Protein Databank data',
     'chemical/rosdal',			'ros:Rosdal data',
     'chemical/xyz',			'xyz:Xmol XYZ data',
@@ -222,8 +225,8 @@ $UnknownExt     = 'bin';
     'image/x-xbm',			'xbm:X bitmap',
     'image/x-xpixmap',			'xpm:X pixmap',
     'image/x-xpm',			'xpm:X pixmap',
-    'image/x-xwd',			'xwd:X window dump',
-    'image/x-xwindowdump',		'xwd:X window dump',
+    'image/xwd',			'xwd:X window dump',
+    'image/xwindowdump',		'xwd:X window dump',
 
     'message/rfc822',			'822:Mail message',
     'message/news',			'822:News post',
@@ -240,6 +243,7 @@ $UnknownExt     = 'bin';
     'text/sgml',			'sgml:SGML document',
     'text/tab-separated-values',	'tsv:Tab separated values',
     'text/x-speech',			'talk:Speech document',
+    'text/x-vcard',			'vcf:Vcard',
 
     'video/isivideo',			'fvi:isi video',
     'video/mpeg',			'mpg,mpeg,mpe:MPEG movie',
@@ -291,12 +295,10 @@ sub write_attachment {
 
     ($ctype) = $content =~ m%^\s*([\w\-\./]+)%;	# Extract content-type
 
-    local(*OUTFILE);
-
     $pathname = $OUTDIR;
     if ($path) {
 	$pathname .= $DIRSEP . $path;
-	mkdir($pathname, 0777);
+	dir_create($pathname);
     }
 
     ## If no filename specified, generate it
@@ -306,19 +308,22 @@ sub write_attachment {
 
     ## Else, filename given
     } else {
-	$fname =~ tr/ \t\n\r/_/;	# Convert spaces to underscore
+	# Convert invalid characters to underscores
+	$fname =~ tr/\0-\40\t\n\r?:*"'<>|\177-\377/_/;
     }
+
+    ## Write to temp file first
+    my($fh, $tmpfile) = file_temp('atchXXXXXXXXXX', $pathname);
+    binmode($fh);
+    print $fh $$sref;
+    close($fh);
 
     ## Set pathname for file
     $pathname .= $DIRSEP . $fname;
-
-    if (open(OUTFILE, "> $pathname")) {
-	binmode(OUTFILE);		# For WinDog
-	print OUTFILE $$sref;
-	close(OUTFILE);
-    } else {
-	warn qq/Warning: Unable to create "$pathname": $!\n/;
+    if (!rename($tmpfile, $pathname)) {
+	die qq/ERROR: Unable to rename "$tmpfile" to "$pathname": $!\n/;
     }
+    file_chmod($pathname);
 
     join("",
 	 ($mhonarc::SINGLE ? $mhonarc::OUTDIR.$mhonarc::DIRSEP : ""),

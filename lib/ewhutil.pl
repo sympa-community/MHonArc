@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: ewhutil.pl,v 2.9 2002/09/25 03:51:13 ehood Exp $
+##	$Id: ewhutil.pl,v 2.11 2003/01/18 02:57:34 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -31,6 +31,7 @@ my %HTMLSpecials = (
   '&'	=> '&amp;',
   '<'	=> '&lt;',
   '>'	=> '&gt;',
+  '@'	=> '&#x40;',
 );
 
 ##---------------------------------------------------------------------------
@@ -49,16 +50,18 @@ sub remove_dups {
 
 sub htmlize {			# Older name
     return ''  unless scalar(@_) && defined($_[0]);
-    my($txt) = $_[0];
-    $txt =~ s/(["&<>])/$HTMLSpecials{$1}/g;
-    $txt;
+    my $txt   = shift;
+    my $txt_r = ref($txt) ? $txt : \$txt;
+    $$txt_r =~ s/(["&<>@])/$HTMLSpecials{$1}/g;
+    $$txt_r;
 }
 
-sub entify {			# Newer name
+sub entify {			# Alternate name
     return ''  unless scalar(@_) && defined($_[0]);
-    my($txt) = $_[0];
-    $txt =~ s/(["&<>])/$HTMLSpecials{$1}/g;
-    $txt;
+    my $txt   = shift;
+    my $txt_r = ref($txt) ? $txt : \$txt;
+    $$txt_r =~ s/(["&<>@])/$HTMLSpecials{$1}/g;
+    $$txt_r;
 }
 
 ##	commentize entifies certain characters to avoid problems when a
@@ -92,11 +95,15 @@ sub cp {
 ##	Translate html string back to regular string
 ##
 sub dehtmlize {
-    my($str) = shift;
-    $str =~ s/\&lt;/</g;
-    $str =~ s/\&gt;/>/g;
-    $str =~ s/\&amp;/\&/g;
-    $str;
+    my $str   = shift;
+    my $str_r = ref($str) ? $str : \$str;
+    $$str_r =~ s/\&lt;/</g;
+    $$str_r =~ s/\&gt;/>/g;
+    $$str_r =~ s/\&amp;/\&/g;
+    $$str_r =~ s/\&quot;/\&/g;
+    $$str_r =~ s/\&#[xX]0*40;/@/g;
+    $$str_r =~ s/\&64;/@/g;
+    $$str_r;
 }
 
 ##---------------------------------------------------------------------------
@@ -104,8 +111,16 @@ sub dehtmlize {
 ##
 sub urlize {
     my($url) = shift || "";
-    $url =~ s/([^\w@\.\-])/sprintf("%%%X",unpack("C",$1))/ge;
-    $url;
+    my $url_r = ref($url) ? $url : \$url;
+    $$url_r =~ s/([^\w\.\-:])/sprintf("%%%X",unpack("C",$1))/ge;
+    $$url_r;
+}
+
+sub urlize_path {
+    my($url) = shift || "";
+    my $url_r = ref($url) ? $url : \$url;
+    $$url_r =~ s/([^\w\.\-:\/])/sprintf("%%%X",unpack("C",$1))/ge;
+    $$url_r;
 }
 
 ##---------------------------------------------------------------------------##

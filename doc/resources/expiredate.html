@@ -1,7 +1,7 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
 <html>
 <head>
 <title>MHonArc Resources: EXPIREDATE</title>
+<link rel="stylesheet" type="text/css" href="../docstyles.css">
 </head>
 <body>
 <!--x-rc-nav-->
@@ -10,10 +10,21 @@
 <!--/x-rc-nav-->
 <hr>
 <h1>EXPIREDATE</h1>
+<!--X-TOC-Start-->
+<ul>
+<li><a href="#syntax">Syntax</a>
+<li><a href="#description">Description</a>
+<li><a href="#default">Default Setting</a>
+<li><a href="#rcvars">Resource Variables</a>
+<li><a href="#examples">Examples</a>
+<li><a href="#version">Version</a>
+<li><a href="#seealso">See Also</a>
+</ul>
+<!--X-TOC-End-->
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Syntax</h2>
+<h2><a name="syntax">Syntax</a></h2>
 
 <dl>
 
@@ -41,7 +52,7 @@
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Description</h2>
+<h2><a name="description">Description</a></h2>
 
 <p>If defined, EXPIREDATE sets the expiration date for messages
 in an archive.  During an archive update, any messages with
@@ -53,7 +64,7 @@ a message to be added is older than EXPIREDATE, it is not added.
 </p>
 
 <blockquote>
-<p><var>DD</var><tt> </tt><var>Mon</var><tt> </tt><var>YY</var><tt> </tt><var>HH</var><tt>:</tt><var>MM</var><tt>:</tt><var>SS</var><tt> </tt><var>Zone</var>
+<p><var>DD</var><tt> </tt><var>Mon</var><tt> </tt><var>YYYY</var><tt> </tt><var>HH</var><tt>:</tt><var>MM</var><tt>:</tt><var>SS</var><tt> </tt><var>Zone</var>
 </p>
 </blockquote>
 
@@ -66,21 +77,21 @@ in the
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Default Setting</h2>
+<h2><a name="default">Default Setting</a></h2>
 
 <p>Nil.
 </p>
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Resource Variables</h2>
+<h2><a name="rcvars">Resource Variables</a></h2>
 
 <p>N/A
 </p>
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Examples</h2>
+<h2><a name="examples">Examples</a></h2>
 
 <p>EXPIREDATE is useful if you want to insure messages older
 than a specified date do not get archived.  For example, if
@@ -88,7 +99,7 @@ you want to make sure that no message before 1997 is added, then
 define EXPIREDATE as follows:
 </p>
 
-<pre>
+<pre class="code">
 <b>&lt;ExpireDate&gt;</b>
 1 Jan 1997 00:00:00
 <b>&lt;/ExpireDate&gt;</b>
@@ -100,7 +111,7 @@ what timezone you are in).  The following
 is more accurate:
 </p>
 
-<pre>
+<pre class="code">
 <b>&lt;ExpireDate&gt;</b>
 1 Jan 1997 00:00:00 +0000
 <b>&lt;/ExpireDate&gt;</b>
@@ -108,7 +119,7 @@ is more accurate:
 
 <p>Or,</p>
 
-<pre>
+<pre class="code">
 <b>&lt;ExpireDate&gt;</b>
 1 Jan 1997 00:00:00 GMT
 <b>&lt;/ExpireDate&gt;</b>
@@ -116,14 +127,14 @@ is more accurate:
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Version</h2>
+<h2><a name="version">Version</a></h2>
 
 <p>2.0
 </p>
 
 <!-- *************************************************************** -->
 <hr>
-<h2>See Also</h2>
+<h2><a name="seealso">See Also</a></h2>
 
 <p>
 <a href="expireage.html">EXPIREAGE</a>,
@@ -138,7 +149,7 @@ is more accurate:
 <!--/x-rc-nav-->
 <hr>
 <address>
-$Date: 2002/07/27 05:13:10 $ <br>
+$Date: 2002/12/10 04:08:02 $ <br>
 <img align="top" src="../monicon.png" alt="">
 <a href="http://www.mhonarc.org/"
 ><strong>MHonArc</strong></a><br>

@@ -1,12 +1,11 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
 <HTML>
 <HEAD>
 <TITLE>MHonArc FAQ: Index Pages</TITLE></HEAD>
+<link rel="stylesheet" type="text/css" href="../docstyles.css">
 <BODY>
 
 <!--X-NavButtons-Start-->
-<p align=center>
-[<a href="archives.html">Prev</a>][<a href="msgpgs.html">Next</a>][<a href="faq.html">TOC</a>][<a href="http://www.mhonarc.org/">Home</a>]
+<table width="100%"><tr><td align="left"><nobr>[<a href="archives.html">Prev</a>]</nobr></td><td align="center" width="100%">[<a href="faq.html">TOC</a>][<a href="../mhonarc.html">Manual</a>][<a href="http://www.mhonarc.org/">Home</a>]</td><td align="right"><nobr>[<a href="msgpgs.html">Next</a>]</nobr></td></tr></table>
 </p>
 <!--X-NavButtons-End-->
 
@@ -48,7 +47,7 @@ it refers to the index listing messages by author, date, or
 subject.  Therefore, all resources. and resource variables, that
 refer to the main index apply to either an author, date, or
 subject index.  The type of main index is controled by
-the SORT, SUBSORT, AUTHSORT resources.
+the <a href="../resources/sort.html">SORT</a>, <a href="../resources/subsort.html">SUBSORT</a>, AUTHSORT resources.
 </p>
 
 <p>By default, MHonArc creates a date index
@@ -64,24 +63,29 @@ Author index support is available only in v2.0 and later.
 </td></tr></table>
 
 <P>Yes. In version 1.2 (or later), a resource was added called
-<strong>OTHERINDEXES</strong>. With this resource, you are able to
+<a href="../resources/otherindexes.html">OTHERINDEXES</a>. With this resource, you are able to
 define an arbitrary number of indexes you desire. The additional
 indexes may be in any format you desire and that is supported
 by MHonArc. Refer to the documentation for the usage of
-<strong>OTHERINDEXES</strong> (also see
+<a href="../resources/otherindexes.html">OTHERINDEXES</a> (also see
 "<a href="#otherindexes">How does the OTHERINDEXES resource work?</a>").
 </P>
 
-<dl>
-<dt><strong>NOTE</strong></dt>
-<dd><p>MHonArc will <strong>NOT</strong> automatically
-create links to any indexes created via the OTHERINDEXES resource.
+<table class="note" width="100%">
+<tr valign="baseline">
+<td><strong>NOTE:</strong></td>
+<td width="100%"><p>
+MHonArc will <strong>NOT</strong> automatically
+create links to any indexes created via the
+<a href="../resources/otherindexes.html">OTHERINDEXES</a> resource.
 You will need to modify the relevant index and messages resources
-to contain the additional links.  See the LISTBEGIN and
-THEAD resources.
+to contain the additional links.  See the
+<a href="../resources/listbegin.html">LISTBEGIN</a> and
+<a href="../resources/thead.html">THEAD</a> resources.
 </p>
-</dd>
-</dl>
+</td>
+</tr>
+</table>
 
 <!-- ??????????????????????????????????????????????????????????????? -->
 <hr noshade size=1>
@@ -90,8 +94,11 @@ THEAD resources.
 <h3><b><a name="multipage">Can I have multi-page indexes?</a></b></h3>
 </td></tr></table>
 
-<p>Yes, in v2.0 or later.  Setting the MULTIPG and IDXSIZE will cause
-indexes to to be listed across multiple pages with IDXSIZE determine
+<p>Yes, in v2.0 or later.  Setting the
+<a href="../resources/multipg.html">MULTIPG</a> and
+<a href="../resources/idxsize.html">IDXSIZE</a> will cause
+indexes to to be listed across multiple pages with
+<a href="../resources/idxsize.html">IDXSIZE</a> determine
 the number of messages listed per page.
 </p>
 
@@ -112,18 +119,18 @@ the number of messages listed per page.
 <h3><b><a name="otherindexes">How does the OTHERINDEXES resource work?</a></b></h3>
 </td></tr></table>
 
-<p>I am going to describe a basic example on how OTHERINDEXES can be used.
+<p>I am going to describe a basic example on how <a href="../resources/otherindexes.html">OTHERINDEXES</a> can be used.
 </p>
 <p>First, lets have the top resource file (call it "top.mrc") that
 defines the formatting of the default 2 indexes (a main and
 a thread).  Example:
 </p>
-<pre>*** snip "top.mrc" ***
-&lt;MAIN&gt;
-&lt;THREAD&gt;
-&lt;SORT&gt;
-&lt;NOTREVERSE&gt;
-&lt;NOREVERSE&gt;
+<pre class="code">*** snip "top.mrc" ***
+&lt;<a href="../resources/main.html">MAIN</a>&gt;
+&lt;<a href="../resources/thread.html">THREAD</a>&gt;
+&lt;<a href="../resources/sort.html">SORT</a>&gt;
+&lt;<a href="../resources/treverse.html">NOTREVERSE</a>&gt;
+&lt;<a href="../resources/reverse.html">NOREVERSE</a>&gt;
 *** snip "top.mrc" ***
 </pre>
 <p>I may have a bunch of layout stuff, but that is not important
@@ -137,8 +144,8 @@ especially when we get to otherindexes).
 <p>Now, I would like to also create subject and author indexes.
 In "top.mrc" I would add the following:
 </p>
-<pre>*** snip "top.mrc" ***
-&lt;OTHERINDEXES&gt;
+<pre class="code">*** snip "top.mrc" ***
+&lt;<a href="../resources/otherindexes.html">OTHERINDEXES</a>&gt;
 subject.mrc
 author.mrc
 &lt;/OTHERINDEXES&gt;
@@ -153,62 +160,81 @@ the archive directory.
 </p>
 <p>The following now shows the important settings for each file:
 </p>
-<pre>*** snip "subject.mrc" ***
-&lt;MAIN&gt;
-&lt;NOTHREAD&gt;
-&lt;SUBSORT&gt;
-&lt;IDXFNAME&gt;
+<pre class="code">*** snip "subject.mrc" ***
+&lt;<a href="../resources/main.html">MAIN</a>&gt;
+&lt;<a href="../resources/thread.html">NOTHREAD</a>&gt;
+&lt;<a href="../resources/subsort.html">SUBSORT</a>&gt;
+&lt;<a href="../resources/idxfname.html">IDXFNAME</a>&gt;
 subject.html
 &lt;/IDXFNAME&gt;
-&lt;IDXPREFIX&gt;
+&lt;<a href="../resources/idxprefix.html">IDXPREFIX</a>&gt;
 subject
 &lt;/IDXPREFIX&gt;
-&lt;NOREVERSE&gt;
+&lt;<a href="../resources/reverse.html">NOREVERSE</a>&gt;
 *** snip "subject.mrc" ***
 </pre>
-<pre>*** snip "author.mrc" ***
-&lt;MAIN&gt;
-&lt;NOTHREAD&gt;
+<pre class="code">*** snip "author.mrc" ***
+&lt;<a href="../resources/main.html">MAIN</a>&gt;
+&lt;<a href="../resources/thread.html">NOTHREAD</a>&gt;
 &lt;AUTHSORT&gt;
-&lt;IDXFNAME&gt;
+&lt;<a href="../resources/idxfname.html">IDXFNAME</a>&gt;
 author.html
 &lt;/IDXFNAME&gt;
-&lt;IDXPREFIX&gt;
+&lt;<a href="../resources/idxprefix.html">IDXPREFIX</a>&gt;
 author
 &lt;/IDXPREFIX&gt;
-&lt;NOREVERSE&gt;
+&lt;<a href="../resources/reverse.html">NOREVERSE</a>&gt;
 *** snip "author.mrc" ***
 </pre>
 <p>Again, notice how I am being explicit.  MHonArc does not reset
 resources when reading the otherindexes resource files. with one
-<em>exception</em>: THREAD is shut-off.  To avoid overriding the default
-index files, I must explicitly redefine IDXFNAME (amd IDXPREFIX
-if MULTIPG is active).  If I want different layouts for my
+<em>exception</em>: <a href="../resources/thread.html">THREAD</a> is shut-off.  To avoid overriding the default
+index files, I must explicitly redefine <a href="../resources/idxfname.html">IDXFNAME</a> (amd <a href="../resources/idxprefix.html">IDXPREFIX</a>
+if <a href="../resources/multipg.html">MULTIPG</a> is active).  If I want different layouts for my
 other indexes, I must explicitly define those, or they will
 use what was ever set in top.mrc (or the applicable default resource setting(s)
 when no explicit setting provided).
 </p>
-<p><strong>NOTE</strong>:
-    Otherindexes resource file only defines a *single* index type: main
-    or thread.  If you specify the THREAD, a thread index will be
-    created and all MAIN related resources are ignored.  I.e.  THREAD
-    overrides MAIN.
+<table class="note" width="100%">
+<tr valign="baseline">
+<td><strong>NOTE:</strong></td>
+<td width="100%"><p>
+    Otherindexes resource file only defines a <strong>single</strong>
+    index type: main
+    or thread.  If you specify the <a href="../resources/thread.html">THREAD</a>, a thread index will be
+    created and all <a href="../resources/main.html">MAIN</a> related resources are ignored.  I.e.  <a href="../resources/thread.html">THREAD</a>
+    overrides <a href="../resources/main.html">MAIN</a>.
 </p>
-<p><strong>WARNING</strong>:
-    Do <b>NOT</b> define OTHERINDEXES in your otherindexes resource files.
+</td>
+</tr>
+</table>
+<p> </p>
+<table class="caution" width="100%">
+<tr valign="baseline">
+<td><strong style="color: red;">WARNING:</strong></td>
+<td width="100%"><p>
+    Do <b>NOT</b> define <a href="../resources/otherindexes.html">OTHERINDEXES</a> in your otherindexes resource files.
     Also, make sure there is no self references.  If you do not heed
     these warnings, you will cause an infinite loop, and/or
     unpredictable results.
 </p>
-<p>Make sure OTHERINDEXES resource files are present for all
+</td>
+</tr>
+</table>
+<p>Make sure <a href="../resources/otherindexes.html">OTHERINDEXES</a> resource files are present for all
 updates to an archive.  Mhonarc only stores settings for the
 default indexes, so the resource files are needed each time
 for other indexes.
 </p>
-<p>What I left out in this example is the redefinition of the navigational
-based resources.  Since I am adding more indexes, I would have to
-redefine resources like TOPLINK, BOTLINKS, LISTBEGIN, THEAD, etc, so
-there will be links to the other indexes.
+
+<p>What I left out in this example is the redefinition
+of the navigational based resources.  Since I am adding
+more indexes, I would have to redefine resources like
+<a href="../resources/toplinks.html">TOPLINKS</a>,
+<a href="../resources/botlinks.html">BOTLINKS</a>,
+<a href="../resources/listbegin.html">LISTBEGIN</a>,
+<a href="../resources/thead.html">THEAD</a>, etc, so there will be links
+to the other indexes.
 </p>
 
 <!-- ??????????????????????????????????????????????????????????????? -->
@@ -230,7 +256,8 @@ placing attachments into a subdirectory.  Make sure that mhexternal.pl
 returns the file as part of the return value so it is automatically
 deleted if the message is removed from the archive.
 </p>
-<p>Then, you define the LITEMPLATE resource to use a server-side include
+<p>Then, you define the <a href="../resources/litemplate.html">LITEMPLATE</a>
+resource to use a server-side include
 to include the file as part of the message listing.  I did say
 it was dirty, but it should work.
 </p>
@@ -239,14 +266,13 @@ it was dirty, but it should work.
 <hr>
 
 <!--X-NavButtons-Start-->
-<p align=center>
-[<a href="archives.html">Prev</a>][<a href="msgpgs.html">Next</a>][<a href="faq.html">TOC</a>][<a href="http://www.mhonarc.org/">Home</a>]
+<table width="100%"><tr><td align="left"><nobr>[<a href="archives.html">Prev</a>]</nobr></td><td align="center" width="100%">[<a href="faq.html">TOC</a>][<a href="../mhonarc.html">Manual</a>][<a href="http://www.mhonarc.org/">Home</a>]</td><td align="right"><nobr>[<a href="msgpgs.html">Next</a>]</nobr></td></tr></table>
 </p>
 <!--X-NavButtons-End-->
 
 <HR>
 <address>
-$Date: 2001/12/24 14:38:39 $ <br>
+$Date: 2003/01/03 04:32:32 $ <br>
 <img align="top" src="monicon.png" alt="">
 <a href="http://www.mhonarc.org/"
 ><strong>MHonArc</strong></a><br>

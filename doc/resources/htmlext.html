@@ -1,7 +1,7 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
 <html>
 <head>
 <title>MHonArc Resources: HTMLEXT</title>
+<link rel="stylesheet" type="text/css" href="../docstyles.css">
 </head>
 <body>
 <!--x-rc-nav-->
@@ -10,10 +10,21 @@
 <!--/x-rc-nav-->
 <hr>
 <h1>HTMLEXT</h1>
+<!--X-TOC-Start-->
+<ul>
+<li><a href="#syntax">Syntax</a>
+<li><a href="#description">Description</a>
+<li><a href="#default">Default Setting</a>
+<li><a href="#rcvars">Resource Variables</a>
+<li><a href="#examples">Examples</a>
+<li><a href="#version">Version</a>
+<li><a href="#seealso">See Also</a>
+</ul>
+<!--X-TOC-End-->
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Syntax</h2>
+<h2><a name="syntax">Syntax</a></h2>
 
 <dl>
 
@@ -41,17 +52,17 @@
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Description</h2>
+<h2><a name="description">Description</a></h2>
 
 <p>HTMLEXT defines the extension for all HTML files generated
 by MHonArc.  The value of the resource should <strong>NOT</strong>
 include the "<tt>.</tt>".
 </p>
 
-<table border=0 cellpadding=4>
+<table class="caution" width="100%">
 <tr valign=top>
-<td><strong><font color=red>WARNING</font></strong></td>
-<td><p>The value for HTMLEXT should not be changed after an
+<td><strong style='color: red;'>WARNING:</strong></td>
+<td width="100%"><p>The value for HTMLEXT should not be changed after an
 archive is created.  If you change the value of HTMLEXT, MHonArc
 will not be able to properly update an archive.
 </p>
@@ -61,21 +72,21 @@ will not be able to properly update an archive.
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Default Setting</h2>
+<h2><a name="default">Default Setting</a></h2>
 
 <p><tt>html</tt>
 </p>
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Resource Variables</h2>
+<h2><a name="rcvars">Resource Variables</a></h2>
 
 <p>N/A
 </p>
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Examples</h2>
+<h2><a name="examples">Examples</a></h2>
 
 <p>If you define server-side directives to be included in HTML pages,
 you may need to redefine the extension for the files so the HTTP
@@ -86,14 +97,14 @@ is "<b><tt>shtml</tt></b>".
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Version</h2>
+<h2><a name="version">Version</a></h2>
 
 <p>2.1.0
 </p>
 
 <!-- *************************************************************** -->
 <hr>
-<h2>See Also</h2>
+<h2><a name="seealso">See Also</a></h2>
 
 <p>
 </p>
@@ -106,7 +117,7 @@ is "<b><tt>shtml</tt></b>".
 <!--/x-rc-nav-->
 <hr>
 <address>
-$Date: 2002/07/27 05:13:10 $ <br>
+$Date: 2002/12/10 04:08:02 $ <br>
 <img align="top" src="../monicon.png" alt="">
 <a href="http://www.mhonarc.org/"
 ><strong>MHonArc</strong></a><br>

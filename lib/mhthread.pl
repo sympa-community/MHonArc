@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##      $Id: mhthread.pl,v 2.10 2002/06/27 04:56:41 ehood Exp $
+##      $Id: mhthread.pl,v 2.11 2002/11/20 23:53:12 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -37,6 +37,7 @@ sub write_thread_index {
     local(*a);
     local($PageNum, $PageSize, $totalpgs, %Printed);
     local($lastlevel, $tlevel, $iscont, $i, $offstart, $offend);
+    my($tmpfile);
 
     local($level) = 0;  	## !!!Used in print_thread!!!
     local($last0index) = '';
@@ -86,10 +87,9 @@ sub write_thread_index {
 	$PageSize = scalar(@a);
 
 	if ($IDXONLY) {
-	    $handle = 'STDOUT';
+	    $handle = \*STDOUT;
 	} else {
-	    ($handle = &file_create($TIDXPATHNAME, $GzipFiles)) ||
-		die("ERROR: Unable to create $TIDXPATHNAME\n");
+	    ($handle, $tmpfile) = file_temp('tidxXXXXXXXXXX', $OUTDIR);
 	}
 	print STDOUT "Writing $TIDXPATHNAME ...\n"  unless $QUIET;
 
@@ -180,7 +180,11 @@ sub write_thread_index {
 
 	print $handle "<!-- ", &commentize("MHonArc v$VERSION"), " -->\n";
 
-	close($handle)  unless $IDXONLY;
+	if (!$IDXONLY) {
+	    close($handle);
+	    file_gzip($tmpfile)  if $GzipFiles;
+	    file_chmod(file_rename($tmpfile, $TIDXPATHNAME));
+	}
     }
 }
 

@@ -1,7 +1,7 @@
 #!/usr/local/bin/perl
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mha-dbrecover,v 1.6 2001/11/18 07:25:34 ehood Exp $
+##	$Id: mha-dbrecover,v 1.7 2003/01/04 04:44:21 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -198,6 +198,10 @@ E<lt>I<http://www.mhonarc.org/>E<gt>
 =head1 AUTHOR
 
 Earl Hood, mhonarc@mhonarc.org
+
+MHonArc comes with ABSOLUTELY NO WARRANTY and MHonArc may be copied only
+under the terms of the GNU General Public License, which may be found in
+the MHonArc distribution.
 
 =cut
 

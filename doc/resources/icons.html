@@ -1,19 +1,30 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
 <html>
 <head>
 <title>MHonArc Resources: ICONS</title>
+<link rel="stylesheet" type="text/css" href="../docstyles.css">
 </head>
 <body>
 <!--x-rc-nav-->
 <table border=0><tr valign="top">
-<td align="left" width="50%">[Prev:&nbsp;<a href="htmlext.html">HTMLEXT</a>]</td><td><nobr>[<a href="../resources.html#icons">Resources</a>][<a href="../mhonarc.html">TOC</a>]</nobr></td><td align="right" width="50%">[Next:&nbsp;<a href="idxfname.html">IDXFNAME</a>]</td></tr></table>
+<td align="left" width="50%">[Prev:&nbsp;<a href="htmlext.html">HTMLEXT</a>]</td><td><nobr>[<a href="../resources.html#icons">Resources</a>][<a href="../mhonarc.html">TOC</a>]</nobr></td><td align="right" width="50%">[Next:&nbsp;<a href="iconurlprefix.html">ICONURLPREFIX</a>]</td></tr></table>
 <!--/x-rc-nav-->
 <hr>
 <h1>ICONS</h1>
+<!--X-TOC-Start-->
+<ul>
+<li><a href="#syntax">Syntax</a>
+<li><a href="#description">Description</a>
+<li><a href="#default">Default Setting</a>
+<li><a href="#rcvars">Resource Variables</a>
+<li><a href="#examples">Examples</a>
+<li><a href="#version">Version</a>
+<li><a href="#seealso">See Also</a>
+</ul>
+<!--X-TOC-End-->
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Syntax</h2>
+<h2><a name="syntax">Syntax</a></h2>
 
 <dl>
 
@@ -41,7 +52,7 @@
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Description</h2>
+<h2><a name="description">Description</a></h2>
 
 <P>The ICONS resource is used to specify the icons that represent the
 different content-types of messages.  This resource is used to
@@ -99,7 +110,7 @@ follows:
 For example:
 </p>
 
-<pre>
+<pre class="code">
 <b>&lt;LiTemplate&gt;</b>
 $ICON$ &lt;strong&gt;$SUBJECT:40$&lt;/strong&gt;
 &lt;em&gt;$FROMNAME$&lt;/em&gt;&lt;br&gt;
@@ -120,7 +131,7 @@ variable  may be used if you want redefine the format of the
 <CODE>IMG</CODE> element.  For example:
 </p>
 
-<PRE>
+<PRE class="code">
 <b>&lt;LiTemplate&gt;</b>
 &lt;img src="$ICONURL$" alt="*"&gt;
 &lt;strong&gt;$SUBJECT:40$&lt;/strong&gt;
@@ -130,26 +141,26 @@ variable  may be used if you want redefine the format of the
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Default Setting</h2>
+<h2><a name="default">Default Setting</a></h2>
 
 <p>Nil.
 </p>
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Resource Variables</h2>
+<h2><a name="rcvars">Resource Variables</a></h2>
 
 <p>N/A
 </p>
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Examples</h2>
+<h2><a name="examples">Examples</a></h2>
 
 <p>The following example works well if using the Apache HTTP server
 and the default set of icons that are provided with it:
 </p>
-<pre>
+<pre class="code">
 <b>&lt;Icons&gt;</b>
 application/*;[20x22]/icons/generic.gif
 application/msword;[20x22]/icons/layout.gif
@@ -183,18 +194,19 @@ video/*;[20x22]/icons/movie.gif
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Version</h2>
+<h2><a name="version">Version</a></h2>
 
 <p>1.0
 </p>
 
 <!-- *************************************************************** -->
 <hr>
-<h2>See Also</h2>
+<h2><a name="seealso">See Also</a></h2>
 
 <p>
 <tt><a href="../rcvars.html#ICON">$ICON$</a></tt>,
 <tt><a href="../rcvars.html#ICONURL">$ICONURL$</a></tt>,
+<a href="iconurlprefix.html">ICONURLPREFIX</a>,
 <a href="litemplate.html">LITEMPLATE</a>,
 <a href="tlitxt.html">TLITXT</a>,
 <a href="tsingletxt.html">TSINGLETXT</a>,
@@ -209,11 +221,11 @@ video/*;[20x22]/icons/movie.gif
 <hr>
 <!--x-rc-nav-->
 <table border=0><tr valign="top">
-<td align="left" width="50%">[Prev:&nbsp;<a href="htmlext.html">HTMLEXT</a>]</td><td><nobr>[<a href="../resources.html#icons">Resources</a>][<a href="../mhonarc.html">TOC</a>]</nobr></td><td align="right" width="50%">[Next:&nbsp;<a href="idxfname.html">IDXFNAME</a>]</td></tr></table>
+<td align="left" width="50%">[Prev:&nbsp;<a href="htmlext.html">HTMLEXT</a>]</td><td><nobr>[<a href="../resources.html#icons">Resources</a>][<a href="../mhonarc.html">TOC</a>]</nobr></td><td align="right" width="50%">[Next:&nbsp;<a href="iconurlprefix.html">ICONURLPREFIX</a>]</td></tr></table>
 <!--/x-rc-nav-->
 <hr>
 <address>
-$Date: 2002/07/27 05:13:10 $ <br>
+$Date: 2003/01/09 23:42:25 $ <br>
 <img align="top" src="../monicon.png" alt="">
 <a href="http://www.mhonarc.org/"><strong>MHonArc</strong></a><br>
 Copyright &#169; 1997-2001, <a href="http://www.earlhood.com/">Earl Hood</a>, <a href="mailto:mhonarc@mhonarc.org">mhonarc@mhonarc.org</a><br>

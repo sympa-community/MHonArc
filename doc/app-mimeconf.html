@@ -1,13 +1,8 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
 <HTML>
 <HEAD>
-<TITLE>MHonArc v2.5 -- Appendix: MIME Conformance
-</TITLE>
+<TITLE>MHonArc Reference -- Appendix: MIME Conformance</TITLE>
+<link rel="stylesheet" type="text/css" href="docstyles.css">
 </HEAD>
-<!--
-<BODY background="ssbg75.jpg"
-      text="#000000" link="#0000ee" vlink="#551a8b" alink="ff0000">
--->
 <BODY>
 
 <!--X-NavButtons-Start-->
@@ -21,7 +16,7 @@
 
 <P>This appendix describes how well MHonArc implements
 MIME-conformance as defined in
-<a href="http://www.pobox.com/~ehood/MIME/2049/rfc2049.html">
+<a href="http://www.mhonarc.org/~ehood/MIME/2049/rfc2049.html">
 RFC 2049: (MIME) Part Five: Conformance Criteria and Examples</a>.
 Also, additional MIME-related features are summarized.
 </P>
@@ -37,22 +32,25 @@ Also, additional MIME-related features are summarized.
 <H2><a name="mime-conformance">MIME-Conformance</a></H2>
 
 <p>MIME-conformance is defined in section 2 of
-<a href="http://www.pobox.com/~ehood/MIME/2049/rfc2049.html">
+<a href="http://www.mhonarc.org/~ehood/MIME/2049/rfc2049.html">
 RFC 2049: (MIME) Part Five: Conformance Criteria and Examples</a>.
 Following is the text extracted from section 2 of RFC 2049 with
-annotations added on how MHonArc conforms to each criteria listed.
+annotations &mdash; denoted by
+<strong><img src="monicon.png" alt="MHonArc"></strong> &mdash;
+added on how well MHonArc conforms to each criteria listed.
 It should be noted that the criteria listed in RFC 2049 is geared
 towards interactive MUAs; therefore, some criteria may not be
 applicable to MHonArc.
 </p>
-<table border=0 cellpadding=4>
+<table class="note" width="100%">
 <tr valign=top>
-<td><strong>NOTE</strong></td>
-<td><p>All notes about conformance is based upon the default MIME-related
+<td><strong>NOTE:</strong></td>
+<td width="100%"><p>All notes about conformance is based upon the default MIME-related
 resource settings:
 <a href="resources/mimefilters.html">MIMEFILTERS</a>, 
+<a href="resources/mimeargs.html">MIMEARGS</a> ,
 <a href="resources/charsetconverters.html">CHARSETCONVERTERS</a>, 
-<a href="resources/mimeargs.html">MIMEARGS</a> 
+<a href="resources/charsetconverters.html">CHARSETALIASES</a>.
 </p>
 </td>
 </tr>
@@ -68,7 +66,6 @@ Always generate a "MIME-Version: 1.0" header field in
 <td><strong><img src="monicon.png" alt="MHonArc"></strong></td>
 <td><p>Not applicable.
 </p>
-<br>
 </td>
 </tr>
 </table>
@@ -86,7 +83,6 @@ Recognize the Content-Transfer-Encoding header field
 Also, uuencode is supported: <tt>uuencode</tt>, <tt>x-uuencode</tt>, and
 <tt>x-uue</tt>.
 </p>
-<br>
 </td>
 </tr>
 </table>
@@ -103,7 +99,6 @@ Also, uuencode is supported: <tt>uuencode</tt>, <tt>x-uuencode</tt>, and
 <td><strong><img src="monicon.png" alt="MHonArc"></strong></td>
 <td><p>Not applicable.
 </p>
-<br>
 </td>
 </tr>
 </table>
@@ -123,7 +118,6 @@ value.  With the default set of filters, the <b><tt>$isdecoded</tt></b>
 flag is ignored.  Therefore, behavior could be considered undefined when
 MHonArc process a message with an unrecognized Content-Transfer-Encoding.
 </p>
-<br>
 </td>
 </tr>
 </table>
@@ -142,7 +136,6 @@ Recognize and interpret the Content-Type header field,
 <td><p>MHonArc conforms to the first sentence of the paragraph
 The second sentence is not applicable.
 </p>
-<br>
 </td>
 </tr>
 </table>
@@ -156,7 +149,6 @@ Ignore any content type parameters whose names they do
 <td><strong><img src="monicon.png" alt="MHonArc"></strong></td>
 <td><p>Yes.
 </p>
-<br>
 </td>
 </tr>
 </table>
@@ -177,7 +169,6 @@ Explicitly handle the following media type values, to
 <td><strong><img src="monicon.png" alt="MHonArc"></strong></td>
 <td><p>Yes.
 </p>
-<br>
 </td>
 </tr>
 </table>
@@ -191,7 +182,6 @@ Explicitly handle the following media type values, to
 <td><p>Not really applicable.  Warnings are generated during processing
 if a character set is encountered that is not recognized.
 </p>
-<br>
 </td>
 </tr>
 </table>
@@ -205,7 +195,6 @@ if a character set is encountered that is not recognized.
 <td><strong><img src="monicon.png" alt="MHonArc"></strong></td>
 <td><p>Yes.
 </p>
-<br>
 </td>
 </tr>
 </table>
@@ -219,7 +208,6 @@ if a character set is encountered that is not recognized.
 <td><strong><img src="monicon.png" alt="MHonArc"></strong></td>
 <td><p>MHonArc will treat the data as text/plain and convert.
 </p>
-<br>
 </td>
 </tr>
 </table>
@@ -234,7 +222,6 @@ data will be shown in raw form, with HTML special characters converted
 to entity references.  This behavior is the default because some MUAs
 are known to give incorrect charset parameters.
 </p>
-<br>
 </td>
 </tr>
 </table>
@@ -254,7 +241,6 @@ are known to give incorrect charset parameters.
 with a link to the file created in the HTML.  For applicable image types, they
 are inlined unless the image has an attachment content-disposition.
 </p>
-<br>
 </td>
 </tr>
 </table>
@@ -293,7 +279,6 @@ can be converted directly to HTML.
 <td><p>Yes.  Each part is automatically processed according to its
 media-type.
 </p>
-<br>
 </td>
 </tr>
 </table>
@@ -304,9 +289,11 @@ media-type.
 <table border=0 cellpadding=4>
 <tr valign=top>
 <td><strong><img src="monicon.png" alt="MHonArc"></strong></td>
-<td><p>Yes.
+<td><p>Yes.  MHonArc also provides the
+<a href="resources/mimealtprefs.html">MIMEALTPREFS</a> resource to
+allow users to control media-type preferences for
+<tt>multipart/alternative</tt> mail.
 </p>
-<br>
 </td>
 </tr>
 </table>
@@ -320,7 +307,6 @@ media-type.
 <td><strong><img src="monicon.png" alt="MHonArc"></strong></td>
 <td><p>Yes.
 </p>
-<br>
 </td>
 </tr>
 </table>
@@ -332,7 +318,6 @@ media-type.
 <td><strong><img src="monicon.png" alt="MHonArc"></strong></td>
 <td><p>Yes.
 </p>
-<br>
 </td>
 </tr>
 </table>
@@ -352,7 +337,6 @@ media-type.
 <td><strong><img src="monicon.png" alt="MHonArc"></strong></td>
 <td><p>Yes.
 </p>
-<br>
 </td>
 </tr>
 </table>
@@ -364,7 +348,6 @@ media-type.
 <td><strong><img src="monicon.png" alt="MHonArc"></strong></td>
 <td><p>Yes.
 </p>
-<br>
 </td>
 </tr>
 </table>
@@ -386,7 +369,6 @@ media-type.
 <a href="resources/mimefilters.html#m2h_external">m2h_external::filter</a>
 to be saved to an external file.
 </p>
-<br>
 </td>
 </tr>
 </table>
@@ -409,11 +391,10 @@ to be saved to an external file.
 <tr valign=top>
 <td><strong><img src="monicon.png" alt="MHonArc"></strong></td>
 <td><p>The
-<a href="resources/mimefilters.html#m2h_text_plain">m2h_text_plain::filter</a>
-supports an option to specify what character set to use if no character
-set is specified.  By default, ISO-8859-1 is assumed.
+<a href="resources/defcharset">DEFCHARSET</a> resource
+can be used to specify what character set to use if no character
+set is specified.  By default, US-ASCII is assumed.
 </p>
-<br>
 </td>
 </tr>
 </table>
@@ -431,7 +412,6 @@ set is specified.  By default, ISO-8859-1 is assumed.
 <td><strong><img src="monicon.png" alt="MHonArc"></strong></td>
 <td><p>Not applicable.
 </p>
-<br>
 </td>
 </tr>
 </table>
@@ -450,7 +430,6 @@ set is specified.  By default, ISO-8859-1 is assumed.
 <td><strong><img src="monicon.png" alt="MHonArc"></strong></td>
 <td><p>Yes.
 </p>
-<br>
 </td>
 </tr>
 </table>
@@ -469,13 +448,10 @@ set is specified.  By default, ISO-8859-1 is assumed.
 <tr valign=top>
 <td><strong><img src="monicon.png" alt="MHonArc"></strong></td>
 <td><p>MHonArc supports non-ASCII encoding of text in message headers,
-including the "B" and "Q" encodings.  By default, US-ASCII,
-ISO-8859-[1-10], and ISO-2022-JP are supported.  For encoded
-words with an unrecognized character set, the word is left in
-encoded form.  Additional character set support can be added via the
-<a href="resources/charsetconverters.html">CHARSETCONVERTERS</a> resource.
+including the "B" and "Q" encodings.  See
+<a href="resources/charsetconverters.html">CHARSETCONVERTERS</a> for
+a list of charsets supported.
 </p>
-<br>
 </td>
 </tr>
 </table>
@@ -501,6 +477,12 @@ information, see the
 Note, many media-types cannot be directly converted into HTML.  For
 these types, they are saved to a separate file with a link to the
 file inserted in the converted HTML message data.
+</p>
+</li>
+
+<li><p>The ability to explicitly control media-type preferences
+of <tt>multipart/alternative</tt> data via the
+<a href="resources/mimealtprefs.html">MIMEALTPREFS</a> resource
 </p>
 </li>
 
@@ -536,7 +518,7 @@ URLs in list header fields will be converted into hypertext links.
 
 <HR>
 <address>
-$Date: 2001/12/24 14:38:07 $ <br>
+$Date: 2003/01/02 05:46:01 $ <br>
 <img align="top" src="monicon.png" alt="">
 <a href="http://www.mhonarc.org/"><strong>MHonArc</strong></a><br>
 Copyright &#169; 1999, <a href="http://www.mhonarc.org/~ehood/"

@@ -1,12 +1,10 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: UTF8.pm,v 1.3 2002/07/30 05:10:30 ehood Exp $
+##	$Id: UTF8.pm,v 1.5 2002/12/20 08:01:11 ehood Exp $
 ##  Author:
 ##      Earl Hood       earl@earlhood.com
 ##  Description:
-##	CHARSETCONVERTER module that support conversion to UTF-8 via
-##	Unicode::MapUTF8 module.  It also requires versions of perl
-##	that support 'use utf8' pragma.
+##	POD after __END__.
 ##---------------------------------------------------------------------------##
 ##    Copyright (C) 2002	Earl Hood, earl@earlhood.com
 ##
@@ -29,119 +27,167 @@
 package MHonArc::UTF8;
 
 use strict;
-use Unicode::String;
-use Unicode::MapUTF8 qw(
-    to_utf8 utf8_charset_alias utf8_supported_charset
-);
+use MHonArc::CharMaps;
 
 BEGIN {
-    utf8_charset_alias({ 'windows-1250' => 'cp1250' });
-    utf8_charset_alias({ 'windows-1252' => 'cp1252' });
-}
-
-my %HTMLSpecials = (
-    '"'	=> '&quot;',
-    '&'	=> '&amp;',
-    '<'	=> '&lt;',
-    '>'	=> '&gt;',
-);
-
-sub entify {
-    use utf8;
-    my $str = shift;
-    $str =~ s/(["&<>])/$HTMLSpecials{$1}/g;
-    $str;
-}
-
-sub str2sgml{
-    my $charset = lc($_[1]);
-    my $str;
-
-    if ($charset eq 'utf-8' || $charset eq 'utf8') {
-	use utf8;
-	($str = $_[0]) =~ s/(["&<>])/$HTMLSpecials{$1}/g;
-	return $str;
-    }
-
-    if (utf8_supported_charset($charset)) {
-	$str = to_utf8({-string => $_[0], -charset => $charset});
-	{
-	    use utf8;
-	    $str =~ s/(["&<>])/$HTMLSpecials{$1}/g;
-	}
-
+    eval {
+	require MHonArc::UTF8::Encode;
+    };
+    if (!$@) {
+	# Encode module available
+	*entify    = \&_entify;
+	*clip      = \&MHonArc::UTF8::Encode::clip;
+	*to_utf8   = \&MHonArc::UTF8::Encode::to_utf8;
+	*str2sgml  = \&MHonArc::UTF8::Encode::str2sgml;
     } else {
-	warn qq/Warning: Unable to convert "$charset" to UTF-8\n/;
-	($str = $_[0]) =~ s/(["&<>])/$HTMLSpecials{$1}/g;
+	eval {
+	    require MHonArc::UTF8::MapUTF8;
+	};
+	if (!$@) {
+	    # Unicode::MapUTF8 module available
+	    *entify    = \&_entify;
+	    *clip      = \&MHonArc::UTF8::MapUTF8::clip;
+	    *to_utf8   = \&MHonArc::UTF8::MapUTF8::to_utf8;
+	    *str2sgml  = \&MHonArc::UTF8::MapUTF8::str2sgml;
+	} else {
+	    # Fallback to homegrown implementation
+	    require MHonArc::UTF8::MhaEncode;
+	    *entify    = \&_entify;
+	    *clip      = \&MHonArc::UTF8::MhaEncode::clip;
+	    *to_utf8   = \&MHonArc::UTF8::MhaEncode::to_utf8;
+	    *str2sgml  = \&MHonArc::UTF8::MhaEncode::str2sgml;
+	}
     }
-    $str;
 }
 
-sub clip {
-    use utf8;
-    my $str      = \shift;  # Prevent unnecessary copy.
-    my $len      = shift;   # Clip length
-    my $is_html  = shift;   # If entity references should be considered
-    my $has_tags = shift;   # If html tags should be stripped
+##---------------------------------------------------------------------------##
 
-    my $u = Unicode::String::utf8($$str);
-
-    if (!$is_html) {
-      return $u->substr(0, $len);
-    }
-
-    my $text = Unicode::String::utf8("");
-    my $subtext;
-    my $html_len = $u->length;
-    my($pos, $sublen, $erlen, $real_len);
-    my $er_len = 0;
-    
-    for ( $pos=0, $sublen=$len; $pos < $html_len; ) {
-	$subtext = $u->substr($pos, $sublen);
-	$pos += $sublen;
-
-	# strip tags
-	if ($has_tags) {
-	    # Strip full tags
-	    $subtext =~ s/<[^>]*>//g;
-	    # Check if clipped part of a tag
-	    if ($subtext =~ s/<[^>]*\Z//) {
-		my $gt = $u->index('>', $pos);
-		$pos = ($gt < 0) ? $html_len : ($gt+1);
-	    }
-	}
-
-	# check for clipped entity reference
-	if (($pos < $html_len) && ($subtext =~ /\&[^;]*\Z/)) {
-	    my $semi = $u->index(';', $pos);
-	    if ($semi < 0) {
-		# malformed entity reference
-		$subtext .= $u->substr($pos);
-		$pos = $html_len;
-	    } else {
-		$subtext .= $u->substr($pos, $semi-$pos+1);
-		$pos = $semi+1;
-	    }
-	}
-
-	# compute entity reference lengths to determine "real" character
-	# count and not raw character count.
-	while ($subtext =~ /(\&[^;]+);/g) {
-	    $er_len += length($1);
-	}
-
-	$text .= $subtext;
-
-	# done if we have enough
-	$real_len = $text->length - $er_len;
-	if ($real_len >= $len) {
-	    last;
-	}
-	$sublen = $len - ($text->length - $er_len);
-    }
-    $text;
+sub _entify {
+    my $text	= shift;
+    my $text_r  = ref($text) ? $text : \$text;
+    $$text_r =~ s/([\x22\x26\x3C\x3E\x40])/$HTMLSpecials{$1}/g;
+    $$text_r;
 }
 
 ##---------------------------------------------------------------------------##
 1;
 __END__
+
+=head1 NAME
+
+MHonArc::UTF8 - UTF-8 routines for MHonArc
+
+=head1 SYNOPSIS
+
+  <CharsetConverters override>
+  plain;    mhonarc::htmlize;
+  default;  MHonArc::UTF8::str2sgml; MHonArc/UTF8.pm
+  </CharsetConverters>
+
+  <TextClipFunc>
+  MHonArc::UTF8::clip; MHonArc/UTF8.pm
+  </TextClipFunc>
+
+=head1 DESCRIPTION
+
+MHonArc::UTF8 provides UTF-8 related routines for use in MHonArc.
+The main use of the routines provided is to generate mail
+archives encoded in Unicode UTF-8.
+
+=head1 FUNCTIONS
+
+=over
+
+=item C<MHonArc::UTF8::to_utf8($data, $from_charset, $to_charset)>
+
+Converts C<$data> encoded in C<$from_charset> into UTF-8.
+C<$to_charset> is ignored since it assumed to be C<utf-8>.
+
+This function is designed to be registered to the TEXTENCODE
+resource:
+
+  <TextEncode>
+  utf-8; MHonArc::UTF8::to_utf8; MHonArc/UTF8.pm
+  </TextEncode>
+
+=item C<MHonArc::UTF8::str2sgml($data, $charset)>
+
+This function is designed to be registered to the CHARSETCONVERTERS
+resource:
+
+  <CharsetConverters override>
+  plain;    mhonarc::htmlize;
+  us-ascii; mhonarc::htmlize;
+  default;  MHonArc::UTF8::str2sgml; MHonArc/UTF8.pm
+  </CharsetConverters>
+
+All data passed in is converted to utf-8 with HTML specials
+converted into entity references.
+
+=item C<MHonArc::UTF8::clip($text, $clip_len, $is_html, $has_tags)>
+
+This function is designed to be registered to the TEXTCLIPFUNC
+resource to have utf-8 strings safely clipped in resource variable
+expansion:
+
+  <TextClipFunc>
+  MHonArc::UTF8::clip; MHonArc/UTF8.pm
+  </TextClipFunc>
+
+=back
+
+=head1 NOTES
+
+=over
+
+=item *
+
+MHonArc::UTF8 tries to leverage existing Perl modules for handling
+conversion to utf-8.  The following list the modules checked for
+in the order of preference:
+
+=over
+
+=item 1
+
+L<Encode|Encode>.  The Encode module is standard with Perl v5.8, or later.
+
+=item 2
+
+L<Unicode::MapUTF8|Unicode::MapUTF8>.  Unicode::MapUTF8 is an optional
+module available via CPAN, and will work with Perl v5.6, or later.
+
+B<Note:> Since it is unclear about the future of Unicode::MapUTF8,
+it is possible that support for it may be dropped in the future.  It
+appears to not have been updated in awhile since Perl's Encode module
+will probably become the standard module to use for handling text
+encodings.
+
+=item 3
+
+Fallback implementation.  The fallback implementation is designed to
+work with older versions of Perl 5 if the above modules are not available.
+
+=back
+
+=back
+
+=head1 SEE ALSO
+
+The CHARSETCONVERTERS, TEXTCLIPFUNC, and TEXTENCODE
+resources in the MHonArc documentation.
+
+=head1 VERSION
+
+C<$Id: UTF8.pm,v 1.5 2002/12/20 08:01:11 ehood Exp $>
+
+=head1 AUTHOR
+
+Earl Hood, earl@earlhood.com
+
+MHonArc comes with ABSOLUTELY NO WARRANTY and MHonArc may be copied only
+under the terms of the GNU General Public License, which may be found in
+the MHonArc distribution.
+
+=cut
+

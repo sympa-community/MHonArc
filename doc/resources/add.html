@@ -1,7 +1,7 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
 <html>
 <head>
 <title>MHonArc Resources: ADD</title>
+<link rel="stylesheet" type="text/css" href="../docstyles.css">
 </head>
 <body>
 <!--x-rc-nav-->
@@ -11,10 +11,21 @@
 <!--/x-rc-nav-->
 <hr>
 <h1>ADD</h1>
+<!--X-TOC-Start-->
+<ul>
+<li><a href="#syntax">Syntax</a>
+<li><a href="#description">Description</a>
+<li><a href="#default">Default Setting</a>
+<li><a href="#rcvars">Resource Variables</a>
+<li><a href="#examples">Examples</a>
+<li><a href="#version">Version</a>
+<li><a href="#seealso">See Also</a>
+</ul>
+<!--X-TOC-End-->
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Syntax</h2>
+<h2><a name="syntax">Syntax</a></h2>
 
 <dl>
 
@@ -39,7 +50,7 @@
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Description</h2>
+<h2><a name="description">Description</a></h2>
 
 <p>The ADD resource instructs <em>MHonArc</em> to add messages
 to an existing archive.  The archive specified does not exist,
@@ -48,29 +59,15 @@ is coming from standard in, then the input is treated as a single
 message to add to the archive.
 </p>
 
-<table border=0 cellpadding=4>
-<tr valign=top>
-<td><strong><font color=red>CAUTION</font></strong></td>
-<td><p>If ADD is specified, and no archive currently exists, make
-sure there is no <b><tt>maillist.html</tt></b> file (or the filename
-specified by <a href="idxfname.html">IDXFNAME</a> resource) in
-the destination directory.  This can may cause the main index to
-be incorrect.  If this happens, remove <tt>maillist.html</tt> and
-use <a href="editidx.html">EDITIDX</a> to regenerate archive pages.
-</p>
-</td>
-</tr>
-</table>
-
 <p>When adding, <em>MHonArc</em> will skip any messages that
 already exists in the archive.  This allows one to have <em>MHonArc</em>
-rescan a mail folder only add any new messages found.
+rescan a mail folder to only add any new messages found.
 </p>
 
-<table border=0 cellpadding=4>
-<tr valign=top>
-<td><strong>NOTE</strong></td>
-<td><p>MHonArc determines duplicate messages by message-ids.
+<table class="note" width="100%">
+<tr valign="baseline">
+<td><strong>NOTE:</strong></td>
+<td width="100%"><p>MHonArc determines duplicate messages by message-ids.
 </p>
 </td>
 </tr>
@@ -78,52 +75,54 @@ rescan a mail folder only add any new messages found.
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Default Setting</h2>
+<h2><a name="default">Default Setting</a></h2>
 
 <p>Off
 </p>
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Resource Variables</h2>
+<h2><a name="rcvars">Resource Variables</a></h2>
 
 <p>N/A
 </p>
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Examples</h2>
+<h2><a name="examples">Examples</a></h2>
 
 <p>The following example shows adding a mail folder:
 </p>
 
-<pre>
-    % <b>mhonarc -outdir /home/ehood/mailarch -add inbox</b>
-</pre>
+<table border=1 width="100%"><tr><td><pre class="shell">
+prompt&gt; <b>mhonarc -outdir /home/ehood/mailarch -add inbox</b>
+</pre></td></tr></table>
 
 <p>The following shows how a single message can be added.
 The message comes from the output of the MH <em>show</em>
 program:
 </p>
 
-<pre>
-    % <b>show -noshow -noheader | mhonarc -add</b>
-</pre>
+<table border=1 width="100%"><tr><td><pre class="shell">
+prompt&gt; <b>show -noshow -noheader | mhonarc -add</b>
+</pre></td></tr></table>
 
 
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Version</h2>
+<h2><a name="version">Version</a></h2>
 
 <p>1.0
 </p>
 
 <!-- *************************************************************** -->
 <hr>
-<h2>See Also</h2>
+<h2><a name="seealso">See Also</a></h2>
 
-<p><a href="outdir.html">OUTDIR</a>
+<p>
+<a href="outdir.html">OUTDIR</a>,
+<a href="reconvert.html">RECONVERT</a>
 </p>
 
 <!-- *************************************************************** -->
@@ -135,7 +134,7 @@ program:
 <!--/x-rc-nav-->
 <hr>
 <address>
-$Date: 2002/07/27 05:13:10 $ <br>
+$Date: 2003/01/02 23:04:56 $ <br>
 <img align="top" src="../monicon.png" alt="">
 <a href="http://www.mhonarc.org/"><strong>MHonArc</strong></a><br>
 Copyright &#169; 1997-1998, <a href="http://www.earlhood.com/">Earl Hood</a>, <a href="mailto:mhonarc@mhonarc.org">mhonarc@mhonarc.org</a><br>

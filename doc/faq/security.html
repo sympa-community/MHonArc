@@ -1,12 +1,11 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
 <HTML>
 <HEAD>
 <TITLE>MHonArc FAQ: Security</TITLE></HEAD>
+<link rel="stylesheet" type="text/css" href="../docstyles.css">
 <BODY>
 
 <!--X-NavButtons-Start-->
-<p align=center>
-[<a href="mime.html">Prev</a>][Next][<a href="faq.html">TOC</a>][<a href="http://www.mhonarc.org/">Home</a>]
+<table width="100%"><tr><td align="left"><nobr>[<a href="mime.html">Prev</a>]</nobr></td><td align="center" width="100%">[<a href="faq.html">TOC</a>][<a href="../mhonarc.html">Manual</a>][<a href="http://www.mhonarc.org/">Home</a>]</td><td align="right"><nobr>[Next]</nobr></td></tr></table>
 </p>
 <!--X-NavButtons-End-->
 
@@ -16,12 +15,52 @@
 
 <!--X-TOC-Start-->
 <ul>
+<li><a href="#contact">Who do I contact if I find a vulnerability with MHonArc?</a></li>
 <li><a href="#spam">Can I obscure email addresses?</a></li>
-<li><a href="#spam">How can I prevent web access to <tt>.mhonarc.db</tt> files?</a></li>
+<li><a href="#mhonarc_db">How can I prevent web access to <tt>.mhonarc.db</tt> files?</a></li>
 <li><a href="#htmldata">Why are HTML messages a security risk?</a></li>
+<li><a href="#htmlexchow">So how can I exclude HTML mail?</a></li>
 <li><a href="#attachments">Why doesn't MHonArc, by default, use the specified filename when saving attachments?</a></li>
+<li><a href="#suid">Is it okay to run <tt>mhonarc</tt> setuid?</a></li>
 </ul>
 <!--X-TOC-End-->
+
+<!-- ??????????????????????????????????????????????????????????????? -->
+<hr noshade size=1>
+<table border=0>
+<tr valign=top><td><img src="monicon.png" align="bottom" alt=""></td><td>
+<h3><b><a name="contact">Who do I contact if I find a vulnerability with MHonArc?</a></b></h3>
+</td></tr></table>
+
+<p>You can do one of the following:
+</p>
+<ul>
+<li><p>You can submit a report at
+    <a href="http://savannah.nongnu.org/bugs/?func=addbug&group=mhonarc"
+    >&lt;https://savannah.nongnu.org/bugs/?func=addbug&group=mhonarc&gt;</a>.
+    Make sure to fill out all required information, and for the
+    <b>Bug Group</b> form item, select <em>Security</em>.
+    </p>
+    <p><strong>Note:</strong> All reports submitted for MHonArc via savannah 
+    are automatically mailed to the
+    <a href="mailto:mhonarc-dev@mhonarc.org">mhonarc-dev@mhonarc.org</a>
+    list, which is archived at
+    <a href="http://www.mhonarc.org/archive/html/"
+    >&lt;http://www.mhonarc.org/archive/html/&gt;</a>.
+    </p>
+    </li>
+<li><p>Or, you can send a mail message to
+    <a href="mailto:mhonarc@mhonarc.org?subject=Security%20Vulnerability"
+    >mhonarc@mhonarc.org</a>.  This address goes directly to the author(s) of
+    MHonArc, and is <strong>not</strong> archived on any public site.
+    </p></li>
+</ul>
+
+<p>Please indicate if it is okay to mention your name in any resulting
+advisories or patches that may result from your report.  If you do
+not make any indications, all attempts will be made to keep your identity
+confidential.
+</p>
 
 <!-- ??????????????????????????????????????????????????????????????? -->
 <hr noshade size=1>
@@ -30,14 +69,14 @@
 <h3><b><a name="spam">Can I obscure email addresses?</a></b></h3>
 </td></tr></table>
 
-<p>See the <b>SPAMMODE</b> resource.
+<p>See the <a href="../resources/spammode.html">SPAMMODE</a> resource.
 </p>
 
 <!-- ??????????????????????????????????????????????????????????????? -->
 <hr noshade size=1>
 <table border=0>
 <tr valign=top><td><img src="monicon.png" align="bottom" alt=""></td><td>
-<h3><b><a name="spam">How can I prevent web access to <tt>.mhonarc.db</tt> files?</a></b></h3>
+<h3><b><a name="mhonarc_db">How can I prevent web access to <tt>.mhonarc.db</tt> files?</a></b></h3>
 </td></tr></table>
 
 <p>MHonArc database files may contain information that you do
@@ -47,12 +86,43 @@ in the MHonArc database file, the original, unobscured, addresses
 exist.
 </p>
 
-<p>Practically, all web servers provide the ability deny access
+<p>There are multiple solutions to preventing access to database
+files:
+</p>
+
+<ul>
+<li><p>In v2.6, and later, the
+<a href="../resources/dbfileperms.html">DBFILEPERMS</a> resource
+exists to control the file permissions of the database file.  By default,
+the resource is set to a value that denies world read access.  If the
+archive files are owned by a different user ID than the web server
+process (which is normally the case), then access to database files
+will be denied.
+</p>
+<table class="note" width="100%">
+<tr valign="baseline">
+<td><strong>NOTE:</strong></td>
+<td width="100%"><p>DBFILEPERMS is applicable to Unix-based systems.
+Therefore, if using a different operating system, you may have to
+use one of the other solutions to deny access.
+</p>
+</td>
+</tr>
+</table>
+</li>
+
+<li><p>Generate the archive in a non-web accessible location, and
+then mirror files into a web-accesible locations, excluding the
+database file.  The drawback to this approach is it adds extra
+administrative and processing overhead.
+</p>
+
+<li><p>Practically, all web servers provide the ability deny access
 to files.  Refer to your web server's documentation for the specifies.
 If you are using the <a href="http://httpd.apache.org/">Apache HTTP server</a>,
 the following configuration directive can be used:
 </p>
-<pre>
+<pre class="code">
 &lt;Files .mhonarc.db&gt;
     Order allow,deny
     Deny from all
@@ -61,12 +131,38 @@ the following configuration directive can be used:
 <p>If you have <tt>mod_rewrite</tt> enabled, you could use the following
 instead:
 </p>
-<pre>
+<pre class="code">
 RewriteRule ^(.*)/.mhonarc.db $1 [R=permanent]
 </pre>
 <p>This will redirect browsers to the parent directory, which is
 the actual archive associated with database file.
 </p>
+</li>
+
+<li><p>The <a href="../resources/dbfile.html">DBFILE</a> resource can
+be used to rename the database file to some arbitrary, not easily
+guessed, name of your choosing.  However, this does not prevent brute
+force attempts to access the file.
+</p>
+</li>
+
+<li><p><a href="../resources/dbfile.html">DBFILE</a> resource can
+be set to a full pathname that is in a non-web server
+accessible location.
+</p>
+<table class="note" width="100%">
+<tr valign="baseline">
+<td><strong>NOTE:</strong></td>
+<td width="100%"><p>
+Using a full pathname for <a href="../resources/dbfile.html">DBFILE</a> is
+supported only in v2.5.13, or later.
+</p>
+</td>
+</tr>
+</table>
+</li>
+
+</ul>
 
 <!-- ??????????????????????????????????????????????????????????????? -->
 <hr noshade size=1>
@@ -86,6 +182,11 @@ email hosting provider) requesting sensitive information from
 users (like passwords).
 </p>
 
+<p>These types of attacks are classified as <em>Cross-Site
+Scripting</em> (XSS) attacks by the security community.  The common
+goal for XSS attacks is to obtain private information of a user,
+like browser cookies used for site authentication.  </p>
+
 <p>The following is a brief list of some of the security issues
 related to HTML messages:
 </p>
@@ -101,12 +202,55 @@ related to HTML messages:
     </li>
 </ul>
 
-<p>MHonArc's HTML filter (documented under the <b>MIMEFILTERS</b>) resource
-provides functionality of stripping out HTML data to minimize security
-exploits.  Check the document for full details.  The general recommendation
-for the security conscience is to exclude any HTML message data, especially
-for publicly accessible archives.
+<p>MHonArc's HTML filter (documented under the <a href="../resources/mimefilters.html">MIMEFILTERS</a>)
+resource provides functionality of stripping out HTML data to
+minimize security exploits.  Check the document for full details.
+The general recommendation for the security conscience is to exclude
+any HTML message data (see <a href="#htmlexchow">next question</a>).
+
+<!-- ??????????????????????????????????????????????????????????????? -->
+<hr noshade size=1>
+<table border=0>
+<tr valign=top><td><img src="monicon.png" align="bottom" alt=""></td><td>
+<h3><b><a name="htmlexchow">So how can I exclude HTML mail?</a></b></h3>
+</td></tr></table>
+
+<p>The quickest method is
+via the <a href="../resources/mimeexcs.html">MIMEEXCS</a> resource:
+<p>
+<pre class="code">
+<b>&lt;MIMEExcs&gt;</b>
+text/html
+text/x-html
+<b>&lt;/MIMEExcs&gt;</b>
+</pre>
+
+<p>Unfortunately, for messages that contain only HTML data, the
+entire message body will be excluded.  Therefore, you may still
+want to show the data, but have it so the HTML markup is completely
+neutralized.  The following resource settings will neutralize the
+dangers of HTML messages without excluding message data:
 </p>
+
+<pre class="code">
+&lt;!-- It is common for popular MUA's to provide a text/plain version
+     of the text/html version of a message body.  Therefore, we
+     use MIMEALTPREFS to choose the text/plain version if available.
+  --&gt;
+<b><a href="../resources/mimealtprefs.html">&lt;MimeAltPrefs&gt;</a></b>
+text/plain
+text/html
+<b>&lt;/MimeAltPrefs&gt;</b>
+
+&lt;!-- For messages that do not have a text/plain alternative, we
+     treat HTML data as text/plain so the content is not lost, but
+     HTML markup is escaped and neutralized.
+  --&gt;
+<b><a href="../resources/mimefilters.html">&lt;MIMEFilters&gt;</a></b>
+text/html;   m2h_text_plain::filter; mhtxtplain.pl
+text/x-html; m2h_text_plain::filter; mhtxtplain.pl
+<b>&lt;/MIMEFilters&gt;</b>
+</pre>
 
 <!-- ??????????????????????????????????????????????????????????????? -->
 <hr noshade size=1>
@@ -135,23 +279,37 @@ introduce executable content.
 </p>
 
 <p>It is because of the above reasons that the
-<tt><b>m2h_external::filter</b></tt> documented in the <b>MIMEFILTERS</b>
+<a href="../resources/mimefilters.html#m2h_external"><tt>m2h_external::filter</tt></a>
+documented in the <a href="../resources/mimefilters.html">MIMEFILTERS</a>
 resource advises caution when using the filter options that enable
 the usage of attachment filenames or filename extensions.
+</p>
+
+<!-- ??????????????????????????????????????????????????????????????? -->
+<hr noshade size=1>
+<table border=0>
+<tr valign=top><td><img src="monicon.png" align="bottom" alt=""></td><td>
+<h3><b><a name="suid">Is it okay to run <tt>mhonarc</tt> setuid?</a></b></h3>
+</td></tr></table>
+
+<p><strong>NO!</strong>  It is not okay.  First, MHonArc does
+not pass Perl's taint checks.  Second, MHonArc is vulnerable to
+symlink attacks.  Hence, if <tt>mhonarc</tt> (or any of the utility
+programs) is setuid, <tt>mhonarc</tt> can be used for local priviledge
+escalation attacks.
 </p>
 
 <!-- ===================================================================== -->
 <hr>
 
 <!--X-NavButtons-Start-->
-<p align=center>
-[<a href="mime.html">Prev</a>][Next][<a href="faq.html">TOC</a>][<a href="http://www.mhonarc.org/">Home</a>]
+<table width="100%"><tr><td align="left"><nobr>[<a href="mime.html">Prev</a>]</nobr></td><td align="center" width="100%">[<a href="faq.html">TOC</a>][<a href="../mhonarc.html">Manual</a>][<a href="http://www.mhonarc.org/">Home</a>]</td><td align="right"><nobr>[Next]</nobr></td></tr></table>
 </p>
 <!--X-NavButtons-End-->
 
 <HR>
 <address>
-$Date: 2002/04/02 06:57:57 $ <br>
+$Date: 2003/01/03 21:57:42 $ <br>
 <img align="top" src="monicon.png" alt="">
 <a href="http://www.mhonarc.org/"
 ><strong>MHonArc</strong></a><br>

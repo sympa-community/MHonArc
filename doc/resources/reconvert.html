@@ -1,0 +1,143 @@
+<html>
+<head>
+<title>MHonArc Resources: RECONVERT</title>
+<link rel="stylesheet" type="text/css" href="../docstyles.css">
+</head>
+<body>
+
+<!--x-rc-nav-->
+<table border=0><tr valign="top">
+<td align="left" width="50%">[Prev:&nbsp;<a href="rcfile.html">RCFILE</a>]</td><td><nobr>[<a href="../resources.html#reconvert">Resources</a>][<a href="../mhonarc.html">TOC</a>]</nobr></td><td align="right" width="50%">[Next:&nbsp;<a href="refsbegin.html">REFSBEGIN</a>]</td></tr></table>
+<!--/x-rc-nav-->
+
+<hr>
+<h1>RECONVERT</h1>
+<!--X-TOC-Start-->
+<ul>
+<li><a href="#syntax">Syntax</a>
+<li><a href="#description">Description</a>
+<li><a href="#default">Default Setting</a>
+<li><a href="#rcvars">Resource Variables</a>
+<li><a href="#examples">Examples</a>
+<li><a href="#version">Version</a>
+<li><a href="#seealso">See Also</a>
+</ul>
+<!--X-TOC-End-->
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="syntax">Syntax</a></h2>
+
+<dl>
+
+<dt><strong>Envariable</strong></dt>
+<dd><p>
+<code>M2H_RECONVERT=</code>[ <code>0</code> | <code>1</code> ]
+</p>
+</dd>
+
+<dt><strong>Element</strong></dt>
+<dd><p>N/A
+</p>
+</dd>
+
+<dt><strong>Command-line Option</strong></dt>
+<dd><p>
+<code>-reconvert</code><br>
+<code>-noreconvert</code><br>
+</p>
+</dd>
+
+</dl>
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="description">Description</a></h2>
+
+<p>When RECONVERT is active during an
+<a href="add.html">add operation</a>, if a message currently exists
+in the archive, it will be reconverted.  This is basically the
+same ad deleting a message and re-adding it, with the exception
+that the message number will be preserved.
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="default">Default Setting</a></h2>
+
+<p>Off.
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="rcvars">Resource Variables</a></h2>
+
+<p>N/A
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="examples">Examples</a></h2>
+
+<p>Generally, RECONVERT is used to selectively re-process individual messages:
+</p>
+<table border="1" width="100%"><tr><td><pre class="shell">
+prompt&gt; <b>mhonarc -add -reconvert -outdir <var>/path/to/archive</var> &lt; mesg.822</b>
+</pre></td></tr></table>
+
+<p>However, RECONVERT can be used to "rebuild" an archive where
+message numbers are preserved:
+</p>
+<table border="1" width="100%"><tr><td><pre class="shell">
+prompt&gt; mhonarc <b>-add -reconvert -outdir <var>/path/to/archive</var> <var>folder</var></b>
+</pre></td></tr></table>
+<p>(assuming that <var>folder</var> contains all the original raw messages).
+</p>
+<p>The RECONVERT method is less efficient than the following:
+</p>
+<table border="1" width="100%"><tr><td><pre class="shell">
+prompt&gt; <b>rm -r <var>/path/to/archive</var></b>
+prompt&gt; <b>mkdir <var>/path/to/archive</var></b>
+prompt&gt; <b>mhonarc -outdir <var>/path/to/archive</var> <var>folder</var></b>
+</pre></td></tr></table>
+
+<p>But, if <var>folder</var> has had messages deleted from it before
+the rebuild (for example, to remove spam or objectionable messages),
+some messages may get assigned different message numbers from the
+pre-rebuild archive.  This can be a problem if people maintain
+bookmarks to individual messages.
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="version">Version</a></h2>
+
+<p>2.6.0
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="seealso">See Also</a></h2>
+
+<p>
+<a href="add.html">ADD</a>
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<!--x-rc-nav-->
+<table border=0><tr valign="top">
+<td align="left" width="50%">[Prev:&nbsp;<a href="rcfile.html">RCFILE</a>]</td><td><nobr>[<a href="../resources.html#reconvert">Resources</a>][<a href="../mhonarc.html">TOC</a>]</nobr></td><td align="right" width="50%">[Next:&nbsp;<a href="refsbegin.html">REFSBEGIN</a>]</td></tr></table>
+<!--/x-rc-nav-->
+<hr>
+<address>
+$Date: 2003/01/03 21:58:45 $<br>
+<img align="top" src="../monicon.png" alt="">
+<a href="http://www.mhonarc.org/"><strong>MHonArc</strong></a><br>
+Copyright &#169; 2002, <a href="http://www.earlhood.com/"
+>Earl Hood</a>, <a href="mailto:mhonarc@mhonarc.org"
+>mhonarc@mhonarc.org</a><br>
+</address>
+
+</body>
+</html>

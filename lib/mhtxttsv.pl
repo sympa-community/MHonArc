@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhtxttsv.pl,v 2.4 2001/08/25 20:01:01 ehood Exp $
+##	$Id: mhtxttsv.pl,v 2.5 2003/01/19 01:35:59 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -46,7 +46,7 @@ sub filter {
     foreach $line (split(/\r?\n/, $$data)) {
 	$ret .= "<tr>";
 	foreach $field (split(/\t/, $line)) {
-	    $ret .= "<td>$field</td>";
+	    $ret .= '<td>' . mhonarc::htmlize($field) . '</td>';
 	}
 	$ret .= "</tr>\n";
     }

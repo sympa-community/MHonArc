@@ -1,12 +1,8 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
 <html>
 <head>
-<title>MHonArc v2.5 -- Release Notes</title>
+<title>MHonArc Reference -- Release Notes</title>
+<link rel="stylesheet" type="text/css" href="docstyles.css">
 </head>
-<!--
-<body background="ssbg75.jpg"
-      text="#000000" link="#0000ee" vlink="#551a8b" alink="ff0000">
--->
 <body>
 
 <!--X-NavButtons-Start-->
@@ -18,9 +14,7 @@
 
 <h1><a name="relnotes">Release Notes</a></h1>
 
-<p>Read the <tt>CHANGES</tt> document included in the distribution
-for a more complete summary of changes to
-MHonArc.  This document highlights important changes that have occurred
+<p>This section highlights important changes that have occurred
 and important usage details which you should be aware of before using
 MHonArc.  If you are upgrading from a previous release, make sure to
 check for the
@@ -28,17 +22,44 @@ check for the
 from earlier releases.
 </p>
 
+<table class="note" width="100%">
+<tr valign="top">
+<td><strong>NOTE:</strong></td>
+<td width="100%"><p>
+Read the <tt>CHANGES</tt> document included in the distribution
+for a more complete summary of changes to MHonArc.
+</p>
+</td>
+</tr>
+</table>
+
 <!--X-TOC-Start-->
 <ul>
 <li><a href="#important">Compatibility Notes</a>
 <ul>
+<li><small><a href="#v2.4.x-defrcname">UPGRADING FROM v2.5.x OR EARLIER: Default iso-2022-jp Converter Changed</a></small>
 <li><small><a href="#v2.4.x-defrcname">UPGRADING FROM v2.4.x OR EARLIER: DEFRCNAME Change</a></small>
 <li><small><a href="#v2.4.x-header-footer">UPGRADING FROM v2.4.x OR EARLIER: HEADER and FOOTER Removed</a></small>
 <li><small><a href="#v2.4.x-mimefilters">UPGRADING FROM v2.4.x OR EARLIER: MIMEFILTERS API Change</a></small>
 <li><small><a href="#v2.1.x-dbedit">UPGRADING FROM v2.1.x OR EARLIER: Database Format Change</a></small>
 <li><small><a href="#down">DOWNGRADING TO OLDER VERSIONS</a></small>
 </ul>
+<li><a href="#v2.6.0">v2.6.0 Notes</a>
+<ul>
+<li><small><a href="#m2h_text_plain:default"><tt>m2h_text_html::filter</tt>: <tt>default</tt> argument removed</a></small>
+<li><small><a href="#spammode"><tt>SPAMMODE</tt>: Applies to message body text.</a></small>
+<li><small><a href="#get_disp"><tt>readmail::MAILhead_get_disposition</tt>: API change.</a></small>
+</ul>
 <li><a href="#general">General Notes</a>
+<ul>
+<li><small><a href="#japanese">Japanese and MHonArc</a></small>
+<li><small><a href="#html_filter">Auto-loaded URL attributes stripped in HTML messages</a></small>
+<li><small><a href="#iso8859_pl"><tt>iso8859.pl</tt> deprecated</a></small>
+<li><small><a href="#tslice">TSLICE range setting</a></small>
+<li><small><a href="#namespace">MHonArc code under the <tt>mhonarc</tt> namespace</a></small>
+<li><small><a href="#htmlext">HTMLEXT and MSGPREFIX usage warning</a></small>
+<li><small><a href="#mimefilters">Applying new MIMEFILTERS settings</a></small>
+</ul>
 </ul>
 <!--X-TOC-End-->
 
@@ -50,13 +71,47 @@ from earlier releases.
 if upgrading from a previous release of MHonArc:
 </p>
 
+<h3><a name="v2.4.x-defrcname">UPGRADING FROM v2.5.x OR EARLIER: Default iso-2022-jp Converter Changed</a></h3>
+
+    <p>In v2.6, the <strong>default</strong>
+    <a href="resources/charsetconverters.html">charset
+    converter</a> for <tt>iso-2022-jp</tt> has changed to the following:
+    </p>
+    <pre class="code">
+<b>&lt;CharsetConverters&gt;</b>
+iso-2022-jp; MHonArc::CharEnt::str2sgml; MHonArc/CharEnt.pm
+<b>&lt;/CharsetConverters&gt;</b></pre>
+    <p>This filter converts all Japanese characters into Unicode character
+    entity references (e.g. <tt class="icode">&amp;#x7279;</tt>)
+    removing the iso-2022-jp encoding.  For some
+    Japanese locales, this type of conversion may not be desired since
+    some Japanese-aware processing tools may not support Unicode character
+    entity references.  If you want to preserve the iso-2022-jp encoding,
+    you must explicitly specify the use of <tt>iso_2022_jp::str2html</tt>
+    via the <a href="resources/charsetconverters.html">CHARSETCONVERTERS</a>
+    resource as follows:
+    </p>
+    <pre class="code">
+<b>&lt;CharsetConverters&gt;</b>
+iso-2022-jp; iso_2022_jp::str2html; iso2022jp.pl
+<b>&lt;/CharsetConverters&gt;</b></pre>
+    <p>The change to <tt>MHonArc::CharEnt::str2sgml</tt> as the default
+    converter for iso-2022-jp was done to make MHonArc as locale neutral
+    as possible in its default configuration.
+    </p>
+    <p>For more information about using MHonArc in a Japanese locale,
+    see (documents in Japanese):<br>
+    <a href="http://www.shiratori.riec.tohoku.ac.jp/~p-katoh/Hack/Docs/mhonarc-jp/index.html">&lt;http://www.shiratori.riec.tohoku.ac.jp/~p-katoh/Hack/Docs/mhonarc-jp/index.html&gt;</a><br>
+    <a href="http://www.shiratori.riec.tohoku.ac.jp/~p-katoh/Hack/Docs/mhonarc-jp/mhonarc-jp-2_4.html">&lt;http://www.shiratori.riec.tohoku.ac.jp/~p-katoh/Hack/Docs/mhonarc-jp/mhonarc-jp-2_4.html&gt;</a>
+    </p>
+
 <h3><a name="v2.4.x-defrcname">UPGRADING FROM v2.4.x OR EARLIER: DEFRCNAME Change</a></h3>
 
     <p>The default value for the <a
     href="resources/defrcname.html">DEFRCNAME</a> is now called
-    "<tt>.mhonarc.mrc</tt>", or "<tt>mhonarc.mrc</tt>" under
-    Windows and VMS.  The old value was "<tt>.mhonarc.rc</tt>", or
-    "<tt>mhonarc.rc</tt>".  If you use the default resource file,
+    "<tt class="icode">.mhonarc.mrc</tt>", or "<tt class="icode">mhonarc.mrc</tt>" under
+    Windows and VMS.  The old value was "<tt class="icode">.mhonarc.rc</tt>", or
+    "<tt class="icode">mhonarc.rc</tt>".  If you use the default resource file,
     you will need to rename the file to match the filenames used for
     v2.5 and later.
     </p>
@@ -119,15 +174,19 @@ if upgrading from a previous release of MHonArc:
     </p>
 
 <h3><a name="down">DOWNGRADING TO OLDER VERSIONS</a></h3>
-    
-    <p>Downgrading to an earlier version of MHonArc can be
-    dangerous, especially if downgrading to an older version that
-    used different storage formats in archive database files from
+
+<table class="caution" width="100%">
+<tr valign="baseline">
+<td><strong style="color: red;">CAUTION:</strong></td>
+<td width="100%"><p>Downgrading to an earlier version of MHonArc can
+    <strong>corrupt</strong> your archives, especially when downgrading to
+    an older version that
+    used different database file storage formats from
     the current version in use.
-    If an older version of MHonArc is
-    used to process an archive last updated by a new version, archive
-    data can get lost and/or unexpected output can occur.
     </p>
+</td>
+</tr>
+</table>
     <p>Changes in archive format are not common, so downgrading
     can be okay depending on the versions involved.  The key versions
     to watch out for are the ones noted in this section where
@@ -149,56 +208,120 @@ if upgrading from a previous release of MHonArc:
     utility contained in the MHonArc version the archive is being
     downgraded to.
     </p>
-    <p>Of course, the safest way to downgrade is to recreate an archive
+<table class="tip" width="100%">
+<tr valign="baseline">
+<td><strong>TIP:</strong></td>
+<td width="100%">
+    <p>The safest way to downgrade is to recreate an archive
     from the original raw mail data.  It is good practice to preserve
-    the raw mail data in some form for cases like these and for
+    the raw mail data for cases like this and for
     general archive recovering situations due to file corruption or other
     system failures.
+    </p>
+</td>
+</tr>
+</table>
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="v2.6.0">v2.6.0 Notes</a></h2>
+
+<h3><a name="m2h_text_plain:default"><tt>m2h_text_html::filter</tt>: <tt>default</tt> argument removed</a></h3>
+    <p>The <tt>default</tt> <a href="resources/mimeargs.html">argument</a>
+    for the <a href="resources/mimefilters.html#m2h_text_plain::filter"
+    ><tt>m2h_text_plain::filter</tt></a> has been removed.  The
+    <a href="resources/defcharset.html">DEFCHARSET</a> can
+    be used instead.
+    </p>
+
+<h3><a name="spammode"><tt>SPAMMODE</tt>: Applies to message body text.</a></h3>
+    <p>If <a href="resources/spammode.html">SPAMMODE</a> resource is
+    enabled, it enables the new
+    <a href="resources/modifybodyaddresses.html">MODIFYBODYADDRESSES</a>
+    resource, which enables
+    <a href="resources/addressmodifycode.html">ADDRESSMODIFYCODE</a>
+    to rewrite addresses in message text bodies.  If you prefer to not have
+    addresses in message bodies modified when SPAMMODE is enabled,
+    you must explicitly disable the MODIFYBODYADDRESSES resource.
+    </p>
+
+<h3><a name="get_disp"><tt>readmail::MAILhead_get_disposition</tt>: API change.</a></h3>
+    <p>The calling interface to <tt>readmail::MAILhead_get_disposition</tt>
+    has been changed to the following:
+    </p>
+    <pre class="code">
+($disp, $file, $raw, $html_name)  =
+	      readmail::MAILhead_get_disposition($fields_hash_ref, $do_html);</pre>
+    <p>The <tt class="icode">$file</tt> return value now has
+    special, or invalid, filename characters converted to underscores.
+    </p>
+    <p>The <tt class="icode">$do_html</tt> is optional.  If a true
+    value, <tt class="icode">$html_name</tt> will be returned as
+    a representation of the filename suited for inclusion HTML and
+    with character conversion processing done.
+    </p>
+    <p>The <tt class="icode">$raw</tt> return value is the raw filename
+    value as specified in the message header, which may include
+    pathname components.  This return value is mainly for informative
+    reasons and it should not be used by filter code for security reasons.
+    </p>
+    <p>The changes are backward compatible, but if you have written
+    custom filters, you may want to use the new calling convention
+    if you display the filename in the HTML generated.
     </p>
 
 <!-- *************************************************************** -->
 <hr>
 <h2><a name="general">General Notes</a></h2>
 
-<ul>
+<h3><a name="japanese">Japanese and MHonArc</a></h3>
+    <p>Information on using MHonArc in a Japanese locale is available
+    at the following locations (documents in Japanese):<br>
+    <a href="http://www.shiratori.riec.tohoku.ac.jp/~p-katoh/Hack/Docs/mhonarc-jp/index.html">&lt;http://www.shiratori.riec.tohoku.ac.jp/~p-katoh/Hack/Docs/mhonarc-jp/index.html&gt;</a><br>
+    <a href="http://www.shiratori.riec.tohoku.ac.jp/~p-katoh/Hack/Docs/mhonarc-jp/mhonarc-jp-2_4.html">&lt;http://www.shiratori.riec.tohoku.ac.jp/~p-katoh/Hack/Docs/mhonarc-jp/mhonarc-jp-2_4.html&gt;</a>
+    </p>
 
-<li><p>For v2.5, the default text/html filter (mhtxthtml.pl) will
-    now convert auto-loaded URL attributes to
-    '<tt>javascript:void(0);</tt>' for some HTML elements --
+<h3><a name="html_filter">Auto-loaded URL attributes stripped in HTML messages</a></h3>
+    <p>For v2.5, the default text/html filter (mhtxthtml.pl) will
+    disable auto-loaded URL attributes for some HTML elements --
     <tt>IMG</tt>, <tt>BODY</tt>, <tt>IFRAME</tt>, <tt>FRAME</tt>,
     <tt>OBJECT</tt>, <tt>SCRIPT</tt>, <tt>INPUT</tt> -- except for cid:
-    URLs.    This behavior can be disabled if the '<tt>allownoncidurls</tt>'
+    URLs.  This behavior can be disabled if the '<tt>allownoncidurls</tt>'
     filter argument is specified.
     </p>
-    <p>The new behavior is to prevent malicious URLs that verify
+    <p>The new behavior prevents malicious URLs used to verify
     mail addresses for spam purposes, secretly set cookies, or
-    gather some statistical data automatically with the use of
-    elements that cause browsers to automatically fetch data.
+    gather some statistical data without the explicit consent of
+    the reader.
     </p>
     </li>
 
-<li><p>ISO-8859 character set data processing now defaults to using
+<h3><a name="iso8859_pl"><tt>iso8859.pl</tt> deprecated</a></h3>
+    <p>ISO-8859 character set data processing now defaults to using
     the <tt>MHonArc::CharEnt</tt> module in v2.5.  The old <tt>iso8859.pl</tt>
     library is still provided for compatibility with older
-    archives.  To update archives to use the new settings, you
+    archives, and with v2.6, <tt>iso8859.pl</tt> directly invokes
+    <tt>MHonArc::CharEnt</tt>.
+    </p>
+    <p>To update archives to use the new settings, you
     can run the following command,
     </p>
-    <pre>
-    <a href="app-utilsprg.html#mha-dbedit">mha-dbedit</a> -rcfile examples/<a href="rcfileexs/def-mime.mrc.html">def-mime.mrc</a> \
-	       -outdir /path/to/archive </pre>
-    <p>where "examples/<a href="rcfileexs/def-mime.mrc.html">def-mime.mrc</a>" represents the default MIME
+    <table border=1 width="100%"><tr><td><pre class="shell">
+<a class="shell" href="app-utilsprg.html#mha-dbedit">mha-dbedit</a> -rcfile examples/<a class="shell" href="rcfileexs/def-mime.mrc.html">def-mime.mrc</a> \
+	   -outdir /path/to/archive</pre></td></tr></table>
+    <p>where <tt class="ishell">examples/<a class="shell" href="rcfileexs/def-mime.mrc.html">def-mime.mrc</a></tt> represents the default MIME
     processing resources for MHonArc provided within the MHonArc
     distribution.
     </p>
-    <table border=0 cellpadding=4>
+    <table class="note" width="100%">
     <tr valign="top">
-    <td><strong>NOTE</strong></td>
-    <td><p>v2.5.4, and later, generated archives will automatically
+    <td><strong>NOTE:</strong></td>
+    <td width="100%"><p>v2.5.4, and later, generated archives will automatically
     inherit new
     <a href="resources/charsetconverters.html">CHARSETCONVERTERS</a>
     if the built-in defaults are being used.
     However, if you have defined CHARSETCONVERTERS for your archives, you
-    will need to explicitly update your archives if you want them
+    will need to explicitly update your archives if you want the new settings
     applied to your archives.
     </p>
     </td>
@@ -206,7 +329,8 @@ if upgrading from a previous release of MHonArc:
     </table>
     </li>
 
-<li><p>The value of the <a href="resources/tslice.html">TSLICE</a>
+<h3><a name="tslice">TSLICE range setting</a></h3>
+    <p>The value of the <a href="resources/tslice.html">TSLICE</a>
     resource is used to determine the number of messages to update,
     before and after by thread, of each new message added.  To
     insure that messages within a thread slice are updated when
@@ -224,15 +348,8 @@ if upgrading from a previous release of MHonArc:
     TSLICE resource so you will not have anything to worry about.
     </p>
 
-<li><p>If updgrading from v2.4.x, or earlier, reference and follow-up
-    information of a message is now stored in a different format
-    in the database (and internally).  MHonArc will auto-update
-    older archives to the new format, so no action should be
-    required on your part.
-    </p>
-    </li>
-
-<li><p>If upgrading from v2.1.x, or earlier, any custom filters you
+<h3><a name="namespace">MHonArc code under the <tt>mhonarc</tt> namespace</a></h3>
+    <p>If upgrading from v2.1.x, or earlier, any custom filters you
     have developed may need to modified.  If your filter accessed
     some main variables, your filter will not operate properly.
     All variables that used to be in package "main" are no longer.
@@ -243,14 +360,16 @@ if upgrading from a previous release of MHonArc:
     </p>
     </li>
 
-<li><p>See the warnings in the documentation for the
+<h3><a name="htmlext">HTMLEXT and MSGPREFIX usage warning</a></h3>
+    <p>See the warnings in the documentation for the
     <a href="resources/htmlext.html">HTMLEXT</a> and
     <a href="resources/msgprefix.html">MSGPREFIX</a>
     resources before using them.
     </p>
     </li>
 
-<li><p>Occasionally, a new release of MHonArc may contain new
+<h3><a name="mimefilters">Applying new MIMEFILTERS settings</a></h3>
+    <p>Occasionally, a new release of MHonArc may contain new
     MIME filters.  See the <tt>CHANGES</tt> file to check if any new filters
     have been added.
     </p>
@@ -261,13 +380,13 @@ if upgrading from a previous release of MHonArc:
     using the <tt><a href="rcfileexs/def-mime.mrc.html">def-mime.mrc</a></tt>
     in the examples directory.
     </p>
-    <table border=0 cellpadding=4>
+    <table class="note" width="100%">
     <tr valign="top">
-    <td><strong>NOTE</strong></td>
-    <td><p>v2.5.4, and later, generated archives will automatically
-    inherit new MIMEFILTERS if the built-in defaults are being used.
+    <td><strong>NOTE:</strong></td>
+    <td width="100%"><p>v2.5.4, and later, generated archives will automatically
+    inherit new <a href="resources/mimefilters.html">MIMEFILTERS</a> if the built-in defaults are being used.
     However, if you have defined MIMEFILTERS for your archives, you
-    will need to explicitly update your archives if you want them
+    will need to explicitly update your archives if you want the new settings
     applied to your archives.
     </p>
     </td>
@@ -275,9 +394,9 @@ if upgrading from a previous release of MHonArc:
     </table>
     <p>Example usage of <tt>mha-dbedit</tt>:
     </p>
-    <pre>
-    mha-dbedit -rcfile examples/<a href="rcfileexs/def-mime.mrc.html">def-mime.mrc</a> \
-	       -outdir /path/to/archive </pre>
+    <table border=1 width="100%"><tr><td><pre class="shell">
+mha-dbedit -rcfile examples/<a class="shell" href="rcfileexs/def-mime.mrc.html">def-mime.mrc</a> \
+	   -outdir /path/to/archive</pre></td></tr></table>
     <p>Change the <a href="resources/rcfile.html">-rcfile</a>
     and <a href="resources/outdir.html">-outdir</a> pathnames to reflect where
     you are running mhonarc and where your archive is located,
@@ -293,9 +412,6 @@ if upgrading from a previous release of MHonArc:
     (included in the examples directory) to include your settings
     and use the variant version when updating your archives.
     </p>
-    </li>
-
-</ul>
 
 <hr>
 <!--X-NavButtons-Start-->
@@ -307,10 +423,10 @@ if upgrading from a previous release of MHonArc:
 <!-- *************************************************************** -->
 <hr>
 <address>
-$Date: 2002/06/27 05:00:01 $ <br>
+$Date: 2003/02/04 23:31:19 $ <br>
 <img align="top" src="monicon.png" alt="">
 <a href="http://www.mhonarc.org/"><strong>MHonArc</strong></a><br>
-Copyright &#169; 1997-2001, <a href="http://www.mhonarc.org/~ehood/"
+Copyright &#169; 1997-2002, <a href="http://www.mhonarc.org/~ehood/"
 >Earl Hood</a>, <a href="mailto:mhonarc@mhonarc.org"
 >mhonarc@mhonarc.org</a><br>
 </address>

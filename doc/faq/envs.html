@@ -1,12 +1,11 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
 <HTML>
 <HEAD>
 <TITLE>MHonArc FAQ: Supported Environments</TITLE></HEAD>
+<link rel="stylesheet" type="text/css" href="../docstyles.css">
 <BODY>
 
 <!--X-NavButtons-Start-->
-<p align=center>
-[<a href="general.html">Prev</a>][<a href="usage.html">Next</a>][<a href="faq.html">TOC</a>][<a href="http://www.mhonarc.org/">Home</a>]
+<table width="100%"><tr><td align="left"><nobr>[<a href="general.html">Prev</a>]</nobr></td><td align="center" width="100%">[<a href="faq.html">TOC</a>][<a href="../mhonarc.html">Manual</a>][<a href="http://www.mhonarc.org/">Home</a>]</td><td align="right"><nobr>[<a href="usage.html">Next</a>]</nobr></td></tr></table>
 </p>
 <!--X-NavButtons-End-->
 
@@ -30,6 +29,7 @@
 <li><a href="#compuserve">Can MHonArc process Compuserve messages?</a></li>
 <li><a href="#otherformats">What about other mailbox/folder formats?</a></li>
 <li><a href="#nonenglish">Can MHonArc create non-English archives?</a></li>
+<li><a href="#japanese">How about Japanese?</a></li>
 <li><a href="#bilingual">Can I create bilingual archives?</a></li>
 <li><a href="#unicode">Does MHonArc support Unicode?</a></li>
 </ul>
@@ -117,13 +117,19 @@ the following MUAs: <EM>MH/nmh</EM>, <EM>mail</EM>, <EM>Mail</EM>,
 <EM>Elm</EM>, <EM>Eudora</EM>, <EM>WinVN</EM>, <EM>Windows
 Trumpet</EM>, and <EM>NUPop</EM>.  </P>
 
-<DL>
-<DT><STRONG>NOTE</STRONG> 
-
-<DD><P>To support some MUA's, it may require redefining the
-MSGSEP or MHPATTERN resource.  Please consult the documentation
-for more information about these resources.</P>
-</DL>
+<table class="note" width="100%">
+<tr valign="baseline">
+<td><strong>NOTE:</strong></td>
+<td width="100%"><p>
+To support some MUA's, it may require redefining the
+<a href="../resources/msgsep.html">MSGSEP</a> or
+<a href="../resources/mhpattern.html">MHPATTERN</a>
+resource.  Please consult the documentation
+for more information about these resources.
+</p>
+</td>
+</tr>
+</table>
 
 <!-- ??????????????????????????????????????????????????????????????? -->
 <hr noshade size=1>
@@ -136,7 +142,7 @@ for more information about these resources.</P>
 <A HREF="http://www.rosat.mpe-garching.mpg.de/mailing-lists/mhonarc/"
 >MHonArc mailing list</A>:
 </p>
-<BLOCKQUOTE>
+<BLOCKQUOTE class="mail">
 <UL>
 <LI><em>Subject</em>: Re: Majordomo Digest -&gt; MHonarc?</LI>
 <LI><em>From</em>: "Christopher P. Lindsey" &lt;<A HREF="mailto:lindsey@mallorn.com">lindsey@mallorn.com</A>&gt;</LI>
@@ -169,8 +175,7 @@ list-digest-owner or whatever).
 Chris
 </PRE>
 </BLOCKQUOTE>
-<BLOCKQUOTE>
-<hr noshade size=1>
+<BLOCKQUOTE class="mail">
 <UL>
 <LI><em>Subject</em>: Majordomo Digests to mbox format for MHonarc (perl script)</LI>
 <LI><em>From</em>: The Hermit Hacker &lt;<A HREF="mailto:scrappy@hub.org">scrappy@hub.org</A>&gt;</LI>
@@ -237,7 +242,7 @@ for($jj = 0; $jj &lt; $ii; $jj++) {
 
 <p>An answer from a MHonArc user:
 </p>
-<blockquote>
+<blockquote class="mail">
 <UL>
 <LI><em>To</em>: <A HREF="mailto:mhonarc@rosat.mpe-garching.mpg.de">mhonarc@rosat.mpe-garching.mpg.de</A></LI>
 <LI><em>Subject</em>: re: digest to mbox</LI>
@@ -318,8 +323,8 @@ www.cruciverb.com
 <p>From what I read from the <b>ezmlm(5)</b> manpage, the following example
 command will process all messages of list:
 </p>
-<pre>
-    shell&gt; <b>mhonarc <var>/list/archive/</var>[0-9]*</b>
+<pre class="shell">
+prompt&gt; <b>mhonarc <var>/list/archive/</var>[0-9]*</b>
 </pre>
 <p>Replace "<tt>/list/archive/</tt>" to what is appropriate for your
 configuration.
@@ -330,8 +335,8 @@ follows the same format as MH mail directories.
 <p>If you are using a shell that cannot handle "<tt>[0-9]*</tt>", the following
 should work:
 </p>
-<pre>
-    shell&gt; <b>mhonarc `find <var>/list/archive/</var> -type d -name '[0-9]*' -print`</b>
+<pre class="shell">
+prompt&gt; <b>mhonarc `find <var>/list/archive/</var> -type d -name '[0-9]*' -print`</b>
 </pre>
 <p>Note, make sure to add any additional options to mhonarc as needed
 to get the effects you desire.
@@ -355,8 +360,8 @@ Which subdirectory you choose to use depends on your needs.
 <p>Also, you will need to define the MHPATTERN resource to process
 all non-dotfiles.  Example:
 </p>
-<pre>
-    shell&gt; <b>mhonarc -mhpattern '^[^\.]' <var>MAILDIR</var>/cur</b>
+<pre class="shell">
+prompt&gt; <b>mhonarc -mhpattern '^[^\.]' <var>MAILDIR</var>/cur</b>
 </pre>
 <p>If all you will ever do is process qmail maildir folders, it may be best
 to set the M2H_MHPATTERN environment variable so you do not have
@@ -364,9 +369,9 @@ to respecify each time you invoke mhonarc.  Examples:
 </p>
 <dl>
 <dt>csh:
-    <dd><b><tt>setenv M2H_MHPATTERN '^[^\.]'</tt></b>
+    <dd><b><tt class="ishell">setenv M2H_MHPATTERN '^[^\.]'</tt></b>
 <dt>sh:
-    <dd><b><tt>M2H_MHPATTERN='^[^\.]'; export M2H_MHPATTERN</tt></b>
+    <dd><b><tt class="ishell">M2H_MHPATTERN='^[^\.]'; export M2H_MHPATTERN</tt></b>
 </dl>
 
 <!-- ??????????????????????????????????????????????????????????????? -->
@@ -393,8 +398,8 @@ The other file contains the raw mail messages and can be passed
 directly to MHonArc for processing.  For example, to process all the
 mail in your Inbox, do something like the following:
 </p>
-<pre>
-    shell&gt; <b>mhonarc $HOME/nsmail/Inbox</b>
+<pre class="shell">
+prompt&gt; <b>mhonarc $HOME/nsmail/Inbox</b>
 </pre>
 
 <p>Note, you may need to compress/compact folders in Netscape before
@@ -426,7 +431,7 @@ the raw messages that can be passed into MHonArc directly.
 
 <p>Here is a response from a user:
 </p>
-<blockquote>
+<blockquote class="mail">
 <UL>
 <LI><em>Subject</em>: Re: CompuServe --&gt; html</LI>
 <LI><em>From</em>: Steve Pacenka &lt;<A HREF="mailto:sp17@cornell.edu">sp17@cornell.edu</A>&gt;</LI>
@@ -522,6 +527,19 @@ resource.
 <hr noshade size=1>
 <table border=0>
 <tr valign=top><td><img src="monicon.png" align="bottom" alt=""></td><td>
+<h3><b><a name="japanese">How about Japanese?</a></b></h3>
+</td></tr></table>
+
+<p>Yes.  For details about Japanese usage of MHonArc, goto:<br>
+<a href="http://www.shiratori.riec.tohoku.ac.jp/~p-katoh/Hack/Docs/mhonarc-jp/index.html">&lt;http://www.shiratori.riec.tohoku.ac.jp/~p-katoh/Hack/Docs/mhonarc-jp/index.html&gt;</a><br>
+<a href="http://www.shiratori.riec.tohoku.ac.jp/~p-katoh/Hack/Docs/mhonarc-jp/mhonarc-jp-2_4.html">&lt;http://www.shiratori.riec.tohoku.ac.jp/~p-katoh/Hack/Docs/mhonarc-jp/mhonarc-jp-2_4.html&gt;</a><br>
+(documents are in Japanese).
+</p>
+
+<!-- ??????????????????????????????????????????????????????????????? -->
+<hr noshade size=1>
+<table border=0>
+<tr valign=top><td><img src="monicon.png" align="bottom" alt=""></td><td>
 <h3><b><a name="bilingual">Can I create bilingual archives?</a></b></h3>
 </td></tr></table>
 
@@ -531,22 +549,29 @@ the OTHERINDEXES resource can define any number of extra indexes
 to create.  For each index, you can redfine the index resources
 to use whatever text (English or non-English) you desire.
 </p>
-<dl>
-<dt><strong>NOTE</strong></dt>
-<dd><p>There is no support for mulitple variations of message
+<table class="note" width="100%">
+<tr valign="baseline">
+<td><strong>NOTE:</strong></td>
+<td width="100%"><p>
+There is no support for mulitple variations of message
 pages in an archive.  Therefore, a single language must be
 chosen for message pages, or you can include redundant information
 using multiple languages.
 </p>
-</dd>
-</dl>
-<dl>
-<dt><strong>NOTE</strong></dt>
-<dd><p>Actual message data will be in the language used in the
+</td>
+</tr>
+</table>
+<p> </p>
+<table class="note" width="100%">
+<tr valign="baseline">
+<td><strong>NOTE:</strong></td>
+<td width="100%"><p>
+Actual message data will be in the language used in the
 message.  MHonArc has no built-in language translation.
 </p>
-</dd>
-</dl>
+</td>
+</tr>
+</table>
 
 <dl>
 <dt>See also:</dt>
@@ -561,24 +586,29 @@ message.  MHonArc has no built-in language translation.
 <h3><b><a name="unicode">Does MHonArc support Unicode?</a></b></h3>
 </td></tr></table>
 
-<p>Not directly, but it is possible to have MHonArc generate
-UTF-8 HTML pages.  See the <tt>utf-8.mrc</tt> example resource
-file in the <cite>Appendix: Resource File Examples</cite> section
-of the documentation for more information and caveats.
+<p>Yes.  Check out the following for more information:
 </p>
+<ul>
+<li><a href="../resources/textencode.html">TEXTENCODE</a>
+    resource.</li>
+<li><a href="../resources/charsetconverters.html">CHARSETCONVERTERS</a>
+    resource.</li>
+<li><a href="../rcfileexs/utf-8-encode.mrc.html"><tt>utf-8-enocde.mrc</tt></a>
+    and <a href="../rcfileexs/utf-8.mrc.html"><tt>utf-8.mrc</tt></a>
+    resource file examples.</li>
+</ul>
 
 <!-- ===================================================================== -->
 <hr>
 
 <!--X-NavButtons-Start-->
-<p align=center>
-[<a href="general.html">Prev</a>][<a href="usage.html">Next</a>][<a href="faq.html">TOC</a>][<a href="http://www.mhonarc.org/">Home</a>]
+<table width="100%"><tr><td align="left"><nobr>[<a href="general.html">Prev</a>]</nobr></td><td align="center" width="100%">[<a href="faq.html">TOC</a>][<a href="../mhonarc.html">Manual</a>][<a href="http://www.mhonarc.org/">Home</a>]</td><td align="right"><nobr>[<a href="usage.html">Next</a>]</nobr></td></tr></table>
 </p>
 <!--X-NavButtons-End-->
 
 <hr>
 <address>
-$Date: 2002/07/20 00:48:48 $ <br>
+$Date: 2002/12/21 07:44:21 $ <br>
 <img align="top" src="monicon.png" alt="">
 <a href="http://www.mhonarc.org/"
 ><strong>MHonArc</strong></a><br>

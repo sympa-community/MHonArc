@@ -1,12 +1,8 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
 <HTML>
 <HEAD>
-<TITLE>MHonArc v2.5 -- Page Layout</TITLE>
+<TITLE>MHonArc Reference -- Page Layout</TITLE>
+<link rel="stylesheet" type="text/css" href="docstyles.css">
 </HEAD>
-<!--
-<BODY background="ssbg75.jpg"
-      text="#000000" link="#0000ee" vlink="#551a8b" alink="ff0000">
--->
 <BODY>
 
 <!--X-NavButtons-Start-->
@@ -92,7 +88,7 @@ main index is commonly referred to as the date index.
 
 <h3><a name="mainidxlayout">Main index page resource layout</a></h3>
 
-<pre>
+<pre class="code">
 <a href="resources/idxpgssmarkup.html"><b>IDXPGSSMARKUP</b></a>
 <a href="resources/idxpgbegin.html"><b>IDXPGBEGIN</b></a>
     <a href="resources/listbegin.html"><b>LISTBEGIN</b></a>
@@ -126,7 +122,7 @@ flexibility for customizing thread listing layout.
 
 <h3><a name="tidxlayout">Thread index page resource layout</a></h3>
 
-<pre>
+<pre class="code">
 <a href="resources/tidxpgssmarkup.html"><b>TIDXPGSSMARKUP</b></a>
 <a href="resources/tidxpgbegin.html"><b>TIDXPGBEGIN</b></a>
     <a href="resources/thead.html"><b>THEAD</b></a>
@@ -177,7 +173,7 @@ to HTML and archive navigational links.
 
 <h3><a name="msgpglayout">Message page resource layout</a></h3>
 
-<pre>
+<pre class="code">
 <a href="resources/msgpgssmarkup.html"><b>MSGPGSSMARKUP</b></a>
 <a href="resources/msgpgbegin.html"><b>MSGPGBEGIN</b></a>
     <a href="resources/msghead.html"><b>MSGHEAD</b></a>
@@ -198,10 +194,10 @@ to HTML and archive navigational links.
 <a href="resources/msgpgend.html"><b>MSGPGEND</b></a>
 </pre>
 
-<table border=0 cellpadding=4>
+<table class="note" width="100%">
 <tr valign=top>
-<td><strong>NOTE</strong></td>
-<td><p>If the <a href="resources/single.html">SINGLE</a> resource
+<td><strong>NOTE:</strong></td>
+<td width="100%"><p>If the <a href="resources/single.html">SINGLE</a> resource
 is set, <a href="resources/toplinks.html">TOPLINKS</a>
 and <a href="resources/botlinks.html">BOTLINKS</a>
 are are not applicable.  If the
@@ -228,7 +224,7 @@ to properly edit the message when needed during updates.
 <p>The format of converted message headers are determined by the
 following resource layout:
 </p>
-<pre>
+<pre class="code">
 <a href="resources/fieldsbeg.html">FIELDSBEG</a>
     (<a href="resources/labelbeg.html">LABELBEG</a>
      <i>label text</i>
@@ -239,23 +235,45 @@ following resource layout:
 <a href="resources/fieldsend.html">FIELDSEND</a>
 </pre>
 
-<table border=0 cellpadding=4>
+<table class="note" width="100%">
 <tr valign=top>
-<td><strong>NOTE</strong></td>
-<td><p>The line breaks above are used to show the sequence order of
+<td><strong>NOTE:</strong></td>
+<td width="100%"><p>The line breaks above are used to show the sequence order of
 the resources and do not indicate any actual line breaks in the final
 markup generated.
 </p>
 </td>
 </tr>
 </table>
-
+<p> </p>
+<table class="note" width="100%">
+<tr valign="baseline">
+<td><strong>NOTE:</strong></td>
+<td width="100%"><p>After a message is initially converted, the message
+header data is static.  Changes to resources that affect message header
+layout will only affect new messages and not existing archived messages.
+</p>
+</td>
+</tr>
+</table>
 <h3><a name="msgbodylayout">Converted message body</a></h3>
 
 <p>The formatting of message body data is controled by filter routines.
 See the <a href="resources/mimefilters.html">MIMEFILTERS</a> resource
 page for more information.
 </p>
+
+<table class="note" width="100%">
+<tr valign="baseline">
+<td><strong>NOTE:</strong></td>
+<td width="100%"><p>After a message is initially converted, the message
+body data is static.  Changes to resources that affect message body
+appearance will only affect news messages and not existing archived
+messages.
+</p>
+</td>
+</tr>
+</table>
 
 <h3><a name="tslice">Thread slices</a></h3>
 
@@ -315,7 +333,7 @@ an example.
 <!-- ******************************************************************** -->
 <HR>
 <address>
-$Date: 2002/06/27 00:06:14 $ <br>
+$Date: 2003/01/02 05:46:01 $ <br>
 <img align="top" src="monicon.png" alt="">
 <a href="http://www.mhonarc.org"
 ><strong>MHonArc</strong></a><br>

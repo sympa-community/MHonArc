@@ -1,13 +1,8 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
 <HTML>
 <HEAD>
-<TITLE>MHonArc v2.5 -- Appendix: Utility Programs
-</TITLE>
+<TITLE>MHonArc Reference -- Appendix: Utility Programs</TITLE>
+<link rel="stylesheet" type="text/css" href="docstyles.css">
 </HEAD>
-<!--
-<BODY background="ssbg75.jpg"
-      text="#000000" link="#0000ee" vlink="#551a8b" alink="ff0000">
--->
 <BODY>
 
 <!--X-NavButtons-Start-->
@@ -48,9 +43,9 @@ database without regenerating any archive pages.
 
 <p>Typical usage:
 </p>
-<pre>
-    shell&gt; <b>mha-dbedit -rcfile <var>res.mrc</var> -outdir <var>/path/to/archive</var></b>
-</pre>
+<table border=1 width="100%"><tr><td><pre class="shell">
+prompt&gt; <b>mha-dbedit <a class="shell" href="resources/rcfile.html">-rcfile</a> <var>res.mrc</var> <a class="shell" href="resources/outdir.html">-outdir</a> <var>/path/to/archive</var></b>
+</pre></td></tr></table>
 
 <hr>
 <H2><a name="mha-dbrecover">mha-dbrecover</a></H2>
@@ -62,9 +57,9 @@ corrupted, or accidentally deleted.
 
 <p>Typical usage:
 </p>
-<pre>
-    shell&gt; <b>mha-dbrecover -outdir <var>/path/to/archive</var></b>
-</pre>
+<table border=1 width="100%"><tr><td><pre class="shell">
+prompt&gt; <b>mha-dbrecover <a class="shell" href="resources/outdir.html">-outdir</a> <var>/path/to/archive</var></b>
+</pre></td></tr></table>
 
 <p>If the archive used different resource settings from the defaults
 for controling filenames, then you must specify those settings when
@@ -72,18 +67,18 @@ invoking <b>mha-dbrecover</b>.  For example, if you are using
 "<tt>shtml</tt>" for <a href="resources/htmlext.html">HTMLEXT</a>,
 then you should invoke <b>mha-dbrecover</b> like the following:
 </p>
-<pre>
-    shell&gt; <b>mha-dbrecover -htmlext shtml -outdir <var>/path/to/archive</var></b>
-</pre>
+<table border=1 width="100%"><tr><td><pre class="shell">
+prompt&gt; <b>mha-dbrecover <a class="shell" href="resources/htmlext.html">-htmlext</a> shtml <a class="shell" href="resources/outdir.html">-outdir</a> <var>/path/to/archive</var></b>
+</pre></td></tr></table>
 
 <p><b>mha-dbrecover</b> will only recreate non-layout message related data.
 If the archive had resource settings that were different than the
 the defaults, then those resource settings must be specified when
 invoking <b>mha-dbrecover</b>.  For example:
 </p>
-<pre>
-    shell&gt; <b>mha-dbrecover -rcfile <var>res.mrc</var> -outdir <var>/path/to/archive</var></b>
-</pre>
+<table border=1 width="100%"><tr><td><pre class="shell">
+prompt&gt; <b>mha-dbrecover <a class="shell" href="resources/rcfile.html">-rcfile</a> <var>res.mrc</var> <a class="shell" href="resources/outdir.html">-outdir</a> <var>/path/to/archive</var></b>
+</pre></td></tr></table>
 
 <h3><a name="mha-dbrecover-options">Additional Options</a></h3>
 
@@ -91,7 +86,7 @@ invoking <b>mha-dbrecover</b>.  For example:
 </p>
 
 <dl>
-<dt><tt>-dbr-startnum <var>#</var></tt></dt>
+<dt><strong><tt>-dbr-startnum <var>#</var></tt></strong></dt>
 <dd>The starting message number to recover data from.  This option is
     useful if you have many message files in a directory, but you only
     want to recover a subset of the files.
@@ -99,7 +94,7 @@ invoking <b>mha-dbrecover</b>.  For example:
     </dd>
 </dl>
 <dl>
-<dt><tt>-dbr-endnum <var>#</var></tt></dt>
+<dt><strong><tt>-dbr-endnum <var>#</var></tt></strong></dt>
 <dd>The ending message number to recover data from.  This option is
     useful if you have many message files in a directory, but you only
     want to recover a subset of the files.
@@ -127,14 +122,14 @@ is 200.  The following command will make recovering more efficient
 by skipping the first 800 messages since they will be dropped from
 the database anyway:
 </p>
-<pre>
-    shell&gt; <b>mha-dbrecover -dbr-startnum 800 -outdir <var>/path/to/archive</var></b>
-</pre>
+<table border=1 width="100%"><tr><td><pre class="shell">
+prompt&gt; <b>mha-dbrecover -dbr-startnum 800 <a class="shell" href="resources/outdir.html">-outdir</a> <var>/path/to/archive</var></b>
+</pre></td></tr></table>
 
-<table border=0 cellpadding=4>
+<table class="note" width="100%">
 <tr valign=top>
 <td><strong>NOTE</strong></td>
-<td><p>It is possible that message number order may not exactly match
+<td width="100%"><p>It is possible that message number order may not exactly match
 date order.  You may want to increase the number range to take in
 account of possible anomolies where message number order may vary from
 message date order.
@@ -178,7 +173,7 @@ for <b>mha-decode</b>.  The following options are applicable:
 </p>
 
 <dl>
-<dt><tt>-dcd-digest</tt></dt>
+<dt><strong><tt>-dcd-digest</tt></strong></dt>
 <dd>Do not parse message/rfc822 and message/news attachments.
     Normally, <b>mha-decode</b> will recursively parse message
     attachments and decode any parts contained within.  With this
@@ -191,38 +186,52 @@ for <b>mha-decode</b>.  The following options are applicable:
 
 <p>Basic usage:
 </p>
-<pre>
-    shell&gt; <b>mha-decode inbox</b>
-</pre>
+<table border=1 width="100%"><tr><td><pre class="shell">
+prompt&gt; <b>mha-decode inbox</b>
+</pre></td></tr></table>
 <p>Use <tt>-outdir</tt> to have all decoded data placed into a
 separate directory:
 </p>
-<pre>
-    shell&gt; <b>mha-decode -outdir <var>/var/tmp</var> inbox</b>
-</pre>
+<table border=1 width="100%"><tr><td><pre class="shell">
+prompt&gt; <b>mha-decode <a class="shell" href="resources/outdir.html">-outdir</a> <var>/var/tmp</var> inbox</b>
+</pre></td></tr></table>
 <p>And to decode a single message:</p>
-<pre>
-    shell&gt; <b>mha-decode -single <var>msg.822</var></b>
-</pre>
+<table border=1 width="100%"><tr><td><pre class="shell">
+prompt&gt; <b>mha-decode <a class="shell" href="resources/single.html">-single</a> <var>msg.822</var></b>
+</pre></td></tr></table>
 <p>or from standard input:</p>
-<pre>
-    shell&gt; <b><var>some_program</var> | mha-decode -single</b>
-</pre>
+<table border=1 width="100%"><tr><td><pre class="shell">
+prompt&gt; <b><var>some_program</var> | mha-decode -single</b>
+</pre></td></tr></table>
 <p>Save out attached messages and then pass them into MHonArc
 to be added to a archive:
 </p>
-<pre>
-    shell&gt; <b>mha-decode -dcd-digest -single <var>digest</var></b>
-    shell&gt; <b>mhonarc -outdir <var>/path/to/archive</var> -mhpattern '^822.*\.822$' .</b>
-</pre>
-<p><b>Note:</b> There is a trailing dot, '<tt>.</tt>', at the end of the
+<table border=1 width="100%"><tr><td><pre class="shell">
+prompt&gt; <b>mha-decode -dcd-digest <a class="shell" href="resources/single.html">-single</a> <var>digest</var></b>
+prompt&gt; <b>mhonarc <a class="shell" href="resources/outdir.html">-outdir</a> <var>/path/to/archive</var> <a class="shell" href="resources/mhpattern.html">-mhpattern</a> '^822.*\.822$' .</b>
+</pre></td></tr></table>
+<p> </p>
+<table class="note" width="100%">
+<tr valign="baseline">
+<td><strong>NOTE:</strong></td>
+<td width="100%"><p>There is a trailing dot, '<tt>.</tt>', at the end of the
 called to <b>mhonarc</b> to tell <b>mhonarc</b> to process the
 current working directory.
 </p>
-<p><b>Note:</b> You may need to reset the
+</td>
+</tr>
+</table>
+<p> </p>
+<table class="caution" width="100%">
+<tr valign=top>
+<td><strong style="color: red;">CAUTION:</strong></td>
+<td width="100%"><p>You will need to reset the
 <a href="resources/mhpattern.html">MHPATTERN</a> resource if normal
 input into the archive is from MH-style mail folders.
 </p>
+</td>
+</tr>
+</table>
 
 <hr>
 <!--X-NavButtons-Start-->
@@ -233,7 +242,7 @@ input into the archive is from MH-style mail folders.
 
 <HR>
 <address>
-$Date: 2002/05/03 04:30:50 $ <br>
+$Date: 2003/01/02 05:46:01 $ <br>
 <img align="top" src="monicon.png" alt="">
 <a href="http://www.mhonarc.org"
 ><strong>MHonArc</strong></a><br>

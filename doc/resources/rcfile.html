@@ -1,19 +1,34 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
 <html>
 <head>
 <title>MHonArc Resources: RCFILE</title>
+<link rel="stylesheet" type="text/css" href="../docstyles.css">
 </head>
 <body>
 <!--x-rc-nav-->
 <table border=0><tr valign="top">
-<td align="left" width="50%">[Prev:&nbsp;<a href="quiet.html">QUIET</a>]</td><td><nobr>[<a href="../resources.html#rcfile">Resources</a>][<a href="../mhonarc.html">TOC</a>]</nobr></td><td align="right" width="50%">[Next:&nbsp;<a href="refsbegin.html">REFSBEGIN</a>]</td></tr></table>
+<td align="left" width="50%">[Prev:&nbsp;<a href="quiet.html">QUIET</a>]</td><td><nobr>[<a href="../resources.html#rcfile">Resources</a>][<a href="../mhonarc.html">TOC</a>]</nobr></td><td align="right" width="50%">[Next:&nbsp;<a href="reconvert.html">RECONVERT</a>]</td></tr></table>
 <!--/x-rc-nav-->
 <hr>
 <h1>RCFILE</h1>
+<!--X-TOC-Start-->
+<ul>
+<li><a href="#syntax">Syntax</a>
+<li><a href="#description">Description</a>
+<ul>
+<li><small><a href="#">Resource file syntax</a></small>
+<li><small><a href="#">Resource variables</a></small>
+</ul>
+<li><a href="#default">Default Setting</a>
+<li><a href="#rcvars">Resource Variables</a>
+<li><a href="#examples">Examples</a>
+<li><a href="#version">Version</a>
+<li><a href="#seealso">See Also</a>
+</ul>
+<!--X-TOC-End-->
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Syntax</h2>
+<h2><a name="syntax">Syntax</a></h2>
 
 <dl>
 
@@ -38,7 +53,7 @@
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Description</h2>
+<h2><a name="description">Description</a></h2>
 
 <p>RCFILE tells MHonArc what the resource file is.
 The resource file allows you to specify most of the resources set by 
@@ -59,10 +74,10 @@ the line is not contained within an element, is ignored.  This implies
 that regular text can be put anywhere <STRONG>outside</STRONG> of
 recognized elements for commenting purposes.  </P>
 
-<table border=0 cellpadding=4>
+<table class="note" width="100%">
 <tr valign=top>
-<td><strong>NOTE</strong></td>
-<td><p>You should use SGML comment declarations
+<td><strong>NOTE:</strong></td>
+<td width="100%"><p>You should use SGML comment declarations
 (<CODE>&lt;!-- </CODE>...<CODE> --&gt;</CODE>) when commenting a
 resource file. This will eliminate possible conflicts
 if more stricter parsing rules are adopted.
@@ -129,26 +144,26 @@ resource's value.
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Default Setting</h2>
+<h2><a name="default">Default Setting</a></h2>
 
 <p>Nil.
 </p>
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Resource Variables</h2>
+<h2><a name="rcvars">Resource Variables</a></h2>
 
 <p>N/A
 </p>
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Examples</h2>
+<h2><a name="examples">Examples</a></h2>
 
 <p>The following shows you what a resource file looks like:
 </p>
 
-<PRE>
+<PRE class="code">
 &lt;!-- MHonArc resource file
   --&gt;
 <b>&lt;<a href="sort.html">SORT</a>&gt;</b>
@@ -289,17 +304,20 @@ video/quicktime:http://foo.org/icons/movie.xbm
 <b>&lt;/ICONS&gt;</b>
 </PRE>
 
+<p>More examples are available under
+<a href="../app-rcfileexs.html"><cite>Appendix: Resource File Examples</cite></a>.
+</p>
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Version</h2>
+<h2><a name="version">Version</a></h2>
 
 <p>1.0
 </p>
 
 <!-- *************************************************************** -->
 <hr>
-<h2>See Also</h2>
+<h2><a name="seealso">See Also</a></h2>
 
 <p>
 </p>
@@ -308,11 +326,11 @@ video/quicktime:http://foo.org/icons/movie.xbm
 <hr>
 <!--x-rc-nav-->
 <table border=0><tr valign="top">
-<td align="left" width="50%">[Prev:&nbsp;<a href="quiet.html">QUIET</a>]</td><td><nobr>[<a href="../resources.html#rcfile">Resources</a>][<a href="../mhonarc.html">TOC</a>]</nobr></td><td align="right" width="50%">[Next:&nbsp;<a href="refsbegin.html">REFSBEGIN</a>]</td></tr></table>
+<td align="left" width="50%">[Prev:&nbsp;<a href="quiet.html">QUIET</a>]</td><td><nobr>[<a href="../resources.html#rcfile">Resources</a>][<a href="../mhonarc.html">TOC</a>]</nobr></td><td align="right" width="50%">[Next:&nbsp;<a href="reconvert.html">RECONVERT</a>]</td></tr></table>
 <!--/x-rc-nav-->
 <hr>
 <address>
-$Date: 2002/07/27 05:13:11 $ <br>
+$Date: 2003/01/02 23:04:56 $ <br>
 <img align="top" src="../monicon.png" alt="">
 <a href="http://www.mhonarc.org/"
 ><strong>MHonArc</strong></a><br>

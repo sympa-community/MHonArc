@@ -1,7 +1,7 @@
 " Vim syntax file
 " Language:	MHonArc Resource File
 " Maintainer:	Earl Hood <mhonarc@pobox.com>
-" Last change:	$Date: 2002/07/27 05:13:13 $ 
+" Last change:	$Date: 2003/02/04 23:31:19 $ 
 
 "	Adapted from the following:
 " Language:	HTML
@@ -48,6 +48,7 @@ syn keyword mhaTagName contained authorend
 syn keyword mhaTagName contained authsort
 syn keyword mhaTagName contained noauthsort
 syn keyword mhaTagName contained botlinks
+syn keyword mhaTagName contained charsetaliases
 syn keyword mhaTagName contained charsetconverters
 syn keyword mhaTagName contained checknoarchive
 syn keyword mhaTagName contained nochecknoarchive
@@ -56,8 +57,10 @@ syn keyword mhaTagName contained noconlen
 syn keyword mhaTagName contained datefields
 syn keyword mhaTagName contained daybegin
 syn keyword mhaTagName contained dayend
+syn keyword mhaTagName contained dbfileperms
 syn keyword mhaTagName contained decodeheads
 syn keyword mhaTagName contained nodecodeheads
+syn keyword mhaTagName contained defcharset
 syn keyword mhaTagName contained definederived
 syn keyword mhaTagName contained definevar
 syn keyword mhaTagName contained doc
@@ -69,7 +72,9 @@ syn keyword mhaTagName contained expiredate
 syn keyword mhaTagName contained fieldorder
 syn keyword mhaTagName contained fieldsbeg
 syn keyword mhaTagName contained fieldsend
+syn keyword mhaTagName contained fieldstore
 syn keyword mhaTagName contained fieldstyles
+syn keyword mhaTagName contained fileperms
 syn keyword mhaTagName contained firstpglink
 syn keyword mhaTagName contained fldbeg
 syn keyword mhaTagName contained fldend
@@ -88,6 +93,7 @@ syn keyword mhaTagName contained nogziplinks
 syn keyword mhaTagName contained headbodysep
 syn keyword mhaTagName contained htmlext
 syn keyword mhaTagName contained icons
+syn keyword mhaTagName contained iconurlprefix
 syn keyword mhaTagName contained idxfname
 syn keyword mhaTagName contained idxlabel
 syn keyword mhaTagName contained idxpgbegin
@@ -117,6 +123,8 @@ syn keyword mhaTagName contained mimeargs
 syn keyword mhaTagName contained mimedecoders
 syn keyword mhaTagName contained mimeexcs
 syn keyword mhaTagName contained mimefilters
+syn keyword mhaTagName contained modifybodyaddresses
+syn keyword mhaTagName contained nomodifybodyaddresses
 syn keyword mhaTagName contained modtime
 syn keyword mhaTagName contained monthsabr
 syn keyword mhaTagName contained months
@@ -180,7 +188,12 @@ syn keyword mhaTagName contained subsort
 syn keyword mhaTagName contained nosubsort
 syn keyword mhaTagName contained tcontbegin
 syn keyword mhaTagName contained tcontend
+syn keyword mhaTagName contained tendbuttonia
+syn keyword mhaTagName contained tendbutton
+syn keyword mhaTagName contained tendlinkia
+syn keyword mhaTagName contained tendlink
 syn keyword mhaTagName contained textclipfunc
+syn keyword mhaTagName contained textencode
 syn keyword mhaTagName contained tfirstpglink
 syn keyword mhaTagName contained tfoot
 syn keyword mhaTagName contained thead
@@ -268,7 +281,11 @@ syn keyword mhaTagName contained tsubsort
 syn keyword mhaTagName contained notsubsort
 syn keyword mhaTagName contained ttitle
 syn keyword mhaTagName contained ttopbegin
+syn keyword mhaTagName contained ttopbuttonia
+syn keyword mhaTagName contained ttopbutton
 syn keyword mhaTagName contained ttopend
+syn keyword mhaTagName contained ttoplinkia
+syn keyword mhaTagName contained ttoplink
 syn keyword mhaTagName contained umask
 syn keyword mhaTagName contained uselocaltime
 syn keyword mhaTagName contained nouselocaltime

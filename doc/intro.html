@@ -1,12 +1,8 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
 <HTML>
 <HEAD>
-<TITLE>MHonArc v2.5 -- Introduction</TITLE>
+<TITLE>MHonArc Reference -- Introduction</TITLE>
+<link rel="stylesheet" type="text/css" href="docstyles.css">
 </HEAD>
-<!--
-<BODY background="ssbg75.jpg"
-      text="#000000" link="#0000ee" vlink="#551a8b" alink="ff0000">
--->
 <BODY>
 
 <!--X-NavButtons-Start-->
@@ -22,39 +18,21 @@
 <ul>
 <li><a href="#whatis">What is MHonArc?</a>
 <li><a href="#whyuse">Why Use MHonArc?</a>
-<li><a href="#platforms">Supported Platforms</a>
 <li><a href="#availability">Availability</a>
 <li><a href="#license">License</a>
+<li><a href="#help">Where to Get Help?</a>
+<li><a href="#nomenclature">Documentation Nomenclature</a>
 </ul>
 <!--X-TOC-End-->
 
 <hr>
 <H2><a name="whatis">What is MHonArc?</a></H2>
 
-<P>MHonArc is a <A HREF="http://perl.com/perl/">Perl</A>
-program for converting e-mail messages as specified in RFC 822 and
-<A HREF="http://www.pobox.com/~ehood/MIME/MIME.html">the
-MIME standard</A> to <A
-HREF="http://www.w3.org/pub/WWW/MarkUp/">HTML</A>.
-MHonArc can perform the following tasks: </P>
-
-<UL>
-<LI>Convert <a href="http://www.ics.uci.edu/~mh/"><em>MH</em></a>
-mail folders or UUCP/Unix style mailboxes into an HTML mail archive.
-<LI>Add or remove messages to an existing HTML mail archive generated
-by MHonArc.
-<LI>Convert a single message to HTML.
-</UL>
-
-<P>Along with these tasks, MHonArc provides the following:
-</P>
-
-<UL>
-<LI>A main customizable index for mail messages archived.
-<LI>A customizable thread index listing messages by thread.
-<LI>Control over message formatting.
-<LI>The ability to hook in your own custom message filters.
-</UL>
+<p>MHonArc is a Perl program for converting mail or news messages
+into HTML archives. It can also be used to convert individual
+messages into HTML documents. Other capabilities include robust
+MIME support and powerful user customization features.
+</p>
 
 <hr>
 <H2><a name="whyuse">Why Use MHonArc?</a></H2>
@@ -65,12 +43,12 @@ by MHonArc.
 <UL>
 
 <LI>You want to keep organized archives
-of mail messages and/or news articles for a <A
+of mail or news articles for a <A
 HREF="http://www.w3.org/hypertext/WWW/TheProject.html">World Wide
 Web</A> (WWW) server; complete with live hypertext pointers
 to their authors and to any url's mentioned.
 
-<LI>You would like to control the layout of mail/news archives to
+<LI>You would like to control the layout of your archives to
 keep a consistent style to your WWW pages.
 
 <LI>You have MIME messages that you want to include in your archives.
@@ -83,6 +61,8 @@ video, etc via your Web client.
 MHonArc should be usable
 on any platform that Perl has been ported to.
 
+<li>MHonArc is <a href="#license">free software</a>.
+
 <LI>You think the MHonArc logo is really cool, and it deserves
 to be used.
 
@@ -92,23 +72,18 @@ to be used.
 </UL>
 
 <hr>
-<H2><a name="platforms">Supported Platforms</a></H2>
-
-<P>MHonArc will run under systems systems with Perl 5 installed.
-</P>
-
-<hr>
 <H2><a name="availability">Availability</a></H2>
 
-<P>The latest information on MHonArc, where to get more help,
-and its availability, may be obtained at
+<P>The latest information about MHonArc, including its
+its availability, may be obtained at
 <A HREF="http://www.mhonarc.org/">&lt;http://www.mhonarc.org/&gt;</A>.
 </P>
 
 <hr>
 <h2><a name="license">License</a></H2>
 
-<p>This program is free software; you can redistribute it and/or modify
+<table class="tip" width="100%"><tr><td>
+<p><strong>MHonArc</strong> is free software; you can redistribute it and/or modify
 it under the terms of the
 <a href="COPYING">GNU General Public License</a> as published by
 the <a href="http://www.gnu.org/">Free Software Foundation</a>;
@@ -119,6 +94,85 @@ but <b>WITHOUT ANY WARRANTY</b>; without even the implied warranty of
 <b>MERCHANTABILITY</b> or <b>FITNESS FOR A PARTICULAR PURPOSE</b>.  See the
 <a href="COPYING">GNU General Public License</a> for more details.
 </p>
+</td></tr></table>
+<p> </p>
+<table class="caution" width="100%">
+<tr valign="baseline">
+<td><strong style="color: red;">WARNING:</strong></td>
+<td width="100%"><p>MHonArc is <strong>NOT</strong> in the public
+domain, applicable copyrights still apply.
+Using MHonArc that is inconsistent with the
+<a href="COPYING">licensing terms</a> is a <b>violation</b>
+of copyright law.
+</p>
+<p>If you cannot agree with the
+<a href="COPYING">licensing terms</a> and would like to use <b>MHonArc</b>
+under a different license, contact
+<a href="mailto:mhonarc@mhonarc.org">mhonarc@mhonarc.org</a>.
+</p>
+</td>
+</tr>
+</table>
+
+<!-- ====================================================================== -->
+<hr>
+<h2><a name="help">Where to Get Help?</a></h2>
+
+<ol>
+<li><p>Read <a href="mhonarc.html">this documentation</a>.
+    </p></li>
+<li><p>Read the <a href="faq/faq.html">FAQ</a>.
+    </p></li>
+<li><p>Subscribe and post to one of the mailing lists described
+    in the <a href="contacts.html"><cite>Contacts</cite></a> section.
+    <a href="http://www.mhonarc.org/archive/html">Searchable archives</a>
+    of the lists exist which provides a historical collection of helpful
+    information.
+    </p>
+</ol>
+
+<p>If you require professional help or consulting, you can contact
+<a href="mailto:mhonarc@mhonarc.org">mhonarc@mhonarc.org</a> with
+your request.
+</p>
+
+<!-- ====================================================================== -->
+<hr>
+<h2><a name="nomenclature">Documentation Nomenclature</a></h2>
+
+<table class="note" width="100%">
+<tr valign="baseline">
+<td><strong>NOTE:</strong></td>
+<td width="100%"><p>Some rendering style semantics may not be available
+if viewing this documentation with a text-based
+and/or a non-CSS capable browser.
+</p>
+</td>
+</tr>
+</table>
+
+<p>Shell examples are rendered as follows:</p>
+<table border=1 width="100%"><tr><td><pre class="shell">
+prompt&gt; <b>ls -CF</b>
+ACKNOWLG  contrib/  etc/       INSTALL      Makefile.PL     mha-decode*  TODO
+admin/    COPYING   examples/  install.me*  man/            mhonarc*
+BUGS      dev.mk    extras/    lib/         mha-dbedit*     README
+CHANGES   doc/      FILELIST   logo/        mha-dbrecover*  RELNOTES
+</pre></td></tr></table>
+
+<p>The text <tt class="ishell">prompt&gt;</tt> represents your
+shell prompt.  Text you would type into the shell is rendered like this:
+<tt class="ishell"><b>text&nbsp;you&nbsp;enter</b></tt>.  Any other
+text is example output generated by the computer.  </p>
+
+<p>Code examples are rendered as follows:</p>
+<pre class="code">
+<b>&lt;DefineVar&gt;</b>
+MY-FOOTER-LINK
+&lt;hr&gt;
+Please visit &lt;a href="http://www.mhonarc.org"&gt;www.mhonarc.org&lt;/a&gt;.
+<b>&lt;/DefineVar&gt;</b>
+</pre>
 
 <hr>
 <!--X-NavButtons-Start-->
@@ -130,11 +184,11 @@ but <b>WITHOUT ANY WARRANTY</b>; without even the implied warranty of
 <!-- *************************************************************** -->
 <hr>
 <address>
-$Date: 2001/12/24 14:38:07 $ <br>
+$Date: 2003/01/02 05:46:01 $ <br>
 <img align="top" src="monicon.png" alt="">
 <a href="http://www.mhonarc.org/"
 ><strong>MHonArc</strong></a><br>
-Copyright &#169; 1997-2000, <a href="http://www.mhonarc.org/~ehood/"
+Copyright &#169; 1997-2002, <a href="http://www.mhonarc.org/~ehood/"
 >Earl Hood</a>, <a href="mailto:mhonarc@mhonarc.org"
 >mhonarc@mhonarc.org</a><br>
 </address>

@@ -1,7 +1,7 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
 <html>
 <head>
 <title>MHonArc Resources: MIMEALTPREFS</title>
+<link rel="stylesheet" type="text/css" href="../docstyles.css">
 </head>
 <body>
 <!--x-rc-nav-->
@@ -10,10 +10,21 @@
 <!--/x-rc-nav-->
 <hr>
 <h1>MIMEALTPREFS</h1>
+<!--X-TOC-Start-->
+<ul>
+<li><a href="#syntax">Syntax</a>
+<li><a href="#description">Description</a>
+<li><a href="#default">Default Setting</a>
+<li><a href="#rcvars">Resource Variables</a>
+<li><a href="#examples">Examples</a>
+<li><a href="#version">Version</a>
+<li><a href="#seealso">See Also</a>
+</ul>
+<!--X-TOC-End-->
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Syntax</h2>
+<h2><a name="syntax">Syntax</a></h2>
 
 <dl>
 
@@ -41,7 +52,7 @@
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Description</h2>
+<h2><a name="description">Description</a></h2>
 
 <p>MIMEALTPREFS allows you to specify media-type preferences
 for <tt>multipart/alternative</tt> data, overriding the default
@@ -51,7 +62,7 @@ preferences as specified in mail messages.
 <p>When a <tt>multipart/alternative</tt> entity is processed,
 the last filterable media-type is normally used.  However, it is sometimes
 desirable to override this behavior for certain media-types.  For example,
-it has become more common for many MUAs to generate the following
+it has become common for many MUAs to generate the following
 message structures:
 </p>
 <pre>
@@ -59,17 +70,16 @@ message structures:
     text/plain
     text/html</pre>
 
-<p>A message with HTML, and a plain text equivalent for those receiving
-MUAs who may not be able to render HTML in email.  When MHonArc processes
+<p>A message with HTML and a plain text equivalent for receiving
+MUAs who cannot render HTML.  When MHonArc processes
 such a message, MHonArc will use the <tt>text/html</tt> part since it
 is filterable and comes after <tt>text/plain</tt>.
 </p>
 
-<p>There are some who would like to have nothing to do with HTML in
-email.  Or, due to security concerns, would prefer to not minimize the
-amount of HTML from email in their archives.  With MIMEALTPREFS, you
-can tell MHonArc to prefer the <tt>text/plain</tt> over the <tt>text/html</tt>
-part with the following setting:
+<p>There are many who would like to have nothing to do with HTML in
+email, like for security reasons.  With MIMEALTPREFS, you can tell
+MHonArc to use the <tt>text/plain</tt> entity (if it exists) over
+the <tt>text/html</tt> part with the following setting:
 </p>
 <pre>
 <b>&lt;MIMEAltPrefs&gt;</b>
@@ -102,10 +112,10 @@ text/html
 
 <p>So which entity will MHonArc actually use?  In this case,
 the <tt>text/enriched</tt> part will be used.  The reason is that
-the <tt>text/html</tt> will be excluded since there does exist a
-<tt>text/plain</tt> alternative entity.  However, MHonArc still
-tries to use the last filterable alternative part, which in this
-case is <tt>text/enriched</tt>.
+the <tt>text/html</tt> will be excluded since a
+<tt>text/plain</tt> alternative entity exists.  However, MHonArc still
+tries to use the last filterable alternative part, which is
+<tt>text/enriched</tt> in this case.
 </p>
 
 <p>In order to have <tt>text/plain</tt> chosen, the following
@@ -136,35 +146,35 @@ specifying the <tt>override</tt> attribute is redundant.
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Default Setting</h2>
+<h2><a name="default">Default Setting</a></h2>
 
 <p>Nil
 </p>
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Resource Variables</h2>
+<h2><a name="rcvars">Resource Variables</a></h2>
 
 <p>N/A
 </p>
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Examples</h2>
+<h2><a name="examples">Examples</a></h2>
 
 <p>None.
 </p>
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Version</h2>
+<h2><a name="version">Version</a></h2>
 
 <p>2.5.8
 </p>
 
 <!-- *************************************************************** -->
 <hr>
-<h2>See Also</h2>
+<h2><a name="seealso">See Also</a></h2>
 
 <p>
 <a href="mimeexcs.html">MIMEEXCS</a>
@@ -178,7 +188,7 @@ specifying the <tt>override</tt> attribute is redundant.
 <!--/x-rc-nav-->
 <hr>
 <address>
-$Date: 2002/07/27 05:13:10 $<br>
+$Date: 2002/12/10 04:08:02 $<br>
 <img align="top" src="../monicon.png" alt="">
 <a href="http://www.mhonarc.org/"><strong>MHonArc</strong></a><br>
 Copyright &#169; 2002, <a href="http://www.earlhood.com/"

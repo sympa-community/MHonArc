@@ -1,5 +1,5 @@
 #!/usr/bin/perl
-# $Id: Makefile.PL,v 1.12 2002/04/04 07:07:48 ehood Exp $
+# $Id: Makefile.PL,v 1.14 2003/01/04 04:44:21 ehood Exp $
 # Pseudo Makefile.PL:  Since MHonArc's history goes back to Perl 4 days,
 # it has its own installation process.  This file generates a simple
 # Makefile to (paritally) satisfy the standard Perl 5 way to install
@@ -59,49 +59,23 @@ PRGS		= mhonarc mha-dbrecover mha-dbedit mha-decode
 PERL		= $perl
 INSTALLPRG	= install.me
 
-.PHONY: default install install-ask pod2man test clean versions relnotes \
-	bugs install-doc release-prep autodoc
-
-
-default: pod2man
+default: _FORCE
 	\$(CHMOD) a+x \$(PRGS)
 	\$(CHMOD) -R a+r,a+X .
 
-release-prep: autodoc relnotes bugs install-doc
-
-install:
+install: _FORCE
 	\$(PERL) \$(INSTALLPRG) -batch $instme_args
 
-install-ask:
+install-ask: _FORCE
 	\$(PERL) \$(INSTALLPRG) $instme_args
 
-install-doc:
-	w3m doc/install.html -cols 76 > INSTALL
-
-pod2man:
-	-\@\$(MKDIR) man
-	\@for i in \$(PRGS) ; \\
-	    do( \\
-		echo "Manifying \$\$i ..."; \\
-		pod2man --center="MHonArc Documentation" --release="MHonArc v2.5" \$\$i > man/\$\$i.1; \\
-	    ); \\
-	done
-
-relnotes:
-	w3m doc/relnotes.html -cols 76 > RELNOTES
-
-autodoc: pod2man
-	\$(MAKE) -C doc
-	\$(MAKE) -C doc/faq
-
-bugs:
-	w3m doc/app-bugs.html -cols 76 > BUGS
-
-test:
+test: _FORCE
 	\@echo "No tests"
 
-clean:
+clean: _FORCE
 	\@echo "Nothing to clean"
+
+_FORCE:
 
 EOF
 

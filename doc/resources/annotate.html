@@ -1,7 +1,7 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
 <html>
 <head>
 <title>MHonArc Resources: ANNOTATE</title>
+<link rel="stylesheet" type="text/css" href="../docstyles.css">
 </head>
 <body>
 <!--x-rc-nav-->
@@ -10,10 +10,21 @@
 <!--/x-rc-nav-->
 <hr>
 <h1>ANNOTATE</h1>
+<!--X-TOC-Start-->
+<ul>
+<li><a href="#syntax">Syntax</a>
+<li><a href="#description">Description</a>
+<li><a href="#default">Default Setting</a>
+<li><a href="#rcvars">Resource Variables</a>
+<li><a href="#examples">Examples</a>
+<li><a href="#version">Version</a>
+<li><a href="#seealso">See Also</a>
+</ul>
+<!--X-TOC-End-->
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Syntax</h2>
+<h2><a name="syntax">Syntax</a></h2>
 
 <dl>
 
@@ -38,7 +49,7 @@
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Description</h2>
+<h2><a name="description">Description</a></h2>
 
 <p>ANNOTATE is used to add an annotation to a message, or multiple
 messages.  Annotation
@@ -55,43 +66,43 @@ annotations in archive pages.
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Default Setting</h2>
+<h2><a name="default">Default Setting</a></h2>
 
 <p>Off.
 </p>
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Resource Variables</h2>
+<h2><a name="rcvars">Resource Variables</a></h2>
 
 <p>N/A
 </p>
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Examples</h2>
+<h2><a name="examples">Examples</a></h2>
 
 <p>The following adds an annotation to message 15 of an archive:
 </p>
-<pre>
-    % <b>mhonarc -annotate -outdir /home/httpd/docs/mail \</b>
-              <b>-notetext "This is an annotation" 15</b>
-</pre>
+<table border=1 width="100%"><tr><td><pre class="shell">
+prompt&gt; <b>mhonarc -annotate -outdir /home/httpd/docs/mail \</b>
+	<b>-notetext "This is an annotation" 15</b>
+</pre></td></tr></table>
 
 <p>Multiple <tt>-notetext</tt> can be specified if you want to keep
 the command-line cleaner for larger annotations.  The following adds
 an annotation to the messages with a message-id of
-<tt>&lt;34D622C8.C37760AB@foo.org&gt;</tt> and message number of
+<tt>&lt;34D622C8.C37760AB@example.com&gt;</tt> and message number of
 23:
 </p>
-<pre>
-    % <b>mhonarc -annotate -outdir /home/httpd/docs/mail \</b>
-              <b>-notetext "&lt;p&gt;This is the start of an annotation." \</b>
-              <b>-notetext "Here is some more text." \</b>
-              <b>-notetext "Here is some more text (again)." \</b>
-              <b>-notetext "The End.&lt;/p&gt;" \</b>
-              <b>"34D622C8.C37760AB@foo.org" 23</b>
-</pre>
+<table border=1 width="100%"><tr><td><pre class="shell">
+prompt&gt; <b>mhonarc -annotate -outdir /home/httpd/docs/mail \</b>
+	<b>-notetext "&lt;p&gt;This is the start of an annotation." \</b>
+	<b>-notetext "Here is some more text." \</b>
+	<b>-notetext "Here is some more text (again)." \</b>
+	<b>-notetext "The End.&lt;/p&gt;" \</b>
+	<b>"34D622C8.C37760AB@example.com" 23</b>
+</pre></td></tr></table>
 
 <p>All <tt>-notetext</tt> options text will be concatenated together
 to form the complete text of the annotation.  Also, the text is
@@ -104,16 +115,16 @@ but it can be cumbersome for large ones.  An alternative is to
 will read the text of the annotation from standard input.  For example:
 </p>
 
-<pre>
-    % <b>mhonarc -annotate -outdir /home/httpd/docs/mail 28 72</b>
-    Reading database ...
-    Annotating messages in out ...
-    Please enter note text (terminated with EOF char):
-    <b>&lt;p&gt;Here is some annotation text.  This will be applied to</b>
-    <b>messages 28 and 72.  To tell MHonArc I am done with this text,</b>
-    <b>I will terminate the text with my system's EOF character.</b>
-    <b>^D</b>
-</pre>
+<table border=1 width="100%"><tr><td><pre class="shell">
+prompt&gt; <b>mhonarc -annotate -outdir /home/httpd/docs/mail 28 72</b>
+Reading database ...
+Annotating messages in out ...
+Please enter note text (terminated with EOF char):
+<b>&lt;p&gt;Here is some annotation text.  This will be applied to</b>
+<b>messages 28 and 72.  To tell MHonArc I am done with this text,</b>
+<b>I will terminate the text with my system's EOF character.</b>
+<b>^D</b>
+</pre></td></tr></table>
 
 <p>The <tt>^D</tt> represents the EOF character and is not part
 of the annotation text.  On Unix systems, this
@@ -125,14 +136,14 @@ Under Windows, it is normally Ctrl-Z.
 annotation text to come for a file the output of another process.
 Here is an example of using the contents of a file as the text:
 </p>
-<pre>
-    % <b>mhonarc -annotate -outdir /home/httpd/docs/mail &lt; somefile.html</b>
-</pre>
+<table border=1 width="100%"><tr><td><pre class="shell">
+prompt&gt; <b>mhonarc -annotate -outdir /home/httpd/docs/mail &lt; somefile.html</b>
+</pre></td></tr></table>
 
 <p>Which is equivalent to:</p>
-<pre>
-    % <b>cat somefile.html | mhonarc -annotate -outdir /home/httpd/docs/mail </b>
-</pre>
+<table border=1 width="100%"><tr><td><pre class="shell">
+prompt&gt; <b>cat somefile.html | mhonarc -annotate -outdir /home/httpd/docs/mail </b>
+</pre></td></tr></table>
 
 <p>The first version utilizes the command-line shell's ability to
 redirect a file's contents into a command's standard input.  The second
@@ -143,14 +154,14 @@ them to standard output (standard on Unix-based systems).
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Version</h2>
+<h2><a name="version">Version</a></h2>
 
 <p>2.3.0
 </p>
 
 <!-- *************************************************************** -->
 <hr>
-<h2>See Also</h2>
+<h2><a name="seealso">See Also</a></h2>
 
 <p>
 <a href="note.html">NOTE</a>,
@@ -166,7 +177,7 @@ them to standard output (standard on Unix-based systems).
 <!--/x-rc-nav-->
 <hr>
 <address>
-$Date: 2002/07/27 05:13:10 $ <br>
+$Date: 2002/12/10 04:08:02 $ <br>
 <img align="top" src="../monicon.png" alt="">
 <a href="http://www.mhonarc.org/"
 ><strong>MHonArc</strong></a><br>

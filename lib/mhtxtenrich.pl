@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhtxtenrich.pl,v 2.5 2001/08/25 19:57:59 ehood Exp $
+##	$Id: mhtxtenrich.pl,v 2.9 2003/01/18 03:10:35 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -10,13 +10,13 @@
 ##	Filter routine can be registered with the following:
 ##
 ##	    <MIMEFILTERS>
-##	    text/enriched:m2h_text_enriched'filter:mhtxtenrich.pl
-##	    text/richtext:m2h_text_enriched'filter:mhtxtenrich.pl
+##	    text/enriched;m2h_text_enriched::filter;mhtxtenrich.pl
+##	    text/richtext;m2h_text_enriched::filter;mhtxtenrich.pl
 ##	    </MIMEFILTERS>
 ##
 ##---------------------------------------------------------------------------##
 ##    MHonArc -- Internet mail-to-HTML converter
-##    Copyright (C) 1997-2001	Earl Hood, mhonarc@mhonarc.org
+##    Copyright (C) 1997-2002	Earl Hood, mhonarc@mhonarc.org
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by
@@ -36,54 +36,106 @@
 
 package m2h_text_enriched;
 
+my %enriched_tags = (
+    'bigger' => 1,
+    'bold' => 1,
+    'center' => 1,
+    'color' => 1,
+    'comment' => 1,
+    'excerpt' => 1,
+    'fixed' => 1,
+    'flushboth' => 1,
+    'flushleft' => 1,
+    'flushright' => 1,
+    'fontfamily' => 1,
+    'indent' => 1,
+    'indentright' => 1,
+    'italic' => 1,
+    'lang' => 1,
+    'lt' => 1,
+    'nl' => 1,
+    'nofill' => 1,
+    'paraindent' => 1,
+    'param' => 1,
+    'signature' => 1,
+    'smaller' => 1,
+    'subscript' => 1,
+    'superscript' => 1,
+    'underline' => 1,
+);
+
+my %special_to_char = (
+    'lt'  => '<',
+    'gt'  => '>',
+);
+
 ##---------------------------------------------------------------------------
 ##	Filter routine.
+##	XXX: Need to update this filter.  However, does anyone still use
+##	     text/enriched anymore.
 ##
 sub filter {
     my($fields, $data, $isdecode, $args) = @_;
-    my($innofill, $chunk, $ret, $charset);
-    $ret  = "";
-    $args = ""  unless defined($args);
-    $charset = "";
+    my($innofill, $chunk);
+    my $charset = $fields->{'x-mha-charset'};
+    my($charcnv, $real_charset_name) =
+	    readmail::MAILload_charset_converter($charset);
+    my $ret = "";
+    $args   = ""  unless defined($args);
 
-    ## Grab charset parameter (if defined)
-    $ctype = $fields->{'content-type'}[0] || "";
-    if ($ctype =~ /charset=(\S+)/) {
-	$charset = lc $1;
-	$charset =~ s/['"]//g;
+    ## Get content-type
+    my($ctype) = $fields->{'content-type'}[0] =~ m%^\s*([\w\-\./]+)%;
+    my $richtext = $ctype =~ /\btext\/richtext\b/i;
+
+    if (defined($charcnv) && defined(&$charcnv)) {
+	$$data = &$charcnv($$data, $real_charset_name);
+    } else {
+	mhonarc::htmlize($data);
+	warn qq/\n/,
+	     qq/Warning: Unrecognized character set: $charset\n/,
+	     qq/         Message-Id: <$mhonarc::MHAmsgid>\n/,
+	     qq/         Message Number: $mhonarc::MHAmsgnum\n/
+		unless ($charcnv eq '-decode-');
     }
+    ## Fixup any EOL mess
+    $$data =~ s/\r?\n/\n/g;
+    $$data =~ s/\r/\n/g;
+
+    # translate back <>'s for tag processing
+    $$data =~ s/&([lg]t);/$special_to_char{$1}/g;
 
     ## Convert specials
-    $$data =~ s|&|\&amp;|gi;
-    $$data =~ s|<<|\&lt;|gi;
+    if (!$richtext) {
+	$$data =~ s/<</\&lt;/g;
+    }
 
-    ## Translate text/enriched commands
+    ## Make sure only non-enriched tags are escaped
+    $$data =~ s{<(/?)([^>]*)>}
+    {
+	my $eot = $1;
+	my $tag = lc $2;
+	$tag =~ s/\s+//g;
+	($enriched_tags{$tag}) ? '<'.$eot.$tag.'>' : '&lt;'.$eot.$tag.'&gt;';
+    }gexs;
+
     $innofill = 0;
     foreach $chunk (split(m|(</?nofill>)|i, $$data)) {
 	if ($chunk =~ m|<nofill>|i) {
-	    $ret .= "<PRE>";
+	    $ret .= '<pre>';
 	    $innofill = 1;
 	    next;
 	}
 	if ($chunk =~ m|</nofill>|i) {
-	    $ret .= "</PRE>";
+	    $ret .= '</pre>';
 	    $innofill = 0;
 	    next;
 	}
-	convert_tags(\$chunk);
-	if (!$innofill) {
-	    $chunk =~ s|(\r?\n\s*)|&nl_seq_to_brs($1)|gie;
+	convert_tags(\$chunk, $richtext);
+	if (!$richtext && !$innofill) {
+	    $chunk =~ s/(\n\s*)/&nl_seq_to_brs($1)/ge;
 	}
 	$ret .= $chunk;
     }
-
-    ## Translate 8-bit characters to entity refs based on charset
-    ## 		(we already did '<' and '&' characters)
-    if ($charset =~ /iso-8859-([2-9]|10)/i) {
-	require 'iso8859.pl';
-	$ret = iso_8859::str2sgml($ret, $charset, 1);
-    }
-
     $ret;
 }
 
@@ -91,41 +143,67 @@ sub filter {
 ##	convert_tags translates text/enriched commands to HTML tags.
 ##
 sub convert_tags {
-    my($str) = shift;
+    my $str  = shift;
+    my $richtext = shift;
 
-    $$str =~ s|<(/?)bold>|<$1B>|gi;
-    $$str =~ s|<(/?)italic>|<$1I>|gi;
-    $$str =~ s|<(/?)underline>|<$1U>|gi;
-    $$str =~ s|<(/?)fixed>|<$1TT>|gi;
-    $$str =~ s|<(/?)smaller>|<$1SMALL>|gi;
-    $$str =~ s|<(/?)bigger>|<$1BIG>|gi;
+    $$str =~ s{<comment\s*>.*?</comment\s*>}{}gis;
 
-    $$str =~ s|<fontfamily>\s*<param>([^<]+)</param>|<FONT face="$1">|gi;
-    $$str =~ s|</fontfamily>|</FONT>|gi;
-    $$str =~ s|<color>\s*<param>\s*(\S+)\s*</param>|<FONT color="$1">|gi;
-    $$str =~ s|</color>|</FONT>|gi;
-    $$str =~ s|<center>|<P align="center">|gi;
-    $$str =~ s|</center>|</P>|gi;
-    $$str =~ s|<flushleft>|<P align="left">|gi;
-    $$str =~ s|</flushleft>|</P>|gi;
-    $$str =~ s|<flushright>|<P align="right">|gi;
-    $$str =~ s|</flushright>|</P>|gi;
-    $$str =~ s|<flushboth>|<P align="both">|gi;	# Not supported in HTML
-    $$str =~ s|</flushboth>|</P>|gi;
-    $$str =~ s|<paraindent>\s*<param>([^<]*)</param>|<BLOCKQUOTE>|gi;
-    $$str =~ s|</paraindent>|</BLOCKQUOTE>|gi;
+    $$str =~ s{<(/?)bold\s*>}{<$1b>}gi;
+    $$str =~ s{<(/?)italic\s*>}{<$1i>}gi;
+    $$str =~ s{<(/?)underline\s*>}{<$1u>}gi;
+    $$str =~ s{<(/?)fixed\s*>}{<$1tt>}gi;
+    $$str =~ s{<(/?)smaller\s*>}{<$1small>}gi;
+    $$str =~ s{<(/?)bigger\s*>}{<$1big>}gi;
+    $$str =~ s{<(/?)signature\s*>}{<$1pre>}gi;
 
-    $$str =~ s|<excerpt>\s*(<param>([^<]*)</param>)?|<BLOCKQUOTE>|gi;
-    $$str =~ s|</excerpt>|</BLOCKQUOTE>|gi;
+    $$str =~ s{<fontfamily\s*>\s*<param\s*>([^<]+)</param\s*>}
+	      {<font face="$1">}gix;
+    $$str =~ s|</fontfamily\s*>|</font>|gi;
+    $$str =~ s{<color\s*>\s*<param\s*>\s*(\S+)\s*</param\s*>}
+	      {<font color="$1">}gix;
+    $$str =~ s|</color\s*>|</font>|gi;
+    $$str =~ s|<center\s*>|<p align="center">|gi;
+    $$str =~ s|</center\s*>|</p>|gi;
+    $$str =~ s|<flushleft\s*>|<p align="left">|gi;
+    $$str =~ s|</flushleft\s*>|</p>|gi;
+    $$str =~ s|<flushright\s*>|<p align="right">|gi;
+    $$str =~ s|</flushright\s*>|</p>|gi;
+    $$str =~ s|<flushboth\s*>|<p align="justify">|gi;
+    $$str =~ s|</flushboth\s*>|</p>|gi;
+    $$str =~ s|<paraindent\s*>\s*<param\s*>([^<]*)</param\s*>|<blockquote>|gi;
+    $$str =~ s|</paraindent\s*>|</blockquote>|gi;
 
-    # Not supported commands
-    $$str =~ s|<lang>\s*<param>([^<]*)</param>||gi;
-    $$str =~ s|</lang>||gi;
+    $$str =~ s|<excerpt\s*>\s*(<param\s*>([^<]*)</param\s*>)?|<blockquote>|gi;
+    $$str =~ s|</excerpt\s*>|</blockquote>|gi;
+
+    $$str =~ s|<lang\s*>\s*<param\s*>([^<]*)</param\s*>|<div lang="$1">|gi;
+    $$str =~ s|</lang\s*>|</div>|gi;
+
+    # richtext commands
+    $$str =~ s{<(/?)subscript\s*>}{<$1sub>}gi;
+    $$str =~ s{<(/?)superscript\s*>}{<$1sup>}gi;
+    $$str =~ s{<lt\s*>}{&lt;}gi;
+    $$str =~ s{<np\s*>}{\f}gi;
+    $$str =~ s{<paragraph\s*>}{<p>}gi;
+    $$str =~ s{</paragraph\s*>\n?}{</p>}gis;
+    $$str =~ s{<indent\s*>}{<p style="margin-left: 1em;">}gi;
+    $$str =~ s{</indent\s*>}{</p>}gi;
+    $$str =~ s{<indentright\s*>}{<p style="margin-right: 1em;">}gi;
+    $$str =~ s{</indentright\s*>}{</p>}gi;
+
+    if ($richtext) {
+	$$str =~ s{<nl\s*>\n?}{<br>}gis;
+    } else {
+	$$str =~ s{<nl\s*>}{}gis;
+    }
+
+    # Cleanup bad tags
+    $$str =~ s{</?(?:para(?:m|indent)|excerpt|lang|color|fontfamily)\s*>}{}g;
 }
 
 ##---------------------------------------------------------------------------
 ##	nl_seq_to_brs returns a "<BR>" string based on the number
-##	on eols in a string.
+##	of eols in a string.
 ##
 sub nl_seq_to_brs {
     my($str) = shift;

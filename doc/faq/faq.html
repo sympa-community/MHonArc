@@ -1,7 +1,7 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
 <HTML>
 <HEAD>
 <TITLE>MHonArc Frequently Asked Questions</TITLE></HEAD>
+<link rel="stylesheet" type="text/css" href="../docstyles.css">
 <BODY>
 
 <table border=0>
@@ -14,11 +14,11 @@
 <P>This documents contains answers to some of the frequently
 asked question on MHonArc. MHonArc is
 a <A HREF="http://language.perl.com/">Perl</A> program
-for converting e-mail messages as specified in RFC 822 and <A
-HREF="http://www.nacs.uci.edu/indiv/ehood/MIME/MIME.html">MIME</a> to <A
+for converting mail messages as specified in RFC 822 and <A
+HREF="http://www.mhonarc.org/~ehood/MIME/">MIME</a> to <A
 HREF="http://www.w3.org/hypertext/WWW/MarkUp/MarkUp.html">HTML</A>.
 MHonArc has the ability to maintain an archive of converted
-messages, or it can be used as a basic e-mail-&gt;HTML converter.  </P>
+messages, or it can be used as a basic mail-&gt;HTML converter.  </P>
 
 <!-- ===================================================================== -->
 <hr>
@@ -67,6 +67,7 @@ messages, or it can be used as a basic e-mail-&gt;HTML converter.  </P>
 <li><a name="compuserve" href="envs.html#compuserve">Can MHonArc process Compuserve messages?</a></li>
 <li><a name="otherformats" href="envs.html#otherformats">What about other mailbox/folder formats?</a></li>
 <li><a name="nonenglish" href="envs.html#nonenglish">Can MHonArc create non-English archives?</a></li>
+<li><a name="japanese" href="envs.html#japanese">How about Japanese?</a></li>
 <li><a name="bilingual" href="envs.html#bilingual">Can I create bilingual archives?</a></li>
 <li><a name="unicode" href="envs.html#unicode">Does MHonArc support Unicode?</a></li>
 </ul>
@@ -158,10 +159,13 @@ messages, or it can be used as a basic e-mail-&gt;HTML converter.  </P>
 <ul>
 <li><a name="security" href="security.html">Security</a>
 <ul>
+<li><a name="contact" href="security.html#contact">Who do I contact if I find a vulnerability with MHonArc?</a></li>
 <li><a name="spam" href="security.html#spam">Can I obscure email addresses?</a></li>
-<li><a name="spam" href="security.html#spam">How can I prevent web access to <tt>.mhonarc.db</tt> files?</a></li>
+<li><a name="mhonarc_db" href="security.html#mhonarc_db">How can I prevent web access to <tt>.mhonarc.db</tt> files?</a></li>
 <li><a name="htmldata" href="security.html#htmldata">Why are HTML messages a security risk?</a></li>
+<li><a name="htmlexchow" href="security.html#htmlexchow">So how can I exclude HTML mail?</a></li>
 <li><a name="attachments" href="security.html#attachments">Why doesn't MHonArc, by default, use the specified filename when saving attachments?</a></li>
+<li><a name="suid" href="security.html#suid">Is it okay to run <tt>mhonarc</tt> setuid?</a></li>
 </ul>
 </ul>
 <!--X-TOC-End-->
@@ -169,7 +173,7 @@ messages, or it can be used as a basic e-mail-&gt;HTML converter.  </P>
 <!-- ===================================================================== -->
 <HR>
 <address>
-$Date: 2002/07/20 00:48:48 $ <br>
+$Date: 2003/01/02 05:46:01 $ <br>
 <img align="top" src="monicon.png" alt="">
 <a href="http://www.mhonarc.org/"
 ><strong>MHonArc</strong></a><br>

@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: iso2022jp.pl,v 1.8 2002/07/30 18:20:46 ehood Exp $
+##	$Id: iso2022jp.pl,v 1.9 2002/12/04 20:00:39 ehood Exp $
 ##  Author(s):
 ##      Earl Hood       mhonarc@mhonarc.org
 ##      NIIBE Yutaka	gniibe@mri.co.jp
@@ -62,6 +62,8 @@ sub jp2022_to_html {
     local($_);
 
     $ret = "";
+    my $cnt = scalar(@lines);
+    my $i = 0;
     foreach (@lines) {
 	# a trick to process preceding ASCII text
 	$_ = "\033(B" . $_ unless /^\033/;
@@ -114,7 +116,8 @@ sub jp2022_to_html {
 	# remove a `trick'
 	$ret =~ s/^\033\(B//;
 
-	$ret .= "\n";
+	# add back eol
+	$ret .= "\n"  unless (++$i >= $cnt);
     }
 
     ($ret);

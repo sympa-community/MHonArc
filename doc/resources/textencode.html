@@ -1,0 +1,558 @@
+<html>
+<head>
+<title>MHonArc Resources: TEXTENCODE</title>
+<link rel="stylesheet" type="text/css" href="../docstyles.css">
+</head>
+<body>
+
+<!--x-rc-nav-->
+<table border=0><tr valign="top">
+<td align="left" width="50%">[Prev:&nbsp;<a href="textclipfunc.html">TEXTCLIPFUNC</a>]</td><td><nobr>[<a href="../resources.html#textencode">Resources</a>][<a href="../mhonarc.html">TOC</a>]</nobr></td><td align="right" width="50%">[Next:&nbsp;<a href="tfirstpglink.html">TFIRSTPGLINK</a>]</td></tr></table>
+<!--/x-rc-nav-->
+
+<hr>
+<h1>TEXTENCODE</h1>
+<!--X-TOC-Start-->
+<ul>
+<li><a href="#syntax">Syntax</a>
+<li><a href="#description">Description</a>
+<ul>
+<li><small><a href="#vscharsetconverters">TEXTENCODE vs CHARSETCONVERTERS</a></small>
+<li><small><a href="#writeencoder">Writing Encoders</a></small>
+</ul>
+<li><a href="#encoders">Available Encoders</a>
+<ul>
+<li><small><a href="#MHonArc::UTF8::to_utf8"><tt>MHonArc::UTF8::to_utf8</tt></a></small>
+<li><small><a href="#MHonArc::Encode::from_to"><tt>MHonArc::Encode::from_to</tt></a></small>
+</ul>
+<li><a href="#default">Default Setting</a>
+<li><a href="#rcvars">Resource Variables</a>
+<li><a href="#examples">Examples</a>
+<li><a href="#version">Version</a>
+<li><a href="#seealso">See Also</a>
+</ul>
+<!--X-TOC-End-->
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="syntax">Syntax</a></h2>
+
+<dl>
+
+<dt><strong>Envariable</strong></dt>
+<dd><p>N/A
+</p>
+</dd>
+
+<dt><strong>Element</strong></dt>
+<dd><p>
+<code>&lt;TEXTENCODE&gt;</code><br>
+<var>charset</var>; <var>perl_function</var>; <var>source_file</var><br>
+<code>&lt;/TEXTENCODE&gt;</code><br>
+</p>
+</dd>
+
+<dt><strong>Command-line Option</strong></dt>
+<dd><p>N/A
+</p>
+</dd>
+
+</dl>
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="description">Description</a></h2>
+
+<p>TEXTENCODE allows you to specify a destination character encoding
+for all message text data.  For each message read to be
+archived, text data, including message header fields and text body parts,
+is translated from the charset(s) used in the message
+to the charset specified by the TEXTENCODE resource.
+</p>
+
+<p>For example, the following resource setting,
+</p>
+<pre class="code">
+<b>&lt;TextEncode&gt;</b>
+utf-8; MHonArc::UTF8::to_utf8; MHonArc/UTF8.pm
+<b>&lt;/TextEncode&gt;</b>
+</pre>
+<p>converts message text to UTF-8 (Unicode) by using the
+<a href="#MHonArc::UTF8::to_utf8"><tt>MHonArc::UTF8::to_utf8</tt></a>
+function.  List of available encoding functions is provided
+<a href="#encoders">below</a>.
+</p>
+
+<table class="note" width="100%">
+<tr valign="baseline">
+<td><strong>NOTE:</strong></td>
+<td width="100%"><p>The terms <em>character set (charset)</em> and
+<em>character encoding</em> are used interchangeably within MHonArc
+documentation.  The reasoning is that <em>charset</em> is used within
+the MIME RFCs, but it blurs the concepts of <em>character encoding</em>
+and <em>coded characer set</em> and probably a few other things.
+For the purposes of this document, such details are not really
+necessary, but if you want to learn more, see
+<a href="http://www.unicode.org/unicode/reports/tr17/"
+><cite>Unicode Technical Report #17: Character Encoding Model</cite></a>
+and
+<a href="http://www.w3.org/MarkUp/html-spec/charset-harmful.html"
+><cite>Character Set Considered Harmful</cite></a>.
+</p>
+</td>
+</tr>
+</table>
+
+<p>The syntax of the TEXTENCODE resource is as follows:
+</p>
+
+<P><var>charset</var><CODE>;</CODE><var>routine-name</var><CODE>;</CODE><var>file-of-routine</var> </P>
+
+<P>The definition of each semi-colon-separated value is as follows:
+</P>
+
+<DL>
+<DT><var>charset</var> 
+ 
+<DD><P>Character set name.  See the
+<a href="charsetconverters.html">CHARSETCONVERTERS</a> and
+<a href="charsetaliases.html">CHARSETALIASES</a> for character sets
+MHonArc is aware of.  The official list of registered character
+sets for use on the Interenet is available from
+<a href="http://www.iana.org/assignments/character-sets">IANA</a>.
+</P>
+
+<DT><var>routine-name</var>
+<DD><P>The actual routine name of the encoder. The name
+should be fully qualified by the package it is defined in
+(e.g. "<tt class="icode">mypackage::filter</tt>").  </P>
+
+<DT><var>file-of-routine</var>
+<DD><P>The name of the file that defines
+<var>routine-name</var>. If the file is not a full
+pathname, MHonArc finds the file by looking in the
+standard include paths of Perl, and the paths specified by the
+<A HREF="perlinc.html">PERLINC</A>
+resource.
+</P>
+
+</DL>
+
+<H3><a name="vscharsetconverters">TEXTENCODE vs CHARSETCONVERTERS</a></H3>
+
+<p>It is important to clarify the differences between 
+TEXTENCODE and <a href="charsetconverters.html">CHARSETCONVERTERS</a>
+since reading about both resources may generate confusion.
+</p>
+<p>The main difference between TEXTENCODE and CHARSETCONVERTERS is that
+TEXTENCODE is applied as the message is read, before the message
+is converted to HTML.  TEXTENCODE's primary role is converting
+characters from one charset to another charset.
+CHARSETCONVERTERS' role is to convert characters into HTML.
+</p>
+<p>The following crude text diagram shows the path message text
+data takes when converted to HTML:
+</p>
+<pre>
+  message-text --&gt; TEXTENCODE --&gt; CHARSETCONVERTERS --&gt; HTML
+</pre>
+<p>
+<p>In addition, TEXTENCODE is applied only once to message text data.
+Since MHonArc stores some message header information in the
+<a href="dbfile.html">archive database</a>,
+the message header text is stored in "raw" form,
+which can include non-ASCII MIME encoded data like
+the following:
+</p>
+<pre class="code">
+From: =?US-ASCII?Q?Earl_Hood?= &lt;earl@earlhood.com&gt;
+Subject: =?ISO-8859-1?B?SWYgeW91IGNhbiByZWFkIHRoaXMgeW8=?=
+ =?ISO-8859-2?B?dSB1bmRlcnN0YW5kIHRoZSBleGFtcGxlLg==?=
+</pre>
+<p>Therefore, when a resource variable like <tt>$SUBJECT$</tt> is
+used, the <tt class="icode">=?ISO-8859-1?B?SWYgeW9...</tt> data
+must be parsed and converted every time.
+</p>
+<p>If TEXTENCODE is active, the message subject
+<tt class="icode">=?ISO-8859-1?B?SWYgeW9...</tt> is parsed and translated
+to the destination encoding when the message is first parsed,
+with the final result stored in the
+archive database.  The non-ASCII MIME encoding is removed, and it no
+longer has to be parsed each time <tt>$SUBJECT$</tt> is used.
+</p>
+
+<p>In either case, CHARSETCONVERTERS is still invoked, but in
+the former <tt class="icode">=?ISO-8859-1?B?SWYgeW9...</tt> case,
+CHARSETCONVERTERS must handle the various character sets specified.
+In the TEXTENCODE case, CHARSETCONVERTERS only has to deal with the
+<var>charset</var> specified in the TEXTENCODE resource.  Therefore,
+using TEXTENCODE vastly simplifies the CHARSETCONVERTERS resource
+value, where only the <tt>default</tt> converter needs to be
+defined.  This is highlighted in the Usage sections for the
+<a href="#encoders"><cite>Available Encoders</cite></a> listed
+below.
+</p>
+
+
+<H3><a name="writeencoder">Writing Encoders</a></H3>
+
+<table class="note" width="100%">
+<tr valign="baseline">
+<td><strong>NOTE:</strong></td>
+<td width="100%"><p>Before writing your own, first check out the
+<a href="#encoders">list of available encoders</a> to see
+if one already exists that satisfies your needs.
+</p>
+</td>
+</tr>
+</table>
+
+<p>If you want to write your own text encode for use in MHonArc,
+you need to know the Perl programming language. The following
+information assumes you know Perl.
+</P>
+
+<H4>Function Interface of Encoder</H4>
+
+<P>MHonArc interfaces with encoder by calling a routine
+with a specific set of arguments. The prototype of the interface
+routine is as follows: </P>
+
+<PRE class="code">
+sub <var>text_encoder</var> {
+    my(<b>$text_ref</b>, <b>$from_charset</b>, <b>$to_charset</b>) = @_;
+
+    <var># code here
+
+    # The last statement should be the return value, unless an
+    # explicit return is done. See the following for the format of the
+    # return value.</var>
+}
+</PRE>
+
+<H5>Parameter Descriptions</H5>
+
+<table cellspacing=1 border=0 cellpadding=4>
+
+<tr valign=top>
+<td><strong><code>$text_ref</code></strong></td>
+<td><p>A reference to the string to encode.  The routine should
+do the text encoding in-place.
+</p>
+</tr>
+
+<tr valign=top>
+<td><strong><code>$from_charset</code></strong></td>
+<td><p>Name of the source character encoding of <tt>$$text_ref</tt>.
+</p>
+</td>
+</tr>
+
+<tr valign=top>
+<td><strong><code>$to_charset</code></strong></td>
+<td><p>The destination encoding for <tt>$$text_ref</tt>.
+<tt>$to_charset</tt> is be set to the <var>charset</var>
+component of the TEXTENCODE resource value.
+</p>
+</td>
+</tr>
+
+</table>
+
+<H5>Return Value</H5>
+
+<p>On error, the routine should return <tt>undef</tt>.  Otherwise,
+it should return any true value.
+</p>
+<table class="caution" width="100%">
+<tr valign="baseline">
+<td><strong style="color: red;">CAUTION:</strong></td>
+<td width="100%"><p>If your routine encounters an error, try to
+preserve the original value of <tt>$$text_ref</tt> or data may
+be lost in archive output.
+</p>
+</td>
+</tr>
+</table>
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="encoders">Available Encoders</a></h2>
+
+<p>The standard MHonArc distribution provides the following character
+encoding routines:
+</p>
+
+<h3><a name="MHonArc::UTF8::to_utf8"><tt>MHonArc::UTF8::to_utf8</tt></a></h3>
+<dl>
+<dt><strong>Usage</strong></dt>
+<dd><pre class="code">
+<b>&lt;TextEncode&gt;</b>
+utf-8; MHonArc::UTF8::to_utf8; MHonArc/UTF8.pm
+<b>&lt;/TextEncode&gt;</b>
+
+&lt;-- With data translated to UTF-8, it simplifies CHARSETCONVERTERS --&gt;
+&lt;<a href="charsetconverters.html">CharsetConverters</a> override&gt;
+default; <a href="charsetconverters.html#mhonarc::htmlize">mhonarc::htmlize</a>
+&lt;/CharsetConverters&gt;
+
+&lt;-- Need to also register UTF-8-aware text clipping function --&gt;
+&lt;<a href="textclipfunc.html">TextClipFunc</a>&gt;
+MHonArc::UTF8::clip; MHonArc/UTF8.pm
+&lt;/TextClipFunc&gt;
+</pre>
+    </dd>
+<dt><strong>Description</strong></dt>
+    <dd><p><tt>MHonArc::UTF8::to_utf8</tt> converts text to
+    UTF-8 (Unicode).  Unicode is designed to represents all characters
+    of all languages.  UTF-8 is an encoding of Unicode that is 8-bit clean
+    and immune to byte ordering of computer systems.  Most modern
+    browsers support UTF-8 and UTF-8 is a good choice if dealing with
+    multi-lingual archives.
+    </p>
+    <p><tt>MHonArc::UTF8::to_utf8</tt> is designed to work with
+    older versions of Perl that do not support UTF-8, but also
+    utilizing UTF-8 aware modules in later versions of Perl.
+    <tt>MHonArc::UTF8</tt> checks for the following, in order of
+    preference, when loaded:
+    </p>
+    <ol>
+    <li><p><b><tt>Encode</tt></b>: <tt>Encode</tt> comes standard
+	with Perl v5.8 and provides conversion capbilities between
+	various character encodings.
+	</p>
+    <li><p><b><tt>Unicode::MapUTF8</tt></b>: <tt>Unicode::MapUTF8</tt>
+	is available via <a href="http://www.cpan.org/">CPAN</a>,
+	and provides conversion capabilities between various
+	character encodings to, and from, UTF-8.  <tt>Unicode::MapUTF8</tt>
+	depends on other modules, see <tt>Unicode::MapUTF8</tt>
+	module documentation for details.
+	</p>
+    <li><p><em>fallback</em>: If none of the above are present, then
+	the fallback implementation is used.  Fallback code is written
+	pure Perl, so it may not be as efficient as the modules
+	listed above.  However, many popular character encodings are
+	supported.
+	</p>
+	<table class="note" width="100%">
+	<tr valign="baseline">
+	<td><strong>NOTE:</strong></td>
+	<td width="100%"><p>Fallback code is automatically
+	invoked for character encodings not recognized by the
+	above listed modules.
+	</p>
+	</td>
+	</tr>
+	</table>
+    </ol>
+    </dd>
+</dl>
+
+<h3><a name="MHonArc::Encode::from_to"><tt>MHonArc::Encode::from_to</tt></a></h3>
+<dl>
+<dt><strong>Usage</strong></dt>
+<dd><pre class="code">
+<b>&lt;TextEncode&gt;</b>
+<var>charset</var>; MHonArc::Encode::from_to; MHonArc/Encode.pm
+<b>&lt;/TextEncode&gt;</b>
+</pre>
+    </dd>
+<dt><strong>Description</strong></dt>
+    <dd><p><tt>MHonArc::Encode::from_to</tt> converts texts to
+    the specified <var>charset</var> encoding.  This routine is
+    useful for locales that prefer to have all archive data translated
+    to the locale-prefered character set.
+    </p>
+    <table class="note" width="100%">
+    <tr valign="baseline">
+    <td><strong>NOTE:</strong></td>
+    <td width="100%"><p>Since most locale-specific character sets are
+    not universal sets (like Unicode), characters may be lost during
+    translation.
+    </p>
+    </td>
+    </tr>
+    </table>
+    <p> </p>
+    <table class="note" width="100%">
+    <tr valign="baseline">
+    <td><strong>NOTE:</strong></td>
+    <td width="100%"><p>For UTF-8 encoding,
+    use <a href=#MHonArc::UTF8::to_utf8"><tt>MHonArc::UTF8::to_utf8</tt></a>
+    instead since it provides more robust fallback capabilities and
+    works under non-UTF-8-aware versions of Perl.
+    </p>
+    </td>
+    </tr>
+    </table>
+
+    <p><tt>MHonArc::Encode:from_to</tt> works only if one of the
+    following modules are available, in order of preference, when
+    <tt>MHonArc::Encode</tt> is located:
+    </p>
+    <ol>
+    <li><p><b><tt>Encode</tt></b>: <tt>Encode</tt> comes standard
+	with Perl v5.8 and provides conversion capbilities between
+	various character encodings.
+	</p>
+    <li><p><b><tt>Unicode::MapUTF8</tt></b>: <tt>Unicode::MapUTF8</tt>
+	is available via <a href="http://www.cpan.org/">CPAN</a>,
+	and provides conversion capabilities between various
+	character encodings to, and from, UTF-8.  <tt>Unicode::MapUTF8</tt>
+	depends on other modules, see <tt>Unicode::MapUTF8</tt>
+	module documentation for details.
+	</p>
+    </ol>
+    <p><b>No</b> fallback implentations are available.
+    </p>
+
+    <p>If converting to a multi-byte encoding, the default
+    <a href="textclipfunc.html">TEXTCLIPFUNC</a> may not be adequate.
+    Therefore, you may have to avoid using resource variables with
+    maximum length specifiers.
+    </p>
+    <table class="note" width="100%">
+    <tr valign="baseline">
+    <td><strong>NOTE:</strong></td>
+    <td width="100%"><p>There is support for <tt>ISO-2022-JP</tt>
+    (Japanese).  The following resource settings should serve
+    as a basis when encoding to <tt>iso-2022-jp</tt>:
+    </p>
+    <pre class="code">
+<b>&lt;TextEncode&gt;</b>
+iso-2022-jp; MHonArc::Encode::from_to; MHonArc/Encode.pm
+<b>&lt;/TextEncode&gt;</b>
+
+&lt;-- Make sure to use iso-2022-jp aware charset converter --&gt;
+&lt;<a href="charsetconverters.html">CharsetConverters</a> override&gt;
+default; <a href="charsetconverters.html#iso2022jp">iso_2022_jp::str2html</a>; iso2022jp.pl
+&lt;/CharsetConverters&gt;
+
+&lt;-- Need to also register iso-2022-jp-aware text clipping function --&gt;
+&lt;<a href="textclipfunc.html">TextClipFunc</a>&gt;
+iso_2022_jp::clip; iso2022jp.pl
+&lt;/TextClipFunc&gt;
+    </pre>
+    <p>For more information about using MHonArc in a Japanese locale,
+    see (documents in Japanese):<br>
+    <a href="http://www.shiratori.riec.tohoku.ac.jp/~p-katoh/Hack/Docs/mhonarc-jp/index.html">&lt;http://www.shiratori.riec.tohoku.ac.jp/~p-katoh/Hack/Docs/mhonarc-jp/index.html&gt;</a><br>
+    <a href="http://www.shiratori.riec.tohoku.ac.jp/~p-katoh/Hack/Docs/mhonarc-jp/mhonarc-jp-2_4.html">&lt;http://www.shiratori.riec.tohoku.ac.jp/~p-katoh/Hack/Docs/mhonarc-jp/mhonarc-jp-2_4.html&gt;</a>
+    </p>
+    </td>
+    </tr>
+    </table>
+
+    </dd>
+</dl>
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="default">Default Setting</a></h2>
+
+<p>Nil.
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="rcvars">Resource Variables</a></h2>
+
+<p>N/A
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="examples">Examples</a></h2>
+
+<p>See the
+<a href="../rcfileexs/utf-8-encode.mrc.html"><tt>utf-8-encode.mrc</tt></a>
+for the basis of generating UTF-8-based archives via TEXTENCODE.
+</p>
+
+<p>If in a Japanese locale, the following generates archives in
+<tt>iso-2022-jp</tt>:
+</p>
+<pre class="code">
+<b>&lt;TextEncode&gt;</b>
+iso-2022-jp; MHonArc::Encode::from_to; MHonArc/Encode.pm
+<b>&lt;/TextEncode&gt;</b>
+
+&lt;-- Make sure to use iso-2022-jp aware charset converter --&gt;
+<b>&lt;<a href="charsetconverters.html">CharsetConverters</a> override&gt;</b>
+default; <a href="charsetconverters.html#iso2022jp">iso_2022_jp::str2html</a>; iso2022jp.pl
+<b>&lt;/CharsetConverters&gt;</b>
+
+&lt;-- Need to also register iso-2022-jp-aware text clipping function --&gt;
+<b>&lt;<a href="textclipfunc.html">TextClipFunc</a>&gt;</b>
+iso_2022_jp::clip; iso2022jp.pl
+<b>&lt;/TextClipFunc&gt;</b>
+
+<b><a href="idxpgbegin.html">&lt;IdxPgBegin&gt;</a></b>
+&lt;!doctype html public "-//W3C//DTD HTML//EN"&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;title&gt;<b><a href="../rcvars.html#IDXTITLE">$IDXTITLE$</a></b>&lt;/title&gt;
+&lt;meta http-equiv="Content-Type" content="text/html; charset=iso-2022-jp"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;h1&gt;<b><a href="../rcvars.html#IDXTITLE">$IDXTITLE$</a></b>&lt;/h1&gt;
+<b>&lt;/IdxPgBegin&gt;</b>
+
+<b><a href="tidxpgbegin.html">&lt;TIdxPgBegin&gt;</a></b>
+&lt;!doctype html public "-//W3C//DTD HTML//EN"&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;title&gt;<b><a href="../rcvars.html#TIDXTITLE">$TIDXTITLE$</a></b>&lt;/title&gt;
+&lt;meta http-equiv="Content-Type" content="text/html; charset=iso-2022-jp"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;h1&gt;<b><a href="../rcvars.html#TIDXTITLE">$TIDXTITLE$</a></b>&lt;/h1&gt;
+<b>&lt;/TIdxPgBegin&gt;</b>
+
+
+<b><a href="msgpgbegin.html">&lt;MsgPgBegin&gt;</a></b>
+&lt;!doctype html public "-//W3C//DTD HTML//EN"&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;title&gt;<b><a href="../rcvars.html#SUBJECTNA">$SUBJECTNA$</a></b>&lt;/title&gt;
+&lt;link rev="made" href="mailto:<b><a href="../rcvars.html#FROMADDR">$FROMADDR$</a></b>"&gt;
+&lt;meta http-equiv="Content-Type" content="text/html; charset=iso-2022-jp"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+<b>&lt;/MsgPgBegin&gt;</b>
+</pre>
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="version">Version</a></h2>
+
+<p>2.6.0
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="seealso">See Also</a></h2>
+
+<p>
+<a href="charsetconverters.html">CHARSETCONVERTERS</a>,
+<a href="perlinc.html">PERLINC</a>,
+<a href="textclipfunc.html">TEXTCLIPFUNC</a>
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<!--x-rc-nav-->
+<table border=0><tr valign="top">
+<td align="left" width="50%">[Prev:&nbsp;<a href="textclipfunc.html">TEXTCLIPFUNC</a>]</td><td><nobr>[<a href="../resources.html#textencode">Resources</a>][<a href="../mhonarc.html">TOC</a>]</nobr></td><td align="right" width="50%">[Next:&nbsp;<a href="tfirstpglink.html">TFIRSTPGLINK</a>]</td></tr></table>
+<!--/x-rc-nav-->
+<hr>
+<address>
+$Date: 2002/12/21 07:26:33 $<br>
+<img align="top" src="../monicon.png" alt="">
+<a href="http://www.mhonarc.org/"><strong>MHonArc</strong></a><br>
+Copyright &#169; 2002, <a href="http://www.earlhood.com/"
+>Earl Hood</a>, <a href="mailto:mhonarc@mhonarc.org"
+>mhonarc@mhonarc.org</a><br>
+</address>
+
+</body>
+</html>

@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhrcvars.pl,v 2.21 2002/07/27 05:13:13 ehood Exp $
+##	$Id: mhrcvars.pl,v 2.25 2003/02/04 23:31:19 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -88,6 +88,7 @@ sub replace_li_var {
     my($n) = (0);
     my($lref, $key, $pos);
     my($arg, $opt) = ("", "");
+    my $isaddr = 0;
 
     ##	Get variable argument string
     if ($val =~ s/\(([^()]*)\)//) {
@@ -141,6 +142,9 @@ sub replace_li_var {
 	    $canclip = 1; $raw = 1;
 	    ($lref, $key, $pos) = compute_msg_pos($index, $var, $arg);
 	    $tmp = defined($key) ? &$esub($From{$key}) : "(nil)";
+	    if ($cnd3 && $SpamMode) {
+		$tmp =~ s/($AddrExp)/rewrite_raw_address($1)/geo;
+	    }
 	    last REPLACESW;
 	}
     	if ( ($cnd1 = ($var eq 'FROMADDRNAME')) ||
@@ -179,9 +183,39 @@ sub replace_li_var {
 	    $tmp = $iconurl  if defined($iconurl);
 	    last REPLACESW;
 	}
+    	if ($var eq 'ICONURLPREFIX') {	## URL prefix to message icon
+	    $isurl = 0;
+	    $tmp = $IconURLPrefix;
+	    last REPLACESW;
+	}
     	if ($var eq 'MSG') {		## Filename of message page
 	    ($lref, $key, $pos) = compute_msg_pos($index, $var, $arg);
 	    $tmp = defined($key) ? &msgnum_filename($IndexNum{$key}) : "";
+	    last REPLACESW;
+	}
+	if ($var eq 'MSGHFIELD') {	## Message header field
+	    $canclip = 1; $raw = 1;
+	    ($lref, $key, $pos, $opt) = compute_msg_pos($index, $var, $arg);
+	    if (!defined($key)) {
+		$tmp = '';
+		last REPLACESW;
+	    }
+	    $opt =~ s/\s+//g;  $opt = lc $opt;
+	    HFIELD: {
+		my $fields = $ExtraHFields{$key};
+		if (defined($fields) && defined($tmp = $fields->{$opt})) {
+		    last HFIELD;
+		}
+		if ($opt eq 'subject') {
+		    $tmp = $Subject{$key};
+		    $tmp = $NoSubjectTxt  if $tmp eq '';
+		    last HFIELD;
+		}
+		$tmp = '';
+	    }
+	    if ($HFieldsAddr{$opt}) {
+		$isaddr = 1;
+	    }
 	    last REPLACESW;
 	}
     	if ($var eq 'MSGGMTDATE') {	## Message GMT date
@@ -305,6 +339,12 @@ sub replace_li_var {
 		if ($arg eq 'TPREVTOP') {
 		    $tmp = defined($key) ? $TPREVTOPBUTTON : $TPREVTOPBUTTONIA;
 		    last SW; }
+		if ($arg eq 'TTOP') {
+		    $tmp = ($key ne $index) ? $TTOPBUTTON : $TTOPBUTTONIA;
+		    last SW; }
+		if ($arg eq 'TEND') {
+		    $tmp = ($key ne $index) ? $TENDBUTTON : $TENDBUTTONIA;
+		    last SW; }
 	    }
 	    last REPLACESW;
 	}
@@ -335,6 +375,12 @@ sub replace_li_var {
 		    last SW; }
 		if ($arg eq 'TPREVTOP') {
 		    $tmp = defined($key) ? $TPREVTOPLINK : $TPREVTOPLINKIA;
+		    last SW; }
+		if ($arg eq 'TTOP') {
+		    $tmp = ($key ne $index) ? $TTOPLINK : $TTOPLINKIA;
+		    last SW; }
+		if ($arg eq 'TEND') {
+		    $tmp = ($key ne $index) ? $TENDLINK : $TENDLINKIA;
 		    last SW; }
 	    }
 	    last REPLACESW;
@@ -632,6 +678,16 @@ sub replace_li_var {
     } else {
 	if ($raw) {
 	    $ret = &$MHeadCnvFunc($tmp);
+	    if ($isaddr) {
+		if ($NOMAILTO) {
+		    $ret =~ s/($HAddrExp)/htmlize(rewrite_address($1))/geo;
+		} else {
+		    $ret =~ s/($HAddrExp)
+			     /mailUrl($1, $Index2MsgId{$key},
+					  $Subject{$key},
+					  $From{$key})/gexo;
+		}
+	    }
 	} else {
 	    $ret = $tmp;
 	}

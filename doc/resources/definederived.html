@@ -1,19 +1,30 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
 <html>
 <head>
 <title>MHonArc Resources: DEFINEDERIVED</title>
+<link rel="stylesheet" type="text/css" href="../docstyles.css">
 </head>
 <body>
 <!--x-rc-nav-->
 <table border=0><tr valign="top">
-<td align="left" width="50%">[Prev:&nbsp;<a href="decodeheads.html">DECODEHEADS</a>]</td><td><nobr>[<a href="../resources.html#definederived">Resources</a>][<a href="../mhonarc.html">TOC</a>]</nobr></td><td align="right" width="50%">[Next:&nbsp;<a href="definevar.html">DEFINEVAR</a>]</td></tr></table>
+<td align="left" width="50%">[Prev:&nbsp;<a href="defcharset.html">DEFCHARSET</a>]</td><td><nobr>[<a href="../resources.html#definederived">Resources</a>][<a href="../mhonarc.html">TOC</a>]</nobr></td><td align="right" width="50%">[Next:&nbsp;<a href="definevar.html">DEFINEVAR</a>]</td></tr></table>
 <!--/x-rc-nav-->
 <hr>
 <h1>DEFINEDERIVED</h1>
+<!--X-TOC-Start-->
+<ul>
+<li><a href="#syntax">Syntax</a>
+<li><a href="#description">Description</a>
+<li><a href="#default">Default Setting</a>
+<li><a href="#rcvars">Resource Variables</a>
+<li><a href="#examples">Examples</a>
+<li><a href="#version">Version</a>
+<li><a href="#seealso">See Also</a>
+</ul>
+<!--X-TOC-End-->
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Syntax</h2>
+<h2><a name="syntax">Syntax</a></h2>
 
 <dl>
 
@@ -40,7 +51,7 @@
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Description</h2>
+<h2><a name="description">Description</a></h2>
 
 <p>DEFINEDERIVED is used to define extra files that are generated
 for each message processed.  DEFINEDERIVED can only be specified
@@ -53,14 +64,14 @@ the content of the file.
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Default Setting</h2>
+<h2><a name="default">Default Setting</a></h2>
 
 <p>N/A
 </p>
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Resource Variables</h2>
+<h2><a name="rcvars">Resource Variables</a></h2>
 
 <table border=1>
 <tr bgcolor="#C0C0C0">
@@ -112,11 +123,15 @@ the content of the file.
 </tr>
 <tr valign=top>
 <td align=center><a name="ICON" href="../rcvars.html#ICON"><strong><code>$ICON$</code></strong></a></td>
-<td>The context-type sensitive icon.</td>
+<td>The content-type sensitive icon.</td>
 </tr>
 <tr valign=top>
 <td align=center><a name="ICONURL" href="../rcvars.html#ICONURL"><strong><code>$ICONURL$</code></strong></a></td>
-<td>The URL to the context-type sensitive icon.</td>
+<td>URL to the content-type sensitive icon.</td>
+</tr>
+<tr valign=top>
+<td align=center><a name="ICONURLPREFIX" href="../rcvars.html#ICONURLPREFIX"><strong><code>$ICONURLPREFIX$</code></strong></a></td>
+<td>Value of ICONURLPREFIX resource.</td>
 </tr>
 <tr valign=top>
 <td align=center><a name="IDXFNAME" href="../rcvars.html#IDXFNAME"><strong><code>$IDXFNAME$</code></strong></a></td>
@@ -157,6 +172,10 @@ the content of the file.
 <tr valign=top>
 <td align=center><a name="MSGGMTDATE" href="../rcvars.html#MSGGMTDATE"><strong><code>$MSGGMTDATE$</code></strong></a></td>
 <td>GMT date of current message.</td>
+</tr>
+<tr valign=top>
+<td align=center><a name="MSGHFIELD" href="../rcvars.html#MSGHFIELD"><strong><code>$MSGHFIELD$</code></strong></a></td>
+<td>Message header field</td>
 </tr>
 <tr valign=top>
 <td align=center><a name="MSGID" href="../rcvars.html#MSGID"><strong><code>$MSGID$</code></strong></a></td>
@@ -250,7 +269,7 @@ the content of the file.
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Examples</h2>
+<h2><a name="examples">Examples</a></h2>
 
 <p>The following example shows how user defined files can be
 used to provide a framed navigational view of an archive.  Note
@@ -258,21 +277,23 @@ how the filenames contain resource variables to uniquely qualify
 the name for each message.
 </p>
  
-<dl>
-<dt><strong>Note</strong></dt>
-<dd><p>This
+<table class="note" width="100%">
+<tr valign="baseline">
+<td><strong>NOTE:</strong></td>
+<td width="100%"><p>This
 example is not complete since other resources need to be defined
 to make everything work.
 </p>
-</dd>
-</dl>
+</td>
+</tr>
+</table>
  
 <p>The following derived file is the main file the index pages
 will link to.  It defines the subframe definitions for the
 navigational links and the message data:
 </p>
 
-<pre>
+<pre class="code">
 <b>&lt;DefineDerived&gt;</b>
 frm<a href="#MSGNUM">$MSGNUM$</a>.html
 &lt;html&gt;
@@ -292,7 +313,7 @@ for a message.  The links will be displayed in a frame
 above the converted message.
 </p>
  
-<pre>
+<pre class="code">
 <b>&lt;DefineDerived&gt;</b>
 nav<a href="#MSGNUM">$MSGNUM$</a>.html
 &lt;html&gt;
@@ -324,14 +345,14 @@ nav<a href="#MSGNUM">$MSGNUM$</a>.html
 
 <!-- *************************************************************** -->
 <hr>
-<h2>Version</h2>
+<h2><a name="version">Version</a></h2>
 
 <p>2.0
 </p>
 
 <!-- *************************************************************** -->
 <hr>
-<h2>See Also</h2>
+<h2><a name="seealso">See Also</a></h2>
 
 <p>
 </p>
@@ -340,11 +361,11 @@ nav<a href="#MSGNUM">$MSGNUM$</a>.html
 <hr>
 <!--x-rc-nav-->
 <table border=0><tr valign="top">
-<td align="left" width="50%">[Prev:&nbsp;<a href="decodeheads.html">DECODEHEADS</a>]</td><td><nobr>[<a href="../resources.html#definederived">Resources</a>][<a href="../mhonarc.html">TOC</a>]</nobr></td><td align="right" width="50%">[Next:&nbsp;<a href="definevar.html">DEFINEVAR</a>]</td></tr></table>
+<td align="left" width="50%">[Prev:&nbsp;<a href="defcharset.html">DEFCHARSET</a>]</td><td><nobr>[<a href="../resources.html#definederived">Resources</a>][<a href="../mhonarc.html">TOC</a>]</nobr></td><td align="right" width="50%">[Next:&nbsp;<a href="definevar.html">DEFINEVAR</a>]</td></tr></table>
 <!--/x-rc-nav-->
 <hr>
 <address>
-$Date: 2002/07/27 05:13:10 $ <br>
+$Date: 2003/01/09 23:42:25 $ <br>
 <img align="top" src="../monicon.png" alt="">
 <a href="http://www.mhonarc.org/"><strong>MHonArc</strong></a><br>
 Copyright &#169; 1997-1998, <a href="http://www.earlhood.com/">Earl Hood</a>, <a href="mailto:mhonarc@mhonarc.org">mhonarc@mhonarc.org</a><br>

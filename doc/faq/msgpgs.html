@@ -1,12 +1,11 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
 <HTML>
 <HEAD>
 <TITLE>MHonArc FAQ: Message Pages</TITLE></HEAD>
+<link rel="stylesheet" type="text/css" href="../docstyles.css">
 <BODY>
 
 <!--X-NavButtons-Start-->
-<p align=center>
-[<a href="indexpgs.html">Prev</a>][<a href="threads.html">Next</a>][<a href="faq.html">TOC</a>][<a href="http://www.mhonarc.org/">Home</a>]
+<table width="100%"><tr><td align="left"><nobr>[<a href="indexpgs.html">Prev</a>]</nobr></td><td align="center" width="100%">[<a href="faq.html">TOC</a>][<a href="../mhonarc.html">Manual</a>][<a href="http://www.mhonarc.org/">Home</a>]</td><td align="right"><nobr>[<a href="threads.html">Next</a>]</nobr></td></tr></table>
 </p>
 <!--X-NavButtons-End-->
 
@@ -35,8 +34,8 @@
 
 <p>No.  However, with the exceptions of the message header and body
 (but see next questions), those resource can be defined
-anyway you like.  For example, I can change the TOPLINKS resource
-to look like the BOTLINKS resource.  Or, I can change the
+anyway you like.  For example, I can change the <a href="../resources/toplinks.html">TOPLINKS</a> resource
+to look like the <a href="../resources/botlinks.html">BOTLINKS</a> resource.  Or, I can change the
 default meaning of the resource so it really outputs something
 else entirely.  If you look at the documentation, the resources
 are just defined by HTML markup and resource variables.  Many
@@ -55,40 +54,38 @@ are converted into HTML.  You can exclude fields and style fields
 with your own HTML markup.  For example, here are resources that
 cause message headers to be formatted with a table:
 </p>
-<pre>
-<b>&lt;FIELDSBEG></b>
-&lt;table>
-&lt;tbody>
-<b>&lt;/FIELDSBEG></b>
-<b>&lt;LABELBEG></b>
-&lt;tr>
-&lt;td align="right" valign="top">
-<b>&lt;/LABELBEG></b>
-<b>&lt;LABELEND></b>
-&lt;/td>
-<b>&lt;/LABELEND></b>
-<b>&lt;FLDBEG></b>
-&lt;td align="left">
-<b>&lt;/FLDBEG></b>
-<b>&lt;FLDEND></b>
-&lt;/td>
-&lt;/tr>
-<b>&lt;/FLDEND></b>
-<b>&lt;FIELDSEND></b>
-&lt;/tbody>
-&lt;/table>
-<b>&lt;/FIELDSEND></b>
+<pre class="code">
+<b>&lt;<a href="../resources/fieldsbeg.html">FIELDSBEG</a>&gt;</b>
+&lt;table&gt;
+<b>&lt;/FIELDSBEG&gt;</b>
+<b>&lt;<a href="../resources/labelbeg.html">LABELBEG</a>></b>
+&lt;tr&gt;
+&lt;td align="right" valign="top"&gt;
+<b>&lt;/LABELBEG&gt;</b>
+<b>&lt;<a href="../resources/labelend.html">LABELEND</a>&gt;</b>
+&lt;/td&gt;
+<b>&lt;/LABELEND&gt;</b>
+<b>&lt;<a href="../resources/fldbeg.html">FLDBEG</a>&gt;</b>
+&lt;td align="left"&gt;
+<b>&lt;/FLDBEG&gt;</b>
+<b>&lt;<a href="../resources/fldend.html">FLDEND</a>&gt;</b>
+&lt;/td&gt;
+&lt;/tr&gt;
+<b>&lt;/FLDEND&gt;</b>
+<b>&lt;<a href="../resources/fieldsend.html">FIELDSEND</a>&gt;</b>
+&lt;/table&gt;
+<b>&lt;/FIELDSEND&gt;</b>
 </pre>
 
 <p>You can also control the order message fields are displayed:
 </p>
-<pre>
-<b>&lt;FIELDORDER></b>
+<pre class="code">
+<b>&lt;<a href="../resources/fieldorder.html">FIELDORDER</a>&gt;</b>
 from
 subject
 date
 -extra-
-<b>&lt;/FIELDORDER></b>
+<b>&lt;/FIELDORDER&gt;</b>
 </pre>
 <p>The "-extra-" signifies all other message fields in alphabetic
 order.
@@ -96,11 +93,11 @@ order.
 
 <p>You can also exclude specific message fields:
 </p>
-<pre>
-<b>&lt;EXCS></b>
+<pre class="code">
+<b>&lt;<a href="../resources/excs.html">EXCS</a>&gt;</b>
 x-
 precendence
-<b>&lt;/EXCS></b>
+<b>&lt;/EXCS&gt;</b>
 </pre>
 <p>Here, we are exluding all "X-..." fields and the Precendence
 field.
@@ -137,20 +134,43 @@ a specific order so it can edit archived messages when needed w/o
 using a bunch of logic, and performance degradation (special comment
 declarations are used to mark off the different sections of a message).
 Therefore, you cannot have the body come before the message header.
-The best you can do is suppress the header (via EXCS) and create a
+The best you can do is suppress the header (via <a href="../resources/excs.html">EXCS</a>) and create a
 bogus header via the resource variables available.  For example:
 </p>
-<pre>
-<b>&lt;EXCS override></b>
+<pre class="code">
+<b>&lt;<a href="../resources/excs.html">EXCS</a> override&gt;</b>
 .
-<b>&lt;/EXCS></b>
-<b>&lt;MSGFOOT></b>
-&lt;ul>
-&lt;li>From: $FROM$
-&lt;li>Subject: $SUBJECTNA$
-&lt;li>Date: $DATE$
-&lt;ul>
-<b>&lt;/MSGFOOT></b>
+<b>&lt;/EXCS&gt;</b>
+<b>&lt;<a href="../resources/msgfoot.html">MSGFOOT</a>&gt;</b>
+&lt;ul&gt;
+&lt;li&gt;From: $FROM$
+&lt;li&gt;Subject: $SUBJECTNA$
+&lt;li&gt;Date: $DATE$
+&lt;ul&gt;
+<b>&lt;/MSGFOOT&gt;</b>
+</pre>
+
+<p>In v2.6, you can include additional header fields by using the
+<a href="../resources/fieldstore.html">FIELDSTORE</a> resource
+and the <tt>$MSGHFIELD$</tt> resource variable.  For example, say
+you want to include the <tt>To:</tt> field in the previous example.
+You can do the following:
+</p>
+<pre class="code">
+<b>&lt;<a href="../resources/excs.html">EXCS</a> override&gt;</b>
+.
+<b>&lt;/EXCS&gt;</b>
+<b>&lt;<a href="../resources/fieldstore.html">FIELDSTORE</a>&gt;</b>
+to
+<b>&lt;/FIELDSTORE&gt;</b>
+<b>&lt;<a href="../resources/msgfoot.html">MSGFOOT</a>&gt;</b>
+&lt;ul&gt;
+&lt;li&gt;To: $MSGHFIELD(CUR;to)$
+&lt;li&gt;From: $FROM$
+&lt;li&gt;Subject: $SUBJECTNA$
+&lt;li&gt;Date: $DATE$
+&lt;ul&gt;
+<b>&lt;/MSGFOOT&gt;</b>
 </pre>
 
 <!-- ??????????????????????????????????????????????????????????????? -->
@@ -161,12 +181,26 @@ bogus header via the resource variables available.  For example:
 </td></tr></table>
 
 <p>Yes, mostly.  The only thing cannot be changed once converted
-is the message header and message body.  All other parts of the
+is the message header and message body (but see
+<a href="#reconvert_note">note below</a>).  All other parts of the
 message page can be changed at any time.  To make any changes
-appear on existing archived messages, set the EDITIDX resource.
-The EDITIDX resource tells MHonArc to recreate all archive
+appear on existing archived messages, set the <a href="../resources/editidx.html">EDITIDX</a> resource.
+The <a href="../resources/editidx.html">EDITIDX</a> resource tells MHonArc to recreate all archive
 pages.
 </p>
+<table class="note" width="100%">
+<tr valign="baseline">
+<td><a name="reconvert_note"><strong>NOTE:</strong></a></td>
+<td width="100%"><p>v2.6 introduced the
+<a href="../resources/reconvert.html">RECONVERT</a> resource.  With
+RECONVERT, you can reconvert messages if the original raw messages
+are available.  See RECONVERT
+<a href="../resources/reconvert.html#examples">examples</a> for
+more information.
+</p>
+</td>
+</tr>
+</table>
 
 <!-- ??????????????????????????????????????????????????????????????? -->
 <hr noshade size=1>
@@ -196,14 +230,13 @@ MESS WITH THEM</strong>.
 <hr>
 
 <!--X-NavButtons-Start-->
-<p align=center>
-[<a href="indexpgs.html">Prev</a>][<a href="threads.html">Next</a>][<a href="faq.html">TOC</a>][<a href="http://www.mhonarc.org/">Home</a>]
+<table width="100%"><tr><td align="left"><nobr>[<a href="indexpgs.html">Prev</a>]</nobr></td><td align="center" width="100%">[<a href="faq.html">TOC</a>][<a href="../mhonarc.html">Manual</a>][<a href="http://www.mhonarc.org/">Home</a>]</td><td align="right"><nobr>[<a href="threads.html">Next</a>]</nobr></td></tr></table>
 </p>
 <!--X-NavButtons-End-->
 
 <HR>
 <address>
-$Date: 2001/12/24 14:38:39 $ <br>
+$Date: 2003/01/03 04:32:32 $ <br>
 <img align="top" src="monicon.png" alt="">
 <a href="http://www.mhonarc.org/"
 ><strong>MHonArc</strong></a><br>

@@ -1,13 +1,13 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhamain.pl,v 2.50.2.1 2002/12/22 00:43:56 ehood Exp $
+##	$Id: mhamain.pl,v 2.59 2003/02/10 05:04:00 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
 ##	Main library for MHonArc.
 ##---------------------------------------------------------------------------##
 ##    MHonArc -- Internet mail-to-HTML converter
-##    Copyright (C) 1995-2002	Earl Hood, mhonarc@mhonarc.org
+##    Copyright (C) 1995-2003	Earl Hood, mhonarc@mhonarc.org
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by
@@ -29,14 +29,35 @@ package mhonarc;
 
 require 5;
 
-$VERSION = '2.5.14';
+$VERSION = '2.6.0';
 $VINFO =<<EndOfInfo;
   MHonArc v$VERSION (Perl $] $^O)
-  Copyright (C) 1995-2002  Earl Hood, mhonarc\@mhonarc.org
+  Copyright (C) 1995-2003  Earl Hood, mhonarc\@mhonarc.org
   MHonArc comes with ABSOLUTELY NO WARRANTY and MHonArc may be copied only
   under the terms of the GNU General Public License, which may be found in
   the MHonArc distribution.
 EndOfInfo
+
+###############################################################################
+BEGIN {
+    ## Check what system we are executing under
+    require 'osinit.pl';  &OSinit();
+
+    ## Check if running setuid/setgid
+    $TaintMode = 0;
+    if ($UNIX && (( $< != $> ) || ( $( != $) ))) {
+	## We do not support setuid since there are too many
+	## security problems to handle, and if we did, mhonarc
+	## would probably not be very useful.
+	die "ERROR: setuid/setgid execution not supported!\n";
+
+	#$TaintMode = 1;
+	#$ENV{'PATH'}  = '/bin:/usr/bin';
+	#$ENV{'SHELL'} = '/bin/sh'  if exists $ENV{'SHELL'};
+	#delete @ENV{qw(IFS CDPATH ENV BASH_ENV)};
+    }
+}
+###############################################################################
 
 $CODE		= 0;
 $ERROR  	= "";
@@ -51,7 +72,6 @@ my @_term_sigs	= qw(
     TERM TRAP USR1 USR2 VTALRM XCPU XFSZ
 );
 
-
 ###############################################################################
 ##	Public routines
 ###############################################################################
@@ -63,9 +83,6 @@ my @_term_sigs	= qw(
 sub initialize {
     ##	Turn off buffered I/O to terminal
     my($curfh) = select(STDOUT);  $| = 1;  select($curfh);
-
-    ##	Check what system we are executing under
-    require 'osinit.pl';  &OSinit();
 
     ##	Require essential libraries
     require 'mhlock.pl';
@@ -259,9 +276,9 @@ sub doit {
     }
 
     ## Get here, we are processing mail folders
-    my($index, $fields, $fh, $i);
+    my($index, $fields, $fh, $cur_msg_cnt);
 
-    $i = $NumOfMsgs;
+    $cur_msg_cnt = $NumOfMsgs;
     ##-------------------##
     ## Read mail folders ##
     ##-------------------##
@@ -279,14 +296,7 @@ sub doit {
 
 	if ($index) {
 	    $AddIndex{$index} = 1;
-	    $IndexNum{$index} = &getNewMsgNum();
-
-	    ## Read rest of message
-	    $Message{$index} = &read_mail_body(
-					$handle,
-					$index,
-				        $fields,
-					$NoMsgPgs);
+	    read_mail_body($handle, $index, $fields, $NoMsgPgs);
 	}
 
     ## Adding/converting mail{boxes,folders}
@@ -326,18 +336,12 @@ sub doit {
 		    #  Process message if valid
 		    if ($index) {
 			if ($ADD && !$SLOW) { $AddIndex{$index} = 1; }
-			$IndexNum{$index} = &getNewMsgNum();
-			$Message{$index} = &read_mail_body(
-						$fh,
-						$index,
-					        $fields,
-						$NoMsgPgs);
+			read_mail_body($fh, $index, $fields, $NoMsgPgs);
+
 			#  Check if conserving memory
 			if ($SLOW && $DoArchive) {
 			    output_mail($index, 1, 1);
-			    if (defined($IndexNum{$index})) {
-				$Update{$IndexNum{$index}} = 1;
-			    }
+			    $Update{$IndexNum{$index}} = 1;
 			}
 			if ($SLOW || !$DoArchive) {
 			    delete $MsgHead{$index};
@@ -371,17 +375,11 @@ sub doit {
 
 		    if ($index) {
 			if ($ADD && !$SLOW) { $AddIndex{$index} = 1; }
-			$IndexNum{$index} = &getNewMsgNum();
-			$Message{$index} = read_mail_body(
-						$fh,
-						$index,
-						$fields,
-						$NoMsgPgs);
+			read_mail_body($fh, $index, $fields, $NoMsgPgs);
+
 			if ($SLOW && $DoArchive) {
 			    output_mail($index, 1, 1);
-			    if (defined($IndexNum{$index})) {
-				$Update{$IndexNum{$index}} = 1;
-			    }
+			    $Update{$IndexNum{$index}} = 1;
 			}
 			if ($SLOW || !$DoArchive) {
 			    delete $MsgHead{$index};
@@ -405,11 +403,12 @@ sub doit {
     }
 
     ## Check if there are any new messages
-    if (!$EDITIDX && ($i == $NumOfMsgs)) {
+    if (!$EDITIDX && ($cur_msg_cnt > 0) &&
+	    !scalar(%AddIndex) && !scalar(%Update)) {
 	print STDOUT "No new messages\n"  unless $QUIET;
 	return 1;
     }
-    $NewMsgCnt = $NumOfMsgs - $i;
+    $NewMsgCnt = $NumOfMsgs - $cur_msg_cnt;
 
     ## Write pages
     &write_pages();
@@ -718,12 +717,14 @@ sub write_mail {
 ##
 sub read_mail_header {
     my $handle = shift;
-    my($index, $date, $tmp, $i, $field, $value);
+    my($date, $tmp, $i, $field, $value);
     my($from, $sub, $msgid, $ctype);
     local($_);
 
-    my @refs = ();
-    my @array = ();
+    my $index  = undef;
+    my $msgnum = undef;
+    my @refs   = ();
+    my @array  = ();
     my($fields, $header) = readmail::MAILread_file_header($handle);
 
     ##---------------------------##
@@ -773,8 +774,14 @@ sub read_mail_header {
     }
 
     ## Return if message already exists in archive
-    if ($msgid && defined($MsgId{$msgid})) {
-	return undef;
+    if ($msgid && defined($index = $MsgId{$msgid})) {
+	if ($Reconvert) {
+	    $msgnum = $IndexNum{$index};
+	    delmsg($index);
+	    $index = undef;
+	} else {
+	    return undef;
+	}
     }
 
     ##----------##
@@ -873,7 +880,7 @@ sub read_mail_header {
     }
 
     ## Insure uniqueness of index
-    $index .= $X . sprintf("%d",$LastMsgNum+1);
+    $index .= $X . sprintf('%d',(defined($msgnum)?$msgnum:($LastMsgNum+1)));
 
     ## Set mhonarc fields.  Note how values are NOT arrays.
     $fields->{'x-mha-index'} = $index;
@@ -897,8 +904,27 @@ sub read_mail_header {
 	$NewMsgId{$msgid} = $index;	# Track new message-ids
 	$Index2MsgId{$index} = $msgid;
     }
+    if (defined($msgnum)) {
+	$IndexNum{$index} = $msgnum;
+	++$NumOfMsgs; # Counteract decrement by delmsg
+    } else {
+	$IndexNum{$index} = getNewMsgNum();
+    }
 
     $Refs{$index} = [ @refs ]  if (@refs);
+
+    ## Grab any extra fields to store
+    foreach $field (@ExtraHFields) {
+	next  unless $fields->{$field};
+	if (!defined($tmp = $ExtraHFields{$index})) {
+	    $tmp = $ExtraHFields{$index} = { };
+	}
+	if ($HFieldsAddr{$field}) {
+	    $tmp->{$field} = join(', ', @{$fields->{$field}});
+	} else {
+	    $tmp->{$field} = join(' ', @{$fields->{$field}});
+	}
+    }
 
     ($index, $fields);
 }
@@ -968,19 +994,20 @@ sub read_mail_body {
     ## Invoke callback if defined
     if (defined($CBMessageBodyRead) && defined(&$CBMessageBodyRead)) {
 	&$CBMessageBodyRead($fields, \$ret, \@files);
+	$Message{$index} = $ret;
+    } else {
+	$Message{$index} = $ret;
     }
 
-    if (!defined($ret) || $ret eq "") {
-	$ret = join('',
-		    "<dl>\n",
-		    "<dt><strong>Warning</strong></dt>\n",
-		    "<dd>Unable to process data: \n",
-		    "<tt>",
-		    htmlize($fields->{'content-type'}[0] || 'text/plain'),
-		    "</tt>\n",
-		    "</dd>\n",
-		    "</dl>\n"
-		    );
+    if (!defined($ret) || $ret eq '') {
+	warn qq/\n/,
+	     qq/Warning: Empty body data generated:\n/,
+	     qq/         Message-Id: $MHAmsgid\n/,
+	     qq/         Message Number: $MHAmsgnum\n/,
+	     qq/         Content-Type/,
+			 ($fields->{'content-type'}[0] || 'text/plain'),
+			 qq/\n/;
+	$ret = '';
     }
     if (@files) {
 	$Derived{$index} = [ @files ];
@@ -1000,7 +1027,7 @@ sub read_mail_body {
 sub output_mail {
     my($index, $force, $nocustom) = @_;
     my($msgi, $tmp, $tmp2, $template, @array2);
-    my($msghandle, $msginfh, $drvfh);
+    my($msghandle, $msginfh);
 
     my $msgnum	     = $IndexNum{$index};
     if (!$SINGLE && !defined($msgnum)) {
@@ -1013,7 +1040,7 @@ sub output_mail {
     my $i_p0 	     = fmt_msgnum($msgnum);
     my $filename     = msgnum_filename($msgnum);
     my $filepathname = join($DIRSEP, $OUTDIR, $filename);
-    my $tmppathname  = join($DIRSEP, $OUTDIR, "msgtmp.$$");
+    my $tmppathname;
 
     if ($adding) {
 	return ($i_p0, $filename)  unless $Update{$msgnum};
@@ -1036,7 +1063,7 @@ sub output_mail {
     if ($SINGLE) {
 	$msghandle = \*STDOUT;
     } else {
-	$msghandle = file_create($tmppathname, $GzipFiles);
+	($msghandle, $tmppathname) = file_temp('tmsgXXXXXXXXXX', $OUTDIR);
     }
 
     ## Output HTML header
@@ -1115,7 +1142,7 @@ sub output_mail {
 	while (<$msginfh>) {
 	    # check if subject header delimited
 	    if (/<!--X-Subject-Header-Begin/) {
-		$tmp2 =~ s%($AddrExp)%&link_refmsgid($1,1)%geo;
+		$tmp2 =~ s/($HAddrExp)/&link_refmsgid($1,1)/geo;
 		print $msghandle $tmp2;
 		$tmp2 = "";
 
@@ -1131,7 +1158,7 @@ sub output_mail {
 	    }
 	    # check if head/body separator delimited
 	    if (/<!--X-Head-Body-Sep-Begin/) {
-		$tmp2 =~ s%($AddrExp)%&link_refmsgid($1,1)%geo;
+		$tmp2 =~ s/($HAddrExp)/&link_refmsgid($1,1)/geo;
 		print $msghandle $tmp2;
 		$tmp2 = "";
 
@@ -1149,7 +1176,7 @@ sub output_mail {
 	    $tmp2 .= $_;
 	    last  if /<!--X-MsgBody-End/;
 	}
-	$tmp2 =~ s%($AddrExp)%&link_refmsgid($1,1)%geo;
+	$tmp2 =~ s/($HAddrExp)/&link_refmsgid($1,1)/geo;
 	print $msghandle $tmp2;
 
     } else {
@@ -1160,8 +1187,8 @@ sub output_mail {
 	print $msghandle $template;
 	print $msghandle "<!--X-Subject-Header-End-->\n";
 
-	$MsgHead{$index} =~ s%($AddrExp)%&link_refmsgid($1)%geo;
-	$Message{$index} =~ s%($AddrExp)%&link_refmsgid($1)%geo;
+	$MsgHead{$index} =~ s/($HAddrExp)/&link_refmsgid($1)/geo;
+	$Message{$index} =~ s/($HAddrExp)/&link_refmsgid($1)/geo;
 
 	print $msghandle "<!--X-Head-of-Message-->\n";
 	print $msghandle $MsgHead{$index};
@@ -1266,24 +1293,27 @@ sub output_mail {
 	close($msginfh);
 	#&file_remove($tmppathname);
     }
-    file_rename($tmppathname, $filepathname)  unless $SINGLE;
+    if (!$SINGLE) {
+	file_gzip($tmppathname)  if $GzipFiles;
+	file_chmod(file_rename($tmppathname, $filepathname));
+    }
 
     ## Create user defined files
+    my($drvfh);
     foreach (keys %UDerivedFile) {
 	($tmp = $_) =~ s/$VarExp/&replace_li_var($1,$index)/geo;
-	$tmp2 = join($DIRSEP, $OUTDIR, $tmp);
-	if ($drvfh = file_create($tmp2, $GzipFiles)) {
-	    ($template = $UDerivedFile{$_}) =~
-		s/$VarExp/&replace_li_var($1,$index)/geo;
-	    print $drvfh $template;
-	    close($drvfh);
-	    if (defined($Derived{$index})) {
-		push(@{$Derived{$index}}, $tmp);
-	    } else {
-		$Derived{$index} = [ $tmp ];
-	    }
+	($drvfh, $tmppathname) = file_temp('drvXXXXXXXXXX', $OUTDIR);
+	($template = $UDerivedFile{$_}) =~
+	    s/$VarExp/&replace_li_var($1,$index)/geo;
+	print $drvfh $template;
+	close($drvfh);
+	file_gzip($tmppathname)  if $GzipFiles;
+	file_chmod(file_rename($tmppathname, join($DIRSEP, $OUTDIR, $tmp)));
+
+	if (defined($Derived{$index})) {
+	    push(@{$Derived{$index}}, $tmp);
 	} else {
-	    warn "Warning: Unable to create $tmp2\n";
+	    $Derived{$index} = [ $tmp ];
 	}
     }
     if (defined($Derived{$index})) {
@@ -1321,7 +1351,7 @@ sub output_mail {
 ##	delmsg delets a message from the archive.
 ##
 sub delmsg {
-    my($key) = @_;
+    my $key = shift;
     my($pathname);
 
     #&defineIndex2MsgId();
@@ -1353,17 +1383,17 @@ sub delmsg {
 ##	Routine to convert a msgid to an anchor
 ##
 sub link_refmsgid {
-    my($refmsgid, $onlynew) = @_;
+    my $refmsgid = dehtmlize(shift);
+    my $onlynew  = shift;
 
     if (defined($MsgId{$refmsgid}) &&
-	defined($IndexNum{$MsgId{$refmsgid}}) &&
-	(!$onlynew || $NewMsgId{$refmsgid})) {
+	    defined($IndexNum{$MsgId{$refmsgid}}) &&
+	    (!$onlynew || $NewMsgId{$refmsgid})) {
 	my($lreftmpl) = $MSGIDLINK;
 	$lreftmpl =~ s/$VarExp/&replace_li_var($1,$MsgId{$refmsgid})/geo;
-	$lreftmpl;
-    } else {
-	$refmsgid;
+	return $lreftmpl;
     }
+    htmlize($refmsgid);
 }
 
 ##---------------------------------------------------------------------------

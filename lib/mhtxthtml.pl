@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhtxthtml.pl,v 2.22.2.1 2002/12/22 00:43:56 ehood Exp $
+##	$Id: mhtxthtml.pl,v 2.31 2003/02/04 23:31:20 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -49,6 +49,14 @@ my $AElem = q/\b(?:img|body|iframe|frame|object|script|input)\b/;
 my $UAttr = q/\b(?:action|background|cite|classid|codebase|data|datasrc|/.
 	         q/dynsrc|for|href|longdesc|profile|src|url|usemap)\b/;
 
+# Used to reverse the effects of CHARSETCONVERTERS
+my %special_to_char = (
+    'lt'    => '<',
+    'gt'    => '>',
+    'amp'   => '&',
+    'quot'  => '"',
+);
+
 ##---------------------------------------------------------------------------
 ##	The filter must modify HTML content parts for merging into the
 ##	final filtered HTML messages.  Modification is needed so the
@@ -86,9 +94,13 @@ my $UAttr = q/\b(?:action|background|cite|classid|codebase|data|datasrc|/.
 ##			an attachment, the data is saved to a file
 ##			with a link to it from the message page.
 ##
+##	disablerelated	Disable MHTML processing.
+##
 ##	nofont  	Remove <FONT> tags.
 ##
 ##	notitle  	Do not print title.
+##
+##	subdir		Place derived files in a subdirectory
 ##
 sub filter {
     my($fields, $data, $isdecode, $args) = @_;
@@ -96,7 +108,8 @@ sub filter {
 
     ## Check if content-disposition should be checked
     if ($args =~ /\battachcheck\b/i) {
-	my($disp, $nameparm) = readmail::MAILhead_get_disposition($fields);
+	my($disp, $nameparm, $raw) =
+	    readmail::MAILhead_get_disposition($fields);
 	if ($disp =~ /\battachment\b/i) {
 	    require 'mhexternal.pl';
 	    return (m2h_external::filter(
@@ -113,7 +126,24 @@ sub filter {
     my $nofont	 = $args =~ /\bnofont\b/i;
     my $notitle	 = $args =~ /\bnotitle\b/i;
     my $onlycid  = $args !~ /\ballownoncidurls\b/i;
+    my $subdir   = $args =~ /\bsubdir\b/i;
+    my $norelate = $args =~ /\bdisablerelated\b/i;
+    my $atdir    = $subdir ? $mhonarc::MsgPrefix.$mhonarc::MHAmsgnum : "";
     my $tmp;
+
+    my $charset = $fields->{'x-mha-charset'};
+    my($charcnv, $real_charset_name) =
+	    readmail::MAILload_charset_converter($charset);
+    if (defined($charcnv) && defined(&$charcnv)) {
+	$$data = &$charcnv($$data, $real_charset_name);
+	# translate HTML specials back
+	$$data =~ s/&([lg]t|amp|quot);/$special_to_char{$1}/g;
+    } elsif ($charcnv ne '-decode-') {
+	warn qq/\n/,
+	     qq/Warning: Unrecognized character set: $charset\n/,
+	     qq/         Message-Id: <$mhonarc::MHAmsgid>\n/,
+	     qq/         Message Number: $mhonarc::MHAmsgnum\n/;
+    }
 
     ## Check comment declarations: may screw-up mhonarc processing
     ## and avoids someone sneaking in SSIs.
@@ -130,7 +160,8 @@ sub filter {
 	$$data =~ s|<title\s*>[^<]*</title\s*>||io;
     }
 
-    ## Get/remove BASE url
+    ## Get/remove BASE url: The base URL may be defined in the HTML
+    ## data or defined in the entity header.
     BASEURL: {
 	if ($$data =~ s|(<base\s[^>]*>)||i) {
 	    $tmp = $1;
@@ -149,26 +180,27 @@ sub filter {
     }
     $base =~ s|(.*/).*|$1|;
 
-    ## Strip out certain elements/tags to support proper inclusion
+    ## Strip out certain elements/tags to support proper inclusion:
+    ## some browsers are forgiving about dublicating header tags, but
+    ## we try to do things right.  It also help minimize XSS exploits.
     $$data =~ s|<head\s*>[\s\S]*</head\s*>||io;
-    1 while ($$data =~ s|<!doctype\s[^>]*>||io);
+    1 while ($$data =~ s|<!doctype\s[^>]*>||gio);
     1 while ($$data =~ s|</?html\b[^>]*>||gio);
     1 while ($$data =~ s|</?x-html\b[^>]*>||gio);
     1 while ($$data =~ s|</?meta\b[^>]*>||gio);
     1 while ($$data =~ s|</?link\b[^>]*>||gio);
 
-    ## Strip out <font> tags if requested
+    ## Strip out style information if requested.
     if ($nofont) {
 	$$data =~ s|<style[^>]*>.*?</style\s*>||gios;
 	1 while ($$data =~ s|</?font\b[^>]*>||gio);
-        1 while ($$data =~ s/\b(?:style|class)\s*=\s*"[^"]*"//gio);
+	1 while ($$data =~ s/\b(?:style|class)\s*=\s*"[^"]*"//gio);
 	1 while ($$data =~ s/\b(?:style|class)\s*=\s*'[^']*'//gio);
 	1 while ($$data =~ s/\b(?:style|class)\s*=\s*[^\s>]+//gio);
 	1 while ($$data =~ s|</?style\b[^>]*>||gi);
-
     }
 
-    ## Strip out scripting markup if requested
+    ## Strip out scripting markup
     if ($noscript) {
 	# remove scripting elements and attributes
 	$$data =~ s|<script[^>]*>.*?</script\s*>||gios;
@@ -235,7 +267,7 @@ sub filter {
 		     if $attr{'bgcolor'};
 	    if ($attr{'background'}) {
 		if ($attr{'background'} =
-			&resolve_cid($onlycid, $attr{'background'})) {
+			&resolve_cid($onlycid, $attr{'background'}, $atdir)) {
 		    $tpre .= qq|background-image: url($attr{'background'}) |;
 		}
 	    }
@@ -256,13 +288,58 @@ sub filter {
 	    $$data = $tpre . $$data . $tsuf;
 	}
     }
-    1 while ($$data =~ s|</?body[^>]*>||ig);
+    1 while ($$data =~ s|</?body\b[^>]*>||ig);
 
-    ## Check for CID URLs (multipart/related HTML)
-    $$data =~ s/($UAttr\s*=\s*['"])([^'"]+)(['"])/
-	       join("", $1, &resolve_cid($onlycid, $2), $3)/geoix;
-    $$data =~ s/($UAttr\s*=\s*)([^'">][^\s>]+)/
-	       join("", $1, '"', &resolve_cid($onlycid, $2), '"')/geoix;
+    my $ahref_tmp;
+    if ($onlycid) {
+	# If only cid URLs allowed, we still try to preserve <a href> or
+	# any hyperlinks in a document would be stripped out.
+	# Algorithm: Replace HREF attribute string in <A>'s with a
+	#	     random string.  We then restore HREF after CID
+	#	     resolution.  We do not worry about javascript since
+	#	     we neutralized it earlier.
+	$ahref_tmp = mhonarc::rand_string('alnkXXXXXXXXXX');
+
+	# Make sure "href" not in rand string
+	$ahref_tmp =~ s/href/XXXX/gi;
+
+	# Remove occurances of random string from input first.  This
+	# should cause nothing to be deleted, but is done to avoid
+	# a potential exploit attempt.
+	$$data =~ s/\b$ahref_tmp\b//g;
+
+	# Replace all <a href> with <a RAND_STR>.  We make sure to
+	# leave cid: attributes alone since they are processed later.
+	$$data =~ s/(<a\b[^>]*)href\s*=\s*("(?!\s*cid:)[^"]+")
+		   /$1$ahref_tmp=$2/gix;  # double-quoted delim attribute
+	$$data =~ s/(<a\b[^>]*)href\s*=\s*('(?!\s*cid:)[^']+')
+		   /$1$ahref_tmp=$2/gix;  # single-quoted delim attribute
+	$$data =~ s/(<a\b[^>]*)href\s*=\s*((?!['"]?\s*cid:)[^\s>]+)
+		   /$1$ahref_tmp=$2/gix;  # non-quoted attribute
+    }
+
+    ## Check for CID URLs (multipart/related HTML).  Multiple expressions
+    ## exist to handle variations in how attribute values are delimited.
+    if ($norelate) {
+	if ($onlycid) {
+	    $$data =~ s/($UAttr\s*=\s*["])[^"]+(["])/$1$2/goi;
+	    $$data =~ s/($UAttr\s*=\s*['])[^']+(['])/$1$2/goi;
+	    $$data =~ s/($UAttr\s*=\s*[^\s'">][^\s>]+)/ /goi;
+	}
+    } else {
+	$$data =~ s/($UAttr\s*=\s*["])([^"]+)(["])
+		   /join("",$1,&resolve_cid($onlycid, $2, $atdir),$3)/geoix;
+	$$data =~ s/($UAttr\s*=\s*['])([^']+)(['])
+		   /join("",$1,&resolve_cid($onlycid, $2, $atdir),$3)/geoix;
+	$$data =~ s/($UAttr\s*=\s*)([^\s'">][^\s>]+)
+		   /join("",$1,'"',&resolve_cid($onlycid, $2, $atdir),'"')
+		   /geoix;
+    }
+
+    if ($onlycid) {
+	# Restore HREF attributes of <A>'s.
+	$$data =~ s/\b$ahref_tmp\b/href/g;
+    }
 
     ($title.$$data, @files);
 }
@@ -303,15 +380,19 @@ sub addbase {
 ##---------------------------------------------------------------------------
 
 sub resolve_cid {
-    my $onlycid = shift;
-    my $cid = shift;
+    my $onlycid   = shift;
+    my $cid_in    = shift;
+    my $attachdir = shift;
+    my $cid	  = $cid_in;
+
+    $cid =~ s/&#(?:x0*40|64);/@/g;
     my $href = $readmail::Cid{$cid};
     if (!defined($href)) {
 	my $basename = $cid;
 	$basename =~ s/.*\///;
 	if (!defined($href = $readmail::Cid{$basename})) {
 	    return ""  if $onlycid;
-	    return ($cid =~ /^cid:/i)? "": $cid;
+	    return ($cid =~ /^cid:/i)? "": $cid_in;
 	}
 	$cid = $basename;
     }
@@ -321,6 +402,11 @@ sub resolve_cid {
 	return $href->{'uri'};
     }
 
+    # Get content-type of data and return if type is excluded
+    my $ctype = $href->{'fields'}{'content-type'}[0];
+      ($ctype) = $ctype =~ m{^\s*([\w\-\./]+)};
+    return ""  if readmail::MAILis_excluded($ctype);
+
     require 'mhmimetypes.pl';
     my $filename;
     my $decodefunc =
@@ -329,11 +415,14 @@ sub resolve_cid {
     if (defined($decodefunc) && defined(&$decodefunc)) {
 	my $data = &$decodefunc(${$href->{'body'}});
 	$filename = mhonarc::write_attachment(
-			    $href->{'fields'}{'content-type'}[0], \$data);
+			    $ctype,
+			    \$data,
+			    $attachdir);
     } else {
 	$filename = mhonarc::write_attachment(
-			    $href->{'fields'}{'content-type'}[0],
-			    $href->{'body'});
+			    $ctype,
+			    $href->{'body'},
+			    $attachdir);
     }
     $href->{'filtered'} = 1; # mark part filtered for readmail.pl
     $href->{'uri'}      = $filename;

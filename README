@@ -23,151 +23,119 @@
 ##############################################################################
 
 ---------------------------------------------------------------------------
-                            README for MHonArc
-                                   v2.5
+			  README for MHonArc
+				 v2.6
 
-			<http://www.mhonarc.org/>
+		      <http://www.mhonarc.org/>
 
-			 Copyright (C) 1995-2002
-		       Earl Hood, mhonarc@mhonarc.org
+		       Copyright (C) 1995-2003
+		     Earl Hood, mhonarc@mhonarc.org
 
 ---------------------------------------------------------------------------
 USING/COPYING
 
-    MHonArc is distributed under the GNU General Public License (GPL).
-    The rules for using and copying MHonArc are explained in the file
-    COPYING.  If you cannot agree to the conditions of the GPL but
-    still want to use/copy the program, you must contact the author of
-    MHonArc, mhonarc@mhonarc.org, about arranging an alternative license.
+  MHonArc is distributed under the GNU General Public License
+  (GPL).  The rules for using and copying MHonArc are explained
+  in the file COPYING.  If you cannot agree to the conditions of
+  the GPL but still want to use/copy the program, you must contact
+  the author of MHonArc, mhonarc@mhonarc.org, about arranging an
+  alternative license.
 
 ---------------------------------------------------------------------------
 SUMMARY
 
-MHonArc is a Perl program for converting mail messages as specified
-in RFC 822 and the MIME standard to HTML. MHonArc can perform the
-following tasks:
-
-    * Convert MH mail folders or UUCP/Unix style mailboxes into an HTML
-      mail archive.
-    * Add or remove messages to an existing HTML mail archive generated
-      by MHonArc.
-    * Convert a single message to HTML.
-
-Along with these tasks, MHonArc provides the following:
-
-    * A main customizable index for mail messages archived.
-    * A customizable thread index listing messages by thread.
-    * Control over message formatting.
-    * The ability to hook in your own custom message filters.
+  MHonArc is a Perl program for converting mail or news messages
+  into HTML archives. It can also be used to convert individual
+  messages into HTML documents. Other capabilities include robust
+  MIME support and powerful user customization features.
 
 ---------------------------------------------------------------------------
 FILE CONTENTS
 
-ACKNOWLG        Thanks to people
-BUGS            Bug history
-CHANGES         Revision history of MHonArc
-COPYING         GNU General Public License
-FILELIST	File listing used by install.me
-INSTALL         Instructions on how to install MHonArc
-README          The file you are reading
-RELNOTES        Release notes for MHonArc (PLEASE READ BEFORE INSTALL)
-TODO		TODO list for MHonArc development
-admin/		Experimental web-based archive administration tool
-contrib/	Contributed programs
-doc/            Documentation for MHonArc
-examples/       Example files for use with MHonArc
-extras/         Extra programs for use with MHonArc (See extras/README)
-install.me      Installation program for MHonArc
-lib/            Libraries/MIME filters used by MHonArc
-logo/           MHonArc logo images
-mha-dbedit*	Modify database without regenerating pages
-mha-dbrecover*	Rebuild database from HTML message pages
-mha-decode*	MIME message decoder
-mhonarc*        The MHonArc program
+  ACKNOWLG        Thanks to people
+  BUGS            Bug history
+  CHANGES         Revision history of MHonArc
+  COPYING         GNU General Public License
+  FILELIST	  File listing used by install.me
+  INSTALL         Instructions on how to install MHonArc
+  README          The file you are reading
+  RELNOTES        Release notes for MHonArc (PLEASE READ BEFORE INSTALL)
+  TODO		  TODO list for MHonArc development (probably not complete)
+  contrib/	  Contributed programs
+  doc/            Documentation for MHonArc
+  examples/       Example files for use with MHonArc
+  extras/         Extra programs for use with MHonArc (See extras/README)
+  install.me      Installation program for MHonArc
+  lib/            MHonArc libraries
+  logo/           MHonArc images
+  mha-dbedit*	  Modify database without regenerating pages
+  mha-dbrecover*  Rebuild database from HTML message pages
+  mha-decode*	  MIME message decoder
+  mhonarc*        The MHonArc program
 
 ---------------------------------------------------------------------------
 INSTALLATION
 
-    Please read RELNOTES, or load doc/relnotes.html into your
-    favorite web client, before installing MHonArc for any news
-    about compatibility with previous versions and/or important
-    usage information.
+  Please read RELNOTES, or load doc/relnotes.html into your
+  favorite web client, before installing MHonArc for any news
+  about compatibility with previous versions and/or important
+  usage information.
 
-    Read the file INSTALL, or load doc/install.html into your favorite
-    web client, for instructions on how to install MHonArc.
+  Read the file INSTALL, or load doc/install.html into your favorite
+  web client, for instructions on how to install MHonArc.
 
 ---------------------------------------------------------------------------
 DOCUMENTATION
 
-    Documentation for MHonArc is located in the doc/ directory.
-    The main documentation for MHonArc is in multiple HTML files.
-    Load index.html in the doc/ directory into your Web browser to
-    get started.
-
-    Filenames of the documentation do NOT follow the 8.3 convention.
-    Therefore, you will need a filesystem that supports long names
-    to read the documentation locally.
-
-    Some tables are used in the documentation.  Therefore, having
-    a table-capable viewer is beneficial, but not essential.
-    Documentation is still readable in clients like Lynx.
+  Documentation for MHonArc is located in the doc/ directory.
+  The main documentation for MHonArc is in multiple HTML files.
+  Load index.html in the doc/ directory into your Web browser to
+  get started.
 
 ---------------------------------------------------------------------------
 MAILING LIST
 
-    A MHonArc mailing list exists to provide a general discussion
-    forum for users and developers.  The list is the main source for
-    the latest news about MHonArc.
+  A MHonArc mailing list exists to provide a general discussion
+  forum for users and developers.  The list is the main source for
+  the latest news about MHonArc.
 
-    To subscribe to the mailing list, send mail to
-    majordomo@mhonarc.org with the text, "subscribe mhonarc-users"
-    (without the quotes) as the message body.
+  To subscribe to the mailing list, send mail to majordomo@mhonarc.org
+  with the text,
 
-    Mail sent to mhonarc-users@mhonarc.org will be distributed to
-    all subscribers.
+    subscribe mhonarc-users
 
-    The list is restricted to subscribers only.  Messages sent to the
-    list by non-subscribers are manually screened before distribution;
-    which may incur a significant delay before the message is actually
-    seen be subscribers.  Any spam messages are happily redirected
-    to /dev/null.
+  as the message body.
 
-    The WWW searchable archives of the mailing list are located at
-    the following URLs:
-      <http://www.xray.mpe.mpg.de/mailing-lists/mhonarc/>
-      <http://www.mail-archive.com/mhonarc-users@mhonarc.org/>
-
-    For more information about the mailing list and contact
-    information, see doc/contacts.html.
+  More information about MHonArc mailing lists, include web-accessible
+  archives, is provided in doc/contacts.html.
 
 ---------------------------------------------------------------------------
 BUGS/COMMENTS/SUGGESTIONS?
 
-    If you have any comments and suggestions about
-    MHonArc, you may send mail to the MHonArc mailing list,
-    <mailto:mhonarc-users@mhonarc.org>, or to the author at
-    <mailto:mhonarc@mhonarc.org> if you are not subscribed to the list.
+  If you have any comments and suggestions about MHonArc, you may send
+  mail to the MHonArc mailing list, <mailto:mhonarc-users@mhonarc.org>,
+  or to the author at <mailto:mhonarc@mhonarc.org> if you are not
+  subscribed to the list.
 
-    NOTE: The author of MHonArc *IS* subscribed to the list so there
-	  is no need to carbon-copy the author.
+  NOTE: The author of MHonArc *IS* subscribed to the list so there
+	is no need to carbon-copy the author.
 
-    If it is a bug you want to report, please goto
-    <http://savannah.nongnu.org/bugs/?group_id=1968> to submit your
-    report.  Before submitting a report, make sure the documentation,
-    or FAQ, does not already have an answer to your question/problem.
-    Also, check the MHonArc home page to see if you have the latest
-    version of MHonArc.
+  See doc/app-bugs.html for bug information and how to submit bug
+  reports.
 
 ---------------------------------------------------------------------------
+DONATIONS
 
-    If you are so inclined, feel free to send the author a donation
-    if you feel guilty on using a program that that cost you nothing,
-    but some poor soul sweated over.  The author is more than happy
-    to provide address information to prospective donors inorder to
-    ease their conscience.  Plus, requests from donors are more likely
-    to get more timely responses ;-) and help insure the continued
-    development of the program.
+  If you are so inclined, feel free to send the author a donation
+  if you feel guilty on using a program that that cost you nothing,
+  but some poor soul sweated over.  The author is more than happy to
+  provide address information to prospective donors inorder to ease
+  their conscience.  Plus, requests from donors are more likely to get
+  more timely responses ;-) and help insure the continued development
+  of the program.
+
+  The author can be reached at mhonarc@mhonarc.org.
 
 ---------------------------------------------------------------------------
 Earl Hood, mhonarc@mhonarc.org
-$Date: 2002/09/25 04:02:16 $
+$Date: 2003/01/01 23:41:42 $

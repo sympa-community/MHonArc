@@ -1,13 +1,13 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##      $Id: mhopt.pl,v 2.32 2002/10/20 03:49:22 ehood Exp $
+##      $Id: mhopt.pl,v 2.51 2003/01/19 01:35:59 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
 ##      Routines to set options for MHonArc.
 ##---------------------------------------------------------------------------##
 ##    MHonArc -- Internet mail-to-HTML converter
-##    Copyright (C) 1997-1999	Earl Hood, mhonarc@mhonarc.org
+##    Copyright (C) 1997-2002	Earl Hood, mhonarc@mhonarc.org
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by
@@ -41,161 +41,168 @@ sub get_resources {
 
     die(qq{Try "$PROG -help" for usage information\n}) unless
     GetOptions(\%opt,
-	"add",		# Add a message to archive
-	"afs",		# Bypass file permission checks
-	"addressmodifycode=s",
+	'add',		# Add a message to archive
+	'afs',		# Bypass file permission checks
+	'addressmodifycode=s',
 			# Perl expression for modifying displayed addresses
-	"annotate",	# Add a note to message(s)
-	"authsort",	# Sort by author
-	"archive",	# Create an archive (the default)
-	"conlen",	# Honor Content-Length fields
-	"checknoarchive",
-			# Check for "no archive" flag in messages
-	"datefields=s", # Fields that contains the date of a message
-	"dbfile=s",	# Database/state filename for mhonarc archive
-	"decodeheads",	# Decode all 1522 encoded data in message headers
-	"definevar|definevars=s@",
+	'annotate',	# Add a note to message(s)
+	'authsort',	# Sort by author
+	'archive',	# Create an archive (the default)
+	'conlen',	# Honor Content-Length fields
+	'checknoarchive',
+			# Check for 'no archive' flag in messages
+	'datefields=s', # Fields that contains the date of a message
+	'dbfile=s',	# Database/state filename for mhonarc archive
+	'dbfileperms=i',# Octal permission to set DBFILE
+	'decodeheads',	# Decode all 1522 encoded data in message headers
+	'definevar|definevars=s@',
 			# Define custom resource variables
-	"doc",		# Print link to doc at end of index page
-	"docurl=s",	# URL to mhonarc documentation
-	"editidx",	# Change index page layout only
-	"expiredate=s",	# Message cut-off date
-	"expireage=i",	# Time in seconds from current if message expires
-	"folrefs",	# Print links to explicit follow-ups/references
-	"footer=s",	# File containing user text for bottom of index page
+	'doc',		# Print link to doc at end of index page
+	'docurl=s',	# URL to mhonarc documentation
+	'editidx',	# Change index page layout only
+	'expiredate=s',	# Message cut-off date
+	'expireage=i',	# Time in seconds from current if message expires
+	'fileperms=i',	# Octal permission to create files
+	'folrefs',	# Print links to explicit follow-ups/references
+	'footer=s',	# File containing user text for bottom of index page
 			# 	(option no longer applicable)
-	"force",	# Perform archive operation even if unable to lock
-	"fromfields=s", # Fields that contains the "from" of a message
-	"genidx",	# Generate an index based upon archive contents
-	"gmtdatefmt=s",	# Date specification for GMT date
-	"gzipexe=s",	# Pathname of Gzip executable
-	"gzipfiles",	# Gzip files
-	"gziplinks",	# Add ".gz" extensions to files
-	"header=s",	# File containing user text for top of index page
+	'force',	# Perform archive operation even if unable to lock
+	'fromfields=s', # Fields that contains the 'from' of a message
+	'genidx',	# Generate an index based upon archive contents
+	'gmtdatefmt=s',	# Date specification for GMT date
+	'gzipexe=s',	# Pathname of Gzip executable
+	'gzipfiles',	# Gzip files
+	'gziplinks',	# Add ".gz" extensions to files
+	'header=s',	# File containing user text for top of index page
 			# 	(option no longer applicable)
-	"htmlext=s",	# Extension for HTML files
-	"idxfname=s",	# Filename of index page
-	"idxprefix=s",	# Filename prefix for multi-page main index
-	"idxsize=i",	# Maximum number of messages shown in indexes
-	"keeponrmm",	# Do not delete message files on archive remove
-	"localdatefmt=s",
+	'htmlext=s',	# Extension for HTML files
+	'iconurlprefix=s',
+			# Prefix for icon urls
+	'idxfname=s',	# Filename of index page
+	'idxprefix=s',	# Filename prefix for multi-page main index
+	'idxsize=i',	# Maximum number of messages shown in indexes
+	'keeponrmm',	# Do not delete message files on archive remove
+	'localdatefmt=s',
 			# Date specification for local date
-	"lock",		# Do archive locking (default)
-	"lockdelay=i",	# Time delay in seconds between lock tries
-	"lockmethod=s",	# Set the method of locking
-	"locktries=i",	# Number of tries in locking an archive
-	"mailtourl=s",	# URL to use for e-mail address hyperlinks
-	"main",		# Create a main index
-	"maxsize=i",	# Maximum number of messages allowed in archive
-	"mbox",		# Use mailbox format		(ignored now)
-	"mh",		# Use MH mail folders format	(ignored now)
-	"mhpattern=s",	# Regular expression for message files in a directory
-	"modtime",	# Set modification time on files to message date
-	"months=s",	# Month names
-	"monthsabr=s",	# Abbreviated month names
-	"msgexcfilter=s",
+	'lock',		# Do archive locking (default)
+	'lockdelay=i',	# Time delay in seconds between lock tries
+	'lockmethod=s',	# Set the method of locking
+	'locktries=i',	# Number of tries in locking an archive
+	'mailtourl=s',	# URL to use for e-mail address hyperlinks
+	'main',		# Create a main index
+	'maxsize=i',	# Maximum number of messages allowed in archive
+	'mbox',		# Use mailbox format		(ignored now)
+	'mh',		# Use MH mail folders format	(ignored now)
+	'mhpattern=s',	# Regular expression for message files in a directory
+	'modifybodyaddresses',
+			# addressmodifycode applies to text entities
+	'modtime',	# Set modification time on files to message date
+	'months=s',	# Month names
+	'monthsabr=s',	# Abbreviated month names
+	'msgexcfilter=s',
 			# Perl expression(s) for selective message exclusion
-	"msgpgs",	# Create message pages
-	"msgsep=s",	# Message separator for mailbox files
-	"msgprefix=s",	# Filename prefix for message files
-	"multipg",	# Generate multi-page indexes
-	"news",		# Add links to newsgroups
-	"noauthsort",	# Do not sort by author
-	"noarchive",	# Do not create an archive
-	"nochecknoarchive",
-			# Do not check for "no archive" flag in messages
-	"noconlen",	# Ignore Content-Length fields
-	"nodecodeheads",
+	'msgpgs',	# Create message pages
+	'msgsep=s',	# Message separator for mailbox files
+	'msgprefix=s',	# Filename prefix for message files
+	'multipg',	# Generate multi-page indexes
+	'news',		# Add links to newsgroups
+	'noauthsort',	# Do not sort by author
+	'noarchive',	# Do not create an archive
+	'nochecknoarchive',
+			# Do not check for 'no archive' flag in messages
+	'noconlen',	# Ignore Content-Length fields
+	'nodecodeheads',
 			# Do not decode 1522 encoded data in message headers
-	"nodoc",	# Do not print link to doc at end of index page
-	"nofolrefs",	# Do not print links to explicit follow-ups/references
-	"nogzipfiles",	# Do not Gzip files
-	"nogziplinks",	# Do not add ".gz" extensions to files
-	"nokeeponrmm",	# Delete message files on archive remove
-	"nolock",	# Do no archive locking
-	"nomailto",	# Do not add in mailto links for e-mail addresses
-	"nomain",	# Do not create a main index
-	"nomsgpgs",	# Do not create message pages
-	"nomodtime",	# Do no set modification time on files to message date
-	"nomultipg",	# Do not generate multi-page indexes
-	"nonews",	# Do not add links to newsgroups
-	"noposixstrftime",
+	'nodoc',	# Do not print link to doc at end of index page
+	'nofolrefs',	# Do not print links to explicit follow-ups/references
+	'nogzipfiles',	# Do not Gzip files
+	'nogziplinks',	# Do not add '.gz' extensions to files
+	'nokeeponrmm',	# Delete message files on archive remove
+	'nolock',	# Do no archive locking
+	'nomailto',	# Do not add in mailto links for e-mail addresses
+	'nomain',	# Do not create a main index
+	'nomsgpgs',	# Do not create message pages
+	'nomodtime',	# Do no set modification time on files to message date
+	'nomultipg',	# Do not generate multi-page indexes
+	'nonews',	# Do not add links to newsgroups
+	'noposixstrftime',
 			# Use own implementation for time format process
-	"noreverse",	# List messages in normal order
-	"nosaveresources",
+	'noreverse',	# List messages in normal order
+	'nosaveresources',
 			# Do not save resource values in db
-	"nosort",	# Do not sort
-	"nospammode",	# Do not run in (anti)spam mode
-	"nosubsort",	# Do not sort by subject
-	"nosubjectthreads",
+	'nosort',	# Do not sort
+	'nospammode',	# Do not run in (anti)spam mode
+	'nosubsort',	# Do not sort by subject
+	'nosubjectthreads',
 			# Do not do subject based threading
-	"nosubjecttxt=s",
+	'nosubjecttxt=s',
 			# Text to use if message has no subject
-	"notedir",	# Location of notes
-	"notetext=s@",	# Text data of note
-	"nothread",	# Do not create threaded index
-	"notreverse",	# List oldest thread first
-	"notsubsort|tnosubsort",
+	'notedir',	# Location of notes
+	'notetext=s@',	# Text data of note
+	'nothread',	# Do not create threaded index
+	'notreverse',	# List oldest thread first
+	'notsubsort|tnosubsort',
 			# Do not list threads by subject
-	"notsort|tnosort",
+	'notsort|tnosort',
 			# List threads by ordered processed
-	"nourl",	# Do not make URL hyperlinks
-	"otherindex|otherindexes=s@",
+	'nourl',	# Do not make URL hyperlinks
+	'otherindex|otherindexes=s@',
 			# List of other rcfiles for extra indexes
-	"outdir=s",	# Destination of HTML files
-	"pagenum=s",	# Page to output if -genidx
-	"perlinc=s@",	# List of paths to search for MIME filters
-	"posixstrftime",
+	'outdir=s',	# Destination of HTML files
+	'pagenum=s',	# Page to output if -genidx
+	'perlinc=s@',	# List of paths to search for MIME filters
+	'posixstrftime',
 			# Use POSIX strftime()
-	"quiet",	# No status messages while running
-	"rcfile=s@",	# Resource file for mhonarc
-	"varregex=s",	# Regex matching resource variables
-	"reverse",	# List messages in reverse order
-	"rmm",		# Remove messages from an archive
-	"savemem",	# Write message data while processing
-	"saveresources",
+	'quiet',	# No status messages while running
+	'rcfile=s@',	# Resource file for mhonarc
+	'reconvert!',	# Reconvert existing messages
+	'varregex=s',	# Regex matching resource variables
+	'reverse',	# List messages in reverse order
+	'rmm',		# Remove messages from an archive
+	'savemem',	# Write message data while processing
+	'saveresources',
 			# Save resource values in db
-	"scan",		# List out archive contents to terminal
-	"single",	# Convert a single message to HTML
-	"sort",		# Sort messages in increasing date order
-	"spammode",	# Run in (anti)spam mode
-	"stderr=s",	# Set file for stderr
-	"stdin=s",	# Set file for stdin
-	"stdout=s",	# Set file for stdout
-	"subjectarticlerxp=s",
+	'scan',		# List out archive contents to terminal
+	'single',	# Convert a single message to HTML
+	'sort',		# Sort messages in increasing date order
+	'spammode',	# Run in (anti)spam mode
+	'stderr=s',	# Set file for stderr
+	'stdin=s',	# Set file for stdin
+	'stdout=s',	# Set file for stdout
+	'subjectarticlerxp=s',
 			# Regex for leading articles in subjects
-	"subjectreplyrxp=s",
+	'subjectreplyrxp=s',
 			# Regex for leading reply string in subjects
-	"subjectstripcode=s",
+	'subjectstripcode=s',
 			# Perl expression for modifying subjects
-	"subjectthreads",
+	'subjectthreads',
 			# Check subjects for threads
-	"subsort",	# Sort message by subject
-	"tidxfname=s",	# File name of threaded index page
-	"tidxprefix=s",	# Filename prefix for multi-page thread index
-	"time",		# Print processing time
-	"title=s",	# Title of index page
-	"ttitle=s",	# Title of threaded index page
-	"thread",	# Create threaded index
-	"tlevels=i",	# Maximum # of nested lists in threaded index
-	"treverse",	# Reverse order of thread listing
-	"tslice=s",	# Set size of thread slice listing
-	"tslicelevels=i",
+	'subsort',	# Sort message by subject
+	'tidxfname=s',	# File name of threaded index page
+	'tidxprefix=s',	# Filename prefix for multi-page thread index
+	'time',		# Print processing time
+	'title=s',	# Title of index page
+	'ttitle=s',	# Title of threaded index page
+	'thread',	# Create threaded index
+	'tlevels=i',	# Maximum # of nested lists in threaded index
+	'treverse',	# Reverse order of thread listing
+	'tslice=s',	# Set size of thread slice listing
+	'tslicelevels=i',
 			# Maximum # of nested lists in thread slices
-	"tsort",	# List threads by date
-	"tsubsort",	# List threads by subject
-	"umask=i",	# Set umask of process
-	"url",		# Make URL hyperlinks
-	"weekdays=s",	# Weekday names
-	"weekdaysabr=s",
+	'tsort',	# List threads by date
+	'tsubsort',	# List threads by subject
+	'umask=i',	# Set umask of process
+	'url',		# Make URL hyperlinks
+	'weekdays=s',	# Weekday names
+	'weekdaysabr=s',
 			# Abbreviated weekday names
 
 	## API (only?) options
-	"noarg", 	# Just load code
-	"readdb",	# Just read db
+	'noarg', 	# Just load code
+	'readdb',	# Just read db
 
-	"v",		# Version information
-	"help"		# A brief usage message
+	'v',		# Version information
+	'help'		# A brief usage message
     );
 
     ## Check for help/version options (nothing to do)
@@ -264,6 +271,8 @@ sub get_resources {
 			 $IDXONLY);
     $DoArchive	= 1  if $opt{'archive'};
     $DoArchive	= 0  if $opt{'noarchive'};
+
+    $Reconvert  = $opt{'reconvert'}  if defined($opt{'reconvert'});
 
     my $dolock	= !$NoArg && !$opt{'nolock'};
 
@@ -378,9 +387,9 @@ sub get_resources {
 		&update_data_1_to_2();
 		&update_data_2_1_to_later();
 		&update_data_2_4_to_later();
-	    }
+
 	    ## Check for 2.[0-4] archive
-	    if ($DbVERSION =~ /^2\.[0-4]\./) {
+	    } elsif ($DbVERSION =~ /^2\.[0-4]\./) {
 		print STDOUT "Updating database $DbVERSION data ...\n"
 		    unless $QUIET;
 		if ($DbVERSION =~ /^2\.[01]\./) {
@@ -408,6 +417,15 @@ sub get_resources {
     ## Clear thread flag if genidx, must be explicitly set
     $THREAD = 0  if $IDXONLY;
 
+    ## Set mail parsing variables.
+    if (!$SCAN) {
+	# require readmail library
+	require 'readmail.pl';
+	mhinit_readmail_vars();
+	$readmail::FormatHeaderFunc = \&mhonarc::htmlize_header;
+	$MHeadCnvFunc = \&readmail::MAILdecode_1522_str;
+    }
+
     ##	Read resource file(s) (I initially used the term 'format file').
     ##	Look for resource in outdir unless existing according to
     ##  current value.
@@ -416,10 +434,16 @@ sub get_resources {
 	&read_fmt_file($_);
     }
 
+    ##	Re-check readmail settings
+    if (!$SCAN) {
+	# If text encoding has been specified, change $MHeadCnvFunc.
+	if (defined(readmail::load_textencoder())) {
+	    $MHeadCnvFunc = \&htmlize_enc_head;
+	}
+    }
+
     ## Check if extension for HTML files defined on the command-line
     $HtmlExt = $opt{'htmlext'}  if defined($opt{'htmlext'});
-
-    $RFC1522 = 1;	# Always True
 
     ## Other indexes resource files
     if (defined($opt{'otherindex'})) {
@@ -443,14 +467,10 @@ sub get_resources {
 
     @OtherIdxs = remove_dups(\@OtherIdxs);
     @PerlINC   = remove_dups(\@PerlINC);
-
-    ## Require mail parsing library
     unshift(@INC, @PerlINC);
+
+    ## Set alternative prefs
     if (!$SCAN) {
-	# require readmail library
-	require 'readmail.pl' || die("ERROR: Unable to require readmail.pl\n");
-	$readmail::FormatHeaderFunc = \&mhonarc::htmlize_header;
-	$MHeadCnvFunc = \&readmail::MAILdecode_1522_str;
 	readmail::MAILset_alternative_prefs(@MIMEAltPrefs);
 	$IsDefault{'MIMEALTPREFS'} = !scalar(@MIMEAltPrefs);
     }
@@ -479,6 +499,7 @@ sub get_resources {
     $VarExp	= $opt{'varregex'}   if $opt{'varregex'} &&
 				        ($opt{'varregex'} =~ /\S/);
     $TSLICELEVELS = $opt{'tslicelevels'}  if $opt{'tslicelevels'};
+    $IconURLPrefix = $opt{'iconurlprefix'}  if $opt{'iconurlprefix'};
 
     $IDXNAME	= $opt{'idxfname'} || $IDXNAME || $ENV{'M2H_IDXFNAME'} ||
 		  "maillist.$HtmlExt";
@@ -561,6 +582,9 @@ sub get_resources {
     $POSIXstrftime  = 1  if $opt{'posixstrftime'};
     $POSIXstrftime  = 0  if $opt{'noposixstrftime'};
 
+    $AddrModifyBodies = 1  if $opt{'modifybodyaddresses'};
+    $AddrModifyBodies = 0  if $opt{'nomodifybodyaddresses'};
+
     $DecodeHeads = 1 if $opt{'decodeheads'};
     $DecodeHeads = 0 if $opt{'nodecodeheads'};
 	$readmail::DecodeHeader = $DecodeHeads;
@@ -587,6 +611,10 @@ sub get_resources {
 	$UMASK = $opt{'umask'}      if defined($opt{'umask'});
 	eval { umask oct($UMASK); };
     }
+    $FilePerms      = $opt{'fileperms'}  if defined($opt{'fileperms'});
+    $FilePermsOct   = oct($FilePerms);
+    $DbFilePerms    = $opt{'dbfileperms'}  if defined($opt{'dbfileperms'});
+    $DbFilePermsOct = oct($DbFilePerms);
 
     ##	Get sort method
     $AUTHSORT = 1  if $opt{'authsort'};
@@ -651,6 +679,15 @@ sub get_resources {
 	$IsDefault{'TEXTCLIPFUNC'} = 1;
     } else {
 	$IsDefault{'TEXTCLIPFUNC'} = 0;
+    }
+
+    ## Check if rewriting addresses in bodies
+    if ($AddrModifyBodies) {
+	$readmail::TextPreFilter = sub {
+	    my $fields = shift;
+	    my $data_r = shift;
+	    $$data_r =~ s/($AddrExp)/rewrite_raw_address($1)/geo;
+	}
     }
 
     ## Predefine %Index2TLoc in case of message deletion
@@ -787,6 +824,380 @@ sub update_data_2_4_to_later {
     while (($index, $value) = each(%Derived)) {
 	next  if ref($value);
 	$Derived{$index} = [ split(/$X/o, $value) ];
+    }
+}
+
+##---------------------------------------------------------------------------
+##	Initialize readmail.pl variables
+##
+sub mhinit_readmail_vars {
+    ##	Default decoders
+    unless (%readmail::MIMEDecoders) {
+	%readmail::MIMEDecoders = (
+	    '7bit'	       => 'as-is',
+	    '8bit'             => 'as-is',
+	    'binary'           => 'as-is',
+	    'base64'           => 'base64::b64decode',
+	    'quoted-printable' => 'quoted_printable::qprdecode',
+	    'x-uuencode'       => 'base64::uudecode',
+	    'x-uue'            => 'base64::uudecode',
+	    'uuencode'         => 'base64::uudecode',
+	);
+	%readmail::MIMEDecodersSrc = (
+	    'base64'           => 'base64.pl',
+	    'quoted-printable' => 'qprint.pl',
+	    'x-uuencode'       => 'base64.pl',
+	    'x-uue'            => 'base64.pl',
+	    'uuencode'         => 'base64.pl',
+	);
+	$IsDefault{'MIMEDECODERS'} = 1;
+    }
+
+    ##	Default filters
+    unless (%readmail::MIMEFilters) {
+	%readmail::MIMEFilters = (
+	    # Content-type			Filter
+	    #-----------------------------------------------------------------
+	    "application/ms-tnef",		"m2h_null::filter",
+	    "application/octet-stream",		"m2h_external::filter",
+	    "application/x-patch",		"m2h_text_plain::filter",
+	    "message/delivery-status",  	"m2h_text_plain::filter",
+	    "message/external-body",		"m2h_msg_extbody::filter",
+	    "message/partial",   		"m2h_text_plain::filter",
+	    "text/enriched",    		"m2h_text_enriched::filter",
+	    "text/html",			"m2h_text_html::filter",
+	    "text/plain",			"m2h_text_plain::filter",
+	    "text/richtext",    		"m2h_text_enriched::filter",
+	    "text/tab-separated-values",	"m2h_text_tsv::filter",
+	    "text/x-html",			"m2h_text_html::filter",
+
+	    "application/*",			"m2h_external::filter",
+	    "audio/*",				"m2h_external::filter",
+	    "chemical/*",  			"m2h_external::filter",
+	    "image/*",  			"m2h_external::filter",
+	    "model/*",  			"m2h_external::filter",
+	    "text/*",   			"m2h_text_plain::filter",
+	    "video/*",  			"m2h_external::filter",
+
+	    "x-sun-attachment",			"m2h_text_plain::filter",
+	);
+
+	%readmail::MIMEFiltersSrc = (
+	    # Content-type			Filter
+	    #-----------------------------------------------------------------
+	    "application/ms-tnef",		"mhnull.pl",
+	    "application/octet-stream",		"mhexternal.pl",
+	    "application/x-patch",		"mhtxtplain.pl",
+	    "message/delivery-status",  	"mhtxtplain.pl",
+	    "message/external-body",		"mhmsgextbody.pl",
+	    "message/partial",   		"mhtxtplain.pl",
+	    "text/enriched",    		"mhtxtenrich.pl",
+	    "text/html",			"mhtxthtml.pl",
+	    "text/plain",			"mhtxtplain.pl",
+	    "text/richtext",    		"mhtxtenrich.pl",
+	    "text/tab-separated-values",	"mhtxttsv.pl",
+	    "text/x-html",			"mhtxthtml.pl",
+
+	    "application/*",			"mhexternal.pl",
+	    "audio/*",				"mhexternal.pl",
+	    "chemical/*",  			"mhexternal.pl",
+	    "image/*",  			"mhexternal.pl",
+	    "model/*",  			"mhexternal.pl",
+	    "text/*",   			"mhtxtplain.pl",
+	    "video/*",  			"mhexternal.pl",
+
+	    "x-sun-attachment",			"mhtxtplain.pl",
+	);
+	$IsDefault{'MIMEFILTERS'} = 1;
+    }
+
+    ##  Default filter arguments
+    unless (%readmail::MIMEFiltersArgs) {
+	%readmail::MIMEFiltersArgs = (
+	    # Content-type			Arguments
+	    #-----------------------------------------------------------------
+	    'm2h_external::filter',		'inline',
+	);
+	$IsDefault{'MIMEARGS'} = 1;
+    }
+
+    ##  Charset filters
+    unless (%readmail::MIMECharSetConverters) {
+	%readmail::MIMECharSetConverters = (
+	    # Character set		Converter Function
+	    #-----------------------------------------------------------------
+	    'plain',     		'mhonarc::htmlize',
+	    'us-ascii',   		'mhonarc::htmlize',
+	    'iso-8859-1',   		'MHonArc::CharEnt::str2sgml',
+	    'iso-8859-2',   		'MHonArc::CharEnt::str2sgml',
+	    'iso-8859-3',   		'MHonArc::CharEnt::str2sgml',
+	    'iso-8859-4',   		'MHonArc::CharEnt::str2sgml',
+	    'iso-8859-5',   		'MHonArc::CharEnt::str2sgml',
+	    'iso-8859-6',   		'MHonArc::CharEnt::str2sgml',
+	    'iso-8859-7',   		'MHonArc::CharEnt::str2sgml',
+	    'iso-8859-8',   		'MHonArc::CharEnt::str2sgml',
+	    'iso-8859-9',   		'MHonArc::CharEnt::str2sgml',
+	    'iso-8859-10',   		'MHonArc::CharEnt::str2sgml',
+	    'iso-8859-11',   		'MHonArc::CharEnt::str2sgml',
+	    'iso-8859-13',   		'MHonArc::CharEnt::str2sgml',
+	    'iso-8859-14',   		'MHonArc::CharEnt::str2sgml',
+	    'iso-8859-15',   		'MHonArc::CharEnt::str2sgml',
+	    'iso-8859-16',   		'MHonArc::CharEnt::str2sgml',
+	    'iso-2022-jp',   		'MHonArc::CharEnt::str2sgml',
+	    'iso-2022-kr',    		'MHonArc::CharEnt::str2sgml',
+	    'euc-jp',    		'MHonArc::CharEnt::str2sgml',
+	    'utf-8',    		'MHonArc::CharEnt::str2sgml',
+	    'cp866',    		'MHonArc::CharEnt::str2sgml',
+	    'cp932',    		'MHonArc::CharEnt::str2sgml',
+	    'cp936',    		'MHonArc::CharEnt::str2sgml',
+	    'cp949',    		'MHonArc::CharEnt::str2sgml',
+	    'cp950',    		'MHonArc::CharEnt::str2sgml',
+	    'cp1250',   		'MHonArc::CharEnt::str2sgml',
+	    'cp1251',   		'MHonArc::CharEnt::str2sgml',
+	    'cp1252',   		'MHonArc::CharEnt::str2sgml',
+	    'cp1253',   		'MHonArc::CharEnt::str2sgml',
+	    'cp1254',   		'MHonArc::CharEnt::str2sgml',
+	    'cp1255',   		'MHonArc::CharEnt::str2sgml',
+	    'cp1256',   		'MHonArc::CharEnt::str2sgml',
+	    'cp1257',   		'MHonArc::CharEnt::str2sgml',
+	    'cp1258',   		'MHonArc::CharEnt::str2sgml',
+	    'koi-0',            	'MHonArc::CharEnt::str2sgml',
+	    'koi-7',            	'MHonArc::CharEnt::str2sgml',
+	    'koi8-a',            	'MHonArc::CharEnt::str2sgml',
+	    'koi8-b',            	'MHonArc::CharEnt::str2sgml',
+	    'koi8-e',            	'MHonArc::CharEnt::str2sgml',
+	    'koi8-f',            	'MHonArc::CharEnt::str2sgml',
+	    'koi8-r',            	'MHonArc::CharEnt::str2sgml',
+	    'koi8-u',            	'MHonArc::CharEnt::str2sgml',
+	    'gost19768-87',            	'MHonArc::CharEnt::str2sgml',
+	    'viscii',            	'MHonArc::CharEnt::str2sgml',
+	    'big5-eten',		'MHonArc::CharEnt::str2sgml',
+	    'big5-hkscs',		'MHonArc::CharEnt::str2sgml',
+	    'gb2312',    		'MHonArc::CharEnt::str2sgml',
+	    'macarabic',		'MHonArc::CharEnt::str2sgml',
+	    'maccentraleurroman',	'MHonArc::CharEnt::str2sgml',
+	    'maccroatian',		'MHonArc::CharEnt::str2sgml',
+	    'maccyrillic',		'MHonArc::CharEnt::str2sgml',
+	    'macgreek',		        'MHonArc::CharEnt::str2sgml',
+	    'machebrew',		'MHonArc::CharEnt::str2sgml',
+	    'macicelandic',		'MHonArc::CharEnt::str2sgml',
+	    'macromanian',		'MHonArc::CharEnt::str2sgml',
+	    'macroman',		        'MHonArc::CharEnt::str2sgml',
+	    'macthai',		        'MHonArc::CharEnt::str2sgml',
+	    'macturkish',		'MHonArc::CharEnt::str2sgml',
+	    'hp-roman8',		'MHonArc::CharEnt::str2sgml',
+	    'default',     		'-ignore-',
+	);
+	%readmail::MIMECharSetConvertersSrc = (
+	    # Character set		Converter Function
+	    #-----------------------------------------------------------------
+	    'plain',     		undef,
+	    'us-ascii',   		undef,
+	    'iso-8859-1',   		'MHonArc/CharEnt.pm',
+	    'iso-8859-2',   		'MHonArc/CharEnt.pm',
+	    'iso-8859-3',   		'MHonArc/CharEnt.pm',
+	    'iso-8859-4',   		'MHonArc/CharEnt.pm',
+	    'iso-8859-5',   		'MHonArc/CharEnt.pm',
+	    'iso-8859-6',   		'MHonArc/CharEnt.pm',
+	    'iso-8859-7',   		'MHonArc/CharEnt.pm',
+	    'iso-8859-8',   		'MHonArc/CharEnt.pm',
+	    'iso-8859-9',   		'MHonArc/CharEnt.pm',
+	    'iso-8859-10',   		'MHonArc/CharEnt.pm',
+	    'iso-8859-11',   		'MHonArc/CharEnt.pm',
+	    'iso-8859-13',   		'MHonArc/CharEnt.pm',
+	    'iso-8859-14',   		'MHonArc/CharEnt.pm',
+	    'iso-8859-15',   		'MHonArc/CharEnt.pm',
+	    'iso-8859-16',   		'MHonArc/CharEnt.pm',
+	    'iso-2022-jp',   		'MHonArc/CharEnt.pm',
+	    'iso-2022-kr',    		'MHonArc/CharEnt.pm',
+	    'euc-jp',    		'MHonArc/CharEnt.pm',
+	    'utf-8',    		'MHonArc/CharEnt.pm',
+	    'cp866',    		'MHonArc/CharEnt.pm',
+	    'cp932',    		'MHonArc/CharEnt.pm',
+	    'cp936',    		'MHonArc/CharEnt.pm',
+	    'cp949',    		'MHonArc/CharEnt.pm',
+	    'cp950',    		'MHonArc/CharEnt.pm',
+	    'cp1250',   		'MHonArc/CharEnt.pm',
+	    'cp1251',   		'MHonArc/CharEnt.pm',
+	    'cp1252',   		'MHonArc/CharEnt.pm',
+	    'cp1253',   		'MHonArc/CharEnt.pm',
+	    'cp1254',   		'MHonArc/CharEnt.pm',
+	    'cp1255',   		'MHonArc/CharEnt.pm',
+	    'cp1256',   		'MHonArc/CharEnt.pm',
+	    'cp1257',   		'MHonArc/CharEnt.pm',
+	    'cp1258',   		'MHonArc/CharEnt.pm',
+	    'koi-0',            	'MHonArc/CharEnt.pm',
+	    'koi-7',            	'MHonArc/CharEnt.pm',
+	    'koi8-a',            	'MHonArc/CharEnt.pm',
+	    'koi8-b',            	'MHonArc/CharEnt.pm',
+	    'koi8-e',            	'MHonArc/CharEnt.pm',
+	    'koi8-f',            	'MHonArc/CharEnt.pm',
+	    'koi8-r',            	'MHonArc/CharEnt.pm',
+	    'koi8-u',            	'MHonArc/CharEnt.pm',
+	    'gost19768-87',            	'MHonArc/CharEnt.pm',
+	    'viscii',            	'MHonArc/CharEnt.pm',
+	    'big5-eten',		'MHonArc/CharEnt.pm',
+	    'big5-hkscs',		'MHonArc/CharEnt.pm',
+	    'gb2312',    		'MHonArc/CharEnt.pm',
+	    'macarabic',		'MHonArc/CharEnt.pm',
+	    'maccentraleurroman',	'MHonArc/CharEnt.pm',
+	    'maccroatian',		'MHonArc/CharEnt.pm',
+	    'maccyrillic',		'MHonArc/CharEnt.pm',
+	    'macgreek',		        'MHonArc/CharEnt.pm',
+	    'machebrew',		'MHonArc/CharEnt.pm',
+	    'macicelandic',		'MHonArc/CharEnt.pm',
+	    'macromanian',		'MHonArc/CharEnt.pm',
+	    'macroman',		        'MHonArc/CharEnt.pm',
+	    'macthai',		        'MHonArc/CharEnt.pm',
+	    'macturkish',		'MHonArc/CharEnt.pm',
+	    'hp-roman8',		'MHonArc/CharEnt.pm',
+	    'default',     		undef,
+	);
+	$IsDefault{'CHARSETCONVERTERS'} = 1;
+    }
+
+    ##	Default charset aliases
+    unless (%readmail::MIMECharsetAliases) {
+	readmail::MAILset_charset_aliases({ 
+	    'us-ascii'     => [ 'ascii',
+				'ansi_x3.4-1968',
+				'iso646', 'iso646-us', 'iso646.irv:1991',
+				'cp367', 'ibm367',
+				'csascii',
+				'iso-ir-6',
+				'us' ],
+	    'iso-8859-1'   => [ 'latin1', 'l1',
+				'iso_8859_1', 'iso_8859-1:1987',
+			        'iso8859-1', 'iso8859_1', '8859-1', '8859_1',
+				'cp819', 'ibm819',
+				'x-mac-latin1',
+				'iso-ir-100' ],
+	    'iso-8859-2'   => [ 'latin2', 'l2',
+				'iso_8859_2', 'iso_8859-2:1987',
+			        'iso8859-2', 'iso8859_2', '8859-2', '8859_2',
+				'iso-ir-101' ],
+	    'iso-8859-3'   => [ 'latin3', 'l3',
+				'iso_8859_3', 'iso_8859-3:1988',
+			        'iso8859-3', 'iso8859_3', '8859-3', '8859_3',
+				'iso-ir-109' ],
+	    'iso-8859-4'   => [ 'latin4', 'l4',
+				'iso_8859_4', 'iso_8859-4:1988',
+			        'iso8859-4', 'iso8859_4', '8859-4', '8859_4',
+				'iso-ir-110' ],
+	    'iso-8859-5'   => [ 'iso_8859-5:1988',
+				'cyrillic',
+				'iso-ir-144' ],
+	    'iso-8859-6'   => [ 'iso_8859-6:1987',
+				'arabic',
+				'asmo-708',
+				'ecma-114',
+				'iso-ir-127' ],
+	    'iso-8859-7'   => [ 'iso_8859-7:1987',
+				'greek', 'greek8',
+				'ecma-118',
+				'elot_928',
+				'iso-ir-126' ],
+	    'iso-8859-8'   => [ 'iso-8859-8-i', 'iso_8859-8:1988',
+				'hebrew',
+				'iso-ir-138' ],
+	    'iso-8859-9'   => [ 'latin5', 'l5',
+				'iso_8859_9', 'iso-8859_9:1989',
+			        'iso8859-9', 'iso8859_9', '8859-9', '8859_9',
+				'iso-ir-148' ],
+	    'iso-8859-10'  => [ 'latin6', 'l6',
+				'iso_8859_10', 'iso_8859-10:1993',
+			        'iso8859-10', 'iso8859_10',
+				'8859-10', '8859_10',
+				'iso-ir-157' ],
+	    'iso-8859-13'  => [ 'latin7' ,'l7' ],
+	    'iso-8859-14'  => [ 'latin8' ,'l8' ],
+	    'iso-8859-15'  => [ 'latin9', 'latin0', 'l9', 'l0',
+				'iso_8859_15',
+				'iso8859-15', 'iso8859_15',
+				'8859-15', '8859_15' ],
+	    'iso-2022-jp'  => [ 'iso-2022-jp-1' ],
+	    'utf-8'        => [ 'utf8' ],
+	    'cp932'        => [ 'shiftjis', 'shift_jis', 'shift-jis',
+				'x-sjis',
+				'ms_kanji',
+				'csshiftjis' ],
+	    'cp936'        => [ 'gbk',
+				'ms936',
+				'windows-936' ],
+	    'cp949'        => [ 'euc-kr',
+				'ks_c_5601-1987', 'ks_c_5601-1989',
+				'ksc_5601',
+				'iso-ir-149',
+				'windows-949', 'ms949',
+				'korean' ],
+	    'cp950'        => [ 'windows-950' ],
+	    'cp1250'       => [ 'windows-1250' ],
+	    'cp1251'       => [ 'windows-1251' ],
+	    'cp1252'       => [ 'windows-1252' ],
+	    'cp1253'       => [ 'windows-1253' ],
+	    'cp1254'       => [ 'windows-1254' ],
+	    'cp1255'       => [ 'windows-1255' ],
+	    'cp1256'       => [ 'windows-1256' ],
+	    'cp1257'       => [ 'windows-1257' ],
+	    'cp1258'       => [ 'windows-1258' ],
+	    'koi-0'          => [ 'gost-13052' ],
+	    'koi8-e'         => [ 'iso-ir-111',
+				  'ecma-113:1986' ],
+	    'koi8-r'         => [ 'cp878' ],
+	    'gost-19768-87'  => [ 'ecma-cyrillic',
+				  'ecma-113', 'ecma-113:1988' ],
+	    'big5-eten '     => [ 'big5', 'csbig5',
+				  'tcs-big5', 'tcsbig5' ],
+	    'big5-hkscs'     => [ 'big5hkscs', 'big5hk',
+				  'hkscs-big5', 'hk-big5' ],
+	    'gb2312'	     => [ 'gb_2312-80', 'csgb2312', 'hz-gb-2312',
+				  'iso-ir-58',
+				  'euc-cn',
+				  'chinese',
+				  'csiso58gb231280' ],
+	    'macarabic'	         => [ 'apple-arabic',
+				      'x-mac-arabic' ],
+	    'maccentraleurroman' => [ 'apple-centeuro',
+				      'x-mac-centraleurroman' ],
+	    'maccroatian'        => [ 'apple-croatian',
+				      'x-mac-croatian' ],
+	    'maccyrillic'        => [ 'apple-cyrillic',
+				      'x-mac-cyrillic' ],
+	    'macgreek'	         => [ 'apple-greek',
+				      'x-mac-greek' ],
+	    'machebrew'	         => [ 'apple-hebrew',
+				      'x-mac-hebrew' ],
+	    'macicelandic'       => [ 'apple-iceland',
+				      'x-mac-icelandic' ],
+	    'macromanian'        => [ 'apple-romanian',
+				      'x-mac-romanian' ],
+	    'macroman'	         => [ 'apple-roman',
+				      'mac', 'macintosh',
+				      'x-mac-roman' ],
+	    'macthai'	         => [ 'apple-thai',
+				      'x-mac-thai' ],
+	    'macturkish'         => [ 'apple-turkish',
+				      'x-mac-turkish' ],
+	});
+	$IsDefault{'CHARSETALIASES'} = 1;
+    }
+
+    ##  Content-Types to exclude:
+    ##    Nothing is excluded by default.
+    unless (%readmail::MIMEExcs) {
+	$IsDefault{'MIMEEXCS'} = 1;
+    }
+
+    ##  Content-type multipart/alternative preferences
+    ##    Note: The variable is not a readmail package variable, but it
+    ##	    is used to set readmail package properties.
+    unless (@MIMEAltPrefs) {
+	$IsDefault{'MIMEALTPREFS'} = 1;
+    }
+
+    ##	Text encoding
+    unless ($readmail::TextEncode) {
+	$IsDefault{'TEXTENCODE'} = 1;
     }
 }
 

@@ -1,12 +1,8 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
 <html>
 <head>
-<title>MHonArc v2.5 -- Resource Variables</title>
+<title>MHonArc Reference -- Resource Variables</title>
+<link rel="stylesheet" type="text/css" href="docstyles.css">
 </head>
-<!--
-<BODY background="ssbg75.jpg"
-      text="#000000" link="#0000ee" vlink="#551a8b" alink="ff0000">
--->
 <BODY>
 
 <!--X-NavButtons-Start-->
@@ -36,7 +32,7 @@ in MHonArc <a href="resources.html">resources</a>.  Take the following
 for example:
 </p>
 
-<PRE>
+<PRE class="code">
 &lt;LiTemplate&gt;
 &lt;li&gt;&lt;strong&gt;<b>$SUBJECT$</b>&lt;/strong&gt;
 &lt;ul&gt;&lt;li&gt;&lt;em&gt;From&lt;/em&gt;: <b>$FROM$</b>&lt;/li&gt;&lt;/ul&gt;
@@ -57,7 +53,7 @@ the message's author's name and address.
 <a href="resources/nextlink.html">NEXTLINK</a> resource setting for
 example:
 
-<pre>
+<pre class="code">
 &lt;li&gt;Next by Date:
 &lt;strong&gt;&lt;a href="<b>$MSG(NEXT)$</b>"&gt;<b>$SUBJECT(NEXT)$</b>&lt;/a&gt;&lt;/strong&gt;
 &lt;/li&gt;
@@ -69,17 +65,17 @@ However, an argument is given to each resource variable
 delimited by <b><tt>(&nbsp;)</tt></b>.
 <tt>$SUBJECT$</tt> will get expanded to the current message's
 subject<SUP><a href="#note1">[*]</a></SUP>.
-With the "<tt>NEXT</tt>" argument,
+With the "<tt class="icode">NEXT</tt>" argument,
 we are instructing MHonArc to use the <em>next</em> message's
-subject.  <tt>$MSG(NEXT)$</tt> will get expanded to the next message's
+subject.  <tt class="icode">$MSG(NEXT)$</tt> will get expanded to the next message's
 filename.  Therefore, the above resource value is creating a link to
 the next message in the archive.
 </p>
 
-<table border=0 cellpadding=4>
+<table class="note" width="100%">
 <tr valign=top>
-<td><strong><a name="note1">*</a>&nbsp;NOTE</strong></td>
-<td><p>In the two examples given, the replacement value of
+<td><strong><a name="note1">*</a>&nbsp;NOTE:</strong></td>
+<td width="100%"><p>In the two examples given, the replacement value of
 <tt>$SUBJECT$</tt> is different (excluding the variable argument difference).
 For compatibility of older versions of MHonArc, when <tt>$SUBJECT$</tt>
 is used <em>without</em> any arguments, it will be expanded to
@@ -102,13 +98,13 @@ will get expanded only to the subject text of the applicable message.
 is as follows:
 </P>
 
-<pre>
+<pre class="code">
 $<i>VARIABLE</i>[[:[<i>N</i>][U][J]][(<i>arglist</i>)]]$
 	  ^----------^^---------^ 
          ^-----------------------^
 </pre>
 
-<p>The items in <tt>[]</tt>'s are optional.  The "<tt>^---^</tt>" are used to
+<p>The items in <tt class="icode">[]</tt>'s are optional.  The "<tt class="icode">^---^</tt>" are used to
 highlight the nested optional groupings.
 </p>
 
@@ -116,32 +112,32 @@ highlight the nested optional groupings.
 
 <dl>
 
-<dt><tt>$</tt></dt>
+<dt><tt class="icode">$</tt></dt>
 <dd><p>The start of a resource variable.  Everything (including
 line breaks) up to the
-next <tt>$</tt> is part of the resource variable.
+next <tt class="icode">$</tt> is part of the resource variable.
 </p>
 </dd>
 
-<dt><tt><i>VARIABLE</i></tt></dt>
+<dt><tt class="icode"><i>VARIABLE</i></tt></dt>
 <dd><p>The name of the variable.  Variable names are case-sensitive.
 </p>
 </dd>
 
-<dt><tt>:[<i>N</i>][U][J]</tt> <em>(optional)</em></dt>
+<dt><tt class="icode">:[<i>N</i>][U][J]</tt> <em>(optional)</em></dt>
 <dd><p>The optional grouping starting with a colon are variable
 modifiers.  The definition of each modifier is as follows:
 </p>
 <table border=0 cellpadding=4>
 <tr valign="top">
-    <td><i>N</i></td>
+    <td><tt class="icode"><i>N</i></tt></td>
     <td><p>Length specification.  MHonArc will clip the expanded text
     to <i>N</i> if the text length is greater than <i>N</i>.
     </p>
-    <table border=0 cellpadding=4>
+    <table class="note" width="100%">
     <tr valign=top>
-    <td><strong>NOTE</strong></td>
-    <td>Not all resource variables support clipping.
+    <td><strong>NOTE:</strong></td>
+    <td width="100%">Not all resource variables support clipping.
 	If a length specification is given for these variables, then
 	it will be ignored.
     </td></tr>
@@ -152,14 +148,14 @@ modifiers.  The definition of each modifier is as follows:
     </td>
 </tr>
 <tr valign="top">
-    <td><tt>U</tt></td>
+    <td><tt class="icode">U</tt></td>
     <td><p>Treat the text as part of a URL string.  MHonArc will escape
     any characters that are considered special in a URL.
     </p>
     </td>
 </tr>
 <tr valign="top">
-    <td><tt>J</tt></td>
+    <td><tt class="icode">J</tt></td>
     <td><p>Treat the text as a JavaScript string.  MHonArc will escape
     any quote characters so the text can be part of a JavaScript
     string.
@@ -169,31 +165,31 @@ modifiers.  The definition of each modifier is as follows:
 </table>
 </dd>
 
-<dt><tt>(<i>arglist</i>)</tt> <em>(optional)</em></dt>
-<dd>An optional argument list delimited by parentheses: <tt>(&nbsp;)</tt>.
+<dt><tt class="icode">(<i>arglist</i>)</tt> <em>(optional)</em></dt>
+<dd>An optional argument list delimited by parentheses: <tt class="icode">(&nbsp;)</tt>.
 Some resource variables can take arguments which modify how the
 variable is expanded.  If a variable can
 take more than one argument, each argument will be separated by
-a semi-colon.  For example: <tt>$MSGLOCALDATE(NEXT;%H:%M)$</tt>.
+a semi-colon.  For example: <tt class="icode">$MSGLOCALDATE(NEXT;%H:%M)$</tt>.
 In the example, there are two arguments to the <tt>$MSGLOCALDATE$</tt>
-variable: "<tt>NEXT</tt>" and "<tt>%H:%M</tt>".
+variable: "<tt class="icode">NEXT</tt>" and "<tt class="icode">%H:%M</tt>".
 </dd>
 
-<dt><tt>$</tt></dt>
+<dt><tt class="icode">$</tt></dt>
 <dd><p>The end of a resource variable.
 </p>
 </dd>
 </dl>
 
 <p>If an unrecognized variable is encountered, it gets replaced with an
-empty string, and a warning is generated. If a literal "<tt>$</tt>"
-is needed, use "<tt>$$</tt>".
+empty string, and a warning is generated. If a literal "<tt class="icode">$</tt>"
+is needed, use "<tt class="icode">$$</tt>".
 </p>
 
-<table border=0 cellpadding=4>
+<table class="note" width="100%">
 <tr valign=top>
-<td><strong>NOTE</strong></td>
-<td><p>The
+<td><strong>NOTE:</strong></td>
+<td width="100%"><p>The
 <a href="resources/mailtourl.html">MAILTOURL</a>
 resource has
 different rules for variable expansion. If a
@@ -203,7 +199,7 @@ as part of the element content. Therefore, a single "<tt>$</tt>"
 can be used to represent a "<tt>$</tt>" character.  </p>
 <p>Also,
 variables in the MAILTOURL should <STRONG>NOT</STRONG>
-have "<tt>:<i>N</i>UJ</tt>" modifiers. This will prevent the
+have "<tt class="icode">:<i>N</i>UJ</tt>" modifiers. This will prevent the
 variables from being recognized. MHonArc will automatically
 treat the replacement value as a part of a URL string.
 </p>
@@ -225,7 +221,7 @@ are used to represent argument values:
 
 <dt><a name="mesg_spec"><b><i><tt>mesg_spec</tt></i></b></a></dt>
 <dd><p>A message specification determines which message the variable's
-expanded will be based upon. Possible values are:
+expanded value will be based upon. Possible values are:
 </p>
 <table border=0>
 <tr valign=top>
@@ -257,11 +253,11 @@ expanded will be based upon. Possible values are:
 </tr>
 <tr valign=top>
 <td align=right><tt>TFIRST</tt>&nbsp;-</td>
-  <td>First message listed thread index.</td>
+  <td>First message listed in thread index.</td>
 </tr>
 <tr valign=top>
 <td align=right><tt>TLAST</tt>&nbsp;-</td>
-  <td>Last message listed thread index.</td>
+  <td>Last message listed in thread index.</td>
 </tr>
 <tr valign=top>
 <td align=right><tt>TNEXT</tt>&nbsp;-</td>
@@ -369,7 +365,7 @@ the <a href="resources/gmtdatefmt.html">GMTDATEFMT</a> and
 to link to the archived message.
 The <tt>NAME</tt> attribute provides a destination location when a message
 links to the index page.  This resource variable is equivalent to
-"<nobr><tt><a href="#A_NAME">$A_NAME$</a>&nbsp;<a href="#A_HREF">$A_HREF$</a></tt></nobr>".
+"<nobr><tt class="icode"><a href="#A_NAME">$A_NAME$</a>&nbsp;<a href="#A_HREF">$A_HREF$</a></tt></nobr>".
 </td>
 </tr>
 </table><br></dd>
@@ -384,7 +380,7 @@ links to the index page.  This resource variable is equivalent to
 <td>The <tt>HREF</tt> attribute to use in an anchor to link to the
 archived message.
 This variable is equivalent to
-"<tt>href="<a href="#MSG">$MSG$</a>"</tt>".
+"<tt class="icode">href="<a href="#MSG">$MSG$</a>"</tt>".
 </td>
 </tr>
 </table><br></dd>
@@ -399,7 +395,7 @@ This variable is equivalent to
 <td>The <tt>NAME</tt> attribute to use in an anchor for messages to link
 to the index page.
 This variable is equivalent to
-"<tt>name="<a href="#MSGNUM">$MSGNUM$</a>"</tt>".
+"<tt class="icode">name="<a href="#MSGNUM">$MSGNUM$</a>"</tt>".
 </td>
 </tr>
 </table><br></dd>
@@ -418,6 +414,8 @@ is determined by the following resources based on
 <a href="resources/nextbuttonia.html">NEXTBUTTONIA</a>,
 <a href="resources/prevbutton.html">PREVBUTTON</a>,
 <a href="resources/prevbuttonia.html">PREVBUTTONIA</a>,
+<a href="resources/tendbutton.html">TENDBUTTON</a>,
+<a href="resources/tendbuttonia.html">TENDBUTTONIA</a>,
 <a href="resources/tnextbutton.html">TNEXTBUTTON</a>,
 <a href="resources/tnextbuttonia.html">TNEXTBUTTONIA</a>,
 <a href="resources/tnextinbutton.html">TNEXTINBUTTON</a>,
@@ -429,7 +427,9 @@ is determined by the following resources based on
 <a href="resources/tprevinbutton.html">TPREVINBUTTON</a>,
 <a href="resources/tprevinbuttonia.html">TPREVINBUTTONIA</a>,
 <a href="resources/tprevtopbutton.html">TPREVTOPBUTTON</a>,
-<a href="resources/tprevtopbuttonia.html">TPREVTOPBUTTONIA</a>.
+<a href="resources/tprevtopbuttonia.html">TPREVTOPBUTTONIA</a>,
+<a href="resources/ttopbutton.html">TTOPBUTTON</a>,
+<a href="resources/ttopbuttonia.html">TTOPBUTTONIA</a>.
 </td>
 </tr>
 </table><br></dd>
@@ -476,7 +476,7 @@ is determined by the following resources based on
 <tr valign=top>
 <td align=right><b>Description:</b></td>
 <td>The value of the environment variable specified by <i>variable_name</i>.
-For example, <tt>$ENV(HOME)$</tt> would expand to the value of the
+For example, <tt class="icode">$ENV(HOME)$</tt> would expand to the value of the
 HOME environment variable.</td>
 </tr>
 </table><br></dd>
@@ -511,7 +511,7 @@ HOME environment variable.</td>
 <tr valign=top>
 <td align=right><b>Description:</b></td>
 <td>The username/local-part of the mail address in the <tt>From:</tt>
-field of the message.  For example, given the address "someuser@mhonarc.org",
+field of the message.  For example, given the address "someuser@example.com",
 <tt>$FROMADDRNAME$</tt> would equal "someuser".</td>
 </tr>
 </table><br></dd>
@@ -564,7 +564,7 @@ resource.
 </tr>
 <tr valign=top>
 <td align=right><b>Description:</b></td>
-<td>The context-type sensistive icon.  The type of icon displayed
+<td>The content-type sensistive icon.  The type of icon displayed
 is determined by the <a href="resources/icons.html">ICONS</a> resource.</td>
 </tr>
 </table><br></dd>
@@ -576,8 +576,23 @@ is determined by the <a href="resources/icons.html">ICONS</a> resource.</td>
 </tr>
 <tr valign=top>
 <td align=right><b>Description:</b></td>
-<td>The URL to the context-type sensistive icon. The URL value is
-determined by the <a href="resources/icons.html">ICONS</a> resource.</td>
+<td>The URL to the content-type sensistive icon. The URL value is
+determined by the
+<a href="resources/icons.html">ICONS</a> and
+<a href="resources/iconurlprefix.html">ICONURLPREFIX</a>
+resources.</td>
+</tr>
+</table><br></dd>
+<dt><strong><a name="ICONURLPREFIX"><tt>$ICONURLPREFIX$</tt></a></strong></dt>
+<dd><table border=0>
+<tr valign=top>
+<td align=right><b>Arguments:</b></td>
+<td>N/A</td>
+</tr>
+<tr valign=top>
+<td align=right><b>Description:</b></td>
+<td>Value of the
+<a href="resources/iconurlprefix.html">ICONURLPREFIX</a> resource.</td>
 </tr>
 </table><br></dd>
 <dt><strong><a name="IDXFNAME"><tt>$IDXFNAME$</tt></a></strong></dt>
@@ -664,6 +679,8 @@ by the following resources based on
 <a href="resources/nextlinkia.html">NEXTLINKIA</a>,
 <a href="resources/prevlink.html">PREVLINK</a>,
 <a href="resources/prevlinkia.html">PREVLINKIA</a>,
+<a href="resources/tendlink.html">TENDLINK</a>,
+<a href="resources/tendlinkia.html">TENDLINKIA</a>,
 <a href="resources/tnextlink.html">TNEXTLINK</a>,
 <a href="resources/tnextlinkia.html">TNEXTLINKIA</a>,
 <a href="resources/tnextinlink.html">TNEXTINLINK</a>,
@@ -675,7 +692,9 @@ by the following resources based on
 <a href="resources/tprevinlink.html">TPREVINLINK</a>,
 <a href="resources/tprevinlinkia.html">TPREVINLINKIA</a>,
 <a href="resources/tprevtoplink.html">TPREVTOPLINK</a>,
-<a href="resources/tprevtoplinkia.html">TPREVTOPLINKIA</a>.
+<a href="resources/tprevtoplinkia.html">TPREVTOPLINKIA</a>,
+<a href="resources/ttoplink.html">TTOPLINK</a>,
+<a href="resources/ttoplinkia.html">TTOPLINKIA</a>.
 </td>
 </tr>
 </table><br></dd>
@@ -729,6 +748,26 @@ following resources:
 <tr valign=top>
 <td align=right><b>Description:</b></td>
 <td>GMT date of current message.</td>
+</tr>
+</table><br></dd>
+<dt><strong><a name="MSGHFIELD"><tt>$MSGHFIELD$</tt></a></strong></dt>
+<dd><table border=0>
+<tr valign=top>
+<td align=right><b>Arguments:</b></td>
+<td><tt><i><a href="#mesg_spec">mesg_spec</a></i>;<i>field-name</i></tt></td>
+</tr>
+<tr valign=top>
+<td align=right><b>Description:</b></td>
+<td>Message header field value as stored by the
+<a href="resources/fieldstore.html">FIELDSTORE</a> resource.
+<i>field-name</i> denotes the name of the field value.  If
+<i>field-name</i> is an address field, then the resources
+<a href="resources/addressmodifycode.html">ADDRESSMODIFYCODE</a>,
+<a href="resources/mailto.html">MAILTO</a>,
+<a href="resources/mailtourl.html">MAILTOURL</a>, and
+<a href="resources/spammode.html">SPAMMODE</a>
+apply.
+</td>
 </tr>
 </table><br></dd>
 <dt><strong><a name="MSGID"><tt>$MSGID$</tt></a></strong></dt>
@@ -791,7 +830,7 @@ resource.
 starts with the first top/root message of a thread and ends with the
 last message of the thread, spanning in sub-threads.  The following
 illustrates how the numbering works:
-<pre>
+<pre class="code">
   <b>1</b>. <var>top/root message</var>
     <b>2</b>. <var>first follow-up to 1</var>
       <b>3</b>. <var>first follow-up to 2</var>
@@ -974,7 +1013,7 @@ two arguments: the first is the number of pages before the current page
 to create links to; the second is the number of pages after the
 current page to create links to.  If either number argument is prefixed
 with a '<tt><b>T</b></tt>', then the list of links apply to the thread index.
-Examples: <tt>$PGLINKLIST(3;3)$</tt>, <tt>$PGLINKLIST(T2;T3)$</tt>.  The
+Examples: <tt class="icode">$PGLINKLIST(3;3)$</tt>, <tt class="icode">$PGLINKLIST(T2;T3)$</tt>.  The
 link text for to a give page is the page number.
 </p>
 <p>If no arguments are provided to <tt>$PGLINKLIST$</tt>, then the
@@ -1008,7 +1047,7 @@ an anchor element that hyperlinks to the message.  This behavior exists
 for backwards capatibility and a simple way to provide a link to
 the current message using the subject as the link text.  The
 no argument version is equivalent to:
-"<nobr><tt>&lt;a&nbsp;<a href="#A_ATTR">$A_ATTR$</a>&gt;<a href="#SUBJECTNA">$SUBJECTNA$</a>&lt;/a&gt;</tt></nobr>".
+"<nobr><tt class="icode">&lt;a&nbsp;<a href="#A_ATTR">$A_ATTR$</a>&gt;<a href="#SUBJECTNA">$SUBJECTNA$</a>&lt;/a&gt;</tt></nobr>".
 </td>
 </tr>
 </table><br></dd>
@@ -1114,7 +1153,7 @@ This variable is only applicable for use in the
 <tr valign=top>
 <td align=right><b>Description:</b></td>
 <td>The username/local-part of the e-mail address.
-For example, given the address "someuser@mhonarc.org",
+For example, given the address "someuser@example.com",
 <tt>$TOADDRNAME$</tt> would equal "someuser".
 This variable is only applicable for use in the
 <a href="resources/mailtourl.html">MAILTOURL</a>.</td>
@@ -1129,8 +1168,8 @@ This variable is only applicable for use in the
 <tr valign=top>
 <td align=right><b>Description:</b></td>
 <td>The domain part of the e-mail address.
-For example, given the address "someuser@mhonarc.org",
-<tt>$TOADDRDOMAIN$</tt> would equal "mhonarc.org".
+For example, given the address "someuser@example.com",
+<tt>$TOADDRDOMAIN$</tt> would equal "example.com".
 This variable is only applicable for use in the
 <a href="resources/mailtourl.html">MAILTOURL</a>.</td>
 </tr>
@@ -1217,7 +1256,7 @@ resources.
 <!-- *************************************************************** -->
 <hr>
 <address>
-$Date: 2002/07/27 05:13:10 $ <br>
+$Date: 2003/02/04 23:31:19 $ <br>
 <img align="top" src="monicon.png" alt="">
 <a href="http://www.mhonarc.org"
 ><strong>MHonArc</strong></a><br>

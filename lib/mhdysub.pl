@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhdysub.pl,v 2.6 2002/06/07 17:45:09 ehood Exp $
+##	$Id: mhdysub.pl,v 2.10 2003/01/10 03:35:40 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -35,6 +35,9 @@ my $_sub_eval_cnt = 0;
 ##	that have to check against several regular expressions
 ##	are candidates.
 ##
+##	NOTE: Subroutine references would be cleaner, but code
+##	      pre-dates Perl 5 where references were not supported.
+##
 sub create_routines {
     my($sub) = '';
 
@@ -61,7 +64,7 @@ EndOfRoutine
     }
 
     $sub .=<<'EndOfRoutine';
-	}
+	};
 	$ret;
     }
 EndOfRoutine
@@ -135,7 +138,8 @@ EndOfRoutine
     ##
     $sub =<<EndOfRoutine;
     sub rewrite_address {
-	local \$_ = shift;
+	package mhonarc::Pkg_rewrite_address;
+	local \$_ = mhonarc::dehtmlize(shift);
 	$AddressModify;
 	\$_;
     }
@@ -144,6 +148,22 @@ EndOfRoutine
     $sub .= "# $_sub_eval_cnt\n";  ++$_sub_eval_cnt;
     eval $sub;
     die("ERROR: Unable to create rewrite_address routine:\n$@\n") if $@;
+
+    ##-----------------------------------------------------------------------
+    ##	Routine to rewrite raw mail addresses
+    ##
+    $sub =<<EndOfRoutine;
+sub rewrite_raw_address {
+    package mhonarc::Pkg_rewrite_raw_address;
+    local \$_ = shift;
+    $AddressModify;
+    \$_;
+}
+EndOfRoutine
+    $sub .= "# $_sub_eval_cnt\n";  ++$_sub_eval_cnt;
+    eval $sub;
+    die("ERROR: Unable to create rewrite_raw_address routine:\n$@\n")
+	if $@;
 
     ##-----------------------------------------------------------------------
     ## message_exclude: User-defined code to check if a message should

@@ -1,12 +1,11 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
 <HTML>
 <HEAD>
 <TITLE>MHonArc FAQ: MIME</TITLE></HEAD>
+<link rel="stylesheet" type="text/css" href="../docstyles.css">
 <BODY>
 
 <!--X-NavButtons-Start-->
-<p align=center>
-[<a href="threads.html">Prev</a>][<a href="security.html">Next</a>][<a href="faq.html">TOC</a>][<a href="http://www.mhonarc.org/">Home</a>]
+<table width="100%"><tr><td align="left"><nobr>[<a href="threads.html">Prev</a>]</nobr></td><td align="center" width="100%">[<a href="faq.html">TOC</a>][<a href="../mhonarc.html">Manual</a>][<a href="http://www.mhonarc.org/">Home</a>]</td><td align="right"><nobr>[<a href="security.html">Next</a>]</nobr></td></tr></table>
 </p>
 <!--X-NavButtons-End-->
 
@@ -40,14 +39,14 @@
 <P>MIME stands for <EM>Multipurpose Internet
 Mail Extensions</EM>.
 An HTML version of the RFCs that define MIME are available at (<A
-HREF="http://www.nacs.uci.edu/indiv/ehood/MIME/MIME.html">http://www.nacs.uci.edu/indiv/ehood/MIME/MIME.html</A>).
+HREF="http://www.mhonarc.org/~ehood/MIME/">http://www.mhonarc.org/~ehood/MIME/</A>).
 </P>
 
 <P>In sum, MIME "redefines the format of message bodies to
 allow multi-part textual and non-textual message bodies to
 be represented and exchanged without loss of information." [<A
-HREF="http://www.nacs.uci.edu/indiv/ehood/MIME/1521/rfc1521ToC.html">RFC
-1521</A>] </P>
+HREF="http://www.mhonarc.org/~ehood/MIME/1521/rfc1521ToC.html">RFC 1521</A>]
+</P>
 
 <!-- ??????????????????????????????????????????????????????????????? -->
 <hr noshade size=1>
@@ -56,7 +55,7 @@ HREF="http://www.nacs.uci.edu/indiv/ehood/MIME/1521/rfc1521ToC.html">RFC
 <h3><b><a name="nonascii">Does MHonArc support message header extensions for non-ASCII text?</a></b></h3>
 </td></tr></table>
 
-<P>v2.0 or later.  Review the CHARSETCONVERTERS resource page for
+<P>v2.0 or later.  Review the <a href="../resources/charsetconverters.html">CHARSETCONVERTERS</a> resource page for
 which character sets are supported by MHonArc and how to extend
 MHonArc to support other character sets.
 </P>
@@ -68,7 +67,7 @@ MHonArc to support other character sets.
 <h3><b><a name="howtorecog">How can I get MHonArc to recognize content-types it states it does not recognize?</a></b></h3>
 </td></tr></table>
 
-<P>This question can be anwsered by reading about the MIMEFILTERS
+<P>This question can be anwsered by reading about the <a href="../resources/mimefilters.html">MIMEFILTERS</a>
 resource of the
 MHonArc documentation. The solution may require registering
 a pre-existing filter for the given content-type, or hooking in a
@@ -83,9 +82,9 @@ new filter.
 </td></tr></table>
 
 <p>Yes.  MHonArc's default filters are hooked in
-as described in the MIMEFILTERS resource.  Note, please review the
-options available for the default filters described in the MIMEFILTERS
-resource page since they may already provide the capability you
+as described in the <a href="../resources/mimefilters.html">MIMEFILTERS</a> resource.  Note, please review the
+options available for the default filters described in the <a href="../resources/mimefilters.html">MIMEFILTERS</a>
+resource page since they may already provide the capabilities you
 need.
 </p>
 
@@ -115,7 +114,7 @@ to a "<tt>.bin</tt>" file, it means the data has a content-type of
 <b>application/octet-stream</b>.  The best solution to the problem
 is have the senders of the messages label the data properly.  You
 can also check out the <b><tt>m2h_external::filter</tt></b> options documented
-in the MIMEFILTERS page of the documentation for some possible alternate
+in the <a href="../resources/mimefilters.html">MIMEFILTERS</a> page of the documentation for some possible alternate
 solutions.
 </p>
 
@@ -127,14 +126,15 @@ solutions.
 </td></tr></table>
 
 <p>Yes.  See the <b><tt>m2h_external::filter</tt></b> options documented
-in the MIMEFILTERS page of the documentation.  Make note of the
-security cautions in the documentation.
+in the <a href="../resources/mimefilters.html">MIMEFILTERS</a> page of
+the documentation.  <strong>Make note of the
+security cautions</strong> in the documentation.
 Example:
 </p>
-<pre>
-&lt;MIMEArgs&gt;
+<pre class="code">
+<b>&lt;MIMEArgs&gt;</b>
 m2h_external::filter; usename
-&lt;/MIMEArgs&gt;
+<b>&lt;/MIMEArgs&gt;</b>
 </pre>
 
 <dl>
@@ -152,13 +152,13 @@ m2h_external::filter; usename
 </td></tr></table>
 
 <p>Yes.  See the options available for the <b>m2h_text_plain::filter</b>
-described in the MIMEFILTERS resource page of the documentation.
+described in the <a href="../resources/mimefilters.html">MIMEFILTERS</a> resource page of the documentation.
 Example:
 </p>
-<pre>
-&lt;MIMEArgs&gt;
+<pre class="code">
+<b>&lt;MIMEArgs&gt;</b>
 m2h_text_plain::filter; nonfixed
-&lt;/MIMEArgs&gt;
+<b>&lt;/MIMEArgs&gt;</b>
 </pre>
 
 <!-- ??????????????????????????????????????????????????????????????? -->
@@ -169,14 +169,14 @@ m2h_text_plain::filter; nonfixed
 </td></tr></table>
 
 <p>Yes.  See the options available for the <b>m2h_text_plain::filter</b>
-described in the MIMEFILTERS resource page of the documentation.
+described in the <a href="../resources/mimefilters.html">MIMEFILTERS</a> resource page of the documentation.
 Example:
 </p>
-<pre>
+<pre class="code">
 &lt;-- Make sure lines are no longer than 80 characters --&gt;
-&lt;MIMEArgs&gt;
+<b>&lt;MIMEArgs&gt;</b>
 m2h_text_plain::filter; maxwidth=80
-&lt;/MIMEArgs&gt;
+<b>&lt;/MIMEArgs&gt;</b>
 </pre>
 
 <!-- ??????????????????????????????????????????????????????????????? -->
@@ -186,15 +186,15 @@ m2h_text_plain::filter; maxwidth=80
 <h3><b><a name="exclude">Can I exclude specific media-types?</a></b></h3>
 </td></tr></table>
 
-<p>Yes.  See the MIMEEXCS resource.
+<p>Yes.  See the <a href="../resources/mimeexcs.html">MIMEEXCS</a> resource.
 Example:
 </p>
-<pre>
+<pre class="code">
 &lt;-- Exclude all HTML and binary data --&gt;
-&lt;MIMEExcs&gt;
+<b>&lt;MIMEExcs&gt;</b>
 text/html
 application/octet-steam
-&lt;/MIMEExcs&gt;
+<b>&lt;/MIMEExcs&gt;</b>
 </pre>
 
 <!-- ??????????????????????????????????????????????????????????????? -->
@@ -204,28 +204,27 @@ application/octet-steam
 <h3><b><a name="alternative">Can I tell MHonArc to use the text/plain part over a text/html part in a multipart/alternative message?</a></b></h3>
 </td></tr></table>
 
-<p>Yes, in v2.5.8, and later, via the MIMEALTPREFS resource.
+<p>Yes, in v2.5.8, and later, via the <a href="../resources/mimealtprefs.html">MIMEALTPREFS</a> resource.
 Example:
 </p>
-<pre>
-&lt;MIMEAltPrefs&gt;
+<pre class="code">
+<b>&lt;MIMEAltPrefs&gt;</b>
 text/plain
 text/html
-&lt;/MIMEAltPrefs&gt;
+<b>&lt;/MIMEAltPrefs&gt;</b>
 </pre>
 
 <!-- ===================================================================== -->
 <hr>
 
 <!--X-NavButtons-Start-->
-<p align=center>
-[<a href="threads.html">Prev</a>][<a href="security.html">Next</a>][<a href="faq.html">TOC</a>][<a href="http://www.mhonarc.org/">Home</a>]
+<table width="100%"><tr><td align="left"><nobr>[<a href="threads.html">Prev</a>]</nobr></td><td align="center" width="100%">[<a href="faq.html">TOC</a>][<a href="../mhonarc.html">Manual</a>][<a href="http://www.mhonarc.org/">Home</a>]</td><td align="right"><nobr>[<a href="security.html">Next</a>]</nobr></td></tr></table>
 </p>
 <!--X-NavButtons-End-->
 
 <HR>
 <address>
-$Date: 2002/06/28 03:28:10 $ <br>
+$Date: 2003/01/03 04:32:32 $ <br>
 <img align="top" src="monicon.png" alt="">
 <a href="http://www.mhonarc.org/"
 ><strong>MHonArc</strong></a><br>

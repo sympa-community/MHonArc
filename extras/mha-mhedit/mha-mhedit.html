@@ -1,0 +1,400 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>mha-mhedit - MH/nmh reply editor for multipart, non-text/plain messages</title>
+<link rev="made" href="mailto:ehood@mcguire.earlhood.com" />
+</head>
+
+<body style="background-color: white">
+<table border="0" width="100%" cellspacing="0" cellpadding="3">
+<tr><td class="block" style="background-color: #cccccc" valign="middle">
+<big><strong><span class="block">&nbsp;mha-mhedit - MH/nmh reply editor for multipart, non-text/plain messages</span></strong></big>
+</td></tr>
+</table>
+
+<p><a name="__index__"></a></p>
+<!-- INDEX BEGIN -->
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#options">OPTIONS</a></li>
+	<li><a href="#installation">INSTALLATION</a></li>
+	<li><a href="#notes">NOTES</a></li>
+	<li><a href="#files">FILES</a></li>
+	<li><a href="#mh/nmh_profile_components">MH/nmh PROFILE COMPONENTS</a></li>
+	<li><a href="#environment">ENVIRONMENT</a></li>
+	<li><a href="#dependencies">DEPENDENCIES</a></li>
+	<li><a href="#version">VERSION</a></li>
+	<li><a href="#author">AUTHOR</a></li>
+</ul>
+<!-- INDEX END -->
+
+<hr />
+<p>
+</p>
+<h1><a name="name">NAME</a></h1>
+<p>mha-mhedit - MH/nmh reply editor for multipart, non-text/plain messages</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<pre>
+  repl -editor mha-mhedit</pre>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>mha-mhedit nicely formats MIME messages for use with MH/nmh's <code>repl(1)</code>
+command.</p>
+<p>A big deficiency with MH/nmh's <code>repl</code> is that it is not MIME aware,
+or more technically, repl filters are not MIME aware.  Consequently,
+if replying to a multipart, non-plain text message, and your repl
+filter includes the body of the message being replied to, all the
+MIME formatting is included, which can be messing for binary data,
+like images, and for quoted-printable text.</p>
+<p>mha-mhedit is designed to be used as the <code>repl</code> editor:</p>
+<pre>
+  repl -editor mha-mhedit</pre>
+<p>mha-mhedit is designed to functional transparently.  mha-mhedit formats
+and quotes the reply-to message body for editing in the message draft.
+After the formatting is complete, mha-mhedit invokes your regular
+editor for final composition.</p>
+<p>mha-mhedit does its job by using MHonArc,
+&lt;<a href="http://www.mhonarc.org">http://www.mhonarc.org</a>&gt;, with a specially crafted MHonArc
+resource file, and by using a text-based HTML viewer, like w3m,
+&lt;<a href="http://w3m.sourceforge.net/">http://w3m.sourceforge.net/</a>&gt;.  Of course, a tool can be
+developed that does not depend on these types of tools, but I did
+not feel like developing one and these work well for what I wanted.</p>
+<p>mha-mhedit can be invoke by default when using <code>repl</code> by
+having the following in your <code>.mh_profile</code>:</p>
+<pre>
+  repl: -editor mha-mhedit</pre>
+<p>However, since using mha-mhedit adds some extra initial overhead
+before your regular editor is invoked, you may choose to define a
+shell alias instead:</p>
+<pre>
+  (t)csh:
+      alias mrepl repl -editor mha-mhedit</pre>
+<pre>
+  bash:
+      alias mrepl=&quot;repl -editor mha-mhedit&quot;</pre>
+<p>Therefore, if replying to a MIME messages, you enter <code>mrepl</code> at your
+shell prompt and continue to use <code>repl</code> for plain text messages.</p>
+<p><strong>Note:</strong> It is recommended to have something like the following
+in your <code>.mh_profile</code>:</p>
+<pre>
+  mha-mhedit-next: &lt;your-editor&gt;</pre>
+<p>This way, at the <code>What now?</code> prompt, if you enter <code>edit</code>, it
+will invoke your regular editor again instead of calling
+mha-mhedit, which will cause all your edits to be lost.</p>
+<p>
+</p>
+<hr />
+<h1><a name="options">OPTIONS</a></h1>
+<p>Options can be defined in your <code>.mh_profile</code> like any other
+MH/nmh component.  For example:</p>
+<pre>
+  mha-mhedit: -editor vim</pre>
+<p>The following options are available:</p>
+<dl>
+<dt><strong><a name="item_%2deditor_editor">-editor <em>editor</em></a></strong><br />
+</dt>
+<dd>
+Text editor to invoke at the end.  If not specified, the
+value of the Editor profile component, the EDITOR environment variable,
+or <code>vi</code> is used.
+</dd>
+<dd>
+<p>Arguments to the editor can be defined by setting the <a href="#item_mha%2dmhedit%2deditor"><code>mha-mhedit-editor</code></a>
+profile component.  For example, if your editor is set to <code>vim</code>, the
+following can be added to your <code>.mh_profile</code> to have vim start at the
+end of your reply:</p>
+</dd>
+<dd>
+<pre>
+  mha-mhedit-vim: +</pre>
+</dd>
+<p></p>
+<dt><strong><a name="item_%2dhtmlconv_command">-htmlconv <em>command</em></a></strong><br />
+</dt>
+<dd>
+Command that converts HTML to plain text.  The command must be able
+to take HTML from stdin and dump plain text to stdout.  If the command
+requires arguments.  If not specified, then <a href="#item_w3m"><code>w3m</code></a> is used.
+</dd>
+<dd>
+<p>You can define arguments to give the specified converter by defining the
+<a href="#item_mha%2dmhedit%2dhtmlconv"><code>mha-mhedit-htmlconv</code></a> profile component in your <code>.mh_profile</code>.  For
+example, the following represents the default arguments used if
+<code>-htmlconv</code> is <a href="#item_w3m"><code>w3m</code></a>:</p>
+</dd>
+<dd>
+<pre>
+  mha-mhedit-w3m: -dump -cols 76 -T text/html</pre>
+</dd>
+<dd>
+<p>The following works well if <code>-htmlconv</code> is set to <code>lynx</code>:</p>
+</dd>
+<dd>
+<pre>
+  mha-mhedit-lynx: -stdin -dump -force_html -nolist -width=76</pre>
+</dd>
+<p></p>
+<dt><strong><a name="item_%2dlinelen_number">-linelen <em>number</em></a></strong><br />
+</dt>
+<dd>
+Maxium line length of formated reply text.  If the orginal message
+contains lines longer then <code>-linelen</code>, the lines will be wrapped.
+Default value is 76.
+</dd>
+<p></p>
+<dt><strong><a name="item_%2dmharc_pathname">-mharc <em>pathname</em></a></strong><br />
+</dt>
+<dd>
+Pathname to mhonarc resource file.  If not specified, the file
+<code>mha-repl.mrc</code> in your MH/nmh directory.
+</dd>
+<dd>
+<p><strong>Note:</strong> If a resource file is not found, mha-mhedit aborts execution.
+If using a custom resource file, be careful of settings that could
+create extra files during mail-to-html conversion.</p>
+</dd>
+<p></p>
+<dt><strong><a name="item_%2dmhonarc_pathname">-mhonarc <em>pathname</em></a></strong><br />
+</dt>
+<dd>
+Pathname to mhonarc program.  If not specified, <code>mhonarc</code> is used.
+</dd>
+<dd>
+<p>You can define extra arguments to give <code>mhonarc</code> by defining the
+<a href="#item_mha%2dmhedit%2dmhonarc"><code>mha-mhedit-mhonarc</code></a> profile component in your <code>.mh_profile</code>.  However,
+I'm unsure if you will ever need to.</p>
+</dd>
+<p></p>
+<dt><strong><a name="item_%2dquotechars_chars">-quotechars <em>chars</em></a></strong><br />
+</dt>
+<dd>
+List of characters denoting the start of a quoted line in a message.
+This option affects is used during line wrapping when detecting for
+quoted lines.
+</dd>
+<dd>
+<p>The default value is <code>&gt;</code>.</p>
+</dd>
+<p></p>
+<dt><strong><a name="item_%2dquoteprefix_string">-quoteprefix <em>string</em></a></strong><br />
+</dt>
+<dd>
+String to prepend to each line of text being responded to.  The default
+value is ``<code>&gt; </code>'' (greater-than sign followed by a space).
+</dd>
+<p></p>
+<dt><strong><a name="item_%2dtmpdir_pathname">-tmpdir <em>pathname</em></a></strong><br />
+</dt>
+<dd>
+Pathname to directory to use for temporary files.  If not
+specified, then the TMPDIR environment variable is used or
+the path location of Draft-Folder profile component.
+</dd>
+<p></p>
+<dt><strong><a name="item_%2dhelp">-help</a></strong><br />
+</dt>
+<dd>
+Display help information.
+</dd>
+<p></p>
+<dt><strong><a name="item_%2dman">-man</a></strong><br />
+</dt>
+<dd>
+Display entire manpage.
+</dd>
+<p></p></dl>
+<p>
+</p>
+<hr />
+<h1><a name="installation">INSTALLATION</a></h1>
+<p>Copy the mha-mhedit program to somewhere in your search path.
+Copy mha-repl.mrc into your MH/nmh directory.</p>
+<p>
+</p>
+<hr />
+<h1><a name="notes">NOTES</a></h1>
+<ul>
+<li></li>
+mha-mhedit is designed to work friendly with your normal replcomps
+and repl filter.  mha-mhedit reads the head of the draft created
+by repl in order to preserve it after formatting the initial
+message body.  mha-mhedit preserves the replcomps message header
+and up-to the next 5 lines afterwards that does not look like
+quoted reply text generated from the repl filter (mha-mhedit assumes
+that the a line starting with a '&gt;' denotes the begining of
+quoted reply text).
+<p>If I have lost you, here is the replcomps I have:</p>
+<pre>
+  %(lit)%(formataddr %&lt;{reply-to}%?{from}%?{sender}%?{return-path}%&gt;)\
+  %&lt;(nonnull)%(void(width))%(putaddr To: )\n%&gt;\
+  %(lit)%(formataddr{to})%(formataddr{cc})%(formataddr(me))\
+  %&lt;(nonnull)%(void(width))%(putaddr cc: )\n%&gt;\
+  %&lt;{fcc}Fcc: %{fcc}\n%&gt;\
+  %&lt;{subject}Subject: Re: %(putstr(trim{subject}))\n%&gt;\
+  From: Earl Hood \&lt;earl@earlhood.com\&gt;
+  Reply-To: Earl Hood \&lt;earl@earlhood.com\&gt;
+  %&lt;{date}In-reply-to: %&lt;{message-id}%{message-id}%&gt;\n%&gt;\
+  %&lt;{message-id}References: %&lt;{references}%(void{references})%(trim)%(putstr) %&gt;
+              %(void{message-id})%(trim)%(putstr)\n%&gt;\
+  --------
+  On %(lmonth{date}) %(mday{date}), %(year{date}) at \
+  %02(putnumf(hour{date})):%02(putnumf(min{date})), \
+  %&lt;{from}%(friendly{from})%|you%&gt; wrote:</pre>
+<p>And the repl filter (repl.filter) I use for quoting the body of the
+reply-to message:</p>
+<pre>
+  leftadjust,compwidth=14
+  body:component=&gt; ,overflowtext=&gt; ,noleftadjust</pre>
+<p>The replcomps file includes a preamble in the message body providing the
+date and person who wrote the message I am replying to.</p>
+<p>My repl.filter causes the reply-to message body to be included in
+the composition draft quoted with ``&gt; '' before each line.</p>
+<p>mha-mhedit automatically reads the initial draft header (everything
+up to the <code>--------</code>).  After that, mha-mhedit reads up-to the
+next 5 lines for potential inclusion.  The body preamble in my
+replcomps takes up 2 lines (there is a trailing blank line that
+may not be easily noticed above).  Therefore, mha-mhedit will
+preserve it.  The third line will be the start of quoted text.
+mha-mhedit sees this, and stops reading the draft.</p>
+<p>Now, if I plan to make mha-mhedit my default repl editor, it will be
+more efficient if I remove the message body quoting since mha-mhedit
+will ignore and overwrite anyway.</p>
+<p></p>
+<li></li>
+Currently, no temporary files should be generated.  However, this
+depends on the version of mhonarc you are using, the type
+of message being replied to, and any edits you may make to the
+mhonarc resource file.
+<p>It may be possible that by-product files, like attachments, could
+be created.  If so, manual deletion of the files in <code>-tmpdir</code> will
+be required.</p>
+<p></p></ul>
+<p>
+</p>
+<hr />
+<h1><a name="files">FILES</a></h1>
+<dl>
+<dt><strong><a name="item_%24home%2f%2emh_profile"><code>$HOME/.mh_profile</code></a></strong><br />
+</dt>
+<dd>
+Profile definitions.
+</dd>
+<p></p>
+<dt><strong><a name="item_%3cmh%2ddir%3e%2fmha%2drepl%2emrc"><code>&lt;mh-dir&gt;/mha-repl.mrc</code></a></strong><br />
+</dt>
+<dd>
+MHonArc resource file.  The resource file can be explicitly
+defined via the <code>-mharc</code> command-line option.
+</dd>
+<p></p></dl>
+<p>
+</p>
+<hr />
+<h1><a name="mh/nmh_profile_components">MH/nmh PROFILE COMPONENTS</a></h1>
+<dl>
+<dt><strong><a name="item_mha%2dmhedit"><code>mha-mhedit</code></a></strong><br />
+</dt>
+<dd>
+Arguments to mha-mhedit.
+</dd>
+<p></p>
+<dt><strong><a name="item_mha%2dmhedit%2deditor"><code>mha-mhedit-editor</code></a></strong><br />
+</dt>
+<dd>
+Arguments to pass to editor invoked by mha-mhedit, where
+<em>editor</em> is the name of the editor.
+</dd>
+<p></p>
+<dt><strong><a name="item_mha%2dmhedit%2dhtmlconv"><code>mha-mhedit-htmlconv</code></a></strong><br />
+</dt>
+<dd>
+Arguments to pass to html-to-text converter, where
+<em>htmlconv</em> is the name of the html-to-text converter program.
+</dd>
+<p></p>
+<dt><strong><a name="item_mha%2dmhedit%2dmhonarc"><code>mha-mhedit-mhonarc</code></a></strong><br />
+</dt>
+<dd>
+Extra arguments to pass to mhonarc.
+</dd>
+<p></p>
+<dt><strong><a name="item_editor"><code>Editor</code></a></strong><br />
+</dt>
+<dd>
+Text editor.
+</dd>
+<p></p></dl>
+<p>
+</p>
+<hr />
+<h1><a name="environment">ENVIRONMENT</a></h1>
+<dl>
+<dt><strong><a name="item_editor"><code>EDITOR</code></a></strong><br />
+</dt>
+<dd>
+Default editor.
+</dd>
+<p></p>
+<dt><strong><a name="item_tmpdir"><code>TMPDIR</code></a></strong><br />
+</dt>
+<dd>
+Location of temporary files.
+</dd>
+<p></p></dl>
+<p>
+</p>
+<hr />
+<h1><a name="dependencies">DEPENDENCIES</a></h1>
+<dl>
+<dt><strong><a name="item_mhonarc">MHonArc</a></strong><br />
+</dt>
+<dd>
+MHonArc, &lt;<a href="http://www.mhonarc.org/">http://www.mhonarc.org/</a>&gt;, is used to translate
+the raw message into HTML.  MHonArc is used since it conveniently
+combines multipart, non-plain text, messages into a singe HTML
+document.
+</dd>
+<p></p>
+<dt><strong><a name="item_w3m">w3m</a></strong><br />
+</dt>
+<dd>
+w3m, &lt;<a href="http://w3m.sourceforge.net/">http://w3m.sourceforge.net/</a>&gt;, is used to translate HTML
+generated by mhonarc into format plain text.
+</dd>
+<dd>
+<p>An alternate converter program can be used via the <code>-htmlconv</code> option.
+It must be able to take HTML as standard input and dump formated text
+to standard out.</p>
+</dd>
+<p></p></dl>
+<p>
+</p>
+<hr />
+<h1><a name="version">VERSION</a></h1>
+<p><code>$Id: mha-mhedit.html,v 1.1 2003/01/04 21:11:26 ehood Exp $</code></p>
+<p>
+</p>
+<hr />
+<h1><a name="author">AUTHOR</a></h1>
+<p>Earl Hood, <a href="mailto:earl@earlhood.com">earl@earlhood.com</a></p>
+<p>Copyright (C), 2002.
+This program comes with ABSOLUTELY NO WARRANTY and may be copied only
+under the terms of the GNU General Public License.</p>
+<table border="0" width="100%" cellspacing="0" cellpadding="3">
+<tr><td class="block" style="background-color: #cccccc" valign="middle">
+<big><strong><span class="block">&nbsp;mha-mhedit - MH/nmh reply editor for multipart, non-text/plain messages</span></strong></big>
+</td></tr>
+</table>
+
+</body>
+
+</html>
