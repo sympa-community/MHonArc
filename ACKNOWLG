@@ -26,9 +26,8 @@ the following:
 
  Achim Bohnet <ach AT rosat DOT mpe-garching DOT mpg DOT de>
 	For his help in testing, and contributing to, mhonarc and for
-	setting up, and maintaining, the first mhonarc mailing list.
-	Even though list ownership has changed, he still maintains
-	a very useful archive of the list.
+	setting up, and maintaining, the first mhonarc mailing list
+	and archive.
 
  Jeff Breidenbach <jeff AT jab DOT org>
 	For his feedback and his usage of MHonArc at a scale that it
@@ -57,7 +56,7 @@ the following:
 	For providing the machine facilities
 	for housing the first MHonArc home page:
 	<http://www.nacs.uci.edu/indiv/ehood/mhonarc.html>.
-	Location still functions a primary mirror/backup for MHonArc.
+	Location still functions as a primary mirror/backup for MHonArc.
 
  Ken Harward
 	For helping me tackle Perl problems and for bouncing ideas
@@ -71,7 +70,7 @@ the following:
 	improvements in index ordering, thread slice formatting, and
 	other features.
 
- Christoper Lindsey <lindsey AT ncsa DOT uiuc DOT edu>
+ Christoper Lindsey <lindsey AT mallorn DOT com>
 	For providing hosting services for mhonarc.org and for
 	taking over administration responsibilities of the mhonarc
 	mailing list.
@@ -104,5 +103,5 @@ the following:
 	(ie. Japanese character set).
 
 ---------------------------------------------------------------------------
-$Date: 2003/01/01 23:41:42 $ 
+$Date: 2003/05/21 17:09:13 $ 
 Earl Hood, mhonarc@mhonarc.org
