@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhdb.pl,v 2.32 2003/02/22 04:40:11 ehood Exp $
+##	$Id: mhdb.pl,v 2.33 2003/08/02 06:15:37 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -165,6 +165,7 @@ print_var($db,'HtmlExt',        \$HtmlExt);
 print_var($db,'IconURLPrefix',  \$IconURLPrefix);
 print_var($db,'IDXSIZE',        \$IDXSIZE);
 print_var($db,'KeepOnRmm',      \$KeepOnRmm);
+print_var($db,'Lang',           \$Lang);
 print_var($db,'LocalDateFmt',   \$LocalDateFmt);
 print_var($db,'MAILTOURL',      \$MAILTOURL)  unless $IsDefault{'MAILTOURL'};
 print_var($db,'MAIN',           \$MAIN);

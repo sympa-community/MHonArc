@@ -152,7 +152,8 @@ sub <var>filter</var> {
 <table cellspacing=1 border=0 cellpadding=4>
 
 <tr valign=top>
-<td><strong><code>$fields_hash_ref</code></strong></td>
+<td><strong><code><a name="fields_hash_ref"
+>$fields_hash_ref</a></code></strong></td>
 <td><p>A reference to hash of message/part header
 fields.  Keys are field names in lowercase
 and values are array references containing the
@@ -168,23 +169,9 @@ multiple times.  For fields that only occur once,
 the array for the field will only contain one
 item.
 </p>
-<table class="note" width="100%">
-<tr valign="baseline">
-<td><strong>NOTE:</strong></td>
-<td width="100%"><p>For <tt>text</tt> entities, the key
-<tt>x-mha-charset</tt> will be defined in <code>$fields_hash_ref</code>.
-It represents the character set encoding of the text entity.
+<p>See <a href="#xmhafields"><cite>Special Variables and Header
+Fields</a> for more information about this parameter.
 </p>
-<p>Unlike regular <code>$fields_hash_ref</code> keys, the value is
-<strong>not</strong> array.  Therefore, to retrieve the character
-set, use something like the following:
-</p>
-<pre class="code">
-  my $charset = $fields_hash_ref-&gt;{'x-mha-charset'}
-</pre>
-</td>
-</tr>
-</table>
 </td>
 </tr>
 
@@ -254,6 +241,160 @@ directory.
 </td>
 </tr>
 </table>
+
+<H4><a name="xmhafields">Special Variables and Header Fields</a></H4>
+
+<p>The following global variables are made available to filters:
+</p>
+
+<table cellspacing=1 border=0 cellpadding=4>
+
+<tr valign=top>
+<td><b><tt><nobr>$mhonarc::MHAindex</nobr></tt></b></td>
+<td><p>Index key of message.  Various MHonArc data structures and
+    utility routines require the index key of the message.
+    </p>
+    </td>
+</tr>
+<tr valign=top>
+<td><b><tt><nobr>$mhonarc::MHAmsgid</nobr></tt></b></td>
+<td><p>Message ID of message.
+    </p>
+    </td>
+</tr>
+<tr valign=top>
+<td><b><tt><nobr>$mhonarc::MHAmsgnum</nobr></tt></b></td>
+<td><p>Message number.  The format of the number will at least
+    be five digits wide, with leading zero padding.  For example,
+    if the number for a message is <tt>15</tt>, <tt>$mhonarc::$MHAmsgnum</tt>
+    will be equal to <tt>00015</tt>.
+    </p>
+    </td>
+</tr>
+<tr valign=top>
+<td><b><tt><nobr>$mhonarc::OUTDIR</nobr></tt></b></td>
+<td><p>Pathname to archive directory.  This variable is useful for
+    filters that create derived files.
+    </p>
+    </td>
+</tr>
+</table>
+
+<p>The <code><a href="#fields_hash_ref">$fields_hash_ref</a></code>
+parameter will have special MHonArc-specific keys defined.  Unlike
+regular header field values, the values are <strong>not</strong> arrays
+(unless noted).  The following special keys are defined:
+</p>
+
+<dl>
+
+<dt><b><tt>x-mha-charset</tt></b></dt>
+<dd><pre class="code">my $charset = $fields_hash_ref-&gt;{'x-mha-charset'}</pre>
+<p>Only defined for <tt>text</tt> entities, the value
+represents the character set encoding of the text entity.
+</p>
+<p>If your filter will take character encoding into account, you
+should use this value vs what is specified in regular entity header
+fields because <a href="textencode.html">TEXTENCODE</a> may be affect,
+so the effective character encoding of the data may be different from
+the original encoding specified in the message.
+</p>
+</dd>
+
+<dt><b><tt>x-mha-content-type</tt></b></dt>
+<dd><pre class="code">my $content_type = $fields_hash_ref-&gt;{'x-mha-content-type'}</pre>
+<p>The media type of the entity extracted from content-type entity header.
+</p>
+</dd>
+
+<dt><b><tt>x-mha-part-number</tt></b></dt>
+<dd><pre class="code">
+my $part_no      = $fields_hash_ref-&gt;{'x-mha-part-number'}
+my $full_part_no = readmail::gen_full_part_number($fields_hash_ref);</pre>
+<p>The child number of the entity within a multipart entity.  Numbering
+starts with 1, and if data is not part of a multipart entity, this
+key may not be defined.
+</p>
+</dd>
+
+<dt><b><tt>x-mha-parent-header</tt></b></dt>
+<dd><pre class="code">
+my $parent_header = $fields_hash_ref-&gt;{'x-mha-parent-header'}
+</pre>
+<p>The header field hash for the parent entity, if applicable.
+</p>
+</dd>
+
+</dl>
+
+<H4><a name="cidhash">Accessing Other Parts</a></H4>
+
+<p>For some media-types, a filter may need to access other entity
+parts to properly process a given part.
+For example,
+<a href="#m2h_text_html">m2h_text_html::filter</a> must access
+other entity parts when processing MHTML messages.
+</p>
+
+<p>When MHonArc parses a multipart message, it fills the
+<tt><b>%readmail::Cid</b></tt> hash for each entity that defines either
+a <tt>Content-Id</tt> or <tt>Content-Location</tt>.
+The <tt>%readmail::Cid</tt> hash is mainly for use by media types,
+like <tt>multipart/related</tt> where message parts may reference other
+message parts.
+</p>
+
+<p>The keys of the <tt>%readmail::Cid</tt> hash will be the
+<tt>Content-Id</tt>s and <tt>Content-Location</tt>s and each value
+will be a reference to an entity hash structure.  Code example:
+</p>
+<pre class="code">my $entity = $readmail::Cid{$content_id};</pre>
+<p>The hash structure defines the following fields: </p>
+
+<dl>
+<dt><strong><code>body</code></strong></td>
+<dd><pre class="code">
+my $entity_body_ref = $readmail::Cid{$content_id}-&gt;{'body'}
+</pre>
+<p>Scalar reference to the body of the entity.
+</p>
+</dd>
+</tr>
+<tr valign=top>
+<td><strong><code>fields</code></strong></td>
+<dd><pre class="code">
+my $entity_header_ref = $readmail::Cid{$content_id}-&gt;{'fields'}
+</pre>
+<p>Entity header fields hash reference.  The format is the same
+as described for <code><a href="#fields_hash_ref">$fields_hash_ref</a></code>.
+</p>
+</dd>
+</tr>
+<tr valign=top>
+<td><strong><code>filtered</code></strong></td>
+<dd><pre class="code">
+my $is_filtered = $readmail::Cid{$content_id}-&gt;{'filtered'}
+</pre>
+<p>Boolean if part has already been filtered.  This field should
+be set to a true value by filters that explicitly filters other entity parts.
+This tells MHonArc itself to not invoke a filter for the data.
+</p>
+</dd>
+</tr>
+<tr valign=top>
+<td><strong><code>uri</code></strong></td>
+<dd><pre class="code">
+my $entity_uri = $readmail::Cid{$content_id}-&gt;{'uri'}
+</pre>
+<p>The URI to the filtered version of the entity.  This field should
+be set by filters that explicitly filters other entity parts.
+</p>
+</dd>
+</dl>
+
+<p>For a detailed example on how <tt>%readmail::Cid</tt> can be used, see
+the MHonArc library <tt>mhtxthtml.pl</tt>.
+</p>
 
 <H4>Filter Writing Tips</H4>
 
@@ -2033,10 +2174,10 @@ sub filter {
 <!--/x-rc-nav-->
 <hr>
 <address>
-$Date: 2003/01/19 01:38:11 $ <br>
+$Date: 2003/08/07 21:27:04 $ <br>
 <img align="top" src="../monicon.png" alt="">
 <a href="http://www.mhonarc.org"><strong>MHonArc</strong></a><br>
-Copyright &#169; 1997-2002 <a href="http://www.mhonarc.org/~ehood/">Earl Hood</a>, <a href="mailto:mhonarc@mhonarc.org">mhonarc@mhonarc.org</a><br>
+Copyright &#169; 1997-2003 <a href="http://www.mhonarc.org/~ehood/">Earl Hood</a>, <a href="mailto:mhonarc@mhonarc.org">mhonarc@mhonarc.org</a><br>
 </address>
 
 </body>

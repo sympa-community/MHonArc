@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: readmail.pl,v 2.32 2003/02/04 23:31:20 ehood Exp $
+##	$Id: readmail.pl,v 2.33 2003/08/02 06:04:47 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -340,6 +340,7 @@ sub MAILdecode_1522_str {
     $plain_real_charset = 'us-ascii'  if $plain_real_charset eq 'plain';
 
     # Decode string
+    my $firsttime = 1;
     while ($str =~ /(=\?([^?]+)\?(.)\?([^?]*)\?=)/g) {
 	# Grab components
 	$pos = pos($str);
@@ -356,16 +357,19 @@ sub MAILdecode_1522_str {
 	}
 
 	# Convert before (unencoded) text
-	if (defined($encfunc)) {			# encoding
-	    &$encfunc(\$str_before, $plain_real_charset, $TextEncode);
-	    $ret .= $str_before;
-	} elsif ($dec_flag) {				# ignore if just decode
-	    $ret .= $str_before;
-	} elsif (defined(&$plaincnv)) {			# decode and convert
-	    $ret .= &$plaincnv($str_before, $plain_real_charset);
-	} else {					# ignore
-	    $ret .= $str_before;
+	if ($firsttime || $str_before =~ /\S/) {
+	    if (defined($encfunc)) {			# encoding
+		&$encfunc(\$str_before, $plain_real_charset, $TextEncode);
+		$ret .= $str_before;
+	    } elsif ($dec_flag) {			# ignore if just decode
+		$ret .= $str_before;
+	    } elsif (defined(&$plaincnv)) {		# decode and convert
+		$ret .= &$plaincnv($str_before, $plain_real_charset);
+	    } else {					# ignore
+		$ret .= $str_before;
+	    }
 	}
+	$firsttime = 0;
 
 	# Encoding text
 	if (defined($encfunc)) {
@@ -482,6 +486,7 @@ sub MAILread_body {
     } else {
 	$type = $subtype = '';
     }
+    $fields->{'x-mha-content-type'} = $ctype;
 
     ## Check if type is excluded
     if (MAILis_excluded($ctype)) {
@@ -567,7 +572,7 @@ sub MAILread_body {
 	    if ($content =~ m/\bboundary\s*=\s*"([^"]*)"/i) {
 		$boundary = $1;
 	    } else {
-		($boundary) = $content =~ m/\bboundary\s*=\s*(\S+)/i;
+		($boundary) = $content =~ m/\bboundary\s*=\s*([^\s;]+)/i;
 		$boundary =~ s/;$//;  # chop ';' if grabbed
 	    }
 
@@ -641,12 +646,14 @@ sub MAILread_body {
 	    my($cid, $href, $pctype);
 	    my %alt_exc = ( );
 	    my $have_alt_prefs = $isalt && scalar(@_MIMEAltPrefs);
+	    my $partno = 0;
 	    @parts = \(@parts);
 	    while (defined($part = shift(@parts))) {
 		$href = { };
 		$partfields = $href->{'fields'} = (MAILread_header($part))[0];
 		$href->{'body'} = $part;
 		$href->{'filtered'} = 0;
+		$partfields->{'x-mha-part-number'} = ++$partno;
 		$pctype = extract_ctype(
 		    $partfields->{'content-type'}, $ctype);
 
@@ -692,12 +699,16 @@ sub MAILread_body {
 		    } elsif (!defined($partfields->{'content-base'})) {
 			$partfields->{'content-base'} = [ $uribase ];
 		    }
+
+		    $partfields->{'x-mha-parent-header'} = $fields;
 		}
 	    }
 
 	    my($entity);
 	    ENTITY: foreach $entity (@entity) {
-		next  if $entity->{'filtered'};
+		if ($entity->{'filtered'}) {
+		    next ENTITY;
+		}
 
 		## If content-type not defined for part, then determine
 		## content-type based upon multipart subtype.
@@ -749,9 +760,20 @@ sub MAILread_body {
 		}
 	    }
 
+	    ## Aid garbage collection(?)
+	    foreach $entity (@entity) {
+		delete $entity->{'fields'}{'x-mha-parent-header'};
+	    }
+
 	## Else if message/rfc822 or message/news
 	} elsif ($ctype =~ m^\bmessage/(?:rfc822|news)\b^i) {
 	    $partfields = (MAILread_header($body))[0];
+
+	    # propogate parent and part no to message/* header
+	    $partfields->{'x-mha-parent-header'} =
+		$fields->{'x-mha-parent-header'};
+	    $partfields->{'x-mha-part-number'} =
+		$fields->{'x-mha-part-number'};
 
 	    $ret = &$BeginEmbeddedMesgFunc();
 	    if ($FormatHeaderFunc && defined(&$FormatHeaderFunc)) {
@@ -767,6 +789,7 @@ sub MAILread_body {
 	    $ret .= &$EndEmbeddedMesgFunc();
 
 	    push(@files, @array);
+	    delete $partfields->{'x-mha-parent-header'};
 
 	## Else cannot handle type
 	} else {
@@ -823,7 +846,7 @@ sub MAILread_header {
 	}
 
 	## Check for continuation of a field
-	if ($tmp =~ s/^\s//) {
+	if ($tmp =~ /^\s/) {
 	    $fields->{$label}[-1] .= $tmp  if $label;
 	    next;
 	}
@@ -875,7 +898,7 @@ sub MAILread_file_header {
 	}
 
 	## Check for continuation of a field
-	if ($tmp =~ s/^\s//) {
+	if ($tmp =~ /^\s/) {
 	    $fields->{$label}[-1] .= $tmp  if $label;
 	    next;
 	}
@@ -1289,6 +1312,23 @@ sub extract_charset {
 	$charset = 'iso-8859-1'  if $$body =~ /[\x80-\xFF]/;
     }
     $charset;
+}
+
+##---------------------------------------------------------------------------##
+##	gen_full_part_number creates a full part number of an entity
+##	from the given entity header.
+##
+sub gen_full_part_number {
+    my $fields = shift;
+    my @number = ( );
+    while (defined($fields->{'x-mha-parent-header'})) {
+	unshift(@number, ($fields->{'x-mha-part-number'} || '1'));
+	$fields = $fields->{'x-mha-parent-header'};
+    }
+    if (!scalar(@number)) {
+	return $fields->{'x-mha-part-number'} || '1';
+    }
+    join('.', @number);
 }
 
 ##---------------------------------------------------------------------------##

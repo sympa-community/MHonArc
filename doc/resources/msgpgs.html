@@ -43,7 +43,7 @@
 
 <dt><strong>Command-line Option</strong></dt>
 <dd><p>
-<code>-msgpgs</code>
+<code>-msgpgs</code><br>
 <code>-nomsgpgs</code>
 </p>
 </dd>
@@ -54,23 +54,34 @@
 <hr>
 <h2><a name="description">Description</a></h2>
 
+<table class="caution" width="100%">
+<tr valign="baseline">
+<td><strong style="color: red;">CAUTION:</strong></td>
+<td width="100%"><p>MSGPGS should not be changed after the
+initial creation of an archive.  If changed, unexpected behavior
+and possible errors may occur.
+</p>
+</td>
+</tr>
+</table>
+
 <p>MSGPGS resource determines if MHonArc will generate HTML pages
 for messages processed.  If set, pages will be created for each
 processed messages as defined by
 <a href="../layout.html#msgpg">message page layout</a>.
 </p>
 
-<p>If MSGPGS is not set, no message pages will be created.  Having
-no message pages created may be desired if you only want to use
-MHonArc for its index page generation.  Note, relevant resources that link
-to message pages would have to be redefined to use URLs that properly
+<p>If MSGPGS is not set, no message pages will be created.  Having no
+message pages created may be desired if you only want to use MHonArc
+for its index page generation.  In this case, relevant resources that
+link to message pages must be redefined to properly
 retrieve messages from how they are stored on the system.
 </p>
 
 <p>When MSGPGS is off, messge body data is skipped when processing
 input data.  Hence, processing time is much faster since no message
 conversion is performed.  The database file is still created to support
-updates to the index pages generated.
+updates to index pages.
 </p>
 
 <!-- *************************************************************** -->
@@ -106,6 +117,8 @@ updates to the index pages generated.
 <h2><a name="seealso">See Also</a></h2>
 
 <p>
+<a href="main.html">MAIN</a>,
+<a href="thread.html">THREAD</a>
 </p>
 
 <!-- *************************************************************** -->
@@ -116,11 +129,11 @@ updates to the index pages generated.
 <!--/x-rc-nav-->
 <hr>
 <address>
-$Date: 2002/12/10 04:08:03 $ <br>
+$Date: 2003/08/07 05:59:39 $ <br>
 <img align="top" src="../monicon.png" alt="">
 <a href="http://www.mhonarc.org/"
 ><strong>MHonArc</strong></a><br>
-Copyright &#169; 1998, <a href="http://www.earlhood.com/"
+Copyright &#169; 1998,2003, <a href="http://www.earlhood.com/"
 >Earl Hood</a>, <a href="mailto:mhonarc@mhonarc.org"
 >mhonarc@mhonarc.org</a><br>
 </address>

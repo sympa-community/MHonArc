@@ -1,7 +1,7 @@
 " Vim syntax file
 " Language:	MHonArc Resource File
 " Maintainer:	Earl Hood <mhonarc@pobox.com>
-" Last change:	$Date: 2003/02/22 04:40:10 $ 
+" Last change:	$Date: 2003/08/02 06:15:37 $ 
 
 "	Adapted from the following:
 " Language:	HTML
@@ -107,6 +107,7 @@ syn keyword mhaTagName contained include
 syn keyword mhaTagName contained labelbeg
 syn keyword mhaTagName contained labelend
 syn keyword mhaTagName contained labelstyles
+syn keyword mhaTagName contained lang
 syn keyword mhaTagName contained lasttpglink
 syn keyword mhaTagName contained listbegin
 syn keyword mhaTagName contained listend

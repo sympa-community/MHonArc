@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhinit.pl,v 2.47 2003/02/22 04:40:11 ehood Exp $
+##	$Id: mhinit.pl,v 2.48 2003/08/02 06:15:37 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -399,6 +399,8 @@ $UsingLASTPG = defined($ENV{'M2H_USINGLASTPG'}) ? $ENV{'M2H_USINGLASTPG'} : 1;
 
 $FastTempFiles = defined($ENV{'M2H_FASTTEMPFILES'}) ?
 			 $ENV{'M2H_FASTTEMPFILES'} : 0;
+
+$Lang        = $ENV{'M2H_LANG'} || $ENV{'LC_ALL'} || $ENV{'LANG'} || undef;
 
 @FMTFILE     = defined($ENV{'M2H_RCFILE'}) ?
 		    ($ENV{'M2H_RCFILE'}) : ();

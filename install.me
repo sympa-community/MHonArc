@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: install.me,v 1.19 2003/07/20 00:00:51 ehood Exp $
+##	$Id: install.me,v 1.20 2003/08/07 21:53:59 ehood Exp $
 ##  Author:
 ##      Earl Hood, earl@earlhood.com
 ##  Summary:
@@ -708,7 +708,7 @@ sub cp {
 ##
 sub cpfile {
     my($src, $dst, $prepend, $mkbat) = @_;
-    my($bflag);
+    my($bflag, $status);
 
     if (-d $dst) {
 	my $tmp;
@@ -726,7 +726,7 @@ sub cpfile {
     if ($bflag) { binmode(SRC); binmode(DST); }
 
     if (!$bflag && $mkbat) {
-	print DST <<'EndOfBat';
+	$status = print DST <<'EndOfBat';
 @rem = '--*-Perl-*--
 @echo off
 if "%OS%" == "Windows_NT" goto WinNT
@@ -739,17 +739,21 @@ if %errorlevel% == 9009 echo You do not have perl in your PATH.
 goto endofperl
 @rem ';
 EndOfBat
+	die qq/Error: Write failure to "$dst": $!\n/  unless $status;
     }
     if ($prepend) {
-	print DST $prepend;
+	$status = print DST $prepend;
+	die qq/Error: Write failure to "$dst": $!\n/  unless $status;
     }
-    print DST <SRC>;
+    $status = print DST <SRC>;
+    die qq/Error: Write failure to "$dst": $!\n/  unless $status;
 
     if (!$bflag && $mkbat) {
-	print DST <<'EndOfBat';
+	$status = print DST <<'EndOfBat';
 __END__
 :endofperl
 EndOfBat
+      die qq/Error: Write failure to "$dst": $!\n/  unless $status;
     }
 
     close(SRC);

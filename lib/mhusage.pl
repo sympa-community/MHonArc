@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##      $Id: mhusage.pl,v 2.22 2003/01/09 23:42:28 ehood Exp $
+##      $Id: mhusage.pl,v 2.23 2003/08/02 06:15:37 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -106,6 +106,7 @@ Options:
   -idxsize <#>             : Maximum number of messages shown in indexes
   -keeponrmm               : Do not delete message files when message is
                              removed from archive.
+  -lang <locale>           : Set locale/language.
   -localdatefmt <fmt>      : Format for local date
   -lock                    : Do archive locking (default)
   -lockdelay <#>           : Time delay, in seconds, between lock tries

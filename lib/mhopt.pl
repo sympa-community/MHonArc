@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##      $Id: mhopt.pl,v 2.53 2003/07/04 01:13:34 ehood Exp $
+##      $Id: mhopt.pl,v 2.54 2003/08/02 06:15:37 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -83,6 +83,7 @@ sub get_resources {
 	'idxprefix=s',	# Filename prefix for multi-page main index
 	'idxsize=i',	# Maximum number of messages shown in indexes
 	'keeponrmm',	# Do not delete message files on archive remove
+	'lang=s',	# Set locale/language
 	'localdatefmt=s',
 			# Date specification for local date
 	'lock',		# Do archive locking (default)
@@ -291,12 +292,16 @@ sub get_resources {
     require 'mhtime.pl';
     require 'mhfile.pl';
     require 'mhutil.pl';
+    require 'mhrcfile.pl';
     require 'mhscan.pl'  	if $SCAN;
     require 'mhsingle.pl'  	if $SINGLE;
     require 'mhrmm.pl'  	if $RMM;
     require 'mhnote.pl'  	if $ANNOTATE;
 
     print STDOUT "This is MHonArc v$VERSION, Perl $] $^O\n"  unless $QUIET;
+
+    ## Check for locale/lang setting
+    $Lang = $opt{'lang'}  if defined($opt{'lang'});
 
     ## Evaluate site local initialization
     delete($INC{'mhasiteinit.pl'});      # force re-evaluation
@@ -305,24 +310,19 @@ sub get_resources {
     ## Read default resource file
     DEFRCFILE: {
 	if ($DefRcFile) {
-	    read_fmt_file($DefRcFile);
-	    last DEFRCFILE;
+	    last DEFRCFILE  if read_resource_file($DefRcFile);
 	}
-	if (defined $ENV{'HOME'}) {
+	my $home_dir = $ENV{'HOME'};
+	if (defined $home_dir) {
 	    # check if in home directory
-	    $tmp = join($DIRSEP, $ENV{'HOME'}, $DefRcName);
-	    if (-e $tmp) {
-		read_fmt_file($tmp);
-		last DEFRCFILE;
-	    }
+	    last DEFRCFILE
+		if read_resource_file(join($DIRSEP, $home_dir, $DefRcName), 1);
 	}
 	local $_;
 	foreach (@INC) {
-	    $tmp = join($DIRSEP, $_, $DefRcName);
-	    if (-e $tmp) {
-		read_fmt_file($tmp);
-		last DEFRCFILE;
-	    }
+	    next if ($_ eq $home_dir);
+	    last DEFRCFILE
+		if read_resource_file(join($DIRSEP, $_, $DefRcName), 1);
 	}
     }
 
@@ -429,12 +429,25 @@ sub get_resources {
 	$MHeadCnvFunc = \&readmail::MAILdecode_1522_str;
     }
 
-    ##	Read resource file(s) (I initially used the term 'format file').
+    ##	Read resource file(s)
     ##	Look for resource in outdir unless existing according to
     ##  current value.
     foreach (@FMTFILE) {
 	$_ = join($DIRSEP, $OUTDIR, $_) unless -e $_;
-	&read_fmt_file($_);
+	&read_resource_file($_);
+    }
+
+    ## Set locale
+    eval {
+	require POSIX;
+	if ($Lang) {
+	    POSIX::setlocal(&POSIX::LC_ALL, $Lang);
+	} else {
+	    POSIX::setlocal(&POSIX::LC_ALL, '');
+	}
+    };
+    if ($@ && $Lang) {
+	qq/Warning: Setting locale appears to be not supported:\n$@\n/;
     }
 
     ##	Re-check readmail settings
@@ -757,15 +770,6 @@ sub version {
 sub usage {
     require 'mhusage.pl';
     &mhusage();
-}
-
-##---------------------------------------------------------------------------
-##	read_fmt_file() requires the library with the resource file
-##	read subroutine and calls the routine.
-##
-sub read_fmt_file {
-    require 'mhrcfile.pl';
-    &read_resource_file;  # implicit passing of @_
 }
 
 ##---------------------------------------------------------------------------

@@ -7,8 +7,6 @@ Items are in no particular order:
 
 => Fix all open bugs. :-)
 
-=> Enhance locale support, especially for message sorting.
-
 => Add resource to disable use of MD5 if no message-id.
 
 => Generalize message page layout so converted header and body can
@@ -21,11 +19,6 @@ Items are in no particular order:
 
 => "Global" filter options.  For example, have something like
    "subdir" be applied to all filters that write files.
-
-=> Fix unfolding problem where there is only a single space on
-   the next line.  Can this be done w/o adding extra overhead in
-   parsing?  XXX: Need to remember input case where the unfolding was
-   a problem.
 
 => Define $MhaStdout and $MhaStdin.  Should help in embedded usage.
 
@@ -59,4 +52,4 @@ Items are in no particular order:
    Should be configurable?
 
 ===========================================================================
-$Id: TODO,v 1.24 2003/01/09 23:42:25 ehood Exp $
+$Id: TODO,v 1.25 2003/08/02 06:15:36 ehood Exp $

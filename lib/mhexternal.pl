@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhexternal.pl,v 2.15 2003/03/31 17:33:05 ehood Exp $
+##	$Id: mhexternal.pl,v 2.17 2003/08/07 05:49:47 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -136,8 +136,10 @@ sub filter {
     }
 
     ## Get content-type
-    ($ctype) = $fields->{'content-type'}[0] =~ m%^\s*([\w\-\./]+)%;
-    $ctype =~ tr/A-Z/a-z/;
+    if (!defined($ctype = $fields->{'x-mha-content-type'})) {
+	($ctype) = $fields->{'content-type'}[0] =~ m%^\s*([\w\-\./]+)%;
+	$ctype =~ tr/A-Z/a-z/;
+    }
     $type = (mhonarc::get_mime_ext($ctype))[1];
 
     ## Get disposition
@@ -157,7 +159,7 @@ sub filter {
 
     ## Check if content is excluded based on filename extension
     if ($excexts && index($excexts, ",$dispext,") >= $[) {
-      return (qq|<p><tt>&lt&lt;attachment: |.
+      return (qq|<p><tt>&lt;&lt;attachment: |.
 	      mhonarc::htmlize($nameparm).
 	      qq|&gt;&gt;</tt></p>\n|);
     }
@@ -199,8 +201,10 @@ sub filter {
     $target = qq/ TARGET="$target"/  if $target;
 
     ## Write file
-    $filename = mhonarc::write_attachment($ctype, $data, $path, $name, $inext);
-    ($urlfile = $filename) =~ s/([^\w.\-\/])/sprintf("%%%X",unpack("C",$1))/ge;
+    $filename =
+	mhonarc::write_attachment($ctype, $data, $path, $name, $inext);
+    ($urlfile = $filename) =~
+	s/([^\w.\-\/])/sprintf("%%%X",unpack("C",$1))/ge;
     &debug("File-written: $filename")  if $debug;
 
     ## Check if inlining when CT not image/*
@@ -238,10 +242,12 @@ sub filter {
 	    if ($nameparm) {
 		#$namelabel = mhonarc::htmlize($nameparm);
 		$namelabel = $html_name;
-	    } else {
+	    } elsif ($filename) {
 		$namelabel = $filename;
 		$namelabel =~ s/^.*$mhonarc::DIRSEPREX//o;
 		mhonarc::htmlize(\$namelabel);
+	    } else {
+		$namelabel = $ctype;
 	    }
 	}
 

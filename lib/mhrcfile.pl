@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhrcfile.pl,v 2.35 2003/02/22 04:40:11 ehood Exp $
+##	$Id: mhrcfile.pl,v 2.36 2003/08/02 06:15:37 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -28,10 +28,64 @@
 package mhonarc;
 
 ##---------------------------------------------------------------------------
-##	read_resource_file() parses the resource file.
-##	(The code for this routine could probably be simplified).
+##	read_resource_file() reads the specifed resource file and any
+##	language variations.
 ##
 sub read_resource_file {
+    my $filename = shift;
+    my $nowarn	 = shift;
+    my $lang	 = shift || $Lang;
+    my @files = get_lang_file_list($filename, $lang);
+
+    my $file;
+    my $found = 0;
+    foreach $file (get_lang_file_list($filename, $lang)) {
+	if (-r $file) {
+	    parse_resource_file($file);
+	    ++$found;
+	} elsif (-e _) {
+	    qq/Warning: "$file" is not readable\n/;
+	}
+    }
+    if (!$found && !$nowarn) {
+	qq/Warning: Unable to read resource file "$filename"\n/;
+    }
+    $found;
+}
+
+##---------------------------------------------------------------------------
+##	get_lang_file_list() returns list of filenames that include
+##	language setting.
+##
+sub get_lang_file_list {
+    my $pathname =  shift;
+    my $lang     =  lc (shift || $Lang);
+       $lang     =~ s/\s+//g;
+    return ($pathname)  unless $lang;
+
+    my $codeset = '';
+    if ($lang =~ s/\.(.*)$//) {
+	$codeset = '.' . lc($1);
+    }
+
+    my @files   = ($pathname);
+    my $curbase = $pathname . '.';
+    my $tag;
+    foreach $tag (split(/[\-_]/, $lang)) {
+	next  unless $tag =~ /\S/;
+	$curbase .= $tag;
+	push(@files, $curbase);
+	push(@files, $curbase.$codeset)  if ($codeset);
+	$curbase .= '_';
+    }
+    @files;
+}
+
+##---------------------------------------------------------------------------
+##	parse_resource_file() parses the resource file.
+##	(The code for this routine could probably be simplified).
+##
+sub parse_resource_file {
     my($file) = shift;
     my($line, $tag, $label, $acro, $hr, $type, $routine, $plfile,
        $url, $arg, $tmp, @a);
@@ -362,6 +416,11 @@ sub read_resource_file {
 	}
 	if ($elem eq 'keeponrmm') {		# Keep files on rmm
 	    $KeepOnRmm = 1;
+	    last FMTSW;
+	}
+	if ($elem eq 'lang') {			# Locale/language
+	    $Lang = &get_elem_last_line($handle, $elem);
+	    $Lang =~ s/\s+//g;
 	    last FMTSW;
 	}
 	if ($elem eq 'labelbeg') {		# Begin markup of label

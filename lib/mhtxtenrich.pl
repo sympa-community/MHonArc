@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhtxtenrich.pl,v 2.9 2003/01/18 03:10:35 ehood Exp $
+##	$Id: mhtxtenrich.pl,v 2.10 2003/08/07 20:35:32 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -57,6 +57,7 @@ my %enriched_tags = (
     'nofill' => 1,
     'paraindent' => 1,
     'param' => 1,
+    'samepage' => 1,
     'signature' => 1,
     'smaller' => 1,
     'subscript' => 1,
@@ -180,6 +181,7 @@ sub convert_tags {
     $$str =~ s|</lang\s*>|</div>|gi;
 
     # richtext commands
+    $$str =~ s{</?samepage\s*>}{}gi;
     $$str =~ s{<(/?)subscript\s*>}{<$1sub>}gi;
     $$str =~ s{<(/?)superscript\s*>}{<$1sup>}gi;
     $$str =~ s{<lt\s*>}{&lt;}gi;

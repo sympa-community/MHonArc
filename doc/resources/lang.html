@@ -1,0 +1,149 @@
+<html>
+<head>
+<title>MHonArc Resources: LANG</title>
+<link rel="stylesheet" type="text/css" href="../docstyles.css">
+</head>
+<body>
+
+<!--x-rc-nav-->
+<table border=0><tr valign="top">
+<td align="left" width="50%">[Prev:&nbsp;<a href="labelstyles.html">LABELSTYLES</a>]</td><td><nobr>[<a href="../resources.html#lang">Resources</a>][<a href="../mhonarc.html">TOC</a>]</nobr></td><td align="right" width="50%">[Next:&nbsp;<a href="lastpglink.html">LASTPGLINK</a>]</td></tr></table>
+<!--/x-rc-nav-->
+
+<hr>
+<h1>LANG</h1>
+<!--X-TOC-Start-->
+<ul>
+<li><a href="#syntax">Syntax</a>
+<li><a href="#description">Description</a>
+<li><a href="#default">Default Setting</a>
+<li><a href="#rcvars">Resource Variables</a>
+<li><a href="#examples">Examples</a>
+<li><a href="#version">Version</a>
+<li><a href="#seealso">See Also</a>
+</ul>
+<!--X-TOC-End-->
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="syntax">Syntax</a></h2>
+
+<dl>
+
+<dt><strong>Envariable</strong></dt>
+<dd><p>
+<code>M2H_LANG=</code><var>locale</var>
+</p>
+</dd>
+
+<dt><strong>Element</strong></dt>
+<dd><p>
+<code>&lt;LANG&gt;</code><br>
+<var>locale</var><br>
+<code>&lt;/LANG&gt;</code><br>
+</p>
+</dd>
+
+<dt><strong>Command-line Option</strong></dt>
+<dd><p>
+<code>-lang </code><var>locale</var>
+</p>
+</dd>
+
+</dl>
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="description">Description</a></h2>
+
+<p>LANG sets the locale.  Setting the locale affects the following
+MHonArc operations:
+</p>
+<ul>
+
+<li><p>Message sorting: Locale properties for string collation are
+    applied when sorting messages by subject or author.
+    </p>
+
+<li><p>Resource file loading:  If a locale is specified, locale 
+    defined variations will be checked for.  See
+    <a href="rcfile.html#locale">RCFILE</a> for more information.
+    </p>
+
+</ul>
+
+<p>The basic format for specifying a locale is:
+</p>
+<pre><var>language</var>_<var>country</var>.<var>codeset</var>
+</pre>
+<p>Where <tt><var>codeset</var></tt></tt> and
+<tt><var>country</var></tt> are optional.  The <tt><var>language</var></tt>
+and <tt><var>country</var></tt> are usually from the standards
+ISO 3166 and ISO 639, the two-letter abbreviations for the
+countries and the languages of the world, respectively.  The
+<tt><var>codeset</var></tt></tt> represents a specific character
+encoding, like ISO8859-1.  You will need to consult your local system
+documentation for what locales, and their formats, are supported
+on your system.
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="default">Default Setting</a></h2>
+
+<p>The value of the <tt>LC_ALL</tt> or <tt>LANG</tt> environment
+variables.
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="rcvars">Resource Variables</a></h2>
+
+<p>N/A
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="examples">Examples</a></h2>
+
+<p>None.
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="version">Version</a></h2>
+
+<p>2.6.7
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="seealso">See Also</a></h2>
+
+<p>
+<a href="rcfile.html">RCFILE</a>,
+<a href="textencode.html">TEXTENCODE</a>
+</p>
+<p>
+<a href="http://www.perldoc.com/perl5.8.0/pod/perllocale.html">perllocale</a>
+manual page.
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<!--x-rc-nav-->
+<table border=0><tr valign="top">
+<td align="left" width="50%">[Prev:&nbsp;<a href="labelstyles.html">LABELSTYLES</a>]</td><td><nobr>[<a href="../resources.html#lang">Resources</a>][<a href="../mhonarc.html">TOC</a>]</nobr></td><td align="right" width="50%">[Next:&nbsp;<a href="lastpglink.html">LASTPGLINK</a>]</td></tr></table>
+<!--/x-rc-nav-->
+<hr>
+<address>
+$Date: 2003/08/02 06:15:37 $<br>
+<img align="top" src="../monicon.png" alt="">
+<a href="http://www.mhonarc.org/"><strong>MHonArc</strong></a><br>
+Copyright &#169; 2003, <a href="http://www.earlhood.com/"
+>Earl Hood</a>, <a href="mailto:mhonarc@mhonarc.org"
+>mhonarc@mhonarc.org</a><br>
+</address>
+
+</body>
+</html>

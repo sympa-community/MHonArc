@@ -17,6 +17,7 @@
 <ul>
 <li><small><a href="#">Resource file syntax</a></small>
 <li><small><a href="#">Resource variables</a></small>
+<li><small><a href="#locale">Localized resource file variations</a></small>
 </ul>
 <li><a href="#default">Default Setting</a>
 <li><a href="#rcvars">Resource Variables</a>
@@ -61,6 +62,17 @@ environment variables and command-line options, and it allows you to specify
 other resources to control MHonArc's behavior.
 </p>
 
+<p>The <tt>-rcfile</tt> command-line option can be specified multiple
+times.  For example,
+</p>
+<table border="1" width="100%"><tr><td><pre class="shell">
+prompt&gt; <b>mhonarc -rcfile <var>file1.mrc</var> -rcfile <var>file2.mrc</var></b> ...
+</pre></td></tr></table>
+
+<p>Each resource file specified will be loaded in the order
+specified on the command-line.
+</p>
+
 <h3>Resource file syntax</h3>
 
 <P>Resources are set in the file by using <EM>elements</EM> similiar
@@ -88,25 +100,62 @@ if more stricter parsing rules are adopted.
 <br>
 
 <LI><P>The opening tag of an element must occur by itself on a
-single line.  Whitespace is allowed before the the open tag.  </P>
+single line.</P>
+<p><b>Correct</b>:
+</p>
+<pre class="code">
+<b><u>&lt;LiTemplate&gt;</u></b>
+&lt;li&gt;&lt;strong&gt;$SUBJECT$&lt;/strong&gt;
+&lt;ul&gt;&lt;li&gt;&lt;em&gt;From&lt;/em&gt;: $FROM$&lt;/li&gt;&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/LiTemplate&gt;
+</pre>
+<p><b>Wrong</b>:
+</p>
+<pre class="code">
+<b style="color: red;"><u>&lt;LiTemplate&gt;</u></b>&lt;li&gt;&lt;strong&gt;$SUBJECT$&lt;/strong&gt;
+&lt;ul&gt;&lt;li&gt;&lt;em&gt;From&lt;/em&gt;: $FROM$&lt;/li&gt;&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/LiTemplate&gt;
+</pre>
+<p> </p>
+</li>
 
-<LI><P>No comments are allowed inside elements because the text will
-be treated as element content (unless the comment text is supposed
-to be part of the resource value).  </P>
+<LI><P>Comments inside elements are treated as part of the
+element content.
+</P>
 
-<LI><P>Each element must be closed with a
-<CODE>&lt;/</CODE><VAR>element_name</VAR><CODE>&gt;</CODE> tag on
-its own line unless resource associated with the element is
-a boolean resource.
-Whitespace is allowed
-before the close tag.  </P>
+<LI><P>Each element must have a close tag,
+<CODE>&lt;/</CODE><VAR>element_name</VAR><CODE>&gt;</CODE>, on
+its own line.</p>
+<p><b>Correct</b>:
+</p>
+<pre class="code">
+&lt;LiTemplate&gt;
+&lt;li&gt;&lt;strong&gt;$SUBJECT$&lt;/strong&gt;
+&lt;ul&gt;&lt;li&gt;&lt;em&gt;From&lt;/em&gt;: $FROM$&lt;/li&gt;&lt;/ul&gt;
+&lt;/li&gt;
+<b><u>&lt;/LiTemplate&gt;</u></b>
+</pre>
+<p><b>Wrong</b>:
+</p>
+<pre class="code">
+&lt;LiTemplate&gt;
+&lt;li&gt;&lt;strong&gt;$SUBJECT$&lt;/strong&gt;
+&lt;ul&gt;&lt;li&gt;&lt;em&gt;From&lt;/em&gt;: $FROM$&lt;/li&gt;&lt;/ul&gt;
+&lt;/li&gt;<b style="color: red;"><u>&lt;/LiTemplate&gt;</u></b>
+</pre>
+
+<p>Close tags are not needed for boolean resources.
+</P>
+</li>
 
 <LI><P>Some elements can take an optional attribute called
 "<CODE>Override</CODE>", if applicable.  This tells MHonArc
 that the contents of the element will completely override the default
-behavior of MHonArc, and previous instances of the element.
-<STRONG>Example</STRONG>: "<CODE>&lt;EXCS Override&gt;</CODE>". If
-"<CODE>Override</CODE>" is not specified, then the contents of the
+behavior of MHonArc, and previous instances of the element, for
+example: "<tt class="icode">&lt;EXCS Override&gt;</tt>". If
+"<tt class="icode">Override</tt>" is not specified, then the contents of the
 element augment the current setting.  </P>
 
 <LI><P>Some elements can take an optional attribute called
@@ -122,8 +171,37 @@ to remove the last line-break of the element's content.
 
 <LI><P>Elements can<b>NOT</b> be nested.  Many resources define
 the values of <a href="../rcvars.html">resource variables</a>, which
-may be used within resource elements.
+may be used within resource elements:
 </P>
+<p><b>Correct</b>:
+</p>
+<pre class="code">
+<b><u>&lt;TTitle&gt;
+Example List Threads
+&lt;/TTitle&gt;</u></b>
+
+&lt;TIdxPgBegin&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;title&gt;<b><u>$TIDXTITLE$</u></b>&lt;/title&gt;
+...
+&lt;/TIdxPgBegin&gt;
+</pre>
+<p><b>Wrong</b>:
+</p>
+<pre class="code">
+&lt;TIdxPgBegin&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;title&gt;
+<b style="color: red;"><u>&lt;TTitle&gt;
+Example List Threads
+&lt;/TTitle&gt;</u></b>
+&lt;/title&gt;
+...
+&lt;/TIdxPgBegin&gt;
+</pre>
+</li>
 
 </UL>
 
@@ -141,6 +219,114 @@ the section: <a href="../rcvars.html">Resource Variables</a>.
 of all applicable variables that may be used in defining the
 resource's value.
 </p>
+
+<h3><a name="locale">Localized resource file variations</a></h3>
+
+<p>MHonArc supports the ability to define locale specific variations
+of a resource file based upon the <a href="lang.html">LANG</a> resource
+setting.  For example, take the following command-line invocation:
+</p>
+<table border="1" width="100%"><tr><td><pre class="shell">
+prompt&gt; <b>mhonarc <a class="shell" href="lang.html">-lang</a> en_US -rcfile settings.mrc</b> ...
+</pre></td></tr></table>
+<p>MHonArc will check for and read the following resource files, in order:
+</p>
+<ol>
+<li><tt>settings.mrc</tt></li>
+<li><tt>settings.mrc.en</tt></li>
+<li><tt>settings.mrc.en_us</tt></li>
+</ol>
+<table class="note" width="100%">
+<tr valign="baseline">
+<td><strong>NOTE:</strong></td>
+<td width="100%"><p>MHonArc will quietly ignore any locale-specific files
+that do not exist.
+</p>
+</td>
+</tr>
+</table>
+<p> </p>
+<table class="note" width="100%">
+<tr valign="baseline">
+<td><strong>NOTE:</strong></td>
+<td width="100%"><p>Setting <a href="lang.html">LANG</a> via a resource
+file element will only affect subsequent resource file resolution: subsequent
+resource files loaded via multiple
+<tt>-rcfile</tt> options and resource
+files loaded via the
+<a href="include.html">INCLUDE</a> and
+<a href="otherindexes.html">OTHERINDEXES</a>
+resource.
+</p>
+</td>
+</tr>
+</table>
+<p>Therefore, if you manage multiple archives comprising multiple languages,
+you can define generic settings in a shared resource file and then define
+language-specific overrides and/or variations.  Continuing with the
+previous example, the following invocation can be used for a French Canadian
+archive:
+</p>
+<table border="1" width="100%"><tr><td><pre class="shell">
+prompt&gt; <b>mhonarc <a class="shell" href="lang.html">-lang</a> fr_CA -rcfile settings.mrc</b> ...
+</pre></td></tr></table>
+<p>Causing the following resource files to be examined:
+</p>
+<ol>
+<li><tt>settings.mrc</tt></li>
+<li><tt>settings.mrc.fr</tt></li>
+<li><tt>settings.mrc.fr_ca</tt></li>
+</ol>
+
+<p>The following is the list of files examined given a resource
+file <tt><var>file.mrc</var></tt> and the generic locale setting
+<tt><var>language</var>_<var>country</var>.<var>codeset</var></tt>:
+</p>
+
+<ol>
+<li><tt><var>file.mrc</var></tt></li>
+<li><tt><var>file.mrc</var>.<var>language</var></tt></li>
+<li><tt><var>file.mrc</var>.<var>language</var>.<var>codeset</var></tt></li>
+<li><tt><var>file.mrc</var>.<var>language</var>_<var>country</var></tt></li>
+<li><tt><var>file.mrc</var>.<var>language</var>_<var>country</var>.<var>codeset</var></tt></li>
+</ol>
+
+<p>By leveraging the use of custom <a href="definevar.html">resource
+variables</a>, you can parameterize textual labels so the locale-specific
+resource files only need to define variable values instead of redefining
+layout.  For example, take the following default value of the
+<a href="nextbutton.html">NEXTBUTTON</a> resource:
+</p>
+<pre class="code">
+<b>&lt;NextButton chop&gt;</b>
+[&lt;a href="$MSG(NEXT)$"&gt;Date Next&lt;/a&gt;]
+<b>&lt;/NextButton&gt;</b>
+</pre>
+
+<p>To facilitate the the localization of your archives, the resource
+should be changed so the button label becomes a custom resource variable
+references:
+</p>
+<pre class="code">
+<b>&lt;NextButton chop&gt;</b>
+[&lt;a href="$MSG(NEXT)$"&gt;<b>$BUTTON-DATE-NEXT-LABEL$</b>&lt;/a&gt;]
+<b>&lt;/NextButton&gt;</b>
+</pre>
+
+<p>You will notice that "<tt class="icode">Date Next</tt>" has been
+changed to "<tt class="icode">$BUTTON-DATE-NEXT-LABEL$</tt>".  Therefore,
+in the locale specific resource file, all that needs to be done is to
+define <tt>$BUTTON-DATE-NEXT-LABEL$</tt>.  Continuing with the
+<tt>settings.mrc</tt> example, the following would be defined in
+<tt>settings.mrc.en</tt> to set the English version of the label:
+</p>
+<pre class="code">
+<b>&lt;<a href="definevar.html">DefineVar</a> chop&gt;</b>
+$BUTTON-DATE-NEXT-LABEL$
+Date Next
+<b>&lt;/DefineVar&gt;</b>
+</pre>
+
 
 <!-- *************************************************************** -->
 <hr>
@@ -181,11 +367,11 @@ MHonArc test (by thread)
   --&gt;
 <b>&lt;<a href="listbegin.html">LISTBEGIN</a>&gt;</b>
 &lt;address&gt;
-Last updated: $LOCALDATE$&lt;br&gt;
-$NUMOFMSG$ messages in chronological order&lt;br&gt;
+Last updated: <a href="../rcvars.html#LOCALDATE">$LOCALDATE$</a>&lt;br&gt;
+<a href="../rcvars.html#NUMOFMSG">$NUMOFMSG$</a> messages in chronological order&lt;br&gt;
 &lt;/address&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;a href="$TIDXFNAME$"&gt;Thread Index&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="<a href="../rcvars.html#TIDXFNAME">$TIDXFNAME$</a>"&gt;Thread Index&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;
 Listing format is the following:
@@ -205,8 +391,8 @@ Listing format is the following:
   --&gt;
 <b>&lt;<a href="litemplate.html">LITEMPLATE</a>&gt;</b>
 &lt;li&gt; 
-&lt;strong&gt;$SUBJECT:40$&lt;/strong&gt;
-($NUMFOLUP$) &lt;em&gt;$FROMNAME$&lt;/em&gt;&lt;br&gt;
+&lt;strong&gt;<a href="../rcvars.html#SUBJECT">$SUBJECT:40$</a>&lt;/strong&gt;
+(<a href="../rcvars.html#NUMFOLUP">$NUMFOLUP$</a>) &lt;em&gt;<a href="../rcvars.html#FROMNAME">$FROMNAME$</a>&lt;/em&gt;&lt;br&gt;
 <b>&lt;/LITEMPLATE&gt;</b>
  
 <b>&lt;<a href="listend.html">LISTEND</a>&gt;</b>
@@ -214,7 +400,7 @@ Listing format is the following:
 &lt;p&gt;
 &lt;hr&gt;
 &lt;strong&gt;
-&lt;a href="http://foo.org/"&gt;Home&lt;/a&gt;
+&lt;a href="http://example.com/"&gt;Home&lt;/a&gt;
 &lt;/strong&gt;
 &lt;p&gt;
 <b>&lt;/LISTEND&gt;</b>
@@ -223,11 +409,11 @@ Listing format is the following:
 <b>&lt;<a href="thead.html">THEAD</a>&gt;</b>
 &lt;address&gt;
 Thread index&lt;br&gt;
-Last updated: $LOCALDATE$&lt;br&gt;
-$NUMOFMSG$ messages&lt;br&gt;
+Last updated: <a href="../rcvars.html#LOCALDATE">$LOCALDATE$</a>&lt;br&gt;
+<a href="../rcvars.html#NUMOFMSG">$NUMOFMSG$</a> messages&lt;br&gt;
 &lt;/address&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;a href="$IDXFNAME$"&gt;Main Index&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="<a href="../rcvars.html#IDXFNAME">$IDXFNAME$</a>"&gt;Main Index&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;hr&gt;
 <b>&lt;/THEAD&gt;</b>
@@ -277,30 +463,41 @@ MHonArc test archive
  
 <b>&lt;<a href="msgfoot.html">MSGFOOT</a>&gt;</b>
 &lt;strong&gt;
-&lt;a href="http://foo.org/"&gt;Home&lt;/a&gt; |
-&lt;a href="$IDXFNAME$"&gt;Main Index&lt;/a&gt; |
-&lt;a href="$TIDXFNAME$"&gt;Thread Index&lt;/a&gt;
+&lt;a href="http://example.com/"&gt;Home&lt;/a&gt; |
+&lt;a href="<a href="../rcvars.html#IDXFNAME">$IDXFNAME$</a>"&gt;Main Index&lt;/a&gt; |
+&lt;a href="<a href="../rcvars.html#TIDXFNAME">$TIDXFNAME$</a>"&gt;Thread Index&lt;/a&gt;
 &lt;/strong&gt;
 <b>&lt;/MSGFOOT&gt;</b>
  
 &lt;!--=== Icons =============================================================--&gt;
 <b>&lt;<a href="icons.html">ICONS</a>&gt;</b>
-application/octet-stream:http://foo.org/icons/binary.xbm
-application/postscript:http://foo.org/icons/postscript.xbm
-audio/basic:http://foo.org/icons/sound.xbm
-image/gif:http://foo.org/icons/image.xbm
-image/jpeg:http://foo.org/icons/image.xbm
-image/tiff:http://foo.org/icons/image.xbm
-multipart/alternative:http://foo.org/icons/alternative.xbm
-multipart/digest:http://foo.org/icons/text.xbm
-multipart/mixed:http://foo.org/icons/mixed.xbm
-multipart/parallel:http://foo.org/icons/mixed.xbm
-text/richtext:http://foo.org/icons/mixed.xbm
-text/html:http://foo.org/icons/mixed.xbm
-text/plain:http://foo.org/icons/text.xbm
-unknown:http://foo.org/icons/unknown.doc.xbm
-video/mpeg:http://foo.org/icons/movie.xbm
-video/quicktime:http://foo.org/icons/movie.xbm
+application/*;[20x22]/icons/generic.gif
+application/msword;[20x22]/icons/layout.gif
+application/postscript;[20x22]/icons/ps.gif
+application/rtf;[20x22]/icons/layout.gif
+application/x-csh;[20x22]/icons/script.gif
+application/x-dvi;[20x22]/icons/dvi.gif
+application/x-gtar;[20x22]/icons/tar.gif
+application/x-gzip;[20x22]/icons/compressed.gif
+application/x-ksh;[20x22]/icons/script.gif
+application/x-latex;[20x22]/icons/tex.gif
+application/octet-stream;[20x22]/icons/binary.gif
+application/x-patch;[20x22]/icons/patch.gif
+application/pdf;[20x22]/icons/pdf.gif
+application/x-script;[20x22]/icons/script.gif
+application/x-sh;[20x22]/icons/script.gif
+application/x-tar;[20x22]/icons/tar.gif
+application/x-tex;[20x22]/icons/tex.gif
+application/x-zip-compressed;[20x22]/icons/compressed.gif
+application/zip;[20x22]/icons/compressed.gif
+audio/*;[20x22]/icons/sound1.gif
+chemical/*;[20x22]/icons/sphere2.gif
+image/*;[20x22]/icons/image2.gif
+message/external-body;[20x22]/icons/link.gif
+multipart/*;[20x22]/icons/layout.gif
+text/*;[20x22]/icons/text.gif
+video/*;[20x22]/icons/movie.gif
+*/*;[20x22]/icons/generic.gif
 <b>&lt;/ICONS&gt;</b>
 </PRE>
 
@@ -320,6 +517,7 @@ video/quicktime:http://foo.org/icons/movie.xbm
 <h2><a name="seealso">See Also</a></h2>
 
 <p>
+<a href="lang.html">LANG</a>
 </p>
 
 <!-- *************************************************************** -->
@@ -330,11 +528,11 @@ video/quicktime:http://foo.org/icons/movie.xbm
 <!--/x-rc-nav-->
 <hr>
 <address>
-$Date: 2003/01/02 23:04:56 $ <br>
+$Date: 2003/08/07 05:59:39 $ <br>
 <img align="top" src="../monicon.png" alt="">
 <a href="http://www.mhonarc.org/"
 ><strong>MHonArc</strong></a><br>
-Copyright &#169; 1997-1999, <a href="http://www.earlhood.com/"
+Copyright &#169; 1997-1999,2003, <a href="http://www.earlhood.com/"
 >Earl Hood</a>, <a href="mailto:mhonarc@mhonarc.org"
 > mhonarc@mhonarc.org</a><br>
 </address>

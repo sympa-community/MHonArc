@@ -13,6 +13,38 @@
 
 YYYY/MM/DD
 ============================================================================
+2003/08/07	(2.6.7)
+
+* Bug Fixes:
+
+    Bug ID  Summary
+    ------  ------------------------------------------------------------
+     4569   Problem with unfolding can mess up boundary processing in
+	    multipart messages.
+     4594   Initial space on lines removed when using fancyquote.
+    ------  ------------------------------------------------------------
+    <https://savannah.nongnu.org/bugs/?group=mhonarc>
+
+* Added LANG resource to define locale.  Affects resource filename
+  resolution and message subject and author sorting.
+
+* readmail.pl updated to define the following special header field
+  keys passed to filter routines:
+
+    x-mha-content-type	  The media type of the entity extracted from
+			  content-type entity header
+    x-mha-part-number	  The relative part number of the entity with
+			  respect to parent entity.  To get the
+			  absolute part number, use
+			  readmail::get_full_part_number($fields).
+    x-mha-parent-header	  Reference to parent header fields hash.
+
+  This, and other data structures, are now mentioned in the MIMEFILTERS
+  resource page.
+
+* Text/richtext tag, <samepage>, is quietly dropped in mhtxtenrich.pl.
+
+============================================================================
 2003/07/21	(2.6.6)
 
 * Bug Fixes:
@@ -2530,4 +2562,4 @@ YYYY/MM/DD
 
 =======================================================================
 Earl Hood, mhonarc@mhonarc.org
-$Id: CHANGES,v 1.113 2003/07/21 16:32:02 ehood Exp $
+$Id: CHANGES,v 1.116 2003/08/07 21:34:27 ehood Exp $

@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhtxthtml.pl,v 2.33 2003/07/15 20:12:16 ehood Exp $
+##	$Id: mhtxthtml.pl,v 2.34 2003/08/07 21:24:53 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -411,8 +411,11 @@ sub resolve_cid {
     }
 
     # Get content-type of data and return if type is excluded
-    my $ctype = $href->{'fields'}{'content-type'}[0];
+    my $ctype = $href->{'fields'}{'x-mha-content-type'};
+    if (!defined($ctype)) {
+      $ctype = $href->{'fields'}{'content-type'}[0];
       ($ctype) = $ctype =~ m{^\s*([\w\-\./]+)};
+    }
     return ""  if readmail::MAILis_excluded($ctype);
 
     require 'mhmimetypes.pl';

@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhtxtplain.pl,v 2.39 2003/07/20 20:52:38 ehood Exp $
+##	$Id: mhtxtplain.pl,v 2.40 2003/08/02 20:38:14 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -358,6 +358,8 @@ sub filter {
 		    $chunk = $$data;
 		    $$data = '';
 		}
+		$chunk =~ s/^[ ]//mg;	# remove space-stuffing
+
 	    } else {
 		# Quoted text: It would be nice to not have
 		# to compile a new pattern each time.
@@ -369,10 +371,8 @@ sub filter {
 		    $chunk = $$data;
 		    $$data = '';
 		}
-		$chunk =~ s/^$qd_re//mg;
+		$chunk =~ s/^$qd ?//mg; # remove quote indi and space-stuffing
 	    }
-	    $chunk =~ s/^$qd ?//mg;  # N.B. also takes care of
-				     # space-stuffing
 	    $chunk =~ s/^-- $/--/mg; # special case for '-- '
 
 	    my @paras = split(/(\n\n)/, $chunk);
@@ -447,7 +447,7 @@ sub filter {
 
 	# Compress '>'s to have no spacing, makes latter patterns
 	# simplier.
-	$$data =~ s/(?:^|\G(${HQuoteChars}))[ ]?/$1/gm;
+	$$data =~ s/(?:^[ ]?|\G)(${HQuoteChars})[ ]?/$1/gmo;
 	while (length($$data) > 0) {
 	    ($qd) = $$data =~ /\A((?:${HQuoteChars})*)/o;
 	    $chunk = '';
