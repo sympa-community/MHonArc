@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: MhaEncode.pm,v 1.2 2002/12/26 21:57:05 ehood Exp $
+##	$Id: MhaEncode.pm,v 1.3 2003/03/05 22:17:15 ehood Exp $
 ##  Author:
 ##      Earl Hood       earl@earlhood.com
 ##  Description:
@@ -196,16 +196,16 @@ sub str2sgml {
 	if ($$data_r =~ /[\x80-\xFF]/) {
 	    $charset = 'iso-8859-1';
 	} else {
-	    $$data_r =~ s/([\x22\x26\x3C\x3E\x40])/$HTMLSpecials{$1}/g;
+	    $$data_r =~ s/([$HTMLSpecials])/$HTMLSpecials{$1}/go;
 	    return $$data_r;
 	}
     }
     if ($charset eq 'utf-8' || $charset eq 'utf8') {
-	$$data_r =~ s/([\x22\x26\x3C\x3E\x40])/$HTMLSpecials{$1}/g;
+	$$data_r =~ s/([$HTMLSpecials])/$HTMLSpecials{$1}/go;
 	return $$data_r;
     }
     MHonArc::Char::map_conv($data_r, $charset, $char_maps);
-    $$data_r =~ s/([\x22\x26\x3C\x3E\x40])/$HTMLSpecials{$1}/g;
+    $$data_r =~ s/([$HTMLSpecials])/$HTMLSpecials{$1}/go;
     $$data_r;
 }
 
@@ -267,7 +267,7 @@ L<MHonArc::UTF8|MHonArc::UTF8>
 
 =head1 VERSION
 
-C<$Id: MhaEncode.pm,v 1.2 2002/12/26 21:57:05 ehood Exp $>
+C<$Id: MhaEncode.pm,v 1.3 2003/03/05 22:17:15 ehood Exp $>
 
 =head1 AUTHOR
 

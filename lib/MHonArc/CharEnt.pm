@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: CharEnt.pm,v 1.13 2002/12/26 21:57:04 ehood Exp $
+##	$Id: CharEnt.pm,v 1.14 2003/03/05 22:17:15 ehood Exp $
 ##  Author:
 ##      Earl Hood       earl@earlhood.com
 ##  Description:
@@ -119,7 +119,7 @@ sub str2sgml {
     }
     # If us-ascii, use simple s/// operation.
     if ($charset eq 'us-ascii') {
-	$$data_r =~ s/([\x22\x26\x3C\x3E\x40\xA0])/$HTMLSpecials{$1}/g;
+	$$data_r =~ s/([$HTMLSpecials])/$HTMLSpecials{$1}/go;
 	return $$data_r;
     }
 
@@ -249,7 +249,7 @@ difficult, but this may be a non-issue with most users.
 
 =head1 VERSION
 
-$Id: CharEnt.pm,v 1.13 2002/12/26 21:57:04 ehood Exp $
+$Id: CharEnt.pm,v 1.14 2003/03/05 22:17:15 ehood Exp $
 
 =head1 AUTHOR
 

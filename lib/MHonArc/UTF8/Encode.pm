@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: Encode.pm,v 1.1 2002/12/18 05:38:44 ehood Exp $
+##	$Id: Encode.pm,v 1.2 2003/03/05 22:17:15 ehood Exp $
 ##  Author:
 ##      Earl Hood       earl@earlhood.com
 ##  Description:
@@ -123,17 +123,17 @@ sub str2sgml {
 	if ($$text_r =~ /[\x80-\xFF]/) {
 	    $charset = 'iso-8859-1';
 	} else {
-	    $$text_r =~ s/([\x22\x26\x3C\x3E\x40])/$HTMLSpecials{$1}/g;
+	    $$text_r =~ s/([$HTMLSpecials])/$HTMLSpecials{$1}/go;
 	    return $$text_r;
 	}
     }
     if ($charset eq 'utf-8' || $charset eq 'utf8') {
-	$$text_r =~ s/([\x22\x26\x3C\x3E\x40])/$HTMLSpecials{$1}/g;
+	$$text_r =~ s/([$HTMLSpecials])/$HTMLSpecials{$1}/go;
 	return $$text_r;
     }
     eval {
 	Encode::from_to($$text_r, $charset, 'utf8');
-	$$text_r =~ s/([\x22\x26\x3C\x3E\x40])/$HTMLSpecials{$1}/g;
+	$$text_r =~ s/([$HTMLSpecials])/$HTMLSpecials{$1}/go;
     };
     if ($@) {
 	# fallback implementation.
@@ -190,7 +190,7 @@ L<MHonArc::UTF8|MHonArc::UTF8>
 
 =head1 VERSION
 
-C<$Id: Encode.pm,v 1.1 2002/12/18 05:38:44 ehood Exp $>
+C<$Id: Encode.pm,v 1.2 2003/03/05 22:17:15 ehood Exp $>
 
 =head1 AUTHOR
 

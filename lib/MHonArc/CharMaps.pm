@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: CharMaps.pm,v 1.1 2002/12/18 05:38:43 ehood Exp $
+##	$Id: CharMaps.pm,v 1.2 2003/03/05 22:17:15 ehood Exp $
 ##  Author:
 ##      Earl Hood       earl@earlhood.com
 ##  Description:
@@ -27,19 +27,21 @@
 package MHonArc::CharMaps;
 
 use strict;
-use vars qw( @ISA @EXPORT %HTMLSpecials );
+use vars qw( @ISA @EXPORT %HTMLSpecials $HTMLSpecials );
 
 use Carp;
 use Exporter ();
 @ISA = qw( Exporter );
-@EXPORT = qw( %HTMLSpecials );
+@EXPORT = qw( $HTMLSpecials %HTMLSpecials );
 
+# The following two variables need to be in sync.  The hash version should
+# have contain mappings for each character in the scalar version.
+$HTMLSpecials = "\x22\x26\x3C\x3E";
 %HTMLSpecials = (
     "\x22" =>	'&quot;',   	# ISOnum : Quotation mark
     "\x26" =>	'&amp;',  	# ISOnum : Ampersand
     "\x3C" =>	'&lt;',   	# ISOnum : Less-than sign
     "\x3E" =>	'&gt;',   	# ISOnum : Greater-than sign
-    "\x40" =>	'&#x40;',   	#        : At sign (useful for mail addresses)
 );
 
 sub new {
@@ -111,7 +113,7 @@ MHonArc::CharMaps provides management for character mapping tables.
 
 =head1 VERSION
 
-$Id: CharMaps.pm,v 1.1 2002/12/18 05:38:43 ehood Exp $
+$Id: CharMaps.pm,v 1.2 2003/03/05 22:17:15 ehood Exp $
 
 =head1 AUTHOR
 

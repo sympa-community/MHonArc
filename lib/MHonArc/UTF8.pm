@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: UTF8.pm,v 1.5 2002/12/20 08:01:11 ehood Exp $
+##	$Id: UTF8.pm,v 1.6 2003/03/05 22:17:15 ehood Exp $
 ##  Author:
 ##      Earl Hood       earl@earlhood.com
 ##  Description:
@@ -65,7 +65,7 @@ BEGIN {
 sub _entify {
     my $text	= shift;
     my $text_r  = ref($text) ? $text : \$text;
-    $$text_r =~ s/([\x22\x26\x3C\x3E\x40])/$HTMLSpecials{$1}/g;
+    $$text_r =~ s/([$HTMLSpecials])/$HTMLSpecials{$1}/go;
     $$text_r;
 }
 
@@ -179,7 +179,7 @@ resources in the MHonArc documentation.
 
 =head1 VERSION
 
-C<$Id: UTF8.pm,v 1.5 2002/12/20 08:01:11 ehood Exp $>
+C<$Id: UTF8.pm,v 1.6 2003/03/05 22:17:15 ehood Exp $>
 
 =head1 AUTHOR
 

@@ -13,6 +13,20 @@
 
 YYYY/MM/DD
 ============================================================================
+2003/03/11	(2.6.2)
+
+* Bug Fixes:
+
+  Bug   Resolution Fixed       Summary                                   
+  ID               Release                                               
+  2738  Fixed      2.6.2       An illegal From: address can cause MHonArc
+			       to hang                                   
+
+  <http://savannah.nongnu.org/bugs/index.php?group_id=1968
+   &set=custom&advsrch=0&msort=0&report_id=105&go_report=Go
+   &fix_release=2.6.2&chunksz=50>
+
+============================================================================
 2003/02/22	(2.6.1)
 
 * Bug Fixes: See
@@ -2428,4 +2442,4 @@ YYYY/MM/DD
 
 =======================================================================
 Earl Hood, mhonarc@mhonarc.org
-$Id: CHANGES,v 1.108 2003/02/23 00:12:07 ehood Exp $
+$Id: CHANGES,v 1.109 2003/03/12 01:31:02 ehood Exp $

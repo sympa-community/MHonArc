@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##      $Id: RFC822.pm,v 1.1 2003/01/04 03:01:56 ehood Exp $
+##      $Id: RFC822.pm,v 1.2 2003/03/07 08:03:41 ehood Exp $
 ##  Author:
 ##      Earl Hood	earl@earlhood.com
 ##	Module adapted to Perl 5 from Perl 4 library:
@@ -145,12 +145,12 @@ sub tokenise {
 	} elsif ($firstchar eq '"') {
 	    # a quoted string.
 	    # XXX we don't prohibit bare CR.
-	    s/^(\"($qp_or_bs_end|[^\\"])*\")//o;
+	    s/^(\"(?:$qp_or_bs_end|[^\\"])*(?:\"|\Z))//o;
 	    push (@outtoks, $1);
 	} elsif ($firstchar eq '[') {
 	    # a domain literal.
 	    # XXX we don't prohibit bare CR or '['.
-	    s/^(\[($qp_or_bs_end|[^\\\]])*(\]|$))//o;
+	    s/^(\[(?:$qp_or_bs_end|[^\\\]])*(?:\]|$))//o;
 	    push (@outtoks, $1);
 	} elsif ($firstchar eq '(') {
 	    # a comment.

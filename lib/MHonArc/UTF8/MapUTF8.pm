@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: MapUTF8.pm,v 1.1 2002/12/18 05:38:44 ehood Exp $
+##	$Id: MapUTF8.pm,v 1.2 2003/03/05 22:17:15 ehood Exp $
 ##  Author:
 ##      Earl Hood       earl@earlhood.com
 ##  Description:
@@ -119,22 +119,22 @@ sub str2sgml{
 	if ($$text_r =~ /[\x80-\xFF]/) {
 	    $charset = 'iso-8859-1';
 	} else {
-	    $$text_r =~ s/([\x22\x26\x3C\x3E\x40])/$HTMLSpecials{$1}/g;
+	    $$text_r =~ s/([$HTMLSpecials])/$HTMLSpecials{$1}/go;
 	    return $$text_r;
 	}
     }
     if ($charset eq 'utf-8' || $charset eq 'utf8') {
-	$$text_r =~ s/([\x22\x26\x3C\x3E\x40])/$HTMLSpecials{$1}/g;
+	$$text_r =~ s/([$HTMLSpecials])/$HTMLSpecials{$1}/go;
 	return $$text_r;
     }
     if ($charset eq 'utf-8' || $charset eq 'utf8') {
-	$$text_r =~ s/([\x22\x26\x3C\x3E\x40])/$HTMLSpecials{$1}/g;
+	$$text_r =~ s/([$HTMLSpecials])/$HTMLSpecials{$1}/go;
 	return $$text_r;
     }
     if (Unicode::MapUTF8::utf8_supported_charset($charset)) {
 	$$text_r = Unicode::MapUTF8::to_utf8(
 	    {-string => $$text_r, -charset => $charset});
-	$$text_r =~ s/([\x22\x26\x3C\x3E\x40])/$HTMLSpecials{$1}/g;
+	$$text_r =~ s/([$HTMLSpecials])/$HTMLSpecials{$1}/go;
 	return $$text_r;
     }
     # Invoke fallback implementation.
@@ -190,7 +190,7 @@ L<MHonArc::UTF8|MHonArc::UTF8>
 
 =head1 VERSION
 
-C<$Id: MapUTF8.pm,v 1.1 2002/12/18 05:38:44 ehood Exp $>
+C<$Id: MapUTF8.pm,v 1.2 2003/03/05 22:17:15 ehood Exp $>
 
 =head1 AUTHOR
 

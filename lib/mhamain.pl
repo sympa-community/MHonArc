@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhamain.pl,v 2.61 2003/02/23 00:19:41 ehood Exp $
+##	$Id: mhamain.pl,v 2.63 2003/03/12 01:31:02 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -29,7 +29,7 @@ package mhonarc;
 
 require 5;
 
-$VERSION = '2.6.1';
+$VERSION = '2.6.2';
 $VINFO =<<EndOfInfo;
   MHonArc v$VERSION (Perl $] $^O)
   Copyright (C) 1995-2003  Earl Hood, mhonarc\@mhonarc.org
@@ -1063,7 +1063,8 @@ sub output_mail {
     if ($SINGLE) {
 	$msghandle = \*STDOUT;
     } else {
-	($msghandle, $tmppathname) = file_temp('tmsgXXXXXXXXXX', $OUTDIR);
+	($msghandle, $tmppathname) =
+	    file_temp('tmsg'.$i_p0.'_XXXXXXXXXX', $OUTDIR);
     }
 
     ## Output HTML header
@@ -1236,9 +1237,10 @@ sub output_mail {
     if (!$nocustom && $DoFolRefs && defined($Refs{$index})) {
 	$tmp2 = 0;	# flag for when first ref printed
 	if (scalar(@{$Refs{$index}})) {
-	    foreach (@{$Refs{$index}}) {
-		next  unless defined($MsgId{$_});
-		next  unless defined($IndexNum{$MsgId{$_}});
+	    my($ref_msgid, $ref_index, $ref_num);
+	    foreach $ref_msgid (@{$Refs{$index}}) {
+		next  unless defined($ref_index = $MsgId{$ref_msgid});
+		next  unless defined($ref_num = $IndexNum{$ref_index});
 		if (!$tmp2) {
 		    ($template = $REFSBEGIN) =~
 			s/$VarExp/&replace_li_var($1,$index)/geo;
@@ -1246,7 +1248,7 @@ sub output_mail {
 		    $tmp2 = 1;
 		}
 		($template = $REFSLITXT) =~
-		    s/$VarExp/&replace_li_var($1,$MsgId{$_})/geo;
+		    s/$VarExp/&replace_li_var($1,$ref_index)/geo;
 		print $msghandle $template;
 	    }
 
