@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhutil.pl,v 2.15 2002/07/27 05:13:13 ehood Exp $
+##	$Id: mhutil.pl,v 2.18 2002/08/04 03:47:06 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -45,7 +45,14 @@ my %HFieldsAddr = (
     'cc'		=> 1,
     'dcc'		=> 1,
     'from'		=> 1,
+    'mail-reply-to'	=> 1,
+    'original-bcc'	=> 1,
+    'original-cc'	=> 1,
+    'original-from'	=> 1,
+    'original-sender'	=> 1,
+    'original-to'	=> 1,
     'reply-to'		=> 1,
+    'resent-bcc'	=> 1,
     'resent-cc'		=> 1,
     'resent-from'	=> 1,
     'resent-sender'	=> 1,
@@ -53,6 +60,7 @@ my %HFieldsAddr = (
     'return-path'	=> 1,
     'sender'		=> 1,
     'to'		=> 1,
+    'x-envelope'	=> 1,
 );
 
 
@@ -81,9 +89,13 @@ sub clip_text {
 
 	# strip tags
 	if ($has_tags) {
-	    $subtext =~ s/\A[^<]*>//; # clipped tag
+	    # Strip full tags
 	    $subtext =~ s/<[^>]*>//g;
-	    $subtext =~ s/<[^>]*\Z//; # clipped tag
+	    # Check if clipped part of a tag
+	    if ($subtext =~ s/<[^>]*\Z//) {
+		my $gt = index($$str, '>', $pos);
+		$pos = ($gt < 0) ? $html_len : ($gt+1);
+	    }
 	}
 
 	# check for clipped entity reference
@@ -94,8 +106,7 @@ sub clip_text {
 		$subtext .= substr($$str, $pos);
 		$pos = $html_len;
 	    } else {
-		$subtext .= substr($$str, $pos, $semi-$pos+1)
-		    if $semi > $pos;
+		$subtext .= substr($$str, $pos, $semi-$pos+1);
 		$pos = $semi+1;
 	    }
 	}
@@ -464,7 +475,7 @@ sub mlist_field_add_links {
     foreach (split(/(<[^>]+>)/, $txt)) {
 	if (/^</) {
 	    chop; substr($_, 0, 1) = "";
-	    $ret .= qq|&lt;<A HREF="$_">$_</A>&gt;|;
+	    $ret .= qq|&lt;<a href="$_">$_</a>&gt;|;
 	} else {
 	    $ret .= &$MHeadCnvFunc($_);
 	}
@@ -518,7 +529,7 @@ sub newsurl {
     $str =~ s/\s//g;			# Strip whitespace
     my @groups = split(/,/, $str);	# Split groups
     foreach (@groups) {			# Make hyperlinks
-	s|(.*)|<A HREF="news:$1">$1</A>|;
+	s|(.*)|<a href="news:$1">$1</a>|;
     }
     $h . join(', ', @groups);	# Rejoin string
 }
@@ -559,7 +570,7 @@ sub mailUrl {
     $url =~ s/\$TOADDRNAME\$/$toname/g;
     $url =~ s/\$TOADDRDOMAIN\$/$todomain/g;
     $url =~ s/\$ADDR\$/$to/g;
-    qq|<A HREF="$url">| . &htmlize(&rewrite_address($eaddr)) . q|</A>|;
+    qq|<a href="$url">| . &htmlize(&rewrite_address($eaddr)) . q|</a>|;
 }
 
 ##---------------------------------------------------------------------------##

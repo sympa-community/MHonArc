@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##      $Id: mhopt.pl,v 2.30 2002/07/27 05:13:13 ehood Exp $
+##      $Id: mhopt.pl,v 2.31 2002/09/04 04:09:30 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -569,9 +569,8 @@ sub get_resources {
     ## Clear main flag if genidx and thread specified
     $MAIN = 0  if $IDXONLY && $THREAD;
 
-    @DateFields	 = split(/:/, $opt{'datefields'})  if $opt{'datefields'};
-    foreach (@DateFields) { s/\s//g; tr/A-Z/a-z/; }
-    @FromFields	 = split(/:/, $opt{'fromfields'})  if $opt{'fromfields'};
+    @DateFields	 = split(/[:;]/, $opt{'datefields'})  if $opt{'datefields'};
+    @FromFields	 = split(/[:;]/, $opt{'fromfields'})  if $opt{'fromfields'};
     foreach (@FromFields) { s/\s//g; tr/A-Z/a-z/; }
 
     ($TSliceNBefore, $TSliceNAfter, $TSliceInclusive) =

@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhidxrc.pl,v 2.11 2001/11/23 20:42:39 ehood Exp $
+##	$Id: mhidxrc.pl,v 2.12 2002/09/04 04:09:30 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -361,8 +361,21 @@ unless ($TSLICELIENDCUR) {
 ##-------------------##
 
 unless (@DateFields) {
-    @DateFields = ('received', 'date');
+    @DateFields  = ('received', 'date');
+    @_DateFields = ( ['received',0], ['date',0] );
     $IsDefault{'DATEFIELDS'} = 1;
+} else {
+    local($_);
+    my $f;
+    foreach (@DateFields) {
+	s/\s//g;  tr/A-Z/a-z/;
+	$f = $_;
+	if ($f =~ s/\[(\d+)\]//) {
+	    push(@_DateFields, [ $f, $1 ]);
+	} else {
+	    push(@_DateFields, [ $f, 0 ]);
+	}
+    }
 }
 unless (@FromFields) {
     @FromFields = ('from', 'mail-reply-to', 'reply-to', 'return-path',

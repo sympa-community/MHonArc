@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: iso2022jp.pl,v 1.7 2002/07/28 23:21:53 ehood Exp $
+##	$Id: iso2022jp.pl,v 1.8 2002/07/30 18:20:46 ehood Exp $
 ##  Author(s):
 ##      Earl Hood       mhonarc@mhonarc.org
 ##      NIIBE Yutaka	gniibe@mri.co.jp
@@ -122,17 +122,17 @@ sub jp2022_to_html {
 
 
 ##---------------------------------------------------------------------------##
-##	clip($str, $length, $html): Clip an iso-2022-jp string.
+##	clip($str, $length, $is_html, $has_tags): Clip an iso-2022-jp string.
 ##
-##   The last argument $html specifies '&' should be treated
+##   The last argument $is_html specifies '&' should be treated
 ##   as HTML character or not.
-##   (i.e., the length of '&amp;' will be 1 if $html).
+##   (i.e., the length of '&amp;' will be 1 if $is_html).
 ##
-sub clip {	# &clip($str, 10, 1);
+sub clip {	# &clip($str, 10, 1, 1);
     my($str) = shift;
     my($length) = shift;
-    my($html) = shift;
-    my($tags) = shift;	# Not implemented, yet
+    my($is_html) = shift;
+    my($has_tags) = shift;
     my($ret, $inascii);
     local($_) = $str;
 
@@ -147,17 +147,22 @@ sub clip {	# &clip($str, 10, 1);
 	    $ret .= $1;
 	    while(1) {
 		if (s/^([^\033])//) {      # ASCII plain text
-		    if ($html) {
-			if ($1 eq '&') {
-			    s/^([^\;]*\;)//;
-			    $ret .= "&$1";
+		    if ($is_html) {
+			if (($1 eq '<') && $has_tags) {
+			    s/^[^>\033]*>//;
 			} else {
-			    $ret .= $1;
+			    if ($1 eq '&') {
+				s/^([^\;]*\;)//;
+				$ret .= "&$1";
+			    } else {
+				$ret .= $1;
+			    }
+			    $length--;
 			}
 		    } else {
 			$ret .= $1;
+			$length--;
 		    }
-		    $length--;
 		} elsif (s/(\033\.[A-F])//) { # G2 Designate Sequence
 		    $ret .= $1;
 		} elsif (s/(\033N[ -])//) { # Single Shift Sequence
@@ -174,6 +179,8 @@ sub clip {	# &clip($str, 10, 1);
 	    while (1) {
 		if (s/^([!-~][!-~])//) { # Double Char plain text
 		    $ret .= $1;
+		    # The length of a double-byte-char is assumed 2.
+		    # If we consider compatibility with UTF-8, it should be 1.
 		    $length -= 2;
 		} elsif (s/(\033\.[A-F])//) { # G2 Designate Sequence
 		    $ret .= $1;

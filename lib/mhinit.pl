@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhinit.pl,v 2.36 2002/07/27 05:13:13 ehood Exp $
+##	$Id: mhinit.pl,v 2.37 2002/09/04 04:09:30 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -397,6 +397,9 @@ $UsingLASTPG = defined($ENV{'M2H_USINGLASTPG'}) ? $ENV{'M2H_USINGLASTPG'} : 1;
 		    split(/:/, $ENV{'M2H_DATEFIELDS'}) : ();
 @FromFields  = defined($ENV{'M2H_FROMFIELDS'}) ?
 		    split(/:/, $ENV{'M2H_FROMFIELDS'}) : ();
+
+# Version of @Datefiles in parsed format
+@_DateFields = ( );
 
 ($TSliceNBefore, $TSliceNAfter, $TSliceInclusive) =
     defined($ENV{'M2H_TSLICE'}) ?

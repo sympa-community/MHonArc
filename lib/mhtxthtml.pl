@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhtxthtml.pl,v 2.20 2001/12/24 13:10:33 ehood Exp $
+##	$Id: mhtxthtml.pl,v 2.21 2002/09/04 04:09:30 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -37,18 +37,17 @@ my $Url	= '(\w+://|\w+:)';
 
 # Script related attributes
 my $SAttr = q/\b(?:onload|onunload|onclick|ondblclick|/.
-	    q/onmouse(?:down|up|over|move|out)|/.
-	    q/onkey(?:press|down|up))\b/;
+	         q/onmouse(?:down|up|over|move|out)|/.
+	         q/onkey(?:press|down|up)|style)\b/;
 # Script/questionable related elements
-my $SElem = q/\b(?:applet|base|embed|form|ilayer|input|layer|link|meta|object|/.
-	    q/option|param|select|textarea)\b/;
+my $SElem = q/\b(?:applet|base|embed|form|ilayer|input|layer|link|meta|/.
+	         q/object|option|param|select|textarea)\b/;
 
 # Elements with auto-loaded URL attributes
 my $AElem = q/\b(?:img|body|iframe|frame|object|script|input)\b/;
-	    # XXX: What about INS, DEL?
 # URL attributes
-my $UAttr = q/\b(?:href|src|background|classid|data|longdesc)\b/;
-	    # XXX: What about codebase, usemap?
+my $UAttr = q/\b(?:action|background|cite|classid|codebase|data|datasrc|/.
+	         q/dynsrc|for|href|longdesc|profile|src|url|usemap)\b/;
 
 ##---------------------------------------------------------------------------
 ##	The filter must modify HTML content parts for merging into the

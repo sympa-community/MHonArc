@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: UTF8.pm,v 1.2 2002/07/27 05:13:14 ehood Exp $
+##	$Id: UTF8.pm,v 1.3 2002/07/30 05:10:30 ehood Exp $
 ##  Author:
 ##      Earl Hood       earl@earlhood.com
 ##  Description:
@@ -102,9 +102,13 @@ sub clip {
 
 	# strip tags
 	if ($has_tags) {
-	    $subtext =~ s/\A[^<]*>//; # clipped tag
+	    # Strip full tags
 	    $subtext =~ s/<[^>]*>//g;
-	    $subtext =~ s/<[^>]*\Z//; # clipped tag
+	    # Check if clipped part of a tag
+	    if ($subtext =~ s/<[^>]*\Z//) {
+		my $gt = $u->index('>', $pos);
+		$pos = ($gt < 0) ? $html_len : ($gt+1);
+	    }
 	}
 
 	# check for clipped entity reference
@@ -115,8 +119,7 @@ sub clip {
 		$subtext .= $u->substr($pos);
 		$pos = $html_len;
 	    } else {
-		$subtext .= $u->substr($pos, $semi-$pos+1)
-		    if $semi > $pos;
+		$subtext .= $u->substr($pos, $semi-$pos+1);
 		$pos = $semi+1;
 	    }
 	}

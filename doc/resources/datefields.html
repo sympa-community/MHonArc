@@ -49,12 +49,27 @@
 <hr>
 <h2>Description</h2>
 
-<p>DATEFIELDS specify the message header fields MHonArc will search to
+<p>DATEFIELDS specify the message header fields mhonarc will search to
 determine the dates of messages.  Each field will be checked in
 the ordered specified.
 </p>
 <p>The value of the DATEFIELDS is a colon separated
-list of message header fields to check.
+list of message header fields to check.  Since it is legal for
+multiple fields with the same name to appear in a message header
+(e.g. <tt>Received</tt>), indexed fields are supported.  For example,
+</p>
+<pre>
+<b>&lt;DateFields&gt;</b>
+received[1]:received[0]:date
+<b>&lt;/DateFields&gt;</b>
+</pre>
+<p>The example says that mhonarc should check the second received
+field, then the first received field, and then the first date field
+to determine the date of a message.
+</p>
+<p>Indexing starts at 0.  I.e. An index of 0 denotes the first
+occurrence of the field, 1 denotes the second, etc.
+If no integer index is specified, then 0 is used.
 </p>
 
 <!-- *************************************************************** -->
@@ -76,18 +91,54 @@ received:date
 <hr>
 <h2>Examples</h2>
 
-<p>By default. MHonArc looks at the <tt>Received</tt> fields of
-a message to determine a message's date.  This tends to be more accurate
-as it tells when the message was actually received.  However, you
-may want to have the date based upon the time the sender composed the
-message.  The <tt>Date</tt> field usually reflects the composition
-date.  Therefore, the following setting can be used:
+<h3>Using composition date</h3>
+<p>By default. mhonarc looks at the <tt>Received</tt> fields of
+a message to determine a message's date.  This tends to be more
+accurate as it tells when the message was actually received (it is
+better to trust a date/time you have control over vs what the sender
+has control over).  However, you may want to have the date based
+upon the time the sender composed the message.  The <tt>Date</tt>
+field usually reflects the composition date.  Therefore, the following
+setting can be used:
 </p>
 <pre>
 <b>&lt;DateFields&gt;</b>
 date:received
 <b>&lt;/DateFields&gt;</b>
 </pre>
+
+<h3>Indexed fields</h3>
+<p>Specified indexed fields can be used if mail you archive is known to
+following a specific delivery path.  Here is an example
+scenario:
+</p>
+<ol>
+<li>All incoming mail is first delivered to a central POP mail server
+    of our ISP.</li>
+<li><a href="http://www.tuxedo.org/~esr/fetchmail/"><tt>fetchmail</tt></a>
+    is used to download the mail from the POP server to our local
+    SMTP server.</li>
+<li>The local SMTP server delivers the mail to a local user account that
+    is used to archive the mail.</li>
+</ol>
+
+<p>With this scenario, we prefer to use the date stamp from the ISP
+server since our local system may not always be up.  Each step above
+causes a <tt>Received</tt> header field to be added to the message.
+Since <tt>Received</tt> fields are listed from final delivery point to
+starting delivery point (i.e. each step inserts a <tt>Received</tt>
+field above existing header fields), we want to base the message
+date on the 3rd <tt>Received</tt> field (the one created by the
+ISP mail server).  Hence, DATEFIELDS shall be set to the following:
+</p>
+<pre>
+<b>&lt;DateFields&gt;</b>
+received[2]:received[1]:received[0]:date
+<b>&lt;/DateFields&gt;</b>
+</pre>
+<p>We still specify fallback fields just-in-case.
+</p>
+
 
 <!-- *************************************************************** -->
 <hr>
@@ -101,6 +152,7 @@ date:received
 <h2>See Also</h2>
 
 <p>
+<a href="fromfields.html">FROMFIELDS</a>
 </p>
 
 <!-- *************************************************************** -->
@@ -111,11 +163,11 @@ date:received
 <!--/x-rc-nav-->
 <hr>
 <address>
-$Date: 2002/07/27 05:13:10 $ <br>
+$Date: 2002/09/04 04:09:30 $ <br>
 <img align="top" src="../monicon.png" alt="">
 <a href="http://www.mhonarc.org/"
 ><strong>MHonArc</strong></a><br>
-Copyright &#169; 1998, <a href="http://www.earlhood.com/"
+Copyright &#169; 1998,2002, <a href="http://www.earlhood.com/"
 >Earl Hood</a>, <a href="mailto:mhonarc@mhonarc.org"
 >mhonarc@mhonarc.org</a><br>
 </address>

@@ -1,13 +1,13 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhamain.pl,v 2.45 2002/07/28 23:24:35 ehood Exp $
+##	$Id: mhamain.pl,v 2.47 2002/09/04 04:09:30 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
 ##	Main library for MHonArc.
 ##---------------------------------------------------------------------------##
 ##    MHonArc -- Internet mail-to-HTML converter
-##    Copyright (C) 1995-2001	Earl Hood, mhonarc@mhonarc.org
+##    Copyright (C) 1995-2002	Earl Hood, mhonarc@mhonarc.org
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by
@@ -29,7 +29,7 @@ package mhonarc;
 
 require 5;
 
-$VERSION = "2.5.10";
+$VERSION = '2.5.12';
 $VINFO =<<EndOfInfo;
   MHonArc v$VERSION (Perl $] $^O)
   Copyright (C) 1995-2002  Earl Hood, mhonarc\@mhonarc.org
@@ -718,7 +718,7 @@ sub write_mail {
 ##
 sub read_mail_header {
     my $handle = shift;
-    my($index, $date, $tmp);
+    my($index, $date, $tmp, $i, $field, $value);
     my($from, $sub, $msgid, $ctype);
     local($_);
 
@@ -781,16 +781,23 @@ sub read_mail_header {
     ## Get date ##
     ##----------##
     $date = "";
-    foreach (@DateFields) {
-	next  unless defined($fields->{$_});
+    foreach (@_DateFields) {
+	($field, $i) = @{$_}[0,1];
+	next  unless defined($fields->{$field}) &&
+		     defined($value = $fields->{$field}[$i]);
 
 	## Treat received field specially
-	if ($_ eq 'received') {
-	    @array = split(/;/, $fields->{$_}[0]);
+	if ($field eq 'received') {
+	    @array = split(/;/, $value);
+	    if ((scalar(@array) <= 1) || (scalar(@array) > 2)) {
+		warn qq/\nWarning: Received header field looks improper:\n/,
+		       qq/         Received: $value\n/,
+		       qq/         Message-Id: <$msgid>\n/;
+	    }
 	    $date = pop @array;
 	## Any other field should just be a date
 	} else {
-	    $date = $fields->{$_}[0];
+	    $date = $value;
 	}
 	$date =~ s/^\s+//;  $date =~ s/\s+$//;
 
