@@ -1,13 +1,13 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	@(#) mhamain.pl 2.10 98/11/08 12:17:52
+##	@(#) mhamain.pl 2.23 01/06/10 17:37:25
 ##  Author:
-##      Earl Hood       earlhood@usa.net
+##      Earl Hood       mhonarc@pobox.com
 ##  Description:
 ##	Main library for MHonArc.
 ##---------------------------------------------------------------------------##
 ##    MHonArc -- Internet mail-to-HTML converter
-##    Copyright (C) 1995-1998	Earl Hood, earlhood@usa.net
+##    Copyright (C) 1995-2001	Earl Hood, mhonarc@pobox.com
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by
@@ -27,10 +27,10 @@
 
 package mhonarc;
 
-$VERSION = "2.3.3";
+$VERSION = "2.4.9";
 $VINFO =<<EndOfInfo;
   MHonArc v$VERSION (Perl $])
-  Copyright (C) 1995-1998  Earl Hood, earlhood\@usa.net
+  Copyright (C) 1995-2001  Earl Hood, mhonarc\@mhonarc.org
   MHonArc comes with ABSOLUTELY NO WARRANTY and MHonArc may be copied only
   under the terms of the GNU General Public License, which may be found in
   the MHonArc distribution.
@@ -43,25 +43,31 @@ $ArchiveOpen	= 0;
 
 $_msgid_cnt	= 0;
 
+my %_sig_org	= ();
+my @_term_sigs	= qw(
+    ABRT ALRM BUS FPE HUP ILL INT IOT PIPE POLL PROF QUIT SEGV
+    TERM TRAP USR1 USR2 VTALRM XCPU XFSZ
+);
+
+
 ###############################################################################
 ##	Public routines
 ###############################################################################
 
 ##---------------------------------------------------------------------------
-##	initialize() does some initialization stuff.
+##	initialize() does some initialization stuff.  Should be called
+##	right after mhamain.pl is called.
 ##
 sub initialize {
     ##	Turn off buffered I/O to terminal
-    local($curfh) = select(STDOUT);
-    $| = 1;
-    select($curfh);
+    my($curfh) = select(STDOUT);  $| = 1;  select($curfh);
 
     ##	Check what system we are executing under
-    require 'osinit.pl'	   || die("ERROR: Unable to require osinit.pl\n");
-    &OSinit();
+    require 'osinit.pl';  &OSinit();
 
     ##	Require essential libraries
-    require 'mhopt.pl'     || die("ERROR: Unable to require mhopt.pl\n");
+    require 'mhlock.pl';
+    require 'mhopt.pl';
 
     ##	Init some variables
     $ISLOCK     = 0;	# Database lock flag
@@ -79,18 +85,24 @@ sub open_archive {
     ## Set @ARGV if options passed in
     if (@_) { @OrgARGV = @ARGV; @ARGV = @_; }
 
-    ## Set options
-    local($optstatus);
+    ## Get options
+    my($optstatus);
     eval {
+	set_handler();
 	$optstatus = get_resources();
     };
 
     ## Check for error
     if ($@ || $optstatus <= 0) {
 	if ($@) {
-	    $CODE = int($!) ? int($!) : 255;
+	    if ($@ =~ /signal caught/) {
+		$CODE = 0;
+	    } else {
+		$CODE = int($!) ? int($!) : 255;
+	    }
 	    $ERROR = $@;
 	    warn "\n", $ERROR;
+
 	} else {
 	    if ($optstatus < 0) {
 		$CODE = $! = 255;
@@ -110,8 +122,13 @@ sub open_archive {
 ##	close_archive closes the archive.
 ##
 sub close_archive {
+    my $reset_sigs = shift;
+
     ## Remove lock
-    remove_lock_file();
+    &$UnlockFunc()  if defined(&$UnlockFunc);
+
+    ## Reset signal handlers
+    reset_handler()  if $reset_sigs;
 
     ## Stop timing
     eval { $EndTime = (times)[0]; };
@@ -153,9 +170,13 @@ sub process_input {
 
     # check for error
     if ($@) {
-	$CODE = (int($!) ? int($!) : 255)  unless $CODE;
+	if ($@ =~ /signal caught/) {
+	    $CODE = 0  unless $CODE;
+	} else {
+	    $CODE = (int($!) ? int($!) : 255)  unless $CODE;
+	}
 	$ERROR = $@;
-	&close_archive();
+	close_archive();
 	warn "\n", $ERROR;
 	return undef;
     }
@@ -194,7 +215,7 @@ sub doit {
 	if (!defined($NoteText)) {
 	    print STDOUT "Please enter note text (terminated with EOF char):\n"
 		unless $QUIET;
-	    $NoteText = join("", <STDIN>);
+	    $NoteText = join("", <$MhaStdin>);
 	}
 	return annotate(@ARGV, $NoteText);
     }
@@ -208,7 +229,6 @@ sub doit {
 
     ## HTML message listing to standard output.
     if ($IDXONLY) {
-	$QUIET = 0;
 	IDXPAGE: {
 	    &compute_page_total();
 	    if ($IdxPageNum && $MULTIIDX) {
@@ -292,8 +312,8 @@ sub doit {
 		}
 		$MBOX = 0;  $MH = 1;
 		print STDOUT "\nReading $mbox "  unless $QUIET;
-		@files = sort numerically grep(/$MHPATTERN/o,
-					       readdir(MAILDIR));
+		@files = sort { $a <=> $b } grep(/$MHPATTERN/o,
+						 readdir(MAILDIR));
 		closedir(MAILDIR);
 		foreach (@files) {
 		    $mesgfile = "${mbox}${DIRSEP}${_}";
@@ -325,8 +345,10 @@ sub doit {
 			if ($SLOW && $DoArchive) {
 			    &output_mail($index, 1, 1);
 			    $Update{$IndexNum{$index}} = 1;
-			    undef $MsgHead{$index};
-			    undef $Message{$index};
+			}
+			if ($SLOW || !$DoArchive) {
+			    delete $MsgHead{$index};
+			    delete $Message{$index};
 			}
 		    }
 		    close($fh);
@@ -335,7 +357,7 @@ sub doit {
 	    ## UUCP mail box file
 	    } else {
 		if ($mbox eq "-") {
-		    $fh = 'STDIN';
+		    $fh = $MhaStdin;
 		} elsif (!($fh = &file_open($mbox))) {
 		    warn "\nWarning: Unable to open $mbox\n";
 		    next;
@@ -343,7 +365,7 @@ sub doit {
 
 		$MBOX = 1;  $MH = 0;
 		print STDOUT "\nReading $mbox "  unless $QUIET;
-		while (<$fh>) { last if /$FROM/o; }
+		# while (<$fh>) { last if /$FROM/o; }
 		MBOX: while (!eof($fh)) {
 		    print STDOUT "."  unless $QUIET;
 		    $mesg = '';
@@ -367,9 +389,12 @@ sub doit {
 			if ($SLOW && $DoArchive) {
 			    &output_mail($index, 1, 1);
 			    $Update{$IndexNum{$index}} = 1;
-			    delete($MsgHead{$index});
-			    delete($Message{$index});
 			}
+			if ($SLOW || !$DoArchive) {
+			    delete $MsgHead{$index};
+			    delete $Message{$index};
+			}
+
 		    } else {
 			&read_mail_body($fh, $index, $header, *fields, 1);
 		    }
@@ -379,6 +404,7 @@ sub doit {
 	    } # END: else UUCP mailbox
 	} # END: foreach $mbox
     } # END: Else converting mailboxes
+    print "\n"  unless $QUIET;
 
     ## All done if not creating an archive
     if (!$DoArchive) {
@@ -387,7 +413,7 @@ sub doit {
 
     ## Check if there are any new messages
     if (!$EDITIDX && ($i == $NumOfMsgs)) {
-	print STDOUT "\nNo new messages\n"  unless $QUIET;
+	print STDOUT "No new messages\n"  unless $QUIET;
 	return 1;
     }
 
@@ -420,7 +446,7 @@ sub write_pages {
 
 	## Expiration based upon time
 	my($mloc, $tloc);
-	foreach $index (sort increase_index keys %Subject) {
+	foreach $index (sort_messages(0,0,0,0)) {
 	    last  unless
 		    ($MAXSIZE && ($NumOfMsgs > $MAXSIZE)) ||
 		    (&expired_time(&get_time_from_index($index)));
@@ -464,7 +490,7 @@ sub write_pages {
     }
 
     ## Reset MListOrder
-    @MListOrder = &sort_messages();
+    @MListOrder = sort_messages();
     @Index2MLoc{@MListOrder} = (0 .. $#MListOrder);
 
     ## Compute follow up messages
@@ -673,13 +699,30 @@ sub write_mail {
 ##
 sub read_mail_header {
     local($handle, *mesg, *fields) = @_;
-    my(%l2o, $header, $index, $date, $tmp, @refs, @array);
+    my(%l2o, $header, $index, $date, $tmp, @array);
+    local(@refs);
     local($from, $sub, $msgid);
     local($_);
 
     $header = &readmail::MAILread_file_header($handle, *fields, *l2o);
     @refs = ();
     @array = ();
+
+    ##---------------------------##
+    ## Check for no archive flag ##
+    ##---------------------------##
+    if ( $CheckNoArchive &&
+	 ($fields{'restrict'} =~ /no-external-archive/i ||
+	  $fields{'x-no-archive'} =~ /yes/i) ) {
+	return ("", "", "", "", "");
+    }
+
+    ##----------------------------------##
+    ## Check for user-defined exclusion ##
+    ##----------------------------------##
+    if ( $MsgExcFilter ) {
+	return ("", "", "", "", "") if &mhonarc::message_exclude($header);
+    }
 
     ##------------##
     ## Get Msg-ID ##
@@ -695,8 +738,18 @@ sub read_mail_header {
 	}
     } else {
         # create bogus ID if none exists
-	$msgid = join("", $$,'.',time,'.',$_msgid_cnt++,
-			  '@NO-ID-FOUND.mhonarc.com');
+	eval {
+	    # create message-id using md5 digest of header;
+	    # can potentially skip over already archived messages w/o id
+	    require Digest::MD5;
+	    $msgid = join("", Digest::MD5::md5_hex($header),
+			      '@NO-ID-FOUND.mhonarc.org');
+	};
+	if ($@) {
+	    # unable to require, so create arbitary message-id
+	    $msgid = join("", $$,'.',time,'.',$_msgid_cnt++,
+			      '@NO-ID-FOUND.mhonarc.org');
+	}
     }
 
     ## Return if message already exists in archive
@@ -761,7 +814,7 @@ sub read_mail_header {
 	$from = $fields{$_};
 	last;
     }
-    $from = 'No Author'  unless $from;
+    $from = 'Anonymous'  unless $from;
 
     ##----------------##
     ## Get References ##
@@ -858,14 +911,18 @@ sub read_mail_body {
     ($ret, @files) = &readmail::MAILread_body($header, $data,
 				    $fields{'content-type'},
 				    $fields{'content-transfer-encoding'});
-    $ret = join('',
-		"<DL>\n",
-		"<DT><STRONG>Warning</STRONG></DT>\n",
-		"<DD>Could not process message with given Content-Type: \n",
-		"<CODE>", $fields{'content-type'}, "</CODE>\n",
-		"</DD>\n",
-		"</DL>\n"
-		)  unless $ret;
+    if ($ret) {
+	# no-op
+    } else {
+	$ret = join('',
+		    "<DL>\n",
+		    "<DT><STRONG>Warning</STRONG></DT>\n",
+		    "<DD>Could not process message with given Content-Type: \n",
+		    "<CODE>", &htmlize($fields{'content-type'}), "</CODE>\n",
+		    "</DD>\n",
+		    "</DL>\n"
+		    );
+    }
     if (@files) {
 	$Derived{$index} = join($X, @files);
     }
@@ -893,13 +950,13 @@ sub output_mail {
 
     if ($adding) {
 	return ($i_p0,$filename)  unless $Update{$IndexNum{$index}};
-	&file_rename($filepathname, $tmppathname);
-	$msginfh = &file_open($tmppathname);
+	#&file_rename($filepathname, $tmppathname);
+	$msginfh = &file_open($filepathname);
     }
     if ($SINGLE) {
 	$msghandle = 'STDOUT';
     } else {
-	$msghandle = &file_create($filepathname, $GzipFiles);
+	$msghandle = &file_create($tmppathname, $GzipFiles);
     }
 
     ## Output HTML header
@@ -911,12 +968,15 @@ sub output_mail {
     if (!$nocustom) {
 	#&defineIndex2MsgId();
 
+	($template = $SSMARKUP) =~ s/$VarExp/&replace_li_var($1,$index)/geo;
+	print $msghandle $template;
+
 	# Output comments -- more informative, but can be used for
 	#		     error recovering.
 	print $msghandle 
 	    "<!-- ", commentize("MHonArc v$VERSION"), " -->\n",
 	    "<!--X-Subject: ",      commentize($Subject{$index}), " -->\n",
-	    "<!--X-From: ", 	    commentize($From{$index}), " -->\n",
+	    "<!--X-From-R13: ",	    commentize(mrot13($From{$index})), " -->\n",
 	    "<!--X-Date: ", 	    commentize($Date{$index}), " -->\n",
 	    "<!--X-Message-Id: ",   commentize($Index2MsgId{$index}), " -->\n",
 	    "<!--X-Content-Type: ", commentize($ContentType{$index}), " -->\n";
@@ -969,8 +1029,41 @@ sub output_mail {
 
     ## Output message data
     if ($adding) {
-	$tmp2 = '';
+	$tmp2 = "";
 	while (<$msginfh>) {
+	    # check if subject header delimited
+	    if (/<!--X-Subject-Header-Begin/) {
+		$tmp2 =~ s%($AddrExp)%&link_refmsgid($1,1)%geo;
+		print $msghandle $tmp2;
+		$tmp2 = "";
+
+		while (<$msginfh>) { last  if /<!--X-Subject-Header-End/; }
+		print $msghandle "<!--X-Subject-Header-Begin-->\n";
+		if (!$nocustom) {
+		    ($template = $SUBJECTHEADER) =~
+			s/$VarExp/&replace_li_var($1,$index)/geo;
+		    print $msghandle $template;
+		}
+		print $msghandle "<!--X-Subject-Header-End-->\n";
+		next;
+	    }
+	    # check if head/body separator delimited
+	    if (/<!--X-Head-Body-Sep-Begin/) {
+		$tmp2 =~ s%($AddrExp)%&link_refmsgid($1,1)%geo;
+		print $msghandle $tmp2;
+		$tmp2 = "";
+
+		while (<$msginfh>) { last  if /<!--X-Head-Body-Sep-End/; }
+		print $msghandle "<!--X-Head-Body-Sep-Begin-->\n";
+		if (!$nocustom) {
+		    ($template = $HEADBODYSEP) =~
+			s/$VarExp/&replace_li_var($1,$index)/geo;
+		    print $msghandle $template;
+		}
+		print $msghandle "<!--X-Head-Body-Sep-End-->\n";
+		next;
+	    }
+
 	    $tmp2 .= $_;
 	    last  if /<!--X-MsgBody-End/;
 	}
@@ -1091,8 +1184,9 @@ sub output_mail {
     close($msghandle)  if (!$SINGLE);
     if ($adding) {
 	close($msginfh);
-	&file_remove($tmppathname);
+	#&file_remove($tmppathname);
     }
+    &file_rename($tmppathname, $filepathname)  unless $SINGLE;
 
     ## Create user defined files
     foreach (keys %UDerivedFile) {
@@ -1154,15 +1248,15 @@ sub delmsg {
     delete $Refs{$key};
     delete $Subject{$key};
     delete $MsgId{$Index2MsgId{$key}};
-    &file_remove($filename);
+    &file_remove($filename)  unless $KeepOnRmm;
     foreach $filename (split(/$X/o, $Derived{$key})) {
 	$pathname = (&OSis_absolute_path($filename)) ?
 			$filename :
 			join($DIRSEP, $OUTDIR, $filename);
 	if (-d $pathname) {
-	    &dir_remove($pathname);
+	    &dir_remove($pathname)  unless $KeepOnRmm;
 	} else {
-	    &file_remove($pathname);
+	    &file_remove($pathname)  unless $KeepOnRmm;
 	}
     }
     delete $Derived{$key};
@@ -1198,41 +1292,40 @@ sub getNewMsgNum {
 
 ##---------------------------------------------------------------------------
 ##	ign_signals() sets mhonarc to ignore termination signals.  This
-##	routine is called right before an archive is written/editted to
+##	routine is called right before an archive is written/edited to
 ##	help prevent archive corruption.
 ##
 sub ign_signals {
-    $SIG{'ABRT'} = 'IGNORE';
-    $SIG{'HUP'}  = 'IGNORE';
-    $SIG{'INT'}  = 'IGNORE';
-    $SIG{'PIPE'} = 'IGNORE';
-    $SIG{'QUIT'} = 'IGNORE';
-    $SIG{'TERM'} = 'IGNORE';
-    $SIG{'USR1'} = 'IGNORE';
-    $SIG{'USR2'} = 'IGNORE';
+    @SIG{@_term_sigs} = ('IGNORE') x scalar(@_term_sigs);
 }
 
 ##---------------------------------------------------------------------------
-##	set_handler() sets up the quit() routine to be called when
-##	a termination signal is sent to mhonarc.
+##	set_handler() sets up the signal_catch() routine to be called when
+##	termination signals are sent to mhonarc.
 ##
 sub set_handler {
-    $SIG{'ABRT'} = \&mhonarc::quit;
-    $SIG{'HUP'}  = \&mhonarc::quit;
-    $SIG{'INT'}  = \&mhonarc::quit;
-    $SIG{'PIPE'} = \&mhonarc::quit;
-    $SIG{'QUIT'} = \&mhonarc::quit;
-    $SIG{'TERM'} = \&mhonarc::quit;
-    $SIG{'USR1'} = \&mhonarc::quit;
-    $SIG{'USR2'} = \&mhonarc::quit;
+    %_sig_org = ( );
+    @_sig_org{@_term_sigs} = @SIG{@_term_sigs};
+    @SIG{@_term_sigs} = (\&mhonarc::signal_catch) x scalar(@_term_sigs);
 }
 
 ##---------------------------------------------------------------------------
-##	Quit execution
+##	reset_handler() resets the original signal handlers.
 ##
-sub quit {
-    close_archive();
-    exit 0;
+sub reset_handler {
+    @SIG{@_term_sigs} = @_sig_org{@_term_sigs};
+}
+
+##---------------------------------------------------------------------------
+##	signal_catch(): Function for handling signals that would cause
+##	termination.
+##
+sub signal_catch {
+    my $signame = shift;
+    close_archive(1);
+    &{$_sig_org{$signame}}($signame)  if defined(&{$_sig_org{$signame}});
+    reset_handler();
+    die qq/Processing stopped, signal caught: SIG$signame\n/;
 }
 
 ##---------------------------------------------------------------------------

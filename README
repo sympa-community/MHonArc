@@ -24,12 +24,12 @@
 
 ---------------------------------------------------------------------------
                             README for MHonArc
-                                 v2.3.3
+                                 v2.4.9
 
-          <URL:http://www.oac.uci.edu/indiv/ehood/mhonarc.html>
+			<http://www.mhonarc.org/>
 
-			 Copyright (C) 1995-1998
-		       Earl Hood, earlhood@usa.net
+			 Copyright (C) 1995-2001
+		       Earl Hood, mhonarc@mhonarc.org
 
 ---------------------------------------------------------------------------
 USING/COPYING
@@ -38,7 +38,7 @@ USING/COPYING
     The rules for using and copying MHonArc are explained in the file
     COPYING.  If you cannot agree to the conditions of the GPL but
     still want to use/copy the program, you must contact the author of
-    MHonarc, earlhood@usa.net, about arranging an alternative license.
+    MHonarc, mhonarc@mhonarc.org, about arranging an alternative license.
 
 ---------------------------------------------------------------------------
 SUMMARY
@@ -64,21 +64,25 @@ Along with these tasks, MHonArc provides the following:
 FILE CONTENTS
 
 ACKNOWLG        Thanks to people
-BUGS            Bug list
+BUGS            Bug history
 CHANGES         Revision history of MHonArc
 COPYING         GNU General Public License
 FILELIST	File listing used by install.me
 INSTALL         Instructions on how to install MHonArc
 README          The file you are reading
-RELNOTES        Release notes for MHonArc (!!!!PLEASE READ!!!!)
+RELNOTES        Release notes for MHonArc (PLEASE READ BEFORE INSTALL)
+TODO		TODO list for MHonArc development
+VERSIONS	List of SCCS versions of MHonArc source
+admin/		Experimental web-based archive administration tool.
 doc/            Documentation for MHonArc
 examples/       Example resource files for MHonArc
 extras/         Extra programs for use with MHonArc (See extras/README)
 install.me      Installation program for MHonArc
 lib/            Libraries/MIME filters used by MHonArc
-logo/           Gifs of the MHonArc logo
+logo/           MHonArc logo images
 mha-dbedit*	Modify database without regenerating pages
 mha-dbrecover*	Rebuild database from HTML message pages
+mha-decode*	MIME message decoder
 mhonarc*        The MHonArc program
 
 ---------------------------------------------------------------------------
@@ -88,7 +92,8 @@ INSTALLATION
     about compatibility with previous versions and/or important
     usage information.
 
-    Read the file INSTALL for instructions on how to install MHonArc.
+    Read the file INSTALL, or load doc/install.html into your favorite
+    web client, for instructions on how to install MHonArc.
 
 ---------------------------------------------------------------------------
 DOCUMENTATION
@@ -104,6 +109,7 @@ DOCUMENTATION
 
     Some tables are used in the documentation.  Therefore, having
     a table-capable viewer is beneficial, but not essential.
+    Documentation is still readable in clients like Lynx.
 
 ---------------------------------------------------------------------------
 MAILING LIST
@@ -125,16 +131,17 @@ MAILING LIST
     seen be subscribers.  Any spam messages are happily redirected
     to /dev/null.
 
-    The WWW archive of the mailing list is located at
-    <URL:http://www.xray.mpe.mpg.de/mailing-lists/mhonarc/> and is
-    searchable via a Glimpse search engine.
+    The WWW searchable archives of the mailing list are located at
+    the following URLs:
+      <http://www.xray.mpe.mpg.de/mailing-lists/mhonarc/>
+      <http://www.mail-archive.com/mhonarc@ncsa.uiuc.edu/>
 
 ---------------------------------------------------------------------------
 BUGS/COMMENTS/SUGGESTIONS?
 
     If you have any bugs/comments/suggestions about MHonArc, you may
     send mail to the MHonArc mailing list,
-    <URL:mailto:mhonarc@ncsa.uiuc.edu>.
+    <mailto:mhonarc@ncsa.uiuc.edu>.
 
     NOTE: The author of MHonArc *IS* subscribed to the list.
 
@@ -166,5 +173,5 @@ BUGS/COMMENTS/SUGGESTIONS?
     development of the program.
 
 ---------------------------------------------------------------------------
-Copyright (C) 1995-1998,		Earl Hood, earlhood@usa.net
-@(#) README 98/11/08 13:06:00
+Copyright (C) 1995-2001,		Earl Hood, mhonarc@mhonarc.org
+@(#) README 01/06/10 18:10:37

@@ -56,8 +56,19 @@ followed a character that determines the type of conversion.
 <p>The following lists the possible conversion specifications:
 </p>
 
+<table border=0 cellpadding=4>
+<tr valign=top>
+<td><strong>NOTE</strong></td>
+<td><p>If <a href="posixstrftime.html">POSIXSTRFTIME</a> is set,
+the <b>POSIX::strftime()</b> function will be used.  Therefore, there may be
+more conversion specifications available.  See your system's
+<b>strftime()</b> manpage for specifics.
+</p>
+</td>
+</tr>
+</table>
+
 <table border=0 cellspacing=1 cellpadding=4>
-<tbody>
 <tr valign=top>
 <th align=right>Spec</th>
 <th align=left>Value</th>
@@ -139,7 +150,6 @@ followed a character that determines the type of conversion.
 <td>year, including the century (for example 1993)</td>
 </tr>
 
-</tbody>
 </table>
 
 <p>Setting LOCALDATEFMT to a blank string will reset the resource
@@ -151,7 +161,7 @@ to the default setting.
 <h2>Default Setting</h2>
 
 <pre>
-%a %b %d %H:%M:%S %y
+%a %b %d %H:%M:%S %Y
 </pre>
 
 <!-- *************************************************************** -->
@@ -193,6 +203,7 @@ month names and 12 hour am/pm time:
 <a href="monthsabr.html">MONTHSABR</a>,
 <a href="msggmtdatefmt.html">MSGGMTDATEFMT</a>,
 <a href="msglocaldatefmt.html">MSGLOCALDATEFMT</a>,
+<a href="posixstrftime.html">POSIXSTRFTIME</a>,
 <a href="weekdays.html">WEEKDAYS</a>,
 <a href="weekdaysabr.html">WEEKDAYSABR</a>
 </p>
@@ -200,10 +211,10 @@ month names and 12 hour am/pm time:
 <!-- *************************************************************** -->
 <hr>
 <address>
-98/09/19 18:27:11<br>
+00/10/28 11:13:03<br>
 <img align="top" src="../monicon.gif" alt="">
-<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"><strong>MHonArc</strong></a><br>
-Copyright &#169; 1997-1998, <a href="http://www.oac.uci.edu/indiv/ehood/">Earl Hood</a>, <a href="mailto:earlhood@usa.net">earlhood@usa.net</a><br>
+<a href="http://www.pobox.com/~ehood/mhonarc.html"><strong>MHonArc</strong></a><br>
+Copyright &#169; 1997-1999, <a href="http://www.pobox.com/~ehood/">Earl Hood</a>, <a href="mailto:mhonarc@pobox.com">mhonarc@pobox.com</a><br>
 </address>
 
 </body>

@@ -13,77 +13,101 @@
 <h1>LOCKFILE</h1>
 
 <!-- *************************************************************** -->
+<hr>
 <h2>Syntax</h2>
 
 <dl>
 
 <dt><strong>Envariable</strong><dt>
 <dd><p>
-<code>M2H_LOCKFILE=</code>
+<code>M2H_LOCKFILE=</code><var>name</var>
 </p>
 </dd>
 
 <dt><strong>Element</strong><dt>
-<dd><p><br>
-<code>&lt;LOCKFILE&gt;</code><br>
-<code>&lt;/LOCKFILE&gt;</code><br>
+<dd><p>N/A
 </p>
 </dd>
 
 <dt><strong>Command-line Option</strong><dt>
 <dd><p>
-<code>-lockfile </code>
+<code>-lockfile </code><var>name</var>
 </p>
 </dd>
 
 </dl>
 
 <!-- *************************************************************** -->
+<hr>
 <h2>Description</h2>
 
-<p>
+<p>LOCKFILE is the name of the file used to create a lock on an
+archive.  The file is used in the archive directory to signify
+that a MHonArc process is accessing the archive, and any other
+MHonArc process will wait until the lock is released.
 </p>
+<table border=0 cellpadding=4>
+<tr valign=top>
+<td><strong><font color="red">WARNING</font></strong></td>
+<td><p>You should not override the default name unless
+absolutely necessary, and you are confident about what you are doing.
+</p>
+</td>
+</tr>
+</table>
+
 
 <!-- *************************************************************** -->
+<hr>
 <h2>Default Setting</h2>
 
-<p>
+<p><tt>.mhonarc.lck</tt><br>
+<tt>mhonarc.lck</tt> (Windows/MSDOS)<br>
+<tt>mhonarc_lck</tt> (VMS)<br>
 </p>
 
 <!-- *************************************************************** -->
+<hr>
 <h2>Resource Variables</h2>
 
 <p>N/A
 </p>
 
 <!-- *************************************************************** -->
+<hr>
 <h2>Examples</h2>
 
 <p>None.
 </p>
 
 <!-- *************************************************************** -->
+<hr>
 <h2>Version</h2>
 
-<p>
+<p>1.2
 </p>
 
 <!-- *************************************************************** -->
+<hr>
 <h2>See Also</h2>
 
 <p>
+<a href="lock.html">LOCK</a>,
+<a href="lockdelay.html">LOCKDELAY</a>,
+<a href="lockmethod.html">LOCKMETHOD</a>,
+<a href="locktries.html">LOCKTRIES</a>
 </p>
 
 <!-- *************************************************************** -->
 <hr>
 <address>
-98/09/19 18:27:11<br>
+00/10/28 11:13:03<br>
 <img align="top" src="../monicon.gif" alt="">
-<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"
+<a href="http://www.pobox.com/~ehood/mhonarc.html"
 ><strong>MHonArc</strong></a><br>
-Copyright &#169; 1998, <a href="http://www.oac.uci.edu/indiv/ehood/"
->Earl Hood</a>, <a href="mailto:earlhood@usa.net"
->earlhood@usa.net</a><br>
+Copyright &#169; 1998-2000, <a href="http://www.pobox.com/~ehood/"
+>Earl Hood</a>, <a href="mailto:mhonarc@pobox.com"
+>mhonarc@pobox.com</a><br>
 </address>
 
 </body>

@@ -1,13 +1,13 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	@(#) mhutil.pl 2.3 98/10/03 16:07:13
+##	@(#) mhutil.pl 2.9 00/01/17 17:18:15
 ##  Author:
-##      Earl Hood       earlhood@usa.net
+##      Earl Hood       mhonarc@pobox.com
 ##  Description:
 ##      Utility routines for MHonArc
 ##---------------------------------------------------------------------------##
 ##    MHonArc -- Internet mail-to-HTML converter
-##    Copyright (C) 1995-1998	Earl Hood, earlhood@usa.net
+##    Copyright (C) 1995-1999	Earl Hood, mhonarc@pobox.com
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by
@@ -27,12 +27,40 @@
 
 package mhonarc;
 
+## RFC 2369 header fields to check for URLs
+my %HFieldsList = (
+    'list-archive'  	=> 1,
+    'list-help'  	=> 1,
+    'list-owner'  	=> 1,
+    'list-post'  	=> 1,
+    'list-subscribe'  	=> 1,
+    'list-unsubscribe' 	=> 1,
+);
+
+## Header fields that contain addresses
+my %HFieldsAddr = (
+    'apparently-from'	=> 1,
+    'apparently-to'	=> 1,
+    'bcc'		=> 1,
+    'cc'		=> 1,
+    'dcc'		=> 1,
+    'from'		=> 1,
+    'reply-to'		=> 1,
+    'resent-cc'		=> 1,
+    'resent-from'	=> 1,
+    'resent-sender'	=> 1,
+    'resent-to'		=> 1,
+    'return-path'	=> 1,
+    'sender'		=> 1,
+    'to'		=> 1,
+);
+
 ##---------------------------------------------------------------------------
 ##	Get an e-mail address from (HTML) $str.
 ##
 sub extract_email_address {
-    local($str) = shift;
-    local($ret);
+    my($str) = shift;
+    my($ret);
 
     if ($str =~ /<(\S+)>/) {
 	$ret = $1;
@@ -73,86 +101,85 @@ sub extract_email_name {
 ##	Routine to sort messages
 ##
 sub sort_messages {
-    if ($NOSORT) {				# Processed order
-	if ($REVSORT) { return sort decrease_msgnum keys %Subject; }
-	else { return sort increase_msgnum keys %Subject; }
+    my($nosort, $subsort, $authsort, $revsort) = @_;
+    $nosort   = $NOSORT    if !defined($nosort);
+    $subsort  = $SUBSORT   if !defined($subsort);
+    $authsort = $AUTHSORT  if !defined($authsort);
+    $revsort  = $REVSORT   if !defined($revsort);
 
-    } elsif ($SUBSORT) {			# Subject order
-	if ($REVSORT) { return sort decrease_subject keys %Subject; }
-	else { return sort increase_subject keys %Subject; }
+    if ($nosort) {
+	## Process order
+	if ($revsort) {
+	    return sort { $IndexNum{$b} <=> $IndexNum{$a} } keys %Subject;
+	} else {
+	    return sort { $IndexNum{$a} <=> $IndexNum{$b} } keys %Subject;
+	}
 
-    } elsif ($AUTHSORT) {			# Author order
-	if ($REVSORT) { return sort decrease_author keys %Subject; }
-	else { return sort increase_author keys %Subject; }
+    } elsif ($subsort) {
+	## Subject order
+	my(%sub, $idx, $sub);
+	eval {
+	    my $hs = scalar(%Subject);  $hs =~ s|^[^/]+/||;
+	    keys(%sub) = $hs;
+	};
+	while (($idx, $sub) = each(%Subject)) {
+	    $sub = lc $sub;
+	    1 while $sub =~ s/$SubReplyRxp//io;
+	    $sub =~ s/$SubArtRxp//io;
+	    $sub{$idx} = $sub;
+	}
+	if ($revsort) {
+	    return sort { ($sub{$b} cmp $sub{$a}) ||
+			  (get_time_from_index($b) <=> get_time_from_index($a))
+			} keys %Subject;
+	} else {
+	    return sort { ($sub{$a} cmp $sub{$b}) ||
+			  (get_time_from_index($a) <=> get_time_from_index($b))
+			} keys %Subject;
+	}
+	
+    } elsif ($authsort) {
+	## Author order
+	my(%from, $idx, $from);
+	eval {
+	    my $hs = scalar(%From);  $hs =~ s|^[^/]+/||;
+	    keys(%from) = $hs;
+	};
+	while (($idx, $from) = each(%From)) {
+	    $from = lc extract_email_name($from);
+	    $from{$idx} = $from;
+	}
+	if ($revsort) {
+	    return sort { ($from{$b} cmp $from{$a}) ||
+			  (get_time_from_index($b) <=> get_time_from_index($a))
+			} keys %Subject;
+	} else {
+	    return sort { ($from{$a} cmp $from{$b}) ||
+			  (get_time_from_index($a) <=> get_time_from_index($b))
+			} keys %Subject;
+	}
 
-    } else {					# Date order
-	if ($REVSORT) { return sort decrease_index keys %Subject; }
-	else { return sort increase_index keys %Subject; }
+    } else {
+	## Date order
+	if ($revsort) {
+	    return sort { (get_time_from_index($b) <=> get_time_from_index($a))
+			  || ($IndexNum{$b} <=> $IndexNum{$a})
+			} keys %Subject;
+	} else {
+	    return sort { (get_time_from_index($a) <=> get_time_from_index($b))
+			  || ($IndexNum{$a} <=> $IndexNum{$b})
+			} keys %Subject;
+	}
+
     }
 }
 
 ##---------------------------------------------------------------------------
-##	Routine to sort messages based on thread resources.
+##	Message-sort routines for sort().
 ##
-sub t_sort_messages {
-    if ($TNOSORT) {				# Processed order
-	if ($TREVERSE) { return sort decrease_msgnum keys %Subject; }
-	else { return sort increase_msgnum keys %Subject; }
-
-    } elsif ($TSUBSORT) {			# Subject order
-	if ($TREVERSE) { return sort decrease_subject keys %Subject; }
-	else { return sort increase_subject keys %Subject; }
-
-    } else {					# Date order
-	if ($TREVERSE) { return sort decrease_index keys %Subject; }
-	else { return sort increase_index keys %Subject; }
-    }
-}
-
-##---------------------------------------------------------------------------
-##	Message-sort routines for sort_messages
-##
-sub increase_msgnum {
-    $IndexNum{$a} <=> $IndexNum{$b};
-}
-sub decrease_msgnum {
-    $IndexNum{$b} <=> $IndexNum{$a};
-}
 sub increase_index {
     (&get_time_from_index($a) <=> &get_time_from_index($b)) ||
 	($IndexNum{$a} <=> $IndexNum{$b});
-}
-sub decrease_index {
-    (&get_time_from_index($b) <=> &get_time_from_index($a)) ||
-	($IndexNum{$b} <=> $IndexNum{$a});
-}
-sub increase_subject {
-    my($A, $B) = ($Subject{$a}, $Subject{$b});
-    $A =~ tr/A-Z/a-z/;  $B =~ tr/A-Z/a-z/; 
-    1 while $A =~ s/$SubReplyRxp//io;
-    1 while $B =~ s/$SubReplyRxp//io;
-    $A =~ s/$SubArtRxp//io;  $B =~ s/$SubArtRxp//io;
-    ($A cmp $B) || (&get_time_from_index($a) <=> &get_time_from_index($b));
-}
-sub decrease_subject {
-    my($A, $B) = ($Subject{$a}, $Subject{$b});
-    $A =~ tr/A-Z/a-z/;  $B =~ tr/A-Z/a-z/; 
-    1 while $A =~ s/$SubReplyRxp//io;
-    1 while $B =~ s/$SubReplyRxp//io;
-    $A =~ s/$SubArtRxp//io;  $B =~ s/$SubArtRxp//io;
-    ($A cmp $B) || (&get_time_from_index($b) <=> &get_time_from_index($a));
-}
-sub increase_author {
-    my($A, $B) = (&extract_email_name($From{$a}),
-		     &extract_email_name($From{$b}));
-    $A =~ tr/A-Z/a-z/;  $B =~ tr/A-Z/a-z/;
-    ($A cmp $B) || (&get_time_from_index($a) <=> &get_time_from_index($b));
-}
-sub decrease_author {
-    my($A, $B) = (&extract_email_name($From{$a}),
-		     &extract_email_name($From{$b}));
-    $A =~ tr/A-Z/a-z/;  $B =~ tr/A-Z/a-z/;
-    ($A cmp $B) || (&get_time_from_index($b) <=> &get_time_from_index($a));
 }
 
 ##---------------------------------------------------------------------------
@@ -231,7 +258,8 @@ sub get_time_from_date {
     local($mday, $mon, $yr, $hr, $min, $sec, $zone) = @_;
     local($time) = 0;
 
-    $yr -= 1900  if $yr >= 1900;
+    $yr -= 1900  if $yr >= 1900;  # if given full 4 digit year
+    $yr += 100   if $yr <= 37;    # in case of 2 digit years
     if (($yr < 70) || ($yr > 137)) {
 	warn "Warning: Bad year (", $yr+1900, ") using current\n";
 	$yr = (localtime(time))[5];
@@ -243,15 +271,28 @@ sub get_time_from_date {
 	$time = &timegm($sec,$min,$hr,$mday,$mon,$yr);
 
 	# try to modify time/date based on timezone
-	if ($zone =~ /^[\+-]\d+$/) {	# numeric timezone
-	    $time -= &zone_offset_to_secs($zone);
+	OFFSET: {
+	    # numeric timezone
+	    if ($zone =~ /^[\+-]\d+$/) {
+		$time -= &zone_offset_to_secs($zone);
+		last OFFSET;
+	    }
+	    # Zone
+	    if (defined($Zone{$zone})) {
+		# timezone abbrev
+		$time += &zone_offset_to_secs($Zone{$zone});
+		last OFFSET;
 
-	# timezone abbrev
-	} elsif (defined($Zone{$zone})) {
-	    $time += ($Zone{$zone}*3600);
-
-	# undefined timezone
-	} else {
+	    }
+	    # Zone[+-]DDDD
+	    if ($zone =~ /^([A-Z]\w+)([\+-]\d+)$/) {
+		$time -= &zone_offset_to_secs($2);
+		if (defined($Zone{$1})) {
+		    $time += &zone_offset_to_secs($Zone{$1});
+		    last OFFSET;
+		}
+	    }
+	    # undefined timezone
 	    warn qq|Warning: Unrecognized time zone, "$zone"\n|;
 	}
 
@@ -311,7 +352,8 @@ sub htmlize_header {
 
 		@array = split(/$readmail::FieldSep/o, $hf{$key});
 		foreach $tmp (@array) {
-		    $tmp = &$MHeadCnvFunc($tmp);
+		    $tmp = $HFieldsList{$key} ? mlist_field_add_links($tmp) :
+						&$MHeadCnvFunc($tmp);
 		    &field_add_links($key, *tmp);
 		    ($tago, $tagc, $ftago, $ftagc) = &get_header_tags($key);
 		    $mesg .= join('', $LABELBEG,
@@ -325,7 +367,8 @@ sub htmlize_header {
 	    if (!&exclude_field($item) && $hf{$item}) {
 		@array = (split(/$readmail::FieldSep/o, $hf{$item}));
 		foreach $tmp (@array) {
-		    $tmp = &$MHeadCnvFunc($tmp);
+		    $tmp = $HFieldsList{$item} ? mlist_field_add_links($tmp) :
+						 &$MHeadCnvFunc($tmp);
 		    &field_add_links($item, *tmp);
 		    ($tago, $tagc, $ftago, $ftagc) = &get_header_tags($item);
 		    $mesg .= join('', $LABELBEG,
@@ -342,15 +385,46 @@ sub htmlize_header {
 }
 
 ##---------------------------------------------------------------------------
+
+sub mlist_field_add_links {
+    my $txt	= shift;
+    my $ret	= "";
+    local($_);
+    foreach (split(/(<[^>]+>)/, $txt)) {
+	if (/^</) {
+	    chop; substr($_, 0, 1) = "";
+	    $ret .= qq|&lt;<A HREF="$_">$_</A>&gt;|;
+	} else {
+	    $ret .= &$MHeadCnvFunc($_);
+	}
+    }
+    $ret;
+}
+
+##---------------------------------------------------------------------------
 ##	Routine to add mailto/news links to a message header string.
 ##
 sub field_add_links {
-    local($label, *fld_text) = @_;
-    &mailto(*fld_text)
-	if !$NOMAILTO &&
-	    $label =~ /^(to|from|cc|sender|reply-to|resent-to|resent-cc)/i;
-    &newsurl(*fld_text)
-	if !$NONEWS && $label =~ /^newsgroup/i;
+    my $label = lc shift;
+    local(*fld_text) = shift;
+
+    LBLSW: {
+	if ($HFieldsAddr{$label}) {
+	    if (!$NOMAILTO) {
+		$fld_text =~ s|([\!\%\w\.\-+=/]+@[\w\.\-]+)|&mailUrl($1)|ge;
+	    } else {
+		$fld_text =~ s|([\!\%\w\.\-+=/]+@[\w\.\-]+)
+			      |&htmlize(&rewrite_address($1))
+			      |gex;
+	    }
+	    last LBLSW;
+	}
+	if ($label eq 'newsgroup') {
+	    &newsurl(*fld_text)  unless $NONEWS;
+	    last LBLSW;
+	}
+	last LBLSW;
+    }
 }
 
 
@@ -374,27 +448,19 @@ sub newsurl {
 }
 
 ##---------------------------------------------------------------------------
-##	Add mailto URLs to $str.
-##
-sub mailto {
-    local(*str) = shift;
-    if ($MAILTOURL) {
-	$str =~ s|([\!\%\w\.\-+=/]+@[\w\.\-]+)|&mailUrl($1)|ge;
-    } else {
-	$str =~ s|([\!\%\w\.\-+=/]+@[\w\.\-]+)|<A HREF="mailto:$1">$1</A>|g;
-    }
-}
-
-##---------------------------------------------------------------------------
 ##	$sub, $msgid, $from come from read_mail_header() (ugly!!!!)
 ##
 sub mailUrl {
     my($eaddr) = shift;
 
+    local $_;
     my($url) = ($MAILTOURL);
     my($to) = (&urlize($eaddr));
+    my($toname, $todomain) = map { urlize($_) } split(/@/,$eaddr,2);
     my($froml, $msgidl) = (&urlize($from), &urlize($msgid));
-    my($fromaddrl) = (&urlize(&extract_email_address($from)));
+    my($fromaddrl) = (&extract_email_address($from));
+    my($faddrnamel, $faddrdomainl) = map { urlize($_) } split(/@/,$fromaddrl,2);
+    $fromaddrl = &urlize($fromaddrl);
     my($subjectl);
 
     # Add "Re:" to subject if not present
@@ -404,13 +470,17 @@ sub mailUrl {
 	$subjectl = &urlize($sub);
     }
     $url =~ s/\$FROM\$/$froml/g;
-    $url =~ s/\$FROMADDR\$/$froml/g;
+    $url =~ s/\$FROMADDR\$/$fromaddrl/g;
+    $url =~ s/\$FROMADDRNAME\$/$faddrnamel/g;
+    $url =~ s/\$FROMADDRDOMAIN\$/$faddrdomainl/g;
     $url =~ s/\$MSGID\$/$msgidl/g;
     $url =~ s/\$SUBJECT\$/$subjectl/g;
     $url =~ s/\$SUBJECTNA\$/$subjectl/g;
     $url =~ s/\$TO\$/$to/g;
+    $url =~ s/\$TOADDRNAME\$/$toname/g;
+    $url =~ s/\$TOADDRDOMAIN\$/$todomain/g;
     $url =~ s/\$ADDR\$/$to/g;
-    qq|<A HREF="$url">$eaddr</A>|;
+    qq|<A HREF="$url">| . &htmlize(&rewrite_address($eaddr)) . q|</A>|;
 }
 
 ##---------------------------------------------------------------------------##
@@ -421,6 +491,7 @@ sub mailUrl {
 ##
 sub parse_vardef_str {
     my($org) = shift;
+    my($lower) = shift;
     my(%hash) = ();
     my($str, $q, $var, $value);
 
@@ -445,11 +516,10 @@ sub parse_vardef_str {
 	    }
 	}
 	$str =~ s/^\s+//;
-	$hash{$var} = $value;
+	$hash{$lower? lc($var): $var} = $value;
     }
     if ($str =~ /\S/) {
-	warn "Warning: Illegal variable definition syntax in: $org\n";
-	return ();
+	warn "Warning: Trailing characters in: $org\n";
     }
     %hash;
 }
@@ -458,7 +528,11 @@ sub parse_vardef_str {
 
 sub msgid_to_filename {
     my $msgid = shift;
-    $msgid =~ s/([^\w.\-\@])/sprintf("=%02X",unpack("C",$1))/geo;
+    if ($VMS) {
+	$msgid =~ s/([^\w\-])/sprintf("=%02X",unpack("C",$1))/geo;
+    } else {
+	$msgid =~ s/([^\w.\-\@])/sprintf("=%02X",unpack("C",$1))/geo;
+    }
     $msgid;
 }
 

@@ -1,13 +1,13 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##      @(#) mhopt.pl 2.8 98/11/08 11:55:42
+##      @(#) mhopt.pl 2.20 01/04/10 21:36:41
 ##  Author:
-##      Earl Hood       earlhood@usa.net
+##      Earl Hood       mhonarc@pobox.com
 ##  Description:
 ##      Routines to set options for MHonArc.
 ##---------------------------------------------------------------------------##
 ##    MHonArc -- Internet mail-to-HTML converter
-##    Copyright (C) 1997-1998	Earl Hood, earlhood@usa.net
+##    Copyright (C) 1997-1999	Earl Hood, mhonarc@pobox.com
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by
@@ -28,6 +28,7 @@
 package mhonarc;
 
 use Getopt::Long;
+use Time::Local;
 
 ##---------------------------------------------------------------------------
 ##	get_resources() is responsible for grabbing resource settings from
@@ -42,10 +43,14 @@ sub get_resources {
     GetOptions(\%opt,
 	"add",		# Add a message to archive
 	"afs",		# Bypass file permission checks
+	"addressmodifycode=s",
+			# Perl expression for modifying displayed addresses
 	"annotate",	# Add a note to message(s)
 	"authsort",	# Sort by author
 	"archive",	# Create an archive (the default)
 	"conlen",	# Honor Content-Length fields
+	"checknoarchive",
+			# Check for "no archive" flag in messages
 	"datefields=s", # Fields that contains the date of a message
 	"dbfile=s",	# Database/state filename for mhonarc archive
 	"decodeheads",	# Decode all 1522 encoded data in message headers
@@ -70,10 +75,12 @@ sub get_resources {
 	"idxfname=s",	# Filename of index page
 	"idxprefix=s",	# Filename prefix for multi-page main index
 	"idxsize=i",	# Maximum number of messages shown in indexes
+	"keeponrmm",	# Do not delete message files on archive remove
 	"localdatefmt=s",
 			# Date specification for local date
 	"lock",		# Do archive locking (default)
 	"lockdelay=i",	# Time delay in seconds between lock tries
+	"lockmethod=s",	# Set the method of locking
 	"locktries=i",	# Number of tries in locking an archive
 	"mailtourl=s",	# URL to use for e-mail address hyperlinks
 	"main",		# Create a main index
@@ -84,6 +91,8 @@ sub get_resources {
 	"modtime",	# Set modification time on files to message date
 	"months=s",	# Month names
 	"monthsabr=s",	# Abbreviated month names
+	"msgexcfilter=s",
+			# Perl expression(s) for selective message exclusion
 	"msgpgs",	# Create message pages
 	"msgsep=s",	# Message separator for mailbox files
 	"msgprefix=s",	# Filename prefix for message files
@@ -91,6 +100,8 @@ sub get_resources {
 	"news",		# Add links to newsgroups
 	"noauthsort",	# Do not sort by author
 	"noarchive",	# Do not create an archive
+	"nochecknoarchive",
+			# Do not check for "no archive" flag in messages
 	"noconlen",	# Ignore Content-Length fields
 	"nodecodeheads",
 			# Do not decode 1522 encoded data in message headers
@@ -98,6 +109,7 @@ sub get_resources {
 	"nofolrefs",	# Do not print links to explicit follow-ups/references
 	"nogzipfiles",	# Do not Gzip files
 	"nogziplinks",	# Do not add ".gz" extensions to files
+	"nokeeponrmm",	# Delete message files on archive remove
 	"nolock",	# Do no archive locking
 	"nomailto",	# Do not add in mailto links for e-mail addresses
 	"nomain",	# Do not create a main index
@@ -105,33 +117,55 @@ sub get_resources {
 	"nomodtime",	# Do no set modification time on files to message date
 	"nomultipg",	# Do not generate multi-page indexes
 	"nonews",	# Do not add links to newsgroups
+	"noposixstrftime",
+			# Use own implementation for time format process
 	"noreverse",	# List messages in normal order
+	"nosaveresources",
+			# Do not save resource values in db
 	"nosort",	# Do not sort
+	"nospammode",	# Do not run in (anti)spam mode
 	"nosubsort",	# Do not sort by subject
+	"nosubjectthreads",
+			# Do not do subject based threading
 	"notedir",	# Location of notes
 	"notetext=s@",	# Text data of note
 	"nothread",	# Do not create threaded index
 	"notreverse",	# List oldest thread first
+	"notsubsort|tnosubsort",
+			# Do not list threads by subject
+	"notsort|tnosort",
+			# List threads by ordered processed
 	"nourl",	# Do not make URL hyperlinks
 	"otherindex|otherindexes=s@",
 			# List of other rcfiles for extra indexes
 	"outdir=s",	# Destination of HTML files
 	"pagenum=s",	# Page to output if -genidx
 	"perlinc=s@",	# List of paths to search for MIME filters
+	"posixstrftime",
+			# Use POSIX strftime()
 	"quiet",	# No status messages while running
 	"rcfile=s@",	# Resource file for mhonarc
+	"varregex=s",	# Regex matching resource variables
 	"reverse",	# List messages in reverse order
 	"rmm",		# Remove messages from an archive
 	"savemem",	# Write message data while processing
+	"saveresources",
+			# Save resource values in db
 	"scan",		# List out archive contents to terminal
 	"single",	# Convert a single message to HTML
 	"sort",		# Sort messages in increasing date order
+	"spammode",	# Run in (anti)spam mode
+	"stderr=s",	# Set file for stderr
+	"stdin=s",	# Set file for stdin
+	"stdout=s",	# Set file for stdout
 	"subjectarticlerxp=s",
 			# Regex for leading articles in subjects
 	"subjectreplyrxp=s",
 			# Regex for leading reply string in subjects
 	"subjectstripcode=s",
 			# Perl expression for modifying subjects
+	"subjectthreads",
+			# Check subjects for threads
 	"subsort",	# Sort message by subject
 	"tidxfname=s",	# File name of threaded index page
 	"tidxprefix=s",	# Filename prefix for multi-page thread index
@@ -143,9 +177,7 @@ sub get_resources {
 	"treverse",	# Reverse order of thread listing
 	"tslice=s",	# Set size of thread slice listing
 	"tsort",	# List threads by date
-	"tnosort",	# List threads by ordered processed
 	"tsubsort",	# List threads by subject
-	"tnosubsort",	# Do not list threads by subject
 	"umask=i",	# Set umask of process
 	"url",		# Make URL hyperlinks
 	"weekdays=s",	# Weekday names
@@ -164,9 +196,40 @@ sub get_resources {
     if ($opt{'help'}) 	{ &usage();   return 0; }
     if ($opt{'v'}) 	{ &version(); return 0; }
 
+    ## Check std{in,out,err} options
+    DUP: {
+	$MhaStdin = \*STDIN;
+	STDOUTERR: {
+	    if (defined($opt{'stdout'}) && !ref($opt{'stdout'})) {
+		open(STDOUT, ">>$opt{'stdout'}") ||
+		    die qq/ERROR: Unable to create "$opt{'stdout'}": $!\n/;
+		if ($opt{'stderr'} eq $opt{'stdout'}) {
+		    open(STDERR, ">&STDOUT") ||
+			die qq/ERROR: Unable to dup STDOUT: $!\n/;
+		    last STDOUTERR;
+		}
+	    }
+	    if (defined($opt{'stderr'}) && !ref($opt{'stderr'})) {
+		open(STDERR, ">>$opt{'stderr'}") ||
+		    die qq/ERROR: Unable to create "$opt{'stderr'}": $!\n/;
+	    }
+	}
+	if (defined($opt{'stdin'})) {
+	    if (ref($opt{'stdin'})) {
+		$MhaStdin = $opt{'stdin'};
+	    } else {
+		open(STDIN, "<$opt{'stdin'}") ||
+		    die qq/ERROR: Unable to open "$opt{'stdin'}": $!\n/;
+		$MhaStdin = \*STDIN;
+	    }
+	}
+	my $curfh = select(STDOUT);  $| = 1;
+		    select(STDERR);  $| = 1;
+	select($curfh);
+    }
+
     ## Initialize variables
-    require 'mhinit.pl'    || die("ERROR: Unable to require mhinit.pl\n");
-    &mhinit_vars();
+    require 'mhinit.pl';   &mhinit_vars();
 
     ## These options have NO resource file equivalent.
     $NoArg   = $opt{'noarg'};
@@ -178,6 +241,7 @@ sub get_resources {
     $QUIET   = $opt{'quiet'};
     $EDITIDX = $opt{'editidx'};
     $ANNOTATE= $opt{'annotate'};
+    $AFS     = $opt{'afs'};
     if ($opt{'genidx'}) {
 	$IDXONLY  = 1;  $QUIET = 1;  $ADD = 0;
     } else {
@@ -193,7 +257,7 @@ sub get_resources {
     $DoArchive	= 1  if $opt{'archive'};
     $DoArchive	= 0  if $opt{'noarchive'};
 
-    my $dolock	= !$opt{'nolock'};
+    my $dolock	= !$NoArg && !$opt{'nolock'};
 
     ## Check argv
     unless (($#ARGV >= 0) || $ADD || $SINGLE || $EDITIDX || $SCAN ||
@@ -203,25 +267,33 @@ sub get_resources {
     }
 
     ## Require needed libraries
-    require 'timelocal.pl' || die("ERROR: Unable to require timelocal.pl\n");
-    require 'ewhutil.pl'   || die("ERROR: Unable to require ewhutil.pl\n");
-    require 'mhtime.pl'    || die("ERROR: Unable to require mhtime.pl\n");
-    require 'mhfile.pl'    || die("ERROR: Unable to require mhfile.pl\n");
-    require 'mhutil.pl'    || die("ERROR: Unable to require mhutil.pl\n");
-    require 'mhscan.pl'    || die("ERROR: Unable to require mhscan.pl\n")
-	if $SCAN;
-    require 'mhsingle.pl'  || die("ERROR: Unable to require mhsingle.pl\n")
-	if $SINGLE;
-    require 'mhrmm.pl'     || die("ERROR: Unable to require mhrmm.pl\n")
-	if $RMM;
-    require 'mhnote.pl'    || die("ERROR: Unable to require mhnote.pl\n")
-	if $ANNOTATE;
+    require 'ewhutil.pl';
+    require 'mhtime.pl';
+    require 'mhfile.pl';
+    require 'mhutil.pl';
+    require 'mhscan.pl'  	if $SCAN;
+    require 'mhsingle.pl'  	if $SINGLE;
+    require 'mhrmm.pl'  	if $RMM;
+    require 'mhnote.pl'  	if $ANNOTATE;
 
+    ## Evaluate site local initialization
+    delete($INC{'mhasiteinit.pl'});      # force re-evaluation
+    eval { require 'mhasiteinit.pl'; };  # ignore status
+
+    ## Read default resource file
     if ($DefRcFile) {
 	&read_fmt_file($DefRcFile);
     } else {
 	$tmp = join($DIRSEP, $ENV{'HOME'}, $DefRcName);
-	$tmp = join($DIRSEP, $INC[0], $DefRcName)  unless (-e $tmp);
+	if (! -e $tmp) {
+	    local $_;
+	    foreach (@INC) {
+		if (-e join($DIRSEP, $_, 'mhamain.pl')) {
+		    $tmp = join($DIRSEP, $_, $DefRcName);
+		    last;
+		}
+	    }
+	}
 	if (-e $tmp) {
 	    &read_fmt_file($tmp);
 	}
@@ -235,10 +307,13 @@ sub get_resources {
 					($opt{'lockdelay'} > 0);
     $FORCELOCK = $opt{'force'};
 
+    $LockMethod = &set_lock_mode($opt{'lockmethod'})
+		  if defined($opt{'lockmethod'});
+
     ## These options must be grabbed before reading the database file
     ## since these options may tells us where the database file is.
     $OUTDIR  = $opt{'outdir'}    if $opt{'outdir'};
-    if (!$NoArg && !($SCAN || $IDXONLY)) {
+    if (!$NoArg && !($SCAN || $IDXONLY || $SINGLE)) {
 	die qq/ERROR: "$OUTDIR" does not exist\n/    unless -e $OUTDIR;
 	if (!$AFS) {
 	    die qq/ERROR: "$OUTDIR" is not readable\n/   unless -r $OUTDIR;
@@ -248,20 +323,12 @@ sub get_resources {
     }
     $DBFILE  = $opt{'dbfile'}    if $opt{'dbfile'};
 
-    ## Create lockfile
-    &set_handler();
+    ## Create lock
     $LOCKFILE  = join($DIRSEP, $OUTDIR, $LOCKFILE);
-    if ($dolock && $DoArchive && !$SINGLE &&
-	!&create_lock_file($LOCKFILE, 1, 0, 0)) {
-
-	print STDOUT qq/Trying to lock mail archive in "$OUTDIR" ...\n/
-	    unless $QUIET;
-	if (!&create_lock_file($LOCKFILE,
-			       $LOCKTRIES-1,
-			       $LOCKDELAY,
-			       $FORCELOCK)) {
+    if ($dolock && $DoArchive && !$SINGLE) {
+	if (!&$LockFunc($LOCKFILE, $LOCKTRIES, $LOCKDELAY, $FORCELOCK)) {
 	    $! = 75; # EX_TEMPFAIL (for sendmail)
-	    die("ERROR: Unable to create $LOCKFILE after $LOCKTRIES tries\n");
+	    die("ERROR: Unable to lock $OUTDIR after $LOCKTRIES tries\n");
 	}
     }
 
@@ -300,15 +367,18 @@ sub get_resources {
 	if (!$IDXONLY) {
 	    if ($#ARGV < 0) { $ADDSINGLE = 1; }	# See if adding single mesg
 	    else { $ADDSINGLE = 0; }
-	    $ADD = 'STDIN';
+	    $ADD = $MhaStdin;
 	}
     }
     my($OldMULTIIDX) = $MULTIIDX;
 
-    ## Remove lock file if db not going to be changed
+    ## Remove lock if db not going to be changed
     if ($SCAN || $IDXONLY) {
-	&remove_lock_file();
+	&$UnlockFunc();
     }
+
+    ## Clear thread flag if genidx, must be explicitly set
+    $THREAD = 0  if $IDXONLY;
 
     ##	Read resource file(s) (I initially used the term 'format file').
     ##	Look for resource in outdir unless existing according to
@@ -377,6 +447,7 @@ sub get_resources {
     $TTITLE	= $opt{'ttitle'}     if $opt{'ttitle'};
     $MsgPrefix	= $opt{'msgprefix'}  if defined($opt{'msgprefix'});
     $GzipExe	= $opt{'gzipexe'}    if $opt{'gzipexe'};
+    $VarExp	= $opt{'varregex'}   if $opt{'varregex'};
 
     $IDXNAME	= $opt{'idxfname'} || $IDXNAME || $ENV{'M2H_IDXFNAME'} ||
 		  "maillist.$HtmlExt";
@@ -390,9 +461,11 @@ sub get_resources {
     $GMTDateFmt	= $opt{'gmtdatefmt'}  	  if $opt{'gmtdatefmt'};
     $LocalDateFmt = $opt{'localdatefmt'}  if $opt{'localdatefmt'};
 
-    $SubArtRxp   = $opt{'subjectarticlerxp'}  if $opt{'subjectarticlerxp'};
-    $SubReplyRxp = $opt{'subjectreplyrxp'}    if $opt{'subjectreplyrxp'};
-    $SubStripCode = $opt{'subjectstripcode'}  if $opt{'subjectstripcode'};
+    $AddressModify = $opt{'addressmodifycode'}  if $opt{'addressmodifycode'};
+    $SubArtRxp     = $opt{'subjectarticlerxp'}  if $opt{'subjectarticlerxp'};
+    $SubReplyRxp   = $opt{'subjectreplyrxp'}    if $opt{'subjectreplyrxp'};
+    $SubStripCode  = $opt{'subjectstripcode'}   if $opt{'subjectstripcode'};
+    $MsgExcFilter  = $opt{'msgexcfilter'}    if defined($opt{'msgexcfilter'});
 
     $IdxPageNum  = $opt{'pagenum'}   if defined($opt{'pagenum'});
 
@@ -443,10 +516,24 @@ sub get_resources {
     $GzipLinks	= 0  if $opt{'nogziplinks'};
     $NoMsgPgs	= 0  if $opt{'msgpgs'};
     $NoMsgPgs	= 1  if $opt{'nomsgpgs'};
+    $SaveRsrcs	= 1  if $opt{'saveresources'};
+    $SaveRsrcs	= 0  if $opt{'nosaveresources'};
+    $SpamMode	= 1  if $opt{'spammode'};
+    $SpamMode	= 0  if $opt{'nospammode'};
+    $KeepOnRmm	= 1  if $opt{'keeponrmm'};
+    $KeepOnRmm	= 0  if $opt{'nokeeponrmm'};
+
+    $CheckNoArchive = 1  if $opt{'checknoarchive'};
+    $CheckNoArchive = 0  if $opt{'nochecknoarchive'};
+    $POSIXstrftime  = 1  if $opt{'posixstrftime'};
+    $POSIXstrftime  = 0  if $opt{'noposixstrftime'};
 
     $DecodeHeads = 1 if $opt{'decodeheads'};
     $DecodeHeads = 0 if $opt{'nodecodeheads'};
 	$readmail::DecodeHeader = $DecodeHeads;
+
+    ## Clear main flag if genidx and thread specified
+    $MAIN = 0  if $IDXONLY && $THREAD;
 
     @DateFields	 = split(/:/, $opt{'datefields'})  if $opt{'datefields'};
     foreach (@DateFields) { s/\s//g; tr/A-Z/a-z/; }
@@ -486,14 +573,16 @@ sub get_resources {
 
     ## Check for thread listing order
     $TSUBSORT = 1  if $opt{'tsubsort'};
-    $TSUBSORT = 0  if $opt{'tnosubsort'};
-    $TNOSORT  = 1  if $opt{'tnosort'};
+    $TSUBSORT = 0  if $opt{'notsubsort'};
+    $TNOSORT  = 1  if $opt{'notsort'};
     $TNOSORT  = 0  if $opt{'tsort'};
     $TREVERSE = 1  if $opt{'treverse'};
     $TREVERSE = 0  if $opt{'notreverse'};
     if ($TNOSORT) {
 	$TSUBSORT = 0;
     }
+    $NoSubjectThreads  = 1  if $opt{'nosubjectthreads'};
+    $NoSubjectThreads  = 0  if $opt{'subjectthreads'};
 
     ## Check if all messages must be updated (this has been simplified;
     ## any serious change should be done via editidx).
@@ -504,20 +593,20 @@ sub get_resources {
     }
 
     ## Set date names
-    &set_date_names(*weekdays, *Weekdays, *months, *Months);
+    &set_date_names(\@weekdays, \@Weekdays, \@months, \@Months);
+
+    ## Set %Zone with user-specified timezones
+    while (($zone, $offset) = each(%ZoneUD)) {
+	$Zone{$zone} = $offset;
+    }
 
     ## Require some more libaries
-    require 'mhidxrc.pl'  || die("ERROR: Unable to require mhidxrc.pl\n");
-    &mhidxrc_set_vars();
-
-    require 'mhdysub.pl'  || die("ERROR: Unable to require mhdysub.pl\n");
-    &create_routines();
-
-    require 'mhrcvars.pl' || die("ERROR: Unable to require mhrcvars.pl\n");
-    require 'mhindex.pl'  || die("ERROR: Unable to require mhindex.pl\n");
-    require 'mhthread.pl' || die("ERROR: Unable to require mhthread.pl\n");
-    require 'mhdb.pl'     || die("ERROR: Unable to require mhdb.pl\n")
-	unless $SCAN || $IDXONLY || !$DoArchive;
+    require 'mhidxrc.pl';   &mhidxrc_set_vars();
+    require 'mhdysub.pl';   &create_routines();
+    require 'mhrcvars.pl';
+    require 'mhindex.pl';
+    require 'mhthread.pl';
+    require 'mhdb.pl'	    unless $SCAN || $IDXONLY || !$DoArchive;
 
     ## Predefine %Index2TLoc in case of message deletion
     if (@TListOrder) {
@@ -574,53 +663,8 @@ sub version {
 ##	Usage routine
 ##
 sub usage {
-    require 'mhusage.pl' ||
-	die("ERROR: Unable to require mhusage.pl.\n",
-	    "Did you install MHonArc properly?\n");
+    require 'mhusage.pl';
     &mhusage();
-}
-
-##---------------------------------------------------------------------------
-##	create_lock_file() creates a directory to act as a lock.
-##
-sub create_lock_file {
-    my($file, $tries, $sleep, $force) = @_;
-    my($umask, $ret);
-    $ret = 0;
-    while ($tries > 0) {
-	if (mkdir($file, 0777)) {
-	    $ISLOCK = 1;
-	    $ret = 1;
-	    last;
-	}
-	sleep($sleep)  if $sleep > 0;
-	$tries--;
-    }
-    if ($force) {
-	$ISLOCK = 1;  $ret = 1;
-    }
-    $ret;
-}
-
-##---------------------------------------------------------------------------
-##	remove_lock_file removes the lock on the archive
-##
-sub remove_lock_file {
-    if ($ISLOCK) {
-	if (-d $LOCKFILE) {
-	    if (!rmdir($LOCKFILE)) {
-		warn "Warning: Unable to remove $LOCKFILE: $!\n";
-		return 0;
-	    }
-	} else {
-	    if (!unlink($LOCKFILE)) {
-		warn "Warning: Unable to remove $LOCKFILE\n";
-		return 0;
-	    }
-	}
-	$ISLOCK = 0;
-    }
-    1;
 }
 
 ##---------------------------------------------------------------------------
@@ -628,7 +672,7 @@ sub remove_lock_file {
 ##	read subroutine and calls the routine.
 ##
 sub read_fmt_file {
-    require 'mhrcfile.pl' || die("ERROR: Unable to require mhrcfile.pl\n");
+    require 'mhrcfile.pl';
     &read_resource_file($_[0]);
 }
 

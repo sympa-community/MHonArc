@@ -1,12 +1,12 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	@(#) ewhutil.pl 2.2 98/08/10 23:19:14
+##	@(#) ewhutil.pl 2.7 00/02/08 10:04:07
 ##  Author:
-##      Earl Hood       earlhood@usa.net
+##      Earl Hood       mhonarc@pobox.com
 ##  Description:
 ##      Generic utility routines
 ##---------------------------------------------------------------------------##
-##    Copyright (C) 1996-1998	Earl Hood, earlhood@usa.net
+##    Copyright (C) 1996-1999	Earl Hood, mhonarc@pobox.com
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by
@@ -24,6 +24,15 @@
 ##    02111-1307, USA
 ##---------------------------------------------------------------------------##
 
+package mhonarc;
+
+my %HTMLSpecials = (
+  '"'	=> '&quot;',
+  '&'	=> '&amp;',
+  '<'	=> '&lt;',
+  '>'	=> '&gt;',
+);
+
 ##---------------------------------------------------------------------------
 ##	Remove duplicates in an array.
 ##
@@ -35,24 +44,17 @@ sub remove_dups {
 }
 
 ##---------------------------------------------------------------------------
-##	numerically() is used to tell 'sort' to sort by numbers.
-##
-sub numerically {
-    $a <=> $b;
-}
-
-##---------------------------------------------------------------------------
 ##	"Entify" special characters
 
 sub htmlize {			# Older name
     my($txt) = $_[0];
-    $txt =~ s/&/\&amp;/g; $txt =~ s/>/&gt;/g; $txt =~ s/</&lt;/g;
+    $txt =~ s/(["&<>])/$HTMLSpecials{$1}/g;
     $txt;
 }
 
 sub entify {			# Newer name
     my($txt) = $_[0];
-    $txt =~ s/&/\&amp;/g; $txt =~ s/>/&gt;/g; $txt =~ s/</&lt;/g;
+    $txt =~ s/(["&<>])/$HTMLSpecials{$1}/g;
     $txt;
 }
 
@@ -75,7 +77,7 @@ sub uncommentize {
 ##	Copy a file.
 ##
 sub cp {
-    local($src, $dst) = @_;
+    my($src, $dst) = @_;
     open(SRC, $src) || die("ERROR: Unable to open $src\n");
     open(DST, "> $dst") || die("ERROR: Unable to create $dst\n");
     print DST <SRC>;
@@ -87,7 +89,7 @@ sub cp {
 ##	Translate html string back to regular string
 ##
 sub dehtmlize {
-    local($str) = shift;
+    my($str) = shift;
     $str =~ s/\&lt;/</g;
     $str =~ s/\&gt;/>/g;
     $str =~ s/\&amp;/\&/g;
@@ -98,9 +100,19 @@ sub dehtmlize {
 ##	Escape special characters in string for URL use.
 ##
 sub urlize {
-    local($url) = shift;
-    $url =~ s/([^\w])/sprintf("%%%X",unpack("C",$1))/ge;
+    my($url) = shift || "";
+    $url =~ s/([^\w@\.\-])/sprintf("%%%X",unpack("C",$1))/ge;
     $url;
+}
+
+##---------------------------------------------------------------------------##
+##	Perform a "modified" rot13 on a string.  This version includes
+##	the '@' character so addresses can be munged a little better.
+##
+sub mrot13 {
+    my $str	= shift;
+    $str =~ tr/@A-Z[a-z/N-Z[@A-Mn-za-m/;
+    $str;
 }
 
 ##---------------------------------------------------------------------------##

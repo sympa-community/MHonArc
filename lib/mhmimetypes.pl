@@ -1,13 +1,13 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	@(#) mhmimetypes.pl 1.1 98/10/24 17:19:30
+##	@(#) mhmimetypes.pl 1.6 01/06/10 17:37:44
 ##  Author:
-##      Earl Hood       earlhood@usa.net
+##      Earl Hood       mhonarc@pobox.com
 ##  Description:
 ##	MIME type mappings.
 ##---------------------------------------------------------------------------##
 ##    MHonArc -- Internet mail-to-HTML converter
-##    Copyright (C) 1998	Earl Hood, earlhood@usa.net
+##    Copyright (C) 1998,1999	Earl Hood, mhonarc@pobox.com
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by
@@ -43,6 +43,9 @@ $UnknownExt     = 'bin';
     'application/mathematica', 		'ma:Mathematica Notebook document',
     'application/mbedlet',		'mbd:mbedlet file',
     'application/msword',		'doc:MS-Word document',
+    'application/ms-excel',            	'xls:MS-Excel spreadsheet',
+    'application/ms-powerpoint',	'ppt:MS-Powerpoint presentation',
+    'application/ms-project',		'mpp:MS-Project file',
     'application/octet-stream', 	'bin:Binary data',
     'application/oda', 			'oda:ODA file',
     'application/pdf', 			'pdf:Adobe PDF document',
@@ -53,21 +56,27 @@ $UnknownExt     = 'bin';
     'application/sgml',			'sgml:SGML document',
     'application/studiom',		'smp:Studio M file',
     'application/timbuktu',		'tbt:timbuktu file',
+    'application/vis5d',		'v5d:Vis5D dataset',
     'application/vnd.framemaker',	'fm:FrameMaker document',
     'application/vnd.hp-hpgl',          'hpg,hpgl:HPGL file',
+    'application/vnd.lotus-1-2-3',      '123,wk4,wk3,wk1:Lotus 1-2-3',
+    'application/vnd.lotus-approach',   'apr,vew:Lotus Approach',
+    'application/vnd.lotus-freelance',  'prz,pre:Lotus Freelance',
+    'application/vnd.lotus-organizer',  'org,or3,or2:Lotus Organizer',
+    'application/vnd.lotus-screencam',  'scm:Lotus Screencam',
+    'application/vnd.lotus-wordpro',    'lwp,sam:Lotus WordPro',
     'application/vnd.mif', 		'mif:Frame MIF document',
     'application/vnd.ms-excel',         'xls:MS-Excel spreadsheet',
     'application/vnd.ms-powerpoint',    'ppt:MS-Powerpoint presentation',
     'application/vnd.ms-project',	'mpp:MS-Project file',
-    'application/vis5d',		'v5d:Vis5D dataset',
     'application/winhlp',		'hlp:WinHelp document',
     'application/wordperfect5.1',	'wp:WordPerfect 5.1 document',
-    'application/x-net-install',	'ins:Net Install file',
     'application/x-asap',		'asp:asap file',
     'application/x-bcpio', 		'bcpio:BCPIO file',
+    'application/x-bzip2', 		'bz2:BZip2 compressed data',
+    'application/x-compress', 		'Z:Unix compressed data',
     'application/x-cpio', 		'cpio:CPIO file',
     'application/x-csh', 		'csh:C-Shell script',
-    'application/x-compress', 		'Z:Unix compressed data',
     'application/x-dot',		'dot:dot file',
     'application/x-dvi', 		'dvi:TeX dvi file',
     'application/x-earthtime',		'etc:Earthtime file',
@@ -92,6 +101,7 @@ $UnknownExt     = 'bin';
     'application/x-msschedule',		'scd:MS-Schedule file',
     'application/x-msterminal',		'trm:MS-Terminal',
     'application/x-mswrite',		'wri:MS-Write document',
+    'application/x-net-install',	'ins:Net Install file',
     'application/x-netcdf', 		'cdf:Cdf file',
     'application/x-ns-proxy-autoconfig','proxy:Netscape Proxy Auto Config',
     'application/x-patch',		'patch:Source code patch',
@@ -137,14 +147,17 @@ $UnknownExt     = 'bin';
     'chemical/chemdraw',		'chm:Chemdraw chemical test',
     'chemical/cif',			'cif:CIF chemical test',
     'chemical/cml',			'cml:CML chemical test',
+    'chemical/cmsl',			'cml:Chemical Structure Markup',
     'chemical/cxf',			'cxf:Chemical Exhange Format file',
     'chemical/daylight-smiles',		'smi:SMILES format file',
     'chemical/embl-dl-nucleotide',	'emb,embl:EMBL nucleotide format file',
-    'chemical/gaussian-input',		'gau:Gaussian chemical test',
+    'chemical/gaussian',		'gau:Gaussian data',
+    'chemical/gaussian-input',		'gau:Gaussian input data',
+    'chemical/gaussian-log',		'gal:Gaussian log',
     'chemical/gcg8-sequence',		'gcg:GCG format file',
     'chemical/genbank',			'gen:GENbank data',
     'chemical/jcamp-dx',		'jdx:Jcamp chemical spectra test',
-    'chemical/kinemage',		'kin:Kinemage chemical test',
+    'chemical/kinemage',		'kin:Kinemage',
     'chemical/macromodel-input',	'mmd,mmod:Macromodel chemical test',
     'chemical/mopac-input',		'gau:Mopac chemical test',
     'chemical/mdl-molfile',		'mol:MOL mdl chemical test',
@@ -153,10 +166,12 @@ $UnknownExt     = 'bin';
     'chemical/mdl-sdf',			'sdf:SDF chemical test',
     'chemical/mdl-tgf',			'tgf:TGF chemical test',
     'chemical/mif',			'mif:MIF chemical test',
+    'chemical/mmd',			'mmd:Macromodel data',
     'chemical/mopac-input',		'mop:MOPAC data ',
     'chemical/ncbi-asn1',		'asn:NCBI data',
-    'chemical/pdb',			'pdb:PDB chemical test',
+    'chemical/pdb',			'pdb:Protein Databank data',
     'chemical/rosdal',			'ros:Rosdal data',
+    'chemical/xyz',			'xyz:Xmol XYZ data',
 
     'image/bmp',			'bmp:Windows bitmap',
     'image/cgm',			'cgm:Computer Graphics Metafile',
@@ -240,12 +255,14 @@ sub get_mime_ext {
 ##	to a file.
 ##
 sub write_attachment {
-    my $ctype	= lc shift;
+    my $content	= lc shift;
     my $sref	= shift;
     my $path	= shift;
     my $fname	= shift;
     my $inext	= shift;
-    my($cnt, $pre, $ext, $pathname);
+    my($ctype, $cnt, $pre, $ext, $pathname);
+
+    ($ctype) = $content =~ m%^\s*([\w-\./]+)%;	# Extract content-type
 
     local(*OUTFILE);
 
@@ -269,7 +286,7 @@ sub write_attachment {
     $pathname .= $DIRSEP . $fname;
 
     if (open(OUTFILE, "> $pathname")) {
-	binmode(OUTFILE);		# For MS-DOS
+	binmode(OUTFILE);		# For WinDog
 	print OUTFILE $$sref;
 	close(OUTFILE);
     } else {

@@ -1,12 +1,12 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	@(#) mhtime.pl 2.2 98/08/10 23:43:24
+##	@(#) mhtime.pl 2.8 00/01/15 17:51:12
 ##  Author:
-##      Earl Hood       earlhood@usa.net
+##      Earl Hood       mhonarc@pobox.com
 ##  Description:
 ##      Time related routines for mhonarc
 ##---------------------------------------------------------------------------##
-##    Copyright (C) 1996-1998	Earl Hood, earlhood@usa.net
+##    Copyright (C) 1996-1999	Earl Hood, mhonarc@pobox.com
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by
@@ -24,49 +24,45 @@
 ##    02111-1307, USA
 ##---------------------------------------------------------------------------##
 
+package mhonarc;
+
 ##---------------------------------------------------------------------------##
 ##      Date variables for date routines
 ##
-{
-    package mhtime;
+my %Month2Num = (
+    'jan', 0, 'feb', 1, 'mar', 2, 'apr', 3, 'may', 4, 'jun', 5, 'jul', 6,
+    'aug', 7, 'sep', 8, 'oct', 9, 'nov', 10, 'dec', 11,
+);
+my %WDay2Num = (
+    'sun', 0, 'mon', 1, 'tue', 2, 'wed', 3, 'thu', 4, 'fri', 5, 'sat', 6,
+);
 
-    %Month2Num = (
-	'jan', 0, 'feb', 1, 'mar', 2, 'apr', 3, 'may', 4, 'jun', 5, 'jul', 6,
-	'aug', 7, 'sep', 8, 'oct', 9, 'nov', 10, 'dec', 11,
-    );
-    %WDay2Num = (
-	'sun', 0, 'mon', 1, 'tue', 2, 'wed', 3, 'thu', 4, 'fri', 5, 'sat', 6,
-    );
+my @wdays = ('Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat');
+my @Wdays = ('Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday',
+	     'Friday', 'Saturday');
+my @mons   = ('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug',
+	      'Sep', 'Oct', 'Nov', 'Dec');
+my @Mons   = ('January', 'February', 'March', 'April', 'May', 'June',
+	      'July', 'August', 'September', 'October', 'November',
+	      'December');
 
-    @weekdays = ('Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat');
-    @Weekdays = ('Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday',
-		 'Friday', 'Saturday');
-    @months   = ('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug',
-		 'Sep', 'Oct', 'Nov', 'Dec');
-    @Months   = ('January', 'February', 'March', 'April', 'May', 'June',
-		 'July', 'August', 'September', 'October', 'November',
-		 'December');
-
-    $p_weekdays = "Mon|Tue|Wed|Thu|Fri|Sat|Sun";
-    $p_months   = "Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec";
-    $p_hrminsec = '\d{1,2}:\d\d:\d\d';
-    $p_hrmin    = '\d{1,2}:\d\d';
-    $p_day      = '\d{1,2}';
-    $p_year     = '\d\d\d\d|\d\d';
-}
+my $p_weekdays = "Mon|Tue|Wed|Thu|Fri|Sat|Sun";
+my $p_months   = "Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec";
+my $p_hrminsec = '\d{1,2}:\d\d:\d\d';
+my $p_hrmin    = '\d{1,2}:\d\d';
+my $p_day      = '\d{1,2}';
+my $p_year     = '\d\d\d\d|\d\d';
 
 ##---------------------------------------------------------------------------
 ##	Set weekday and month names.  This allows localization of
 ##	names.
 ##
 sub set_date_names {
-    package mhtime;
-
-    local(*in_wd, *in_Wd, *in_m, *in_M) = @_;
-    @weekdays = @in_wd	if scalar(@in_wd);
-    @Weekdays = @in_Wd	if scalar(@in_Wd);
-    @months   = @in_m 	if scalar(@in_m);
-    @Months   = @in_M 	if scalar(@in_M);
+    my($in_wd, $in_Wd, $in_m, $in_M) = @_;
+    @wdays = @$in_wd	if defined($in_wd) && scalar(@$in_wd);
+    @Wdays = @$in_Wd	if defined($in_Wd) && scalar(@$in_Wd);
+    @mons  = @$in_m 	if defined($in_m)  && scalar(@$in_m);
+    @Mons  = @$in_M 	if defined($in_M)  && scalar(@$in_M);
 }
 
 ##---------------------------------------------------------------------------
@@ -78,11 +74,9 @@ sub getdate {
 }
 
 ##---------------------------------------------------------------------------
-##	Convert a calander time to a string.  Similar to strftime(3).
+##	Convert a calander time to a string.
 ##
 sub time2str {
-    package mhtime;
-
     my($fmt, $time, $local) = @_;
     my($date) = "";
 
@@ -90,54 +84,66 @@ sub time2str {
     my($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) =
 	    ($local ? localtime($time) : gmtime($time));
 
+    ## If format string blank, use default format
+    if ($fmt !~ /\S/) {
+	$fmt  = '%a %b %d %H:%M:%S';
+	$fmt .= ' GMT'  unless $local;
+	$fmt .= ' %Y';
+    }
+
+    POSIXMODCHK: {
+	last  POSIXMODCHK  unless $POSIXstrftime;
+	eval { require POSIX; };
+	last  POSIXMODCHK  if ($@) || !defined(&POSIX::strftime);
+	return POSIX::strftime($fmt, $sec,$min,$hour,$mday,$mon,$year,
+				     $wday,$yday,$isdst);
+    }
+
+    ## Get here, we have to do it ourselves.
     my($yearfull, $hour12);
     $yearfull = $year + 1900;
+    $year     = $year % 100;
     $hour12   = $hour > 12 ? $hour-12 : $hour;
 
     ## Format output
-    if ($fmt =~ /\S/) {
-	$fmt =~ s/\%a/$weekdays[$wday]/g;
-	$fmt =~ s/\%A/$Weekdays[$wday]/g;
-	$fmt =~ s/\%b/$months[$mon]/g;
-	$fmt =~ s/\%B/$Months[$mon]/g;
+    $fmt =~ s/\%c/\%a \%b \%d \%H:\%M:\%S \%Y/g;
 
-	$sec	  = sprintf("%02d", $sec);
-	$min	  = sprintf("%02d", $min);
-	$hour	  = sprintf("%02d", $hour);
-	$hour12   = sprintf("%02d", $hour12);
-	$mday	  = sprintf("%02d", $mday);
-	$mon	  = sprintf("%02d", $mon+1);
-	$year	  = sprintf("%02d", $year);
-	$yearfull = sprintf("%04d", $yearfull);
-	$wday	  = sprintf("%02d", $wday+1);
-	$yday	  = sprintf("%03d", $yday);
+    $fmt =~ s/\%a/$wdays[$wday]/g;
+    $fmt =~ s/\%A/$Wdays[$wday]/g;
+    $fmt =~ s/\%[bh]/$mons[$mon]/g;
+    $fmt =~ s/\%B/$Mons[$mon]/g;
 
-	$fmt =~ s/\%d/$mday/g;
-	$fmt =~ s/\%H/$hour/g;
-	$fmt =~ s/\%I/$hour12/g;
-	$fmt =~ s/\%j/$yday/g;
-	$fmt =~ s/\%m/$mon/g;
-	$fmt =~ s/\%M/$min/g;
-	$fmt =~ s/\%n/\n/g;
-	$fmt =~ s/\%p/am/g if ($hour < 12);
-	$fmt =~ s/\%p/pm/g if ($hour >= 12);
-	$fmt =~ s/\%P/AM/g if ($hour < 12);
-	$fmt =~ s/\%P/PM/g if ($hour >= 12);
-	$fmt =~ s/\%S/$sec/eg;
-	$fmt =~ s/\%w/$wday/g;
-	$fmt =~ s/\%y/$year/g; 
-	$fmt =~ s/\%Y/$year+1900/ge; 
+    $sec	= sprintf("%02d", $sec);
+    $min	= sprintf("%02d", $min);
+    $hour	= sprintf("%02d", $hour);
+    $hour12	= sprintf("%02d", $hour12);
+    $mday	= sprintf("%02d", $mday);
+    $mon	= sprintf("%02d", $mon+1);
+    $year	= sprintf("%02d", $year);
+    $yearfull	= sprintf("%04d", $yearfull);
+    $wday	= sprintf("%02d", $wday+1);
+    $yday	= sprintf("%03d", $yday);
 
-	$fmt =~ s/\%\%/\%/g ; 
+    $fmt =~ s/\%d/$mday/g;
+    $fmt =~ s/\%H/$hour/g;
+    $fmt =~ s/\%I/$hour12/g;
+    $fmt =~ s/\%j/$yday/g;
+    $fmt =~ s/\%m/$mon/g;
+    $fmt =~ s/\%M/$min/g;
+    $fmt =~ s/\%n/\n/g;
+    $fmt =~ s/\%p/am/g if ($hour < 12);
+    $fmt =~ s/\%p/pm/g if ($hour >= 12);
+    $fmt =~ s/\%P/AM/g if ($hour < 12);
+    $fmt =~ s/\%P/PM/g if ($hour >= 12);
+    $fmt =~ s/\%S/$sec/g;
+    $fmt =~ s/\%w/$wday/g;
+    $fmt =~ s/\%y/$year/g; 
+    $fmt =~ s/\%Y/$yearfull/g; 
 
-	$date = $fmt ;
+    $fmt =~ s/\%\%/\%/g ; 
 
-    } else {
-	$date = sprintf("%s %s %02d %02d:%02d:%02d ".
-				($local ? "%d" : "GMT %d"),
-			$weekdays[$wday], $months[$mon],
-			$mday, $hour, $min, $sec, $yearfull);
-    }
+    $date = $fmt ;
+
     $date ;
 }
 
@@ -170,12 +176,10 @@ sub time2str {
 ##	Contributer(s): Frank J. Manion <FJ_Manion@fccc.edu>
 ##
 sub parse_date {
-    package mhtime;
-
-    local($date) = $_[0];
-    local($wday, $mday, $mon, $yr, $time, $hr, $min, $sec, $zone);
-    local(@array);
-    local($start, $rest);
+    my($date) = $_[0];
+    my($wday, $mday, $mon, $yr, $time, $hr, $min, $sec, $zone);
+    my(@array);
+    my($start, $rest);
 
     # Try to find the date by focusing on the "\d\d:\d\d" field.
     # All parsing is then done relative to this location.
@@ -219,7 +223,7 @@ sub parse_date {
 	} elsif ( $rest =~ /^($p_year)/o ) {	# YYYY
 	    ($yr) = ($1);
 	} else {				# zilch, use current year
-	    warn "Warning: No year in date, using current\n";
+	    warn "Warning: No year in date ($date), using current\n";
 	    $yr = (localtime(time))[5];
 	}
 
@@ -241,10 +245,8 @@ sub parse_date {
 ##	year can be specifed as "yyyy" if a 4 digit year is needed.
 ##
 sub time2mmddyy {
-    package mhtime;
-
-    local($time, $fmt) = ($_[0], $_[1]);
-    local($day,$mon,$year,$ylen);
+    my($time, $fmt) = ($_[0], $_[1]);
+    my($day,$mon,$year,$ylen,$tmp);
     if ($time) {
 	($day,$mon,$year) = (localtime($time))[3,4,5];
 	$year += 1900;
@@ -274,22 +276,25 @@ sub time2mmddyy {
 ##	seconds.
 ##
 sub zone_offset_to_secs {
-    local($off) = shift;
-    local($sign, $min);
+    my($off) = shift;
+    my($sign, $min);
 
+    ## Check if just an hour specification
     if (length($off) < 4) {
-	warn qq{Warning: "$off" not a valid timezone offset\n};
-	return 0;
+	return $off * 3600;
     }
-    if ($off =~ s/-//) {		# Check for sign
+    ## Check for sign
+    if ($off =~ s/-//) {
 	$sign = -1;
     } else {
 	$sign = 1;  s/\+//;
     }
-    $min = substr($off, -2, 2);		# Extract minutes
-    substr($off, -2, 2) = "";		# Just leave hour in $off
-    $sign * (($off * 3600) + ($min * 60));
+    ## Extract minutes
+    $min = substr($off, -2, 2);
+    substr($off, -2, 2) = "";	# Just leave hour in $off
 
+    ## Translate to seconds
+    $sign * (($off * 3600) + ($min * 60));
 }
 
 ##---------------------------------------------------------------------------##

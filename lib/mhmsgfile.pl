@@ -1,15 +1,15 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	@(#) mhmsgfile.pl 1.1 98/08/10 23:56:33
+##	@(#) mhmsgfile.pl 1.4 99/08/04 23:14:15
 ##  Author:
-##      Earl Hood       earlhood@usa.net
+##      Earl Hood       mhonarc@pobox.com
 ##  Description:
 ##	MHonArc library for dealing with HTML message files.  Mainly
 ##	for parsing existing message files inorder to extract archive
 ##	related data.
 ##---------------------------------------------------------------------------##
 ##    MHonArc -- Internet mail-to-HTML converter
-##    Copyright (C) 1998	Earl Hood, earlhood@usa.net
+##    Copyright (C) 1998-1999	Earl Hood, mhonarc@pobox.com
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by
@@ -31,8 +31,9 @@ package mhonarc;
 
 ##---------------------------------------------------------------------------##
 ## Dependent libraries:
-##	ewhutil.pl, mhtime.pl
 ##---------------------------------------------------------------------------##
+require 'ewhutil.pl';
+require 'mhtime.pl';
 
 ##---------------------------------------------------------------------------##
 ##	parse_data_from_msg(): Function to parse the initial comment
@@ -94,8 +95,13 @@ sub load_data_from_msg_file {
     ## Assign data to hashes
     $Date{$index} = $date;
     $Subject{$index} = $href->{'subject'}[0];
-    $From{$index} = defined($href->{'from'}) ? $href->{'from'}[0] :
-    					       'No author';
+    if (defined($href->{'from-r13'})) {
+	$From{$index} = &mrot13($href->{'from-r13'}[0]);
+    } elsif (defined($href->{'from'})) {
+	$From{$index} = $href->{'from'}[0];
+    } else {
+	$From{$index} = 'Anonymous';
+    }
     if (defined($href->{'message-id'})) {
 	$Index2MsgId{$index} = $href->{'message-id'}[0];
 	$MsgId{$href->{'message-id'}[0]} = $index;

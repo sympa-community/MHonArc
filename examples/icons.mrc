@@ -1,6 +1,6 @@
 <!--	MHonArc resource file
 
-	icons.mrc 1.2 98/08/10
+	icons.mrc 1.3 99/06/25
 
 	This example file makes use of the icons feature of
 	MHonArc.

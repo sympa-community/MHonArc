@@ -1,0 +1,134 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
+<html>
+<head>
+<title>MHonArc Resources: MIMEEXCS</title>
+</head>
+<body>
+
+<address>
+<a href="../resources.html#mimeexcs">MHonArc Resource List</a><br>
+</address>
+
+<hr>
+<h1>MIMEEXCS</h1>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Syntax</h2>
+
+<dl>
+
+<dt><strong>Envariable</strong><dt>
+<dd><p>N/A
+</p>
+</dd>
+
+<dt><strong>Element</strong><dt>
+<dd><p><br>
+<code>&lt;MIMEEXCS&gt;</code><br>
+<var>content-type</var><br>
+<var>content-type</var><br>
+...
+<code>&lt;/MIMEEXCS&gt;</code><br>
+</p>
+</dd>
+
+<dt><strong>Command-line Option</strong><dt>
+<dd><p>N/A
+</p>
+</dd>
+
+</dl>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Description</h2>
+
+<p>MIMEEXCS defines the list of content-types to exclude from processing.
+The exclusion occurs before the data is processed to any filters
+registered via the <a href="mimefilters.html">MIMEFILTERS</a> resource.
+If a message body part is excluded, the converted message will have
+a note that the part was excluded.
+</p>
+<table border=0 cellpadding=4>
+<tr valign=top>
+<td><strong>NOTE</strong></td>
+<td><p>Base types can also be listed to exclude all content-types
+with a give base.  For example, <tt>image/jpg</tt> will only exclude
+JPEG images, but <tt>image</tt> will exclude all images.
+</p>
+</td>
+</tr>
+</table>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Default Setting</h2>
+
+<p>Nil.
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Resource Variables</h2>
+
+<p>N/A
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Examples</h2>
+
+<p>The following example excludes all binaries, images, and postscript
+data:
+</p>
+<pre>
+<b>&lt;MIMEExcs&gt;</b>
+application/octet-stream
+application/postscript
+image
+<b>&lt;/MIMEExcs&gt;</b>
+</pre>
+
+<p>The following is a very restrictive setting to minimize archive
+exploits and large data files:
+</p>
+<pre>
+<b>&lt;MIMEExcs&gt;</b>
+application
+image
+audio
+video
+text/html
+<b>&lt;/MIMEExcs&gt;</b>
+</pre>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Version</h2>
+
+<p>2.4.9
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>See Also</h2>
+
+<p>
+<a href="mimefilters.html">MIMEFILTERS</a>
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<address>
+01/06/10 17:08:42<br>
+<img align="top" src="../monicon.gif" alt="">
+<a href="http://www.pobox.com/~ehood/mhonarc.html"
+><strong>MHonArc</strong></a><br>
+Copyright &#169; 2001, <a href="http://www.mhonarc.org/~ehood"
+>Earl Hood</a>, <a href="mailto:mhonarc@mhonarc.org"
+>mhonarc@mhonarc.org</a><br>
+</address>
+
+</body>
+</html>

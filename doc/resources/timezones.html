@@ -26,11 +26,10 @@
 <dt><strong>Element</strong><dt>
 <dd><p><br>
 <code>&lt;TIMEZONES&gt;<br></code>
-<VAR>timezone_acronym</VAR><CODE>:</CODE><VAR>hour_offset</VAR><br>
-<VAR>timezone_acronym</VAR><CODE>:</CODE><VAR>hour_offset</VAR><br>
+<VAR>timezone_acronym</VAR><CODE>:</CODE><VAR>time_offset</VAR><br>
+<VAR>timezone_acronym</VAR><CODE>:</CODE><VAR>time_offset</VAR><br>
 <var>...</var><br>
 <code>&lt;/TIMEZONES&gt;<br></code>
-</code>
 </p>
 </dd>
 
@@ -50,44 +49,227 @@
 can be defined only by the
 <CODE>TIMEZONES</CODE> element
 The format of each line of content is
-"<VAR>timezone_acronym</VAR><CODE>:</CODE><VAR>hour_offset</VAR>".
+"<VAR>timezone_acronym</VAR><CODE>:</CODE><VAR>time_offset</VAR>",
+where <VAR>time_offset</VAR> is in <tt>[-]HHMM</tt> notation.
 Examples of timezone acronyms are: <CODE>UTC</CODE>, <CODE>PDT</CODE>,
-<CODE>EST</CODE>. The hour offset should be positive for timezones
+<CODE>EST</CODE>. The time offsets should be positive for timezones
 West of UTC, and negative for time zones East of UTC.  </P>
 
-<P>MHonArc has a default list of timezone acronyms
-defined with hour offsets.  Therefore, the list given in
-the resource file will augment the default list, unless the
-"<CODE><strong>Override</strong></CODE>" attribute is specified. If
-"<CODE>Override</CODE>" is specified, the default list, along with any
-other lists specified in previous <CODE>TIMEZONES</CODE> elements,
-are discarded, and only the timezone acronyms specified in the
-<CODE>TIMEZONES</CODE> element will be used.  </P>
+<table border=0 cellpadding=4>
+<tr valign=top>
+<td><strong>NOTE</strong></td>
+<td><P>Timezone settings in MHonArc are the negative inverse
+of what is used in dates in messages.  For example, an EST time will
+look like the following in a mail message:
+</p>
+<pre>
+    Sat, 10 Sep 1994 15:11:10 -0500
+</pre>
+<p>Notice that <tt>-0500</tt> is used for EST.  However, in MHonArc,
+EST is mapped to <tt>0500</tt>, since <tt>0500</tt> must be added to
+the specified date/time to get the UTC date/time.
+</p>
+</td>
+</tr>
+</table>
 
-<P>Much of the time, the date used by MHonArc has an hour
-offset instead of a timezone acronym. However, mail messages may
+<P>MHonArc has a default list of timezone acronyms defined with
+time offsets.  Therefore, the list given in the resource file will
+augment the default list.  If "<CODE>Override</CODE>" attribute is
+specified, any local lists specified in previous <CODE>TIMEZONES</CODE>
+elements are replaced.
+</P>
+
+<P>Much of the time, the date used by MHonArc has a time
+offset instead of a timezone acronym.  However, mail messages may
 contain timezone acronyms in received/sent dates and MHonArc
-must be told what the hour offset from UTC the timezone acronym
-represents in order to properly sort messages by date.  </P>
+must be told what hour offset to add to the give time to get UTC time
+to properly sort messages by date.  </P>
 
 <!-- *************************************************************** -->
 <hr>
 <h2>Default Setting</h2>
 
+<p>The following table shows the zones and values currently known
+to MHonArc:
+</p>
+<table border=1>
+<tr><th align="left">Zone</th>
+    <th align="left">Offset</th>
+    <th align="left">Description</th></tr>
+<tr><th align="left">ACDT</th><td align="right">-1030</td><td>Australian Central Daylight</td></tr>
+<tr><th align="left">ACST</th><td align="right">-0930</td><td>Australian Central Standard</td></tr>
+<tr><th align="left">ADT</th><td align="right">0300</td><td>(US) Atlantic Daylight</td></tr>
+<tr><th align="left">AEDT</th><td align="right">-1100</td><td>Australian East Daylight</td></tr>
+<tr><th align="left">AEST</th><td align="right">-1000</td><td>Australian East Standard</td></tr>
+<tr><th align="left">AHDT</th><td align="right">0900</td><td>&nbsp;</td></tr>
+<tr><th align="left">AHST</th><td align="right">1000</td><td>&nbsp;</td></tr>
+<tr><th align="left">AST</th><td align="right">0400</td><td>(US) Atlantic Standard</td></tr>
+<tr><th align="left">AT</th><td align="right">0200</td><td>Azores</td></tr>
+<tr><th align="left">AWDT</th><td align="right">-0900</td><td>Australian West Daylight</td></tr>
+<tr><th align="left">AWST</th><td align="right">-0800</td><td>Australian West Standard</td></tr>
+<tr><th align="left">BAT</th><td align="right">-0300</td><td>Baghdad</td></tr>
+<tr><th align="left">BDST</th><td align="right">-0200</td><td>British Double Summer</td></tr>
+<tr><th align="left">BET</th><td align="right">1100</td><td>Bering Standard</td></tr>
+<tr><th align="left">BST</th><td align="right">-0100</td><td>British Summer</td></tr>
+<tr><th align="left">BT</th><td align="right">-0300</td><td>Baghdad</td></tr>
+<tr><th align="left">BZT2</th><td align="right">0300</td><td>Brazil Zone 2</td></tr>
+<tr><th align="left">CADT</th><td align="right">-1030</td><td>Central Australian Daylight</td></tr>
+<tr><th align="left">CAST</th><td align="right">-0930</td><td>Central Australian Standard</td></tr>
+<tr><th align="left">CAT</th><td align="right">1000</td><td>Central Alaska</td></tr>
+<tr><th align="left">CCT</th><td align="right">-0800</td><td>China Coast</td></tr>
+<tr><th align="left">CDT</th><td align="right">0500</td><td>(US) Central Daylight</td></tr>
+<tr><th align="left">CED</th><td align="right">-0200</td><td>Central European Daylight</td></tr>
+<tr><th align="left">CET</th><td align="right">-0100</td><td>Central European</td></tr>
+<tr><th align="left">CST</th><td align="right">0600</td><td>(US) Central Standard</td></tr>
+<tr><th align="left">EAST</th><td align="right">-1000</td><td>Eastern Australian Standard</td></tr>
+<tr><th align="left">EDT</th><td align="right">0400</td><td>(US) Eastern Daylight</td></tr>
+<tr><th align="left">EED</th><td align="right">-0300</td><td>Eastern European Daylight</td></tr>
+<tr><th align="left">EET</th><td align="right">-0200</td><td>Eastern Europe</td></tr>
+<tr><th align="left">EEST</th><td align="right">-0300</td><td>Eastern Europe Summer</td></tr>
+<tr><th align="left">EST</th><td align="right">0500</td><td>(US) Eastern Standard</td></tr>
+<tr><th align="left">FST</th><td align="right">-0200</td><td>French Summer</td></tr>
+<tr><th align="left">FWT</th><td align="right">-0100</td><td>French Winter</td></tr>
+<tr><th align="left">GMT</th><td align="right">0000</td><td>Greenwich Mean</td></tr>
+<tr><th align="left">GST</th><td align="right">-1000</td><td>Guam Standard</td></tr>
+<tr><th align="left">HDT</th><td align="right">0900</td><td>Hawaii Daylight</td></tr>
+<tr><th align="left">HST</th><td align="right">1000</td><td>Hawaii Standard</td></tr>
+<tr><th align="left">IDLE</th><td align="right">-1200</td><td>Internation Date Line East</td></tr>
+<tr><th align="left">IDLW</th><td align="right">1200</td><td>Internation Date Line West</td></tr>
+<tr><th align="left">IST</th><td align="right">-0530</td><td>Indian Standard</td></tr>
+<tr><th align="left">IT</th><td align="right">-0330</td><td>Iran</td></tr>
+<tr><th align="left">JST</th><td align="right">-0900</td><td>Japan Standard</td></tr>
+<tr><th align="left">JT</th><td align="right">-0700</td><td>Java</td></tr>
+<tr><th align="left">KST</th><td align="right">-0900</td><td>Korean Standard</td></tr>
+<tr><th align="left">MDT</th><td align="right">0600</td><td>(US) Mountain Daylight</td></tr>
+<tr><th align="left">MED</th><td align="right">-0200</td><td>Middle European Daylight</td></tr>
+<tr><th align="left">MET</th><td align="right">-0100</td><td>Middle European</td></tr>
+<tr><th align="left">MEST</th><td align="right">-0200</td><td>Middle European Summer</td></tr>
+<tr><th align="left">MEWT</th><td align="right">-0100</td><td>Middle European Winter</td></tr>
+<tr><th align="left">MST</th><td align="right">0700</td><td>(US) Mountain Standard</td></tr>
+<tr><th align="left">MT</th><td align="right">-0800</td><td>Moluccas</td></tr>
+<tr><th align="left">NDT</th><td align="right">0230</td><td>Newfoundland Daylight</td></tr>
+<tr><th align="left">NFT</th><td align="right">0330</td><td>Newfoundland</td></tr>
+<tr><th align="left">NT</th><td align="right">1100</td><td>Nome</td></tr>
+<tr><th align="left">NST</th><td align="right">-0630</td><td>North Sumatra</td></tr>
+<tr><th align="left">NZ</th><td align="right">-1100</td><td>New Zealand</td></tr>
+<tr><th align="left">NZST</th><td align="right">-1200</td><td>New Zealand Standard</td></tr>
+<tr><th align="left">NZDT</th><td align="right">-1300</td><td>New Zealand Daylight</td></tr>
+<tr><th align="left">NZT</th><td align="right">-1200</td><td>New Zealand</td></tr>
+<tr><th align="left">PDT</th><td align="right">0700</td><td>(US) Pacific Daylight</td></tr>
+<tr><th align="left">PST</th><td align="right">0800</td><td>(US) Pacific Standard</td></tr>
+<tr><th align="left">ROK</th><td align="right">-0900</td><td>Republic of Korea</td></tr>
+<tr><th align="left">SAD</th><td align="right">-1000</td><td>South Australia Daylight</td></tr>
+<tr><th align="left">SAST</th><td align="right">-0900</td><td>South Australia Standard</td></tr>
+<tr><th align="left">SAT</th><td align="right">-0900</td><td>South Australia</td></tr>
+<tr><th align="left">SDT</th><td align="right">-1000</td><td>South Australia Daylight</td></tr>
+<tr><th align="left">SST</th><td align="right">-0200</td><td>Swedish Summer</td></tr>
+<tr><th align="left">SWT</th><td align="right">-0100</td><td>Swedish Winter</td></tr>
+<tr><th align="left">USZ3</th><td align="right">-0400</td><td>USSR Zone 3</td></tr>
+<tr><th align="left">USZ4</th><td align="right">-0500</td><td>USSR Zone 4</td></tr>
+<tr><th align="left">USZ5</th><td align="right">-0600</td><td>USSR Zone 5</td></tr>
+<tr><th align="left">USZ6</th><td align="right">-0700</td><td>USSR Zone 6</td></tr>
+<tr><th align="left">UT</th><td align="right">0000</td><td>Universal Coordinated</td></tr>
+<tr><th align="left">UTC</th><td align="right">0000</td><td>Universal Coordinated</td></tr>
+<tr><th align="left">UZ10</th><td align="right">-1100</td><td>USSR Zone 10</td></tr>
+<tr><th align="left">WAT</th><td align="right">0100</td><td>West Africa</td></tr>
+<tr><th align="left">WET</th><td align="right">0000</td><td>West European</td></tr>
+<tr><th align="left">WST</th><td align="right">-0800</td><td>West Australian Standard</td></tr>
+<tr><th align="left">YDT</th><td align="right">0800</td><td>Yukon Daylight</td></tr>
+<tr><th align="left">YST</th><td align="right">0900</td><td>Yukon Standard</td></tr>
+<tr><th align="left">ZP4</th><td align="right">-0400</td><td>USSR Zone 3</td></tr>
+<tr><th align="left">ZP5</th><td align="right">-0500</td><td>USSR Zone 4</td></tr>
+<tr><th align="left">ZP6</th><td align="right">-0600</td><td>USSR Zone 5</td></tr>
+</table>
+
+<p>The following shows how these values would be specified in a
+resource file:
+</p>
 <PRE>
 <b>&lt;TimeZones&gt;</b>
-UTC:0
-GMT:0
-AST:4
-ADT:3
-EST:5
-EDT:4
-CST:6
-CDT:5
-MST:7
-MDT:6
-PST:8
-PDT:7
+ACDT:-1030
+ACST:-0930
+ADT:0300
+AEDT:-1100
+AEST:-1000
+AHDT:0900
+AHST:1000
+AST:0400
+AT:0200
+AWDT:-0900
+AWST:-0800
+BAT:-0300
+BDST:-0200
+BET:1100
+BST:-0100
+BT:-0300
+BZT2:0300
+CADT:-1030
+CAST:-0930
+CAT:1000
+CCT:-0800
+CDT:0500
+CED:-0200
+CET:-0100
+CST:0600
+EAST:-1000
+EDT:0400
+EED:-0300
+EET:-0200
+EEST:-0300
+EST:0500
+FST:-0200
+FWT:-0100
+GMT:0000
+GST:-1000
+HDT:0900
+HST:1000
+IDLE:-1200
+IDLW:1200
+IST:-0530
+IT:-0330
+JST:-0900
+JT:-0700
+KST:-0900
+MDT:0600
+MED:-0200
+MET:-0100
+MEST:-0200
+MEWT:-0100
+MST:0700
+MT:-0800
+NDT:0230
+NFT:0330
+NT:1100
+NST:-0630
+NZ:-1100
+NZST:-1200
+NZDT:-1300
+NZT:-1200
+PDT:0700
+PST:0800
+ROK:-0900
+SAD:-1000
+SAST:-0900
+SAT:-0900
+SDT:-1000
+SST:-0200
+SWT:-0100
+USZ3:-0400
+USZ4:-0500
+USZ5:-0600
+USZ6:-0700
+UT:0000
+UTC:0000
+UZ10:-1100
+WAT:0100
+WET:0000
+WST:-0800
+YDT:0800
+YST:0900
+ZP4:-0400
+ZP5:-0500
+ZP6:-0600
 <b>&lt;/TimeZones&gt;</b>
 </PRE>
 
@@ -102,8 +284,27 @@ PDT:7
 <hr>
 <h2>Examples</h2>
 
-<p>None.
+<p>Some zone acronyms are not unique, and have different time offsets.
+The following table describes alternative values for these zones:
 </p>
+<table border=1>
+<tr><th align="left">Zone</th>
+    <th align="left">Offset</th>
+    <th align="left">Description</th></tr>
+<tr><th align="left">BST</th><td align="right">0300</td><td>Brazil Standard</td></tr>
+<tr><th align="left">NST</th><td align="right">0330</td><td>Newfoundland Standard</td></tr>
+<tr><th align="left">GST</th><td align="right">0300</td><td>Greenland Standard</td></tr>
+</table>
+<p>To have the above values used instead of the default values use by
+MHonArc, the following TIMEZONES setting would be used:
+</p>
+<PRE>
+<b>&lt;TimeZones&gt;</b>
+BST:0300
+NST:0330
+GST:0300
+<b>&lt;/TimeZones&gt;</b>
+</PRE>
 
 <!-- *************************************************************** -->
 <hr>
@@ -122,10 +323,10 @@ PDT:7
 <!-- *************************************************************** -->
 <hr>
 <address>
-98/09/19 18:27:17<br>
+00/10/28 11:13:10<br>
 <img align="top" src="../monicon.gif" alt="">
-<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"><strong>MHonArc</strong></a><br>
-Copyright &#169; 1997-1998, <a href="http://www.oac.uci.edu/indiv/ehood/">Earl Hood</a>, <a href="mailto:earlhood@usa.net">earlhood@usa.net</a><br>
+<a href="http://www.pobox.com/~ehood/mhonarc.html"><strong>MHonArc</strong></a><br>
+Copyright &#169; 1997-1998, <a href="http://www.pobox.com/~ehood/">Earl Hood</a>, <a href="mailto:mhonarc@pobox.com">mhonarc@pobox.com</a><br>
 </address>
 
 </body>

@@ -1,14 +1,14 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
 <HTML>
 <HEAD>
-<TITLE>MHonArc v2.3 -- Quick Start</TITLE>
+<TITLE>MHonArc v2.4 -- Quick Start</TITLE>
 </HEAD>
 <BODY background="ssbg75.jpg"
       text="#000000" link="#0000ee" vlink="#551a8b" alink="ff0000">
 
 <!--X-NavButtons-Start-->
 <p align=center>
-<a href="intro.html"><img src="prev.gif" border=0 alt="[Prev]"></a><a href="layout.html"><img src="next.gif" border=0 alt="[Next]"></a><a href="mhonarc.html"><img src="up.gif" border=0 alt="[TOC]"></a><a href="faq/faq.html"><img src="faq.gif" border=0 alt="[FAQ]"></a><a href="bugs.html"><img src="bug.gif" border=0 alt="[Bugs]"></a><a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"><img src="home.gif" border=0 alt="[Home]"></a>
+<a href="install.html"><img src="prev.gif" border=0 alt="[Prev]"></a><a href="commontasks.html"><img src="next.gif" border=0 alt="[Next]"></a><a href="mhonarc.html"><img src="up.gif" border=0 alt="[TOC]"></a><a href="faq/faq.html"><img src="faq.gif" border=0 alt="[FAQ]"></a><a href="app-bugs.html"><img src="bug.gif" border=0 alt="[Bugs]"></a><a href="http://www.mhonarc.org/"><img src="home.gif" border=0 alt="[Home]"></a>
 </p>
 <!--X-NavButtons-End-->
 <HR>
@@ -16,12 +16,19 @@
 <H1><a name="quickstart">Quick Start</a></H1>
 
 <P>This section will give you a "<EM>quick start</EM>" on using
-MHonArc. However, I recommend reading through the entire
-documentation to take full advantage of all the features of
-MHonArc.  </P>
+MHonArc.
+</P>
+
+<!--X-TOC-Start-->
+<ul>
+<li><a href="#folders">Converting mail</a>
+<li><a href="#adding">Adding Messages to an Archive</a>
+<li><a href="#single">Converting a single message</a>
+</ul>
+<!--X-TOC-End-->
 
 <hr>
-<H2><a name="folders">Converting MH mail folders or Mailbox files</a></H2>
+<H2><a name="folders">Converting mail</a></H2>
 
 <P>Since MHonArc supports <EM>MH</EM> mail folders and
 UUCP/Unix mailbox files, the term "<EM>mail folder</EM>" will represent
@@ -31,7 +38,7 @@ To convert your mail folder to an HTML archive, use the following:
 
 <blockquote>
 <pre>
-% <b>mhonarc </b><VAR>path</VAR><b>/inbox</b>
+shell&gt; <b>mhonarc </b><VAR>path</VAR><b>/inbox</b>
 </pre>
 </blockquote>
 
@@ -44,7 +51,7 @@ directory that contains inbox, then you can leave out the
 <table border=0 cellpadding=4>
 <tr valign=top>
 <td><strong>NOTE</strong></td>
-<td>The "<b><tt>%</tt></b>" represents your shell's prompt.
+<td>The "<b><tt>shell&gt;</tt></b>" represents your shell's prompt.
 </td>
 </tr>
 </table>
@@ -54,7 +61,7 @@ to process on the command-line:  </P>
 
 <blockquote>
 <pre>
-% <b>mhonarc </b><VAR>path</VAR><b>/inbox1</b> <VAR>path</VAR><b>/inbox2</b> ...
+shell&gt; <b>mhonarc </b><VAR>path</VAR><b>/inbox1</b> <VAR>path</VAR><b>/inbox2</b> ...
 </pre>
 </blockquote>
 
@@ -65,7 +72,7 @@ This is useful if want to use MHonArc in a pipe:
 
 <blockquote>
 <pre>
-% <b>mhonarc -- - </b><VAR>path</VAR><b>/inbox</b>
+shell&gt; <b>mhonarc -- - </b><VAR>path</VAR><b>/inbox</b>
 </pre>
 </blockquote>
 
@@ -126,7 +133,7 @@ option.  </P>
 <DT><STRONG>Example</STRONG> 
 
 <DD><PRE>
-% <b>mhonarc -outdir /home/ehood/htmlarchive /home/ehood/mail/inbox</b>
+shell&gt; <b>mhonarc -outdir /home/ehood/htmlarchive /home/ehood/mail/inbox</b>
 </PRE>
 </DL>
 
@@ -135,7 +142,7 @@ option.  </P>
 
 <blockquote>
 <PRE>
-% <b>mhonarc ~/mail/inbox</b>
+shell&gt; <b>mhonarc ~/mail/inbox</b>
 Converting messages to .
 Reading /mnt/ehood/mail/inbox ..........
 Writing mail ...
@@ -147,7 +154,7 @@ Writing database ...
 </blockquote>
 
 <p>By default, MHonArc prints out information about its progress.
-This can be disable if you specify the
+This can be disabled with the
 <a href="resources/quiet.html"><strong><tt>-quiet</tt></strong></a>
 option.
 </p>
@@ -174,7 +181,7 @@ can be done like the following: </P>
 
 <blockquote>
 <PRE>
-% <b>mhonarc -add </b><VAR>&lt;path&gt;</VAR><b>/mailfolder</b>
+shell&gt; <b>mhonarc -add </b><VAR>&lt;path&gt;</VAR><b>/mailfolder</b>
 </PRE>
 </blockquote>
 
@@ -202,14 +209,14 @@ input.  </P>
 
 <blockquote>
 <PRE>
-% <b>mhonarc -add &lt; single.msg</b> 
+shell&gt; <b>mhonarc -add &lt; single.msg</b> 
 </PRE>
 </blockquote>
 <P>Or, from a pipe:
 </P>
 <blockquote>
 <PRE>
-% <b>cat single.msg | mhonarc -add</b> 
+shell&gt; <b>cat single.msg | mhonarc -add</b> 
 </PRE>
 </blockquote>
 
@@ -229,13 +236,12 @@ being processed for an archive, with the exception of formatting
 related specificly to archive processing, like index links and mail
 thread links.  </P>
 
-<H3><STRONG>Examples</STRONG> 
-</H3>
+<p><STRONG>Examples</STRONG></p>
 
 <DL>
 <DT>Input from standard input:
 
-<DD><P><tt>% <b>mhonarc -single &lt; messagefile &gt; file.html</b></tt> 
+<DD><P><tt>shell&gt; <b>mhonarc -single &lt; messagefile &gt; file.html</b></tt> 
 </P>
 </DL>
 
@@ -243,26 +249,26 @@ thread links.  </P>
 <DT>Filename on command-line:
 
 <DD>
-<P><tt>% <b>mhonarc -single messagefile &gt; file.html</b></tt> 
+<P><tt>shell&gt; <b>mhonarc -single messagefile &gt; file.html</b></tt> 
 </P>
 </DL>
 
 <hr>
 <!--X-NavButtons-Start-->
 <p align=center>
-<a href="intro.html"><img src="prev.gif" border=0 alt="[Prev]"></a><a href="layout.html"><img src="next.gif" border=0 alt="[Next]"></a><a href="mhonarc.html"><img src="up.gif" border=0 alt="[TOC]"></a><a href="faq/faq.html"><img src="faq.gif" border=0 alt="[FAQ]"></a><a href="bugs.html"><img src="bug.gif" border=0 alt="[Bugs]"></a><a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"><img src="home.gif" border=0 alt="[Home]"></a>
+<a href="install.html"><img src="prev.gif" border=0 alt="[Prev]"></a><a href="commontasks.html"><img src="next.gif" border=0 alt="[Next]"></a><a href="mhonarc.html"><img src="up.gif" border=0 alt="[TOC]"></a><a href="faq/faq.html"><img src="faq.gif" border=0 alt="[FAQ]"></a><a href="app-bugs.html"><img src="bug.gif" border=0 alt="[Bugs]"></a><a href="http://www.mhonarc.org/"><img src="home.gif" border=0 alt="[Home]"></a>
 </p>
 <!--X-NavButtons-End-->
 
 <HR>
 <address>
-98/10/24 17:31:05<br>
+01/06/10 17:47:40<br>
 <img align="top" src="monicon.gif" alt="">
-<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"
+<a href="http://www.mhonarc.org"
 ><strong>MHonArc</strong></a><br>
-Copyright &#169; 1997-1998, <a href="http://www.oac.uci.edu/indiv/ehood/"
->Earl Hood</a>, <a href="mailto:earlhood@usa.net"
->earlhood@usa.net</a><br>
+Copyright &#169; 1997-1999, <a href="http://www.mhonarc.org/~ehood/"
+>Earl Hood</a>, <a href="mailto:mhonarc@mhonarc.org"
+>mhonarc@mhonarc.org</a><br>
 </address>
 
 </BODY>

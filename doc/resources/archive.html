@@ -13,6 +13,7 @@
 <h1>ARCHIVE</h1>
 
 <!-- *************************************************************** -->
+<hr>
 <h2>Syntax</h2>
 
 <dl>
@@ -30,14 +31,15 @@
 
 <dt><strong>Command-line Option(s)</strong><dt>
 <dd><p><br>
-<code>-archive </code><br>
-<code>-noarchive </code>
+<code>-archive</code><br>
+<code>-noarchive</code>
 </p>
 </dd>
 
 </dl>
 
 <!-- *************************************************************** -->
+<hr>
 <h2>Description</h2>
 
 <p>MHonArc using the ARCHIVE resource to determine if it should
@@ -45,6 +47,7 @@ create archive data after reading message data.
 </p>
 
 <!-- *************************************************************** -->
+<hr>
 <h2>Default Setting</h2>
 
 <pre>
@@ -52,122 +55,53 @@ create archive data after reading message data.
 </pre>
 
 <!-- *************************************************************** -->
+<hr>
 <h2>Resource Variables</h2>
 
 <p>N/A
 </p>
 
 <!-- *************************************************************** -->
+<hr>
 <h2>Examples</h2>
 
 <p>The purpose of MHonArc is to create HTML archive, so why would you
 want to disable archiving?  One potential purpose is to use MHonArc
 as a general MIME processing filter to extract all attachments in a
-mail folder to separate files.  To do this, you can define a resource
-file as follows: </p>
-
-<pre>
-<b>&lt;<a href="mimefilters.html">MIMEFilters</a> override></b>
-application/*;m2h_external::filter;mhexternal.pl
-audio/*;m2h_external::filter;mhexternal.pl
-image/*;m2h_external::filter;mhexternal.pl
-model/*;m2h_external::filter;mhexternal.pl
-text/*;m2h_external::filter;mhexternal.pl
-video/*;m2h_external::filter;mhexternal.pl
-<b>&lt;/MIMEFilters></b>
-<b>&lt;<a href="mimeargs.html">MIMEArgs</a> override></b>
-m2h_external::filter; usename
-<b>&lt;/MIMEArgs></b>
-</pre>
-<p>For this example, let's assume this resource file is called
-<tt>.mha-attach.mrc</tt> and it exists in your home directory.
-</p>
-<table border=0 cellpadding=4>
-<tr valign=top>
-<td><strong>NOTE</strong></td>
-<td><p>You notice that we set the "usename" option to the external file
-filter.  Our intent is to be able to save attachments with the filename
-specified in the message.  If you do not want this, you can remove
-the MIMEARGS resource setting.  This will cause the attachments to
-be saved to a unique
-filename with an extenstion based upon sub-type is generated. 
-</p>
-</td>
-</tr>
-</table>
-<p>Now, you can create a shell alias (assuming Csh syntax) as
-follows:
-</p>
-<pre>
-<b>alias save-attachments 'mhonarc -noarchive -rcfile ~/mha-attach.mrc \!*'</b>
-</pre>
-<p>So, if you want to extract all attachments to a mail folder called
-"inbox" with all attachments saved to <tt>~/tmp</tt>, you would enter
-the following at your shell prompt (<tt>%</tt>):
-</p>
-<pre>
-    % <b>save-attachments -outdir ~/tmp inbox</b>
-</pre>
-
-<p>Extraction of all attachments from a mail folder maybe more than
-you need.  You may want to just do a single message.  Although the
-following example has nothing to with the ARCHIVE resource, it is related
-to using MHonArc as a MIME processing tool.
-</p>
-
-<p>To processing a single message, we can use the same resource file
-listed above.  The difference is how we invoke MHonArc.  If you have
-the message in a file, you can do the following:
-</p>
-<pre>
-    % <b>mhonarc -rcfile ~/mha-attach.mrc -single message.822 > /dev/null</b>
-</pre>
-<p>Where <tt>message.822</tt> is the file containing a single message.
-The redirection of standard output to <tt>/dev/null</tt>
-is done to discard the
-HTML message text data since all we care about are the attachments saved.
-</p>
-<p>I use MH, and the version I have does not support filenames
-defined for attachments.  Hence, I have the following (Csh) alias
-in my <tt>.cshrc</tt> file
-to store all parts of a message to disk utilizing the filenames
-defined in the message:
-</p>
-<pre>
-<b>alias store     'show -noshowproc -noheader \!* | \\</b>
-                <b>mhonarc -rcfile ~/dotfile/.mhonarc.attach.mrc -single  \\</b>
-                <b>> /dev/null'</b>
-</pre>
-<p>The resource file <tt>~/dotfile/.mhonarc.attach.mrc</tt> is the
-same as <tt>mha-attach.mrc</tt> in the previous examples.
-</p>
-
-<p>If you have a MUA that does not support MIME, or the support is minimal,
-you can use MHonArc as shown to decode and save attachments.
+mail folder to separate files.  Luckily, the utility program
+<a href="../app-utilsprg.html#mha-decode"><b>mha-decode</b></a> is
+included in the MHonArc distribution to provide basic MIME message
+decoding.  Therefore, the lengthy example that used to be here
+has been deleted.  You can examine the source of <b>mha-decode</b>
+to see how it interfaces with the MHonArc libraries and uses the
+ARCHIVE resource.
 </p>
 
 <!-- *************************************************************** -->
+<hr>
 <h2>Version</h2>
 
 <p>2.1.2
 </p>
 
 <!-- *************************************************************** -->
+<hr>
 <h2>See Also</h2>
 
 <p>
+<a href="../app-utilsprg.html#mha-decode"><b>mha-decode</b></a>
 </p>
 
 <!-- *************************************************************** -->
 <hr>
 <address>
-98/09/27 16:56:01<br>
+00/10/28 11:12:59<br>
 <img align="top" src="../monicon.gif" alt="">
-<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"
+<a href="http://www.pobox.com/~ehood/mhonarc.html"
 ><strong>MHonArc</strong></a><br>
-Copyright &#169; 1998, <a href="http://www.oac.uci.edu/indiv/ehood/"
->Earl Hood</a>, <a href="mailto:earlhood@usa.net"
->earlhood@usa.net</a><br>
+Copyright &#169; 1998-1999, <a href="http://www.pobox.com/~ehood/"
+>Earl Hood</a>, <a href="mailto:mhonarc@pobox.com"
+>mhonarc@pobox.com</a><br>
 </address>
 
 </body>

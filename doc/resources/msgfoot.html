@@ -20,7 +20,6 @@
 
 <dt><strong>Envariable</strong><dt>
 <dd><p>N/A
-</code>
 </p>
 </dd>
 
@@ -29,7 +28,6 @@
 <code>&lt;MSGFOOT&gt;<br></code>
 <var>markup ...</var><br>
 <code>&lt;/MSGFOOT&gt;<br></code>
-</code>
 </p>
 </dd>
 
@@ -60,7 +58,6 @@ converted message page.
 <h2>Resource Variables</h2>
 
 <table border=1>
-<tbody>
 <tr bgcolor="#C0C0C0">
 <th>Variable</th><th>Value</th>
 </tr>
@@ -81,8 +78,8 @@ converted message page.
 <td>URL to documentation.</td>
 </tr>
 <tr valign=top>
-<td align=center><a name="FIRSTPG" href="../rcvars.html#FIRSTPG"><strong><code>$FIRSTPG$</code></strong></a></td>
-<td>Filename of first page of main index.</td>
+<td align=center><a name="ENV" href="../rcvars.html#ENV"><strong><code>$ENV$</code></strong></a></td>
+<td>Value of an environment variable.</td>
 </tr>
 <tr valign=top>
 <td align=center><a name="FROM" href="../rcvars.html#FROM"><strong><code>$FROM$</code></strong></a></td>
@@ -91,6 +88,14 @@ converted message page.
 <tr valign=top>
 <td align=center><a name="FROMADDR" href="../rcvars.html#FROMADDR"><strong><code>$FROMADDR$</code></strong></a></td>
 <td>The e-mail address in the <tt>From:</tt> field of the message.</td>
+</tr>
+<tr valign=top>
+<td align=center><a name="FROMADDRDOMAIN" href="../rcvars.html#FROMADDRDOMAIN"><strong><code>$FROMADDRDOMAIN$</code></strong></a></td>
+<td>The e-mail address domain of the <tt>From:</tt> field of the message.</td>
+</tr>
+<tr valign=top>
+<td align=center><a name="FROMADDRNAME" href="../rcvars.html#FROMADDRNAME"><strong><code>$FROMADDRNAME$</code></strong></a></td>
+<td>The e-mail address "username" (or local-part) of the <tt>From:</tt> field of the message.</td>
 </tr>
 <tr valign=top>
 <td align=center><a name="FROMNAME" href="../rcvars.html#FROMNAME"><strong><code>$FROMNAME$</code></strong></a></td>
@@ -129,10 +134,6 @@ converted message page.
 <td>The title of the main index page.</td>
 </tr>
 <tr valign=top>
-<td align=center><a name="LASTPG" href="../rcvars.html#LASTPG"><strong><code>$LASTPG$</code></strong></a></td>
-<td>Filename of last page in of main index.</td>
-</tr>
-<tr valign=top>
 <td align=center><a name="LINK" href="../rcvars.html#LINK"><strong><code>$LINK$</code></strong></a></td>
 <td>Link markup linking to a message.</td>
 </tr>
@@ -169,6 +170,14 @@ converted message page.
 <td>Filename prefix for message files.</td>
 </tr>
 <tr valign=top>
+<td align=center><a name="MSGTORDNUM" href="../rcvars.html#MSGTORDNUM"><strong><code>$MSGTORDNUM$</code></strong></a></td>
+<td>The ordinal message number of the current discussion thread.</td>
+</tr>
+<tr valign=top>
+<td align=center><a name="NOTE" href="../rcvars.html#NOTE"><strong><code>$NOTE$</code></strong></a></td>
+<td>Message annotation.</td>
+</tr>
+<tr valign=top>
 <td align=center><a name="NUMFOLUP" href="../rcvars.html#NUMFOLUP"><strong><code>$NUMFOLUP$</code></strong></a></td>
 <td>Number of explicit follow-ups to the message.</td>
 </tr>
@@ -191,6 +200,10 @@ converted message page.
 <tr valign=top>
 <td align=center><a name="PROG" href="../rcvars.html#PROG"><strong><code>$PROG$</code></strong></a></td>
 <td>Program name</td>
+</tr>
+<tr valign=top>
+<td align=center><a name="SUBJECT" href="../rcvars.html#SUBJECT"><strong><code>$SUBJECT$</code></strong></a></td>
+<td>The subject text of the message, and if no arguments, wrapped in an anchor element that hyperlinks to the message.</td>
 </tr>
 <tr valign=top>
 <td align=center><a name="SUBJECTNA" href="../rcvars.html#SUBJECTNA"><strong><code>$SUBJECTNA$</code></strong></a></td>
@@ -224,7 +237,6 @@ converted message page.
 <td align=center><a name="YYYYMMDD" href="../rcvars.html#YYYYMMDD"><strong><code>$YYYYMMDD$</code></strong></a></td>
 <td>Message date in yyyy/mm/dd format.</td>
 </tr>
-</tbody>
 </table>
 
 <!-- *************************************************************** -->
@@ -256,8 +268,8 @@ converted message page.
 <address>
 98/03/03 18:19:42<br>
 <img align="top" src="../monicon.gif" alt="">
-<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"><strong>MHonArc</strong></a><br>
-Copyright &#169; 1997-1998, <a href="http://www.oac.uci.edu/indiv/ehood/">Earl Hood</a>, <a href="mailto:earlhood@usa.net">earlhood@usa.net</a><br>
+<a href="http://www.pobox.com/~ehood/mhonarc.html"><strong>MHonArc</strong></a><br>
+Copyright &#169; 1997-1998, <a href="http://www.pobox.com/~ehood/">Earl Hood</a>, <a href="mailto:mhonarc@pobox.com">mhonarc@pobox.com</a><br>
 </address>
 
 </body>

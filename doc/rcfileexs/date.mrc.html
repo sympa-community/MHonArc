@@ -1,0 +1,72 @@
+<html>
+<body>
+<pre>
+&lt;!-- MHonArc Resource File --&gt;
+&lt;!-- @(#) date.mrc 99/06/25 13:25:39
+     Earl Hood &lt;mhonarc@pobox.com&gt;
+  --&gt;
+&lt;!-- This resource file utilizes the day grouping feature of MHonArc
+     to format the main index.
+  --&gt;
+
+&lt;!--	Specify date sorting.
+  --&gt;
+<b><a href="../resources/sort.html">&lt;Sort&gt;</a></b>
+
+&lt;!--	Set USELOCALTIME since local date formats are used when displaying
+	dates.
+  --&gt;
+<b><a href="../resources/uselocaltime.html">&lt;UseLocalTime&gt;</a></b>
+
+&lt;!--    Define message local date format to print day of the week, month,
+	month day, and year.  Format used for day group heading.
+  --&gt;
+<b><a href="../resources/msglocaldatefmt.html">&lt;MsgLocalDateFmt&gt;</a></b>
+%B %d, %y
+<b>&lt;/MsgLocalDateFmt&gt;</b>
+
+&lt;!--	Redefine LISTBEGIN since a table will be used for index listing.
+  --&gt;
+<b><a href="../resources/listbegin.html">&lt;ListBegin&gt;</a></b>
+&lt;UL&gt;
+&lt;LI&gt;&lt;A HREF="<b><a href="../rcvars.html#TIDXFNAME">$TIDXFNAME$</a></b>"&gt;Thread Index&lt;/A&gt;&lt;/LI&gt;
+&lt;/UL&gt;
+&lt;HR&gt;
+&lt;table border=0&gt;
+<b>&lt;/ListBegin&gt;</b>
+
+&lt;!--	DAYBEGIN defines the markup to be printed when a new day group
+	is started.
+  --&gt;
+<b><a href="../resources/daybegin.html">&lt;DayBegin&gt;</a></b>
+&lt;tr&gt;&lt;td colspan=4&gt;&lt;strong&gt;<b><a href="../rcvars.html#MSGLOCALDATE">$MSGLOCALDATE$</a></b>&lt;/strong&gt;&lt;/td&gt;&lt;/tr&gt;
+<b>&lt;/DayBegin&gt;</b>
+
+&lt;!--	DAYBEND defines the markup to be printed when a day group
+	ends.  No markup is needed in this case, so we leave it blank.
+  --&gt;
+<b><a href="../resources/dayend.html">&lt;DayEnd&gt;</a></b>
+
+<b>&lt;/DayEnd&gt;</b>
+
+&lt;!--	Define LITEMPLATE to display the time of day the message was
+	sent, message subject, author, and any annotation for the
+	message.
+  --&gt;
+<b><a href="../resources/litemplate.html">&lt;LiTemplate&gt;</a></b>
+&lt;tr valign=top&gt;
+&lt;td&gt;<b><a href="../rcvars.html#MSGLOCALDATE">$MSGLOCALDATE(CUR;%H:%M)$</a></b>&lt;/td&gt;
+&lt;td&gt;&lt;b&gt;<b><a href="../rcvars.html#SUBJECT">$SUBJECT$</a></b>&lt;/b&gt;&lt;/td&gt;
+&lt;td&gt;<b><a href="../rcvars.html#FROMNAME">$FROMNAME$</a></b>&lt;/td&gt;
+&lt;td&gt;<b><a href="../rcvars.html#NOTE">$NOTE$</a></b>&lt;/td&gt;
+&lt;/tr&gt;
+<b>&lt;/LiTemplate&gt;</b>
+
+&lt;!--	Define LISTEND to close table
+  --&gt;
+<b><a href="../resources/listend.html">&lt;ListEnd&gt;</a></b>
+&lt;/table&gt;
+<b>&lt;/ListEnd&gt;</b>
+</pre>
+</body>
+</html>

@@ -1,14 +1,14 @@
 #!/usr/local/bin/perl
 ##---------------------------------------------------------------------------##
 ##  File:
-##	@(#) mha-dbedit 1.1 98/08/10 23:16:04
+##	@(#) mha-dbedit 1.3 00/04/24 00:13:52
 ##  Author:
-##      Earl Hood       earlhood@usa.net
+##      Earl Hood       mhonarc@bigfoot.com
 ##  Description:
 ##      Program to modify database w/o editing archive files.
 ##---------------------------------------------------------------------------##
 ##    MHonArc -- Internet mail-to-HTML converter
-##    Copyright (C) 1998	Earl Hood, earlhood@usa.net
+##    Copyright (C) 1998-1999	Earl Hood, mhonarc@pobox.com
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by
@@ -53,3 +53,36 @@ MAIN: {
 
 ##---------------------------------------------------------------------------##
 1;
+
+__END__
+
+=head1 NAME
+
+mha-dbedit - make database edits to a MHonArc archive
+
+=head1 SYNOPSIS
+
+S<B<mha-dbedit> [I<options>]>
+
+=head1 DESCRIPTION
+
+B<mha-dbedit> is a utility program that is part of the B<MHonArc>
+software package.  The program allows archive database edits to be
+made without causing HTML pages to be touched.
+
+The documentation for B<MHonArc> is distributed in HTML format.
+Due to its size and organization, it is not suited for manpage
+format.  Consult your system administrator for where the documentation
+has been installed, or see L<"AVAILABILITY"> on where you can
+access the documentation on the web.
+
+=head1 AVAILABILITY
+
+E<lt>I<http://www.mhonarc.org/>E<gt>
+
+=head1 AUTHOR
+
+Earl Hood, mhonarc@pobox.com
+
+=cut
+

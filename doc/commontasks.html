@@ -1,0 +1,252 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
+<HTML>
+<HEAD>
+<TITLE>MHonArc v2.4 -- Common Tasks</TITLE>
+</HEAD>
+<BODY background="ssbg75.jpg"
+      text="#000000" link="#0000ee" vlink="#551a8b" alink="ff0000">
+
+<!--X-NavButtons-Start-->
+<p align=center>
+<a href="quickstart.html"><img src="prev.gif" border=0 alt="[Prev]"></a><a href="layout.html"><img src="next.gif" border=0 alt="[Next]"></a><a href="mhonarc.html"><img src="up.gif" border=0 alt="[TOC]"></a><a href="faq/faq.html"><img src="faq.gif" border=0 alt="[FAQ]"></a><a href="app-bugs.html"><img src="bug.gif" border=0 alt="[Bugs]"></a><a href="http://www.mhonarc.org/"><img src="home.gif" border=0 alt="[Home]"></a>
+</p>
+<!--X-NavButtons-End-->
+
+<!-- *************************************************************** -->
+<HR>
+<H1><a name="commontasks">Common Tasks</a></H1>
+
+<p>The following section describes how to perform some common tasks with
+MHonArc archives beyond those mentioned in
+<a href="quickstart.html">Quick Start</a>.  To get a complete picture
+of what you can do with MHonArc, see the section
+on <a href="resources.html">Resources</a>.
+</p>
+
+<!--X-TOC-Start-->
+<ul>
+<li><a href="#chgtitle">Setting the Index Title</a>
+<li><a href="#rmm">Changing Index Listing Order</a>
+<li><a href="#rmm">Removing Messages</a>
+<ul>
+<li><small><a href="#autormm">Automatic Removal</a></small>
+<li><small><a href="#manualrmm">Manual Removal</a></small>
+</ul>
+</ul>
+<!--X-TOC-End-->
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="chgtitle">Setting the Index Title</a></h2>
+
+<p>If you read the <a href="quickstart.html">Quick Start</a>
+section and ran MHonArc on some of your mail, 
+you have may have noticed that the titles of the main (date)
+and thread index pages are not very descriptive: "Mail Index"
+and "Mail Thread Index".  It would be much nicer if the the
+titles reflect what type of mail is in the archive.  For example,
+if the archive contains messages from a mailing list, the name
+of the list should probably be in the title.
+</p>
+<p>MHonArc allows you to change the titles via the
+<a href="resources/title.html"><tt>-title</tt></a> and
+<a href="resources/ttitle.html"><tt>-ttitle</tt></a> options.
+The <a href="resources/title.html"><tt>-title</tt></a> option sets
+main index title, and the
+<a href="resources/ttitle.html"><tt>-ttitle</tt></a> option sets
+the thread index title.  Example:
+</p>
+<pre>
+    shell&gt; <b>mhonarc <a href="resources/title.html">-title</a> "The Widget List Archive" \
+                   <a href="resources/ttitle.html">-ttitle</a> "The Widget List Thread Archive"</b> ...
+</pre>
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="rmm">Changing Index Listing Order</a></h2>
+
+<p>By default, messages get listed in chronological order on
+the main/non-thread and thread index pages.
+</p>
+<table border=0 cellpadding=4>
+<tr valign=top>
+<td><strong>NOTE</strong></td>
+<td><p>The chronological order in the thread index is based on
+the root messages of each thread.
+</p>
+</td>
+</tr>
+</table>
+<p>For many, the default listing order is
+not what is desired.  A common desire is to have
+messages in the main index listed in reverse chronological order;
+ie. the most recent messages are listed first while the oldest
+are listed last.  Or, one may want to list messages by author
+since the target audience is more interested in looking up messages
+by certain authors than by date.
+</p>
+<p>Following is the list options available for changing the
+listing order on index pages:
+</p>
+
+<table border=0>
+<tr>
+<td align="right"><b>Option</b>&nbsp;</td><td><b>Description</b></td>
+</tr>
+<tr valign="top"><td align="right"><b><a name="authsort" href="resources/authsort.html"><tt>-authsort</tt></a></b>&nbsp;</td><td>Sort main index by author.</td></tr>
+<tr valign="top"><td align="right"><b><a name="reverse" href="resources/reverse.html"><tt>-reverse</tt></a></b>&nbsp;</td><td>Reverse the listing order in the main index.</td></tr>
+<tr valign="top"><td align="right"><b><a name="sort" href="resources/sort.html"><tt>-sort</tt></a></b>&nbsp;</td><td>List messages by date in main index.</td></tr>
+<tr valign="top"><td align="right"><b><a name="subsort" href="resources/subsort.html"><tt>-subsort</tt></a></b>&nbsp;</td><td>List messages by subjext in main index.</td></tr>
+<tr valign="top"><td align="right"><b><a name="treverse" href="resources/treverse.html"><tt>-treverse</tt></a></b>&nbsp;</td><td>List thread in reverse order.</td></tr>
+<tr valign="top"><td align="right"><b><a name="tsort" href="resources/tsort.html"><tt>-tsort</tt></a></b>&nbsp;</td><td>List threads by date.</td></tr>
+<tr valign="top"><td align="right"><b><a name="tsubsort" href="resources/tsubsort.html"><tt>-tsubsort</tt></a></b>&nbsp;</td><td>List threads by subject.</td></tr>
+</table>
+
+<p>For example, to get a reverse chronological listing,
+do something like the following:
+</p>
+<pre>
+    shell&gt; <b>mhonarc <a href="resources/sort.html">-sort</a> <a href="resources/reverse.html">-reverse</a></b> ...
+</pre>
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="rmm">Removing Messages</a></h2>
+
+<p>There are two ways to delete messages from an archive:
+automatic and manual.
+</p>
+
+<h3><a name="autormm">Automatic Removal</a></h3>
+
+<p>MHonArc supports the ability to automatically remove archive messages
+that are older than a specified time period, are older than
+a specified date/time, or the number of messages have reached the maximum
+number specified.
+</p>
+
+</p>For example, if you want an archive to only
+contain messages that are less than a month, you can do something
+like the following:
+</p>
+<pre>
+    shell&gt; <b>mhonarc <a href="resources/expireage.html">-expireage</a> 2635200 <a href="resources/add.html">-add</a> <a href="resources/outdir.html">-outdir</a> /path/to/archive mailbox</b>
+</pre>
+<p>Here, we used the <a href="resources/expireage.html"><tt>-expireage</tt></a>
+option
+to tell MHonArc to remove messages older than 2635200 seconds (30.5 days) when
+adding new messages.
+I know, having to use seconds to specify the expiration age seems cumbersome.
+A table is provided in the <a href="resources/expireage.html">EXPIREAGE</a>
+reference page listing common time periods to their equivalence in seconds.
+</p>
+
+<p>A less used option that will cause automatic deletion is the
+<a href="resources/expiredate.html"><tt>-expiredate</tt></a> option.
+This allows
+you to specify an exact date/time where any messages older than the
+given date/time, will be automatically removed.  For example:
+</p>
+<pre>
+    shell&gt; <b>mhonarc <a href="resources/expiredate.html">-expiredate</a> "1 Jan 1999 00:00:00" <a href="resources/add.html">-add</a> <a href="resources/outdir.html">-outdir</a> /path/to/archive mailbox</b>
+</pre>
+<p>In this example, before MHonArc adds any new messages, it will delete
+any messages with a date earlier than January 1, 1999.  See the
+<a href="resources/expiredate.html">EXPIREDATE</a> reference page for
+more information and for the correct expiration date syntax.
+</p>
+
+<p>An archive can also have a maximum number of messages limit.
+When the maximum number is reached, the oldest messages are automatically
+removed.  The following is an example of setting the maximum size
+of an archive:
+</p>
+<pre>
+    shell&gt; <b>mhonarc <a href="resources/maxsize.html">-maxsize</a> 500 <a href="resources/add.html">-add</a> <a href="resources/outdir.html">-outdir</a> /path/to/archive mailbox</b>
+</pre>
+
+<h3><a name="manualrmm">Manual Removal</a></h3>
+
+<p>Sometimes it becomes necessary to remove specific messages from archive.
+For example, their may be some spam messages and you do not want them
+cluttering your archive (and providing free advertising).  Or, there
+may be archived messages that you believe are not appropriate for
+the archive's intended audience.
+</p>
+<p>To remove specific messages, use the
+<a href="resources/rmm.html"><tt>-rmm</tt></a> option.  For example:
+</p>
+<pre>
+    shell&gt; <b>mhonarc <a href="resources/rmm.html">-rmm</a> 24 28 39 48</b>
+</pre>
+<p>will delete messages 24, 28, 39, and 48.
+</p>
+<p>You are now asking, "How do I know what a message's number is?".  One
+way is to look at the number in the message's filename.  I.e.  Each
+converted message is writting to a filename containing the number of
+message.  For example, <tt>msg00024.html</tt>,
+<tt>msg00028.html</tt>, <tt>msg00039.html</tt>, and <tt>msg00048.html</tt>
+denote messages 24, 28, 39, and 48.
+</p>
+<p>Checking filenames can be awkward, so one alternative is to use
+the <a href="resources/scan.html"><tt>-scan</tt></a> option.  For example:
+</p>
+<pre>
+    shell&gt; <b>mhonarc <a href="resources/scan.html">-scan</a> <a href="resources/outdir.html">-outdir</a> /home/ehood/html/archive</b>
+    Reading database ...
+    117 messages in /home/ehood/html/archive:
+     
+    Msg #  YYYY/MM/DD  From             Subject                                    
+    -----  ----------  ---------------  -------------------------------------------
+       62  1996/07/30  Kwin Kramer      Reading STDIN not from keyboard -- or, Syst
+       23  1996/07/31  Christopher M.   Re: Setting @INC to include my own modules 
+	9  1996/08/01  Dan Kirkwood     object as hash key loses methods           
+	2  1996/08/01  James F'jord Ly  Re: We're HIRING hot hackers!              
+	1  1996/08/01  Christopher Cha  Curious Multi-Dimensional array behavior   
+       14  1996/08/01  I R A Aggie      Re: Patch for arithmetic bug in 5.003 ?    
+	3  1996/08/01  Bernard Bellon   Re: How do you grab a URL in perl?         
+       38  1996/08/01  Mohammed Dewan   Help needed badly win3.1 and perl.         
+       59  1996/08/01  Mohammed Dewan   Using file in perl.                        
+	4  1996/08/01  Dan Gildor       Re: Threaded Discusion groups embeded in We
+	5  1996/08/01  kendall shaw     addicted to emacs lisp                     
+	6  1996/08/01  Ye He            Q: Sybase extension to Perl                
+       83  1996/08/01  I R A Aggie      Re: Browser/Page matching CGI script       
+	7  1996/08/01  Chris Schleiche  Re: Simple program looks good, but gives er
+       13  1996/08/01  Steve McCullagh  Perl 5.002 and $| errors                   
+    ...
+</pre>
+
+<p>With <a href="resources/scan.html">-scan</a>, you can get a listing
+of an archive to your terminal.  The listing can be used to determine
+the message number for a message if you know the message's subject and
+author.
+</p>
+
+<p>The <a href="resources/rmm.html"><tt>-rmm</tt></a> also supports
+the ability to specify message number ranges and message-ids.  See
+the <a href="resources/rmm.html">RMM</a> reference page for
+more information and examples.
+</p>
+
+
+<!-- *************************************************************** -->
+<HR>
+<!--X-NavButtons-Start-->
+<p align=center>
+<a href="quickstart.html"><img src="prev.gif" border=0 alt="[Prev]"></a><a href="layout.html"><img src="next.gif" border=0 alt="[Next]"></a><a href="mhonarc.html"><img src="up.gif" border=0 alt="[TOC]"></a><a href="faq/faq.html"><img src="faq.gif" border=0 alt="[FAQ]"></a><a href="app-bugs.html"><img src="bug.gif" border=0 alt="[Bugs]"></a><a href="http://www.mhonarc.org/"><img src="home.gif" border=0 alt="[Home]"></a>
+</p>
+<!--X-NavButtons-End-->
+
+<!-- *************************************************************** -->
+<hr>
+<address>
+01/06/10 17:47:40<br>
+<img align="top" src="monicon.gif" alt="">
+<a href="http://www.mhonarc.org/"><strong>MHonArc</strong></a><br>
+Copyright &#169; 1997-1999, <a href="http://www.mhonarc.org/~ehood/"
+>Earl Hood</a>, <a href="mailto:mhonarc@mhonarc.org"
+>mhonarc@mhonarc.org</a><br>
+</address>
+
+</BODY>
+</HTML>

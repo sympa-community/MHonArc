@@ -1,8 +1,8 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	@(#) mhexternal.pl 2.5 98/10/24 17:14:01
+##	@(#) mhexternal.pl 2.8 01/04/10 21:36:40
 ##  Author:
-##      Earl Hood       earlhood@usa.net
+##      Earl Hood       mhonarc@pobox.com
 ##  Description:
 ##	Library defines a routine for MHonArc to filter content-types
 ##	that cannot be directly filtered into HTML, but a linked to an
@@ -19,7 +19,7 @@
 ##
 ##---------------------------------------------------------------------------##
 ##    MHonArc -- Internet mail-to-HTML converter
-##    Copyright (C) 1995-1998	Earl Hood, earlhood@usa.net
+##    Copyright (C) 1995-1999	Earl Hood, mhonarc@pobox.com
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by
@@ -45,12 +45,37 @@ package m2h_external;
 ##	Argument string may contain the following values.  Each value
 ##	should be separated by a space:
 ##
+##	excludeexts="ext1,ext2,..."
+##			A comma separated list of message specified filename
+##			extensions to exclude.  I.e.  If the filename
+##			extension matches an extension in excludeexts,
+##			the content will not be written.  The return
+##			markup will contain the name of the attachment,
+##			but no link to the data.  This option is best
+##			used with application/octet-stream to exclude
+##			unwanted data that is not tagged with the proper
+##			content-type.  The m2h_null::filter can be used
+##			to exclude content by content-type.
+##
+##			Applicable when content-type not image/* and
+##			usename or usenameext is in effect.
+##
 ##	ext=ext 	Use `ext' as the filename extension.
+##
+##	forceattach 	Never inline image data.
+##
+##	forceinline 	Inline image data, always
 ##
 ##	iconurl="url"	Use "url" for location of icon to use.
 ##
 ##	inline  	Inline image data by default if
 ##			content-disposition not defined.
+##
+##	inlineexts="ext1,ext2,..."
+##			A comma separated list of message specified filename
+##			extensions to treat as possible inline data.
+##			Applicable when content-type not image/* and
+##			usename or usenameext is in effect.
 ##
 ##	subdir		Place derived files in a subdirectory
 ##
@@ -77,33 +102,37 @@ package m2h_external;
 ##
 sub filter {
     local($header, *fields, *data, $isdecode, $args) = @_;
-    my($ret,
-       $filename, $urlfile,
-       $name, $nameparm,
-       $path,
-       $disp,
-       $ctype, $type, $ext,
-       $iconurl, $icon_mu,
-       $inline,
-       $target,
-       $inext, $intype);
-    my($debug) = 0;
-
+    my($ret, $filename, $urlfile, $disp);
     require 'mhmimetypes.pl';
 
     ## Init variables
-    $args	= ''  unless defined($args);
-    $name	= '';
-    $ctype	= '';
-    $inline	=  0;
-    $inext	= '';
-    $intype	= '';
-    $iconurl	= '';
-    $icon_mu	= '';
-    $target	= '';
-
-    if ($args =~ /debug/i) {
-	$debug = 1;
+    $args	   = ''  unless defined($args);
+    my $name	   = '';
+    my $nameparm   = '';
+    my $ctype	   = '';
+    my $type	   = '';
+    my $ext	   = '';
+    my $inline	   =  0;
+    my $inext	   = '';
+    my $intype	   = '';
+    my $iconurl	   = '';
+    my $icon_mu	   = '';
+    my $target	   = '';
+    my $path       = '';
+    my $subdir     = $args =~ /\bsubdir\b/i;
+    my $usename    = $args =~ /\busename\b/i;
+    my $usenameext = $args =~ /\busenameext\b/i;
+    my $debug      = $args =~ /\bdebug\b/i;
+    my $inlineexts = '';
+    my $excexts    = '';
+    if ($args =~ /\binlineexts=(\S+)/) {
+	$inlineexts = join("", ',', lc($1), ',');
+	$inlineexts =~ s/['"]//g;
+    }
+    if ($args =~ /\bexcludeexts=(\S+)/) {
+	$excexts = join("", ',', lc($1), ',');
+	$excexts =~ s/['"]//g;
+	&debug("Exclude extensions: $excexts") if $debug;
     }
 
     ## Get content-type
@@ -113,45 +142,51 @@ sub filter {
 
     ## Get disposition
     ($disp, $nameparm) = &readmail::MAILhead_get_disposition(*fields);
+    $name = $nameparm  if $usename;
+    &debug("Content-type: $ctype",
+	   "Disposition: $disp; filename=$nameparm",
+	   "Arg-string: $args")  if $debug;
 
-    if ($debug) {
-	&debug("Content-type: $ctype",
-	       "Disposition: $disp; filename=$nameparm",
-	       "Arg-string: $args");
+    ## Get filename extension in disposition
+    my $dispext = '';
+    if ($nameparm && ($nameparm !~ /^\./) && ($nameparm =~ /\.(\w+)$/)) {
+      $dispext = lc $1;
+      &debug("Disposition filename extension: $dispext") if $debug;
     }
 
-    ## Check if using name
-    if ($args =~ /\busename\b/i) {
-	$name = $nameparm;
-    } else {
-	$name = '';
+    ## Check if content is excluded based on filename extension
+    if ($excexts && index($excexts, ",$dispext,") >= $[) {
+      return (qq|<p><tt>&lt&lt;attachment: $nameparm&gt;&gt;</tt></p>\n|);
     }
 
     ## Check if file goes in a subdirectory
-    if ($args =~ /\bsubdir\b/i) {
-	$path = join('', $mhonarc::MsgPrefix, $mhonarc::MHAmsgnum, '.dir');
-    } else {
-	$path = '';
-    }
-
-    ## Check if inlining (images only)
-    if ($disp) {
-	$inline = ($disp =~ /\binline\b/i);
-    } else {
-	$inline = ($args =~ /\binline\b/i);
-    }
+    $path = join('', $mhonarc::MsgPrefix, $mhonarc::MHAmsgnum)
+	if $subdir;
 
     ## Check if extension and type description passed in
     if ($args =~ /\bext=(\S+)/i)      { $inext  = $1;  $inext =~ s/['"]//g; }
     if ($args =~ /\btype="([^"]+)"/i) { $intype = $1; }
 
     ## Check if utilizing extension from mail header defined filename
-    if (($nameparm) &&			 # filename specified, and
-	($args =~ /\busenameext\b/i) &&	 # use filename ext option set, and
-	($nameparm !~ /^\./) &&		 # filename does not begin w/dot, and
-	($nameparm =~ /\.(\w+)/)) {	 # filename has an extention
-
+    if ($dispext && $usenameext) {
 	$inext = $1;
+    }
+
+    ## Check if inlining (images only)
+    INLINESW: {
+	if ($args =~ /\bforceattach\b/i) {
+	    $inline = 0;
+	    last INLINESW;
+	}
+	if ($args =~ /\bforceinline\b/i) {
+	    $inline = 1;
+	    last INLINESW;
+	}
+	if ($disp) {
+	    $inline = ($disp =~ /\binline\b/i);
+	    last INLINESW;
+	}
+	$inline = ($args =~ /\binline\b/i);
     }
 
     ## Check if using icon
@@ -163,20 +198,29 @@ sub filter {
     }
 
     ## Check if target specified
-    if ($args =~ /target="([^"]+)"/i) { $target = $1; }
-        elsif ($args =~ /target=(\S+)/i) { $target = $1; }
+    if    ($args =~ /target="([^"]+)"/i) { $target = $1; }
+    elsif ($args =~ /target=(\S+)/i)     { $target = $1; }
     $target =~ s/['"]//g;
     $target = qq/ TARGET="$target"/  if $target;
 
     ## Write file
     $filename = mhonarc::write_attachment($ctype, \$data, $path, $name, $inext);
     ($urlfile = $filename) =~ s/([^\w.\-\/])/sprintf("%%%X",unpack("C",$1))/ge;
-    if ($debug) {
-	&debug("File-written: $filename");
+    &debug("File-written: $filename")  if $debug;
+
+    ## Check if inlining when CT not image/*
+    if ($inline && ($ctype !~ /\bimage/i)) {
+	if ($inlineexts && ($usename || $usenameext) &&
+		($filename =~ /\.(\w+)$/)) {
+	    my $fext = lc($1);
+	    $inline = 0  if (index($inlineexts, ",$fext,") < $[);
+	} else {
+	    $inline = 0;
+	}
     }
 
     ## Create HTML markup
-    if ($inline && ($ctype =~ /image/i)) {
+    if ($inline) {
 	$ret  = "<P>" . &htmlize($fields{'content-description'}) . "</P>\n"
 	    if ($fields{'content-description'});
 	$ret .= qq|<P><A HREF="$urlfile" $target><IMG SRC="$urlfile" | .

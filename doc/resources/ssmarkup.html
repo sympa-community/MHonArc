@@ -1,0 +1,110 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
+<html>
+<head>
+<title>MHonArc Resources: SSMARKUP</title>
+</head>
+<body>
+
+<address>
+<a href="../resources.html#ssmarkup">MHonArc Resource List</a><br>
+</address>
+
+<hr>
+<h1>SSMARKUP</h1>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Syntax</h2>
+
+<dl>
+
+<dt><strong>Envariable</strong><dt>
+<dd><p>N/A
+</p>
+</dd>
+
+<dt><strong>Element</strong><dt>
+<dd><p><br>
+<code>&lt;SSMARKUP&gt;</code><br>
+<var>markup...</var><br>
+<code>&lt;/SSMARKUP&gt;</code><br>
+</p>
+</dd>
+
+<dt><strong>Command-line Option</strong><dt>
+<dd><p>N/A
+</p>
+</dd>
+
+</dl>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Description</h2>
+
+<p>SSMARKUP defines any markup that occurs at the <strong>very</strong>
+beginning of <strong>all</strong> created HTML pages.  This resource
+may be used to include any server-side processing markup that must
+occur before any HTML-related markup.
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Default Setting</h2>
+
+<p>Nil.
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Resource Variables</h2>
+
+<p>N/A
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Examples</h2>
+
+<p>The following example is stolen from the MHonArc mailing list
+which lead to the addition of SSMARKUP to MHonArc.  In this markup,
+some server-side markup is added to check if the user is logged
+in:
+</p>
+<pre>
+<b>&lt;SSMarkup&gt;</b>
+&lt;%@ LANGUAGE=VBSCRIPT %&gt;
+&lt;%
+If Not Session("LoginOK") Then Response.redirect "/default.htm"
+%&gt;
+<b>&lt;/SSMarkup&gt;</b>
+</pre>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Version</h2>
+
+<p>2.4.0
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>See Also</h2>
+
+<p>
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<address>
+00/10/28 11:13:09<br>
+<img align="top" src="../monicon.gif" alt="">
+<a href="http://www.pobox.com/~ehood/mhonarc.html"
+><strong>MHonArc</strong></a><br>
+Copyright &#169; 1999, <a href="http://www.pobox.com/~ehood/"
+>Earl Hood</a>, <a href="mailto:mhonarc@pobox.com"
+>mhonarc@pobox.com</a><br>
+</address>
+
+</body>
+</html>

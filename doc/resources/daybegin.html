@@ -29,7 +29,6 @@ N/A
 <code>&lt;DAYBEGIN&gt;</code><br>
 <var>markup ...</var><br>
 <code>&lt;/DAYBEGIN&gt;</code><br>
-</code>
 </p>
 </dd>
 
@@ -69,7 +68,6 @@ evaluate based on information from the first message in the group.
 <h2>Resource Variables</h2>
 
 <table border=1>
-<tbody>
 <tr bgcolor="#C0C0C0">
 <th>Variable</th><th>Value</th>
 </tr>
@@ -94,12 +92,24 @@ evaluate based on information from the first message in the group.
 <td>Message date in dd/mm/yyyy format.</td>
 </tr>
 <tr valign=top>
+<td align=center><a name="ENV" href="../rcvars.html#ENV"><strong><code>$ENV$</code></strong></a></td>
+<td>Value of an environment variable.</td>
+</tr>
+<tr valign=top>
 <td align=center><a name="FROM" href="../rcvars.html#FROM"><strong><code>$FROM$</code></strong></a></td>
 <td>The complete text in the <tt>From:</tt> field of the message.</td>
 </tr>
 <tr valign=top>
 <td align=center><a name="FROMADDR" href="../rcvars.html#FROMADDR"><strong><code>$FROMADDR$</code></strong></a></td>
 <td>The e-mail address in the <tt>From:</tt> field of the message.</td>
+</tr>
+<tr valign=top>
+<td align=center><a name="FROMADDRDOMAIN" href="../rcvars.html#FROMADDRDOMAIN"><strong><code>$FROMADDRDOMAIN$</code></strong></a></td>
+<td>The e-mail address domain of the <tt>From:</tt> field of the message.</td>
+</tr>
+<tr valign=top>
+<td align=center><a name="FROMADDRNAME" href="../rcvars.html#FROMADDRNAME"><strong><code>$FROMADDRNAME$</code></strong></a></td>
+<td>The e-mail address "username" (or local-part) of the <tt>From:</tt> field of the message.</td>
 </tr>
 <tr valign=top>
 <td align=center><a name="FROMNAME" href="../rcvars.html#FROMNAME"><strong><code>$FROMNAME$</code></strong></a></td>
@@ -138,6 +148,14 @@ evaluate based on information from the first message in the group.
 <td>Filename prefix for message files.</td>
 </tr>
 <tr valign=top>
+<td align=center><a name="MSGTORDNUM" href="../rcvars.html#MSGTORDNUM"><strong><code>$MSGTORDNUM$</code></strong></a></td>
+<td>The ordinal message number of the current discussion thread.</td>
+</tr>
+<tr valign=top>
+<td align=center><a name="NOTE" href="../rcvars.html#NOTE"><strong><code>$NOTE$</code></strong></a></td>
+<td>Message annotation.</td>
+</tr>
+<tr valign=top>
 <td align=center><a name="NUMFOLUP" href="../rcvars.html#NUMFOLUP"><strong><code>$NUMFOLUP$</code></strong></a></td>
 <td>Number of explicit follow-ups to the message.</td>
 </tr>
@@ -147,7 +165,7 @@ evaluate based on information from the first message in the group.
 </tr>
 <tr valign=top>
 <td align=center><a name="SUBJECT" href="../rcvars.html#SUBJECT"><strong><code>$SUBJECT$</code></strong></a></td>
-<td>The subject text of the message wrapped in an anchor element that hyperlinks to the message.</td>
+<td>The subject text of the message, and if no arguments, wrapped in an anchor element that hyperlinks to the message.</td>
 </tr>
 <tr valign=top>
 <td align=center><a name="SUBJECTNA" href="../rcvars.html#SUBJECTNA"><strong><code>$SUBJECTNA$</code></strong></a></td>
@@ -157,7 +175,6 @@ evaluate based on information from the first message in the group.
 <td align=center><a name="YYYYMMDD" href="../rcvars.html#YYYYMMDD"><strong><code>$YYYYMMDD$</code></strong></a></td>
 <td>Message date in yyyy/mm/dd format.</td>
 </tr>
-</tbody>
 </table>
 
 <!-- *************************************************************** -->
@@ -170,22 +187,22 @@ followed by a sub-listing of the messages for that day:
 </p>
 
 <pre>
-<b>&lt;<a href="sort.html">Sort</a>></b>
-<b>&lt;<a href="msglocaldatefmt.html">MsgLocalDateFmt</a>></b>
+<b>&lt;<a href="sort.html">Sort</a>&gt;</b>
+<b>&lt;<a href="msggmtdatefmt.html">MsgGMTDateFmt</a>&gt;</b>
 %B %d, %Y
-<b>&lt;/MsgLocalDateFmt></b>
+<b>&lt;/MsgGMTDateFmt&gt;</b>
 
-<b>&lt;DayBegin></b>
-&lt;li>&lt;strong><a href="#MSGGMTDATE">$MSGGMTDATE$</a>&lt;/strong>
-&lt;ul>
-<b>&lt;/DayBegin></b>
+<b>&lt;DayBegin&gt;</b>
+&lt;li&gt;&lt;strong&gt;<a href="#MSGGMTDATE">$MSGGMTDATE$</a>&lt;/strong&gt;
+&lt;ul&gt;
+<b>&lt;/DayBegin&gt;</b>
 
 <b>&lt;<a href="dayend.html">DayEnd</a>></b>
-&lt;/li>&lt;/ul>
-<b>&lt;/DayEnd></b>
+&lt;/li&gt;&lt;/ul&gt;
+<b>&lt;/DayEnd&gt;</b>
 
-<b>&lt;<a href="litemplate.html">LITemplate</a>></b>
-&lt;li><a href="#SUBJECT">$SUBJECT$</a>, <a href="#FROMNAME">$FROMNAME$</a>&lt;/li>
+<b>&lt;<a href="litemplate.html">LITemplate</a>&gt;</b>
+&lt;li&gt;<a href="#SUBJECT">$SUBJECT$</a>, <a href="#FROMNAME">$FROMNAME$</a>&lt;/li&gt;
 <b>&lt;/LITemplate></b>
 </pre>
 
@@ -209,13 +226,13 @@ followed by a sub-listing of the messages for that day:
 <!-- *************************************************************** -->
 <hr>
 <address>
-98/10/10 15:29:28<br>
+00/10/28 11:13:00<br>
 <img align="top" src="../monicon.gif" alt="">
-<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"
+<a href="http://www.pobox.com/~ehood/mhonarc.html"
 ><strong>MHonArc</strong></a><br>
-Copyright &#169; 1997-1998, <a href="http://www.oac.uci.edu/indiv/ehood/"
->Earl Hood</a>, <a href="mailto:earlhood@usa.net"
->earlhood@usa.net</a><br>
+Copyright &#169; 1997-1999, <a href="http://www.pobox.com/~ehood/"
+>Earl Hood</a>, <a href="mailto:mhonarc@pobox.com"
+>mhonarc@pobox.com</a><br>
 </address>
 
 </body>

@@ -1,14 +1,14 @@
 #!/usr/local/bin/perl
 ##---------------------------------------------------------------------------##
 ##  File:
-##	@(#) mha-dbrecover 1.1 98/08/10 23:16:04
+##	@(#) mha-dbrecover 1.3 00/04/24 00:13:55
 ##  Author:
-##      Earl Hood       earlhood@usa.net
+##      Earl Hood       mhonarc@pobox.com
 ##  Description:
 ##      Program to rebuild the MHonArc database file from message files.
 ##---------------------------------------------------------------------------##
 ##    MHonArc -- Internet mail-to-HTML converter
-##    Copyright (C) 1998	Earl Hood, earlhood@usa.net
+##    Copyright (C) 1998	Earl Hood, mhonarc@pobox.com
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by
@@ -100,3 +100,38 @@ MAIN: {
 
 ##---------------------------------------------------------------------------##
 1;
+
+__END__
+
+=head1 NAME
+
+mha-dbrecover - rebuild a MHonArc archive database
+
+=head1 SYNOPSIS
+
+S<B<mha-dbrecover> [I<options>]>
+
+=head1 DESCRIPTION
+
+B<mha-dbrecover> is a utility program that is part of the B<MHonArc>
+software package.  The program allows can be used to rebuild a
+B<MHonArc> archive database from the HTML message files.  This allows
+database recovery if the database gets corrupted or accidentally
+deleted.
+
+The documentation for B<MHonArc> is distributed in HTML format.
+Due to its size and organization, it is not suited for manpage
+format.  Consult your system administrator for where the documentation
+has been installed, or see L<"AVAILABILITY"> on where you can
+access the documentation on the web.
+
+=head1 AVAILABILITY
+
+E<lt>I<http://www.mhonarc.org/>E<gt>
+
+=head1 AUTHOR
+
+Earl Hood, mhonarc@pobox.com
+
+=cut
+

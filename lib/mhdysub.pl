@@ -1,14 +1,14 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	@(#) mhdysub.pl 2.2 98/08/10 23:21:42
+##	@(#) mhdysub.pl 2.4 99/07/25 02:02:34
 ##  Author:
-##      Earl Hood       earlhood@usa.net
+##      Earl Hood       mhonarc@pobox.com
 ##  Description:
 ##      Definition of create_routines() that creates routines are
 ##	runtime.
 ##---------------------------------------------------------------------------##
 ##    MHonArc -- Internet mail-to-HTML converter
-##    Copyright (C) 1996-1998	Earl Hood, earlhood@usa.net
+##    Copyright (C) 1996-1999	Earl Hood, mhonarc@pobox.com
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by
@@ -126,6 +126,38 @@ EndOfRoutine
     $sub .= "# $_sub_eval_cnt\n";  ++$_sub_eval_cnt;
     eval $sub;
     die("ERROR: Unable to create get_base_subject routine:\n$@\n") if $@;
+
+    ##-----------------------------------------------------------------------
+    ##	Routine to rewrite mail addresses in message header
+    ##
+    $sub =<<EndOfRoutine;
+    sub rewrite_address {
+	local \$_ = shift;
+	$AddressModify;
+	\$_;
+    }
+EndOfRoutine
+
+    $sub .= "# $_sub_eval_cnt\n";  ++$_sub_eval_cnt;
+    eval $sub;
+    die("ERROR: Unable to create rewrite_address routine:\n$@\n") if $@;
+
+    ##-----------------------------------------------------------------------
+    ## message_exclude: User-defined code to check if a message should
+    ## be added or not.
+    ##
+    $sub  =<<EndOfRoutine;
+    sub message_exclude {
+	package mhonarc::Pkg_message_exclude;
+	local(\$_) = shift;
+	$MsgExcFilter;
+    }
+EndOfRoutine
+
+    $sub .= "# $_sub_eval_cnt\n";  ++$_sub_eval_cnt;
+    eval $sub;
+    die("ERROR: Unable to create subject_strip routine:\n$@\n") if $@;
+
 }
 
 ##---------------------------------------------------------------------------##

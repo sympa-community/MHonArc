@@ -1,0 +1,142 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
+<html>
+<head>
+<title>MHonArc Resources: ADDRESSMODIFYCODE</title>
+</head>
+<body>
+
+<address>
+<a href="../resources.html#addressmodifycode">MHonArc Resource List</a><br>
+</address>
+
+<hr>
+<h1>ADDRESSMODIFYCODE</h1>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Syntax</h2>
+
+<dl>
+
+<dt><strong>Envariable</strong><dt>
+<dd><p>
+<code>M2H_ADDRESSMODIFYCODE=<var>Perl_expressions</var></code>
+</p>
+</dd>
+
+<dt><strong>Element</strong><dt>
+<dd><p><br>
+<code>&lt;ADDRESSMODIFYCODE&gt;</code><br>
+<var>Perl expressions...</var><br>
+<code>&lt;/ADDRESSMODIFYCODE&gt;</code><br>
+</p>
+</dd>
+
+<dt><strong>Command-line Option</strong><dt>
+<dd><p><br>
+<code>-addressmodifycode </code><var>Perl_expressions</var>
+</p>
+</dd>
+
+</dl>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Description</h2>
+
+<p>ADDRESSMODIFYCODE may be used to define Perl expressions to
+apply to addresses in message headers during conversion.
+</p>
+<p>When defining the expressions, the mail address will be in
+the <b><tt>$_</tt></b> variable.  The value of <b><tt>$_</tt></b>
+after all expressions are evaluated is the address MHonArc will
+print.
+</p>
+<table border=0 cellpadding=4>
+<tr valign=top>
+<td><a name="note1"><strong>NOTE</strong></a></td>
+<td><p>ADDRESSMODIFYCODE only affects the display text of the
+address.  If <a href="mailto.html">MAILTO</a> is active, the
+URL of the link is <b>NOT</b> affected by ADDRESSMODIFYCODE.
+<a href="mailtourl.html">MAILTOURL</a> can be used to modify the
+URL.
+</p>
+</td>
+</tr>
+</table>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Default Setting</h2>
+
+<p>Nil.
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Resource Variables</h2>
+
+<p>N/A
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Examples</h2>
+
+<p>ADDRESSMODIFYCODE main use is to obfuscate addresses,
+or hide them entirely, to
+prevent spam address harvesters from getting user addresses from
+MHonArc archives.  Here is an example that performs a ROT13 to
+provide some simple obfuscation:
+</p>
+<pre>
+&lt;AddressModifyCode&gt;
+tr/A-Za-z/N-ZA-Mn-za-m/;
+&lt;/AddressModifyCode&gt;
+</pre>
+<p>However, this may not be enough since an intelligent harvester
+may try a ROT13.  To completely hide the address, do something like
+this:
+</p>
+<pre>
+&lt;AddressModifyCode&gt;
+$_ = 'address@hidden';
+&lt;/AddressModifyCode&gt;
+</pre>
+<p>You cannot rely on ADDRESSMODIFYCODE alone to
+hide/obfuscate addresses (see <a href="#note1">NOTE</a> above).
+Also look at the <a href="spammode.html">SPAMMODE</a> if you are
+interested in fighting address harvesting.
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Version</h2>
+
+<p>2.4.0
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>See Also</h2>
+
+<p>
+<a href="mailto.html">MAILTO</a>,
+<a href="mailtourl.html">MAILTOURL</a>,
+<a href="spammode.html">SPAMMODE</a>,
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<address>
+00/10/28 11:12:59<br>
+<img align="top" src="../monicon.gif" alt="">
+<a href="http://www.pobox.com/~ehood/mhonarc.html"
+><strong>MHonArc</strong></a><br>
+Copyright &#169; 1999, <a href="http://www.pobox.com/~ehood/"
+>Earl Hood</a>, <a href="mailto:mhonarc@pobox.com"
+>mhonarc@pobox.com</a><br>
+</address>
+
+</body>
+</html>

@@ -1,0 +1,39 @@
+<html>
+<body>
+<pre>
+&lt;!-- MHonArc Resource File --&gt;
+&lt;!-- @(#) subject.mrc 99/06/25 13:25:44
+     Earl Hood &lt;mhonarc@pobox.com&gt;
+  --&gt;
+&lt;!-- This resource file utilizes the subject grouping feature of MHonArc
+     to format the main index.
+  --&gt;
+
+&lt;!--	Specify subject sorting.
+  --&gt;
+<b><a href="../resources/subsort.html">&lt;SubSort&gt;</a></b>
+
+&lt;!--	SUBJECTBEGIN defines the markup to be printed when a new subject
+	group is started.
+  --&gt;
+<b><a href="../resources/subjectbegin.html">&lt;SubjectBegin&gt;</a></b>
+&lt;li&gt;&lt;strong&gt;<b><a href="../rcvars.html#SUBJECTNA">$SUBJECTNA$</a></b>&lt;/strong&gt;
+&lt;ul&gt;
+<b>&lt;/SubjectBegin&gt;</b>
+
+&lt;!--	SUBJECTEND defines the markup to be printed when a subject
+	group ends.  We define it to close the &lt;UL&gt; opened by
+	SUBJECTBEGIN.
+  --&gt;
+<b><a href="../resources/subjectend.html">&lt;SubjectEnd&gt;</a></b>
+&lt;/li&gt;&lt;/ul&gt;
+<b>&lt;/SubjectEnd&gt;</b>
+
+&lt;!--	Define LITEMPLATE to display just author names.
+  --&gt;
+<b><a href="../resources/litemplate.html">&lt;LiTemplate&gt;</a></b>
+&lt;li&gt;&lt;a <b><a href="../rcvars.html#A_ATTR">$A_ATTR$</a></b>&gt;<b><a href="../rcvars.html#FROMNAME">$FROMNAME$</a></b>&lt;/a&gt;&lt;/li&gt;
+<b>&lt;/LiTemplate&gt;</b>
+</pre>
+</body>
+</html>

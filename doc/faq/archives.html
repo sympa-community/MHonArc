@@ -57,11 +57,25 @@ instruct MHonArc to use a stricter test detecting a message
 separator. The following <strong>MSGSEP</strong> resource setting is
 known to work well: </P>
 
-<PRE>
+<pre>
 <b>&lt;MsgSep&gt;</b>
 ^From \S+\s+\S+\s+\S+\s+\d+\s+\d+:\d+:\d+\s+\d+
 <b>&lt;/MsgSep&gt;</b>
-</PRE>
+</pre>
+
+<p>In case you have message separates with quoted local parts in
+the address part of the separator, you can use the following:
+</p>
+
+<pre>
+<b>&lt;MsgSep></b>
+^From\s+(?:"[^"]+"@\S+|\S+)\s+\S+\s+\S+\s+\d+\s+\d+:\d+:\d+\s+\d+
+<b>&lt;/MsgSep></b>
+</pre>
+
+<p>Make sure to test things out before using in production
+environments.
+</p>
 
 <p>If this fails, you can try the <strong>CONLEN</strong>
 resource available in v2.0 and later.  The CONLEN resource, when set, tells
@@ -131,7 +145,7 @@ from MHonArc.
 
 <p>Many users use <b>Procmail</b>
 <a href="http://www.ii.com/internet/robots/procmail/"
->&lt;URL:http://www.ii.com/internet/robots/procmail/&gt;</a> to call MHonArc
+>&lt;http://www.ii.com/internet/robots/procmail/&gt;</a> to call MHonArc
 to archive messages.  Procmail provides the ability to preprocess
 mail as it arrives to do selective processing and automated tasks
 with your mail.
@@ -223,11 +237,34 @@ Majordomo list to include in sendmail's <tt>aliases</tt> file:
 owner-<em>xxxx</em>:          <em>list-admin-address</em>
 <em>xxxx</em>-owner:          <em>list-admin-address</em>
 
-<em>xxxx</em>-mhonarc:        "|<em>/usr/lib/majordomo/</em>wrapper mhonarc -add -quiet -outdir <em>/home/httpd/html/yyyyyyy</em> <em>-rcfile rcs.mrc</em>" 
+<em>xxxx</em>-mhonarc:        "|<em>/usr/lib/majordomo/</em>wrapper mhonarc -add -quiet -outdir <em>/home/httpd/html/yyyyyyy</em> <em>-rcfile rcs.mrc</em> <em>-stderr /var/log/mhonarc</em>" 
 </pre>
 
 <p>Replace text that <em>is rendered like this</em> with
 what is appropriate for your configuration.
+</p>
+<p>In order to run MHonArc with Majordomo's wrapper, the program has to 
+be in the same directory where the Majordomo programs are located. 
+An easy way to insure this is to create a symbolic link to in Majordomo's
+program directory to where MHonArc is installed.  For example:
+</p>
+<pre>
+    shell&gt; <b>ln -s <em>/usr/bin/mhonarc</em> <em>/usr/lib/majordomo/mhonarc</em></b>
+</pre>
+<p>Make sure <em><tt>/usr/bin/mhonarc</tt></em> is readable and executable
+by the majordomo user.  Something like the following can be done
+to insure this:
+</p>
+<pre>
+    shell&gt; <b>chmod <em>755</em> <em>/usr/bin/mhonarc</em></b>
+</pre>
+<p>If you redirect stderr to a logfile, the logfile must 
+be owned by the majordomo user and be writable by the majordomo user.
+The directory for that logfile must exist.
+</p>
+<p>The MHonArc-archive directory must be owned by the majordomo user
+and must have the minimum access permission 755.  Group ownership does not
+matter.
 </p>
 
 <!-- ??????????????????????????????????????????????????????????????? -->
@@ -244,7 +281,7 @@ scan the message header an invoke MHonArc with the proper arguments.
 Or. you can use a tool like
 <b>Procmail</b>
 <a href="http://www.ii.com/internet/robots/procmail/"
->&lt;URL:http://www.ii.com/internet/robots/procmail/&gt;</a>.
+>&lt;http://www.ii.com/internet/robots/procmail/&gt;</a>.
 Here are a some messages from users about using Procmail:
 </p>
 
@@ -426,7 +463,11 @@ Unix SysAdmin Contractor
 <h3><b><a name="exclude">Does MHonArc support the "no archive" flag in messages?</a></b></h3>
 </td></tr></table>
 
-<p>No.  However, you can use a pre-processor like <b>Procmail</b>
+<p>Version 2.4, or later, does via the <b>CHECKNOARCHIVE</b> resource.
+</p>
+
+<p>If using an earlier version, or if you are already doing some preprocessing,
+you can use a pre-processor like <b>Procmail</b>
 to do the filtering.  Here is a message sent to the
 <a href="mailto:mhonarc@ncsa.uiuc.edu">MHonArc mailing list</a>:
 </p>
@@ -539,6 +580,18 @@ to move already-processed messages into a different area so
 MHonArc does not read them again.
 </p>
 
+<table border=0 cellpadding=4>
+<tr valign=top>
+<td><strong>NOTE</strong></td>
+<td><p>In MHonArc v2.4 and later, and if you have
+the <b>Digest::MD5</b> module installed, MHonArc will compute
+the MD5 digest of message headers without message-ids.  This
+allows MHonArc to skip the message in subsequent add operations.
+</p>
+</td>
+</tr>
+</table>
+
 <p>A related problem is messages showing up again in the archive
 after you deleted them with RMM.  MHonArc does not keep track of
 delete message-ids.  Therefore, if want to make sure that
@@ -555,7 +608,7 @@ via RMM, make sure to remove the message from input source.
 
 <p>Automatic removal can be done via the <strong>EXPIREAGE</strong> or
 <strong>EXPIREDATE</strong> resources (available in v2.0 beta 2,
-or later).
+or later) or the <strong>MAXSIZE</strong> resource.
 </p>
 <p>Explicit message removal can be done with the <strong>RMM</strong>
 resource.  Please read the RMM resource page for more information
@@ -573,13 +626,13 @@ and examples.
 
 <hr>
 <address>
-98/11/08 12:21:29<br>
+01/06/10 17:47:20<br>
 <img align="top" src="monicon.gif" alt="">
 <a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"
 ><strong>MHonArc</strong></a><br>
-Copyright &#169; 1997-1998, <a href="http://www.oac.uci.edu/indiv/ehood/"
->Earl Hood</a>, <a href="mailto:ehood@medusa.acs.uci.edu"
->ehood@medusa.acs.uci.edu</a><br>
+Copyright &#169; 1997-1999, <a href="http://www.oac.uci.edu/indiv/ehood/"
+>Earl Hood</a>, <a href="mailto:mhonarc@mhonarc.org"
+>mhonarc@mhonarc.org</a><br>
 </address>
 
 </body>

@@ -1,15 +1,15 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	@(#) osinit.pl 2.2 98/08/10 23:38:25
+##	@(#) osinit.pl 2.4 99/07/13 00:46:45
 ##  Author:
-##      Earl Hood       earlhood@usa.net
+##      Earl Hood       mhonarc@pobox.com
 ##  Description:
 ##	A library for setting up a script based upon the OS the script
 ##	is running under.  The main routine defined is OSinit.  See
 ##	the routine for specific information.
 ##---------------------------------------------------------------------------##
 ##    MHonArc -- Internet mail-to-HTML converter
-##    Copyright (C) 1995-1998	Earl Hood, earlhood@usa.net
+##    Copyright (C) 1995-1999	Earl Hood, mhonarc@pobox.com
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by
@@ -63,10 +63,11 @@ sub OSinit {
 	$PATHSEP = ':';
 
     } elsif (($^O !~ /cygwin/i) &&
-    	     ($^O =~ /win/i) && 
-    	     ($tmp = $ENV{'COMSPEC'}) &&
-	     ($tmp =~ /[a-zA-Z]:\\/) &&
-	     (-e $tmp)) {
+    	     (($^O =~ /mswin/i) ||
+	      ($^O =~ /\bdos\b/i) ||
+    	      (($tmp = $ENV{'COMSPEC'}) &&
+	       ($tmp =~ /^[a-zA-Z]:\\/) &&
+	       (-e $tmp))) ) {
         $MSDOS = 1;  $MACOS = 0;  $UNIX = 0;  $VMS = 0;
 	$DIRSEP = '\\';  $CURDIR = '.';
 	$PATHSEP = ';';

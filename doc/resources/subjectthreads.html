@@ -1,0 +1,109 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
+<html>
+<head>
+<title>MHonArc Resources: SUBJECTTHREADS</title>
+</head>
+<body>
+
+<address>
+<a href="../resources.html#subjectthreads">MHonArc Resource List</a><br>
+</address>
+
+<hr>
+<h1>SUBJECTTHREADS</h1>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Syntax</h2>
+
+<dl>
+
+<dt><strong>Envariable</strong><dt>
+<dd><p>
+<code>M2H_SUBJECTTHREADS=</code>[ <code>0</code> | <code>1</code> ]
+</p>
+</dd>
+
+<dt><strong>Element</strong><dt>
+<dd><p><br>
+<code>&lt;SUBJECTTHREADS&gt;</code><br>
+<code>&lt;NOSUBJECTTHREADS&gt;</code><br>
+</p>
+</dd>
+
+<dt><strong>Command-line Option</strong><dt>
+<dd><p><br>
+<code>-subjectthreads</code><br>
+<code>-nosubjectthreads</code>
+</p>
+</dd>
+
+</dl>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Description</h2>
+
+<p>SUBJECTTHREADS determines if MHonArc will examine message subjects
+for detecting message threads.  It is still common for mail composition
+software to not include a message-id reference when a user replies to a message.
+When SUBJECTTHREADS is active, after checking for message-id references,
+MHonArc will then look for messages with the same subjects and group
+them into the same thread.  Subject thread groups are contained
+by the
+<a href="tsubjectbeg.html">TSUBJECTBEG</a> and
+<a href="tsubjectend.html">TSUBJECTEND</a> of the thread index.
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Default Setting</h2>
+
+<p>On.
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Resource Variables</h2>
+
+<p>N/A
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Examples</h2>
+
+<p>None.
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Version</h2>
+
+<p>2.4.0
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>See Also</h2>
+
+<p>
+<a href="subjectreplyrxp.html">SUBJECTREPLYRXP</a>,
+<a href="tsubjectbeg.html">TSUBJECTBEG</a>,
+<a href="tsubjectend.html">TSUBJECTEND</a>
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<address>
+00/10/28 11:13:10<br>
+<img align="top" src="../monicon.gif" alt="">
+<a href="http://www.pobox.com/~ehood/mhonarc.html"
+><strong>MHonArc</strong></a><br>
+Copyright &#169; 1999, <a href="http://www.pobox.com/~ehood/"
+>Earl Hood</a>, <a href="mailto:mhonarc@pobox.com"
+>mhonarc@pobox.com</a><br>
+</address>
+
+</body>
+</html>

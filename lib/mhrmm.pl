@@ -1,13 +1,13 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##      @(#) mhrmm.pl 1.2 98/10/31 11:50:17
+##      @(#) mhrmm.pl 1.4 00/04/24 00:03:36
 ##  Author:
-##      Earl Hood       earlhood@usa.net
+##      Earl Hood       mhonarc@pobox.com
 ##  Description:
 ##      Rmm routine for MHonArc.
 ##---------------------------------------------------------------------------##
 ##    MHonArc -- Internet mail-to-HTML converter
-##    Copyright (C) 1995-1998   Earl Hood, earlhood@usa.net
+##    Copyright (C) 1995-1999   Earl Hood, mhonarc@pobox.com
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by
@@ -70,7 +70,7 @@ sub rmm {
 
     ## Remove messages
     foreach $num (@numbers) {
-	if (($key = $Num2Index{$num}) || $MsgId{$num}) {
+	if (($key = $Num2Index{$num}) || ($key = $MsgId{$num})) {
 	    &delmsg($key);
 
 	    # Need to flag messages that link to deleted message so

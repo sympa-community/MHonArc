@@ -1,6 +1,6 @@
 <!-- MHonArc Resource File -->
-<!-- @(#) subject.mrc 98/10/10 16:13:45
-     Earl Hood <earlhood@usa.net>
+<!-- @(#) subject.mrc 99/06/25 13:25:44
+     Earl Hood <mhonarc@pobox.com>
   -->
 <!-- This resource file utilizes the subject grouping feature of MHonArc
      to format the main index.

@@ -1,0 +1,131 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
+<html>
+<head>
+<title>MHonArc Resources: SPAMMODE</title>
+</head>
+<body>
+
+<address>
+<a href="../resources.html#spammode">MHonArc Resource List</a><br>
+</address>
+
+<hr>
+<h1>SPAMMODE</h1>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Syntax</h2>
+
+<dl>
+
+<dt><strong>Envariable</strong><dt>
+<dd><p>
+<code>M2H_SPAMMODE=</code>[ <code>0</code> | <code>1</code> ]
+</p>
+</dd>
+
+<dt><strong>Element</strong><dt>
+<dd><p><br>
+<code>&lt;SPAMMODE&gt;</code><br>
+<code>&lt;NOSPAMMODE&gt;</code><br>
+</p>
+</dd>
+
+<dt><strong>Command-line Option</strong><dt>
+<dd><p><br>
+<code>-spammode</code><br>
+<code>-nospammode</code>
+</p>
+</dd>
+
+</dl>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Description</h2>
+
+<p>SPAMMODE determines if MHonArc will perform actions to deter
+spam address harvesters or not.  If SPAMMODE is true, it changes the default
+values of various resources that display email addresses.  The
+following default resource values are affected:
+</p>
+<dl>
+<dt><a href="litemplate.html">LITEMPLATE</a></dt>
+<dd><a href="../rcvars.html#FROMNAME"><tt>$FROMNAME$</tt></a> is used
+instead of <a href="../rcvars.html#FROM"><tt>$FROM$</tt></a>.</dd>
+<dt><a href="msgpgbegin.html">MSGPGBEGIN</a></dt>
+<dd>The <tt>&lt;LINK REV="made" ...&gt;</tt> is removed.</dd>
+<dt><a href="foluplitxt.html">FOLUPLITXT</a></dt>
+<dd><a href="../rcvars.html#FROMNAME"><tt>$FROMNAME$</tt></a> is used
+instead of <a href="../rcvars.html#FROM"><tt>$FROM$</tt></a>.</dd>
+<dt><a href="refslitxt.html">REFSLITXT</a></dt>
+<dd><a href="../rcvars.html#FROMNAME"><tt>$FROMNAME$</tt></a> is used
+instead of <a href="../rcvars.html#FROM"><tt>$FROM$</tt></a>.</dd>
+<dt><a href="addressmodifycode.html">ADDRESSMODIFYCODE</a></dt>
+<dd>Is defined as
+"<tt>s|([\!\%\w\.\-+=/]+@)([\w\.\-]+)|$1.('x' x length($2))|ge"</tt>
+(this has the effect of preserving the local-part of the address and
+complete masking out the domain portion).</dd>
+<dt><a href="mailtourl.html">MAILTOURL</a></dt>
+<dd>Is defined as
+"<tt>mailto:<a href="../rcvars.html#TOADDRNAME">$TOADDRNAME$</a>@DOMAIN.HIDDEN</tt>"</dd>
+</dl>
+<p>Note, a user defined setting of an above resource will override
+any effects that SPAMMODE has on the resource.
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Default Setting</h2>
+
+<p>Off.
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Resource Variables</h2>
+
+<p>N/A
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Examples</h2>
+
+<p>None.
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Version</h2>
+
+<p>2.4.0
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>See Also</h2>
+
+<p>
+<a href="addressmodifycode.html">ADDRESSMODIFYCODE</a>,
+<a href="foluplitxt.html">FOLUPLITXT</a>,
+<a href="litemplate.html">LITEMPLATE</a>,
+<a href="mailtourl.html">MAILTOURL</a>,
+<a href="msgpgbegin.html">MSGPGBEGIN</a>,
+<a href="refslitxt.html">REFSLITXT</a>
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<address>
+00/10/28 11:13:09<br>
+<img align="top" src="../monicon.gif" alt="">
+<a href="http://www.pobox.com/~ehood/mhonarc.html"
+><strong>MHonArc</strong></a><br>
+Copyright &#169; 1999, <a href="http://www.pobox.com/~ehood/"
+>Earl Hood</a>, <a href="mailto:mhonarc@pobox.com"
+>mhonarc@pobox.com</a><br>
+</address>
+
+</body>
+</html>

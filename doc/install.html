@@ -1,0 +1,479 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
+<HTML>
+<HEAD>
+<TITLE>MHonArc v2.4 -- Installation</TITLE>
+</HEAD>
+<BODY background="ssbg75.jpg"
+      text="#000000" link="#0000ee" vlink="#551a8b" alink="ff0000">
+
+<!--X-NavButtons-Start-->
+<p align=center>
+<a href="intro.html"><img src="prev.gif" border=0 alt="[Prev]"></a><a href="quickstart.html"><img src="next.gif" border=0 alt="[Next]"></a><a href="mhonarc.html"><img src="up.gif" border=0 alt="[TOC]"></a><a href="faq/faq.html"><img src="faq.gif" border=0 alt="[FAQ]"></a><a href="app-bugs.html"><img src="bug.gif" border=0 alt="[Bugs]"></a><a href="http://www.mhonarc.org/"><img src="home.gif" border=0 alt="[Home]"></a>
+</p>
+<!--X-NavButtons-End-->
+<HR>
+
+<H1><a name="installation">Installation</a></H1>
+
+<p>The following section describes how to install MHonArc on your
+system.
+</p>
+
+<!--X-TOC-Start-->
+<ul>
+<li><a href="#sysreqs">System Requirements</a>
+<li><a href="#download">Downloading MHonArc</a>
+<li><a href="#extraction">Extracting the MHonArc Distribution</a>
+<li><a href="#installingviainstallme">Installing with <tt>install.me</tt></a>
+<ul>
+<li><small><a href="#installmenotes"><tt>install.me</tt> Notes</a></small>
+</ul>
+<li><a href="#p5install">The Perl 5 Way</a>
+<li><a href="#win32">Win32 Notes</a>
+<li><a href="#altos">Alternate Operating Systems</a>
+<li><a href="#manual">Manual Installation</a>
+<li><a href="#postinstall">Post Installation Configuration</a>
+<ul>
+<li><small><a href="#siterc">Default Resource File</a></small>
+<li><small><a href="#sitelib">Site Initialization Library</a></small>
+</ul>
+<li><a href="#rcfileedit">Resource File Editing</a>
+</ul>
+<!--X-TOC-End-->
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="sysreqs">System Requirements</a></h2>
+
+<p>The following is required inorder to use MHonArc:
+</p>
+<ul>
+<li><p>Perl 5 is installed.  If you do not have Perl 5, goto
+<a href="http://language.perl.com/"
+>&lt;http://language.perl.com/&gt;</a> for download information.
+</p>
+</li>
+<li><p><b>Getopt::Long</b> and <b>Time::Local</b> modules are installed.
+These modules are part of the standard Perl distribution.  The
+following command can be used to verify that the modules
+are installed on your system:
+</p>
+<pre>
+shell&gt; <b>perl -MGetopt::Long -MTime::Local -e ';'</b>
+</pre>
+<p>If you get any error messages, you either have an incomplete
+installation of Perl, or Perl is misconfigured.
+</p>
+</li>
+<li><p>The following modules are optional:
+</p>
+<ul>
+<li><p><b>Digest::MD5</b>:  Used for creating IDs for messages without
+message-ids.  This module helps MHonArc detect already
+archived messages for messages without message-ids.
+</p>
+</li>
+<li><p><b>Fcntl</b>, <b>Symbol</b>:  Used for flock() based archive locking
+(if specified by the user).  See <a href="resources/lockmethod.html">LOCKMETHOD</a>
+ resource for more information.
+</p>
+</li>
+</ul>
+<p>MHonArc will still function if the above listed modules are
+not available.
+</p>
+</li>
+</ul>
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="download">Downloading MHonArc</a></h2>
+
+<p>The homepage for MHonArc is
+<A HREF="http://www.mhonarc.org/"
+>&lt;http://www.mhonarc.org/&gt;</A>.  The homepage
+list various sites that you can download MHonArc.  If you are
+familiar with
+<a href="http://www.perl.com/CPAN/">Comprehensive Perl Archive Network
+(CPAN)</a>, MHonArc can be downloaded from
+<a href="http://www.perl.com/CPAN/authors/id/EHOOD/"
+>&lt;http://www.perl.com/CPAN/authors/id/EHOOD/&gt;</a>.
+</p>
+
+<p>MHonArc is distributed in either a tar/gzip file or a zip file.  The
+tar/gzip file will have a name like <tt>MHonArc<var>X.X.X</var>.tar.gz</tt>,
+and the zip file have a name like <tt>MHonArc<var>X.X.X</var>.zip</tt>;
+where <tt><var>X.X.X</var></tt> represents the version number.
+</p>
+<p>Alternate distribution formats for MHonArc may be available, like
+Linux RPM.  Alternate distribution formats are not covered in this
+document.
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="extraction">Extracting the MHonArc Distribution</a></h2>
+
+<p>After downloading MHonArc, it is best to move the file to a
+temporary location for extraction.  To extract a tar/gzip distribution,
+use the following command:
+</p>
+<pre>
+    shell&gt; <b>gzip -dc MHonArc<var>X.X.X</var>.tar.gz | tar xvf -</b>
+</pre>
+<p>To extract the zip distribution, you can use a program like WinZip,
+or any other program that supports zip archives.  When extracting, make
+sure to preserve the directory structure.
+</p>
+<table border=0 cellpadding=4>
+<tr valign=top>
+<td><strong>NOTE</strong></td>
+<td><p>WinZip does support tar/gzip files.
+</p>
+</td>
+</tr>
+</table>
+<p>After extraction, the subdirectory <tt>MHonArc<var>X.X.X</var></tt> will
+have been created containing all the files comprising MHonArc.
+</p>
+<table border=0 cellpadding=4>
+<tr valign=top>
+<td><strong>IMPORTANT</strong></td>
+<td><p>Please read the file RELNOTES included in the MHonArc
+distribution before continuing for any news about compatibility
+with previous versions and/or important usage information.
+</p>
+</td>
+</tr>
+</table>
+<p>You
+will now want to change your current directory to <tt>MHonArc<var>X.X.X</var></tt>
+for the <a href="#installingfiles">next step</a>.
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="installingviainstallme">Installing with <tt>install.me</tt></a></h2>
+
+<p>Provided in the MHonArc distribution is a Perl program,
+<b><tt>install.me</tt></b>
+that will install MHonArc on your system.  To run the program, type
+the following at your shell prompt:
+</p>
+<pre>
+    shell&gt; <b>perl install.me</b>
+</pre>
+<table border=0 cellpadding=4>
+<tr valign=top>
+<td><strong>IMPORTANT</strong></td>
+<td><p>You must be in the same directory as the <b><tt>install.me</tt></b>
+program when you run it.
+</p>
+</td>
+</tr>
+</table>
+
+<p>The installation program will ask you a series of questions on where
+the perl executable is and where to put MHonArc files.  Just hit
+&lt;CR&gt; to accept the default values listed in ()'s.  Note, the default
+values are determined by the configuration of perl on your system.
+If you choose the defaults, you may need to possess root/admin privileges
+to have a successful install.
+</p>
+
+<p><b><tt>install.me</tt></b> can take several options on the
+command-line to affect what is done during installation.  The following
+is the list of options available:
+</p>
+<pre>
+  -afs                  : Skip permission checks (useful if AFS)
+  -batch                : Run in batch mode (do not ask questions)
+  -binpath &lt;path&gt;       : Directory path to install programs/scripts
+  -docpath &lt;path&gt;       : Directory path to install documentation
+  -help                 : A message summarizing options available
+  -libpath &lt;path&gt;       : Directory path to install library files
+  -filelist &lt;file&gt;      : List of files to install (def="FILELIST")
+  -manpath &lt;path&gt;       : Directory path to manpages
+  -nobin                : Do not install programs
+  -nodoc                : Do not install documentation
+  -nolib                : Do not install library files
+  -noman                : Do not install manpages
+  -perl &lt;pathname&gt;      : Pathname of perl interpreter
+  -prefix &lt;path&gt;        : Set prefix for installation directories
+</pre>
+
+<p>For example, if you do not want to install the documentation, do
+the following:
+</p>
+<pre>
+    shell&gt; <b>perl install.me -nodoc</b>
+</pre>
+
+<p>Later on, if you decide you want to install the documentation, but
+not re-install the other files, do the following:
+</p>
+<pre>
+    shell&gt; <b>perl install.me -nobin -nolib -noman</b>
+</pre>
+
+<p>If you want to install files relative to your home directory, do the
+following:
+</p>
+<pre>
+    shell&gt; <b>perl install.me -prefix $HOME</b>
+</pre>
+<br>
+<h3><a name="installmenotes"><tt>install.me</tt> Notes</a></h3>
+<ul>
+<li><p>The "#!" line in the installed programs are set to point to
+the perl executable specified in the installation process.
+This is convienence for those using systems that support the
+"#!" notation.
+</p>
+</li>
+<li><p>The installation lib directory is added to each program's
+search path so each program can find the libaries needed for
+proper execution.  Therefore, you should <b>NOT</b> have to set your
+PERL5LIB environment variable if you install the library files
+in a location not in the default perl library search path.
+</p>
+</li>
+<li><p>If you specify paths that do not exist, the <tt>install.me</tt>
+program will create the paths for you.	If running in
+interactive mode, you will be prompted before each path
+is created.
+</p>
+</li>
+<li><p><tt>install.me</tt> supports environment variable interpolation in
+pathnames specified during interactive installation.
+For example, if you want to install the program files into
+your local bin directory, you can enter the following when
+prompted for the location to install executables: <tt>$HOME/bin</tt>.
+Also, if the '~' (tilde) character is the first character of the
+pathname specified, it will be expanded to the value of the
+HOME environment variable.  Therefore, the following are
+equivalent: <tt>$HOME/bin</tt> and <tt>~/bin</tt>.
+</p>
+</li>
+<li><p>The <b><tt>-afs</tt></b> option should only be needed
+if installing MHonArc onto AFS and using an older version of Perl 5.
+It should not be needed for Perl 5.005 or later.
+</p>
+</li>
+<li><p>If you want to abort the installation, just enter the
+termination character.	For Unix systems, it is normally
+Ctrl-C; for Win32 systems, it is normally Ctrl-Z.
+</p>
+</li>
+</ul>
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="p5install">The Perl 5 Way</a></h2>
+
+<p>Of course, you can install MHonArc the standard way under Perl 5:
+</p>
+<pre>
+    shell&gt; perl Makefile.PL
+    shell&gt; make
+    shell&gt; make install
+</pre>
+<p>If you want to install in a specific directory, try:
+</p>
+<pre>
+    shell&gt; perl Makefile.PL PREFIX=/tmp/myperl5
+    shell&gt; make
+    shell&gt; make install
+</pre>
+
+<table border=0 cellpadding=4>
+<tr valign=top>
+<td><strong>NOTE</strong></td>
+<td><p><b><tt>install.me</tt></b> is actually called "behind the scenes"
+to install the files.
+</p>
+</td>
+</tr>
+</table>
+
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="win32">Win32 Notes</a></h2>
+<ul>
+<li><p>The main programs will automatically be converted to DOS batch
+files.  Hence, if the path location of the main programs is
+in your PATH, you should be able to invoke them like any other
+program.  Note, the path to the perl executable must be in
+your PATH, also.
+</p>
+</li>
+<li><p>The main programs will also be copied to "<tt>.pl</tt>" files.
+Therefore, if you have <tt>.pl</tt> associated with Perl in the registry, you
+can invoke the programs directly (if the path location of the
+main programs are in your search path).  For example:
+</p><pre>
+    shell&gt; <b>mhonarc.pl ...</b>
+</pre>
+<p>This is known to work under WinNT and under the Cygwin bash shell.
+</p>
+<p>This is better than going though the batch file mechanism since
+I/O redirection does not work when invoking a batch file.
+</p>
+</li>
+<li><p>In the <b><tt>logo</tt></b> directory of the distribution is a BMP file
+<b><tt>mhaicon.bmp</tt></b>.  You can copy the image into your Windows Icon
+directory.  Then through the file types editor of the file
+explorer, you can specify <b><tt>mhaicon.bmp</tt></b> as the icon for MHonArc
+resource (<b><tt>.mrc</tt></b>) files.
+</p>
+</li>
+</ul>
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="altos">Alternate Operating Systems</a></h2>
+
+<p>In many cases, the <tt>install.me</tt> program will work for other operating
+systems.  Please contact the author on any success stories for
+other operating systems, and please send any patches, if required.
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="manual">Manual Installation</a></h2>
+
+<p>If <tt>install.me</tt> will not work properly for your system, here are the
+steps to install MHonArc manually:
+</p>
+<ul>
+
+<li><p>Copy files in the <tt>lib</tt> directory to the
+library location you desire.
+</p>
+</li>
+<li><p>Copy the program files to the location you want them
+installed.  After copying, you must edit the each file
+as follows:
+</p>
+<ul>
+<li><p>Edit the "<tt>#!/...</tt>" line (the first line of each file)
+to be the complete pathname of your perl interpreter.
+Note, this step is only required for systems (Unix)
+that support "<tt>#!</tt>".
+</p>
+</li>
+<li><p>Add a new line right after the "<tt>#!/...</tt>" line to
+contain the following:
+</p><pre>
+    use lib '/path/to/lib/files';
+</pre>
+<p>where "<tt>/path/to/lib/files/</tt>" is the path to where
+copied the library files to.
+</p>
+<p>Note, if the location you copied the libraries are
+already part of Perl's standard library search path,
+you do not need to add the "use lib" statement.
+</p>
+</li>
+</ul>
+</li>
+</ul>
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="postinstall">Post Installation Configuration</a></h2>
+
+<p>After installation, you may want to do some site-specific
+configuration.
+</p>
+
+<h3><a name="siterc">Default Resource File</a></h3>
+
+<p>You have the ability to create a default
+<a href="resources/rcfile.html">resource file</a>
+to make site-wide defaults for MHonArc.  The name of the
+resource file should be <b><tt>mhonarc.rc</tt></b> and should
+be placed in the MHonArc library directory as specified during
+installation.  For more information on what can be put in
+a resource file, see the
+<a href="resources.html">Resources</a> section.
+</p>
+<table border=0 cellpadding=4>
+<tr valign=top>
+<td><strong>NOTE</strong></td>
+<td><p>It is advisable to create some local documentation for
+users describing
+any settings you place in the site-wide resource file.
+This will avoid confusion if site settings vary from default settings
+described in the documentation, and it will help avoid invalid bug
+reports.
+</p>
+</td>
+</tr>
+</table>
+
+<h3><a name="sitelib">Site Initialization Library</a></h3>
+
+<p>If you do not know Perl, ignore this section.
+</p>
+<p>When MHonArc opens an archive for processing, MHonArc
+will attempt to execute the instructions in the file
+<b><tt>mhasiteinit.pl</tt></b>.  This file allows you
+to make site customizations not possible through a
+<a href="resources/defrcfile.html">default resource file</a>.
+<b><tt>mhasiteinit.pl</tt></b> should be placed in the
+MHonArc library directory as specified during installation.
+A sample <b><tt>mhasiteinit.pl</tt></b> file is provied in the
+<b><tt>examples</tt></b> directory of the distribution to get you
+started.
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="rcfileedit">Resource File Editing</a></h2>
+
+<p>If you are a Vim user,
+<a href="http://www.vim.org/">&lt;http://www.vim.org/&gt;</a>, a syntax file
+for MHonArc resource files is included in the examples directory:
+<b><tt>mhonarc.vim</tt></b>.
+Vim is known to run on a variety of operating systems,
+and is free software.
+</p>
+
+<p>To use <tt>mhonarc.vim</tt>, copy <tt>mhonarc.vim</tt> to an
+appropriate location and
+add something like the following to your <tt>.vimrc</tt> file:
+</p>
+<pre>
+au BufNewFile,BufRead *.mrc	so $HOME/share/vim/syntax/mhonarc.vim
+</pre>
+<p>Of course, change the pathname to <tt>mhonarc.vim</tt> to wherever
+you copied it to.
+</p>
+
+<p>Now, any file with <tt>.mrc</tt> extension will put Vim into
+MHonArc resource file highlighting mode.  The mode is best used with
+color-capable terminals.
+</p>
+
+<HR>
+<!--X-NavButtons-Start-->
+<p align=center>
+<a href="intro.html"><img src="prev.gif" border=0 alt="[Prev]"></a><a href="quickstart.html"><img src="next.gif" border=0 alt="[Next]"></a><a href="mhonarc.html"><img src="up.gif" border=0 alt="[TOC]"></a><a href="faq/faq.html"><img src="faq.gif" border=0 alt="[FAQ]"></a><a href="app-bugs.html"><img src="bug.gif" border=0 alt="[Bugs]"></a><a href="http://www.mhonarc.org/"><img src="home.gif" border=0 alt="[Home]"></a>
+</p>
+<!--X-NavButtons-End-->
+
+<!-- *************************************************************** -->
+<hr>
+<address>
+01/06/10 17:47:40<br>
+<img align="top" src="monicon.gif" alt="">
+<a href="http://www.mhonarc.org/"><strong>MHonArc</strong></a><br>
+Copyright &#169; 1997-1999, <a href="http://www.mhonarc.org/~ehood/"
+>Earl Hood</a>, <a href="mailto:mhonarc@mhonarc.org"
+>mhonarc@mhonarc.org</a><br>
+</address>
+
+</BODY>
+</HTML>

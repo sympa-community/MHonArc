@@ -60,13 +60,18 @@ the line is not contained within an element, is ignored.  This implies
 that regular text can be put anywhere <STRONG>outside</STRONG> of
 recognized elements for commenting purposes.  </P>
 
-<dl><dt><STRONG>NOTE</STRONG></dt>
-<dd><p>You should use SGML comment declarations
+<table border=0 cellpadding=4>
+<tr valign=top>
+<td><strong>NOTE</strong></td>
+<td><p>You should use SGML comment declarations
 (<CODE>&lt;!-- </CODE>...<CODE> --&gt;</CODE>) when commenting a
-resource file. This will eliminate possible conflict with later
-versions of MHonArc if more stricter parsing rules are
-adopted.  </P>
-</dd></dl>
+resource file. This will eliminate possible conflicts
+if more stricter parsing rules are adopted.
+</p>
+</td>
+</tr>
+</table>
+<br>
 
 <LI><P>The opening tag of an element must occur by itself on a
 single line.  Whitespace is allowed before the the open tag.  </P>
@@ -99,6 +104,11 @@ to remove the last line-break of the element's content.
 </P>
 
 <LI><P>Elements can occur in any order in the resource file.
+</P>
+
+<LI><P>Elements can<b>NOT</b> be nested.  Many resources define
+the values of <a href="../rcvars.html">resource variables</a>, which
+may be used within resource elements.
 </P>
 
 </UL>
@@ -298,13 +308,13 @@ video/quicktime:http://foo.org/icons/movie.xbm
 <!-- *************************************************************** -->
 <hr>
 <address>
-98/09/19 18:27:15<br>
+00/10/28 11:13:08<br>
 <img align="top" src="../monicon.gif" alt="">
-<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"
+<a href="http://www.pobox.com/~ehood/mhonarc.html"
 ><strong>MHonArc</strong></a><br>
-Copyright &#169; 1997-1998, <a href="http://www.oac.uci.edu/indiv/ehood/"
->Earl Hood</a>, <a href="mailto:earlhood@usa.net"
-> earlhood@usa.net</a><br>
+Copyright &#169; 1997-1999, <a href="http://www.pobox.com/~ehood/"
+>Earl Hood</a>, <a href="mailto:mhonarc@pobox.com"
+> mhonarc@pobox.com</a><br>
 </address>
 
 </body>

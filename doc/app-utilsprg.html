@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
 <HTML>
 <HEAD>
-<TITLE>MHonArc v2.3 -- Appendix: Utility Programs
+<TITLE>MHonArc v2.4 -- Appendix: Utility Programs
 </TITLE>
 </HEAD>
 <BODY background="ssbg75.jpg"
@@ -9,17 +9,25 @@
 
 <!--X-NavButtons-Start-->
 <p align=center>
-<a href="app-diagnos.html"><img src="prev.gif" border=0 alt="[Prev]"></a><a href="app-bugs.html"><img src="next.gif" border=0 alt="[Next]"></a><a href="mhonarc.html"><img src="up.gif" border=0 alt="[TOC]"></a><a href="faq/faq.html"><img src="faq.gif" border=0 alt="[FAQ]"></a><a href="bugs.html"><img src="bug.gif" border=0 alt="[Bugs]"></a><a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"><img src="home.gif" border=0 alt="[Home]"></a>
+<a href="app-diagnos.html"><img src="prev.gif" border=0 alt="[Prev]"></a><a href="app-mimeconf.html"><img src="next.gif" border=0 alt="[Next]"></a><a href="mhonarc.html"><img src="up.gif" border=0 alt="[TOC]"></a><a href="faq/faq.html"><img src="faq.gif" border=0 alt="[FAQ]"></a><a href="app-bugs.html"><img src="bug.gif" border=0 alt="[Bugs]"></a><a href="http://www.mhonarc.org/"><img src="home.gif" border=0 alt="[Home]"></a>
 </p>
 <!--X-NavButtons-End-->
 <HR>
 
 <H1><a name="appendixA">Appendix: Utility Programs</a></H1>
 
-<P>This appendix describes the adiitional utility programs that
+<P>This appendix describes the additional utility programs that
 are included in the MHonArc distribution.  The utility programs
 are installed with <b>mhonarc</b> during the installation process.
 </P>
+
+<!--X-TOC-Start-->
+<ul>
+<li><a href="#mha-dbedit">mha-dbedit</a>
+<li><a href="#mha-dbrecover">mha-dbrecover</a>
+<li><a href="#mha-decode">mha-decode</a>
+</ul>
+<!--X-TOC-End-->
 
 <hr>
 <H2><a name="mha-dbedit">mha-dbedit</a></H2>
@@ -31,7 +39,7 @@ database without regenerating any archive pages.
 <p>Typical usage:
 </p>
 <pre>
-    % <b>mha-dbedit -rcfile <var>res.mrc</var> -outdir <var>/path/to/archive</var></b>
+    shell&gt; <b>mha-dbedit -rcfile <var>res.mrc</var> -outdir <var>/path/to/archive</var></b>
 </pre>
 
 <hr>
@@ -45,17 +53,17 @@ corrupted, or accidentally deleted.
 <p>Typical usage:
 </p>
 <pre>
-    % <b>mha-dbrecover -outdir <var>/path/to/archive</var></b>
+    shell&gt; <b>mha-dbrecover -outdir <var>/path/to/archive</var></b>
 </pre>
 
 <p>If the archive used different resource settings from the defaults
 for controling filenames, then you must specify those settings when
 invoking <b>mha-dbrecover</b>.  For example, if you are using
-"<tt>shtml</tt>" for HTMLEXT, then you should invoke <b>mha-dbrecover</b>
-like as follows:
+"<tt>shtml</tt>" for <a href="resources/htmlext.html">HTMLEXT</a>,
+then you should invoke <b>mha-dbrecover</b> like the following:
 </p>
 <pre>
-    % <b>mha-dbrecover -htmlext shtml -outdir <var>/path/to/archive</var></b>
+    shell&gt; <b>mha-dbrecover -htmlext shtml -outdir <var>/path/to/archive</var></b>
 </pre>
 
 <p><b>mha-dbrecover</b> will only recreate non-layout message related data.
@@ -64,26 +72,74 @@ the defaults, then those resource settings must be specified when
 invoking <b>mha-dbrecover</b>.  For example:
 </p>
 <pre>
-    % <b>mha-dbrecover -rcfile <var>res.mrc</var> -outdir <var>/path/to/archive</var></b>
+    shell&gt; <b>mha-dbrecover -rcfile <var>res.mrc</var> -outdir <var>/path/to/archive</var></b>
 </pre>
 
+<hr>
+<H2><a name="mha-decode">mha-decode</a></H2>
+
+<P><b>mha-decode</b> is a utility program unrelated to MHonArc archives.
+<b>mha-decode</b> provides basic MIME decoding capabilites for
+messages.
+</P>
+<p>If given mail folders as input, all messages within in the mail
+folders will be decoded.  All message parts are written to files.  If a
+filename is specified for a message part, that filename will be used
+when writing the part to a file.  If no filename is specified in the
+message, a unique name will be used based upon the content-type of
+the message part.
+</p>
+<p>A single message can be decoded by using the <tt>-single</tt> option.
+</p>
+
+Only MHonArc options that affect parsing of mail folders are applicable
+for <b>mha-decode</b>.  The following options are applicable:
+<tt>-conlen</tt>,
+<tt>-mhpattern</tt>,
+<tt>-msgsep</tt>,
+<tt>-noconlen</tt>,
+<tt>-outdir</tt>,
+<tt>-perlinc</tt>,
+<tt>-rcfile</tt>,
+<tt>-single</tt>,
+<tt>-umask</tt>.
+
+<p>Example usage:
+</p>
+<pre>
+    shell&gt; <b>mha-decode inbox</b>
+</pre>
+<p>Use <tt>-outdir</tt> to have all decoded data placed into a
+separate directory:
+</p>
+<pre>
+    shell&gt; <b>mha-decode -outdir <var>/var/tmp</var> inbox</b>
+</pre>
+<p>And to decode a single message:</p>
+<pre>
+    shell&gt; <b>mha-decode -single <var>msg.822</var></b>
+</pre>
+<p>or from standard input:</p>
+<pre>
+    shell&gt; <b><var>some_program</var> | mha-decode -single</b>
+</pre>
 
 <hr>
 <!--X-NavButtons-Start-->
 <p align=center>
-<a href="app-diagnos.html"><img src="prev.gif" border=0 alt="[Prev]"></a><a href="app-bugs.html"><img src="next.gif" border=0 alt="[Next]"></a><a href="mhonarc.html"><img src="up.gif" border=0 alt="[TOC]"></a><a href="faq/faq.html"><img src="faq.gif" border=0 alt="[FAQ]"></a><a href="bugs.html"><img src="bug.gif" border=0 alt="[Bugs]"></a><a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"><img src="home.gif" border=0 alt="[Home]"></a>
+<a href="app-diagnos.html"><img src="prev.gif" border=0 alt="[Prev]"></a><a href="app-mimeconf.html"><img src="next.gif" border=0 alt="[Next]"></a><a href="mhonarc.html"><img src="up.gif" border=0 alt="[TOC]"></a><a href="faq/faq.html"><img src="faq.gif" border=0 alt="[FAQ]"></a><a href="app-bugs.html"><img src="bug.gif" border=0 alt="[Bugs]"></a><a href="http://www.mhonarc.org/"><img src="home.gif" border=0 alt="[Home]"></a>
 </p>
 <!--X-NavButtons-End-->
 
 <HR>
 <address>
-98/10/24 17:31:02<br>
+01/06/10 17:47:40<br>
 <img align="top" src="monicon.gif" alt="">
-<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"
+<a href="http://www.mhonarc.org"
 ><strong>MHonArc</strong></a><br>
-Copyright &#169; 1998, <a href="http://www.oac.uci.edu/indiv/ehood/"
->Earl Hood</a>, <a href="mailto:earlhood@usa.net"
->earlhood@usa.net</a><br>
+Copyright &#169; 1998-1999, <a href="http://www.mhonarc.org/~ehood/"
+>Earl Hood</a>, <a href="mailto:mhonarc@mhonarc.org"
+>mhonarc@mhonarc.org</a><br>
 </address>
 
 </BODY>

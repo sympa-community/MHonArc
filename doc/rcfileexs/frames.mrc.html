@@ -1,0 +1,613 @@
+<html>
+<body>
+<pre>
+&lt;!-- ================================================================== --&gt;
+&lt;!--	@(#) frames.mrc 1.8 99/07/25 01:01:43
+	Earl Hood &lt;mhonarc@pobox.com&gt;
+  --&gt;
+&lt;!--	MHonArc Resource File					--
+  --									--
+  --	Description:							--
+  --									--
+  --	    This is an example of using HTML frames for an archive.	--
+  --	    This resource file also illustrates how powerful the	--
+  --	    customization features of MHonArc are while giving		--
+  --	    explanations on the use of each resource.			--
+  --									--
+  --	    The document that defines the main frames is created	--
+  --	    outside of mhonarc.  The following is a sample document	--
+  --	    that can be used:						--
+  --									--
+  --	    &lt;html&gt;							--
+  --	    &lt;head&gt;							--
+  --	    &lt;title&gt;Mail Archive (by MHonArc)&lt;/title&gt;			--
+  --	    &lt;/head&gt;							--
+  --	    &lt;frameset cols="275,*"&gt;					--
+  --	    &lt;frame src="threads.html" name="INDEX"&gt;			--
+  --	    &lt;frame src="start.html" name="MAIN"&gt;			--
+  --	    &lt;/frameset&gt;							--
+  --	    &lt;/html&gt;							--
+  --									--
+  --	    The frame names are important since they are used in	--
+  --	    this file.  The default message in the MAIN frame is	--
+  --	    start.html: a document containing information about the	--
+  --	    the archive.  A bogus null document can be used to		--
+  --	    have the MAIN frame come up blank.				--
+  --									--
+  --		NOTE: Netscape will not properly handle frame		--
+  --		      linking if the SRC attribute is not defined	--
+  --		      to a document.  Therefore, some document		--
+  --		      should be referenced.				--
+  --									--
+  --	    The title of the archive is controlled by the MAIN-TITLE	--
+  --	    resource variable.  This variable should be defined on	--
+  --	    the command-line.  Example:					--
+  --									--
+  --	        -definevars "MAIN-TITLE='Sample Frame Archive'" ...	--
+  --									--
+&lt;!-- ================================================================== --&gt;
+
+&lt;!-- ================================================================== --&gt;
+&lt;!-- 	Variable definitions						--&gt;
+&lt;!-- ================================================================== --&gt;
+&lt;!--
+	User defined variables are defined by the DEFINEVAR element.
+	The first line is the name of the variable and subsequent
+	lines to the close tag are the value of the variable.
+
+	User defined variables are extremely useful when the same
+	layout information occurs in multiple places.  It also
+	help centralize information that maybe likely to change.
+	
+	User defined variables can reference other variables.
+  --&gt;
+&lt;!-- ================================================================== --&gt;
+
+&lt;!-- 	Variables for frame names
+  --&gt;
+<b><a href="../resources/definevar.html">&lt;DefineVar&gt;</a></b>
+FRAME-MAIN
+target="MAIN"
+<b>&lt;/DefineVar&gt;</b>
+
+<b><a href="../resources/definevar.html">&lt;DefineVar&gt;</a></b>
+FRAME-IDX
+target="INDEX"
+<b>&lt;/DefineVar&gt;</b>
+
+&lt;!--	Variable for navigational links.  This defines a table of
+	buttons to link to previous and next messages and to thread
+	and date indexes.
+  --&gt;
+<b><a href="../resources/definevar.html">&lt;DefineVar&gt;</a></b>
+NAV-LINKS
+&lt;table cellpadding=0 cellspacing=0 border=1 width="100%"&gt;
+&lt;tbody&gt;
+&lt;tr align="center"&gt;
+&lt;th colspan=3&gt;&lt;strong&gt;Thread Links&lt;/strong&gt;&lt;/th&gt;
+&lt;th colspan=3&gt;&lt;strong&gt;Date Links&lt;/strong&gt;&lt;/th&gt;
+&lt;/tr&gt;
+&lt;tr align="center"&gt;
+&lt;td&gt;<b><a href="../rcvars.html#BUTTON">$BUTTON(TPREV)$</a></b>&lt;/td&gt;
+&lt;td&gt;<b><a href="../rcvars.html#BUTTON">$BUTTON(TNEXT)$</a></b>&lt;/td&gt;
+&lt;td&gt;&lt;a $FRAME-IDX$ href="<b><a href="../rcvars.html#TIDXFNAME">$TIDXFNAME$</a></b>#<b><a href="../rcvars.html#MSGNUM">$MSGNUM$</a></b>"&gt;Index&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;<b><a href="../rcvars.html#BUTTON">$BUTTON(PREV)$</a></b>&lt;/td&gt;
+&lt;td&gt;<b><a href="../rcvars.html#BUTTON">$BUTTON(NEXT)$</a></b>&lt;/td&gt;
+&lt;td&gt;&lt;a $FRAME-IDX$ href="<b><a href="../rcvars.html#IDXFNAME">$IDXFNAME$</a></b>#<b><a href="../rcvars.html#MSGNUM">$MSGNUM$</a></b>"&gt;Index&lt;/a&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+<b>&lt;/DefineVar&gt;</b>
+
+&lt;!--	Variable for table attributes for page links on index pages.
+  --&gt;
+<b><a href="../resources/definevar.html">&lt;DefineVar&gt;</a></b>
+IDXPG-TBL-LINKS-ATTRS
+width="100%" border=0 cellpadding=0 cellspacing=0
+<b>&lt;/DefineVar&gt;</b>
+
+&lt;!-- ================================================================== --&gt;
+&lt;!-- 	Options			 					--&gt;
+&lt;!-- ================================================================== --&gt;
+
+&lt;!--	It is good to be explicit when possible since a default
+	resource file, and/or environment variables, may be in affect.
+  --&gt;
+<b><a href="../resources/main.html">&lt;Main&gt;</a></b>
+<b><a href="../resources/thread.html">&lt;Thread&gt;</a></b>
+<b><a href="../resources/sort.html">&lt;Sort&gt;</a></b>
+<b><a href="../resources/reverse.html">&lt;NoReverse&gt;</a></b>
+<b><a href="../resources/treverse.html">&lt;NoTReverse&gt;</a></b>
+
+&lt;!--	Have mhonarc generate multipage indexes with a maximum of 50
+	messages listed per page.  MULITPG requires IDXSIZE to be
+	set to a finite value to be in effect.
+  --&gt;
+<b><a href="../resources/multipg.html">&lt;MultiPg&gt;</a></b>
+<b><a href="../resources/idxsize.html">&lt;IdxSize&gt;</a></b>
+50
+<b>&lt;/IdxSize&gt;</b>
+
+&lt;!--	Shut-off mhonarc's adding follow-up/ref links after message.
+	This resource file defines other mechanisms for a reader
+	to navigate the archive.
+  --&gt;
+<b><a href="../resources/folrefs.html">&lt;NoFolRefs&gt;</a></b>
+
+&lt;!-- ================================================================== --&gt;
+&lt;!-- 	Derived Files		 					--&gt;
+&lt;!-- ================================================================== --&gt;
+&lt;!--
+	Derived files are defined by the DEFINEDERIVED element.
+	Derived files are extra files that should be created with
+	each message added to an archive.  The first line is the name
+	of the file to create.  The filename may (should) contain
+	variables to uniquely name it for each message.
+
+	User defined derived files are automatically removed if
+	the message they are associated with is removed.
+  --&gt;
+&lt;!-- ================================================================== --&gt;
+
+&lt;!-- 	The following derived file is the main file the index pages
+	will link to.  It defines the subframe definitions for the
+	navigational links and the message data.
+  --&gt;
+<b><a href="../resources/definederived.html">&lt;DefineDerived&gt;</a></b>
+frm<b><a href="../rcvars.html#MSGNUM">$MSGNUM$</a></b>.html
+&lt;html&gt;
+&lt;head&gt;
+&lt;title&gt;Message View&lt;/title&gt;
+&lt;/head&gt;
+&lt;frameset rows="60,*"&gt;
+&lt;frame src="nav<b><a href="../rcvars.html#MSGNUM">$MSGNUM$</a></b>.html" name="NAV"
+       frameborder=1 scrolling=no marginheight=0 marginwidth=0&gt;
+&lt;frame src="msg<b><a href="../rcvars.html#MSGNUM">$MSGNUM$</a></b>.html" name="MESSAGE"
+       frameborder=0&gt;
+&lt;/frameset&gt;
+&lt;/html&gt;
+<b>&lt;/DefineDerived&gt;</b>
+
+&lt;!-- 	The following derived file defines the navigational links
+	for a message.  The links will be displayed in a frame
+	above the converted message.
+  --&gt;
+<b><a href="../resources/definederived.html">&lt;DefineDerived&gt;</a></b>
+nav<b><a href="../rcvars.html#MSGNUM">$MSGNUM$</a></b>.html
+&lt;html&gt;
+&lt;head&gt;
+&lt;title&gt;Message Navigation&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+$NAV-LINKS$
+&lt;/body&gt;
+&lt;/html&gt;
+<b>&lt;/DefineDerived&gt;</b>
+
+&lt;!-- ================================================================== --&gt;
+&lt;!-- 	Thread index resources						--&gt;
+&lt;!-- ================================================================== --&gt;
+
+&lt;!--	The thread index is setup where a thread will have the subject
+	in bold at the top of the thread and the names of the authors
+	of the messages in the thread will be hyperlinked to the
+	actual message.  Nested unordered lists are used to provide a
+	visual cue of the depths of the thread.
+
+	Unique messages are show in normal text.
+  --&gt;
+
+&lt;!--	Set the title of the thread index.
+  --&gt;
+<b><a href="../resources/ttitle.html">&lt;TTitle chop&gt;</a></b>
+$MAIN-TITLE$ (thread)
+<b>&lt;/TTitle&gt;</b>
+
+&lt;!--	Define the appearances of the prev/next page links.
+  --&gt;
+<b><a href="../resources/tnextpglink.html">&lt;TNextPgLink chop&gt;</a></b>
+&lt;A HREF="<b><a href="../rcvars.html#PG">$PG(TNEXT)$</a></b>"&gt;&amp;gt;&amp;gt;&lt;/A&gt;
+<b>&lt;/TNextPgLink&gt;</b>
+<b><a href="../resources/tnextpglinkia.html">&lt;TNextPgLinkIA chop&gt;</a></b>
+&amp;gt;&amp;gt;
+<b>&lt;/TNextPgLinkIA&gt;</b>
+
+<b><a href="../resources/tprevpglink.html">&lt;TPrevPgLink chop&gt;</a></b>
+&lt;A HREF="<b><a href="../rcvars.html#PG">$PG(TPREV)$</a></b>"&gt;&amp;lt;&amp;lt;&lt;/A&gt;
+<b>&lt;/TPrevPgLink&gt;</b>
+<b><a href="../resources/tprevpglinkia.html">&lt;TPrevPgLinkIA chop&gt;</a></b>
+&amp;lt;&amp;lt;
+<b>&lt;/TPrevPgLinkIA&gt;</b>
+
+&lt;!--	Before the thread list, we will have links to the date index,
+	previous page, first page, last page, and next page.  THEAD
+	is also responsible for beginning the message listing
+	(analagous to LISTBEGIN for the main index).
+  --&gt;
+<b><a href="../resources/thead.html">&lt;THead&gt;</a></b>
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="<b><a href="../rcvars.html#IDXFNAME">$IDXFNAME$</a></b>"&gt;Date Index&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;table $IDXPG-TBL-LINKS-ATTRS$&gt;
+&lt;tbody&gt;
+&lt;tr align="center"&gt;
+&lt;th colspan=4&gt;&lt;small&gt;Page <b><a href="../rcvars.html#PAGENUM">$PAGENUM$</a></b> of <b><a href="../rcvars.html#NUMOFPAGES">$NUMOFPAGES$</a></b>&lt;/small&gt;&lt;/th&gt;
+&lt;tr&gt;
+&lt;td align="left"&gt;&lt;a href="<b><a href="../rcvars.html#PG">$PG(TFIRST)$</a></b>"&gt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&lt;/a&gt;
+&lt;td align="right"&gt;<b><a href="../rcvars.html#PGLINK">$PGLINK(TPREV)$</a></b>
+&lt;td align="left"&gt;<b><a href="../rcvars.html#PGLINK">$PGLINK(TNEXT)$</a></b>
+&lt;td align="right"&gt;&lt;a href="<b><a href="../rcvars.html#PG">$PG(TLAST)$</a></b>"&gt;&amp;gt;&amp;gt;&amp;gt;&amp;gt;&lt;/a&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;hr noshade size=1&gt;
+&lt;small&gt;
+&lt;ul&gt;
+<b>&lt;/THead&gt;</b>
+
+&lt;!--	TFOOT terminates the message listing.  We also include
+	page navigational links like in TFOOT for convenience.
+  --&gt;
+<b><a href="../resources/tfoot.html">&lt;TFoot&gt;</a></b>
+&lt;/ul&gt;
+&lt;/small&gt;
+&lt;hr noshade size=1&gt;
+&lt;table $IDXPG-TBL-LINKS-ATTRS$&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td align="left"&gt;&lt;a href="<b><a href="../rcvars.html#PG">$PG(TFIRST)$</a></b>"&gt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&lt;/a&gt;
+&lt;td align="right"&gt;<b><a href="../rcvars.html#PGLINK">$PGLINK(TPREV)$</a></b>
+&lt;td align="left"&gt;<b><a href="../rcvars.html#PGLINK">$PGLINK(TNEXT)$</a></b>
+&lt;td align="right"&gt;&lt;a href="<b><a href="../rcvars.html#PG">$PG(TLAST)$</a></b>"&gt;&amp;gt;&amp;gt;&amp;gt;&amp;gt;&lt;/a&gt;
+&lt;tr align="center"&gt;
+&lt;th colspan=4&gt;&lt;small&gt;Page <b><a href="../rcvars.html#PAGENUM">$PAGENUM$</a></b> of <b><a href="../rcvars.html#NUMOFPAGES">$NUMOFPAGES$</a></b>&lt;/small&gt;&lt;/th&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+<b>&lt;/TFoot&gt;</b>
+
+&lt;!--	TTOPBEGIN is the markup for the beginning of a thread, and the
+	first message in a thread.
+  --&gt;
+<b><a href="../resources/ttopbegin.html">&lt;TTopBegin&gt;</a></b>
+&lt;!-- Top of a thread --&gt;
+&lt;li&gt;&lt;a <b><a href="../rcvars.html#A_NAME">$A_NAME$</a></b>&gt;&lt;strong&gt;<b><a href="../rcvars.html#SUBJECTNA">$SUBJECTNA$</a></b>&lt;/strong&gt;&lt;/a&gt;&lt;br&gt;
+&lt;a $FRAME-MAIN$ href="frm<b><a href="../rcvars.html#MSGNUM">$MSGNUM$</a></b>.html"&gt;<b><a href="../rcvars.html#FROMNAME">$FROMNAME$</a></b>&lt;/a&gt;
+<b>&lt;/TTopBegin&gt;</b>
+
+&lt;!--	TTOPEND is the markup for closing a main thread.
+  --&gt;
+<b><a href="../resources/ttopend.html">&lt;TTopEnd&gt;</a></b>
+&lt;/li&gt;
+&lt;!-- End of a thread --&gt;
+<b>&lt;/TTopEnd&gt;</b>
+
+&lt;!--	TLITXT is the markup for a message *within* a thread
+  --&gt;
+<b><a href="../resources/tlitxt.html">&lt;TLiTxt&gt;</a></b>
+&lt;li&gt;&lt;a <b><a href="../rcvars.html#A_NAME">$A_NAME$</a></b> $FRAME-MAIN$ href="frm<b><a href="../rcvars.html#MSGNUM">$MSGNUM$</a></b>.html"&gt;<b><a href="../rcvars.html#FROMNAME">$FROMNAME$</a></b>&lt;/a&gt;
+<b>&lt;/TLiTxt&gt;</b>
+
+<b><a href="../resources/tliend.html">&lt;TLiEnd&gt;</a></b>
+&lt;/li&gt;
+<b>&lt;/TLiEnd&gt;</b>
+
+&lt;!--	TSINGLETXT is the markup for a message not in a thread.  I.e.
+	it does not start a thread or is part of a thread.
+  --&gt;
+<b><a href="../resources/tsingletxt.html">&lt;TSingleTxt&gt;</a></b>
+&lt;li&gt;&lt;a <b><a href="../rcvars.html#A_NAME">$A_NAME$</a></b>&gt;<b><a href="../rcvars.html#SUBJECTNA">$SUBJECTNA$</a></b>&lt;/a&gt;,
+&lt;a $FRAME-MAIN$ href="frm<b><a href="../rcvars.html#MSGNUM">$MSGNUM$</a></b>.html"&gt;<b><a href="../rcvars.html#FROMNAME">$FROMNAME$</a></b>&lt;/a&gt;
+&lt;/li&gt;
+<b>&lt;/TSingleTxt&gt;</b>
+
+&lt;!--	TSUBJECTBEG is any markup at the beginning of a sub-thread that
+	is based on the subject of the message.
+  --&gt;
+<b><a href="../resources/tsubjectbeg.html">&lt;TSubjectBeg&gt;</a></b>
+&lt;LI&gt;&lt;font size="-1"&gt;Possible follow-ups&lt;/font&gt;&lt;/LI&gt;
+<b>&lt;/TSubjectBeg&gt;</b>
+
+&lt;!--	TCONTBEGIN is used to show the continuation of a thread
+	that has been split by a page boundary.  This resource
+	is only meant to provide some informative cue for the
+	reader.  Notice, no links are defined in the resource.
+  --&gt;
+<b><a href="../resources/tcontbegin.html">&lt;TContBegin&gt;</a></b>
+&lt;LI&gt;&lt;STRONG&gt;<b><a href="../rcvars.html#SUBJECTNA">$SUBJECTNA$</a></b>&lt;/STRONG&gt;, &lt;EM&gt;(continued)&lt;/EM&gt;
+<b>&lt;/TContBegin&gt;</b>
+
+&lt;!--	TCONTEND closes off any markup opened by TCONTBEGIN
+	(if required).
+  --&gt;
+<b><a href="../resources/tcontend.html">&lt;TContEnd&gt;</a></b>
+&lt;/LI&gt;
+<b>&lt;/TContEnd&gt;</b>
+
+&lt;!--	TINDENTBEGIN is used to open a level indent in a
+	thread listing.  It is used to restart a thread that
+	has been split by a page boundary.
+  --&gt;
+<b><a href="../resources/tindentbegin.html">&lt;TIndentBegin&gt;</a></b>
+&lt;UL&gt;
+<b>&lt;/TIndentBegin&gt;</b>
+
+&lt;!--	TINDENTEND is used to close a level opened by TINDENTBEGIN.
+  --&gt;
+<b><a href="../resources/tindentend.html">&lt;TIndentEnd&gt;</a></b>
+&lt;/UL&gt;
+<b>&lt;/TIndentEnd&gt;</b>
+
+&lt;!-- ================================================================== --&gt;
+&lt;!-- 	Main index resources						--&gt;
+&lt;!-- ================================================================== --&gt;
+
+&lt;!--	The main index is the chronological index since we have
+	specified the &lt;SORT&gt; element (which is the default).
+  --&gt;
+<b><a href="../resources/title.html">&lt;Title chop&gt;</a></b>
+$MAIN-TITLE$ (date)
+<b>&lt;/Title&gt;</b>
+
+&lt;!--	NEXTPGLINK and NEXTPGLINKIA control how the link to the
+	next index page is formatted.  NEXTPGLINKIA is used for
+	the last page of the index.
+  --&gt;
+<b><a href="../resources/nextpglink.html">&lt;NextPgLink chop&gt;</a></b>
+&lt;A HREF="<b><a href="../rcvars.html#PG">$PG(NEXT)$</a></b>"&gt;&amp;gt;&amp;gt;&lt;/A&gt;
+<b>&lt;/NextPgLink&gt;</b>
+<b><a href="../resources/nextpglinkia.html">&lt;NextPgLinkIA chop&gt;</a></b>
+&amp;gt;&amp;gt;
+<b>&lt;/NextPgLinkIA&gt;</b>
+
+&lt;!--	PREVPGLINK and PREVPGLINKIA control how the link to the
+	previous index page is formatted.  PREVPGLINKIA is used for
+	the first page of the index.
+  --&gt;
+<b><a href="../resources/prevpglink.html">&lt;PrevPgLink chop&gt;</a></b>
+&lt;A HREF="<b><a href="../rcvars.html#PG">$PG(PREV)$</a></b>"&gt;&amp;lt;&amp;lt;&lt;/A&gt;
+<b>&lt;/PrevPgLink&gt;</b>
+<b><a href="../resources/prevpglinkia.html">&lt;PrevPgLinkIA chop&gt;</a></b>
+&amp;lt;&amp;lt;
+<b>&lt;/PrevPgLinkIA&gt;</b>
+
+&lt;!--	LISTBEGIN defines the markup for the start of the message
+	listing.  Traditionally, the resource also defines links
+	to any other indexes for the archive.  Here, we define
+	the resource to link to the thread index, navigational
+	links to next/prev/first/last pages, and the start of
+	the unordered list for the message list.
+  --&gt;
+<b><a href="../resources/listbegin.html">&lt;ListBegin&gt;</a></b>
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="<b><a href="../rcvars.html#TIDXFNAME">$TIDXFNAME$</a></b>"&gt;Thread Index&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;table $IDXPG-TBL-LINKS-ATTRS$&gt;
+&lt;tbody&gt;
+&lt;tr align="center"&gt;
+&lt;th colspan=4&gt;&lt;small&gt;Page <b><a href="../rcvars.html#PAGENUM">$PAGENUM$</a></b> of <b><a href="../rcvars.html#NUMOFPAGES">$NUMOFPAGES$</a></b>&lt;/small&gt;&lt;/th&gt;
+&lt;tr&gt;
+&lt;td align="left"&gt;&lt;a href="<b><a href="../rcvars.html#PG">$PG(FIRST)$</a></b>"&gt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&lt;/a&gt;
+&lt;td align="right"&gt;<b><a href="../rcvars.html#PGLINK">$PGLINK(PREV)$</a></b>
+&lt;td align="left"&gt;<b><a href="../rcvars.html#PGLINK">$PGLINK(NEXT)$</a></b>
+&lt;td align="right"&gt;&lt;a href="<b><a href="../rcvars.html#PG">$PG(LAST)$</a></b>"&gt;&amp;gt;&amp;gt;&amp;gt;&amp;gt;&lt;/a&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;hr noshade size=1&gt;
+&lt;small&gt;
+&lt;ul&gt;
+<b>&lt;/ListBegin&gt;</b>
+
+&lt;!--	LISTEND defines the markup for the end of the message
+	listing.
+  --&gt;
+<b><a href="../resources/listend.html">&lt;ListEnd&gt;</a></b>
+&lt;/ul&gt;
+&lt;/small&gt;
+&lt;hr noshade size=1&gt;
+&lt;table $IDXPG-TBL-LINKS-ATTRS$&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td align="left"&gt;&lt;a href="<b><a href="../rcvars.html#PG">$PG(FIRST)$</a></b>"&gt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&lt;/a&gt;
+&lt;td align="right"&gt;<b><a href="../rcvars.html#PGLINK">$PGLINK(PREV)$</a></b>
+&lt;td align="left"&gt;<b><a href="../rcvars.html#PGLINK">$PGLINK(NEXT)$</a></b>
+&lt;td align="right"&gt;&lt;a href="<b><a href="../rcvars.html#PG">$PG(LAST)$</a></b>"&gt;&amp;gt;&amp;gt;&amp;gt;&amp;gt;&lt;/a&gt;
+&lt;tr align="center"&gt;
+&lt;th colspan=4&gt;&lt;small&gt;Page <b><a href="../rcvars.html#PAGENUM">$PAGENUM$</a></b> of <b><a href="../rcvars.html#NUMOFPAGES">$NUMOFPAGES$</a></b>&lt;/small&gt;&lt;/th&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+<b>&lt;/ListEnd&gt;</b>
+
+&lt;!--	LITEMPLATE defines the markup for a message list entry
+	for the main index.  Since the main index has a simple
+	flat, linear listing, LITEMPLATE defines how all entries
+	will look.
+
+	Note how I include <b><a href="../rcvars.html#A_NAME">$A_NAME$</a></b> so links from a message to
+	the index will have the index scrolled to where the
+	message is listed.
+  --&gt;
+<b><a href="../resources/litemplate.html">&lt;LiTemplate&gt;</a></b>
+&lt;li&gt;&lt;a $FRAME-MAIN$ <b><a href="../rcvars.html#A_NAME">$A_NAME$</a></b>
+href="frm<b><a href="../rcvars.html#MSGNUM">$MSGNUM$</a></b>.html"&gt;&lt;strong&gt;<b><a href="../rcvars.html#SUBJECTNA">$SUBJECTNA$</a></b>&lt;/strong&gt;&lt;/a&gt;
+&lt;ul&gt;&lt;li&gt;<b><a href="../rcvars.html#FROMNAME">$FROMNAME$</a></b>&lt;/li&gt;&lt;/ul&gt;
+&lt;/li&gt;
+<b>&lt;/LiTemplate&gt;</b>
+
+&lt;!-- ================================================================== --&gt;
+&lt;!-- 	Message Page Resources						--&gt;
+&lt;!-- ================================================================== --&gt;
+
+&lt;!--	Have the main subject header centered.
+  --&gt;
+<b><a href="../resources/subjectheader.html">&lt;SubjectHeader&gt;</a></b>
+&lt;h2 align="center"&gt;<b><a href="../rcvars.html#SUBJECTNA">$SUBJECTNA$</a></b>&lt;/h2&gt;
+&lt;hr&gt;
+<b>&lt;/SubjectHeader&gt;</b>
+
+&lt;!--	Mail header formatting.  The default header formatting is
+	overridden to use a table for formatting.
+  --&gt;
+
+&lt;!-- Exclude some fields from messages heads --&gt;
+<b><a href="../resources/excs.html">&lt;Excs&gt;</a></b>
+subject
+xref
+<b>&lt;/Excs&gt;</b>
+
+&lt;!-- Fields labels will be in HTML strong elements --&gt;
+<b><a href="../resources/labelstyles.html">&lt;LabelStyles override&gt;</a></b>
+-default-:strong
+<b>&lt;/LabelStyles&gt;</b>
+
+&lt;!-- Field values will be in normal text --&gt;
+<b><a href="../resources/fieldstyles.html">&lt;FieldStyles override&gt;</a></b>
+-default-:
+<b>&lt;/FieldStyles&gt;</b>
+
+&lt;!-- Open table markup for message header --&gt;
+<b><a href="../resources/fieldsbeg.html">&lt;FieldsBeg&gt;</a></b>
+&lt;table width="100%"&gt;
+&lt;tbody&gt;
+<b>&lt;/FieldsBeg&gt;</b>
+
+&lt;!-- Each label starts a new row in the table --&gt;
+<b><a href="../resources/labelbeg.html">&lt;LabelBeg&gt;</a></b>
+&lt;tr&gt;
+&lt;td align="right" valign="top"&gt;
+<b>&lt;/LabelBeg&gt;</b>
+
+&lt;!-- Close table cell for field label --&gt;
+<b><a href="../resources/labelend.html">&lt;LabelEnd&gt;</a></b>
+&lt;/td&gt;
+<b>&lt;/LabelEnd&gt;</b>
+
+&lt;!-- Field value starts a new table cell --&gt;
+<b><a href="../resources/fldbeg.html">&lt;FldBeg&gt;</a></b>
+&lt;td align="left"&gt;
+<b>&lt;/FldBeg&gt;</b>
+
+&lt;!-- Close value table cell and row --&gt;
+<b><a href="../resources/fldend.html">&lt;FldEnd&gt;</a></b>
+&lt;/td&gt;
+&lt;/tr&gt;
+<b>&lt;/FldEnd&gt;</b>
+
+&lt;!-- Close table body and table --&gt;
+<b><a href="../resources/fieldsend.html">&lt;FieldsEnd&gt;</a></b>
+&lt;/tbody&gt;
+&lt;/table&gt;
+<b>&lt;/FieldsEnd&gt;</b>
+
+&lt;!--	Define markup between mail message header and body.
+  --&gt;
+<b><a href="../resources/headbodysep.html">&lt;HeadBodySep&gt;</a></b>
+&lt;hr noshade size=1&gt;
+<b>&lt;/HeadBodySep&gt;</b>
+
+&lt;!--	Define message-id link markup.  We redefine it so the message-id
+	links will link to the appropriate message frame document.  Note,
+	this applies to message data.  Therefore, once a message-id
+	is converted to a link, the format of the link cannot be changed.
+	Any changes to MSGIDLINK will only affect newly create links.
+  --&gt;
+<b><a href="../resources/msgidlink.html">&lt;MsgIdLink&gt;</a></b>
+&lt;A $FRAME-MAIN$ HREF="frm<b><a href="../rcvars.html#MSGNUM">$MSGNUM$</a></b>.html"&gt;<b><a href="../rcvars.html#MSGID">$MSGID$</a></b>&lt;/A&gt;
+<b>&lt;/MsgIdLink&gt;</b>
+
+&lt;!--	Define MSGFOOT to contain a partial thread listing.  Set
+	TSLICE to have current message as the start of the listing.
+	Redefine TSLICEBEG and TSLICEEND to suit our needs.  The
+	thread formating resources used for the thread index are
+	also apply to a thread slice listing.
+  --&gt;
+<b><a href="../resources/msgfoot.html">&lt;MsgFoot&gt;</a></b>
+Partial thread listing:
+<b><a href="../rcvars.html#TSLICE">$TSLICE$</a></b>
+<b>&lt;/MsgFoot&gt;</b>
+
+<b><a href="../resources/tslice.html">&lt;TSlice&gt;</a></b>
+0:4
+<b>&lt;/TSlice&gt;</b>
+<b><a href="../resources/tslicebeg.html">&lt;TSliceBeg&gt;</a></b>
+&lt;ul&gt;
+<b>&lt;/TSliceBeg&gt;</b>
+<b><a href="../resources/tsliceend.html">&lt;TSliceEnd&gt;</a></b>
+&lt;/ul&gt;
+<b>&lt;/TSliceEnd&gt;</b>
+
+&lt;!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  --&gt;
+&lt;!-- 	Message navigation resources					--&gt;
+
+&lt;!--	We define TOPLINKS and BOTLINKS as blank since derived files
+	with frames will provide navigational links.
+	Note: A newline is needed else mhonarc will use the default
+	      values if the elements are null.
+  --&gt;
+<b><a href="../resources/toplinks.html">&lt;TopLinks&gt;</a></b>
+
+<b>&lt;/TopLinks&gt;</b>
+
+<b><a href="../resources/botlinks.html">&lt;BotLinks&gt;</a></b>
+
+<b>&lt;/BotLinks&gt;</b>
+
+&lt;!--	We define next/previous links to point to frame documents
+	created through the definederived feature.  Since (T)NEXTBUTTON,
+	(T)NEXTBUTTONIA, (T)PREVBUTTON, and (T)PREVBUTTONIA actually set
+	their corresponding resource variables, these values are
+	actually utilized in the derived navigational files.
+  --&gt;
+<b><a href="../resources/tnextbutton.html">&lt;TNextButton chop&gt;</a></b>
+&lt;a $FRAME-MAIN$ href="frm<b><a href="../rcvars.html#MSGNUM">$MSGNUM(TNEXT)$</a></b>.html"&gt;Next&lt;/a&gt;
+<b>&lt;/TNextButton&gt;</b>
+
+<b><a href="../resources/tnextbuttonia.html">&lt;TNextButtonIA chop&gt;</a></b>
+Next
+<b>&lt;/TNextButtonIA&gt;</b>
+
+<b><a href="../resources/tprevbutton.html">&lt;TPrevButton chop&gt;</a></b>
+&lt;a $FRAME-MAIN$ href="frm<b><a href="../rcvars.html#MSGNUM">$MSGNUM(TPREV)$</a></b>.html"&gt;Prev&lt;/a&gt;
+<b>&lt;/TPrevButton&gt;</b>
+
+<b><a href="../resources/tprevbuttonia.html">&lt;TPrevButtonIA chop&gt;</a></b>
+Prev
+<b>&lt;/TPrevButtonIA&gt;</b>
+
+<b><a href="../resources/nextbutton.html">&lt;NextButton chop&gt;</a></b>
+&lt;a $FRAME-MAIN$ href="frm<b><a href="../rcvars.html#MSGNUM">$MSGNUM(NEXT)$</a></b>.html"&gt;Next&lt;/a&gt;
+<b>&lt;/NextButton&gt;</b>
+
+<b><a href="../resources/nextbuttonia.html">&lt;NextButtonIA chop&gt;</a></b>
+Next
+<b>&lt;/NextButtonIA&gt;</b>
+
+<b><a href="../resources/prevbutton.html">&lt;PrevButton chop&gt;</a></b>
+&lt;a $FRAME-MAIN$ href="frm<b><a href="../rcvars.html#MSGNUM">$MSGNUM(PREV)$</a></b>.html"&gt;Prev&lt;/a&gt;
+<b>&lt;/PrevButton&gt;</b>
+
+<b><a href="../resources/prevbuttonia.html">&lt;PrevButtonIA chop&gt;</a></b>
+Prev
+<b>&lt;/PrevButtonIA&gt;</b>
+
+&lt;!-- ================================================================== --&gt;
+&lt;!--	MIME Resources							--&gt;
+&lt;!-- ================================================================== --&gt;
+
+&lt;!--	Define some options to text/plain filter.
+  --&gt;
+<b><a href="../resources/mimeargs.html">&lt;MimeArgs&gt;</a></b>
+text/plain:quote maxwidth=78
+<b>&lt;/MimeArgs&gt;</b>
+
+&lt;!--	Have iso-8859-1 data stored in binary form since Web browsers
+	use iso-8859-1 natively.  I.e.  Do not keep iso-8859-1 encoded
+	or escaped with SGML entities.
+  --&gt;
+<b><a href="../resources/decodeheads.html">&lt;DecodeHeads&gt;</a></b>
+<b><a href="../resources/charsetconverters.html">&lt;CharsetConverters&gt;</a></b>
+iso-8859-1:-decode-
+<b>&lt;/CharsetConverters&gt;</b>
+</pre>
+</body>
+</html>

@@ -1,13 +1,13 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##      @(#) mhsingle.pl 1.2 98/10/31 12:10:13
+##      @(#) mhsingle.pl 1.5 99/08/04 23:39:52
 ##  Author:
-##      Earl Hood       earlhood@usa.net
+##      Earl Hood       mhonarc@pobox.com
 ##  Description:
 ##      Routines for converting a single message to HTML
 ##---------------------------------------------------------------------------##
 ##    MHonArc -- Internet mail-to-HTML converter
-##    Copyright (C) 1995-1998   Earl Hood, earlhood@usa.net
+##    Copyright (C) 1995-1999   Earl Hood, mhonarc@pobox.com
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by
@@ -44,7 +44,7 @@ sub single {
 	    die("ERROR: Unable to open $ARGV[0]\n");
 	$filename = $ARGV[0];
     } else {
-	$handle = 'STDIN';
+	$handle = $MhaStdin;
     }
 
     ## Read header
@@ -63,9 +63,11 @@ sub single {
     @Index2MLoc{@MListOrder} = (0 .. $#MListOrder);
 
     ## Output mail
-    &output_mail($index, 1, 0);
+    if ($DoArchive) {
+	&output_mail($index, 1, 0);
+    }
 
-    close($handle);
+    close($handle)  unless -t $handle;
 }
 
 ##---------------------------------------------------------------------------

@@ -1,6 +1,6 @@
 <!-- ================================================================== -->
-<!--    @(#) def-mime.mrc 1.4 98/10/10 21:56:24
-        Earl Hood <earlhood@usa.net>
+<!--    @(#) def-mime.mrc 1.8 00/10/28 11:14:10
+        Earl Hood <mhonarc@pobox.com>
   -->
 <!--    MHonArc Resource File                                           --
   --                                                                    --
@@ -22,10 +22,19 @@ iso-8859-7;     iso_8859::str2sgml;     iso8859.pl
 iso-8859-8;     iso_8859::str2sgml;     iso8859.pl
 iso-8859-9;     iso_8859::str2sgml;     iso8859.pl
 iso-8859-10;    iso_8859::str2sgml;     iso8859.pl
+iso-2022-jp;    iso_2022_jp::str2html;  iso2022jp.pl
+latin1;         mhonarc::htmlize;
+latin2;         iso_8859::str2sgml;     iso8859.pl
+latin3;         iso_8859::str2sgml;     iso8859.pl
+latin4;         iso_8859::str2sgml;     iso8859.pl
+latin5;         iso_8859::str2sgml;     iso8859.pl
+latin6;         iso_8859::str2sgml;     iso8859.pl
 default;        -ignore-
 </CharsetConverters>
 
 <MIMEFilters>
+application/ms-tnef;       m2h_null::filter;            mhnull.pl
+application/octet-stream;  m2h_external::filter;        mhexternal.pl
 application/*;             m2h_external::filter;        mhexternal.pl
 application/x-patch;       m2h_text_plain::filter;      mhtxtplain.pl
 audio/*;                   m2h_external::filter;        mhexternal.pl
@@ -33,6 +42,7 @@ chemical/*;                m2h_external::filter;        mhexternal.pl
 model/*;                   m2h_external::filter;        mhexternal.pl
 image/*;                   m2h_external::filter;        mhexternal.pl
 message/delivery-status;   m2h_text_plain::filter;      mhtxtplain.pl
+message/external-body;     m2h_msg_extbody::filter;     mhmsgextbody.pl
 message/partial;           m2h_text_plain::filter;      mhtxtplain.pl
 text/*;                    m2h_text_plain::filter;      mhtxtplain.pl
 text/enriched;             m2h_text_enriched::filter;   mhtxtenrich.pl
@@ -54,3 +64,13 @@ image/x-xbitmap; inline
 image/x-xbm;     inline
 </MIMEArgs>
 
+<MIMEDecoders>
+7bit;   	  as-is;
+8bit;   	  as-is;
+binary;   	  as-is;
+base64;   	  base64::b64decode;		base64.pl
+quoted-printable; quoted_printable::qprdecode;	qprint.pl
+x-uuencode;   	  base64::uudecode;		base64.pl
+xuue;   	  base64::uudecode;		base64.pl
+uuencode;   	  base64::uudecode;		base64.pl
+</MIMEDecoders>

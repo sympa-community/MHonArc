@@ -1,13 +1,13 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	@(#) mhinit.pl 2.9 98/10/10 21:31:25
+##	@(#) mhinit.pl 2.23 01/06/10 17:35:46
 ##  Author:
-##      Earl Hood       earlhood@usa.net
+##      Earl Hood       mhonarc@pobox.com
 ##  Description:
 ##      Initialization stuff for MHonArc.
 ##---------------------------------------------------------------------------##
 ##    MHonArc -- Internet mail-to-HTML converter
-##    Copyright (C) 1995-1998	Earl Hood, earlhood@usa.net
+##    Copyright (C) 1995-1999	Earl Hood, mhonarc@pobox.com
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by
@@ -33,23 +33,100 @@ sub mhinit_vars {
 
 ##	The %Zone array should be augmented to contain all timezone
 ##	specifications with the positive/negative hour offset from UTC
-##	(GMT).  (There has got to be a better way to handle timezones)
+##	(GMT).  The zone value is *added* to the time containing the
+##	zone to determine GMT time.  Hence, the values will be the
+##	negative inverse used in actual time specifications in messages.
+##	(There has got to be a better way to handle timezones)
 ##	Array can be augmented/overridden via the resource file.
-
 %Zone = (
-    "UTC", 0,	# Universal Coordinated Time
-    "GMT", 0,	# Greenwich Mean Time
-    "AST", 4,	# Atlantic Standard Time
-    "ADT", 3,	# Atlantic Daylight Time
-    "EST", 5,	# Eastern Standard Time
-    "EDT", 4,	# Eastern Daylight Time
-    "CST", 6,	# Central Standard Time
-    "CDT", 5,	# Central Daylight Time
-    "MST", 7,	# Mountain Standard Time
-    "MDT", 6,	# Mountain Daylight Time
-    "PST", 8,	# Pacific Standard Time
-    "PDT", 7,	# Pacific Daylight Time
+    'ACDT', '-1030',	# Australian Central Daylight
+    'ACST', '-0930',	# Australian Central Standard
+    'ADT',   '0300',	# (US) Atlantic Daylight
+    'AEDT', '-1100',	# Australian East Daylight
+    'AEST', '-1000',	# Australian East Standard
+    'AHDT',  '0900',
+    'AHST',  '1000',	
+    'AST',   '0400',	# (US) Atlantic Standard
+    'AT',    '0200',	# Azores
+    'AWDT', '-0900',	# Australian West Daylight
+    'AWST', '-0800',	# Australian West Standard
+    'BAT',  '-0300',	# Baghdad
+    'BDST', '-0200',	# British Double Summer
+    'BET',   '1100',	# Bering Standard
+    'BST',  '-0100',	# British Summer
+#   'BST',   '0300',	# Brazil Standard
+    'BT',   '-0300',	# Baghdad
+    'BZT2',  '0300',	# Brazil Zone 2
+    'CADT', '-1030',	# Central Australian Daylight
+    'CAST', '-0930',	# Central Australian Standard
+    'CAT',   '1000',	# Central Alaska
+    'CCT',  '-0800',	# China Coast
+    'CDT',   '0500',	# (US) Central Daylight
+    'CED',  '-0200',	# Central European Daylight
+    'CET',  '-0100',	# Central European
+    'CST',   '0600',	# (US) Central Standard
+    'EAST', '-1000',	# Eastern Australian Standard
+    'EDT',   '0400',	# (US) Eastern Daylight
+    'EED',  '-0300',	# Eastern European Daylight
+    'EET',  '-0200',	# Eastern Europe
+    'EEST', '-0300',	# Eastern Europe Summer
+    'EST',   '0500',	# (US) Eastern Standard
+    'FST',  '-0200',	# French Summer
+    'FWT',  '-0100',	# French Winter
+    'GMT',   '0000',	# Greenwich Mean
+    'GST',  '-1000',	# Guam Standard
+#   'GST',   '0300',	# Greenland Standard
+    'HDT',   '0900',	# Hawaii Daylight
+    'HST',   '1000',	# Hawaii Standard
+    'IDLE', '-1200',	# Internation Date Line East
+    'IDLW',  '1200',	# Internation Date Line West
+    'IST',  '-0530',	# Indian Standard
+    'IT',   '-0330',	# Iran
+    'JST',  '-0900',	# Japan Standard
+    'JT',   '-0700',	# Java
+    'KST',  '-0900',	# Korean Standard
+    'MDT',   '0600',	# (US) Mountain Daylight
+    'MED',  '-0200',	# Middle European Daylight
+    'MET',  '-0100',	# Middle European
+    'MEST', '-0200',	# Middle European Summer
+    'MEWT', '-0100',	# Middle European Winter
+    'MST',   '0700',	# (US) Mountain Standard
+    'MT',   '-0800',	# Moluccas
+    'NDT',   '0230',	# Newfoundland Daylight
+    'NFT',   '0330',	# Newfoundland
+    'NT',    '1100',	# Nome
+    'NST',  '-0630',	# North Sumatra
+#   'NST',   '0330',	# Newfoundland Standard
+    'NZ',   '-1100',	# New Zealand
+    'NZST', '-1200',	# New Zealand Standard
+    'NZDT', '-1300',	# New Zealand Daylight
+    'NZT',  '-1200',	# New Zealand
+    'PDT',   '0700',	# (US) Pacific Daylight
+    'PST',   '0800',	# (US) Pacific Standard
+    'ROK',  '-0900',	# Republic of Korea
+    'SAD',  '-1000',	# South Australia Daylight
+    'SAST', '-0900',	# South Australia Standard
+    'SAT',  '-0900',	# South Australia
+    'SDT',  '-1000',	# South Australia Daylight
+    'SST',  '-0200',	# Swedish Summer
+    'SWT',  '-0100',	# Swedish Winter
+    'USZ3', '-0400',	# USSR Zone 3
+    'USZ4', '-0500',	# USSR Zone 4
+    'USZ5', '-0600',	# USSR Zone 5
+    'USZ6', '-0700',	# USSR Zone 6
+    'UT',    '0000',	# Universal Coordinated
+    'UTC',   '0000',	# Universal Coordinated
+    'UZ10', '-1100',	# USSR Zone 10
+    'WAT',   '0100',	# West Africa
+    'WET',   '0000',	# West European
+    'WST',  '-0800',	# West Australian Standard
+    'YDT',   '0800',	# Yukon Daylight
+    'YST',   '0900',	# Yukon Standard
+    'ZP4',  '-0400',	# USSR Zone 3
+    'ZP5',  '-0500',	# USSR Zone 4
+    'ZP6',  '-0600',	# USSR Zone 5
 );
+%ZoneUD = ();
 
 ##	Assoc array listing mail header fields to exclude in output.
 ##	Each key is treated as a regular expression with '^' prepended
@@ -162,8 +239,11 @@ $DBPathName	= '';	# Full pathname of database file
 %readmail::MIMEFilters = (
     # Content-type			Filter
     #-------------------------------------------------------------------
+    "application/ms-tnef",		"m2h_null::filter",
+    "application/octet-stream",		"m2h_external::filter",
     "application/x-patch",		"m2h_text_plain::filter",
     "message/delivery-status",  	"m2h_text_plain::filter",
+    "message/external-body",   		"m2h_msg_extbody::filter",
     "message/partial",   		"m2h_text_plain::filter",
     "text/enriched",    		"m2h_text_enriched::filter",
     "text/html",			"m2h_text_html::filter",
@@ -187,7 +267,11 @@ $DBPathName	= '';	# Full pathname of database file
 %readmail::MIMEFiltersSrc = (
     # Content-type			Filter
     #-------------------------------------------------------------------
+    "application/ms-tnef",		"mhnull.pl",
+    "application/octet-stream",		"mhexternal.pl",
     "application/x-patch",		"mhtxtplain.pl",
+    "message/delivery-status",  	"mhtxtplain.pl",
+    "message/external-body",   		"mhmsgextbody.pl",
     "message/partial",   		"mhtxtplain.pl",
     "text/enriched",    		"mhtxtenrich.pl",
     "text/html",			"mhtxthtml.pl",
@@ -237,6 +321,13 @@ $DBPathName	= '';	# Full pathname of database file
     "iso-8859-8",   			"iso_8859::str2sgml",
     "iso-8859-9",   			"iso_8859::str2sgml",
     "iso-8859-10",   			"iso_8859::str2sgml",
+    "iso-2022-jp",   			"iso_2022_jp::str2html",
+    "latin1",   			"mhonarc::htmlize",
+    "latin2",   			"iso_8859::str2sgml",
+    "latin3",   			"iso_8859::str2sgml",
+    "latin4",   			"iso_8859::str2sgml",
+    "latin5",   			"iso_8859::str2sgml",
+    "latin6",   			"iso_8859::str2sgml",
     "default",     			"-ignore-",
 );
 %readmail::MIMECharSetConvertersSrc = (
@@ -254,6 +345,13 @@ $DBPathName	= '';	# Full pathname of database file
     "iso-8859-8",   			"iso8859.pl",
     "iso-8859-9",   			"iso8859.pl",
     "iso-8859-10",   			"iso8859.pl",
+    "iso-2022-jp",   			"iso2022jp.pl",
+    "latin1",   			undef,
+    "latin2",   			"iso8859.pl",
+    "latin3",   			"iso8859.pl",
+    "latin4",   			"iso8859.pl",
+    "latin5",   			"iso8859.pl",
+    "latin6",   			"iso8859.pl",
     "default",     			undef,
 );
 
@@ -265,10 +363,10 @@ $DBPathName	= '';	# Full pathname of database file
 $MHeadCnvFunc	= "mhonarc::htmlize";
 
 ##  Regexp for variable detection
-$VarExp = '\$([^\$]*)\$';
+$VarExp    = $ENV{'M2H_VARREGEX'}   || '\$([^\$]*)\$';
 
-##  Regexp for address/msg-id detection
-$AddrExp = q%[^()<>@,;:\/\s"'&|]+@[^()<>@,;:\/\s"'&|]+%;
+##  Regexp for address/msg-id detection (looks like cussing in cartoons)
+$AddrExp = '[^()<>@,;:\/\s"\'&|]+@[^()<>@,;:\/\s"\'&|]+';
 
 ##	Grab environment variable settings
 ##
@@ -292,7 +390,8 @@ $TITLE     = $ENV{'M2H_TITLE'}      || "Mail Index";
 $MAILTOURL = $ENV{'M2H_MAILTOURL'}  || "";
 $FROM      = $ENV{'M2H_MSGSEP'}     || '^From ';
 $LOCKFILE  = $ENV{'M2H_LOCKFILE'}   ||
-	     (($MSDOS || $VMS) ? "mhonarc.lck": ".mhonarc.lck");
+	     ($MSDOS ? "mhonarc.lck" :
+		$VMS ? "mhonarc_lck" : ".mhonarc.lck");
 $LOCKTRIES = $ENV{'M2H_LOCKTRIES'}  || 10;
 $LOCKDELAY = $ENV{'M2H_LOCKDELAY'}  || 3;
 $MAXSIZE   = $ENV{'M2H_MAXSIZE'}    || 0;
@@ -304,6 +403,7 @@ $MsgPrefix = $ENV{'M2H_MSGPREFIX'}  || "msg";
 $DefRcName = $ENV{'M2H_DEFRCNAME'}  ||
 	     (($MSDOS || $VMS) ? "mhonarc.rc": ".mhonarc.rc");
 $GzipExe   = $ENV{'M2H_GZIPEXE'}    || 'gzip';
+$SpamMode  = $ENV{'M2H_SPAMMODE'}   || 0;
 
 $GMTDateFmt	= $ENV{'M2H_GMTDATEFMT'}   	|| '';
 $LocalDateFmt	= $ENV{'M2H_LOCALDATEFMT'} 	|| '';
@@ -316,27 +416,37 @@ $MsgLocalDateFmt= $ENV{'M2H_MSGLOCALDATEFMT'}	|| '';
 
 $NoteDir	= $ENV{'M2H_NOTEDIR'} 		|| 'notes';
 
-$CONLEN      = defined($ENV{'M2H_CONLEN'})    ?  $ENV{'M2H_CONLEN'}    : 0;
-$MAIN        = defined($ENV{'M2H_MAIN'})      ?  $ENV{'M2H_MAIN'}      : 1;
-$MULTIIDX    = defined($ENV{'M2H_MULTIPG'})   ?  $ENV{'M2H_MULTIPG'}   : 0;
-$MODTIME     = defined($ENV{'M2H_MODTIME'})   ?  $ENV{'M2H_MODTIME'}   : 0;
-$NODOC       = defined($ENV{'M2H_DOC'})       ? !$ENV{'M2H_DOC'}       : 0;
-$NOMAILTO    = defined($ENV{'M2H_MAILTO'})    ? !$ENV{'M2H_MAILTO'}    : 0;
-$NoMsgPgs    = defined($ENV{'M2H_MSGPGS'})    ? !$ENV{'M2H_MSGPGS'}    : 0;
-$NONEWS      = defined($ENV{'M2H_NEWS'})      ? !$ENV{'M2H_NEWS'}      : 0;
-$NOSORT      = defined($ENV{'M2H_SORT'})      ? !$ENV{'M2H_SORT'}      : 0;
-$NOURL       = defined($ENV{'M2H_URL'})       ? !$ENV{'M2H_SORT'}      : 0;
-$REVSORT     = defined($ENV{'M2H_REVSORT'})   ?  $ENV{'M2H_REVSORT'}   : 0;
-$SUBSORT     = defined($ENV{'M2H_SUBSORT'})   ?  $ENV{'M2H_SUBSORT'}   : 0;
-$AUTHSORT    = defined($ENV{'M2H_AUTHSORT'})  ?  $ENV{'M2H_AUTHSORT'}  : 0;
-$THREAD      = defined($ENV{'M2H_THREAD'})    ?  $ENV{'M2H_THREAD'}    : 1;
-$TNOSORT     = defined($ENV{'M2H_TSORT'})     ? !$ENV{'M2H_TSORT'}     : 0;
-$TREVERSE    = defined($ENV{'M2H_TREVERSE'})  ?  $ENV{'M2H_TREVERSE'}  : 0;
-$TSUBSORT    = defined($ENV{'M2H_TSUBSORT'})  ?  $ENV{'M2H_TSUBSORT'}  : 0;
-$GzipFiles   = defined($ENV{'M2H_GZIPFILES'}) ?  $ENV{'M2H_GZIPFILES'} : 0;
-$GzipLinks   = defined($ENV{'M2H_GZIPLINKS'}) ?  $ENV{'M2H_GZIPLINKS'} : 0;
+$LockMethod 	= $ENV{'M2H_LOCKMETHOD'}	|| 'directory';
+$LockMethod	= set_lock_mode($LockMethod);
+
+$CONLEN      = defined($ENV{'M2H_CONLEN'})    ?  $ENV{'M2H_CONLEN'}	: 0;
+$MAIN        = defined($ENV{'M2H_MAIN'})      ?  $ENV{'M2H_MAIN'}	: 1;
+$MULTIIDX    = defined($ENV{'M2H_MULTIPG'})   ?  $ENV{'M2H_MULTIPG'}	: 0;
+$MODTIME     = defined($ENV{'M2H_MODTIME'})   ?  $ENV{'M2H_MODTIME'}	: 0;
+$NODOC       = defined($ENV{'M2H_DOC'})       ? !$ENV{'M2H_DOC'}	: 0;
+$NOMAILTO    = defined($ENV{'M2H_MAILTO'})    ? !$ENV{'M2H_MAILTO'}	: 0;
+$NoMsgPgs    = defined($ENV{'M2H_MSGPGS'})    ? !$ENV{'M2H_MSGPGS'}	: 0;
+$NONEWS      = defined($ENV{'M2H_NEWS'})      ? !$ENV{'M2H_NEWS'}	: 0;
+$NOSORT      = defined($ENV{'M2H_SORT'})      ? !$ENV{'M2H_SORT'}	: 0;
+$NOURL       = defined($ENV{'M2H_URL'})       ? !$ENV{'M2H_URL'}	: 0;
+$REVSORT     = defined($ENV{'M2H_REVSORT'})   ?  $ENV{'M2H_REVSORT'}	: 0;
+$SUBSORT     = defined($ENV{'M2H_SUBSORT'})   ?  $ENV{'M2H_SUBSORT'}	: 0;
+$AUTHSORT    = defined($ENV{'M2H_AUTHSORT'})  ?  $ENV{'M2H_AUTHSORT'}	: 0;
+$THREAD      = defined($ENV{'M2H_THREAD'})    ?  $ENV{'M2H_THREAD'}	: 1;
+$TNOSORT     = defined($ENV{'M2H_TSORT'})     ? !$ENV{'M2H_TSORT'}	: 0;
+$TREVERSE    = defined($ENV{'M2H_TREVERSE'})  ?  $ENV{'M2H_TREVERSE'}	: 0;
+$TSUBSORT    = defined($ENV{'M2H_TSUBSORT'})  ?  $ENV{'M2H_TSUBSORT'}	: 0;
+$GzipFiles   = defined($ENV{'M2H_GZIPFILES'}) ?  $ENV{'M2H_GZIPFILES'}	: 0;
+$GzipLinks   = defined($ENV{'M2H_GZIPLINKS'}) ?  $ENV{'M2H_GZIPLINKS'}	: 0;
+$KeepOnRmm   = defined($ENV{'M2H_KEEPONRMM'}) ?  $ENV{'M2H_KEEPONRMM'}  : 0;
 $UseLocalTime= defined($ENV{'M2H_USELOCALTIME'}) ? 
 		       $ENV{'M2H_USELOCALTIME'} : 0;
+$NoSubjectThreads = defined($ENV{'M2H_SUBJECTTHREADS'}) ?
+			   !$ENV{'M2H_SUBJECTTHREADS'} : 0;
+$SaveRsrcs   = defined($ENV{'M2H_SAVERESOURCES'}) ?
+		       $ENV{'M2H_SAVERESOURCES'} : 1;
+$POSIXstrftime = defined($ENV{'M2H_POSIXSTRFTIME'}) ?
+			 $ENV{'M2H_POSIXSTRFTIME'} : 0;
 
 if ($UNIX) {
     eval {
@@ -345,6 +455,8 @@ if ($UNIX) {
     };
 }
 
+$CheckNoArchive = defined($ENV{'M2H_CHECKNOARCHIVE'}) ?
+			  $ENV{'M2H_CHECKNOARCHIVE'} : 0;
 $DecodeHeads = defined($ENV{'M2H_DECODEHEADS'}) ? $ENV{'M2H_DECODEHEADS'} : 0;
 $DoArchive   = defined($ENV{'M2H_ARCHIVE'})     ? $ENV{'M2H_ARCHIVE'}     : 1;
 $DoFolRefs   = defined($ENV{'M2H_FOLREFS'})     ? $ENV{'M2H_FOLREFS'}     : 1;
@@ -362,6 +474,9 @@ $UsingLASTPG = defined($ENV{'M2H_USINGLASTPG'}) ? $ENV{'M2H_USINGLASTPG'} : 1;
 ($TSliceNBefore, $TSliceNAfter) = defined($ENV{'M2H_TSLICE'}) ?
 		    split(/:/, $ENV{'M2H_TSLICE'}) : (0, 0);
 
+##	Code for modify addresses in headers
+$AddressModify = $ENV{'M2H_ADDRESSMODIFYCODE'} || "";
+
 ##	Regex representing "article" words for stripping out when doing
 ##	subject sorting.
 $SubArtRxp   = $ENV{'M2H_SUBJECTARTICLERXP'} ||
@@ -373,6 +488,8 @@ $SubReplyRxp = $ENV{'M2H_SUBJECTREPLYRXP'} ||
 
 ##	Code for stripping subjects
 $SubStripCode = $ENV{'M2H_SUBJECTSTRIPCODE'} || "";
+
+$MsgExcFilter = $ENV{'M2H_MSGEXCFILTER'} || "";
 
 ##	Arrays for months and weekdays.  If empty, the default settings
 ##	in mhtime.pl are used.
@@ -390,6 +507,8 @@ $ADDSINGLE	= 0;	# Flag if adding a single message
 $IDXONLY	= 0;	# Flag if generating index to stdout
 $RMM		= 0;	# Flag if removing messages
 $SCAN		= 0;	# Flag if doing an archive scan
+
+$SSMARKUP	= '';	# Initial markup of all pages
 
 $IDXLABEL	= '';	# Label for main index
 $LIBEG  	= '';	# List open template for main index

@@ -1,30 +1,43 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
 <html>
 <head>
-<title>MHonArc v2.3 -- Resource Variables</title>
+<title>MHonArc v2.4 -- Resource Variables</title>
 </head>
 <BODY background="ssbg75.jpg"
       text="#000000" link="#0000ee" vlink="#551a8b" alink="ff0000">
 
 <!--X-NavButtons-Start-->
 <p align=center>
-<a href="resources.html"><img src="prev.gif" border=0 alt="[Prev]"></a><a href="contacts.html"><img src="next.gif" border=0 alt="[Next]"></a><a href="mhonarc.html"><img src="up.gif" border=0 alt="[TOC]"></a><a href="faq/faq.html"><img src="faq.gif" border=0 alt="[FAQ]"></a><a href="bugs.html"><img src="bug.gif" border=0 alt="[Bugs]"></a><a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"><img src="home.gif" border=0 alt="[Home]"></a>
+<a href="resources.html"><img src="prev.gif" border=0 alt="[Prev]"></a><a href="contacts.html"><img src="next.gif" border=0 alt="[Next]"></a><a href="mhonarc.html"><img src="up.gif" border=0 alt="[TOC]"></a><a href="faq/faq.html"><img src="faq.gif" border=0 alt="[FAQ]"></a><a href="app-bugs.html"><img src="bug.gif" border=0 alt="[Bugs]"></a><a href="http://www.mhonarc.org/"><img src="home.gif" border=0 alt="[Home]"></a>
 </p>
 <!--X-NavButtons-End-->
 <hr>
 <h1><a name="rcvars">Resource Variables</a></h1>
 
+<!--X-TOC-Start-->
+<ul>
+<li><a href="#overview">Overview</a>
+<li><a href="#rcvar_syntax">Resource Variable Syntax</a>
+<li><a href="#rcvar_index">Resource Variable Index</a>
+<ul>
+<li><small><a href="#variables">Variables</a></small>
+</ul>
+</ul>
+<!--X-TOC-End-->
+
+<hr>
+<h2><a name="overview">Overview</a></h2>
 <p><em>Resource variables</em> are used to represent dynamic data
 in MHonArc <a href="resources.html">resources</a>.  Take the following
 <a href="resources/litemplate.html">LITEMPLATE</a> resource setting
 for example:
-    </p>
+</p>
 
 <PRE>
 &lt;LiTemplate&gt;
-&lt;LI&gt;&lt;STRONG&gt;<b>$SUBJECT$</b>&lt;/STRONG&gt;
-&lt;UL&gt;&lt;LI&gt;&lt;EM&gt;From&lt;/EM&gt;: <b>$FROM$</b>&lt;/LI&gt;&lt;/UL&gt;
-&lt;/LI&gt;
+&lt;li&gt;&lt;strong&gt;<b>$SUBJECT$</b>&lt;/strong&gt;
+&lt;ul&gt;&lt;li&gt;&lt;em&gt;From&lt;/em&gt;: <b>$FROM$</b>&lt;/li&gt;&lt;/ul&gt;
+&lt;/li&gt;
 &lt;/LiTemplate&gt;
 </PRE>
 
@@ -32,7 +45,8 @@ for example:
 in the main index page.  The <tt>$SUBJECT$</tt> and
 <tt>$FROM$</tt> are resource
 variables.  <tt>$SUBJECT$</tt> will get expanded to the current message's
-subject, hyperlinked to the message page.  <tt>$FROM$</tt> will be replaced with
+subject, hyperlinked to the message page.
+<tt>$FROM$</tt> will be replaced with
 the message's author's name and address.
 </p>
 
@@ -41,9 +55,9 @@ the message's author's name and address.
 example:
 
 <pre>
-&lt;LI&gt;Next by Date:
-&lt;STRONG&gt;&lt;A HREF="<b>$MSG(NEXT)$</b>"&gt;<b>$SUBJECT(NEXT)$</b>&lt;/A&gt;&lt;/STRONG&gt;
-&lt;/LI&gt;
+&lt;li&gt;Next by Date:
+&lt;strong&gt;&lt;a href="<b>$MSG(NEXT)$</b>"&gt;<b>$SUBJECT(NEXT)$</b>&lt;/a&gt;&lt;/strong&gt;
+&lt;/li&gt;
 </pre>
 
 <p>The resource setting uses two resource variables: <tt>$MSG$</tt> and
@@ -186,7 +200,7 @@ are used to represent argument values:
 
 <dl>
 
-<dt><a name="mesg_spec"><i><tt>mesg_spec</tt></i></a></dt>
+<dt><a name="mesg_spec"><b><i><tt>mesg_spec</tt></i></b></a></dt>
 <dd><p>A message specification determines which message the variable's
 expanded will be based upon. Possible values are:
 </p>
@@ -195,34 +209,53 @@ expanded will be based upon. Possible values are:
 <th align=right>Value</th><th align=left>- Meaning</th>
 </tr>
 <tr valign=top>
-<td align=right><tt>CUR</tt></td><td>- Current message.</td>
+<td align=right><tt>CUR</tt></td>
+  <td>- Current message.</td>
 </tr>
 <tr valign=top>
-<td align=right><tt>FIRST</tt></td><td>- First message listed in main index.</td>
+<td align=right><tt>FIRST</tt></td>
+  <td>- First message listed in main index.</td>
 </tr>
 <tr valign=top>
-<td align=right><tt>LAST</tt></td><td>- Last message listed in main index.</td>
+<td align=right><tt>LAST</tt></td>
+  <td>- Last message listed in main index.</td>
 </tr>
 <tr valign=top>
-<td align=right><tt>NEXT</tt></td><td>- Next message by main sort order.</td>
+<td align=right><tt>NEXT</tt></td>
+  <td>- Next message by main sort order.</td>
 </tr>
 <tr valign=top>
-<td align=right><tt>PARENT</tt></td><td>- Parent message by thread.</td>
+<td align=right><tt>PREV</tt></td>
+  <td>- Previous message by main sort order.</td>
 </tr>
 <tr valign=top>
-<td align=right><tt>PREV</tt></td><td>- Previous message by main sort order.</td>
+<td align=right><tt>TEND</tt></td>
+  <td>- Last message of current discussion thread.</td>
 </tr>
 <tr valign=top>
-<td align=right><tt>TFIRST</tt></td><td>- First message listed thread index.</td>
+<td align=right><tt>TFIRST</tt></td>
+  <td>- First message listed thread index.</td>
 </tr>
 <tr valign=top>
-<td align=right><tt>TLAST</tt></td><td>- Last message listed thread index.</td>
+<td align=right><tt>TLAST</tt></td>
+  <td>- Last message listed thread index.</td>
 </tr>
 <tr valign=top>
-<td align=right><tt>TNEXT</tt></td><td>- Next message by thread.</td>
+<td align=right><tt>TNEXT</tt></td>
+  <td>- Next message by thread.</td>
 </tr>
 <tr valign=top>
-<td align=right><tt>TPREV</tt></td><td>- Previous message by thread.</td>
+<td align=right><tt>TPARENT</tt></td>
+  <td>- Parent message of current
+thread.</td>
+</tr>
+<tr valign=top>
+<td align=right><tt>TPREV</tt></td>
+  <td>- Previous message by thread.</td>
+</tr>
+<tr valign=top>
+<td align=right><tt>TTOP</tt></td>
+  <td>- Top/root message of current discussion thread.</td>
 </tr>
 </table>
 <p>"<tt>CUR</tt>" is the default if nothing is specified for
@@ -231,7 +264,7 @@ expanded will be based upon. Possible values are:
 </dd>
 
 
-<dt><a name="idx_page_spec"><i><tt>idx_page_spec</tt></i></a></dt>
+<dt><a name="idx_page_spec"><b><i><tt>idx_page_spec</tt></i></b></a></dt>
 <dd><p>An index page specification denoting the index page to use
 when determing the value of the variable.  The possible values are:
 </p>
@@ -269,7 +302,7 @@ variable's value is undefined.
 </p>
 </dd>
 
-<dt><a name="time_fmt_str"><i><tt>time_fmt_str</tt></i></a></dt>
+<dt><a name="time_fmt_str"><b><i><tt>time_fmt_str</tt></i></b></a></dt>
 <dd><p>A time format string specifies how a date/time will be
 printed for a date/time related variable.  The syntax of the format
 string is the same as the conversion specification as defined in
@@ -292,7 +325,10 @@ the <a href="resources/gmtdatefmt.html">GMTDATEFMT</a> and
 </tr>
 <tr valign=top>
 <td align=right><b>Description:</b></td>
-<td>The <tt>NAME</tt> and <tt>HREF</tt> attributes to use in an anchor to link to the archived message. The <tt>NAME</tt> attribute links the messages to the index page.</td>
+<td>The <tt>NAME</tt> and <tt>HREF</tt> attributes to use in an anchor
+to link to the archived message.
+The <tt>NAME</tt> attribute provides a destination location when a message
+links to the index page.</td>
 </tr>
 </table><br></dd>
 <dt><strong><a name="A_HREF"><tt>$A_HREF$</tt></a></strong></dt>
@@ -325,7 +361,15 @@ the <a href="resources/gmtdatefmt.html">GMTDATEFMT</a> and
 </tr>
 <tr valign=top>
 <td align=right><b>Description:</b></td>
-<td>Button markup linking to a message.</td>
+<td>Button markup linking to a message. The value of $BUTTON$ is determined
+by the following resources:
+<a href="resources/nextbutton.html">NEXTBUTTON</a>,
+<a href="resources/nextbuttonia.html">NEXTBUTTONIA</a>,
+<a href="resources/prevbutton.html">PREVBUTTON</a>,
+<a href="resources/prevbuttonia.html">PREVBUTTONIA</a>,
+<a href="resources/tnextbutton.html">TNEXTBUTTON</a>,
+<a href="resources/tnextbuttonia.html">TNEXTBUTTONIA</a>.
+</td>
 </tr>
 </table><br></dd>
 <dt><strong><a name="DATE"><tt>$DATE$</tt></a></strong></dt>
@@ -347,7 +391,7 @@ the <a href="resources/gmtdatefmt.html">GMTDATEFMT</a> and
 </tr>
 <tr valign=top>
 <td align=right><b>Description:</b></td>
-<td>Message date in dd/mm/yyyy format.</td>
+<td>Message date (according to local time) in dd/mm/yyyy format.</td>
 </tr>
 </table><br></dd>
 <dt><strong><a name="DOCURL"><tt>$DOCURL$</tt></a></strong></dt>
@@ -358,18 +402,21 @@ the <a href="resources/gmtdatefmt.html">GMTDATEFMT</a> and
 </tr>
 <tr valign=top>
 <td align=right><b>Description:</b></td>
-<td>URL to documentation.</td>
+<td>URL to MHonArc documentation.  Value of variable set by the
+<a href="resources/docurl.html">DOCURL</a> resource.</td>
 </tr>
 </table><br></dd>
-<dt><strong><a name="FIRSTPG"><tt>$FIRSTPG$</tt></a></strong></dt>
+<dt><strong><a name="ENV"><tt>$ENV$</tt></a></strong></dt>
 <dd><table border=0>
 <tr valign=top>
 <td align=right><b>Arguments:</b></td>
-<td>N/A</td>
+<td><tt><i>variable_name</i></tt></td>
 </tr>
 <tr valign=top>
 <td align=right><b>Description:</b></td>
-<td>Filename of first page of main index.</td>
+<td>The value of the environment variable specified by <i>variable_name</i>.
+For example, <tt>$ENV(HOME)$</tt> would expand to the value of the
+HOME environment variable.</td>
 </tr>
 </table><br></dd>
 <dt><strong><a name="FROM"><tt>$FROM$</tt></a></strong></dt>
@@ -391,7 +438,33 @@ the <a href="resources/gmtdatefmt.html">GMTDATEFMT</a> and
 </tr>
 <tr valign=top>
 <td align=right><b>Description:</b></td>
-<td>The e-mail address in the <tt>From:</tt> field of the message.</td>
+<td>The full mail address in the <tt>From:</tt> field of the message.</td>
+</tr>
+</table><br></dd>
+<dt><strong><a name="FROMADDRNAME"><tt>$FROMADDRNAME$</tt></a></strong></dt>
+<dd><table border=0>
+<tr valign=top>
+<td align=right><b>Arguments:</b></td>
+<td><tt><i><a href="#mesg_spec">mesg_spec</a></i></tt></td>
+</tr>
+<tr valign=top>
+<td align=right><b>Description:</b></td>
+<td>The username/local-part of the mail address in the <tt>From:</tt>
+field of the message.  For example, given the address "someuser@foo.com",
+<tt>$FROMADDRNAME$</tt> would equal "someuser".</td>
+</tr>
+</table><br></dd>
+<dt><strong><a name="FROMADDR"><tt>$FROMADDRDOMAIN$</tt></a></strong></dt>
+<dd><table border=0>
+<tr valign=top>
+<td align=right><b>Arguments:</b></td>
+<td><tt><i><a href="#mesg_spec">mesg_spec</a></i></tt></td>
+</tr>
+<tr valign=top>
+<td align=right><b>Description:</b></td>
+<td>The domain part of the mail address in the <tt>From:</tt>
+field of the message.  For example, given the address "someuser@foo.com",
+<tt>$FROMADDRDOMAIN$</tt> would equal "foo.com".</td>
 </tr>
 </table><br></dd>
 <dt><strong><a name="FROMNAME"><tt>$FROMNAME$</tt></a></strong></dt>
@@ -402,18 +475,24 @@ the <a href="resources/gmtdatefmt.html">GMTDATEFMT</a> and
 </tr>
 <tr valign=top>
 <td align=right><b>Description:</b></td>
-<td>The human name of the person in the <tt>From:</tt> field of the message. If no human name is found, the username specified in the e-mail address is used.</td>
+<td>The human name of the person in the <tt>From:</tt> field of the message.
+If no human name is found, the local-part specified in the mail address
+is used.</td>
 </tr>
 </table><br></dd>
 <dt><strong><a name="GMTDATE"><tt>$GMTDATE$</tt></a></strong></dt>
 <dd><table border=0>
 <tr valign=top>
 <td align=right><b>Arguments:</b></td>
-<td>N/A</td>
+<td><tt><i><a href="#time_fmt_str">time_fmt_str</a></i></tt></td>
 </tr>
 <tr valign=top>
 <td align=right><b>Description:</b></td>
-<td>Current GMT date.</td>
+<td>Current GMT date.
+Default format of date set by the
+<a href="resources/gmtdatefmt.html">GMTDATEFMT</a>
+resource.
+</td>
 </tr>
 </table><br></dd>
 <dt><strong><a name="ICON"><tt>$ICON$</tt></a></strong></dt>
@@ -424,7 +503,8 @@ the <a href="resources/gmtdatefmt.html">GMTDATEFMT</a> and
 </tr>
 <tr valign=top>
 <td align=right><b>Description:</b></td>
-<td>The context-type sensistive icon.</td>
+<td>The context-type sensistive icon.  The type of icon displayed
+is determined by the <a href="resources/icons.html">ICONS</a> resource.</td>
 </tr>
 </table><br></dd>
 <dt><strong><a name="ICONURL"><tt>$ICONURL$</tt></a></strong></dt>
@@ -435,7 +515,8 @@ the <a href="resources/gmtdatefmt.html">GMTDATEFMT</a> and
 </tr>
 <tr valign=top>
 <td align=right><b>Description:</b></td>
-<td>The URL to the context-type sensistive icon.</td>
+<td>The URL to the context-type sensistive icon. The URL value is
+determined by the <a href="resources/icons.html">ICONS</a> resource.</td>
 </tr>
 </table><br></dd>
 <dt><strong><a name="IDXFNAME"><tt>$IDXFNAME$</tt></a></strong></dt>
@@ -446,7 +527,13 @@ the <a href="resources/gmtdatefmt.html">GMTDATEFMT</a> and
 </tr>
 <tr valign=top>
 <td align=right><b>Description:</b></td>
-<td>Filename of main index page.</td>
+<td>Filename of main index page.  The value is set by the
+<a href="resources/idxfname.html">IDXFNAME</a> or
+<a href="resources/idxprefix.html">IDXPREFIX</a> and
+<a href="resources/htmlext.html">HTMLEXT</a>
+resources.  If the first page, IDXFNAME is used.  For other pages,
+the filename is <var>IDXPREFIXpage-number</var><tt>.</tt><var>HTMLEXT</var>.
+</td>
 </tr>
 </table><br></dd>
 <dt><strong><a name="IDXLABEL"><tt>$IDXLABEL$</tt></a></strong></dt>
@@ -457,7 +544,8 @@ the <a href="resources/gmtdatefmt.html">GMTDATEFMT</a> and
 </tr>
 <tr valign=top>
 <td align=right><b>Description:</b></td>
-<td>Label for main index page.</td>
+<td>Label for main index page.  Value set by the
+<a href="resources/idxlabel.html">IDXLABEL</a> resource.</td>
 </tr>
 </table><br></dd>
 <dt><strong><a name="IDXPREFIX"><tt>$IDXPREFIX$</tt></a></strong></dt>
@@ -468,7 +556,9 @@ the <a href="resources/gmtdatefmt.html">GMTDATEFMT</a> and
 </tr>
 <tr valign=top>
 <td align=right><b>Description:</b></td>
-<td>Prefix of filenames of main index pages.</td>
+<td>Prefix of filenames of main index pages.
+Value set by the <a href="resources/idxprefix.html">IDXPREFIX</a> resource.
+</td>
 </tr>
 </table><br></dd>
 <dt><strong><a name="IDXSIZE"><tt>$IDXSIZE$</tt></a></strong></dt>
@@ -479,7 +569,9 @@ the <a href="resources/gmtdatefmt.html">GMTDATEFMT</a> and
 </tr>
 <tr valign=top>
 <td align=right><b>Description:</b></td>
-<td>Max number of messages that may be listed in index page.</td>
+<td>Max number of messages that may be listed in index page.
+Value set by the <a href="resources/idxsize.html">IDXSIZE</a> resource.
+</td>
 </tr>
 </table><br></dd>
 <dt><strong><a name="IDXTITLE"><tt>$IDXTITLE$</tt></a></strong></dt>
@@ -490,18 +582,9 @@ the <a href="resources/gmtdatefmt.html">GMTDATEFMT</a> and
 </tr>
 <tr valign=top>
 <td align=right><b>Description:</b></td>
-<td>The title of the main index page.</td>
-</tr>
-</table><br></dd>
-<dt><strong><a name="LASTPG"><tt>$LASTPG$</tt></a></strong></dt>
-<dd><table border=0>
-<tr valign=top>
-<td align=right><b>Arguments:</b></td>
-<td>N/A</td>
-</tr>
-<tr valign=top>
-<td align=right><b>Description:</b></td>
-<td>Filename of last page in of main index.</td>
+<td>The title of the main index page.
+Value set by the <a href="resources/title.html">TITLE</a> resource.
+</td>
 </tr>
 </table><br></dd>
 <dt><strong><a name="LINK"><tt>$LINK$</tt></a></strong></dt>
@@ -512,18 +595,33 @@ the <a href="resources/gmtdatefmt.html">GMTDATEFMT</a> and
 </tr>
 <tr valign=top>
 <td align=right><b>Description:</b></td>
-<td>Link markup linking to a message.</td>
+<td>Link markup linking to a message.
+Value set by the
+<a href="resources/nextlink.html">NEXTLINK</a>,
+<a href="resources/nextlinkia.html">NEXTLINKIA</a>,
+<a href="resources/prevlink.html">PREVLINK</a>,
+<a href="resources/prevlinkia.html">PREVLINKIA</a>,
+<a href="resources/tnextlink.html">TNEXTLINK</a>,
+<a href="resources/tnextlinkia.html">TNEXTLINKIA</a>,
+<a href="resources/tprevlink.html">TPREVLINK</a>, and
+<a href="resources/tprevlinkia.html">TPREVLINKIA</a>
+resources.
+</td>
 </tr>
 </table><br></dd>
 <dt><strong><a name="LOCALDATE"><tt>$LOCALDATE$</tt></a></strong></dt>
 <dd><table border=0>
 <tr valign=top>
 <td align=right><b>Arguments:</b></td>
-<td>N/A</td>
+<td><tt><i><a href="#time_fmt_str">time_fmt_str</a></i></tt></td>
 </tr>
 <tr valign=top>
 <td align=right><b>Description:</b></td>
-<td>Current local date.</td>
+<td>Current local date.
+Default format of date set by the
+<a href="resources/localdatefmt.html">LOCALDATEFMT</a>
+resource.
+</td>
 </tr>
 </table><br></dd>
 <dt><strong><a name="MMDDYYYY"><tt>$MMDDYYYY$</tt></a></strong></dt>
@@ -534,7 +632,7 @@ the <a href="resources/gmtdatefmt.html">GMTDATEFMT</a> and
 </tr>
 <tr valign=top>
 <td align=right><b>Description:</b></td>
-<td>Message date in mm/dd/yyyy format.</td>
+<td>Message (local) date in mm/dd/yyyy format.</td>
 </tr>
 </table><br></dd>
 <dt><strong><a name="MSG"><tt>$MSG$</tt></a></strong></dt>
@@ -545,7 +643,11 @@ the <a href="resources/gmtdatefmt.html">GMTDATEFMT</a> and
 </tr>
 <tr valign=top>
 <td align=right><b>Description:</b></td>
-<td>Filename of message.</td>
+<td>Filename of message. Filename of the message is determined by the
+following resources:
+<a href="resources/htmlext.html">HTMLEXT</a>,
+<a href="resources/msgprefix.html">MSGPREFIX</a>.
+</td>
 </tr>
 </table><br></dd>
 <dt><strong><a name="MSGGMTDATE"><tt>$MSGGMTDATE$</tt></a></strong></dt>
@@ -600,7 +702,64 @@ the <a href="resources/gmtdatefmt.html">GMTDATEFMT</a> and
 </tr>
 <tr valign=top>
 <td align=right><b>Description:</b></td>
-<td>Filename prefix for message files.</td>
+<td>Filename prefix for message files.
+Value set by the
+<a href="resources/msgprefix.html">MSGPREFIX</a>
+resource.
+</td>
+</tr>
+</table><br></dd>
+<dt><strong><a name="MSGTORDNUM"><tt>$MSGTORDNUM$</tt></a></strong></dt>
+<dd><table border=0>
+<tr valign=top>
+<td align=right><b>Arguments:</b></td>
+<td><tt><i><a href="#mesg_spec">mesg_spec</a></i></tt></td>
+</tr>
+<tr valign=top>
+<td align=right><b>Description:</b></td>
+<td>The ordinal message number of the current discussion thread.  Numbering
+starts with the first top/root message of a thread and ends with the
+last message of the thread, spanning in sub-threads.  The following
+illustrates how the numbering works:
+<pre>
+  <b>1</b>. <var>top/root message</var>
+    <b>2</b>. <var>first follow-up to 1</var>
+      <b>3</b>. <var>first follow-up to 2</var>
+      <b>4</b>. <var>second follow-up to 2</var>
+    <b>5</b>. <var>second follow-up to 1</var>
+      <b>6</b>. <var>first follow-up to 5</var>
+        <b>7</b>. <var>first follow-up to 6</var>
+    <b>8</b>. <var>third follow-up to 1</var>
+</pre>
+The above contains 8 total message in the discussion thread, so numbering
+goes from 1 to 8.
+</td>
+</tr>
+</table><br></dd>
+<dt><strong><a name="NOTE"><tt>$NOTE$</tt></a></strong></dt>
+<dd><table border=0>
+<tr valign=top>
+<td align=right><b>Arguments:</b></td>
+<td><tt><i><a href="#mesg_spec">mesg_spec</a></i></tt></td>
+</tr>
+<tr valign=top>
+<td align=right><b>Description:</b></td>
+<td>Message annotation. If annotation text exists for the message,
+the <a href="resources/note.html">NOTE</a> resource determines the
+value of $NOTE$.  When no annotation text is defined,
+<a href="resources/noteia.html">NOTEIA</a> is used.</td>
+</tr>
+</table><br></dd>
+<dt><strong><a name="NOTETEXT"><tt>$NOTETEXT$</tt></a></strong></dt>
+<dd><table border=0>
+<tr valign=top>
+<td align=right><b>Arguments:</b></td>
+<td><tt><i><a href="#mesg_spec">mesg_spec</a></i></tt></td>
+</tr>
+<tr valign=top>
+<td align=right><b>Description:</b></td>
+<td>Base text of message annotation.  Variable should be used only
+within the <a href="resource/note.html">NOTE</a> resource.</td>
 </tr>
 </table><br></dd>
 <dt><strong><a name="NUMFOLUP"><tt>$NUMFOLUP$</tt></a></strong></dt>
@@ -611,7 +770,8 @@ the <a href="resources/gmtdatefmt.html">GMTDATEFMT</a> and
 </tr>
 <tr valign=top>
 <td align=right><b>Description:</b></td>
-<td>Number of explicit follow-ups to the message.</td>
+<td>Number of explicit follow-ups to the message.  This number does
+<b>NOT</b> include subject-based follow-ups.</td>
 </tr>
 </table><br></dd>
 <dt><strong><a name="NUMOFIDXMSG"><tt>$NUMOFIDXMSG$</tt></a></strong></dt>
@@ -622,7 +782,7 @@ the <a href="resources/gmtdatefmt.html">GMTDATEFMT</a> and
 </tr>
 <tr valign=top>
 <td align=right><b>Description:</b></td>
-<td>Number of message listed.</td>
+<td>Number of message listed for the current page.</td>
 </tr>
 </table><br></dd>
 <dt><strong><a name="NUMOFMSG"><tt>$NUMOFMSG$</tt></a></strong></dt>
@@ -633,7 +793,7 @@ the <a href="resources/gmtdatefmt.html">GMTDATEFMT</a> and
 </tr>
 <tr valign=top>
 <td align=right><b>Description:</b></td>
-<td>Number of messages in the archive.</td>
+<td>Total number of messages in the archive.</td>
 </tr>
 </table><br></dd>
 <dt><strong><a name="NUMOFPAGES"><tt>$NUMOFPAGES$</tt></a></strong></dt>
@@ -644,7 +804,7 @@ the <a href="resources/gmtdatefmt.html">GMTDATEFMT</a> and
 </tr>
 <tr valign=top>
 <td align=right><b>Description:</b></td>
-<td>Number of index pages.</td>
+<td>Total number of index pages for a given index type.</td>
 </tr>
 </table><br></dd>
 <dt><strong><a name="ORDNUM"><tt>$ORDNUM$</tt></a></strong></dt>
@@ -666,7 +826,11 @@ the <a href="resources/gmtdatefmt.html">GMTDATEFMT</a> and
 </tr>
 <tr valign=top>
 <td align=right><b>Description:</b></td>
-<td>Pathname of archive.</td>
+<td>Pathname of archive.
+Value set by the
+<a href="resources/outdir.html">OUTDIR</a>
+resource.
+</td>
 </tr>
 </table><br></dd>
 <dt><strong><a name="PAGENUM"><tt>$PAGENUM$</tt></a></strong></dt>
@@ -684,22 +848,62 @@ the <a href="resources/gmtdatefmt.html">GMTDATEFMT</a> and
 <dd><table border=0>
 <tr valign=top>
 <td align=right><b>Arguments:</b></td>
-<td><tt><i><a href="#page_spec">mesg_spec</a></i></tt></td>
+<td><tt><i><a href="#idx_page_spec">idx_page_spec</a></i></tt></td>
 </tr>
 <tr valign=top>
 <td align=right><b>Description:</b></td>
-<td>Filename of an index page.</td>
+<td>Filename of an index page.
+Value determined by the
+<a href="resources/htmlext.html">HTMLEXT</a>,
+<a href="resources/idxfname.html">IDXFNAME</a>,
+<a href="resources/idxprefix.html">IDXPREFIX</a>,
+<a href="resources/tidxfname.html">TIDXFNAME</a>, and
+<a href="resources/tidxprefix.html">TIDXPREFIX</a>
+resources.  Which resources are in effect depends on the current
+context.
+</td>
 </tr>
 </table><br></dd>
 <dt><strong><a name="PGLINK"><tt>$PGLINK$</tt></a></strong></dt>
 <dd><table border=0>
 <tr valign=top>
 <td align=right><b>Arguments:</b></td>
-<td><tt><i><a href="#page_spec">mesg_spec</a></i></tt></td>
+<td><tt><i><a href="#idx_page_spec">idx_page_spec</a></i></tt></td>
 </tr>
 <tr valign=top>
 <td align=right><b>Description:</b></td>
-<td>Markup linking to a main index page.</td>
+<td>Markup linking to a main index page.
+Value determined by the
+<a href="resources/nextpglink.html">NEXTPGLINK</a>,
+<a href="resources/nextpglinkia.html">NEXTPGLINKIA</a>,
+<a href="resources/prevpglink.html">PREVPGLINK</a>,
+<a href="resources/prevpglinkia.html">PREVPGLINKIA</a>,
+<a href="resources/tnextpglink.html">TNEXTPGLINK</a>,
+<a href="resources/tnextpglinkia.html">TNEXTPGLINKIA</a>,
+<a href="resources/tprevpglink.html">TPREVPGLINK</a>, and
+<a href="resources/tprevpglinkia.html">TPREVPGLINKIA</a>,
+resources.  The resource used depends on
+<i><a href="#idx_page_spec">idx_page_spec</a></i> and context.
+</td>
+</tr>
+</table><br></dd>
+<dt><strong><a name="PGLINKLIST"><tt>$PGLINKLIST$</tt></a></strong></dt>
+<dd><table border=0>
+<tr valign=top>
+<td align=right><b>Arguments:</b></td>
+<td><tt><i>num</i>;<i>num</i></tt></td>
+</tr>
+<tr valign=top>
+<td align=right><b>Description:</b></td>
+<td><p>Markup linking to a list of index pages.  <tt>$PGLINKLIST$</tt> takes
+two arguments: the first is the number of pages before the current page
+to create links to; the second is the number of pages after the
+current page to create links to.  If either number argument is prefixed
+with a '<tt><b>T</b></tt>', then the list of links apply to the thread index.
+Examples: <tt>$PGLINKLIST(3;3)$</tt>, <tt>$PGLINKLIST(T2;T3)$</tt>.  The
+link text for to a give page is the page number.
+</p>
+</td>
 </tr>
 </table><br></dd>
 <dt><strong><a name="PROG"><tt>$PROG$</tt></a></strong></dt>
@@ -721,7 +925,10 @@ the <a href="resources/gmtdatefmt.html">GMTDATEFMT</a> and
 </tr>
 <tr valign=top>
 <td align=right><b>Description:</b></td>
-<td>The subject text of the message wrapped in an anchor element that hyperlinks to the message.</td>
+<td>The subject text of the message, and if no arguments, wrapped in an
+anchor element that hyperlinks to the message.  This behavior exists
+for backwards capatibility and a simple way to provide a link to
+the current message using the subject as the link text.</td>
 </tr>
 </table><br></dd>
 <dt><strong><a name="SUBJECTNA"><tt>$SUBJECTNA$</tt></a></strong></dt>
@@ -743,7 +950,13 @@ the <a href="resources/gmtdatefmt.html">GMTDATEFMT</a> and
 </tr>
 <tr valign=top>
 <td align=right><b>Description:</b></td>
-<td>Filename of thread index page.</td>
+<td>Filename of thread index page.  The value is set by the
+<a href="resources/tidxfname.html">TIDXFNAME</a> or
+<a href="resources/tidxprefix.html">TIDXPREFIX</a> and
+<a href="resources/htmlext.html">HTMLEXT</a>
+resources.  If the first page, TIDXFNAME is used.  For other pages,
+the filename is <var>TIDXPREFIXpage-number</var><tt>.</tt><var>HTMLEXT</var>.
+</td>
 </tr>
 </table><br></dd>
 <dt><strong><a name="TIDXLABEL"><tt>$TIDXLABEL$</tt></a></strong></dt>
@@ -754,7 +967,8 @@ the <a href="resources/gmtdatefmt.html">GMTDATEFMT</a> and
 </tr>
 <tr valign=top>
 <td align=right><b>Description:</b></td>
-<td>Label for thread index page.</td>
+<td>Label for thread index page.  Value set by the
+<a href="resources/tidxlabel.html">TIDXLABEL</a> resource.</td>
 </tr>
 </table><br></dd>
 <dt><strong><a name="TIDXPREFIX"><tt>$TIDXPREFIX$</tt></a></strong></dt>
@@ -765,7 +979,11 @@ the <a href="resources/gmtdatefmt.html">GMTDATEFMT</a> and
 </tr>
 <tr valign=top>
 <td align=right><b>Description:</b></td>
-<td>Prefix of filenames of thread index pages.</td>
+<td>Prefix of filenames of thread index pages.
+Value set by the
+<a href="resources/tidxprefix.html">TIDXPREFIX</a>
+resource.
+</td>
 </tr>
 </table><br></dd>
 <dt><strong><a name="TIDXTITLE"><tt>$TIDXTITLE$</tt></a></strong></dt>
@@ -776,7 +994,52 @@ the <a href="resources/gmtdatefmt.html">GMTDATEFMT</a> and
 </tr>
 <tr valign=top>
 <td align=right><b>Description:</b></td>
-<td>Title of thread index.</td>
+<td>The title of the thread index page.
+Value set by the <a href="resources/ttitle.html">TTITLE</a> resource.
+</td>
+</tr>
+</table><br></dd>
+<dt><strong><a name="TO"><tt>$TO$</tt></a></strong></dt>
+<dd><table border=0>
+<tr valign=top>
+<td align=right><b>Arguments:</b></td>
+<td>N/A</td>
+</tr>
+<tr valign=top>
+<td align=right><b>Description:</b></td>
+<td>The mail address.
+This variable is only applicable for use in the
+<a href="resources/mailtourl.html">MAILTOURL</a>.</td>
+</tr>
+</table><br></dd>
+<dt><strong><a name="TOADDRNAME"><tt>$TOADDRNAME$</tt></a></strong></dt>
+<dd><table border=0>
+<tr valign=top>
+<td align=right><b>Arguments:</b></td>
+<td>N/A</td>
+</tr>
+<tr valign=top>
+<td align=right><b>Description:</b></td>
+<td>The username/local-part of the e-mail address.
+For example, given the address "someuser@foo.com",
+<tt>$TOADDRNAME$</tt> would equal "someuser".
+This variable is only applicable for use in the
+<a href="resources/mailtourl.html">MAILTOURL</a>.</td>
+</tr>
+</table><br></dd>
+<dt><strong><a name="TOADDRDOMAIN"><tt>$TOADDRDOMAIN$</tt></a></strong></dt>
+<dd><table border=0>
+<tr valign=top>
+<td align=right><b>Arguments:</b></td>
+<td>N/A</td>
+</tr>
+<tr valign=top>
+<td align=right><b>Description:</b></td>
+<td>The domain part of the e-mail address.
+For example, given the address "someuser@foo.com",
+<tt>$TOADDRDOMAIN$</tt> would equal "foo.com".
+This variable is only applicable for use in the
+<a href="resources/mailtourl.html">MAILTOURL</a>.</td>
 </tr>
 </table><br></dd>
 <dt><strong><a name="TSLICE"><tt>$TSLICE$</tt></a></strong></dt>
@@ -787,7 +1050,19 @@ the <a href="resources/gmtdatefmt.html">GMTDATEFMT</a> and
 </tr>
 <tr valign=top>
 <td align=right><b>Description:</b></td>
-<td>A <em>slice</em> of the thread listing relative to the current message.  Size of slice determined by the TSLICE resource.</td>
+<td>A <em>slice</em> of the thread listing relative to the current message.
+Size of slice determined by the <a href="resources/tslice.html">TSLICE</a>
+resource.  Layout appearance of <tt>$TSLICE$</tt> determined by
+<a href="tslicebeg.html">TSLICEBEG</a>,
+<a href="tsliceend.html">TSLICEEND</a>,
+<a href="ttopbegin.html">TTOPBEGIN</a>,
+<a href="tlitxt.html">TLITXT</a>,
+<a href="tliend.html">TLIEND</a>,
+<a href="tsingletxt.html">TSINGLETXT</a>,
+<a href="tsubjectbeg.html">TSUBJECTBEG</a>, and
+<a href="ttopend.html">TTOPEND</a>
+resources.
+</td>
 </tr>
 </table><br></dd>
 <dt><strong><a name="VERSION"><tt>$VERSION$</tt></a></strong></dt>
@@ -809,7 +1084,7 @@ the <a href="resources/gmtdatefmt.html">GMTDATEFMT</a> and
 </tr>
 <tr valign=top>
 <td align=right><b>Description:</b></td>
-<td>Message date in yyyy/mm/dd format.</td>
+<td>Message (local) date in yyyy/mm/dd format.</td>
 </tr>
 </table><br></dd>
 </dl>
@@ -819,20 +1094,20 @@ the <a href="resources/gmtdatefmt.html">GMTDATEFMT</a> and
 <hr>
 <!--X-NavButtons-Start-->
 <p align=center>
-<a href="resources.html"><img src="prev.gif" border=0 alt="[Prev]"></a><a href="contacts.html"><img src="next.gif" border=0 alt="[Next]"></a><a href="mhonarc.html"><img src="up.gif" border=0 alt="[TOC]"></a><a href="faq/faq.html"><img src="faq.gif" border=0 alt="[FAQ]"></a><a href="bugs.html"><img src="bug.gif" border=0 alt="[Bugs]"></a><a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"><img src="home.gif" border=0 alt="[Home]"></a>
+<a href="resources.html"><img src="prev.gif" border=0 alt="[Prev]"></a><a href="contacts.html"><img src="next.gif" border=0 alt="[Next]"></a><a href="mhonarc.html"><img src="up.gif" border=0 alt="[TOC]"></a><a href="faq/faq.html"><img src="faq.gif" border=0 alt="[FAQ]"></a><a href="app-bugs.html"><img src="bug.gif" border=0 alt="[Bugs]"></a><a href="http://www.mhonarc.org/"><img src="home.gif" border=0 alt="[Home]"></a>
 </p>
 <!--X-NavButtons-End-->
 
 <!-- *************************************************************** -->
 <hr>
 <address>
-98/10/24 17:31:05<br>
+01/06/10 17:47:40<br>
 <img align="top" src="monicon.gif" alt="">
-<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"
+<a href="http://www.mhonarc.org"
 ><strong>MHonArc</strong></a><br>
-Copyright &#169; 1998, <a href="http://www.oac.uci.edu/indiv/ehood/"
->Earl Hood</a>, <a href="mailto:earlhood@usa.net"
->earlhood@usa.net</a><br>
+Copyright &#169; 1998-1999, <a href="http://www.mhonarc.org/~ehood/"
+>Earl Hood</a>, <a href="mailto:mhonarc@mhonarc.org"
+>mhonarc@mhonarc.org</a><br>
 </address>
 
 </body>

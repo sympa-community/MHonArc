@@ -24,6 +24,7 @@
 <li><a href="#compare">How does MHonArc compare to other email archivers, like Hypermail?</a></li>
 <li><a href="#vscommercial">Why I should use MHonArc over some of the Internet-based mailing list archive services?</a></li>
 <li><a href="#studies">Are their "real-world" examples of MHonArc usage?</a></li>
+<li><a href="#whynonperl">Why are list archives about Perl-related topics not maintained with a Perl-based program, like MHonArc?</a></li>
 <li><a href="#y2k">Is MHonArc Y2K (Year 2000) compliant?</a></li>
 </ul>
 <!--X-TOC-End-->
@@ -69,7 +70,7 @@ by MHonArc.
 <h3><b><a name="mhversion">What's the latest version of MhonArc?</a></b></h3>
 </td></tr></table>
 
-<P>2.3.3
+<P>2.4.9
 </P>
 
 <!-- ??????????????????????????????????????????????????????????????? -->
@@ -82,12 +83,12 @@ by MHonArc.
 <P>The latest information on MHonArc,
 and its availability, may be obtained at <A
 HREF="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"
->&lt;URL:http://www.oac.uci.edu/indiv/ehood/mhonarc.html&gt;</A>.
+>&lt;http://www.mhonarc.org/&gt;</A>.
 </P>
 
 <p>MHonArc requires Perl to run.  If you do not have Perl, it can
 be obtained from
-<a href="http://www.perl.com/">&lt;URL:http://www.perl.com/&gt;</a>.
+<a href="http://www.perl.com/">&lt;http://www.perl.com/&gt;</a>.
 </p>
 
 <!-- ??????????????????????????????????????????????????????????????? -->
@@ -100,10 +101,10 @@ be obtained from
 <P>MHonArc is free software.  MHonArc is distributed under
 the GNU General Public License (GPL).  A copy of the license is included in
 the distribution.  Please read it for more information, or go
-to <a href="http://www.gnu.org/">&lt;URL:http://www.gnu.org/&gt;</a>.
+to <a href="http://www.gnu.org/">&lt;http://www.gnu.org/&gt;</a>.
 Note, that the word <em>"free"</em> means something
 different than <em>"no&nbsp;cost"</em>.  See the GPL and
-<a href="http://www.gnu.org/">&lt;URL:http://www.gnu.org/&gt;</a> for more
+<a href="http://www.gnu.org/">&lt;http://www.gnu.org/&gt;</a> for more
 information.
 </p>
 
@@ -112,7 +113,8 @@ development of MHonArc.
 </p>
 
 <p>If you do not feel comfortable with the current licensing
-of MHonArc, GPL, then contact the developer of MHonArc if you
+of MHonArc, GPL, then contact the
+<a href="mailto:mhonarc@mhonarc.org">developer</a> of MHonArc if you
 want to make alternate licensing arrangements.
 </p>
 
@@ -190,10 +192,10 @@ Majordomo. You can also use the WWW to access
 the archive (with full text search using
 <a href="http://glimpse.cs.arizona.edu/">Glimpse</a>) at
 <A HREF="http://www.xray.mpe.mpg.de/mailing-lists/"
->&lt;URL:http://www.xray.mpe.mpg.de/mailing-lists/&gt;</A>.
+>&lt;http://www.xray.mpe.mpg.de/mailing-lists/&gt;</A>.
 An alternative web archive of the mailing list is at
 <A HREF="http://www.mail-archive.com/mhonarc@ncsa.uiuc.edu/"
->&lt;URL:http://www.mail-archive.com/mhonarc@ncsa.uiuc.edu/&gt;</A>.
+>&lt;http://www.mail-archive.com/mhonarc@ncsa.uiuc.edu/&gt;</A>.
 </P>
 
 <!-- ??????????????????????????????????????????????????????????????? -->
@@ -232,8 +234,10 @@ to Hypermail, please contact the FAQ maintainer.
 UUCP-style mailboxes.
 </p>
 </li>
-<li><p>MHonArc provides the ability to extend the type of
-MIME content-types supported.
+<li><p>MHonArc has fairly robust MIME support, including the ability to
+extend the list of media-types supported.
+Hypermail is supposed to have some
+some support for MIME, but it still appears to be a work in progress.
 </p>
 </li>
 <li><p>Page customization.  MHonArc gives you complete control
@@ -272,7 +276,7 @@ was a lack of development on Hypermail.  However, there is
 currently a maintainer.  Information about Hypermail can
 be obtained from
 <a href="http://www.landfield.com/hypermail/"
->&lt;URL:http://www.landfield.com/hypermail/&gt;</a>.
+>&lt;http://www.landfield.com/hypermail/&gt;</a>.
 </p>
 
 <!-- ??????????????????????????????????????????????????????????????? -->
@@ -308,7 +312,7 @@ an Internet based service is not an option.
 that is available at no charge, and it uses MHonArc and the
 <a href="http://www.htdig.org">htDig</a> search engine.  See
 <a href="http://www.mail-archive.com/"
->&lt;URL:http://www.mail-archive.com/&gt;</a> for more information.
+>&lt;http://www.mail-archive.com/&gt;</a> for more information.
 </p>
 
 <!-- ??????????????????????????????????????????????????????????????? -->
@@ -323,26 +327,48 @@ that is available at no charge, and it uses MHonArc and the
 <ul>
 <li>WWW Mailing List Archives &amp; References:<br>
 <a href="http://www.xray.mpe.mpg.de/mailing-lists/"
->&lt;URL:http://www.xray.mpe.mpg.de/mailing-lists/&gt;</a>
+>&lt;http://www.xray.mpe.mpg.de/mailing-lists/&gt;</a>
 <li>The Mail Archive:<br>
 <a href="http://www.mail-archive.com/"
->&lt;URL:http://www.mail-archive.com/&gt;</a>
+>&lt;http://www.mail-archive.com/&gt;</a>
 <li>Mallorn Archived Email Lists:<br>
 <a href="http://www.mallorn.com/lists/"
->&lt;URL:http://www.mallorn.com/lists/&gt;</a>
+>&lt;http://www.mallorn.com/lists/&gt;</a>
+<li>FreeLists:<br>
+<a href="http://www.freelists.org/"
+>&lt;http://www.freelists.org/&gt;</a>
 <li>Majordomo Users Mailing List Interface:<br>
 <a href="http://www.hpc.uh.edu/majordomo-users"
->&lt;URL:http://www.hpc.uh.edu/majordomo-users&gt;</a>
+>&lt;http://www.hpc.uh.edu/majordomo-users&gt;</a>
+<li>Sourceware.cygnus.com Mailing Lists:<br>
+<a href="http://sourceware.cygnus.com/ml/"
+>&lt;http://sourceware.cygnus.com/ml/&gt;</a>
 <li>Liblicense-L List Archives:<br>
 <a href="http://www.library.yale.edu/~llicense/ListArchives/"
->&lt;URL:http://www.library.yale.edu/~llicense/ListArchives/&gt;</a>
-<li>Lyx Mailing List Archives:<br>
-<a href="http://www.via.ecp.fr/lyx/archive/"
->&lt;URL:http://www.via.ecp.fr/lyx/archive/&gt;</a>
+>&lt;http://www.library.yale.edu/~llicense/ListArchives/&gt;</a>
 <li>FVWM Archives:<br>
 <a href="http://www.hpc.uh.edu/fvwm/archive/"
->&lt;URL:http://www.hpc.uh.edu/fvwm/archive/&gt;</a>
+>&lt;http://www.hpc.uh.edu/fvwm/archive/&gt;</a>
+<li>Lists Archived at Kanga.Nu:<br>
+<a href="http://www.kanga.nu/archives/"
+>&lt;http://www.kanga.nu/archives/&gt;</a>
+<li>Apsfilter Archives:<br>
+<a href="http://www.apsfilter.org/Lists-Archives/"
+>&lt;http://www.apsfilter.org/Lists-Archives/&gt;</a>
+<li>Giant Java Tree Archives:<br>
+<a href="http://www.git.org/servlets/MailingLists/ListOfLists.html"
+>&lt;http://www.git.org/servlets/MailingLists/ListOfLists.html&gt;</a>
 </ul>
+
+<!-- ??????????????????????????????????????????????????????????????? -->
+<hr noshade size=1>
+<table border=0>
+<tr valign=top><td><img src="monicon.gif" align="bottom" alt=""></td><td>
+<h3><b><a name="whynonperl">Why are list archives about Perl-related topics not maintained with a Perl-based program, like MHonArc?</a></b></h3>
+</td></tr></table>
+
+<p>The answer is something I would like to know myself.
+</p>
 
 <!-- ??????????????????????????????????????????????????????????????? -->
 <hr noshade size=1>
@@ -364,7 +390,7 @@ Hence, do not go looking for someone to sue if something breaks.
 
 <p>You may want to check
 <a href="http://language.perl.com/news/y2k.html"
->&lt;URL:http://language.perl.com/news/y2k.html&gt;</a> about Y2K
+>&lt;http://language.perl.com/news/y2k.html&gt;</a> about Y2K
 from a Perl point-of-view.
 </p>
 
@@ -379,13 +405,12 @@ from a Perl point-of-view.
 
 <hr>
 <address>
-98/11/08 12:21:28<br>
+01/06/10 17:47:21<br>
 <img align="top" src="monicon.gif" alt="">
-<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"
-><strong>MHonArc</strong></a><br>
-Copyright &#169; 1997-1998, <a href="http://www.oac.uci.edu/indiv/ehood/"
->Earl Hood</a>, <a href="mailto:ehood@medusa.acs.uci.edu"
->ehood@medusa.acs.uci.edu</a><br>
+<a href="http://www.mhonarc.org/"><strong>MHonArc</strong></a><br>
+Copyright &#169; 1997-2001, <a href="http://www.mhonarc.org/~ehood/"
+>Earl Hood</a>, <a href="mailto:mhonarc@mhonarc.org"
+>mhonarc@mhonarc.org</a><br>
 </address>
 </body>
 </html>

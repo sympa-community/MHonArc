@@ -22,7 +22,10 @@
 <li><a href="#perl">What version of Perl is required to run MHonArc?</a></li>
 <li><a href="#muas">What mail user agents (MUA's) does MHonarc support?</a></li>
 <li><a href="#mdomodigests">Can MHonArc process Majordomo digests?</a></li>
-<li><a href="#listprocessor">Can MHonArc process Listproc, Majordomo, or Listserv archives?</a></li>
+<li><a href="#listprocessor">Can MHonArc process Listprocessor archives?</a></li>
+<li><a href="#ezmlm">Can MHonArc process ezmlm archives?</a></li>
+<li><a href="#maildir">Can MHonArc process qmail's maildir style mail folders?</a></li>
+<li><a href="#netscape">Can MHonArc process Netscape Messenger folders?</a></li>
 <li><a href="#compuserve">Can MHonArc process Compuserve messages?</a></li>
 <li><a href="#otherformats">What about other mailbox/folder formats?</a></li>
 <li><a href="#nonenglish">Can MHonArc create non-English archives?</a></li>
@@ -226,7 +229,7 @@ for($jj = 0; $jj &lt; $ii; $jj++) {
 <hr noshade size=1>
 <table border=0>
 <tr valign=top><td><img src="monicon.gif" align="bottom" alt=""></td><td>
-<h3><b><a name="listprocessor">Can MHonArc process Listproc, Majordomo, or Listserv archives?</a></b></h3>
+<h3><b><a name="listprocessor">Can MHonArc process Listprocessor archives?</a></b></h3>
 </td></tr></table>
 
 <p>An answer from a MHonArc user:
@@ -306,6 +309,100 @@ www.cruciverb.com
 <hr noshade size=1>
 <table border=0>
 <tr valign=top><td><img src="monicon.gif" align="bottom" alt=""></td><td>
+<h3><b><a name="ezmlm">Can MHonArc process ezmlm archives?</a></b></h3>
+</td></tr></table>
+
+<p>From what I read from the <b>ezmlm(5)</b> manpage, the following example
+command will process all messages of list:
+</p>
+<pre>
+    shell&gt; <b>mhonarc <var>/list/archive/</var>[0-9]*</b>
+</pre>
+<p>Replace "<tt>/list/archive/</tt>" to what is appropriate for your
+configuration.
+</p>
+<p>Basically, each numeric subdirectory in the "<var>archive</var>" directory
+follows the same format as MH mail directories.
+</p>
+<p>If you are using a shell that cannot handle "<tt>[0-9]*</tt>", the following
+should work:
+</p>
+<pre>
+    shell&gt; <b>mhonarc `find <var>/list/archive/</var> -type d -name '[0-9]*' -print`</b>
+</pre>
+<p>Note, make sure to add any additional options to mhonarc as needed
+to get the effects you desire.
+</p>
+
+<!-- ??????????????????????????????????????????????????????????????? -->
+<hr noshade size=1>
+<table border=0>
+<tr valign=top><td><img src="monicon.gif" align="bottom" alt=""></td><td>
+<h3><b><a name="maildir">Can MHonArc process qmail's maildir style mail folders?</a></b></h3>
+</td></tr></table>
+
+<p>For simplicity, let "<var>MAILDIR</var>" represent the pathname
+to your qmail mail directory.
+</p>
+<p>To have mhonarc process <var>MAILDIR</var>,
+you pass "<var>MAILDIR</var><tt>/cur</tt>" and/or
+"<var>MAILDIR</var><tt>/new</tt>" as the mail folder arguments.
+Which subdirectory you choose to use depends on your needs.
+</p>
+<p>Also, you will need to define the MHPATTERN resource to process
+all non-dotfiles.  Example:
+</p>
+<pre>
+    shell&gt; <b>mhonarc -mhpattern '^[^\.]' <var>MAILDIR</var>/cur</b>
+</pre>
+<p>If all you will ever do is process qmail maildir folders, it may be best
+to set the M2H_MHPATTERN environment variable so you do not have
+to respecify each time you invoke mhonarc.  Examples:
+</p>
+<dl>
+<dt>csh:
+    <dd><b><tt>setenv M2H_MHPATTERN '^[^\.]'</tt></b>
+<dt>sh:
+    <dd><b><tt>M2H_MHPATTERN='^[^\.]'; export M2H_MHPATTERN</tt></b>
+</dl>
+
+<!-- ??????????????????????????????????????????????????????????????? -->
+<hr noshade size=1>
+<table border=0>
+<tr valign=top><td><img src="monicon.gif" align="bottom" alt=""></td><td>
+<h3><b><a name="netscape">Can MHonArc process Netscape Messenger folders?</a></b></h3>
+</td></tr></table>
+
+<p>Yes.  Each Netscape Messenger folder has a corresponding mailbox file
+that stores the raw mail messages for the folder.  The location
+of the mailbox file will be in your mail directory.  Under Unix, this
+is normally <b><tt>$HOME/nsmail</tt></b>.  For Windows, this is
+typically
+<b><tt>C:\Program Files\Netscape\Users\<var>&lt;username&gt;</var>\Mail</tt></b>.
+</p>
+
+<p>For each Netscape folder, there are two files: 
+<b><tt><i>&lt;folder-name&gt;</i></tt></b> and 
+<b><tt><i>&lt;folder-name&gt;</i>.summary</tt></b> (or
+<b><tt><i>&lt;folder-name&gt;</i>.snm</tt></b> under Windows).
+The <b><tt>.summary</tt></b> can be ignored with respect to MHonArc.
+The other file contains the raw mail messages and can be passed
+directly to MHonArc for processing.  For example, to process all the
+mail in your Inbox, do something like the following:
+</p>
+<pre>
+    shell&gt; <b>mhonarc $HOME/nsmail/Inbox</b>
+</pre>
+
+<p>Note, you may need to compress/compact folders in Netscape before
+running MHonArc.  If not, messages you have deleted from a folder may
+show up in the archive create by MHonArc.
+</p>
+
+<!-- ??????????????????????????????????????????????????????????????? -->
+<hr noshade size=1>
+<table border=0>
+<tr valign=top><td><img src="monicon.gif" align="bottom" alt=""></td><td>
 <h3><b><a name="compuserve">Can MHonArc process Compuserve messages?</a></b></h3>
 </td></tr></table>
 
@@ -377,7 +474,7 @@ resources to make conversion potentially easier.
 </p>
 <p>A potential source for help is
 <a href="http://mango.human.cornell.edu/kens/MoreFAQ.html#Convert"
->&lt;URL:http://mango.human.cornell.edu/kens/MoreFAQ.html#Convert&gt;</a>.  The
+>&lt;http://mango.human.cornell.edu/kens/MoreFAQ.html#Convert&gt;</a>.  The
 URL is part of the Eudora FAQ.  However, Eudora does uses UUCP-style
 mailbox format to store its messagse.  Hence, the information
 provided from the URL can be applicable to MHonArc.
@@ -439,13 +536,13 @@ message.  MHonArc has no built-in language translation.
 
 <hr>
 <address>
-98/11/08 12:21:27<br>
+01/06/10 17:47:21<br>
 <img align="top" src="monicon.gif" alt="">
 <a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"
 ><strong>MHonArc</strong></a><br>
-Copyright &#169; 1997-1998, <a href="http://www.oac.uci.edu/indiv/ehood/"
->Earl Hood</a>, <a href="mailto:ehood@medusa.acs.uci.edu"
->ehood@medusa.acs.uci.edu</a><br>
+Copyright &#169; 1997-1999, <a href="http://www.oac.uci.edu/indiv/ehood/"
+>Earl Hood</a>, <a href="mailto:mhonarc@mhonarc.org"
+>mhonarc@mhonarc.org</a><br>
 </address>
 </body>
 </html>

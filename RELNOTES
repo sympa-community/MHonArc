@@ -1,25 +1,16 @@
 Release Notes for MHonArc
 =========================
-<URL:http://www.oac.uci.edu/indiv/ehood/mhonarc.html>
+<http://www.mhonarc.org/>
 
 Read the CHANGES document for changes that may affect you if you are
 a user of an earlier version of MHonArc.
 
 ===========================================================================
-Version 2.3.3
 
-    See notes below about v2.3.x releases if upgrading from v2.2,
-    or earlier, or from an earlier v2.3 release.
-
-Version 2.3.2
-
-    o	A new (improved) "install.me" exists to install MHonArc.
-	See INSTALL for more information.
-
-Version 2.3.0, 2.3.1
-
-    o	If you have archives created with v2.1.x, or earlier, you
-	must update the archives before using versions v2.3, or
+  ==>	IMPORTANT IF UPGRADING FROM v2.1.x OR EARLIER:
+    
+	If you have archives created with v2.1.x, or earlier, you
+	must update the archives before using versions v2.2, or
 	later.
 
 	To update your archives, you use the mha-dbedit program
@@ -28,7 +19,7 @@ Version 2.3.0, 2.3.1
 	    mha-dbedit -rcfile examples/def-mime.mrc \
 		       -outdir /path/to/archive
 
-	Make sure that the mhonarc you are using is v2.3, or later.
+	Make sure that the mhonarc you are using is v2.2, or later.
 	Change the -rcfile and -outdir pathnames to reflect where
 	you are running mhonarc and where your archive is located,
 	respectively.
@@ -39,124 +30,34 @@ Version 2.3.0, 2.3.1
 	(included in the examples directory) to include your settings
 	and use the variant version when updating your archives.
 
-===========================================================================
-==	Past Release Notes						 ==
-===========================================================================
-Version 2.2.0
+  ==>	If upgrading from v2.1.x, or earlier, any custom filters you
+	have developed may need to modified.  If your filter accessed
+	some main variables, your filter will not operate properly.
+	All variables that used to be in package "main" are no longer.
+	The major variables are now in package "mhonarc".  For example,
+	$::OUTDIR is now $mhonarc::OUTDIR.  See the MIMEFILTERS
+	resource page for more information.
 
-    o	*IMPORTANT* *IMPORTANT* *IMPORTANT* *IMPORTANT* *IMPORTANT* 
+  ==>	See the Warnings in the documentation for the HTMLEXT and
+	MSGPREFIX resources before using them.
 
-	If you have archives created with v2.1.x, or earlier, you
-	must update the archive before using v2.2.0, and later.  If
-	you are creating new archives, then you can skip the how-to
-	on upgrading older archives.
+  ==>	Occasionally, a new release of MHonArc may contain new
+	MIME filters.  See the CHANGES file to check if any new filters
+	have been added.
 
-	To update your v2.1.x, or earlier, archives, you can run the
-	-editidx option with the def-mime.rc resource in the examples
-	directory on your archives.  For example:
+	If you confirm that new filters have been added, and you want
+	to apply them to your archives, you use the mha-dbedit program
+	using the def-mime.mrc in the examples directory.  For example:
 
-	    mhonarc -editidx -rcfile examples/def-mime.rc \
-		    -outdir /path/to/archive
+	    mha-dbedit -rcfile examples/def-mime.mrc \
+		       -outdir /path/to/archive
 
-	Make sure that the mhonarc you are using is v2.2.0, or later.
-	Of course, change the -rcfile and -outdir pathname to reflect
-	where you are running mhonarc and where your archive is
-	located, respectively.
-
-	The key is to apply the def-mime.rc to all your archives.
 	Note, if your archives are using custom settings of
 	MIMEFILTERS, MIMEARGS, and/or CHARSETCONVERTERS resources,
-	you will need to create a variant version of def-mime.rc
-	to include your settings and use the variant version when
-	updating your archives.
-
-    o	If you have written any custom MIME filters, you filters may
-	be affected by v2.2.0.	If your filter accessed some
-	main variables, your filter will not operate properly.
-	All variables that used to be in package "main" are no
-	longer.  The major variables are now in package "mhonarc".
-	For example, $::OUTDIR is now $mhonarc::OUTDIR.  See the
-	MIMEFILTERS resource page for more information.
-
-
----------------------------------------------------------------------------
-Version 2.1.2
-
-    o	The new default setting for CHARSETCONVERTERS will not get
-	used in existing archives.  If you want the settings to
-	help improve the performance on existing archives, you need
-	to define the following resource:
-
-	<CHARSETCONVERTERS>
-	plain:main'htmlize:
-	us-ascii:main'htmlize:
-	iso-8859-1:main'htmlize:
-	</CHARSETCONVERTERS>
-
-	If you do not specify a resource file each time you update
-	and archive, you can create one with the above settings and
-	do -editidx so subsequent updates will use the new settings
-	(you do not need to respecify the resource file again after
-	the -editidx operation).
-
-    o	For a reason why you may want to set the ARCHIVE resource to
-	0, see the ARCHIVE resource page of the documentation.
-
----------------------------------------------------------------------------
-Version 2.1.1
-
-    o	A bug-fix, minor enhancement, release.  There are no
-	changes to MHonArc that require any special notes.
-
-    o	A new (contributed) program, prsfrom.pl, has been added to
-	the extras directory.  This program may be of use depending
-	on the type of input you pass to MHonArc.  See the extras
-	README for more information.
-
----------------------------------------------------------------------------
-Version 2.1.0
-
-    o	See the Warnings in the documentation for the new HTMLEXT
-	and MSGPREFIX resources before using them.
-
-    o	To take advantage of the new default MIMEFILTERS setting
-	for existing archives, you will need set the MIMEFILERS
-	resource in a update operation.  The simplest approach
-	is to perform an -editidx on existing archives with a
-	resource file containing the following settings:
-
-	<MIMEFILTERS>
-	model/*:m2h_external'filter:mhexternal.pl
-	text/enriched:m2h_text_enriched'filter:mhtxtenrich.pl
-	text/richtext:m2h_text_enriched'filter:mhtxtenrich.pl
-	</MIMEFILTERS>
-
----------------------------------------------------------------------------
-Version 2.0.1
-
-	See the BUGS file for an important bug fix related to
-	empty database entries.
-
----------------------------------------------------------------------------
-Version 2.0.0
-
-	o  The installation process has changed slightly.  Please
-	   read the installation instructions in the README
-	   carefully.
-
-	o  Documentation is now provided only in HTML.
-
-	o  There are some changes to how data is stored in the
-	   database file from v1.x.  If MHonArc v2.0 reads a 1.x
-	   archive, it will automatically convert the 1.x data into
-	   2.0 data.  All existing resource settings will be preserved.
-
-	   NOTE
-		Once an archive has been processed by v2.0, the
-		database may no longer be utilized by v1.x.  If
-		v1.x is used later to process the archive,
-		unpredictable results will occur.
+	you will need to create a variant version of def-mime.mrc
+	(included in the examples directory) to include your settings
+	and use the variant version when updating your archives.
 
 ===========================================================================
-@(#) RELNOTES 98/11/08 13:04:27
-Earl Hood, earlhood@usa.net
+@(#) RELNOTES 00/04/24 00:20:38
+Earl Hood, mhonarc@pobox.com

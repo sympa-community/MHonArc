@@ -1,0 +1,545 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
+<HTML>
+<HEAD>
+<TITLE>MHonArc v2.4 -- Appendix: MIME Conformance
+</TITLE>
+</HEAD>
+<BODY background="ssbg75.jpg"
+      text="#000000" link="#0000ee" vlink="#551a8b" alink="ff0000">
+
+<!--X-NavButtons-Start-->
+<p align=center>
+<a href="app-utilsprg.html"><img src="prev.gif" border=0 alt="[Prev]"></a><a href="app-bugs.html"><img src="next.gif" border=0 alt="[Next]"></a><a href="mhonarc.html"><img src="up.gif" border=0 alt="[TOC]"></a><a href="faq/faq.html"><img src="faq.gif" border=0 alt="[FAQ]"></a><a href="app-bugs.html"><img src="bug.gif" border=0 alt="[Bugs]"></a><a href="http://www.mhonarc.org/"><img src="home.gif" border=0 alt="[Home]"></a>
+</p>
+<!--X-NavButtons-End-->
+<HR>
+
+<H1><a name="appendix-mimeconf">Appendix: MIME Conformance</a></H1>
+
+<P>This appendix describes how well MHonArc implements
+MIME-conformance as defined in
+<a href="http://www.pobox.com/~ehood/MIME/2049/rfc2049.html">
+RFC 2049: (MIME) Part Five: Conformance Criteria and Examples</a>.
+Also, additional MIME-related features are summarized.
+</P>
+
+<!--X-TOC-Start-->
+<ul>
+<li><a href="#mime-conformance">MIME-Conformance</a>
+<li><a href="#otherstuff">Other Stuff Supported</a>
+</ul>
+<!--X-TOC-End-->
+
+<hr>
+<H2><a name="mime-conformance">MIME-Conformance</a></H2>
+
+<p>MIME-conformance is defined in section 2 of
+<a href="http://www.pobox.com/~ehood/MIME/2049/rfc2049.html">
+RFC 2049: (MIME) Part Five: Conformance Criteria and Examples</a>.
+Following is the text extracted from section 2 of RFC 2049 with
+annotations added on how MHonArc conforms to each criteria listed.
+It should be noted that the criteria listed in RFC 2049 is geared
+towards interactive MUAs; therefore, some criteria may not be
+applicable to MHonArc.
+</p>
+<table border=0 cellpadding=4>
+<tr valign=top>
+<td><strong>NOTE</strong></td>
+<td><p>All notes about conformance is based upon the default MIME-related
+resource settings:
+<a href="resources/mimefilters.html">MIMEFILTERS</a>, 
+<a href="resources/charsetconverters.html">CHARSETCONVERTERS</a>, 
+<a href="resources/mimeargs.html">MIMEARGS</a> 
+</p>
+</td>
+</tr>
+</table>
+
+<ol>
+<li><p>
+Always generate a "MIME-Version: 1.0" header field in
+          any message it creates.
+</p>
+<table border=0 cellpadding=4>
+<tr valign=top>
+<td><strong><img src="monicon.gif" alt="MHonArc"></strong></td>
+<td><p>Not applicable.
+</p>
+<br>
+</td>
+</tr>
+</table>
+</li>
+<li><p>
+Recognize the Content-Transfer-Encoding header field
+          and decode all received data encoded by either quoted-printable or base64 implementations.  The identity
+          transformations 7bit, 8bit, and binary must also be
+          recognized.
+</p>
+<table border=0 cellpadding=4>
+<tr valign=top>
+<td><strong><img src="monicon.gif" alt="MHonArc"></strong></td>
+<td><p>Base64, quoted-printable, 7bit, 8bit, and binary are supported.
+Also, uuencode is supported: <tt>uuencode</tt>, <tt>x-uuencode</tt>, and
+<tt>x-uue</tt>.
+</p>
+<br>
+</td>
+</tr>
+</table>
+<p>
+          Any non-7bit data that is sent without encoding must be
+          properly labelled with a content-transfer-encoding of
+          8bit or binary, as appropriate.  If the underlying
+          transport does not support 8bit or binary (as SMTP
+          [RFC-821] does not), the sender is required to both
+          encode and label data using an appropriate Content-Transfer-Encoding such as quoted-printable or base64.
+</p>
+<table border=0 cellpadding=4>
+<tr valign=top>
+<td><strong><img src="monicon.gif" alt="MHonArc"></strong></td>
+<td><p>Not applicable.
+</p>
+<br>
+</td>
+</tr>
+</table>
+</li>
+<li><p>
+Must treat any unrecognized Content-Transfer-Encoding
+          as if it had a Content-Type of "application/octet-stream", regardless of whether or not the actual
+          Content-Type is recognized.
+</p>
+<table border=0 cellpadding=4>
+<tr valign=top>
+<td><strong><img src="monicon.gif" alt="MHonArc"></strong></td>
+<td><p>Currently, MHonArc will still call the registered
+<a href="resources/mimefilters.html">content-type filter</a> for the specified
+Content-Type, but the <b><tt>$isdecoded</tt></b> will be set to a false
+value.  With the default set of filters, the <b><tt>$isdecoded</tt></b>
+flag is ignored.  Therefore, behavior could be considered undefined when
+MHonArc process a message with an unrecognized Content-Transfer-Encoding.
+</p>
+<br>
+</td>
+</tr>
+</table>
+</li>
+<li><p>
+Recognize and interpret the Content-Type header field,
+          and avoid showing users raw data with a Content-Type
+          field other than text.  Implementations  must be able
+          to send at least text/plain messages, with the
+          character set specified with the charset parameter if
+          it is not US-ASCII.
+</p>
+<table border=0 cellpadding=4>
+<tr valign=top>
+<td><strong><img src="monicon.gif" alt="MHonArc"></strong></td>
+<td><p>MHonArc conforms to the first sentence of the paragraph
+The second sentence is not applicable.
+</p>
+<br>
+</td>
+</tr>
+</table>
+</li>
+<li><p>
+Ignore any content type parameters whose names they do
+          not recognize.
+</p>
+<table border=0 cellpadding=4>
+<tr valign=top>
+<td><strong><img src="monicon.gif" alt="MHonArc"></strong></td>
+<td><p>Yes.
+</p>
+<br>
+</td>
+</tr>
+</table>
+</li>
+<li><p>
+Explicitly handle the following media type values, to
+          at least the following extents:
+</p>
+<p>
+          Text:
+</p>
+<ul>
+<li><p>Recognize and display "text" mail with the
+            character set "US-ASCII."
+</p>
+<table border=0 cellpadding=4>
+<tr valign=top>
+<td><strong><img src="monicon.gif" alt="MHonArc"></strong></td>
+<td><p>Yes.
+</p>
+<br>
+</td>
+</tr>
+</table>
+<li><p>Recognize other character sets at least to the
+            extent of being able to inform the user about what
+            character set the message uses.
+</p>
+<table border=0 cellpadding=4>
+<tr valign=top>
+<td><strong><img src="monicon.gif" alt="MHonArc"></strong></td>
+<td><p>Not really applicable.  Warnings are generated during processing
+if a character set is encountered that is not recognized.
+</p>
+<br>
+</td>
+</tr>
+</table>
+<li><p>Recognize the "ISO-8859-*" character sets to the
+            extent of being able to display those characters that
+            are common to ISO-8859-* and US-ASCII, namely all
+            characters represented by octet values 1-127.
+</p>
+<table border=0 cellpadding=4>
+<tr valign=top>
+<td><strong><img src="monicon.gif" alt="MHonArc"></strong></td>
+<td><p>Yes.
+</p>
+<br>
+</td>
+</tr>
+</table>
+<li><p>For unrecognized subtypes in a known character
+            set, show or offer to show the user the "raw" version
+            of the data after conversion of the content from
+            canonical form to local form.
+</p>
+<table border=0 cellpadding=4>
+<tr valign=top>
+<td><strong><img src="monicon.gif" alt="MHonArc"></strong></td>
+<td><p>MHonArc will treat the data as text/plain and convert.
+</p>
+<br>
+</td>
+</tr>
+</table>
+<li><p>Treat material in an unknown character set as if
+            it were "application/octet-stream".
+</p>
+<table border=0 cellpadding=4>
+<tr valign=top>
+<td><strong><img src="monicon.gif" alt="MHonArc"></strong></td>
+<td><p>No.  A warning is generated for unknown character sets.  The
+data will be shown in raw form, with HTML special characters converted
+to entity references.  This behavior is the default because some MUAs
+are known to give incorrect charset parameters.
+</p>
+<br>
+</td>
+</tr>
+</table>
+</ul>
+<p>
+  Image, audio, and video:
+</p>
+<ul>
+    <li><p>At a minumum provide facilities to treat any
+    unrecognized subtypes as if they were
+    "application/octet-stream".
+</p>
+<table border=0 cellpadding=4>
+<tr valign=top>
+<td><strong><img src="monicon.gif" alt="MHonArc"></strong></td>
+<td><p>All image, audio, and video types are saved to an external file
+with a link to the file created in the HTML.  For applicable image types, they
+are inlined unless the image has an attachment content-disposition.
+</p>
+<br>
+</td>
+</tr>
+</table>
+</ul>
+<p>
+  Application:
+</p>
+<ul>
+    <li><p>Offer the ability to remove either of the quoted-printable or base64 encodings defined in this
+    document if they were used and put the resulting
+    information in a user file.
+</p>
+<table border=0 cellpadding=4>
+<tr valign=top>
+<td><strong><img src="monicon.gif" alt="MHonArc"></strong></td>
+<td><p>Most application types are decoded and saved to an external file
+with a link to the file created in the HTML.  Some application types
+can be converted directly to HTML.
+</p>
+</td>
+</tr>
+</table>
+</ul>
+<p>
+  Multipart:
+</p>
+<ul>
+    <li><p>Recognize the mixed subtype.  Display all relevant
+    information on the message level and the body part
+    header level and then display or offer to display
+    each of the body parts individually.
+</p>
+<table border=0 cellpadding=4>
+<tr valign=top>
+<td><strong><img src="monicon.gif" alt="MHonArc"></strong></td>
+<td><p>Yes.  Each part is automatically processed according to its
+media-type.
+</p>
+<br>
+</td>
+</tr>
+</table>
+    <li><p>Recognize the "alternative" subtype, and avoid
+    showing the user redundant parts of
+    multipart/alternative mail.
+</p>
+<table border=0 cellpadding=4>
+<tr valign=top>
+<td><strong><img src="monicon.gif" alt="MHonArc"></strong></td>
+<td><p>Yes.
+</p>
+<br>
+</td>
+</tr>
+</table>
+    <li><p>Recognize the "multipart/digest" subtype,
+    specifically using "message/rfc822" rather than
+    "text/plain" as the default media type for body parts
+    inside "multipart/digest" entities.
+</p>
+<table border=0 cellpadding=4>
+<tr valign=top>
+<td><strong><img src="monicon.gif" alt="MHonArc"></strong></td>
+<td><p>Yes.
+</p>
+<br>
+</td>
+</tr>
+</table>
+    <li><p>Treat any unrecognized subtypes as if they were
+    "mixed".
+</p>
+<table border=0 cellpadding=4>
+<tr valign=top>
+<td><strong><img src="monicon.gif" alt="MHonArc"></strong></td>
+<td><p>Yes.
+</p>
+<br>
+</td>
+</tr>
+</table>
+</ul>
+<p>
+  Message:
+</p>
+<ul>
+    <li><p>Recognize and display at least the RFC822 message
+    encapsulation (message/rfc822) in such a way as to
+    preserve any recursive structure, that is, displaying
+    or offering to display the encapsulated data in
+    accordance with its media type.
+</p>
+<table border=0 cellpadding=4>
+<tr valign=top>
+<td><strong><img src="monicon.gif" alt="MHonArc"></strong></td>
+<td><p>Yes.
+</p>
+<br>
+</td>
+</tr>
+</table>
+    <li><p>Treat any unrecognized subtypes as if they were
+    "application/octet-stream".
+</p>
+<table border=0 cellpadding=4>
+<tr valign=top>
+<td><strong><img src="monicon.gif" alt="MHonArc"></strong></td>
+<td><p>Yes.
+</p>
+<br>
+</td>
+</tr>
+</table>
+</ul>
+<li><p>Upon encountering any unrecognized Content-Type field,
+          an implementation must treat it as if it had a media
+          type of "application/octet-stream" with no parameter
+          sub-arguments.  How such data are handled is up to an
+          implementation, but likely options for handling such
+          unrecognized data include offering the user to write it
+          into a file (decoded from its mail transport format) or
+          offering the user to name a program to which the
+          decoded data should be passed as input.
+</p>
+<table border=0 cellpadding=4>
+<tr valign=top>
+<td><strong><img src="monicon.gif" alt="MHonArc"></strong></td>
+<td><p>Yes.  The data is passed to the
+<a href="resources/mimefilters.html#m2h_external">m2h_external::filter</a>
+to be saved to an external file.
+</p>
+<br>
+</td>
+</tr>
+</table>
+<li><p>Conformant user agents are required, if they provide
+        non-standard support for non-MIME messages employing
+        character sets other than US-ASCII, to do so on
+        received messages only. Conforming user agents must not
+        send non-MIME messages containing anything other than
+        US-ASCII text.
+</p>
+<p>In particular, the use of non-US-ASCII text in mail
+        messages without a MIME-Version field is strongly
+        discouraged as it impedes interoperability when sending
+        messages between regions with different localization
+        conventions. Conforming user agents MUST include proper
+        MIME labelling when sending anything other than plain
+        text in the US-ASCII character set.
+</p>
+<table border=0 cellpadding=4>
+<tr valign=top>
+<td><strong><img src="monicon.gif" alt="MHonArc"></strong></td>
+<td><p>The
+<a href="resources/mimefilters.html#m2h_text_plain">m2h_text_plain::filter</a>
+supports an option to specify what character set to use if no character
+set is specified.  By default, ISO-8859-1 is assumed.
+</p>
+<br>
+</td>
+</tr>
+</table>
+<p>In addition, non-MIME user agents should be upgraded if
+        at all possible to include appropriate MIME header
+        information in the messages they send even if nothing
+        else in MIME is supported.  This upgrade will have
+        little, if any, effect on non-MIME recipients and will
+        aid MIME in correctly displaying such messages.  It
+        also provides a smooth transition path to eventual
+        adoption of other MIME capabilities.
+</p>
+<table border=0 cellpadding=4>
+<tr valign=top>
+<td><strong><img src="monicon.gif" alt="MHonArc"></strong></td>
+<td><p>Not applicable.
+</p>
+<br>
+</td>
+</tr>
+</table>
+<li><p>Conforming user agents must ensure that any string of
+        non-white-space printable US-ASCII characters within a
+        "*text" or "*ctext" that begins with "=?" and ends with
+        "?=" be a valid encoded-word.  ("begins" means: At the
+        start of the field-body or immediately following
+        linear-white-space; "ends" means: At the end of the
+        field-body or immediately preceding linear-white-space.) In addition, any "word" within a "phrase" that
+        begins with "=?" and ends with "?=" must be a valid
+        encoded-word.
+</p>
+<table border=0 cellpadding=4>
+<tr valign=top>
+<td><strong><img src="monicon.gif" alt="MHonArc"></strong></td>
+<td><p>Yes.
+</p>
+<br>
+</td>
+</tr>
+</table>
+<li><p>Conforming user agents must be able to distinguish
+        encoded-words from "text", "ctext", or "word"s,
+        according to the rules in section 4, anytime they
+        appear in appropriate places in message headers.  It
+        must support both the "B" and "Q" encodings for any
+        character set which it supports.  The program must be
+        able to display the unencoded text if the character set
+        is "US-ASCII".  For the ISO-8859-* character sets, the
+        mail reading program must at least be able to display
+        the characters which are also in the US-ASCII set.
+</p>
+<table border=0 cellpadding=4>
+<tr valign=top>
+<td><strong><img src="monicon.gif" alt="MHonArc"></strong></td>
+<td><p>MHonArc supports non-ASCII encoding of text in message headers,
+including the "B" and "Q" encodings.  By default, US-ASCII,
+ISO-8859-[1-10], and ISO-2022-JP are supported.  For encoded
+words with an unrecognized character set, the word is left in
+encoded form.  Additional character set support can be added via the
+<a href="resources/charsetconverters.html">CHARSETCONVERTERS</a> resource.
+</p>
+<br>
+</td>
+</tr>
+</table>
+</ol>
+
+
+<hr>
+<H2><a name="otherstuff">Other Stuff Supported</a></H2>
+
+<p>The following lists other MIME-related features supported
+by MHonArc:</p>
+
+<ul>
+
+<li><p>Support for uuencoding as a Content-Transfer-Encoding.
+</p>
+</li>
+
+<li><p>Support for many media-types (including the ability to extend
+that support).  For a complete list, along with more
+information, see the
+<a href="resources/mimefilters.html">MIMEFILTERS</a> resource.
+Note, many media-types cannot be directly converted into HTML.  For
+these types, they are saved to a separate file with a link to the
+file inserted in the converted HTML message data.
+</p>
+</li>
+
+<li><p>Support for <b><tt>multipart/related</tt></b> by allowing
+<a href="resources/mimefilters.html">filters</a> to access other
+message parts via content-ids.
+</p>
+</li>
+
+<li><p>Support for <b><tt>cid:</tt></b> URLs in <b><tt>text/html</tt></b>
+data.  The provides support for things like MHTML:
+<em>MIME E-mail Encapsulation of Aggregate Documents</em>,
+<a href="http://www.ietf.org/rfc/rfc2110.txt">RFC 2110</a>.
+</p>
+</li>
+
+<li><p>Support for
+<a href="http://www.ietf.org/rfc/rfc2369.txt">RFC 2369</a>,
+<em>The Use of URLs as Meta-Syntax for Core Mail List Commands
+and their Transport through Message Header Fields</em>.  The
+URLs in list header fields will be converted into hypertext links.
+</p>
+</li>
+
+</ul>
+
+<hr>
+<!--X-NavButtons-Start-->
+<p align=center>
+<a href="app-utilsprg.html"><img src="prev.gif" border=0 alt="[Prev]"></a><a href="app-bugs.html"><img src="next.gif" border=0 alt="[Next]"></a><a href="mhonarc.html"><img src="up.gif" border=0 alt="[TOC]"></a><a href="faq/faq.html"><img src="faq.gif" border=0 alt="[FAQ]"></a><a href="app-bugs.html"><img src="bug.gif" border=0 alt="[Bugs]"></a><a href="http://www.mhonarc.org/"><img src="home.gif" border=0 alt="[Home]"></a>
+</p>
+<!--X-NavButtons-End-->
+
+<HR>
+<address>
+01/06/10 17:47:39<br>
+<img align="top" src="monicon.gif" alt="">
+<a href="http://www.mhonarc.org/"><strong>MHonArc</strong></a><br>
+Copyright &#169; 1999, <a href="http://www.mhonarc.org/~ehood/"
+>Earl Hood</a>, <a href="mailto:mhonarc@mhonarc.org"
+>mhonarc@mhonarc.org</a><br>
+</address>
+
+</BODY>
+</HTML>

@@ -1,7 +1,7 @@
 Bug History for MHonArc
 =======================
-<URL:http://www.oac.uci.edu/indiv/ehood/mhonarc.html>
-@(#) BUGS 98/11/08 13:05:02
+<URL:http://www.mhonarc.org/>
+@(#) BUGS 01/06/10 18:10:37
 
 Each bug listing has the following fields:
 
@@ -15,6 +15,265 @@ Each bug listing has the following fields:
 		    applicable.
 
 Bug List
+------------------------------------------------------------------------
+Version:	2.4.8, and earlier
+Problem:   	Default CHARSETCONVERTERS values for latin[1-6] charsets
+		causing require error.
+Solution:	This was supposedly fixed in 2.4.8 in mhinit.pl, but
+		apparently was not.  The def-mime.mrc file in the
+		example directory did have the correct mappings.
+Version Fixed:	2.4.9
+------------------------------------------------------------------------
+Version:	2.4.8
+Problem:   	MHonArc aborts with Perl syntax errors if mhnull.pl
+		filter is loaded.
+Solution:	Dump typo errors that should have been caught before
+		release.  Syntax errors fixed in mhnull.pl.
+Version Fixed:	2.4.9
+------------------------------------------------------------------------
+Version:	2.4.7, and earlier
+Problem:   	Message with HTML content can cause perl to crash.
+		Other symptom would be that a stale .mhonarc.lck
+		directory would exist preventing further archive
+		updates.
+Solution:	There appears to be a bug in perl's regex engine.
+		The fix was to change mhtxthtml.pl comment declaration
+		removal expression into a simplier one that just
+		munges (removes parts) to avoid crashes.
+Version Fixed:	2.4.8
+------------------------------------------------------------------------
+Version:	2.4.7, and earlier
+Problem:   	Prefixing second argument to $PGLINKLIST()$ with
+		a 'T' cause no thread page links to be rendered after
+		current thread index page.
+Solution:	Fixed in mhrcvars.pl: Make sure to strip 'T' from
+		both arguments before evaluating numeric values.
+Version Fixed:	2.4.8
+------------------------------------------------------------------------
+Version:	2.4.7, and earlier
+Problem:   	Default CHARSETCONVERTERS values for latin[1-6] charsets
+		causing require error.
+Solution:	Fixed in mhinit.pl (typo in library filename).
+Version Fixed:	2.4.8
+------------------------------------------------------------------------
+Version:	2.4.6, and earlier
+Problem:   	ADDRESSMODIFYCODE not stored in database.
+Solution:	Fixed in mhdb.pl (a dumb typo)
+Version Fixed:	2.4.7
+------------------------------------------------------------------------
+Version:	2.4.6, and earlier
+Problem:   	TPARENT message specifier for applicable resource
+		variables will cause a resource variable to expand
+		to the empty string if there is no parent message
+		to the current message.
+Solution:	If there is no parent message, TPARENT resolves to
+		to the current message.
+Version Fixed:	2.4.7
+------------------------------------------------------------------------
+Version:	2.4.5, maybe earlier
+Problem:   	Using message-ids with -rmm does not remove messages.
+Solution:	Fixed in mhrmm.pl
+Version Fixed:	2.4.6
+------------------------------------------------------------------------
+Version:	2.4.5
+Problem:   	Japanese text messages not wrapped in PRE element.
+Solution:	Fixed in mhtxtplain.pl
+Version Fixed:	2.4.6
+------------------------------------------------------------------------
+Version:	2.4.4
+Problem:   	$PGLINKLIST$ for threads did not work.
+Solution:	Fixed in mhrcvars.pl.
+Version Fixed:	2.4.5
+------------------------------------------------------------------------
+Version:	2.4.4, and earlier
+Problem:   	-afs had no effect.
+Solution:	Fixed in mhopt.pl: Option was not checked.
+Version Fixed:	2.4.5
+------------------------------------------------------------------------
+Version:	2.4.4, and earlier
+Problem:   	%y print 3 digits in time format strings if year 2000
+		or later.
+Solution:	Fixed in mhtime.pl
+Version Fixed:	2.4.5
+------------------------------------------------------------------------
+Version:	2.4.0-4
+Problem:   	<PRE> tags are printed when decoding ISO-2022-JP
+		encoded header text.
+Solution:	Fixed in iso2022jp.pl
+Version Fixed:	2.4.5
+------------------------------------------------------------------------
+Version:	2.4.3, and earlier
+Problem:   	Text/html filter died with a "Modification of
+		non-creatable array" error when a relative URL
+		exists in body data, but no base URL defined for
+		the html data.
+Solution:	Fixed in mhtxthtml.pl
+Version Fixed:	2.4.4
+------------------------------------------------------------------------
+Version:	2.4.0 - 2.4.3
+Problem:   	Error "Can't modify keys in scalar assignment" occurs
+		when using older version of Perl 5.
+Solution:	Later Perl 5 releases support keys operator as an
+		lvalue to preallocate a hash.  Assignment put in
+		an eval block to avoid program termination.
+Version Fixed:	2.4.4
+------------------------------------------------------------------------
+Version:	2.3.0 - 2.4.3
+Problem:   	Setting IDXSIZE < MAXSIZE for a single page index
+		causes the generation of incorrect list entries and
+		null list entries.
+Solution:	Fixed in mhindex.pl
+Version Fixed:	2.4.4
+------------------------------------------------------------------------
+Version:	2.4.3, and earlier
+Problem:   	Using entity references within MONTHS, WEEKDAYS, et al,
+		not supported and caused names to be incorrect.
+Solution:	The semi-colon, ';', was treated as an undocumented
+		list separator in resource files.  "Feature" removed.
+Version Fixed:	2.4.4
+------------------------------------------------------------------------
+Version:	2.4.2
+Problem:   	$*GMTDATE$ and $*LOCALDATE$ expand to the empty string
+		if using default time format string settings.
+Solution:	Fixed in mhtime.pl
+Version Fixed:	2.4.3
+------------------------------------------------------------------------
+Version:	2.4.2, and earlier
+Problem:   	Multipart processing is done inproperly if nested
+		multiparts exist and "outer" multipart entity has a
+		boundary which is a substring prefix of an "inner"
+		multipart entity.
+Solution:	Fixed in readmail.pl
+Version Fixed:	2.4.3
+------------------------------------------------------------------------
+Version:	2.4.2, and earlier
+Problem:   	Cid URL in multipart/related is not resolved if message
+		part being referenced is at a higher "level" (due to
+		nested multiparts) than the referrer.
+Solution:	Fixed in readmail.pl
+Version Fixed:	2.4.3
+------------------------------------------------------------------------
+Version:	2.4.2, and earlier
+Problem:   	-tnosort and -tnosubsort should be -notsort and
+		-notsubsort.  Also, bogus -tnoreverse and -notgziplinks
+		options listed in -help message.
+Solution:	Fixed.
+Version Fixed:	2.4.3
+------------------------------------------------------------------------
+Version:	2.4.2, and earlier
+Problem:   	Charset parameter value not properly extracted when
+		no space after value and next parameter
+		(Example: charset=us-ascii;name="file.txt").
+Solution:	Fixed in mhtxtplain.pl
+Version Fixed:	2.4.3
+------------------------------------------------------------------------
+Version:	2.4.1, and earlier
+Problem:   	M2H_URL envariable does not properly affect the URL
+		resource.  M2H_SORT does affect it.
+Solution:	Fixed (typo).
+Version Fixed:	2.4.2
+------------------------------------------------------------------------
+Version:	2.4.1, and earlier
+Problem:   	%c does not work in time format resources.
+Solution:	Fixed.
+Version Fixed:	2.4.2
+------------------------------------------------------------------------
+Version:	2.4.1
+Problem:   	When invoking mha-dbrecover, Perl errors occur for
+		mhmsgfile.pl.
+Solution:	Fixed.
+Version Fixed:	2.4.2
+------------------------------------------------------------------------
+Version:	2.4.0, and earlier
+Problem:   	DOC resource setting not stored in database.
+Solution:	Fixed.
+Version Fixed:	2.4.1
+------------------------------------------------------------------------
+Version:	2.4.0
+Problem:   	Default filehandle changed to STDERR after call to
+		get_resources().  Can cause problems for Perl apps
+		calling MHonArc via API.
+Solution:	Fixed.
+Version Fixed:	2.4.1
+------------------------------------------------------------------------
+Version:	2.4.0
+Problem:   	MHonArc under BSD OS would go into Win/MS-DOS mode.
+Solution:	Make check for "dos" platform stricter in osinit.pl.
+Version Fixed:	2.4.1
+------------------------------------------------------------------------
+Version:	2.3.3
+Problem:   	Duplicate message-ids in a message's reference list
+		were not removed.
+Solution:	Array changed to my() scope caused remove_dups()
+		to not do anything (it takes a typeglob).  Array
+		changed back to local().
+Version Fixed:	2.4.0
+------------------------------------------------------------------------
+Version:	2.3.0-3
+Problem:   	TFIRST, TLAST, and PARENT arguments to resource
+		variables always produced null values.
+Solution:	Fixed.  Note, PARENT is now TPARENT to be consistent
+		with other thread-related arguments.
+Version Fixed:	2.4.0
+------------------------------------------------------------------------
+Version:	2.3.0-3
+Problem:   	SUBJECTHEADER resource not printed when -savemem is
+		used.
+Solution:	Problem is due to the new resource variable handling
+		in 2.3.  The solution is to support the editing of
+		SUBJECTHEADER (and HEADBODYSEP) in existing message
+		pages.
+Version Fixed:	2.4.0
+------------------------------------------------------------------------
+Version:	2.3.3, and earlier versions
+Problem:   	Multipart processing not done properly if boundary
+		parameter not enclosed in quotes and is terminated
+		by a semi-colon.
+Solution:	Fixed in readmail.pl.
+Version Fixed:	2.4.0
+------------------------------------------------------------------------
+Version:	2.3.3, and earlier versions
+Problem:   	%h not recognized in time format strings.
+Solution:	Fixed.
+Version Fixed:	2.4.0
+------------------------------------------------------------------------
+Version:	2.3.3
+Problem:   	Use of $ICON$ will generate defective tag like
+		`ALT="[text/plain]">'.
+Solution:	Fixed typo in join() call in mhrcvars.pl.
+Version Fixed:	2.4.0
+------------------------------------------------------------------------
+Version:	2.3.3, and earlier versions
+Problem:   	Some messages with specified inline images are not
+		having images inlined.
+Solution:	Content-Disposition parsing fixed.
+Version Fixed:	2.4.0
+------------------------------------------------------------------------
+Version:	2.3.3, and earlier versions
+Problem:   	Clip length not handled properly in resource variables.
+		Ie.  Characters that are translated into entity
+		references are not handled properly when computing clip
+		adjustment.  Incorrect clipping can occur.
+Solution:	Fixed.
+Version Fixed:	2.4.0
+------------------------------------------------------------------------
+Version:	2.3.3, and some possible earlier versions
+Problem:   	MHonArc checking for writable OUTDIR in SINGLE mode.
+Solution:	Fixed.
+Version Fixed:	2.4.0
+------------------------------------------------------------------------
+Version:	2.3.3, and earlier
+Problem:   	Default resource file not read if located in MHonArc
+		lib directory.
+Solution:	Fixed improper assumption of @INC setting.
+Version Fixed:	2.4.0
+------------------------------------------------------------------------
+Version:	2.3.3, and earlier
+Problem:   	TLIEND not generated at proper times when thread level
+		goes beyond TLEVELS.
+Solution:	A check is made in thread index printing to generate a
+		TLIEND properly for TLITXT when deeper than TLEVELS.
+Version Fixed:	2.4.0
 ------------------------------------------------------------------------
 Version:	2.3.0-2.3.2
 Problem:   	-otherindex and -perlinc command-line options do not

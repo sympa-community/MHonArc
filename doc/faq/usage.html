@@ -59,7 +59,7 @@ command-line option, the <strong>M2H_MAXSIZE</strong> envariable, or the
 </td></tr></table>
 
 <p>If you are Vim user,
-<a href="http://www.vim.org/">&lt;URL:http://www.vim.org/&gt;</a>,
+<a href="http://www.vim.org/">&lt;http://www.vim.org/&gt;</a>,
 a syntax file
 for MHonArc resource files is included in the examples directory
 (<b>mhonarc.vim</b>).  To use it, copy mhonarc.vim to an appropriate location
@@ -125,21 +125,23 @@ in the Perl 5 distribution.
 <h3><b><a name="searching">Does MHonArc provide searching of archives?</a></b></h3>
 </td></tr></table>
 
-<p>No, but a searching can be provided by another utility.  See
-the MHonArc home page
-<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"
->&lt;URL:http://www.oac.uci.edu/indiv/ehood/mhonarc.html&gt;</a> to
-some links to contributed programs for searching MHonArc
-archives.
-Also, any standard search engine can be used.  For example, the
-MHonArc mailing list archive
-<A HREF="http://www.rosat.mpe-garching.mpg.de/mailing-lists/mhonarc/"
->&lt;URL:http://www.rosat.mpe-garching.mpg.de/mailing-lists/mhonarc/&gt;</a>
-provides a
-<strong>Glimpse</strong>
+<p>No, but a searching can be provided by another utility.
+The following list of search indexing tools have been used with 
+MHonArc archives:
+</p>
+<ul>
+<li><strong>Glimpse</strong>:
 <a href="http://glimpse.cs.arizona.edu/"
->&lt;URL:http://glimpse.cs.arizona.edu/&gt;</a>
-search engine for searching messages.  For more information, see
+>&lt;http://glimpse.cs.arizona.edu/&gt;</a></li>
+<li><strong>ht://Dig</strong>:
+<a href="http://www.htdig.org/">&lt;http://www.htdig.org/&gt;</a></li>
+<li><strong>Namazu</strong>:
+<a href="http://www.namazu.org/">&lt;http://www.namazu.org/&gt;</a>
+(MHonArc aware and supports Japanese)</li>
+<li><strong>UdmSearch</strong>:
+<a href="http://mysearch.udm.net/">&lt;http://mysearch.udm.net/&gt;</a></li>
+</ul>
+<p>For more information, see
 the respective documentation of the search engine software of
 interest.
 </p>
@@ -149,7 +151,7 @@ interest.
 <dd><p>You may also want to check out
 <strong><a href="http://www.hpc.uh.edu/majordomo/#wilma">Wilma</a></strong>
 at <a href="http://www.hpc.uh.edu/majordomo/#wilma"
->&lt;URL:http://www.hpc.uh.edu/majordomo/#wilma&gt;</a>.
+>&lt;http://www.hpc.uh.edu/majordomo/#wilma&gt;</a>.
 Wilma is the Web Interface to List Mail Archives, written by Dave Wolfe
 and Jason Tibbitts with nods to Achim Bohnet and Tom Christiansen.
 WIlma is a relatively simple bit of Perl which links together the
@@ -169,8 +171,10 @@ by Majordomo's archive2.pl script.
 </td></tr></table>
 
 <p>No official ones.  Several users have created home-grown interfaces
-to perform various tasks.  I recommend searching the
-MHonArc mailing list archives.
+to perform various tasks.  An experimental web admin tool comes in
+with the MHonArc distribution under the "admin" directory.
+I recommend searching the
+MHonArc mailing list archives for discussion about web interfaces.
 </p>
 
 <!-- ??????????????????????????????????????????????????????????????? -->
@@ -226,7 +230,7 @@ the directory your message files are in when invoking MHonArc.
 called "messages".  I'd do the following:
 </p>
 <pre>
-    % <b>mhonarc -mhpattern "^[^.]" messages</b>
+    shell&gt; <b>mhonarc -mhpattern "^[^.]" messages</b>
 </pre>
 <p>MHPATTERN can be any Perl regular expression.  The one in
 the example matches any file not beginning with ".".  This
@@ -237,8 +241,8 @@ is to avoid the special files "." and ".." which are directories.
 it one at a time.  For example:
 </p>
 <pre>
-    % <b>mhonarc -add &lt; file1.822</b>
-    % <b>mhonarc -add &lt; file2.822</b>
+    shell&gt; <b>mhonarc -add &lt; file1.822</b>
+    shell&gt; <b>mhonarc -add &lt; file2.822</b>
     ...
 </pre>
 
@@ -253,7 +257,7 @@ it one at a time.  For example:
 the capability).  The syntax is something like the following:
 </p>
 <pre>
-    % <b>mhonarc </b><var>[options-here]</var> <b>-- -</b>
+    shell&gt; <b>mhonarc </b><var>[options-here]</var> <b>-- -</b>
 </pre>
 <p>The "--" tells MHonArc to terminate all command-line
 option processing and treat all following arguments as mail
@@ -267,7 +271,7 @@ takes input from some preprocessor that massages some data to
 make it suitable for processing by MHonArc.  For example:
 </p>
 <pre>
-    % <b>mypreproc | mhonarc -- -</b>
+    shell&gt; <b>mypreproc | mhonarc -- -</b>
 </pre>
 
 <!-- ??????????????????????????????????????????????????????????????? -->
@@ -343,13 +347,13 @@ and
 
 <hr>
 <address>
-98/10/03 15:44:56<br>
+01/06/10 17:47:21<br>
 <img align="top" src="monicon.gif" alt="">
 <a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"
 ><strong>MHonArc</strong></a><br>
-Copyright &#169; 1997-1998, <a href="http://www.oac.uci.edu/indiv/ehood/"
->Earl Hood</a>, <a href="mailto:ehood@medusa.acs.uci.edu"
->ehood@medusa.acs.uci.edu</a><br>
+Copyright &#169; 1997-1999, <a href="http://www.oac.uci.edu/indiv/ehood/"
+>Earl Hood</a>, <a href="mailto:mhonarc@mhonarc.org"
+>mhonarc@mhonarc.org</a><br>
 </address>
 </body>
 </html>

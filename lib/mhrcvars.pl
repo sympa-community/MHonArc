@@ -1,13 +1,13 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	@(#) mhrcvars.pl 2.5 98/11/02 22:32:45
+##	@(#) mhrcvars.pl 2.13 01/04/10 21:36:41
 ##  Author:
-##      Earl Hood       earlhood@usa.net
+##      Earl Hood       mhonarc@pobox.com
 ##  Description:
 ##      Defines routine for expanding resource variables.
 ##---------------------------------------------------------------------------##
 ##    MHonArc -- Internet mail-to-HTML converter
-##    Copyright (C) 1996-1998	Earl Hood, earlhood@usa.net
+##    Copyright (C) 1996-1999	Earl Hood, mhonarc@pobox.com
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by
@@ -151,13 +151,28 @@ sub replace_li_var {
 	    $tmp = defined($key) ? &$esub($From{$key}) : "(nil)";
 	    last REPLACESW;
 	}
+    	if ( ($cnd1 = ($var eq 'FROMADDRNAME')) ||
+	     ($cnd2 = ($var eq 'FROMADDRDOMAIN')) ) {
+	    ($lref, $key, $pos) = compute_msg_pos($index, $var, $arg);
+	    if (!defined($key)) {
+		$tmp = "";
+		last REPLACESW;
+	    }
+	    my @a = split(/@/, extract_email_address($From{$key}), 2);
+	    if ($cnd1) {
+		$tmp = $a[0];
+		last REPLACESW;
+	    }
+	    $tmp = defined($a[1]) ? $a[1] : "";
+	    last REPLACESW;
+	}
     	if ($var eq 'ICON') {		## Message icon
 	    ($lref, $key, $pos) = compute_msg_pos($index, $var, $arg);
 	    if (!defined($key)) { $tmp = ""; last REPLACESW; }
 	    $tmp = $Icons{$ContentType{$key}} ?
-			join(qq|<IMG SRC="$Icons{$ContentType{$key}}" |,
-			     qq|ALT="[$ContentType{$key}]">|) :
-			qq|<IMG SRC="$Icons{'unknown'}" ALT="[unknown]">|;
+			join("", qq|<img src="$Icons{$ContentType{$key}}" |,
+			     qq|alt="[$ContentType{$key}]">|) :
+			qq|<img src="$Icons{'unknown'}" alt="[unknown]">|;
 	    last REPLACESW;
 	}
     	if ($var eq 'ICONURL') {	## URL to message icon
@@ -195,6 +210,19 @@ sub replace_li_var {
     	if ($var eq 'MSGNUM') {		## Message number
 	    ($lref, $key, $pos) = compute_msg_pos($index, $var, $arg);
 	    $tmp = defined($key) ? &fmt_msgnum($IndexNum{$key}) : "";
+	    last REPLACESW;
+	}
+    	if ($var eq 'MSGTORDNUM') {	## Message ordinal num in cur thread
+	    # Some form of optimization should be done here since
+	    # computation can degrade to n^2 (where n is size of thread)
+	    # if variable is referenced for each message on thread index
+	    # page.
+	    ($lref, $key, $pos) = compute_msg_pos($index, $var, $arg, 1);
+	    $tmp = 1;
+	    my $level = $ThreadLevel{$key};
+	    for (--$pos ; ($level > 0) && ($pos >= 0); --$pos, ++$tmp ) {
+		$level = $ThreadLevel{$TListOrder[$pos]};
+	    }
 	    last REPLACESW;
 	}
     	if ($var eq 'NOTE') {		## Annotation template markup
@@ -290,8 +318,8 @@ sub replace_li_var {
 	    $isurl = 0;
 	    ($lref, $key, $pos) = compute_msg_pos($index, $var, $arg);
 	    if (!defined($key)) { $tmp = ""; last REPLACESW; }
-	    $tmp = qq/NAME="/ . &fmt_msgnum($IndexNum{$key}) .
-		   qq/" HREF="/ .
+	    $tmp = qq/name="/ . &fmt_msgnum($IndexNum{$key}) .
+		   qq/" href="/ .
 		   &msgnum_filename($IndexNum{$key}) .
 		   qq/"/;
 	    last REPLACESW;
@@ -300,14 +328,14 @@ sub replace_li_var {
 	    $isurl = 0;
 	    ($lref, $key, $pos) = compute_msg_pos($index, $var, $arg);
 	    if (!defined($key)) { $tmp = ""; last REPLACESW; }
-	    $tmp = qq/NAME="/ . &fmt_msgnum($IndexNum{$key}) . qq/"/;
+	    $tmp = qq/name="/ . &fmt_msgnum($IndexNum{$key}) . qq/"/;
 	    last REPLACESW;
 	}
     	if ($var eq 'A_HREF') {		## Anchor href to link to message
 	    $isurl = 0;
 	    ($lref, $key, $pos) = compute_msg_pos($index, $var, $arg);
 	    if (!defined($key)) { $tmp = ""; last REPLACESW; }
-	    $tmp = qq/HREF="/ . &msgnum_filename($IndexNum{$key}) . qq/"/;
+	    $tmp = qq/href="/ . &msgnum_filename($IndexNum{$key}) . qq/"/;
 	    last REPLACESW;
 	}
     	if ($var eq 'IDXFNAME') {	## Filename of index page
@@ -333,7 +361,7 @@ sub replace_li_var {
 	    $tmp = $TITLE;
 	    last REPLACESW;
 	}
-    	if ($var eq 'NUMOFIDXMSG') {	## Number of item on the index page
+    	if ($var eq 'NUMOFIDXMSG') {	## Number of items on the index page
 	    $tmp = $PageSize;
 	    last REPLACESW;
 	}
@@ -400,6 +428,34 @@ sub replace_li_var {
 	    }
 	    last REPLACESW;
 	}
+	if ($var eq 'PGLINKLIST') {
+	    my $num = $PageNum;
+	    my $t = $arg =~ s/T//gi;
+	    my($before, $after) = split(/;/, $arg);
+	    my $prefix  = $t ? $TIDXPREFIX : $IDXPREFIX;
+	    my $suffix  = $HtmlExt;
+	       $suffix .= '.gz'  if $GzipLinks;
+	    $before = $num - abs($before);
+	    $after  = $num + abs($after);
+	    $tmp = "";
+	    for ($i=$before; $i < $num; ++$i) {
+		next  if $i < 1;
+		if ($i < 2) {
+		    $tmp .= sprintf('<a href="%s%s">%d</a> | ',
+				    ($t ? $TIDXNAME : $IDXNAME),
+				    ($GzipLinks ? '.gz' : ""), $i);
+		    next;
+		}
+		$tmp .= sprintf('<a href="%s%d.%s">%d</a> | ',
+			        $prefix, $i, $suffix, $i);
+	    }
+	    $tmp .= $num;
+	    for ($i=$num+1; $i <= $after && $i <= $NumOfPages; ++$i) {
+		$tmp .= sprintf(' | <a href="%s%d.%s">%d</a>',
+			        $prefix, $i, $suffix, $i);
+	    }
+	    last REPLACESW;
+	}
 
 	if ($var eq 'PAGENUM') {
 	    $tmp = $PageNum;
@@ -439,8 +495,16 @@ sub replace_li_var {
 	    $tmp = $DOCURL;
 	    last REPLACESW;
 	}
+	if ($var eq 'ENV') {
+	    $tmp = htmlize($ENV{$arg});
+	    last REPLACESW;
+	}
     	if ($var eq 'GMTDATE') {
 	    $tmp = &time2str($arg || $GMTDateFmt, time, 0);
+	    last REPLACESW;
+	}
+    	if ($var eq 'HTMLEXT') {
+	    $tmp = $HtmlExt;
 	    last REPLACESW;
 	}
 	if ($var eq 'IDXPREFIX') {
@@ -491,7 +555,7 @@ sub replace_li_var {
 
     ##	Check if string needs to be expanded again
     if ($expand) {
-	$tmp =~ s/\$([^\$]*)\$/&replace_li_var($1,$index)/ge;
+	$tmp =~ s/$VarExp/&replace_li_var($1,$index)/geo;
     }
 
     ##	Check if URL text specifier is set
@@ -506,24 +570,24 @@ sub replace_li_var {
 	}
 
 	# Check for clipping
-	if ($len > 0 && $canclip) {
-	    # Check for entity refs and modify clip length accordingly
-	    foreach ($ret =~ /(\&[^;\s]*;)/g) {
-		$len += length($_) -1;
-	    }
-	    $ret = substr($ret, 0, $len);
-	}
+	$ret = join("", ($ret =~ /(\&[^;\s]*;|.)/g)[0 .. $len - 1])
+	    if ($len > 0 && $canclip);
 
 	# Check if JavaScript string
-	$ret =~ s/(["'])/\\$1/g  if $jstr;
+	if ($jstr) {
+	    $ret =~ s/\\/\\\\/g;	# escape backslashes
+	    $ret =~ s/(["'])/\\$1/g;	# escape quotes
+	    $ret =~ s/\n/\\n/g;		# escape newlines
+	    $ret =~ s/\r/\\r/g;		# escape returns
+	}
     }
 
     ##	Check for subject link
-    $ret = qq|<A NAME="| .
+    $ret = qq|<a name="| .
 	   &fmt_msgnum($IndexNum{$index}) .
-	   qq|" HREF="| .
+	   qq|" href="| .
 	   &msgnum_filename($IndexNum{$index}) .
-	   qq|">$ret</A>|
+	   qq|">$ret</a>|
 	if $var eq 'SUBJECT' && $arg eq "";
 
     $ret;
@@ -533,13 +597,13 @@ sub replace_li_var {
 ##	compute_msg_pos(): Get message location data.
 ##
 sub compute_msg_pos {
-    my($idx, $var, $arg) = @_;
+    my($idx, $var, $arg, $usethread) = @_;
     my($ofs, $pos, $aref, $href, $key);
     my $opt  = undef;
     my $flip = 0;
 
     ## Determine what list type
-    if ($arg =~ s/^T//) {
+    if (($arg =~ s/^T//) || $usethread) {
 	$aref = \@TListOrder;
 	$href = \%Index2TLoc;
     } else {
@@ -558,19 +622,43 @@ sub compute_msg_pos {
 	    if $arg eq 'PREV';
 	$ofs = ($flip ? -1 : 1), last SW
 	    if $arg eq 'NEXT';
-	$ofs = ($flip ? $aref->[$#$aref] : $aref->[0]), last SW
-	    if $arg eq 'FIRST';
-	$ofs = ($flip ? $aref->[$#$aref] : $aref->[0]), last SW
-	    if $arg eq 'LAST';
 	$ofs = ($flip ? -$arg : $arg), last SW
 	    if $arg =~ /^-?\d+$/;
+
+	if ($arg eq 'FIRST') {
+	    $pos = $flip ? $#$aref : 0;
+	    undef $ofs;
+	    last SW;
+	}
+	if ($arg eq 'LAST') {
+	    $pos = $flip ? 0 : $#$aref;
+	    undef $ofs;
+	    last SW;
+	}
 	if ($arg eq 'PARENT') {
+	    undef $ofs;
 	    my $level = $ThreadLevel{$idx};
 	    $pos = $Index2TLoc{$idx};
-	    for ( ; $pos >= 0; --$pos) {
+	    last SW  if ($level <= 0);
+	    for (--$pos; $pos >= 0; --$pos) {
 		last  if $ThreadLevel{$TListOrder[$pos]} < $level;
 	    }
+	    last SW;
+	}
+	if ($arg eq 'TOP') {
 	    undef $ofs;
+	    $pos = $Index2TLoc{$idx};
+	    for (; $pos >= 0; --$pos) {
+		last  if $ThreadLevel{$TListOrder[$pos]} <= 0;
+	    }
+	    last SW;
+	}
+	if ($arg eq 'END') {
+	    undef $ofs;
+	    $pos = $Index2TLoc{$idx};
+	    for (; $pos < $#TListOrder; ++$pos) {
+		last  if $ThreadLevel{$TListOrder[$pos+1]} <= 0;
+	    }
 	    last SW;
 	}
 	warn qq/Warning: $var: Unrecognized variable argument: "$arg"\n/;

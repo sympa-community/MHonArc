@@ -1,23 +1,47 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
 <html>
 <head>
-<title>MHonArc v2.3 -- Resources</title>
+<title>MHonArc v2.4 -- Resources</title>
 </head>
 <BODY background="ssbg75.jpg"
       text="#000000" link="#0000ee" vlink="#551a8b" alink="ff0000">
 
 <!--X-NavButtons-Start-->
 <p align=center>
-<a href="layout.html"><img src="prev.gif" border=0 alt="[Prev]"></a><a href="rcvars.html"><img src="next.gif" border=0 alt="[Next]"></a><a href="mhonarc.html"><img src="up.gif" border=0 alt="[TOC]"></a><a href="faq/faq.html"><img src="faq.gif" border=0 alt="[FAQ]"></a><a href="bugs.html"><img src="bug.gif" border=0 alt="[Bugs]"></a><a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"><img src="home.gif" border=0 alt="[Home]"></a>
+<a href="layout.html"><img src="prev.gif" border=0 alt="[Prev]"></a><a href="rcvars.html"><img src="next.gif" border=0 alt="[Next]"></a><a href="mhonarc.html"><img src="up.gif" border=0 alt="[TOC]"></a><a href="faq/faq.html"><img src="faq.gif" border=0 alt="[FAQ]"></a><a href="app-bugs.html"><img src="bug.gif" border=0 alt="[Bugs]"></a><a href="http://www.mhonarc.org/"><img src="home.gif" border=0 alt="[Home]"></a>
 </p>
 <!--X-NavButtons-End-->
 <hr>
 <h1><a name="resources">Resources</a></h1>
 
+<!--X-TOC-Start-->
+<ul>
+<li><a href="#overview">Overview</a>
+<li><a href="#types">Resource Types</a>
+<li><a href="#index">Resource Index</a>
+<ul>
+<li><small><a href="#rclist">Resource list</a></small>
+</ul>
+</ul>
+<!--X-TOC-End-->
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="overview">Overview</a></h2>
+
 <p>All the behavior of MHonArc is controlled by resources.
 Resources may be set via environment variables (<em>envariables</em>
-for short), command-line options, and/or elements in a resource file.
-For information on the syntax of a MHonArc resource file,
+for short), command-line options, and/or elements in a
+<a href="resources/rcfile.html">resource file</a>.
+For example, the <a href="resources/maxsize.html">MAXSIZE</a>
+resource tells
+MHonArc the maximum number of messages in an archive.  To set
+the resource, you can use the <strong><code>-maxsize</code></strong>
+command-line option, the <strong>M2H_MAXSIZE</strong> envariable, or the
+<strong><code>&lt;MAXSIZE&gt;</code></strong> resource file element.
+</p>
+
+<p>For information on the syntax and usage of MHonArc resource files,
 see the <a href="resources/rcfile.html">RCFILE</a> resource.
 </p>
 
@@ -114,211 +138,231 @@ from the version of MHonArc the resource first came available.
 </dl>
 </blockquote>
 
-<h3>Resource list</h3>
+<h3><a name="rclist">Resource list</a></h3>
 
-<center>
+<p>The following is a list of all the MHonArc resources available.
+For a list of resource by envariable, resource file element, and/or
+command-line option, see
+<a href="app-rcidx.html">Appendix: Resource Indexes</a>.
+</p>
+
 <!--X-Resource-Index-Start-->
-<table border=1>
+<table border=0>
 <tr>
-<td><b>Resource Name</b></td><td><b>Description</b></td>
+<td align="right"><b>Resource</b></td><td><b>Description</b></td>
 </tr>
-<tr valign="top"><td><b><a name="add" href="resources/add.html">ADD</a></b></td><td>Add messages to the archive.</td></tr>
-<tr valign="top"><td><b><a name="afs" href="resources/afs.html">AFS</a></b></td><td>Skip archive directory permission check.</td></tr>
-<tr valign="top"><td><b><a name="annotate" href="resources/annotate.html">ANNOTATE</a></b></td><td>Add/set annotation for message(s).</td></tr>
-<tr valign="top"><td><b><a name="archive" href="resources/archive.html">ARCHIVE</a></b></td><td>Create archive.</td></tr>
-<tr valign="top"><td><b><a name="authorbegin" href="resources/authorbegin.html">AUTHORBEGIN</a></b></td><td>Markup at the start of a author group.</td></tr>
-<tr valign="top"><td><b><a name="authorend" href="resources/authorend.html">AUTHOREND</a></b></td><td>Markup at the end of a author group.</td></tr>
-<tr valign="top"><td><b><a name="authsort" href="resources/authsort.html">AUTHSORT</a></b></td><td>Sort main index by author.</td></tr>
-<tr valign="top"><td><b><a name="botlinks" href="resources/botlinks.html">BOTLINKS</a></b></td><td>Links markup at the bottom of message pages.</td></tr>
-<tr valign="top"><td><b><a name="charsetconverters" href="resources/charsetconverters.html">CHARSETCONVERTERS</a></b></td><td>Charater set filter functions.</td></tr>
-<tr valign="top"><td><b><a name="conlen" href="resources/conlen.html">CONLEN</a></b></td><td>Use Content-Length value.</td></tr>
-<tr valign="top"><td><b><a name="datefields" href="resources/datefields.html">DATEFIELDS</a></b></td><td>List of fields to extract date of message.</td></tr>
-<tr valign="top"><td><b><a name="daybegin" href="resources/daybegin.html">DAYBEGIN</a></b></td><td>Markup at the start of a day group.</td></tr>
-<tr valign="top"><td><b><a name="dayend" href="resources/dayend.html">DAYEND</a></b></td><td>Markup at the end of a day group.</td></tr>
-<tr valign="top"><td><b><a name="dbfile" href="resources/dbfile.html">DBFILE</a></b></td><td>Name of archive database file.</td></tr>
-<tr valign="top"><td><b><a name="decodeheads" href="resources/decodeheads.html">DECODEHEADS</a></b></td><td>Store "decode-only" characters sets in raw form.</td></tr>
-<tr valign="top"><td><b><a name="definederived" href="resources/definederived.html">DEFINEDERIVED</a></b></td><td>Define extra file(s) to generate for each message page.</td></tr>
-<tr valign="top"><td><b><a name="definevar" href="resources/definevar.html">DEFINEVAR</a></b></td><td>Define a custom resource variable.</td></tr>
-<tr valign="top"><td><b><a name="defrcfile" href="resources/defrcfile.html">DEFRCFILE</a></b></td><td>Pathname of default resource file.</td></tr>
-<tr valign="top"><td><b><a name="defrcname" href="resources/defrcname.html">DEFRCNAME</a></b></td><td>Name of default resource file.</td></tr>
-<tr valign="top"><td><b><a name="doc" href="resources/doc.html">DOC</a></b></td><td>Add link to documentation.</td></tr>
-<tr valign="top"><td><b><a name="docurl" href="resources/docurl.html">DOCURL</a></b></td><td>URL to documentation</td></tr>
-<tr valign="top"><td><b><a name="editidx" href="resources/editidx.html">EDITIDX</a></b></td><td>Modify archive with new resource settings.</td></tr>
-<tr valign="top"><td><b><a name="excs" href="resources/excs.html">EXCS</a></b></td><td>List of header fields to exclude.</td></tr>
-<tr valign="top"><td><b><a name="expireage" href="resources/expireage.html">EXPIREAGE</a></b></td><td>Length of time to keep a message in an archive.</td></tr>
-<tr valign="top"><td><b><a name="expiredate" href="resources/expiredate.html">EXPIREDATE</a></b></td><td>Expiration of date of message.</td></tr>
-<tr valign="top"><td><b><a name="fieldorder" href="resources/fieldorder.html">FIELDORDER</a></b></td><td>Order to display message header fields.</td></tr>
-<tr valign="top"><td><b><a name="fieldsbeg" href="resources/fieldsbeg.html">FIELDSBEG</a></b></td><td>Beginning markup of message header.</td></tr>
-<tr valign="top"><td><b><a name="fieldsend" href="resources/fieldsend.html">FIELDSEND</a></b></td><td>Ending markup of message header.</td></tr>
-<tr valign="top"><td><b><a name="fieldstyles" href="resources/fieldstyles.html">FIELDSTYLES</a></b></td><td>Define HTML elements that wrap field text of message headers.</td></tr>
-<tr valign="top"><td><b><a name="fldbeg" href="resources/fldbeg.html">FLDBEG</a></b></td><td>Markup before field text.</td></tr>
-<tr valign="top"><td><b><a name="fldend" href="resources/fldend.html">FLDEND</a></b></td><td>Markup after field text.</td></tr>
-<tr valign="top"><td><b><a name="folrefs" href="resources/folrefs.html">FOLREFS</a></b></td><td>Print links links to explicit follow-ups and references.</td></tr>
-<tr valign="top"><td><b><a name="folupbegin" href="resources/folupbegin.html">FOLUPBEGIN</a></b></td><td>Beginning markup of follow-up links in message pages.</td></tr>
-<tr valign="top"><td><b><a name="folupend" href="resources/folupend.html">FOLUPEND</a></b></td><td>Ending markup of follow-up links in message pages.</td></tr>
-<tr valign="top"><td><b><a name="foluplitxt" href="resources/foluplitxt.html">FOLUPLITXT</a></b></td><td>Markup for a follow-up link.</td></tr>
-<tr valign="top"><td><b><a name="footer" href="resources/footer.html">FOOTER</a></b></td><td>File to include at the foot of main index pages.</td></tr>
-<tr valign="top"><td><b><a name="force" href="resources/force.html">FORCE</a></b></td><td>Force archive operation even if lock cannot be obtained.</td></tr>
-<tr valign="top"><td><b><a name="fromfields" href="resources/fromfields.html">FROMFIELDS</a></b></td><td>List of fields to extract author of a message.</td></tr>
-<tr valign="top"><td><b><a name="genidx" href="resources/genidx.html">GENIDX</a></b></td><td>Generate a message index to standard output.</td></tr>
-<tr valign="top"><td><b><a name="gmtdatefmt" href="resources/gmtdatefmt.html">GMTDATEFMT</a></b></td><td>Conversion specification for GMT dates.</td></tr>
-<tr valign="top"><td><b><a name="gzipexe" href="resources/gzipexe.html">GZIPEXE</a></b></td><td>Pathname to gzip executable.</td></tr>
-<tr valign="top"><td><b><a name="gzipfiles" href="resources/gzipfiles.html">GZIPFILES</a></b></td><td>Gzip files.</td></tr>
-<tr valign="top"><td><b><a name="gziplinks" href="resources/gziplinks.html">GZIPLINKS</a></b></td><td>Assume files are gzipped when creating links.</td></tr>
-<tr valign="top"><td><b><a name="headbodysep" href="resources/headbodysep.html">HEADBODYSEP</a></b></td><td>Markup separating the message head from the body.</td></tr>
-<tr valign="top"><td><b><a name="header" href="resources/header.html">HEADER</a></b></td><td>File to include at the top of main index pages.</td></tr>
-<tr valign="top"><td><b><a name="htmlext" href="resources/htmlext.html">HTMLEXT</a></b></td><td>Extension to use for HTML files.</td></tr>
-<tr valign="top"><td><b><a name="icons" href="resources/icons.html">ICONS</a></b></td><td>Content-type to icon mapping.</td></tr>
-<tr valign="top"><td><b><a name="idxfname" href="resources/idxfname.html">IDXFNAME</a></b></td><td>Filename for main (first) index page.</td></tr>
-<tr valign="top"><td><b><a name="idxlabel" href="resources/idxlabel.html">IDXLABEL</a></b></td><td>Label for main index.</td></tr>
-<tr valign="top"><td><b><a name="idxpgbegin" href="resources/idxpgbegin.html">IDXPGBEGIN</a></b></td><td>Beginning markup for main index pages.</td></tr>
-<tr valign="top"><td><b><a name="idxpgend" href="resources/idxpgend.html">IDXPGEND</a></b></td><td>Ending markup for main index pages.</td></tr>
-<tr valign="top"><td><b><a name="idxprefix" href="resources/idxprefix.html">IDXPREFIX</a></b></td><td>Filename prefix for multi-page main index.</td></tr>
-<tr valign="top"><td><b><a name="idxsize" href="resources/idxsize.html">IDXSIZE</a></b></td><td>Size of each index page.</td></tr>
-<tr valign="top"><td><b><a name="include" href="resources/include.html">INCLUDE</a></b></td><td>Include a resource file.</td></tr>
-<tr valign="top"><td><b><a name="labelbeg" href="resources/labelbeg.html">LABELBEG</a></b></td><td>Beginning markup of the label text of a message field.</td></tr>
-<tr valign="top"><td><b><a name="labelend" href="resources/labelend.html">LABELEND</a></b></td><td>End markup of the label text of a message field.</td></tr>
-<tr valign="top"><td><b><a name="labelstyles" href="resources/labelstyles.html">LABELSTYLES</a></b></td><td>Define HTML elements to wrap message header field labels.</td></tr>
-<tr valign="top"><td><b><a name="listbegin" href="resources/listbegin.html">LISTBEGIN</a></b></td><td>Markup to begin main index message listing.</td></tr>
-<tr valign="top"><td><b><a name="listend" href="resources/listend.html">LISTEND</a></b></td><td>Markup to end main index message listing.</td></tr>
-<tr valign="top"><td><b><a name="litemplate" href="resources/litemplate.html">LITEMPLATE</a></b></td><td>Markup for an entry in the main index message list.</td></tr>
-<tr valign="top"><td><b><a name="localdatefmt" href="resources/localdatefmt.html">LOCALDATEFMT</a></b></td><td>Conversion specification for printing local date.</td></tr>
-<tr valign="top"><td><b><a name="lock" href="resources/lock.html">LOCK</a></b></td><td>Perform a lock on the archive.</td></tr>
-<tr valign="top"><td><b><a name="lockdelay" href="resources/lockdelay.html">LOCKDELAY</a></b></td><td>Wait time between lock attempts.</td></tr>
-<tr valign="top"><td><b><a name="lockfile" href="resources/lockfile.html">LOCKFILE</a></b></td><td>Name of the lock file.</td></tr>
-<tr valign="top"><td><b><a name="locktries" href="resources/locktries.html">LOCKTRIES</a></b></td><td>Total number of time to attempt a lock before failing.</td></tr>
-<tr valign="top"><td><b><a name="mailto" href="resources/mailto.html">MAILTO</a></b></td><td>Convert email addresses in message headers to hyperlinks.</td></tr>
-<tr valign="top"><td><b><a name="mailtourl" href="resources/mailtourl.html">MAILTOURL</a></b></td><td>URL template to use when MAILTO is set.</td></tr>
-<tr valign="top"><td><b><a name="main" href="resources/main.html">MAIN</a></b></td><td>Create main index.</td></tr>
-<tr valign="top"><td><b><a name="maxsize" href="resources/maxsize.html">MAXSIZE</a></b></td><td>Maximum number of messages in an archive.</td></tr>
-<tr valign="top"><td><b><a name="mhpattern" href="resources/mhpattern.html">MHPATTERN</a></b></td><td>Regex for matching message files in an MH folder (directory).</td></tr>
-<tr valign="top"><td><b><a name="mimeargs" href="resources/mimeargs.html">MIMEARGS</a></b></td><td>Arguments to MIME filters.</td></tr>
-<tr valign="top"><td><b><a name="mimefilters" href="resources/mimefilters.html">MIMEFILTERS</a></b></td><td>Mapping of MIME filters to content-types.</td></tr>
-<tr valign="top"><td><b><a name="modtime" href="resources/modtime.html">MODTIME</a></b></td><td>Set modification time on message files to message dates.</td></tr>
-<tr valign="top"><td><b><a name="months" href="resources/months.html">MONTHS</a></b></td><td>Month names.</td></tr>
-<tr valign="top"><td><b><a name="monthsabr" href="resources/monthsabr.html">MONTHSABR</a></b></td><td>Abbreviated month names.</td></tr>
-<tr valign="top"><td><b><a name="msgbodyend" href="resources/msgbodyend.html">MSGBODYEND</a></b></td><td>Markup after the message body.</td></tr>
-<tr valign="top"><td><b><a name="msgfoot" href="resources/msgfoot.html">MSGFOOT</a></b></td><td>Markup at the foot of each message page.</td></tr>
-<tr valign="top"><td><b><a name="msggmtdatefmt" href="resources/msggmtdatefmt.html">MSGGMTDATEFMT</a></b></td><td>GMT conversion specification for message dates.</td></tr>
-<tr valign="top"><td><b><a name="msghead" href="resources/msghead.html">MSGHEAD</a></b></td><td>Markup at the head of each message page.</td></tr>
-<tr valign="top"><td><b><a name="msgidlink" href="resources/msgidlink.html">MSGIDLINK</a></b></td><td>Hyperlink markup for embedded message-ids in message pages.</td></tr>
-<tr valign="top"><td><b><a name="msglocaldatefmt" href="resources/msglocaldatefmt.html">MSGLOCALDATEFMT</a></b></td><td>Local conversion specification for message dates.</td></tr>
-<tr valign="top"><td><b><a name="msgpgbegin" href="resources/msgpgbegin.html">MSGPGBEGIN</a></b></td><td>Starting markup for each message page.</td></tr>
-<tr valign="top"><td><b><a name="msgpgend" href="resources/msgpgend.html">MSGPGEND</a></b></td><td>Ending markup for each message page.</td></tr>
-<tr valign="top"><td><b><a name="msgpgs" href="resources/msgpgs.html">MSGPGS</a></b></td><td>Print message pages.</td></tr>
-<tr valign="top"><td><b><a name="msgprefix" href="resources/msgprefix.html">MSGPREFIX</a></b></td><td>Prefix for message page filenames.</td></tr>
-<tr valign="top"><td><b><a name="msgsep" href="resources/msgsep.html">MSGSEP</a></b></td><td>Regex for matching message separator in mailbox files.</td></tr>
-<tr valign="top"><td><b><a name="multipg" href="resources/multipg.html">MULTIPG</a></b></td><td>Create multi-page indexes.</td></tr>
-<tr valign="top"><td><b><a name="news" href="resources/news.html">NEWS</a></b></td><td>Hyperlink newsgroups in message headers.</td></tr>
-<tr valign="top"><td><b><a name="nextbutton" href="resources/nextbutton.html">NEXTBUTTON</a></b></td><td>Button markup for next message by main index.</td></tr>
-<tr valign="top"><td><b><a name="nextbuttonia" href="resources/nextbuttonia.html">NEXTBUTTONIA</a></b></td><td>Inactive button markup for next message by main index.</td></tr>
-<tr valign="top"><td><b><a name="nextlink" href="resources/nextlink.html">NEXTLINK</a></b></td><td>Link markup for next message by main index.</td></tr>
-<tr valign="top"><td><b><a name="nextlinkia" href="resources/nextlinkia.html">NEXTLINKIA</a></b></td><td>Inactive link markup for next message by main index.</td></tr>
-<tr valign="top"><td><b><a name="nextpglink" href="resources/nextpglink.html">NEXTPGLINK</a></b></td><td>Link markup for next page of main index.</td></tr>
-<tr valign="top"><td><b><a name="nextpglinkia" href="resources/nextpglinkia.html">NEXTPGLINKIA</a></b></td><td>Inactive link markup for next page of main index.</td></tr>
-<tr valign="top"><td><b><a name="note" href="resources/note.html">NOTE</a></b></td><td>Markup for representing the annotation of a message.</td></tr>
-<tr valign="top"><td><b><a name="notedir" href="resources/notedir.html">NOTEDIR</a></b></td><td>Directory to store annotations.</td></tr>
-<tr valign="top"><td><b><a name="noteia" href="resources/noteia.html">NOTEIA</a></b></td><td>Markup when no annotation is available for a message.</td></tr>
-<tr valign="top"><td><b><a name="notetext" href="resources/notetext.html">NOTETEXT</a></b></td><td>Annotation text.</td></tr>
-<tr valign="top"><td><b><a name="otherindexes" href="resources/otherindexes.html">OTHERINDEXES</a></b></td><td>List of alternate indexes to create for an archive.</td></tr>
-<tr valign="top"><td><b><a name="outdir" href="resources/outdir.html">OUTDIR</a></b></td><td>Location of archive.</td></tr>
-<tr valign="top"><td><b><a name="perlinc" href="resources/perlinc.html">PERLINC</a></b></td><td>Additional Perl include paths.</td></tr>
-<tr valign="top"><td><b><a name="prevbutton" href="resources/prevbutton.html">PREVBUTTON</a></b></td><td>Button markup for previous message by main index.</td></tr>
-<tr valign="top"><td><b><a name="prevbuttonia" href="resources/prevbuttonia.html">PREVBUTTONIA</a></b></td><td>Inactive button markup for previous message by main index.</td></tr>
-<tr valign="top"><td><b><a name="prevlink" href="resources/prevlink.html">PREVLINK</a></b></td><td>Link markup for previous message by main index.</td></tr>
-<tr valign="top"><td><b><a name="prevlinkia" href="resources/prevlinkia.html">PREVLINKIA</a></b></td><td>Inactive link markup for previous message by main index.</td></tr>
-<tr valign="top"><td><b><a name="prevpglink" href="resources/prevpglink.html">PREVPGLINK</a></b></td><td>Link markup for previous page of main index.</td></tr>
-<tr valign="top"><td><b><a name="prevpglinkia" href="resources/prevpglinkia.html">PREVPGLINKIA</a></b></td><td>Inactive link markup for previous page of main index.</td></tr>
-<tr valign="top"><td><b><a name="quiet" href="resources/quiet.html">QUIET</a></b></td><td>Do not output status.</td></tr>
-<tr valign="top"><td><b><a name="rcfile" href="resources/rcfile.html">RCFILE</a></b></td><td>Resource file to read before processing input.</td></tr>
-<tr valign="top"><td><b><a name="refsbegin" href="resources/refsbegin.html">REFSBEGIN</a></b></td><td>Beginning markup for explicit reference links in message pages.</td></tr>
-<tr valign="top"><td><b><a name="refsend" href="resources/refsend.html">REFSEND</a></b></td><td>Ending markup for explicit reference links in message pages.</td></tr>
-<tr valign="top"><td><b><a name="refslitxt" href="resources/refslitxt.html">REFSLITXT</a></b></td><td>Markup representing a reference entry in explicit reference links.</td></tr>
-<tr valign="top"><td><b><a name="reverse" href="resources/reverse.html">REVERSE</a></b></td><td>Reverse the listing order in the main index.</td></tr>
-<tr valign="top"><td><b><a name="rmm" href="resources/rmm.html">RMM</a></b></td><td>Remove specified messages from an archive.</td></tr>
-<tr valign="top"><td><b><a name="scan" href="resources/scan.html">SCAN</a></b></td><td>List archive messages to standard output.</td></tr>
-<tr valign="top"><td><b><a name="single" href="resources/single.html">SINGLE</a></b></td><td>Process a single message.</td></tr>
-<tr valign="top"><td><b><a name="sort" href="resources/sort.html">SORT</a></b></td><td>List messages by date in main index.</td></tr>
-<tr valign="top"><td><b><a name="subjectarticlerxp" href="resources/subjectarticlerxp.html">SUBJECTARTICLERXP</a></b></td><td>Regex for matching leading articles in message subjects.</td></tr>
-<tr valign="top"><td><b><a name="subjectbegin" href="resources/subjectbegin.html">SUBJECTBEGIN</a></b></td><td>Beginning markup for a subject group in the main index.</td></tr>
-<tr valign="top"><td><b><a name="subjectend" href="resources/subjectend.html">SUBJECTEND</a></b></td><td>Ending markup for a subject group in the main index.</td></tr>
-<tr valign="top"><td><b><a name="subjectheader" href="resources/subjectheader.html">SUBJECTHEADER</a></b></td><td>Main subject line markup above message header.</td></tr>
-<tr valign="top"><td><b><a name="subjectreplyrxp" href="resources/subjectreplyrxp.html">SUBJECTREPLYRXP</a></b></td><td>Regex for matching subject text denoting a reply message.</td></tr>
-<tr valign="top"><td><b><a name="subjectstripcode" href="resources/subjectstripcode.html">SUBJECTSTRIPCODE</a></b></td><td>Perl expressions to strip subject text while reading messages.</td></tr>
-<tr valign="top"><td><b><a name="subsort" href="resources/subsort.html">SUBSORT</a></b></td><td>List messages by subjext in main index.</td></tr>
-<tr valign="top"><td><b><a name="tcontbegin" href="resources/tcontbegin.html">TCONTBEGIN</a></b></td><td>Markup before the continuation of a broken thread.</td></tr>
-<tr valign="top"><td><b><a name="tcontend" href="resources/tcontend.html">TCONTEND</a></b></td><td>Markup after the continuation of a broken thread.</td></tr>
-<tr valign="top"><td><b><a name="tfoot" href="resources/tfoot.html">TFOOT</a></b></td><td>Footer markup for thread index page.</td></tr>
-<tr valign="top"><td><b><a name="thead" href="resources/thead.html">THEAD</a></b></td><td>Header markup for thread index page.</td></tr>
-<tr valign="top"><td><b><a name="thread" href="resources/thread.html">THREAD</a></b></td><td>Create thread index.</td></tr>
-<tr valign="top"><td><b><a name="tidxfname" href="resources/tidxfname.html">TIDXFNAME</a></b></td><td>Filename of first thread index page.</td></tr>
-<tr valign="top"><td><b><a name="tidxlabel" href="resources/tidxlabel.html">TIDXLABEL</a></b></td><td>Label string for the thread index.</td></tr>
-<tr valign="top"><td><b><a name="tidxpgbegin" href="resources/tidxpgbegin.html">TIDXPGBEGIN</a></b></td><td>Beginning markup for the thread index pages.</td></tr>
-<tr valign="top"><td><b><a name="tidxpgend" href="resources/tidxpgend.html">TIDXPGEND</a></b></td><td>Ending markup for the thread index pages.</td></tr>
-<tr valign="top"><td><b><a name="tidxprefix" href="resources/tidxprefix.html">TIDXPREFIX</a></b></td><td>Filename prefix for thread index pages beyond the first page.</td></tr>
-<tr valign="top"><td><b><a name="timezones" href="resources/timezones.html">TIMEZONES</a></b></td><td>Hour offsets for timezones.</td></tr>
-<tr valign="top"><td><b><a name="tindentbegin" href="resources/tindentbegin.html">TINDENTBEGIN</a></b></td><td>Markup for opening a level when continuing a broken thread.</td></tr>
-<tr valign="top"><td><b><a name="tindentend" href="resources/tindentend.html">TINDENTEND</a></b></td><td>Markup for closing a level when continuing a broken thread.</td></tr>
-<tr valign="top"><td><b><a name="title" href="resources/title.html">TITLE</a></b></td><td>Title for main index.</td></tr>
-<tr valign="top"><td><b><a name="tlevels" href="resources/tlevels.html">TLEVELS</a></b></td><td>Maximum number of levels to indent in thread index.</td></tr>
-<tr valign="top"><td><b><a name="tliend" href="resources/tliend.html">TLIEND</a></b></td><td>Ending markup for a thread index message listing.</td></tr>
-<tr valign="top"><td><b><a name="tlinone" href="resources/tlinone.html">TLINONE</a></b></td><td>Markup for a missing message in thread index.</td></tr>
-<tr valign="top"><td><b><a name="tlinoneend" href="resources/tlinoneend.html">TLINONEEND</a></b></td><td>Ending markup for a missing message in thread index.</td></tr>
-<tr valign="top"><td><b><a name="tlitxt" href="resources/tlitxt.html">TLITXT</a></b></td><td>Markup for a thread index message listing.</td></tr>
-<tr valign="top"><td><b><a name="tnextbutton" href="resources/tnextbutton.html">TNEXTBUTTON</a></b></td><td>Button markup for next message by thread.</td></tr>
-<tr valign="top"><td><b><a name="tnextbuttonia" href="resources/tnextbuttonia.html">TNEXTBUTTONIA</a></b></td><td>Inactive button markup for next message by thread.</td></tr>
-<tr valign="top"><td><b><a name="tnextlink" href="resources/tnextlink.html">TNEXTLINK</a></b></td><td>Link markup for next message by thread.</td></tr>
-<tr valign="top"><td><b><a name="tnextlinkia" href="resources/tnextlinkia.html">TNEXTLINKIA</a></b></td><td>Inactive link markup for next message by thread.</td></tr>
-<tr valign="top"><td><b><a name="tnextpglink" href="resources/tnextpglink.html">TNEXTPGLINK</a></b></td><td>Link markup for next page in thread index.</td></tr>
-<tr valign="top"><td><b><a name="tnextpglinkia" href="resources/tnextpglinkia.html">TNEXTPGLINKIA</a></b></td><td>Inactive link markup for next page in thread index.</td></tr>
-<tr valign="top"><td><b><a name="toplinks" href="resources/toplinks.html">TOPLINKS</a></b></td><td>Markup for top navigational links of a message page.</td></tr>
-<tr valign="top"><td><b><a name="tprevbutton" href="resources/tprevbutton.html">TPREVBUTTON</a></b></td><td>Button markup for previous message by thread.</td></tr>
-<tr valign="top"><td><b><a name="tprevbuttonia" href="resources/tprevbuttonia.html">TPREVBUTTONIA</a></b></td><td>Inactive button markup for previous message by thread.</td></tr>
-<tr valign="top"><td><b><a name="tprevlink" href="resources/tprevlink.html">TPREVLINK</a></b></td><td>Link markup for previous message by thread.</td></tr>
-<tr valign="top"><td><b><a name="tprevlinkia" href="resources/tprevlinkia.html">TPREVLINKIA</a></b></td><td>Inactive link markup for previous message by thread.</td></tr>
-<tr valign="top"><td><b><a name="tprevpglink" href="resources/tprevpglink.html">TPREVPGLINK</a></b></td><td>Link markup for previous page in thread index.</td></tr>
-<tr valign="top"><td><b><a name="tprevpglinkia" href="resources/tprevpglinkia.html">TPREVPGLINKIA</a></b></td><td>Inactive link markup for previous page in thread index.</td></tr>
-<tr valign="top"><td><b><a name="treverse" href="resources/treverse.html">TREVERSE</a></b></td><td>List thread in reverse order.</td></tr>
-<tr valign="top"><td><b><a name="tsingletxt" href="resources/tsingletxt.html">TSINGLETXT</a></b></td><td>Markup for a thread listing with no follow-ups.</td></tr>
-<tr valign="top"><td><b><a name="tslice" href="resources/tslice.html">TSLICE</a></b></td><td>Size of thread listing slice for message pages.</td></tr>
-<tr valign="top"><td><b><a name="tslicebeg" href="resources/tslicebeg.html">TSLICEBEG</a></b></td><td>Markup for the start of a thread slice.</td></tr>
-<tr valign="top"><td><b><a name="tsliceend" href="resources/tsliceend.html">TSLICEEND</a></b></td><td>Markup for the end of a thread slice.</td></tr>
-<tr valign="top"><td><b><a name="tsort" href="resources/tsort.html">TSORT</a></b></td><td>List threads by date.</td></tr>
-<tr valign="top"><td><b><a name="tsubjectbeg" href="resources/tsubjectbeg.html">TSUBJECTBEG</a></b></td><td>Markup before a subject based thread listing.</td></tr>
-<tr valign="top"><td><b><a name="tsubjectend" href="resources/tsubjectend.html">TSUBJECTEND</a></b></td><td>Markup after a subject based thread listing.</td></tr>
-<tr valign="top"><td><b><a name="tsublistbeg" href="resources/tsublistbeg.html">TSUBLISTBEG</a></b></td><td>Markup for starting a sub-thread.</td></tr>
-<tr valign="top"><td><b><a name="tsublistend" href="resources/tsublistend.html">TSUBLISTEND</a></b></td><td>Markup for ending a sub-thread.</td></tr>
-<tr valign="top"><td><b><a name="tsubsort" href="resources/tsubsort.html">TSUBSORT</a></b></td><td>List threads by subject.</td></tr>
-<tr valign="top"><td><b><a name="ttitle" href="resources/ttitle.html">TTITLE</a></b></td><td>Title of thread index.</td></tr>
-<tr valign="top"><td><b><a name="ttopbegin" href="resources/ttopbegin.html">TTOPBEGIN</a></b></td><td>Markup for the root/start of a thread.</td></tr>
-<tr valign="top"><td><b><a name="ttopend" href="resources/ttopend.html">TTOPEND</a></b></td><td>Markup for the end of a thread.</td></tr>
-<tr valign="top"><td><b><a name="umask" href="resources/umask.html">UMASK</a></b></td><td>Umask value for the MHonArc process.</td></tr>
-<tr valign="top"><td><b><a name="uselocaltime" href="resources/uselocaltime.html">USELOCALTIME</a></b></td><td>Use local time to determine day groups in main index listing.</td></tr>
-<tr valign="top"><td><b><a name="usinglastpg" href="resources/usinglastpg.html">USINGLASTPG</a></b></td><td>$LASTPG$ is used in resource values.</td></tr>
-<tr valign="top"><td><b><a name="weekdays" href="resources/weekdays.html">WEEKDAYS</a></b></td><td>Weekday names.</td></tr>
-<tr valign="top"><td><b><a name="weekdaysabr" href="resources/weekdaysabr.html">WEEKDAYSABR</a></b></td><td>Abbreviated weekday names.</td></tr>
+<tr valign="top"><td align="right"><b><a name="add" href="resources/add.html">ADD</a></b></td><td>&nbsp;Add messages to the archive.</td></tr>
+<tr valign="top"><td align="right"><b><a name="addressmodifycode" href="resources/addressmodifycode.html">ADDRESSMODIFYCODE</a></b></td><td>&nbsp;Perl expressions modifying displayed addresses in headers.</td></tr>
+<tr valign="top"><td align="right"><b><a name="afs" href="resources/afs.html">AFS</a></b></td><td>&nbsp;Skip archive directory permission check.</td></tr>
+<tr valign="top"><td align="right"><b><a name="annotate" href="resources/annotate.html">ANNOTATE</a></b></td><td>&nbsp;Add/set annotation for message(s).</td></tr>
+<tr valign="top"><td align="right"><b><a name="archive" href="resources/archive.html">ARCHIVE</a></b></td><td>&nbsp;Create archive.</td></tr>
+<tr valign="top"><td align="right"><b><a name="authorbegin" href="resources/authorbegin.html">AUTHORBEGIN</a></b></td><td>&nbsp;Markup at the start of a author group.</td></tr>
+<tr valign="top"><td align="right"><b><a name="authorend" href="resources/authorend.html">AUTHOREND</a></b></td><td>&nbsp;Markup at the end of a author group.</td></tr>
+<tr valign="top"><td align="right"><b><a name="authsort" href="resources/authsort.html">AUTHSORT</a></b></td><td>&nbsp;Sort main index by author.</td></tr>
+<tr valign="top"><td align="right"><b><a name="botlinks" href="resources/botlinks.html">BOTLINKS</a></b></td><td>&nbsp;Links markup at the bottom of message pages.</td></tr>
+<tr valign="top"><td align="right"><b><a name="charsetconverters" href="resources/charsetconverters.html">CHARSETCONVERTERS</a></b></td><td>&nbsp;Charater set filter functions.</td></tr>
+<tr valign="top"><td align="right"><b><a name="checknoarchive" href="resources/checknoarchive.html">CHECKNOARCHIVE</a></b></td><td>&nbsp;Honor "no archive" flag in messages.</td></tr>
+<tr valign="top"><td align="right"><b><a name="conlen" href="resources/conlen.html">CONLEN</a></b></td><td>&nbsp;Use Content-Length value.</td></tr>
+<tr valign="top"><td align="right"><b><a name="datefields" href="resources/datefields.html">DATEFIELDS</a></b></td><td>&nbsp;List of fields to extract date of message.</td></tr>
+<tr valign="top"><td align="right"><b><a name="daybegin" href="resources/daybegin.html">DAYBEGIN</a></b></td><td>&nbsp;Markup at the start of a day group.</td></tr>
+<tr valign="top"><td align="right"><b><a name="dayend" href="resources/dayend.html">DAYEND</a></b></td><td>&nbsp;Markup at the end of a day group.</td></tr>
+<tr valign="top"><td align="right"><b><a name="dbfile" href="resources/dbfile.html">DBFILE</a></b></td><td>&nbsp;Name of archive database file.</td></tr>
+<tr valign="top"><td align="right"><b><a name="decodeheads" href="resources/decodeheads.html">DECODEHEADS</a></b></td><td>&nbsp;Store "decode-only" characters sets in raw form.</td></tr>
+<tr valign="top"><td align="right"><b><a name="definederived" href="resources/definederived.html">DEFINEDERIVED</a></b></td><td>&nbsp;Define extra file(s) to generate for each message page.</td></tr>
+<tr valign="top"><td align="right"><b><a name="definevar" href="resources/definevar.html">DEFINEVAR</a></b></td><td>&nbsp;Define a custom resource variable.</td></tr>
+<tr valign="top"><td align="right"><b><a name="defrcfile" href="resources/defrcfile.html">DEFRCFILE</a></b></td><td>&nbsp;Pathname of default resource file.</td></tr>
+<tr valign="top"><td align="right"><b><a name="defrcname" href="resources/defrcname.html">DEFRCNAME</a></b></td><td>&nbsp;Name of default resource file.</td></tr>
+<tr valign="top"><td align="right"><b><a name="doc" href="resources/doc.html">DOC</a></b></td><td>&nbsp;Add link to documentation.</td></tr>
+<tr valign="top"><td align="right"><b><a name="docurl" href="resources/docurl.html">DOCURL</a></b></td><td>&nbsp;URL to documentation</td></tr>
+<tr valign="top"><td align="right"><b><a name="editidx" href="resources/editidx.html">EDITIDX</a></b></td><td>&nbsp;Modify archive with new resource settings.</td></tr>
+<tr valign="top"><td align="right"><b><a name="excs" href="resources/excs.html">EXCS</a></b></td><td>&nbsp;List of header fields to exclude.</td></tr>
+<tr valign="top"><td align="right"><b><a name="expireage" href="resources/expireage.html">EXPIREAGE</a></b></td><td>&nbsp;Length of time to keep a message in an archive.</td></tr>
+<tr valign="top"><td align="right"><b><a name="expiredate" href="resources/expiredate.html">EXPIREDATE</a></b></td><td>&nbsp;Expiration of date of message.</td></tr>
+<tr valign="top"><td align="right"><b><a name="fieldorder" href="resources/fieldorder.html">FIELDORDER</a></b></td><td>&nbsp;Order to display message header fields.</td></tr>
+<tr valign="top"><td align="right"><b><a name="fieldsbeg" href="resources/fieldsbeg.html">FIELDSBEG</a></b></td><td>&nbsp;Beginning markup of message header.</td></tr>
+<tr valign="top"><td align="right"><b><a name="fieldsend" href="resources/fieldsend.html">FIELDSEND</a></b></td><td>&nbsp;Ending markup of message header.</td></tr>
+<tr valign="top"><td align="right"><b><a name="fieldstyles" href="resources/fieldstyles.html">FIELDSTYLES</a></b></td><td>&nbsp;Define HTML elements that wrap field text of message headers.</td></tr>
+<tr valign="top"><td align="right"><b><a name="fldbeg" href="resources/fldbeg.html">FLDBEG</a></b></td><td>&nbsp;Markup before field text.</td></tr>
+<tr valign="top"><td align="right"><b><a name="fldend" href="resources/fldend.html">FLDEND</a></b></td><td>&nbsp;Markup after field text.</td></tr>
+<tr valign="top"><td align="right"><b><a name="folrefs" href="resources/folrefs.html">FOLREFS</a></b></td><td>&nbsp;Print links links to explicit follow-ups and references.</td></tr>
+<tr valign="top"><td align="right"><b><a name="folupbegin" href="resources/folupbegin.html">FOLUPBEGIN</a></b></td><td>&nbsp;Beginning markup of follow-up links in message pages.</td></tr>
+<tr valign="top"><td align="right"><b><a name="folupend" href="resources/folupend.html">FOLUPEND</a></b></td><td>&nbsp;Ending markup of follow-up links in message pages.</td></tr>
+<tr valign="top"><td align="right"><b><a name="foluplitxt" href="resources/foluplitxt.html">FOLUPLITXT</a></b></td><td>&nbsp;Markup for a follow-up link.</td></tr>
+<tr valign="top"><td align="right"><b><a name="footer" href="resources/footer.html">FOOTER</a></b></td><td>&nbsp;File to include at the foot of main index pages.</td></tr>
+<tr valign="top"><td align="right"><b><a name="force" href="resources/force.html">FORCE</a></b></td><td>&nbsp;Force archive operation even if lock cannot be obtained.</td></tr>
+<tr valign="top"><td align="right"><b><a name="fromfields" href="resources/fromfields.html">FROMFIELDS</a></b></td><td>&nbsp;List of fields to extract author of a message.</td></tr>
+<tr valign="top"><td align="right"><b><a name="genidx" href="resources/genidx.html">GENIDX</a></b></td><td>&nbsp;Generate a message index to standard output.</td></tr>
+<tr valign="top"><td align="right"><b><a name="gmtdatefmt" href="resources/gmtdatefmt.html">GMTDATEFMT</a></b></td><td>&nbsp;Conversion specification for GMT dates.</td></tr>
+<tr valign="top"><td align="right"><b><a name="gzipexe" href="resources/gzipexe.html">GZIPEXE</a></b></td><td>&nbsp;Pathname to gzip executable.</td></tr>
+<tr valign="top"><td align="right"><b><a name="gzipfiles" href="resources/gzipfiles.html">GZIPFILES</a></b></td><td>&nbsp;Gzip files.</td></tr>
+<tr valign="top"><td align="right"><b><a name="gziplinks" href="resources/gziplinks.html">GZIPLINKS</a></b></td><td>&nbsp;Assume files are gzipped when creating links.</td></tr>
+<tr valign="top"><td align="right"><b><a name="headbodysep" href="resources/headbodysep.html">HEADBODYSEP</a></b></td><td>&nbsp;Markup separating the message head from the body.</td></tr>
+<tr valign="top"><td align="right"><b><a name="header" href="resources/header.html">HEADER</a></b></td><td>&nbsp;File to include at the top of main index pages.</td></tr>
+<tr valign="top"><td align="right"><b><a name="htmlext" href="resources/htmlext.html">HTMLEXT</a></b></td><td>&nbsp;Extension to use for HTML files.</td></tr>
+<tr valign="top"><td align="right"><b><a name="icons" href="resources/icons.html">ICONS</a></b></td><td>&nbsp;Content-type to icon mapping.</td></tr>
+<tr valign="top"><td align="right"><b><a name="idxfname" href="resources/idxfname.html">IDXFNAME</a></b></td><td>&nbsp;Filename for main (first) index page.</td></tr>
+<tr valign="top"><td align="right"><b><a name="idxlabel" href="resources/idxlabel.html">IDXLABEL</a></b></td><td>&nbsp;Label for main index.</td></tr>
+<tr valign="top"><td align="right"><b><a name="idxpgbegin" href="resources/idxpgbegin.html">IDXPGBEGIN</a></b></td><td>&nbsp;Beginning markup for main index pages.</td></tr>
+<tr valign="top"><td align="right"><b><a name="idxpgend" href="resources/idxpgend.html">IDXPGEND</a></b></td><td>&nbsp;Ending markup for main index pages.</td></tr>
+<tr valign="top"><td align="right"><b><a name="idxprefix" href="resources/idxprefix.html">IDXPREFIX</a></b></td><td>&nbsp;Filename prefix for multi-page main index.</td></tr>
+<tr valign="top"><td align="right"><b><a name="idxsize" href="resources/idxsize.html">IDXSIZE</a></b></td><td>&nbsp;Size of each index page.</td></tr>
+<tr valign="top"><td align="right"><b><a name="include" href="resources/include.html">INCLUDE</a></b></td><td>&nbsp;Include a resource file.</td></tr>
+<tr valign="top"><td align="right"><b><a name="keeponrmm" href="resources/keeponrmm.html">KEEPONRMM</a></b></td><td>&nbsp;Do not physically delete message files when message removed from archive.</td></tr>
+<tr valign="top"><td align="right"><b><a name="labelbeg" href="resources/labelbeg.html">LABELBEG</a></b></td><td>&nbsp;Beginning markup of the label text of a message field.</td></tr>
+<tr valign="top"><td align="right"><b><a name="labelend" href="resources/labelend.html">LABELEND</a></b></td><td>&nbsp;End markup of the label text of a message field.</td></tr>
+<tr valign="top"><td align="right"><b><a name="labelstyles" href="resources/labelstyles.html">LABELSTYLES</a></b></td><td>&nbsp;Define HTML elements to wrap message header field labels.</td></tr>
+<tr valign="top"><td align="right"><b><a name="listbegin" href="resources/listbegin.html">LISTBEGIN</a></b></td><td>&nbsp;Markup to begin main index message listing.</td></tr>
+<tr valign="top"><td align="right"><b><a name="listend" href="resources/listend.html">LISTEND</a></b></td><td>&nbsp;Markup to end main index message listing.</td></tr>
+<tr valign="top"><td align="right"><b><a name="litemplate" href="resources/litemplate.html">LITEMPLATE</a></b></td><td>&nbsp;Markup for an entry in the main index message list.</td></tr>
+<tr valign="top"><td align="right"><b><a name="localdatefmt" href="resources/localdatefmt.html">LOCALDATEFMT</a></b></td><td>&nbsp;Conversion specification for printing local date.</td></tr>
+<tr valign="top"><td align="right"><b><a name="lock" href="resources/lock.html">LOCK</a></b></td><td>&nbsp;Perform a lock on the archive.</td></tr>
+<tr valign="top"><td align="right"><b><a name="lockdelay" href="resources/lockdelay.html">LOCKDELAY</a></b></td><td>&nbsp;Wait time between lock attempts.</td></tr>
+<tr valign="top"><td align="right"><b><a name="lockfile" href="resources/lockfile.html">LOCKFILE</a></b></td><td>&nbsp;Name of the lock file.</td></tr>
+<tr valign="top"><td align="right"><b><a name="lockmethod" href="resources/lockmethod.html">LOCKMETHOD</a></b></td><td>&nbsp;How archive locks are done.</td></tr>
+<tr valign="top"><td align="right"><b><a name="locktries" href="resources/locktries.html">LOCKTRIES</a></b></td><td>&nbsp;Total number of time to attempt a lock before failing.</td></tr>
+<tr valign="top"><td align="right"><b><a name="mailto" href="resources/mailto.html">MAILTO</a></b></td><td>&nbsp;Convert email addresses in message headers to hyperlinks.</td></tr>
+<tr valign="top"><td align="right"><b><a name="mailtourl" href="resources/mailtourl.html">MAILTOURL</a></b></td><td>&nbsp;URL template to use when MAILTO is set.</td></tr>
+<tr valign="top"><td align="right"><b><a name="main" href="resources/main.html">MAIN</a></b></td><td>&nbsp;Create main index.</td></tr>
+<tr valign="top"><td align="right"><b><a name="maxsize" href="resources/maxsize.html">MAXSIZE</a></b></td><td>&nbsp;Maximum number of messages in an archive.</td></tr>
+<tr valign="top"><td align="right"><b><a name="mhpattern" href="resources/mhpattern.html">MHPATTERN</a></b></td><td>&nbsp;Regex for matching message files in an MH folder (directory).</td></tr>
+<tr valign="top"><td align="right"><b><a name="mimeargs" href="resources/mimeargs.html">MIMEARGS</a></b></td><td>&nbsp;Arguments to MIME filters.</td></tr>
+<tr valign="top"><td align="right"><b><a name="mimedecoders" href="resources/mimedecoders.html">MIMEDECODERS</a></b></td><td>&nbsp;Content-Transfer-Encoding decoding functions.</td></tr>
+<tr valign="top"><td align="right"><b><a name="mimeexcs" href="resources/mimeexcs.html">MIMEEXCS</a></b></td><td>&nbsp;Content-types to exclude.</td></tr>
+<tr valign="top"><td align="right"><b><a name="mimefilters" href="resources/mimefilters.html">MIMEFILTERS</a></b></td><td>&nbsp;Mapping of MIME filters to content-types.</td></tr>
+<tr valign="top"><td align="right"><b><a name="modtime" href="resources/modtime.html">MODTIME</a></b></td><td>&nbsp;Set modification time on message files to message dates.</td></tr>
+<tr valign="top"><td align="right"><b><a name="months" href="resources/months.html">MONTHS</a></b></td><td>&nbsp;Month names.</td></tr>
+<tr valign="top"><td align="right"><b><a name="monthsabr" href="resources/monthsabr.html">MONTHSABR</a></b></td><td>&nbsp;Abbreviated month names.</td></tr>
+<tr valign="top"><td align="right"><b><a name="msgbodyend" href="resources/msgbodyend.html">MSGBODYEND</a></b></td><td>&nbsp;Markup after the message body.</td></tr>
+<tr valign="top"><td align="right"><b><a name="msgexcfilter" href="resources/msgexcfilter.html">MSGEXCFILTER</a></b></td><td>&nbsp;Perl expression(s) to selectively exclude messages.</td></tr>
+<tr valign="top"><td align="right"><b><a name="msgfoot" href="resources/msgfoot.html">MSGFOOT</a></b></td><td>&nbsp;Markup at the foot of each message page.</td></tr>
+<tr valign="top"><td align="right"><b><a name="msggmtdatefmt" href="resources/msggmtdatefmt.html">MSGGMTDATEFMT</a></b></td><td>&nbsp;GMT conversion specification for message dates.</td></tr>
+<tr valign="top"><td align="right"><b><a name="msghead" href="resources/msghead.html">MSGHEAD</a></b></td><td>&nbsp;Markup at the head of each message page.</td></tr>
+<tr valign="top"><td align="right"><b><a name="msgidlink" href="resources/msgidlink.html">MSGIDLINK</a></b></td><td>&nbsp;Hyperlink markup for embedded message-ids in message pages.</td></tr>
+<tr valign="top"><td align="right"><b><a name="msglocaldatefmt" href="resources/msglocaldatefmt.html">MSGLOCALDATEFMT</a></b></td><td>&nbsp;Local conversion specification for message dates.</td></tr>
+<tr valign="top"><td align="right"><b><a name="msgpgbegin" href="resources/msgpgbegin.html">MSGPGBEGIN</a></b></td><td>&nbsp;Starting markup for each message page.</td></tr>
+<tr valign="top"><td align="right"><b><a name="msgpgend" href="resources/msgpgend.html">MSGPGEND</a></b></td><td>&nbsp;Ending markup for each message page.</td></tr>
+<tr valign="top"><td align="right"><b><a name="msgpgs" href="resources/msgpgs.html">MSGPGS</a></b></td><td>&nbsp;Print message pages.</td></tr>
+<tr valign="top"><td align="right"><b><a name="msgprefix" href="resources/msgprefix.html">MSGPREFIX</a></b></td><td>&nbsp;Prefix for message page filenames.</td></tr>
+<tr valign="top"><td align="right"><b><a name="msgsep" href="resources/msgsep.html">MSGSEP</a></b></td><td>&nbsp;Regex for matching message separator in mailbox files.</td></tr>
+<tr valign="top"><td align="right"><b><a name="multipg" href="resources/multipg.html">MULTIPG</a></b></td><td>&nbsp;Create multi-page indexes.</td></tr>
+<tr valign="top"><td align="right"><b><a name="news" href="resources/news.html">NEWS</a></b></td><td>&nbsp;Hyperlink newsgroups in message headers.</td></tr>
+<tr valign="top"><td align="right"><b><a name="nextbutton" href="resources/nextbutton.html">NEXTBUTTON</a></b></td><td>&nbsp;Button markup for next message by main index.</td></tr>
+<tr valign="top"><td align="right"><b><a name="nextbuttonia" href="resources/nextbuttonia.html">NEXTBUTTONIA</a></b></td><td>&nbsp;Inactive button markup for next message by main index.</td></tr>
+<tr valign="top"><td align="right"><b><a name="nextlink" href="resources/nextlink.html">NEXTLINK</a></b></td><td>&nbsp;Link markup for next message by main index.</td></tr>
+<tr valign="top"><td align="right"><b><a name="nextlinkia" href="resources/nextlinkia.html">NEXTLINKIA</a></b></td><td>&nbsp;Inactive link markup for next message by main index.</td></tr>
+<tr valign="top"><td align="right"><b><a name="nextpglink" href="resources/nextpglink.html">NEXTPGLINK</a></b></td><td>&nbsp;Link markup for next page of main index.</td></tr>
+<tr valign="top"><td align="right"><b><a name="nextpglinkia" href="resources/nextpglinkia.html">NEXTPGLINKIA</a></b></td><td>&nbsp;Inactive link markup for next page of main index.</td></tr>
+<tr valign="top"><td align="right"><b><a name="note" href="resources/note.html">NOTE</a></b></td><td>&nbsp;Markup for representing the annotation of a message.</td></tr>
+<tr valign="top"><td align="right"><b><a name="notedir" href="resources/notedir.html">NOTEDIR</a></b></td><td>&nbsp;Directory to store annotations.</td></tr>
+<tr valign="top"><td align="right"><b><a name="noteia" href="resources/noteia.html">NOTEIA</a></b></td><td>&nbsp;Markup when no annotation is available for a message.</td></tr>
+<tr valign="top"><td align="right"><b><a name="notetext" href="resources/notetext.html">NOTETEXT</a></b></td><td>&nbsp;Annotation text.</td></tr>
+<tr valign="top"><td align="right"><b><a name="otherindexes" href="resources/otherindexes.html">OTHERINDEXES</a></b></td><td>&nbsp;List of alternate indexes to create for an archive.</td></tr>
+<tr valign="top"><td align="right"><b><a name="outdir" href="resources/outdir.html">OUTDIR</a></b></td><td>&nbsp;Location of archive.</td></tr>
+<tr valign="top"><td align="right"><b><a name="perlinc" href="resources/perlinc.html">PERLINC</a></b></td><td>&nbsp;Additional Perl include paths.</td></tr>
+<tr valign="top"><td align="right"><b><a name="posixstrftime" href="resources/posixstrftime.html">POSIXSTRFTIME</a></b></td><td>&nbsp;Use POSIX's strftime() for converted time format strings.</td></tr>
+<tr valign="top"><td align="right"><b><a name="prevbutton" href="resources/prevbutton.html">PREVBUTTON</a></b></td><td>&nbsp;Button markup for previous message by main index.</td></tr>
+<tr valign="top"><td align="right"><b><a name="prevbuttonia" href="resources/prevbuttonia.html">PREVBUTTONIA</a></b></td><td>&nbsp;Inactive button markup for previous message by main index.</td></tr>
+<tr valign="top"><td align="right"><b><a name="prevlink" href="resources/prevlink.html">PREVLINK</a></b></td><td>&nbsp;Link markup for previous message by main index.</td></tr>
+<tr valign="top"><td align="right"><b><a name="prevlinkia" href="resources/prevlinkia.html">PREVLINKIA</a></b></td><td>&nbsp;Inactive link markup for previous message by main index.</td></tr>
+<tr valign="top"><td align="right"><b><a name="prevpglink" href="resources/prevpglink.html">PREVPGLINK</a></b></td><td>&nbsp;Link markup for previous page of main index.</td></tr>
+<tr valign="top"><td align="right"><b><a name="prevpglinkia" href="resources/prevpglinkia.html">PREVPGLINKIA</a></b></td><td>&nbsp;Inactive link markup for previous page of main index.</td></tr>
+<tr valign="top"><td align="right"><b><a name="quiet" href="resources/quiet.html">QUIET</a></b></td><td>&nbsp;Do not output status.</td></tr>
+<tr valign="top"><td align="right"><b><a name="rcfile" href="resources/rcfile.html">RCFILE</a></b></td><td>&nbsp;Resource file to read before processing input.</td></tr>
+<tr valign="top"><td align="right"><b><a name="refsbegin" href="resources/refsbegin.html">REFSBEGIN</a></b></td><td>&nbsp;Beginning markup for explicit reference links in message pages.</td></tr>
+<tr valign="top"><td align="right"><b><a name="refsend" href="resources/refsend.html">REFSEND</a></b></td><td>&nbsp;Ending markup for explicit reference links in message pages.</td></tr>
+<tr valign="top"><td align="right"><b><a name="refslitxt" href="resources/refslitxt.html">REFSLITXT</a></b></td><td>&nbsp;Markup representing a reference entry in explicit reference links.</td></tr>
+<tr valign="top"><td align="right"><b><a name="reverse" href="resources/reverse.html">REVERSE</a></b></td><td>&nbsp;Reverse the listing order in the main index.</td></tr>
+<tr valign="top"><td align="right"><b><a name="rmm" href="resources/rmm.html">RMM</a></b></td><td>&nbsp;Remove specified messages from an archive.</td></tr>
+<tr valign="top"><td align="right"><b><a name="saveresources" href="resources/saveresources.html">SAVERESOURCES</a></b></td><td>&nbsp;Save resource values in database.</td></tr>
+<tr valign="top"><td align="right"><b><a name="scan" href="resources/scan.html">SCAN</a></b></td><td>&nbsp;List archive messages to standard output.</td></tr>
+<tr valign="top"><td align="right"><b><a name="single" href="resources/single.html">SINGLE</a></b></td><td>&nbsp;Process a single message.</td></tr>
+<tr valign="top"><td align="right"><b><a name="sort" href="resources/sort.html">SORT</a></b></td><td>&nbsp;List messages by date in main index.</td></tr>
+<tr valign="top"><td align="right"><b><a name="spammode" href="resources/spammode.html">SPAMMODE</a></b></td><td>&nbsp;Perform actions to deter email address harvesters.</td></tr>
+<tr valign="top"><td align="right"><b><a name="ssmarkup" href="resources/ssmarkup.html">SSMARKUP</a></b></td><td>&nbsp;Markup at the beginning of all generated pages.</td></tr>
+<tr valign="top"><td align="right"><b><a name="stderr" href="resources/stderr.html">STDERR</a></b></td><td>&nbsp;File for standard error messages.</td></tr>
+<tr valign="top"><td align="right"><b><a name="stdin" href="resources/stdin.html">STDIN</a></b></td><td>&nbsp;File to treat as standard input.</td></tr>
+<tr valign="top"><td align="right"><b><a name="stdout" href="resources/stdout.html">STDOUT</a></b></td><td>&nbsp;File for standard output messages.</td></tr>
+<tr valign="top"><td align="right"><b><a name="subjectarticlerxp" href="resources/subjectarticlerxp.html">SUBJECTARTICLERXP</a></b></td><td>&nbsp;Regex for matching leading articles in message subjects.</td></tr>
+<tr valign="top"><td align="right"><b><a name="subjectbegin" href="resources/subjectbegin.html">SUBJECTBEGIN</a></b></td><td>&nbsp;Beginning markup for a subject group in the main index.</td></tr>
+<tr valign="top"><td align="right"><b><a name="subjectend" href="resources/subjectend.html">SUBJECTEND</a></b></td><td>&nbsp;Ending markup for a subject group in the main index.</td></tr>
+<tr valign="top"><td align="right"><b><a name="subjectheader" href="resources/subjectheader.html">SUBJECTHEADER</a></b></td><td>&nbsp;Main subject line markup above message header.</td></tr>
+<tr valign="top"><td align="right"><b><a name="subjectreplyrxp" href="resources/subjectreplyrxp.html">SUBJECTREPLYRXP</a></b></td><td>&nbsp;Regex for matching subject text denoting a reply message.</td></tr>
+<tr valign="top"><td align="right"><b><a name="subjectstripcode" href="resources/subjectstripcode.html">SUBJECTSTRIPCODE</a></b></td><td>&nbsp;Perl expressions to strip subject text while reading messages.</td></tr>
+<tr valign="top"><td align="right"><b><a name="subjectthreads" href="resources/subjectthreads.html">SUBJECTTHREADS</a></b></td><td>&nbsp;Check subjects when computing message threads.</td></tr>
+<tr valign="top"><td align="right"><b><a name="subsort" href="resources/subsort.html">SUBSORT</a></b></td><td>&nbsp;List messages by subjext in main index.</td></tr>
+<tr valign="top"><td align="right"><b><a name="tcontbegin" href="resources/tcontbegin.html">TCONTBEGIN</a></b></td><td>&nbsp;Markup before the continuation of a broken thread.</td></tr>
+<tr valign="top"><td align="right"><b><a name="tcontend" href="resources/tcontend.html">TCONTEND</a></b></td><td>&nbsp;Markup after the continuation of a broken thread.</td></tr>
+<tr valign="top"><td align="right"><b><a name="tfoot" href="resources/tfoot.html">TFOOT</a></b></td><td>&nbsp;Footer markup for thread index page.</td></tr>
+<tr valign="top"><td align="right"><b><a name="thead" href="resources/thead.html">THEAD</a></b></td><td>&nbsp;Header markup for thread index page.</td></tr>
+<tr valign="top"><td align="right"><b><a name="thread" href="resources/thread.html">THREAD</a></b></td><td>&nbsp;Create thread index.</td></tr>
+<tr valign="top"><td align="right"><b><a name="tidxfname" href="resources/tidxfname.html">TIDXFNAME</a></b></td><td>&nbsp;Filename of first thread index page.</td></tr>
+<tr valign="top"><td align="right"><b><a name="tidxlabel" href="resources/tidxlabel.html">TIDXLABEL</a></b></td><td>&nbsp;Label string for the thread index.</td></tr>
+<tr valign="top"><td align="right"><b><a name="tidxpgbegin" href="resources/tidxpgbegin.html">TIDXPGBEGIN</a></b></td><td>&nbsp;Beginning markup for the thread index pages.</td></tr>
+<tr valign="top"><td align="right"><b><a name="tidxpgend" href="resources/tidxpgend.html">TIDXPGEND</a></b></td><td>&nbsp;Ending markup for the thread index pages.</td></tr>
+<tr valign="top"><td align="right"><b><a name="tidxprefix" href="resources/tidxprefix.html">TIDXPREFIX</a></b></td><td>&nbsp;Filename prefix for thread index pages beyond the first page.</td></tr>
+<tr valign="top"><td align="right"><b><a name="timezones" href="resources/timezones.html">TIMEZONES</a></b></td><td>&nbsp;Hour offsets for timezones.</td></tr>
+<tr valign="top"><td align="right"><b><a name="tindentbegin" href="resources/tindentbegin.html">TINDENTBEGIN</a></b></td><td>&nbsp;Markup for opening a level when continuing a broken thread.</td></tr>
+<tr valign="top"><td align="right"><b><a name="tindentend" href="resources/tindentend.html">TINDENTEND</a></b></td><td>&nbsp;Markup for closing a level when continuing a broken thread.</td></tr>
+<tr valign="top"><td align="right"><b><a name="title" href="resources/title.html">TITLE</a></b></td><td>&nbsp;Title for main index.</td></tr>
+<tr valign="top"><td align="right"><b><a name="tlevels" href="resources/tlevels.html">TLEVELS</a></b></td><td>&nbsp;Maximum number of levels to indent in thread index.</td></tr>
+<tr valign="top"><td align="right"><b><a name="tliend" href="resources/tliend.html">TLIEND</a></b></td><td>&nbsp;Ending markup for a thread index message listing.</td></tr>
+<tr valign="top"><td align="right"><b><a name="tlinone" href="resources/tlinone.html">TLINONE</a></b></td><td>&nbsp;Markup for a missing message in thread index.</td></tr>
+<tr valign="top"><td align="right"><b><a name="tlinoneend" href="resources/tlinoneend.html">TLINONEEND</a></b></td><td>&nbsp;Ending markup for a missing message in thread index.</td></tr>
+<tr valign="top"><td align="right"><b><a name="tlitxt" href="resources/tlitxt.html">TLITXT</a></b></td><td>&nbsp;Markup for a thread index message listing.</td></tr>
+<tr valign="top"><td align="right"><b><a name="tnextbutton" href="resources/tnextbutton.html">TNEXTBUTTON</a></b></td><td>&nbsp;Button markup for next message by thread.</td></tr>
+<tr valign="top"><td align="right"><b><a name="tnextbuttonia" href="resources/tnextbuttonia.html">TNEXTBUTTONIA</a></b></td><td>&nbsp;Inactive button markup for next message by thread.</td></tr>
+<tr valign="top"><td align="right"><b><a name="tnextlink" href="resources/tnextlink.html">TNEXTLINK</a></b></td><td>&nbsp;Link markup for next message by thread.</td></tr>
+<tr valign="top"><td align="right"><b><a name="tnextlinkia" href="resources/tnextlinkia.html">TNEXTLINKIA</a></b></td><td>&nbsp;Inactive link markup for next message by thread.</td></tr>
+<tr valign="top"><td align="right"><b><a name="tnextpglink" href="resources/tnextpglink.html">TNEXTPGLINK</a></b></td><td>&nbsp;Link markup for next page in thread index.</td></tr>
+<tr valign="top"><td align="right"><b><a name="tnextpglinkia" href="resources/tnextpglinkia.html">TNEXTPGLINKIA</a></b></td><td>&nbsp;Inactive link markup for next page in thread index.</td></tr>
+<tr valign="top"><td align="right"><b><a name="toplinks" href="resources/toplinks.html">TOPLINKS</a></b></td><td>&nbsp;Markup for top navigational links of a message page.</td></tr>
+<tr valign="top"><td align="right"><b><a name="tprevbutton" href="resources/tprevbutton.html">TPREVBUTTON</a></b></td><td>&nbsp;Button markup for previous message by thread.</td></tr>
+<tr valign="top"><td align="right"><b><a name="tprevbuttonia" href="resources/tprevbuttonia.html">TPREVBUTTONIA</a></b></td><td>&nbsp;Inactive button markup for previous message by thread.</td></tr>
+<tr valign="top"><td align="right"><b><a name="tprevlink" href="resources/tprevlink.html">TPREVLINK</a></b></td><td>&nbsp;Link markup for previous message by thread.</td></tr>
+<tr valign="top"><td align="right"><b><a name="tprevlinkia" href="resources/tprevlinkia.html">TPREVLINKIA</a></b></td><td>&nbsp;Inactive link markup for previous message by thread.</td></tr>
+<tr valign="top"><td align="right"><b><a name="tprevpglink" href="resources/tprevpglink.html">TPREVPGLINK</a></b></td><td>&nbsp;Link markup for previous page in thread index.</td></tr>
+<tr valign="top"><td align="right"><b><a name="tprevpglinkia" href="resources/tprevpglinkia.html">TPREVPGLINKIA</a></b></td><td>&nbsp;Inactive link markup for previous page in thread index.</td></tr>
+<tr valign="top"><td align="right"><b><a name="treverse" href="resources/treverse.html">TREVERSE</a></b></td><td>&nbsp;List thread in reverse order.</td></tr>
+<tr valign="top"><td align="right"><b><a name="tsingletxt" href="resources/tsingletxt.html">TSINGLETXT</a></b></td><td>&nbsp;Markup for a thread listing with no follow-ups.</td></tr>
+<tr valign="top"><td align="right"><b><a name="tslice" href="resources/tslice.html">TSLICE</a></b></td><td>&nbsp;Size of thread listing slice for message pages.</td></tr>
+<tr valign="top"><td align="right"><b><a name="tslicebeg" href="resources/tslicebeg.html">TSLICEBEG</a></b></td><td>&nbsp;Markup for the start of a thread slice.</td></tr>
+<tr valign="top"><td align="right"><b><a name="tsliceend" href="resources/tsliceend.html">TSLICEEND</a></b></td><td>&nbsp;Markup for the end of a thread slice.</td></tr>
+<tr valign="top"><td align="right"><b><a name="tsort" href="resources/tsort.html">TSORT</a></b></td><td>&nbsp;List threads by date.</td></tr>
+<tr valign="top"><td align="right"><b><a name="tsubjectbeg" href="resources/tsubjectbeg.html">TSUBJECTBEG</a></b></td><td>&nbsp;Markup before a subject based thread listing.</td></tr>
+<tr valign="top"><td align="right"><b><a name="tsubjectend" href="resources/tsubjectend.html">TSUBJECTEND</a></b></td><td>&nbsp;Markup after a subject based thread listing.</td></tr>
+<tr valign="top"><td align="right"><b><a name="tsublistbeg" href="resources/tsublistbeg.html">TSUBLISTBEG</a></b></td><td>&nbsp;Markup for starting a sub-thread.</td></tr>
+<tr valign="top"><td align="right"><b><a name="tsublistend" href="resources/tsublistend.html">TSUBLISTEND</a></b></td><td>&nbsp;Markup for ending a sub-thread.</td></tr>
+<tr valign="top"><td align="right"><b><a name="tsubsort" href="resources/tsubsort.html">TSUBSORT</a></b></td><td>&nbsp;List threads by subject.</td></tr>
+<tr valign="top"><td align="right"><b><a name="ttitle" href="resources/ttitle.html">TTITLE</a></b></td><td>&nbsp;Title of thread index.</td></tr>
+<tr valign="top"><td align="right"><b><a name="ttopbegin" href="resources/ttopbegin.html">TTOPBEGIN</a></b></td><td>&nbsp;Markup for the root/start of a thread.</td></tr>
+<tr valign="top"><td align="right"><b><a name="ttopend" href="resources/ttopend.html">TTOPEND</a></b></td><td>&nbsp;Markup for the end of a thread.</td></tr>
+<tr valign="top"><td align="right"><b><a name="umask" href="resources/umask.html">UMASK</a></b></td><td>&nbsp;Umask value for the MHonArc process.</td></tr>
+<tr valign="top"><td align="right"><b><a name="uselocaltime" href="resources/uselocaltime.html">USELOCALTIME</a></b></td><td>&nbsp;Use local time to determine day groups in main index listing.</td></tr>
+<tr valign="top"><td align="right"><b><a name="usinglastpg" href="resources/usinglastpg.html">USINGLASTPG</a></b></td><td>&nbsp;$LASTPG$ is used in resource values.</td></tr>
+<tr valign="top"><td align="right"><b><a name="varregex" href="resources/varregex.html">VARREGEX</a></b></td><td>&nbsp;Perl regular expression matching a resource variable.</td></tr>
+<tr valign="top"><td align="right"><b><a name="weekdays" href="resources/weekdays.html">WEEKDAYS</a></b></td><td>&nbsp;Weekday names.</td></tr>
+<tr valign="top"><td align="right"><b><a name="weekdaysabr" href="resources/weekdaysabr.html">WEEKDAYSABR</a></b></td><td>&nbsp;Abbreviated weekday names.</td></tr>
 </table>
 <!--X-Resource-Index-End-->
-</center>
 
 <!-- *************************************************************** -->
 <hr>
 <!--X-NavButtons-Start-->
 <p align=center>
-<a href="layout.html"><img src="prev.gif" border=0 alt="[Prev]"></a><a href="rcvars.html"><img src="next.gif" border=0 alt="[Next]"></a><a href="mhonarc.html"><img src="up.gif" border=0 alt="[TOC]"></a><a href="faq/faq.html"><img src="faq.gif" border=0 alt="[FAQ]"></a><a href="bugs.html"><img src="bug.gif" border=0 alt="[Bugs]"></a><a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"><img src="home.gif" border=0 alt="[Home]"></a>
+<a href="layout.html"><img src="prev.gif" border=0 alt="[Prev]"></a><a href="rcvars.html"><img src="next.gif" border=0 alt="[Next]"></a><a href="mhonarc.html"><img src="up.gif" border=0 alt="[TOC]"></a><a href="faq/faq.html"><img src="faq.gif" border=0 alt="[FAQ]"></a><a href="app-bugs.html"><img src="bug.gif" border=0 alt="[Bugs]"></a><a href="http://www.mhonarc.org/"><img src="home.gif" border=0 alt="[Home]"></a>
 </p>
 <!--X-NavButtons-End-->
 
 <!-- *************************************************************** -->
 <hr>
 <address>
-98/10/24 17:31:06<br>
+01/06/10 17:47:40<br>
 <img align="top" src="monicon.gif" alt="">
-<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"
+<a href="http://www.mhonarc.org"
 ><strong>MHonArc</strong></a><br>
-Copyright &#169; 1997-1998, <a href="http://www.oac.uci.edu/indiv/ehood/"
->Earl Hood</a>, <a href="mailto:earlhood@usa.net"
->earlhood@usa.net</a><br>
+Copyright &#169; 1997-1999, <a href="http://www.mhonarc.org/~ehood/"
+>Earl Hood</a>, <a href="mailto:mhonarc@mhonarc.org"
+>mhonarc@mhonarc.org</a><br>
 </address>
 
 </body>

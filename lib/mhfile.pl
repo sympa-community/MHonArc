@@ -1,13 +1,13 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	@(#) mhfile.pl 2.3 98/08/10 23:44:51
+##	@(#) mhfile.pl 2.4 99/06/25 14:13:41
 ##  Author:
-##      Earl Hood       earlhood@usa.net
+##      Earl Hood       mhonarc@pobox.com
 ##  Description:
 ##      File routines for MHonArc
 ##---------------------------------------------------------------------------##
 ##    MHonArc -- Internet mail-to-HTML converter
-##    Copyright (C) 1997-1998	Earl Hood, earlhood@usa.net
+##    Copyright (C) 1997-1999	Earl Hood, mhonarc@pobox.com
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by
@@ -31,7 +31,7 @@ package mhonarc;
 
 sub file_open {
     local($file) = shift;
-    local($handle) = q/mhonarc'FOPEN/ . ++$_fo_cnt;
+    local($handle) = q/mhonarc::FOPEN/ . ++$_fo_cnt;
     local($gz) = $file =~ /\.gz$/i;
 
     if ($gz) {
@@ -49,7 +49,7 @@ sub file_open {
 sub file_create {
     local($file) = shift;
     local($gz) = shift;
-    local($handle) = q/mhonarc'FCREAT/ . ++$_fc_cnt;
+    local($handle) = q/mhonarc::FCREAT/ . ++$_fc_cnt;
 
     if ($gz) {
 	$file .= ".gz"  unless $file =~ /\.gz$/;

@@ -1,14 +1,14 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
 <HTML>
 <HEAD>
-<TITLE>MHonArc v2.3 -- Page Layout</TITLE>
+<TITLE>MHonArc v2.4 -- Page Layout</TITLE>
 </HEAD>
 <BODY background="ssbg75.jpg"
       text="#000000" link="#0000ee" vlink="#551a8b" alink="ff0000">
 
 <!--X-NavButtons-Start-->
 <p align=center>
-<a href="quickstart.html"><img src="prev.gif" border=0 alt="[Prev]"></a><a href="resources.html"><img src="next.gif" border=0 alt="[Next]"></a><a href="mhonarc.html"><img src="up.gif" border=0 alt="[TOC]"></a><a href="faq/faq.html"><img src="faq.gif" border=0 alt="[FAQ]"></a><a href="bugs.html"><img src="bug.gif" border=0 alt="[Bugs]"></a><a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"><img src="home.gif" border=0 alt="[Home]"></a>
+<a href="commontasks.html"><img src="prev.gif" border=0 alt="[Prev]"></a><a href="resources.html"><img src="next.gif" border=0 alt="[Next]"></a><a href="mhonarc.html"><img src="up.gif" border=0 alt="[TOC]"></a><a href="faq/faq.html"><img src="faq.gif" border=0 alt="[FAQ]"></a><a href="app-bugs.html"><img src="bug.gif" border=0 alt="[Bugs]"></a><a href="http://www.mhonarc.org/"><img src="home.gif" border=0 alt="[Home]"></a>
 </p>
 <!--X-NavButtons-End-->
 <HR>
@@ -17,9 +17,36 @@
 <H1><a name="pagelayout">Page Layout</a></H1>
 
 <p>The section describes the layout of the pages created by
-MHonArc.  Each page's layout is controlled by resources
-(see <a href="resources.html">MHonArc Resources</a>).
-To simplify the description of each type of page created
+MHonArc.  Each page's layout is controled by
+<a href="resources.html">resources</a>
+(see Section <a href="resources.html">Resources</a>).  Layout
+resources can be changed as you see fit to achieve the
+appearence you desire for your mail archives.
+
+<!--X-TOC-Start-->
+<ul>
+<li><a href="#notaion">Notation</a>
+<li><a href="#mainidxpg">Main Index Page</a>
+<ul>
+<li><small><a href="#mainidxlayout">Main index page resource layout</a></small>
+</ul>
+<li><a href="#threadidxpg">Thread Index Page</a>
+<ul>
+<li><small><a href="#tidxlayout">Thread index page resource layout</a></small>
+</ul>
+<li><a href="#msgpg">Message Page</a>
+<ul>
+<li><small><a href="#msgpglayout">Message page resource layout</a></small>
+</ul>
+</ul>
+<!--X-TOC-End-->
+
+
+<!-- ******************************************************************** -->
+<hr>
+<h2><a name="notaion">Notation</a></h2>
+
+<p>To simplify the description of the various pages created
 by MHonArc, the following notation is used:
 </p>
 
@@ -52,12 +79,12 @@ Since date listing is the default, the
 main index is commonly referred to as the date index.
 </p>
 
-<h3>Main index page resource layout</h3>
+<h3><a name="mainidxlayout">Main index page resource layout</a></h3>
 
 <pre>
 <a href="resources/idxpgbegin.html"><b>IDXPGBEGIN</b></a>
     <a href="resources/header.html"><b>HEADER</b></a>
-	<a href="resources/listbegin.html"><b>LISTBEGIN</b></a>
+    <a href="resources/listbegin.html"><b>LISTBEGIN</b></a>
 	<b>(</b><a href="resources/authorbegin.html"><b>AUTHORBEGIN</b></a> <b>|</b>
 	 <a href="resources/daybegin.html"><b>DAYBEGIN</b></a> <b>|</b>
 	 <a href="resources/subjectbegin.html"><b>SUBJECTBEGIN</b></a><b>)?</b>
@@ -65,9 +92,9 @@ main index is commonly referred to as the date index.
 	<b>(</b><a href="resources/authorend.html"><b>AUTHOREND</b></a> <b>|</b>
 	 <a href="resources/dayend.html"><b>DAYEND</b></a> <b>|</b>
 	 <a href="resources/subjectend.html"><b>SUBJECTEND</b></a><b>)?</b>
-         <a href="resources/listend.html"><b>LISTEND</b></a>
+     <a href="resources/listend.html"><b>LISTEND</b></a>
     <a href="resources/footer.html"><b>FOOTER</b></a>
-    <a href="resources/doc.html"><b>DOC</b></a>
+    <a href="resources/doc.html"><b>DOC</b></a><b>?</b>
 <a href="resources/idxpgend.html"><b>IDXPGEND</b></a>
 </pre>
 
@@ -92,7 +119,7 @@ Also, MHonArc tries to provide the greatest
 flexibility for customizing thread listing layout.
 </p>
 
-<h3>Thread index page resource layout</h3>
+<h3><a name="tidxlayout">Thread index page resource layout</a></h3>
 
 <pre>
 <a href="resources/tidxpgbegin.html"><b>TIDXPGBEGIN</b></a>
@@ -118,7 +145,7 @@ flexibility for customizing thread listing layout.
 	 <b>|</b>
 	 <a href="resources/tsingletxt.html"><b>TSINGLETXT</b></a><b>)*</b> <small>[message w/o references or follow-ups]</small>
     <a href="resources/tfoot.html"><b>TFOOT</b></a>
-    <a href="resources/doc.html"><b>DOC</b></a>
+    <a href="resources/doc.html"><b>DOC</b></a><b>?</b>
 <a href="resources/tidxpgend.html"><b>TIDXPGEND</b></a>
 </pre>
 
@@ -142,7 +169,7 @@ a page boundary.
 to HTML and archive navigational links.
 </p>
 
-<h3>Message page resource layout</h3>
+<h3><a name="msgpglayout">Message page resource layout</a></h3>
 
 <pre>
 <a href="resources/msgpgbegin.html"><b>MSGPGBEGIN</b></a>
@@ -192,20 +219,20 @@ to properly edit the message when needed during updates.
 <hr>
 <!--X-NavButtons-Start-->
 <p align=center>
-<a href="quickstart.html"><img src="prev.gif" border=0 alt="[Prev]"></a><a href="resources.html"><img src="next.gif" border=0 alt="[Next]"></a><a href="mhonarc.html"><img src="up.gif" border=0 alt="[TOC]"></a><a href="faq/faq.html"><img src="faq.gif" border=0 alt="[FAQ]"></a><a href="bugs.html"><img src="bug.gif" border=0 alt="[Bugs]"></a><a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"><img src="home.gif" border=0 alt="[Home]"></a>
+<a href="commontasks.html"><img src="prev.gif" border=0 alt="[Prev]"></a><a href="resources.html"><img src="next.gif" border=0 alt="[Next]"></a><a href="mhonarc.html"><img src="up.gif" border=0 alt="[TOC]"></a><a href="faq/faq.html"><img src="faq.gif" border=0 alt="[FAQ]"></a><a href="app-bugs.html"><img src="bug.gif" border=0 alt="[Bugs]"></a><a href="http://www.mhonarc.org/"><img src="home.gif" border=0 alt="[Home]"></a>
 </p>
 <!--X-NavButtons-End-->
 
 <!-- ******************************************************************** -->
 <HR>
 <address>
-98/10/24 17:31:04<br>
+01/06/10 17:47:40<br>
 <img align="top" src="monicon.gif" alt="">
-<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"
+<a href="http://www.mhonarc.org"
 ><strong>MHonArc</strong></a><br>
-Copyright &#169; 1997-1998, <a href="http://www.oac.uci.edu/indiv/ehood/"
->Earl Hood</a>, <a href="mailto:earlhood@usa.net"
->earlhood@usa.net</a><br>
+Copyright &#169; 1997-1999, <a href="http://www.mhonarc.org/~ehood/"
+>Earl Hood</a>, <a href="mailto:mhonarc@mhonarc.org"
+>mhonarc@mhonarc.org</a><br>
 </address>
 
 </BODY>

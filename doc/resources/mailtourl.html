@@ -77,8 +77,51 @@ mailto:$TO$
 <hr>
 <h2>Resource Variables</h2>
 
-<p>N/A
-</p>
+<table border=1>
+<tr bgcolor="#C0C0C0">
+<th>Variable</th><th>Value</th>
+</tr>
+<tr valign=top>
+<td align=center><a name="FROMADDR" href="../rcvars.html#FROMADDR"><strong><code>$FROMADDR$</code></strong></a></td>
+<td>The e-mail address in the <tt>From:</tt> field of the message.</td>
+</tr>
+<tr valign=top>
+<td align=center><a name="FROMADDRDOMAIN" href="../rcvars.html#FROMADDRDOMAIN"><strong><code>$FROMADDRDOMAIN$</code></strong></a></td>
+<td>The e-mail address domain of the <tt>From:</tt> field of the message.</td>
+</tr>
+<tr valign=top>
+<td align=center><a name="FROMADDRNAME" href="../rcvars.html#FROMADDRNAME"><strong><code>$FROMADDRNAME$</code></strong></a></td>
+<td>The e-mail address "username" (or local-part) of the <tt>From:</tt> field of the message.</td>
+</tr>
+<tr valign=top>
+<td align=center><a name="FROMNAME" href="../rcvars.html#FROMNAME"><strong><code>$FROMNAME$</code></strong></a></td>
+<td>The human name of the person in the <tt>From:</tt> field of the message. If no human name is found, the username specified in the e-mail address is used.</td>
+</tr>
+<tr valign=top>
+<td align=center><a name="MSGGMTDATE" href="../rcvars.html#MSGGMTDATE"><strong><code>$MSGGMTDATE$</code></strong></a></td>
+<td>GMT date of current message.</td>
+</tr>
+<tr valign=top>
+<td align=center><a name="MSGID" href="../rcvars.html#MSGID"><strong><code>$MSGID$</code></strong></a></td>
+<td>The message-id of the message.</td>
+</tr>
+<tr valign=top>
+<td align=center><a name="MSGLOCALDATE" href="../rcvars.html#MSGLOCALDATE"><strong><code>$MSGLOCALDATE$</code></strong></a></td>
+<td>Local date of current message.</td>
+</tr>
+<tr valign=top>
+<td align=center><a name="TO" href="../rcvars.html#TO"><strong><code>$TO$</code></strong></a></td>
+<td>The email address (MAILTOURL only).</td>
+</tr>
+<tr valign=top>
+<td align=center><a name="TOADDRDOMAIN" href="../rcvars.html#TOADDRDOMAIN"><strong><code>$TOADDRDOMAIN$</code></strong></a></td>
+<td>The e-mail address domain (MAILTOURL only).</td>
+</tr>
+<tr valign=top>
+<td align=center><a name="TOADDRNAME" href="../rcvars.html#TOADDRNAME"><strong><code>$TOADDRNAME$</code></strong></a></td>
+<td>The e-mail address "username" (or local-part) (MAILTOURL only).</td>
+</tr>
+</table>
 
 <!-- *************************************************************** -->
 <hr>
@@ -90,7 +133,7 @@ to have e-mail addresses linked to a CGI program:
 
 <pre>
 <b>&lt;MailToURL&gt;</b>
-/cgi-bin/mailform.cgi?to=$FROM$;subject=$SUBJECT$;srcid=$MSGID$
+/cgi-bin/mailform.cgi?to=$TO$;subject=$SUBJECT$;srcid=$MSGID$
 <b>&lt;/MailToURL&gt;</b>
 </pre>
 
@@ -112,10 +155,10 @@ to have e-mail addresses linked to a CGI program:
 <!-- *************************************************************** -->
 <hr>
 <address>
-98/09/19 18:27:12<br>
+00/10/28 11:13:03<br>
 <img align="top" src="../monicon.gif" alt="">
-<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"><strong>MHonArc</strong></a><br>
-Copyright &#169; 1997-1998, <a href="http://www.oac.uci.edu/indiv/ehood/">Earl Hood</a>, <a href="mailto:earlhood@usa.net">earlhood@usa.net</a><br>
+<a href="http://www.pobox.com/~ehood/mhonarc.html"><strong>MHonArc</strong></a><br>
+Copyright &#169; 1997-1998, <a href="http://www.pobox.com/~ehood/">Earl Hood</a>, <a href="mailto:mhonarc@pobox.com">mhonarc@pobox.com</a><br>
 </address>
 
 </body>

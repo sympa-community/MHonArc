@@ -1,6 +1,6 @@
 <!-- MHonArc Resource File -->
-<!-- @(#) date.mrc 98/10/10 16:13:45
-     Earl Hood <earlhood@usa.net>
+<!-- @(#) date.mrc 99/06/25 13:25:39
+     Earl Hood <mhonarc@pobox.com>
   -->
 <!-- This resource file utilizes the day grouping feature of MHonArc
      to format the main index.

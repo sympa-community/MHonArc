@@ -26,7 +26,7 @@
 <dt><strong>Element</strong><dt>
 <dd><p><br>
 <code>&lt;CHARSETCONVERTERS&gt;</code><br>
-<var>charset-filter-specification</var>
+<var>charset-filter-specification</var><br>
 <code>&lt;/CHARSETCONVERTERS&gt;</code><br>
 </p>
 </dd>
@@ -171,6 +171,13 @@ iso-8859-7;	iso_8859::str2sgml;	iso8859.pl
 iso-8859-8;	iso_8859::str2sgml;	iso8859.pl
 iso-8859-9;	iso_8859::str2sgml;	iso8859.pl
 iso-8859-10;	iso_8859::str2sgml;	iso8859.pl
+iso-2022-jp;    iso_2022_jp::str2html;  iso2022jp.pl
+latin1;         mhonarc::htmlize;
+latin2;         iso_8859::str2sgml;     iso8859.pl
+latin3;         iso_8859::str2sgml;     iso8859.pl
+latin4;         iso_8859::str2sgml;     iso8859.pl
+latin5;         iso_8859::str2sgml;     iso8859.pl
+latin6;         iso_8859::str2sgml;     iso8859.pl
 default;	-ignore-
 <b>&lt;/CharsetConverters&gt;</b>
 </pre>
@@ -210,6 +217,7 @@ iso-8859-1;-decode-
 
 <p>
 <a href="decodeheads.html">DECODEHEADS</a>,
+<a href="mimedecoders.html">MIMEDECODERS</a>,
 <a href="mimefilters.html">MIMEFILTERS</a>,
 <a href="perlinc.html">PERLINC</a>
 </p>
@@ -217,10 +225,10 @@ iso-8859-1;-decode-
 <!-- *************************************************************** -->
 <hr>
 <address>
-98/09/19 18:27:07<br>
+00/10/28 11:13:00<br>
 <img align="top" src="../monicon.gif" alt="">
-<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"><strong>MHonArc</strong></a><br>
-Copyright &#169; 1997-1998, <a href="http://www.oac.uci.edu/indiv/ehood/">Earl Hood</a>, <a href="mailto:earlhood@usa.net">earlhood@usa.net</a><br>
+<a href="http://www.pobox.com/~ehood/mhonarc.html"><strong>MHonArc</strong></a><br>
+Copyright &#169; 1997-1999, <a href="http://www.pobox.com/~ehood/">Earl Hood</a>, <a href="mailto:mhonarc@pobox.com">mhonarc@pobox.com</a><br>
 </address>
 
 </body>

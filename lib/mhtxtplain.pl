@@ -1,8 +1,8 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	@(#) mhtxtplain.pl 2.3 98/10/24 17:16:20
+##	@(#) mhtxtplain.pl 2.12 01/06/10 17:39:30
 ##  Author:
-##      Earl Hood       earlhood@usa.net
+##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
 ##	Library defines routine to filter text/plain body parts to HTML
 ##	for MHonArc.
@@ -12,7 +12,7 @@
 ##              </MIMEFILTERS>
 ##---------------------------------------------------------------------------##
 ##    MHonArc -- Internet mail-to-HTML converter
-##    Copyright (C) 1995-1998	Earl Hood, earlhood@usa.net
+##    Copyright (C) 1995-2001	Earl Hood, mhonarc@mhonarc.org
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by
@@ -32,10 +32,13 @@
 
 package m2h_text_plain;
 
+require 'readmail.pl';
+
 $Url    	= '(http://|https://|ftp://|afs://|wais://|telnet://|ldap://' .
 		   '|gopher://|news:|nntp:|mid:|cid:|mailto:|prospero:)';
-$UrlExp 	= $Url . q%[^\s\(\)\|<>"']*[^\.?!;,"'\|\[\]\(\)\s<>]%;
-$HUrlExp	= $Url . q%[^\s\(\)\|<>"'\&]*[^\.?!;,"'\|\[\]\(\)\s<>\&]%;
+$UrlExp 	= $Url . q/[^\s\(\)\|<>"']*[^\.?!;,"'\|\[\]\(\)\s<>]/;
+$HUrlExp        = $Url . q/(?:&(?![gl]t;)|[^\s\(\)\|<>"'\&])+/ .
+			 q/[^\.?!;,"'\|\[\]\(\)\s<>\&]/;
 $QuoteChars	= '[>\|\]+:]';
 $HQuoteChars	= '&gt;|[\|\]+:]';
 
@@ -43,72 +46,195 @@ $HQuoteChars	= '&gt;|[\|\]+:]';
 ##	Text/plain filter for mhonarc.  The following filter arguments
 ##	are recognized ($args):
 ##
-##	    asis=set1:set2:...	-- Colon separated lists of charsets
-##				   to leave as-is.  Only HTML special
-##				   characters will be converted into
-##				   entities.
-##	    default=set 	-- Default charset to use if not set.
-##	    keepspace		-- Preserve whitespace if nonfixed
-##	    nourl		-- Do hyperlink URLs
-##	    nonfixed		-- Use normal typeface
-##	    maxwidth=#		-- Set the maximum width of lines.  Lines
-##				   exceeding the maxwidth will be broken
-##				   up across multiple lines.
-##	    quote		-- Italicize quoted message text
-##	    target=name  	-- Set TARGET attribute for links if
-##				   converting URLs to links.  Defaults to
-##				   _top.
+##	asis=set1:set2:...
+##			Colon separated lists of charsets to leave as-is.
+##			Only HTML special characters will be converted into
+##			entities.  The default value is "us-ascii:iso-8859-1".
+##
+##	attachcheck	Honor attachment disposition.  By default,
+##			all text/plain data is displayed inline on
+##			the message page.  If attachcheck is specified
+##			and Content-Disposition specifies the data as
+##			an attachment, the data is saved to a file
+##			with a link to it from the message page.
+##
+##	default=set 	Default charset to use if not set.
+##
+##      inlineexts="ext1,ext2,..."
+##                      A comma separated list of message specified filename
+##                      extensions to treat as inline data.
+##                      Applicable only when uudecode options specified.
+##
+##	htmlcheck	Check if message is actually an HTML message
+##			(to get around abhorrent MUAs).  The message
+##			is treated as HTML if the first non-whitespace
+##			data looks like the start of an HTML document.
+##
+##	keepspace	Preserve whitespace if nonfixed
+##
+##	nourl		Do hyperlink URLs
+##
+##	nonfixed	Use normal typeface
+##
+##	maxwidth=#	Set the maximum width of lines.  Lines exceeding
+##			the maxwidth will be broken up across multiple lines.
+##
+##	quote		Italicize quoted message text
+##
+##	target=name  	Set TARGET attribute for links if converting URLs
+##			to links.  Defaults to _top.
+##
+##	usename		Use filename specified in uuencoded data when
+##			converting uuencoded data.  This option is only
+##			applicable of uudecode is specified.
+##
+##	uudecode	Decoded any embedded uuencoded data.
 ##
 ##	All arguments should be separated by at least one space
 ##
 sub filter {
     local($header, *fields, *data, $isdecode, $args) = @_;
-    my($charset, $nourl, $doquote, $igncharset, $nonfixed,
-       $keepspace, $maxwidth, $target, $defset);
-    my(%asis) = ();
     local($_);
 
     ## Parse arguments
     $args	= ""  unless defined($args);
+
+    ## Check if content-disposition should be checked
+    if ($args =~ /\battachcheck\b/i) {
+	my($disp, $nameparm) = &readmail::MAILhead_get_disposition(*fields);
+	if ($disp =~ /\battachment\b/i) {
+	    require 'mhexternal.pl';
+	    return (&m2h_external::filter(
+		      $header, *fields, *data, $isdecode, $args));
+	}
+    }
+
+    ## Check if decoding uuencoded data.  The implementation chosen here
+    ## for decoding uuencoded data was done so when uudecode is not
+    ## specified, there is no extra overhead (besides the $args check for
+    ## uudecode).  However, when uudecode is specified, more overhead may
+    ## exist over other potential implementations.
+    ## I.e.  We only try to penalize performance when uudecode is specified.
+    if ($args =~ s/\buudecode\b//ig) {
+	# $args has uudecode stripped out for recursive calls
+
+	# Make sure we have needed routines
+	require 'base64.pl';
+	require 'mhmimetypes.pl';
+
+	# Grab any filename extensions that imply inlining
+	my $inlineexts = '';
+	if ($args =~ /\binlineexts=(\S+)/) {
+	    $inlineexts = ',' . lc($1) . ',';
+	    $inlineexts =~ s/['"]//g;
+	}
+	my $usename = $args =~ /\busename\b/;
+
+	local($pdata);	# have to use local() since typeglobs used
+	my($inext, $uddata, $file, $urlfile);
+	my @files = ( );
+	my $ret = "";
+	my $i = 0;
+
+	# Split on uuencoded data.  For text portions, recursively call
+	# filter to convert text data: makes it easier to handle all
+	# the various formatting options.
+	foreach $pdata
+		(split(/^(begin \d\d\d \S+\n[!-M].*?\nend\n)/sm, $data)) {
+	    if ($i % 2) {	# uuencoded data
+		# extract filename extension
+		($file) = $pdata =~ /^begin \d\d\d (\S+)/;
+		if ($file =~ /\.(\w+)$/) { $inext = $1; } else { $inext = ""; }
+
+		# decode data
+		$uddata = base64::uudecode($pdata);
+
+		# save to file
+		if (&readmail::MAILis_excluded('application/octet-stream')) {
+		    $ret .=
+		    "<tt>&lt;&lt;&lt; $file: EXCLUDED &gt;&gt;&gt;</tt><br>\n";
+		} else {
+		    push(@files,
+			 mhonarc::write_attachment(
+			    'application/octet-stream', \$uddata, '',
+			    ($usename?$file:''), $inext));
+		    $urlfile = mhonarc::htmlize($files[$#files]);
+
+		    # create link to file
+		    if (index($inlineexts, ','.lc($inext).',') >= $[) {
+			$ret .= qq|<a href="$urlfile"><img src="$urlfile">| .
+				qq|</a><br>\n|;
+		    } else {
+			$ret .= qq|<a href="$urlfile">| .
+				mhonarc::htmlize($file) .  qq|</a><br>\n|;
+		    }
+		}
+
+	    } elsif ($pdata =~ /\S/) {	# plain text
+		my(@subret) =
+		    &filter($header, *fields, *pdata, $isdecode, $args);
+		$ret .= shift @subret;
+		push(@files, @subret);
+	    }
+	    ++$i;
+	}
+
+	## Done with uudecode
+	return ($ret, @files);
+    }
+
+    
+    ## Check for HTML data if requested
+    if ($args =~ s/\bhtmlcheck\b//i &&
+	    $data =~ /\A\s*<(?:html\b|x-html\b|!doctype\s+html\s)/i) {
+	require 'mhtxthtml.pl';
+	return (&m2h_text_html::filter(
+		  $header, *fields, *data, $isdecode, $args));
+    }
+
+    my($charset, $nourl, $doquote, $igncharset, $nonfixed,
+       $keepspace, $maxwidth, $target, $defset, $xhtml);
+    my(%asis) = (
+	'us-ascii'   => 1,
+	'iso-8859-1' => 1,
+    );
+
     $nourl	= ($mhonarc::NOURL || ($args =~ /\bnourl\b/i));
     $doquote	= ($args =~ /\bquote\b/i);
     $nonfixed	= ($args =~ /\bnonfixed\b/i);
     $keepspace	= ($args =~ /\bkeepspace\b/i);
     if ($args =~ /\bmaxwidth=(\d+)/i) { $maxwidth = $1; }
 	else { $maxwidth = 0; }
-    if ($args =~ /\bdefault=(\S+)/i) { $defset = $1; }
+    if ($args =~ /\bdefault=(\S+)/i) { $defset = lc $1; }
 	else { $defset = 'us-ascii'; }
     $target = "";
     if ($args =~ /\btarget="([^"]+)"/i) { $target = $1; }
 	elsif ($args =~ /\btarget=(\S+)/i) { $target = $1; }
     $target =~ s/['"]//g;
     if ($target) {
-	$target = qq/TARGET="$target"/;
+	$target = qq/target="$target"/;
     }
-    $defset =~ s/['"]//g;
+    $defset =~ s/['"\s]//g;
 
     ## Grab charset parameter (if defined)
-    if (defined($fields{'content-type'}) and
-	    $fields{'content-type'} =~ /\bcharset=(\S+)/i) {
+    if ( defined($fields{'content-type'}) and
+	 $fields{'content-type'} =~ /\bcharset\s*=\s*([^\s;]+)/i ) {
 	$charset = lc $1;
+	$charset =~ s/['";\s]//g;
     } else {
-	$charset = lc $defset;
+	$charset = $defset;
     }
-    $charset =~ s/['";]//g;
 
     ## Check if certain charsets should be left alone
-    if ($args =~ /\sasis=(\S+)/i) {
-	my(@a) = split(':', $1);
-	local($_);
-	foreach (@a) {
-	    s/["']//g;  tr/A-Z/a-z/;
-	    $asis{$_} = 1;
-	}
+    if ($args =~ /\basis=(\S+)/i) {
+	my $t = lc $1;  $t =~ s/['"]//g;
+	%asis = ('us-ascii' => 1);  # XXX: Should us-ascii always be "as-is"?
+	local($_);  foreach (split(':', $t)) { $asis{$_} = 1; }
     }
 
     ## Check MIMECharSetConverters if charset should be left alone
-    if (defined($readmail::MIMECharSetConverters{$charset}) and
-	    $readmail::MIMECharSetConverters{$charset} eq "-decode-") {
+    my $charcnv = &readmail::load_charset($charset);
+    if (defined($charcnv) && $charcnv eq '-decode-') {
 	$asis{$charset} = 1;
     }
 
@@ -119,21 +245,29 @@ sub filter {
 
     ## Convert data according to charset
     if (!$asis{$charset}) {
-	##	Japanese message
-	if ($charset =~ /iso-2022-jp/i) {
-	    return (&jp2022(*data));
+	# Japanese we have to handle directly to support nourl flag
+	if ($charset =~ /iso-2022-jp/) {
+	    require "iso2022jp.pl";
+	    if ($nonfixed) {
+		return (&iso_2022_jp::jp2022_to_html($data, $nourl));
+	    } else {
+		return ('<pre>' .
+			&iso_2022_jp::jp2022_to_html($data, $nourl).
+			'</pre>');
+	    }
 
-	##	Latin 2-6, Greek, Hebrew, Arabic
-	} elsif ($charset =~ /iso-8859-([2-9]|10)/i) {
-	    require "iso8859.pl";
-	    $data = &iso_8859::str2sgml($data, $charset);
+	# Registered in CHARSETCONVERTERS
+	} elsif (defined($charcnv) && defined(&$charcnv)) {
+	    $data = &$charcnv($data, $charset);
 
-	##	ASCII, Latin 1, Other
+	# Other
 	} else {
-	    &esc_chars_inplace(*data);
+	    warn qq/Warning: Unrecognized character set: $charset\n/;
+	    &esc_chars_inplace(\$data);
 	}
+
     } else {
-	&esc_chars_inplace(*data);
+	&esc_chars_inplace(\$data);
     }
 
     ##	Check for quoting
@@ -148,7 +282,7 @@ sub filter {
 	    $data =~ s/^(.*)$/&preserve_space($1)/gem;
 	}
     } else {
-    	$data = "<PRE>\n" . $data . "</PRE>\n";
+    	$data = "<pre>\n" . $data . "</pre>\n";
     }
 
     ## Convert URLs to hyperlinks
@@ -159,113 +293,13 @@ sub filter {
 }
 
 ##---------------------------------------------------------------------------##
-##	Function to convert ISO-2022-JP data into HTML.  Function is based
-##	on the following RFCs:
-##
-##	RFC-1468 I
-##		J. Murai, M. Crispin, E. van der Poel, "Japanese Character
-##		Encoding for Internet Messages", 06/04/1993. (Pages=6)
-##
-##	RFC-1554  I
-##		M. Ohta, K. Handa, "ISO-2022-JP-2: Multilingual Extension of  
-##		ISO-2022-JP", 12/23/1993. (Pages=6)
-##
-##  Author of function:
-##      NIIBE Yutaka	gniibe@mri.co.jp
-##	(adapted for mhtxtplain.pl by Earl Hood <earlhood@usa.net>)
-##	(some changes made to remove use of $& and few other optimizations)
-##
-sub jp2022 {
-    local(*body) = shift;
-    my(@lines) = split(/\r?\n/,$body);
-    my($ret, $ascii_text);
-    local($_);
-
-    $ret = "<PRE>\n";
-    foreach (@lines) {
-	# Process preceding ASCII text
-	while(1) {
-	    if (s/^([^\033]+)//) {	# ASCII plain text
-		$ascii_text = $1;
-
-		# Replace meta characters in ASCII plain text
-		$ascii_text =~ s%\&%\&amp;%g;
-		$ascii_text =~ s%<%\&lt;%g;
-		$ascii_text =~ s%>%\&gt;%g;
-		## Convert URLs to hyperlinks
-		$ascii_text =~ s%($HUrlExp)%<A HREF="$1">$1</A>%gio
-		    unless $mhonarc::NOURL;
-
-		$ret .= $ascii_text;
-	    } elsif (s/(\033\.[A-F])//) { # G2 Designate Sequence
-		$ret .= $1;
-	    } elsif (s/(\033N[ -])//) { # Single Shift Sequence
-		$ret .= $1;
-	    } else {
-		last;
-	    }
-	}
-
-	# Process Each Segment
-	while(1) {
-	    if (s/^(\033\([BJ])//) { # Single Byte Segment
-		$ret .= $1;
-		while(1) {
-		    if (s/^([^\033]+)//) {	# ASCII plain text
-			$ascii_text = $1;
-
-			# Replace meta characters in ASCII plain text
-			$ascii_text =~ s%\&%\&amp;%g;
-			$ascii_text =~ s%<%\&lt;%g;
-			$ascii_text =~ s%>%\&gt;%g;
-			## Convert URLs to hyperlinks
-			$ascii_text =~ s%($HUrlExp)%<A HREF="$1">$1</A>%gio
-			    unless $mhonarc::NOURL;
-
-			$ret .= $ascii_text;
-		    } elsif (s/(\033\.[A-F])//) { # G2 Designate Sequence
-			$ret .= $1;
-		    } elsif (s/(\033N[ -])//) { # Single Shift Sequence
-			$ret .= $1;
-		    } else {
-			last;
-		    }
-		}
-	    } elsif (s/^(\033\$[\@AB]|\033\$\([CD])//) { # Double Byte Segment
-		$ret .= $1;
-		while (1) {
-		    if (s/^([!-~][!-~]+)//) { # Double Char plain text
-			$ret .= $1;
-		    } elsif (s/(\033\.[A-F])//) { # G2 Designate Sequence
-			$ret .= $1;
-		    } elsif (s/(\033N[ -])//) { # Single Shift Sequence
-			$ret .= $1;
-		    } else {
-			last;
-		    }
-		}
-	    } else {
-		# Something wrong in text
-		$ret .= $_;
-		last;
-	    }
-	}
-
-	$ret .= "\n";
-    }
-
-    $ret .= "</PRE>\n";
-
-    ($ret);
-}
-
-##---------------------------------------------------------------------------##
 
 sub esc_chars_inplace {
-    local(*foo) = shift;
-    $foo =~ s@\&@\&amp;@g;
-    $foo =~ s@<@\&lt;@g;
-    $foo =~ s@>@\&gt;@g;
+    my($foo) = shift;
+    $$foo =~ s/&/&amp;/g;
+    $$foo =~ s/</&lt;/g;
+    $$foo =~ s/>/&gt;/g;
+    $$foo =~ s/"/&quot;/g;
     1;
 }
 

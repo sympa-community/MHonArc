@@ -13,6 +13,7 @@
 <h1>TSLICEEND</h1>
 
 <!-- *************************************************************** -->
+<hr>
 <h2>Syntax</h2>
 
 <dl>
@@ -38,6 +39,7 @@
 </dl>
 
 <!-- *************************************************************** -->
+<hr>
 <h2>Description</h2>
 
 <p>TSLICEEND defines the end markup of a thread listing
@@ -59,6 +61,7 @@ be equivalent to the thread listing end portion of TFOOT.
 </p>
 
 <!-- *************************************************************** -->
+<hr>
 <h2>Default Setting</h2>
 
 <pre>
@@ -68,10 +71,10 @@ be equivalent to the thread listing end portion of TFOOT.
 </pre>
 
 <!-- *************************************************************** -->
+<hr>
 <h2>Resource Variables</h2>
 
 <table border=1>
-<tbody>
 <tr bgcolor="#C0C0C0">
 <th>Variable</th><th>Value</th>
 </tr>
@@ -92,8 +95,8 @@ be equivalent to the thread listing end portion of TFOOT.
 <td>URL to documentation.</td>
 </tr>
 <tr valign=top>
-<td align=center><a name="FIRSTPG" href="../rcvars.html#FIRSTPG"><strong><code>$FIRSTPG$</code></strong></a></td>
-<td>Filename of first page of main index.</td>
+<td align=center><a name="ENV" href="../rcvars.html#ENV"><strong><code>$ENV$</code></strong></a></td>
+<td>Value of an environment variable.</td>
 </tr>
 <tr valign=top>
 <td align=center><a name="FROM" href="../rcvars.html#FROM"><strong><code>$FROM$</code></strong></a></td>
@@ -102,6 +105,14 @@ be equivalent to the thread listing end portion of TFOOT.
 <tr valign=top>
 <td align=center><a name="FROMADDR" href="../rcvars.html#FROMADDR"><strong><code>$FROMADDR$</code></strong></a></td>
 <td>The e-mail address in the <tt>From:</tt> field of the message.</td>
+</tr>
+<tr valign=top>
+<td align=center><a name="FROMADDRDOMAIN" href="../rcvars.html#FROMADDRDOMAIN"><strong><code>$FROMADDRDOMAIN$</code></strong></a></td>
+<td>The e-mail address domain of the <tt>From:</tt> field of the message.</td>
+</tr>
+<tr valign=top>
+<td align=center><a name="FROMADDRNAME" href="../rcvars.html#FROMADDRNAME"><strong><code>$FROMADDRNAME$</code></strong></a></td>
+<td>The e-mail address "username" (or local-part) of the <tt>From:</tt> field of the message.</td>
 </tr>
 <tr valign=top>
 <td align=center><a name="FROMNAME" href="../rcvars.html#FROMNAME"><strong><code>$FROMNAME$</code></strong></a></td>
@@ -140,10 +151,6 @@ be equivalent to the thread listing end portion of TFOOT.
 <td>The title of the main index page.</td>
 </tr>
 <tr valign=top>
-<td align=center><a name="LASTPG" href="../rcvars.html#LASTPG"><strong><code>$LASTPG$</code></strong></a></td>
-<td>Filename of last page in of main index.</td>
-</tr>
-<tr valign=top>
 <td align=center><a name="LINK" href="../rcvars.html#LINK"><strong><code>$LINK$</code></strong></a></td>
 <td>Link markup linking to a message.</td>
 </tr>
@@ -180,6 +187,14 @@ be equivalent to the thread listing end portion of TFOOT.
 <td>Filename prefix for message files.</td>
 </tr>
 <tr valign=top>
+<td align=center><a name="MSGTORDNUM" href="../rcvars.html#MSGTORDNUM"><strong><code>$MSGTORDNUM$</code></strong></a></td>
+<td>The ordinal message number of the current discussion thread.</td>
+</tr>
+<tr valign=top>
+<td align=center><a name="NOTE" href="../rcvars.html#NOTE"><strong><code>$NOTE$</code></strong></a></td>
+<td>Message annotation.</td>
+</tr>
+<tr valign=top>
 <td align=center><a name="NUMFOLUP" href="../rcvars.html#NUMFOLUP"><strong><code>$NUMFOLUP$</code></strong></a></td>
 <td>Number of explicit follow-ups to the message.</td>
 </tr>
@@ -202,6 +217,10 @@ be equivalent to the thread listing end portion of TFOOT.
 <tr valign=top>
 <td align=center><a name="PROG" href="../rcvars.html#PROG"><strong><code>$PROG$</code></strong></a></td>
 <td>Program name</td>
+</tr>
+<tr valign=top>
+<td align=center><a name="SUBJECT" href="../rcvars.html#SUBJECT"><strong><code>$SUBJECT$</code></strong></a></td>
+<td>The subject text of the message, and if no arguments, wrapped in an anchor element that hyperlinks to the message.</td>
 </tr>
 <tr valign=top>
 <td align=center><a name="SUBJECTNA" href="../rcvars.html#SUBJECTNA"><strong><code>$SUBJECTNA$</code></strong></a></td>
@@ -235,22 +254,24 @@ be equivalent to the thread listing end portion of TFOOT.
 <td align=center><a name="YYYYMMDD" href="../rcvars.html#YYYYMMDD"><strong><code>$YYYYMMDD$</code></strong></a></td>
 <td>Message date in yyyy/mm/dd format.</td>
 </tr>
-</tbody>
 </table>
 
 <!-- *************************************************************** -->
+<hr>
 <h2>Examples</h2>
 
 <p>None.
 </p>
 
 <!-- *************************************************************** -->
+<hr>
 <h2>Version</h2>
 
 <p>2.2.0
 </p>
 
 <!-- *************************************************************** -->
+<hr>
 <h2>See Also</h2>
 
 <p>
@@ -266,13 +287,13 @@ be equivalent to the thread listing end portion of TFOOT.
 <!-- *************************************************************** -->
 <hr>
 <address>
-98/09/19 18:27:19<br>
+00/10/28 11:13:12<br>
 <img align="top" src="../monicon.gif" alt="">
-<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"
+<a href="http://www.pobox.com/~ehood/mhonarc.html"
 ><strong>MHonArc</strong></a><br>
-Copyright &#169; 1998, <a href="http://www.oac.uci.edu/indiv/ehood/"
->Earl Hood</a>, <a href="mailto:earlhood@usa.net"
->earlhood@usa.net</a><br>
+Copyright &#169; 1998-1999, <a href="http://www.pobox.com/~ehood/"
+>Earl Hood</a>, <a href="mailto:mhonarc@pobox.com"
+>mhonarc@pobox.com</a><br>
 </address>
 
 </body>

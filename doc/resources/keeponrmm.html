@@ -1,0 +1,128 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
+<html>
+<head>
+<title>MHonArc Resources: KEEPONRMM</title>
+</head>
+<body>
+
+<address>
+<a href="../resources.html#keeponrmm">MHonArc Resource List</a><br>
+</address>
+
+<hr>
+<h1>KEEPONRMM</h1>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Syntax</h2>
+
+<dl>
+
+<dt><strong>Envariable</strong><dt>
+<dd><p>
+<code>M2H_KEEPONRMM=</code>[ <code>0</code> | <code>1</code> ]
+</p>
+</dd>
+
+<dt><strong>Element</strong><dt>
+<dd><p><br>
+<code>&lt;KEEPONRMM&gt;</code><br>
+<code>&lt;NOKEEPONRMM&gt;</code><br>
+</p>
+</dd>
+
+<dt><strong>Command-line Option</strong><dt>
+<dd><p><br>
+<code>-keeponrmm</code>
+<code>-nokeeponrmm</code>
+</p>
+</dd>
+
+</dl>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Description</h2>
+
+<p>If KEEPONRMM is set, message files will not be deleted from
+the file system when a message is removed from an archive.  This option
+is useful if you are using a search engine to index archives and
+you still want old messages to be searchable but not part of the
+browsable indexes.  This is a benefit for large archives that want to
+allow access to old messages but without taking the overhead of
+long archive updates.
+</p>
+
+<p>The KEEPONRMM applies to messages removed via the
+<a href="rmm.html">RMM</a> resource or by automatic deletions performed
+enforcing 
+<a href="maxsize.html">MAXSIZE</a>,
+<a href="expireage.html">EXPIREAGE</a>, and
+<a href="expiredate.html">EXPIREDATE</a>,
+</p>
+
+<table border=0 cellpadding=4>
+<tr valign=top>
+<td><strong>NOTE</strong></td>
+<td><p>KEEPONRMM resource is stored in the database file.  Therefore,
+when set on an archive update, or creation, message files will
+not be physically deleted for all future archive message removals
+until KEEPONRMM is explicitly disabled.
+</p>
+</td>
+</tr>
+</table>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Default Setting</h2>
+
+<p>Off.
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Resource Variables</h2>
+
+<p>N/A
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Examples</h2>
+
+<p>None.
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Version</h2>
+
+<p>2.4.8
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>See Also</h2>
+
+<p>
+<a href="expireage.html">EXPIREAGE</a>,
+<a href="expiredate.html">EXPIREDATE</a>,
+<a href="maxsize.html">MAXSIZE</a>,
+<a href="rmm.html">RMM</a>
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<address>
+01/04/13 12:32:44<br>
+<img align="top" src="../monicon.gif" alt="">
+<a href="http://www.pobox.com/~ehood/mhonarc.html"
+><strong>MHonArc</strong></a><br>
+Copyright &#169; 2001, <a href="http://www.pobox.com/~ehood"
+>Earl Hood</a>, <a href="mailto:mhonarc@pobox.com"
+>mhonarc@pobox.com</a><br>
+</address>
+
+</body>
+</html>

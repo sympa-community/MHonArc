@@ -13,6 +13,7 @@
 <h1>FROMFIELDS</h1>
 
 <!-- *************************************************************** -->
+<hr>
 <h2>Syntax</h2>
 
 <dl>
@@ -46,6 +47,7 @@
 </dl>
 
 <!-- *************************************************************** -->
+<hr>
 <h2>Description</h2>
 
 <p>FROMFIELDS specify the message header fields MHonArc will search to
@@ -58,31 +60,43 @@ list of message header fields to check.
 </p>
 
 <!-- *************************************************************** -->
+<hr>
 <h2>Default Setting</h2>
 
 <pre>
-from:reply-to:apparently-from
+from:mail-reply-to:reply-to:return-path:apparently-from:sender:resent-sender
 </pre>
 
+<p>This resource is intended to reflect who the author is and not necessarily
+where replies of the message should be directed.  This is why the
+<tt>From: </tt> field has higher precendence than the reply-to fields.
+However, if it is desired that it reflect where replies should be
+directed, then put <tt>mail-reply-to</tt> and <tt>reply-to</tt> first.
+</p>
+
 <!-- *************************************************************** -->
+<hr>
 <h2>Resource Variables</h2>
 
 <p>N/A
 </p>
 
 <!-- *************************************************************** -->
+<hr>
 <h2>Examples</h2>
 
 <p>None.
 </p>
 
 <!-- *************************************************************** -->
+<hr>
 <h2>Version</h2>
 
 <p>2.1.2
 </p>
 
 <!-- *************************************************************** -->
+<hr>
 <h2>See Also</h2>
 
 <p><a href="datefields.html">DATEFIELDS</a>
@@ -91,13 +105,13 @@ from:reply-to:apparently-from
 <!-- *************************************************************** -->
 <hr>
 <address>
-98/09/19 18:27:09<br>
+00/10/28 11:13:01<br>
 <img align="top" src="../monicon.gif" alt="">
-<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"
+<a href="http://www.pobox.com/~ehood/mhonarc.html"
 ><strong>MHonArc</strong></a><br>
-Copyright &#169; 1998, <a href="http://www.oac.uci.edu/indiv/ehood/"
->Earl Hood</a>, <a href="mailto:earlhood@usa.net"
->earlhood@usa.net</a><br>
+Copyright &#169; 1998-1999, <a href="http://www.pobox.com/~ehood/"
+>Earl Hood</a>, <a href="mailto:mhonarc@pobox.com"
+>mhonarc@pobox.com</a><br>
 </address>
 
 </body>

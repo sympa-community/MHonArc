@@ -1,8 +1,8 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	@(#) mhtxtenrich.pl 2.2 98/08/10 23:50:38
+##	@(#) mhtxtenrich.pl 2.4 00/02/08 10:04:43
 ##  Author:
-##      Earl Hood       earlhood@usa.net
+##      Earl Hood       mhonarc@pobox.com
 ##  Description:
 ##	Library defines a routine for MHonArc to filter text/enriched
 ##	data.
@@ -16,7 +16,7 @@
 ##
 ##---------------------------------------------------------------------------##
 ##    MHonArc -- Internet mail-to-HTML converter
-##    Copyright (C) 1997-1998	Earl Hood, earlhood@usa.net
+##    Copyright (C) 1997-1999	Earl Hood, mhonarc@pobox.com
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by
@@ -81,7 +81,7 @@ sub filter {
     ## 		(we already did '<' and '&' characters)
     if ($charset =~ /iso-8859-([2-9]|10)/i) {
 	require 'iso8859.pl';
-	$ret = &iso_8859'str2sgml($ret, $charset, 1);
+	$ret = &iso_8859::str2sgml($ret, $charset, 1);
     }
 
     $ret;

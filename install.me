@@ -1,9 +1,9 @@
-#!/opt/perl/bin/perl
+#!/usr/bin/perl
 ##---------------------------------------------------------------------------##
 ##  File:
-##	@(#) install.me 1.10 98/11/08 15:54:02
+##	@(#) install.me 1.16 01/04/06 00:28:49
 ##  Author:
-##      Earl Hood, earlhood@usa.net
+##      Earl Hood, ehood@pobox.com
 ##  Summary:
 ##	Installation program for Perl applications.  It is an alternative
 ##	to the MakeMaker/Makefile.PL method for "pure" Perl applications.
@@ -13,7 +13,7 @@
 ##	file to install is listed in the file with a prefix telling
 ##	the installation program the type of file it is.
 ##---------------------------------------------------------------------------##
-##    Copyright (C) 1997,1998	Earl Hood, earlhood@usa.net
+##    Copyright (C) 1997-1999	Earl Hood, ehood@pobox.com
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by
@@ -45,7 +45,8 @@ use Config;
 use FileHandle;
 use Getopt::Long;
 
-my $MacCLPrompt;
+my $MacCLPrompt = 0;
+my $SkipPermCheck = 0;
 
 ###############################################################################
 ##	OS Configuration Code
@@ -97,21 +98,15 @@ BEGIN {
     } elsif (/vms/i) {
 	$VMS = 1;
 	$OSType = 'vms';
-    } elsif (/msdos/i) {
+    } elsif (/msdos/i || /\bdos\b/i) {
 	$MSDOS = 1;
 	$OSType = 'msdos';
     } elsif (/mswin/i or /winnt/i) {
 	$WINDOWS = 1;  $MSDOS = 1;
 	$OSType = 'windows';
-    } elsif (/unix/i or
-	     /aix/i or
-	     /bsd/i or
-	     /dynix/i or
-	     /hpux/i or
-	     /solaris/i or
-	     /sunos/i or
-	     /ultrix/i or
-	     /linux/i) {
+    } elsif (/unix/i  || /aix/i     || /bsd/i   || /dynix/i  ||
+	     /hpux/i  || /solaris/i || /sunos/i || /ultrix/i ||
+	     /linux/i || /cygwin/i) {
 	$UNIX = 1;
 	$OSType = 'unix';
     } else {
@@ -243,18 +238,19 @@ my %OptValues	= ();
     my $ret =
     GetOptions(\%OptValues,
 	       qw(
+		   afs
 		   batch
-		   prefix=s
 		   binpath=s
 		   docpath=s
+		   filelist=s
 		   libpath=s
 		   manpath=s
-		   perl=s
-		   filelist=s
 		   nobin
 		   nodoc
 		   nolib
 		   noman
+		   perl=s
+		   prefix=s
 
 		   help));
 
@@ -263,22 +259,42 @@ my %OptValues	= ();
 	exit !$ret;
     }
 
-    my $cfg_prefix        = $Config{'prefix'};
-    $DefValues{'binpath'} = $Config{'installbin'};
-    $DefValues{'libpath'} = $Config{'installsitelib'};
-    $DefValues{'manpath'} = $Config{'installman1dir'};
+    my $cfg_prefix        = interpolate_path($Config{'prefix'});
+    $DefValues{'binpath'} = interpolate_path($Config{'installbin'});
+    $DefValues{'libpath'} = interpolate_path($Config{'installsitelib'});
+    $DefValues{'manpath'} = interpolate_path($Config{'installman1dir'});
     if (defined($OptValues{'prefix'})) {
-	$DefValues{'binpath'} =~ s/^\Q$cfg_prefix/$OptValues{'prefix'}/o;
-	$DefValues{'libpath'} =~ s/^\Q$cfg_prefix/$OptValues{'prefix'}/o;
-	$DefValues{'manpath'} =~ s/^\Q$cfg_prefix/$OptValues{'prefix'}/o;
-	$DefValues{'docpath'}  = join($DIRSEP, $OptValues{'prefix'}, 'doc');
+	$DefValues{'binpath'} = join($DIRSEP, $OptValues{'prefix'}, 'bin')
+	    unless $DefValues{'binpath'} =~
+		   s/^\Q$cfg_prefix/$OptValues{'prefix'}/o;
+	$DefValues{'libpath'} = join($DIRSEP, $OptValues{'prefix'}, 'lib')
+	    unless $DefValues{'libpath'} =~
+		   s/^\Q$cfg_prefix/$OptValues{'prefix'}/o;
+	$DefValues{'manpath'} = join($DIRSEP, $OptValues{'prefix'}, 'man')
+	    unless $DefValues{'manpath'} =~
+		   s/^\Q$cfg_prefix/$OptValues{'prefix'}/o;
+	$DefValues{'docpath'} = join($DIRSEP, $OptValues{'prefix'}, 'doc');
+
     } else {
-	$DefValues{'docpath'}  = join($DIRSEP, $cfg_prefix, 'doc');
+	$DefValues{'docpath'} = join($DIRSEP, $cfg_prefix, 'doc');
     }
     $DefValues{'manpath'} =~ s|(${DIRSEPRX}man)${DIRSEPRX}.*|$1|;
 
     $DefValues{'filelist'} = 'FILELIST';
-    $DefValues{'perl'}     = $Config{'perlpath'}
+    $DefValues{'perl'}     = $Config{'perlpath'};
+
+    $SkipPermCheck = 1  if $OptValues{'afs'};
+
+    ## If VMS, tweak pathnames
+    if ($VMS) {
+      my($key);
+      foreach $key (keys(%DefValues)) {
+        $DefValues{$key} =~ s|:||;
+        $DefValues{$key} =~ s|[\.\[\]]|/|g;
+        $DefValues{$key} =~ s|000000||g;
+        $DefValues{$key} =~ s|//|/|g;
+      }
+    }
 }
 
 ###############################################################################
@@ -389,6 +405,11 @@ my %OptValues	= ();
 	    print STDOUT $destfile, "\n";
 	    cp($_, $destfile, $plprefix, $WINDOWS);
 	    eval q{chmod 0755, $destfile;};
+	    if ($WINDOWS && $file !~ /\.pl$/i) {
+		$destfile .= ".pl";
+		cp($_, $destfile, $plprefix);
+		eval q{chmod 0755, $destfile;};
+	    }
 	}
     }
     if ($dolib) {
@@ -414,15 +435,16 @@ my %OptValues	= ();
 	}
     }
     if ($doman) {
-	my $sect;
+	my($sect, $msubdir);
 	print STDOUT qq(Installing manpages to "$OptValues{'manpath'}":\n);
 	if (create_dir($OptValues{'manpath'}, 1) <= 0) { die "\n"; }
 	foreach (@{$Files{'man'}}) {
 	    print STDOUT "    $_ => ";
 	    ($file = $_)    =~ s%.*/%%o;
 	    ($sect = $file) =~ s%.*\.%%o;
-	    $destfile = join('', $OptValues{'manpath'},
-			     $DIRSEP, "man", $sect, $DIRSEP, $file);
+	    $msubdir  = join($DIRSEP, $OptValues{'manpath'}, "man$sect");
+	    if (create_dir($msubdir, 1) <= 0) { die "\n"; }
+	    $destfile = join($DIRSEP, $msubdir, $file);
 	    print STDOUT $destfile, "\n";
 	    cp($_, $destfile);
 	}
@@ -525,7 +547,7 @@ sub create_dir {
     my $noask	= shift;	# Don't ask to create flag
 
     if (-e $d) {
-	if (-w $d) { return 1; }
+	if ($SkipPermCheck || -w $d) { return 1; }
 	warn qq/"$d" is not writable\n/;
 	return -1;
     }
@@ -562,7 +584,7 @@ sub create_dir {
 	}
 	$path .= $DIRSEP . $dir;
     }
-    if (! -w $d) {
+    if (!$SkipPermCheck && (! -w $d)) {
 	warn qq/"$d" not writable\n/;
 	return -1;
     }
@@ -570,16 +592,27 @@ sub create_dir {
 }
 
 ##------------------------------------------------------------------------
-##	interpolate_path() expands any special characters in a
-##	pathname.
+##	interpolate_path() expands any special characters in a pathname.
 ##
 sub interpolate_path {
     my($path) = shift;
 
-    $path =~ s/^~/$ENV{'HOME'}/e;
-    $path =~ s/\$(\w+)/$ENV{$1}/ge;
-    $path =~ s/\$\{(\w+)\}/$ENV{$1}/ge;
+    $path =~ s/^~($DIRSEPRX|$)/$ENV{'HOME'}$1/o;
+    $path =~ s/^(~\w+)($DIRSEPRX|$)/get_user_home_dir($1).$2/oe;
+    $path =~ s/\$(\w+)/defined($ENV{$1})?$ENV{$1}:"\$$1"/ge;
+    $path =~ s/\$\{(\w+)\}/defined($ENV{$1})?$ENV{$1}:"\${$1}"/ge;
     $path;
+}
+
+##------------------------------------------------------------------------
+##	get_user_home_dir() retrieves home directory for a given user.
+##
+sub get_user_home_dir {
+    my $orguser = shift;
+    my $user = $orguser;
+       $user =~ s/~//g;
+    my @pwent = getpwnam($user);
+    return scalar(@pwent) ? $pwent[7] : $orguser;
 }
 
 ##------------------------------------------------------------------------
@@ -719,6 +752,7 @@ sub usage {
     print STDOUT <<EOF;
 Usage: $PROG [options]
 Options:
+  -afs                  : Skip permission checks (useful if AFS)
   -batch                : Run in batch mode (do not ask questions)
   -binpath <path>       : Directory path to install programs/scripts
   -docpath <path>       : Directory path to install documentation

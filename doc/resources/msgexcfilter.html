@@ -1,0 +1,142 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
+<html>
+<head>
+<title>MHonArc Resources: MSGEXCFILTER</title>
+</head>
+<body>
+
+<address>
+<a href="../resources.html#msgexcfilter">MHonArc Resource List</a><br>
+</address>
+
+<hr>
+<h1>MSGEXCFILTER</h1>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Syntax</h2>
+
+<dl>
+
+<dt><strong>Envariable</strong><dt>
+<dd><p>
+<code>M2H_MSGEXCFILTER=</code><var>Perl_expressions</var>
+</p>
+</dd>
+
+<dt><strong>Element</strong><dt>
+<dd><p><br>
+<code>&lt;MSGEXCFILTER&gt;</code><br>
+<var>Perl_expressions</var><br>
+<code>&lt;/MSGEXCFILTER&gt;</code><br>
+</p>
+</dd>
+
+<dt><strong>Command-line Option</strong><dt>
+<dd><p><br>
+<code>-msgexcfilter </code><var>Perl_expressions</var>
+</p>
+</dd>
+
+</dl>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Description</h2>
+
+<p>MSGEXCFILTER may be used to define Perl expressions to
+selectively exclude messages during an
+<a href="add.html">ADD</a> operation.  Unlike the
+<a href="checknoarchive.html">CHECKNOARCHIVE</a> resource,
+MSGEXCFILTER allows you to explicitly examine entire message headers
+to determine which messages should be added.
+</p>
+<p>When defining the expressions, the raw message header will be in
+the <b><tt>$_</tt></b> variable.  If the last evaluated expression
+of MSGEXCFILTER returns a true value, or there is an explicit
+<tt>return</tt> statement that returns a true value, MHonArc will
+exclude the message.
+</p>
+
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Default Setting</h2>
+
+<p>Nil.
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Resource Variables</h2>
+
+<p>N/A
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Examples</h2>
+
+<p>A typical usage of MSGEXCFILTER is to define a pattern match
+operation:
+</p>
+<pre>
+<b>&lt;MsgExcFilter&gt;</b>
+/^From: .*\behood@/im;
+<b>&lt;/MsgExcFilter&gt;</b>
+</pre>
+<p>Here, we are excluding any messages that are from "ehood".  The
+"<tt>m</tt>" modifier to the pattern match exists because the
+header will contain newlines.
+</p>
+
+<p>The following example attempts to exclude all messages not addressed
+to <tt>mhonarc@ncsa.uiuc.edu</tt>:
+</p>
+<pre>
+<b>&lt;MsgExcFilter&gt;</b>
+!/\bmhonarc@ncsa.uiuc.edu\b/i;
+<b>&lt;/MsgExcFilter&gt;</b>
+</pre>
+
+<p>Here, we do what the <a href="checknoarchive.html">CHECKNOARCHIVE</a>
+resource basically does:
+</p>
+<pre>
+<b>&lt;MsgExcFilter&gt;</b>
+/^restrict:\s+no-external-archive/im ||
+/^x-no-archive:\s+yes/im;
+<b>&lt;/MsgExcFilter&gt;</b>
+</pre>
+
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Version</h2>
+
+<p>2.4.1
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>See Also</h2>
+
+<p>
+<a href="add.html">ADD</a>,
+<a href="checknoarchive.html">CHECKNOARCHIVE</a>
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<address>
+00/10/28 11:13:04<br>
+<img align="top" src="../monicon.gif" alt="">
+<a href="http://www.pobox.com/~ehood/mhonarc.html"
+><strong>MHonArc</strong></a><br>
+Copyright &#169; 1999, <a href="http://www.pobox.com/~ehood"
+>Earl Hood</a>, <a href="mailto:mhonarc@pobox.com"
+>mhonarc@pobox.com</a><br>
+</address>
+
+</body>
+</html>

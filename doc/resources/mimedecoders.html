@@ -1,0 +1,161 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
+<html>
+<head>
+<title>MHonArc Resources: MIMEDECODERS</title>
+</head>
+<body>
+
+<address>
+<a href="../resources.html#mimedecoders">MHonArc Resource List</a><br>
+</address>
+
+<hr>
+<h1>MIMEDECODERS</h1>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Syntax</h2>
+
+<dl>
+
+<dt><strong>Envariable</strong><dt>
+<dd><p>N/A
+</p>
+</dd>
+
+<dt><strong>Element</strong><dt>
+<dd><p><br>
+<code>&lt;MIMEDECODERS&gt;</code><br>
+<var>decoder-specification</var><br>
+<var>...</var><br>
+<code>&lt;/MIMEDECODERS&gt;</code><br>
+</p>
+</dd>
+
+<dt><strong>Command-line Option</strong><dt>
+<dd><p>N/A
+</p>
+</dd>
+
+</dl>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Description</h2>
+
+<p>The MIMEDECODERS resource specifies Perl routines to call
+for decoding MIME encoded data.  For message bodies, the encoding
+is specified by the <tt>Content-Transfer-Encoding</tt> header
+field.  Data encoding can also occur for non-ASCII data in
+message headers.
+</p>
+
+<p>The MIMEDECODERS resource can only be defined via the
+resource file.  Each line of the element specifies a encoding,
+the Perl routine for filtering the character set, and the Perl source
+file containing the routine.
+</p>
+
+<p>Example:</p>
+<pre>
+<b>&lt;MIMEDecoders&gt;</b>
+base64;           base64::b64decode;            base64.pl
+<b>&lt;/MIMEDecoders&gt;</b>
+</pre>
+
+<p>The first field is the encoding method.  The second field
+is the routine name (which should contain a package qualifier).
+The third field is the source file the routine is defined.  The
+source file is optional if the routine is known to be defined in
+an already listed source file.
+</p>
+
+<p>There are some special decoder routines
+values.  They are as follows:
+</p>
+ 
+<dl>
+ 
+<dt><em>as-is</em></dt>
+<dd><p>Leave the data "as-is".
+</p>
+</dd>
+
+</dl>
+
+<p>Each decoder function is invoked as follows:
+</p>
+
+<pre>
+    $decoded_data = &amp;function($data);
+</pre>
+ 
+<!-- *************************************************************** -->
+<hr>
+<h2>Default Setting</h2>
+
+<pre>
+<b>&lt;MIMEDecoders&gt;</b>
+7bit;             as-is;
+8bit;             as-is;
+binary;           as-is;
+base64;           base64::b64decode;            base64.pl
+quoted-printable; quoted_printable::qprdecode;  qprint.pl
+x-uuencode;       base64::uudecode;             base64.pl
+xuue;             base64::uudecode;             base64.pl
+uuencode;         base64::uudecode;             base64.pl
+<b>&lt;/MIMEDecoders&gt;</b>
+</pre>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Resource Variables</h2>
+
+<p>N/A
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Examples</h2>
+
+<p>The following example changes the base64 decoder to use the
+MIME::Base64 module (available from CPAN):
+</p>
+
+<pre>
+<b>&lt;MIMEDecoders&gt;</b>
+base64; MIME::Base64::decode_base64; MIME/Base64.pm
+<b>&lt;/MIMEDecoders&gt;</b>
+</pre>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Version</h2>
+
+<p>2.4.4
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>See Also</h2>
+
+<p>
+<a href="charsetconverter.html">CHARSETCONVERTER</a>,
+<a href="mimefilters.html">MIMEFILTERS</a>,
+<a href="perlinc.html">PERLINC</a>
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<address>
+00/10/28 11:13:13<br>
+<img align="top" src="../monicon.gif" alt="">
+<a href="http://www.pobox.com/~ehood/mhonarc.html"
+><strong>MHonArc</strong></a><br>
+Copyright &#169; 1999, <a href="http://www.pobox.com/~ehood"
+>Earl Hood</a>, <a href="mailto:mhonarc@pobox.com"
+>mhonarc@pobox.com</a><br>
+</address>
+
+</body>
+</html>

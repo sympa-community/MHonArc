@@ -1,7 +1,7 @@
 " Vim syntax file
 " Language:	MHonArc Resource File
-" Maintainer:	Earl Hood <earlhood@usa.net>
-" Last change:	98/10/10 15:49:20
+" Maintainer:	Earl Hood <mhonarc@pobox.com>
+" Last change:	01/06/10 17:47:56
 
 "	Adapted from the following:
 " Language:	HTML
@@ -41,47 +41,198 @@ syn region  mhaRcVar	 	   start=+\$+ end=+\$+		      contains=mhaRcVarArg
 syn region  mhaRcVarArg	 contained start=+(+  end=+)+
 " syn match mhaRcVar	  "\$[^$]*\$"
 
-" MHonArc tag names
-syn keyword mhaTagName contained annotate archive authorbegin authorend authsort
-syn keyword mhaTagName contained botlinks charsetconverters conlen datefields
-syn keyword mhaTagName contained daybegin dayend dbfile decodeheads definederived
-syn keyword mhaTagName contained definevar defrcfile defrcname doc docurl
-syn keyword mhaTagName contained editidx excs expireage expiredate
-syn keyword mhaTagName contained fieldorder fieldsbeg fieldsend fieldstyles
-syn keyword mhaTagName contained fldbeg fldend folrefs folupbegin folupend
-syn keyword mhaTagName contained foluplitxt footer force fromfields genidx
-syn keyword mhaTagName contained gmtdatefmt gzipexe gzipfiles gziplinks headbodysep
-syn keyword mhaTagName contained header htmlext icons idxfname idxlabel
-syn keyword mhaTagName contained idxpgbegin idxpgend idxprefix idxsize include
-syn keyword mhaTagName contained labelbeg labelend labelstyles listbegin listend
-syn keyword mhaTagName contained litemplate localdatefmt lock lockdelay locktries
-syn keyword mhaTagName contained mailto mailtourl main maxsize mhpattern mimeargs
-syn keyword mhaTagName contained mimefilters modtime months monthsabr msgbodyend
-syn keyword mhaTagName contained msgfoot msggmtdatefmt msghead msgidlink
-syn keyword mhaTagName contained msglocaldatefmt msgpgbegin msgpgend msgprefix
-syn keyword mhaTagName contained msgpgs msgsep multipg news nextbutton nextbuttonia
-syn keyword mhaTagName contained nextlink nextlinkia nextpglink nextpglinkia
-syn keyword mhaTagName contained nofolrefs nomsgpgs noreverse nothread notreverse
+" BEGIN: MHonArc Tags
+syn keyword mhaTagName contained addressmodifycode
+syn keyword mhaTagName contained authorbegin
+syn keyword mhaTagName contained authorend
+syn keyword mhaTagName contained authsort
+syn keyword mhaTagName contained noauthsort
+syn keyword mhaTagName contained botlinks
+syn keyword mhaTagName contained charsetconverters
+syn keyword mhaTagName contained checknoarchive
+syn keyword mhaTagName contained nochecknoarchive
+syn keyword mhaTagName contained conlen
+syn keyword mhaTagName contained noconlen
+syn keyword mhaTagName contained datefields
+syn keyword mhaTagName contained daybegin
+syn keyword mhaTagName contained dayend
+syn keyword mhaTagName contained dbfile
+syn keyword mhaTagName contained decodeheads
+syn keyword mhaTagName contained nodecodeheads
+syn keyword mhaTagName contained definederived
+syn keyword mhaTagName contained definevar
+syn keyword mhaTagName contained doc
+syn keyword mhaTagName contained nodoc
+syn keyword mhaTagName contained docurl
+syn keyword mhaTagName contained excs
+syn keyword mhaTagName contained expireage
+syn keyword mhaTagName contained expiredate
+syn keyword mhaTagName contained fieldorder
+syn keyword mhaTagName contained fieldsbeg
+syn keyword mhaTagName contained fieldsend
+syn keyword mhaTagName contained fieldstyles
+syn keyword mhaTagName contained fldbeg
+syn keyword mhaTagName contained fldend
+syn keyword mhaTagName contained folrefs
+syn keyword mhaTagName contained nofolrefs
+syn keyword mhaTagName contained folupbegin
+syn keyword mhaTagName contained folupend
+syn keyword mhaTagName contained foluplitxt
+syn keyword mhaTagName contained footer
+syn keyword mhaTagName contained fromfields
+syn keyword mhaTagName contained gmtdatefmt
+syn keyword mhaTagName contained gzipexe
+syn keyword mhaTagName contained gzipfiles
+syn keyword mhaTagName contained nogzipfiles
+syn keyword mhaTagName contained gziplinks
+syn keyword mhaTagName contained nogziplinks
+syn keyword mhaTagName contained headbodysep
+syn keyword mhaTagName contained header
+syn keyword mhaTagName contained htmlext
+syn keyword mhaTagName contained icons
+syn keyword mhaTagName contained idxfname
+syn keyword mhaTagName contained idxlabel
+syn keyword mhaTagName contained idxpgbegin
+syn keyword mhaTagName contained idxpgend
+syn keyword mhaTagName contained idxprefix
+syn keyword mhaTagName contained idxsize
+syn keyword mhaTagName contained include
+syn keyword mhaTagName contained labelbeg
+syn keyword mhaTagName contained labelend
+syn keyword mhaTagName contained labelstyles
+syn keyword mhaTagName contained listbegin
+syn keyword mhaTagName contained listend
+syn keyword mhaTagName contained litemplate
+syn keyword mhaTagName contained localdatefmt
+syn keyword mhaTagName contained lockmethod
+syn keyword mhaTagName contained mailto
+syn keyword mhaTagName contained nomailto
+syn keyword mhaTagName contained mailtourl
+syn keyword mhaTagName contained main
+syn keyword mhaTagName contained nomain
+syn keyword mhaTagName contained maxsize
+syn keyword mhaTagName contained mhpattern
+syn keyword mhaTagName contained mimeargs
+syn keyword mhaTagName contained mimedecoders
+syn keyword mhaTagName contained mimeexcs
+syn keyword mhaTagName contained mimefilters
+syn keyword mhaTagName contained modtime
+syn keyword mhaTagName contained months
+syn keyword mhaTagName contained monthsabr
+syn keyword mhaTagName contained msgbodyend
+syn keyword mhaTagName contained msgexcfilter
+syn keyword mhaTagName contained msgfoot
+syn keyword mhaTagName contained msggmtdatefmt
+syn keyword mhaTagName contained msghead
+syn keyword mhaTagName contained msgidlink
+syn keyword mhaTagName contained msglocaldatefmt
+syn keyword mhaTagName contained msgpgbegin
+syn keyword mhaTagName contained msgpgend
+syn keyword mhaTagName contained msgpgs
+syn keyword mhaTagName contained nomsgpgs
+syn keyword mhaTagName contained msgprefix
+syn keyword mhaTagName contained msgsep
+syn keyword mhaTagName contained multipg
+syn keyword mhaTagName contained news
+syn keyword mhaTagName contained nonews
+syn keyword mhaTagName contained nextbutton
+syn keyword mhaTagName contained nextbuttonia
+syn keyword mhaTagName contained nextlink
+syn keyword mhaTagName contained nextlinkia
+syn keyword mhaTagName contained nextpglink
+syn keyword mhaTagName contained nextpglinkia
+syn keyword mhaTagName contained note
+syn keyword mhaTagName contained notedir
+syn keyword mhaTagName contained noteia
+syn keyword mhaTagName contained otherindexes
+syn keyword mhaTagName contained perlinc
+syn keyword mhaTagName contained posixstrftime
+syn keyword mhaTagName contained prevbutton
+syn keyword mhaTagName contained prevbuttonia
+syn keyword mhaTagName contained prevlink
+syn keyword mhaTagName contained prevlinkia
+syn keyword mhaTagName contained prevpglink
+syn keyword mhaTagName contained prevpglinkia
+syn keyword mhaTagName contained refsbegin
+syn keyword mhaTagName contained refsend
+syn keyword mhaTagName contained refslitxt
+syn keyword mhaTagName contained reverse
+syn keyword mhaTagName contained noreverse
+syn keyword mhaTagName contained saveresources
+syn keyword mhaTagName contained nosaveresources
+syn keyword mhaTagName contained sort
+syn keyword mhaTagName contained nosort
+syn keyword mhaTagName contained spammode
+syn keyword mhaTagName contained nospammode
+syn keyword mhaTagName contained ssmarkup
+syn keyword mhaTagName contained subjectarticlerxp
+syn keyword mhaTagName contained subjectbegin
+syn keyword mhaTagName contained subjectend
+syn keyword mhaTagName contained subjectheader
+syn keyword mhaTagName contained subjectreplyrxp
+syn keyword mhaTagName contained subjectstripcode
+syn keyword mhaTagName contained subjectthreads
+syn keyword mhaTagName contained nosubjectthreads
+syn keyword mhaTagName contained subsort
+syn keyword mhaTagName contained nosubsort
+syn keyword mhaTagName contained tcontbegin
+syn keyword mhaTagName contained tcontend
+syn keyword mhaTagName contained tfoot
+syn keyword mhaTagName contained thead
+syn keyword mhaTagName contained thread
+syn keyword mhaTagName contained nothread
+syn keyword mhaTagName contained tidxfname
+syn keyword mhaTagName contained tidxlabel
+syn keyword mhaTagName contained tidxpgbegin
+syn keyword mhaTagName contained tidxpgend
+syn keyword mhaTagName contained tidxprefix
+syn keyword mhaTagName contained timezones
+syn keyword mhaTagName contained tindentbegin
+syn keyword mhaTagName contained tindentend
+syn keyword mhaTagName contained title
+syn keyword mhaTagName contained tlevels
+syn keyword mhaTagName contained tliend
+syn keyword mhaTagName contained tlinone
+syn keyword mhaTagName contained tlinoneend
+syn keyword mhaTagName contained tlitxt
+syn keyword mhaTagName contained tnextbutton
+syn keyword mhaTagName contained tnextbuttonia
+syn keyword mhaTagName contained tnextlink
+syn keyword mhaTagName contained tnextlinkia
+syn keyword mhaTagName contained tnextpglink
+syn keyword mhaTagName contained tnextpglinkia
+syn keyword mhaTagName contained toplinks
+syn keyword mhaTagName contained tprevbutton
+syn keyword mhaTagName contained tprevbuttonia
+syn keyword mhaTagName contained tprevlink
+syn keyword mhaTagName contained tprevlinkia
+syn keyword mhaTagName contained tprevpglink
+syn keyword mhaTagName contained tprevpglinkia
+syn keyword mhaTagName contained treverse
+syn keyword mhaTagName contained notreverse
+syn keyword mhaTagName contained tsingletxt
+syn keyword mhaTagName contained tslice
+syn keyword mhaTagName contained tslicebeg
+syn keyword mhaTagName contained tsliceend
+syn keyword mhaTagName contained tsort
+syn keyword mhaTagName contained notsort
+syn keyword mhaTagName contained tsubjectbeg
+syn keyword mhaTagName contained tsubjectend
+syn keyword mhaTagName contained tsublistbeg
+syn keyword mhaTagName contained tsublistend
+syn keyword mhaTagName contained tsubsort
+syn keyword mhaTagName contained notsubsort
+syn keyword mhaTagName contained ttitle
+syn keyword mhaTagName contained ttopbegin
+syn keyword mhaTagName contained ttopend
+syn keyword mhaTagName contained umask
+syn keyword mhaTagName contained uselocaltime
 syn keyword mhaTagName contained nouselocaltime
-syn keyword mhaTagName contained note noteia notetext otherindexes outdir pagenum
-syn keyword mhaTagName contained perlinc prevbutton prevbuttonia prevlink
-syn keyword mhaTagName contained prevlinkia prevpglink prevpglinkia quiet readdb
-syn keyword mhaTagName contained rcfile refsbegin refsend refslitxt reverse
-syn keyword mhaTagName contained rmm scan single sort subjectarticlerxp
-syn keyword mhaTagName contained subjectbegin subjectend subjectheader
-syn keyword mhaTagName contained subjectreplyrxp subjectstripcode subsort
-syn keyword mhaTagName contained tcontbegin tcontend tfoot thead thread
-syn keyword mhaTagName contained tidxfname tidxlabel tidxpgbegin tidxpgend
-syn keyword mhaTagName contained tidxprefix timezones tindentbegin tindentend
-syn keyword mhaTagName contained title tlevels tliend tlinone tlinoneend tlitxt
-syn keyword mhaTagName contained tnextbutton tnextbuttonia tnextlink tnextlinkia
-syn keyword mhaTagName contained tnextpglink tnextpglinkia toplinks tprevbutton
-syn keyword mhaTagName contained tprevbuttonia tprevlink tprevlinkia tprevpglink
-syn keyword mhaTagName contained tprevpglinkia treverse tsingletxt tslice
-syn keyword mhaTagName contained tslicebeg tsliceend tsort tsubjectbeg
-syn keyword mhaTagName contained tsubjectend tsublistbeg tsublistend tsubsort
-syn keyword mhaTagName contained ttitle ttopbegin ttopend umask uselocaltime
-syn keyword mhaTagName contained usinglastpg weekdays weekdaysabr 
+syn keyword mhaTagName contained usinglastpg
+syn keyword mhaTagName contained nousinglastpg
+syn keyword mhaTagName contained weekdays
+syn keyword mhaTagName contained weekdaysabr
+" END: MHonArc Tags
 
 " MHonArc legal arg names
 syn keyword mhaArg     contained chop override

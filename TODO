@@ -1,0 +1,52 @@
+TODO List for MHonArc
+=====================
+
+Items are in no particular order:
+
+=> Remove all use of Perl 4 style of representing nested data structures.
+   Impact on existing archives (%Refs)?
+
+=> Fix unfolding problem where there is only a single space on
+   the next line.  Can this be done w/o adding extra overhead in
+   parsing?
+
+=> Define $MhaStdout and $MhaStdin.  Should help in embedded usage.
+
+=> Subject detection case-sensitive: Should this behavior be conditional?
+   Should it even be implemented?
+
+=> Support for text/uri-list.
+
+=> XHTML defaults for resources.
+
+=> TSLICE version of resources.  I.e. A separate set of layout resource
+   exist for formatting $TSLICE$ output instead of using same resource
+   set for thread index page.  Would have a separate set make things
+   too complicated for the user?  Could reasonable fallback logic to
+   index page-based resources be done?
+
+=> Restructure head parsing to support "hooks".  Probably make DB
+   hooks easier.  A cleaning-up of data structures would make hook API
+   easier to add.
+
+=> Add support for "format=flowed" for text/plain.
+
+=> "00" year => 1900 (need test case that verifies this).
+
+=> Output number of messages added along with total message count.
+
+=> Exclude writing files based on size in bytes.  Is this really the
+   domain of MHonArc?
+
+=> Add resource to set initial message number.
+
+=> Remove HEADER and FOOTER resources.  How many people use these
+   resources?  These resource exploit some bug in perl(!?) that
+   causes main index pages from getting screwed up.  Cannot see any
+   error in MHonArc code that can cause this.
+
+=> Get source moved to CVS.  Is preserving SCCS history files
+   important.
+
+=> Redo MHonArc using modules/class structure.  Basically a redesign
+   and implementation (MHonArc 3.x?).

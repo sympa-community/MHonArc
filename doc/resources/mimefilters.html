@@ -25,10 +25,10 @@
 
 <dt><strong>Element</strong><dt>
 <dd><p>
-<code>&lt;MIMEFILTERS&gt;<br></code>
+<code>&lt;MIMEFILTERS&gt;</code></br>
 <var>filter-specification</var><br>
 <var>...</var><br>
-<code>&lt;/MIMEFILTERS&gt;<br></code>
+<code>&lt;/MIMEFILTERS&gt;</code></br>
 </p>
 </dd>
 
@@ -80,17 +80,6 @@ resource.
 
 </DL>
 
-<table border=0 cellpadding=4>
-<tr valign=top>
-<td><strong>NOTE</strong></td>
-<td><p>For backwards compatibility, the values of a filter specification
-can be separated with a colon, "<tt>:</tt>".  However, if you use a colon,
-package qualification of a function must use Perl 4 syntax.
-</p>
-</td>
-</tr>
-</table>
-
 <P>Whitespace is stripped out for each filter specification.
 </P>
 
@@ -107,8 +96,7 @@ information assumes you know Perl.
 <td><p>The filter model follows Perl 4 syntax conventions
 and constructs.  This is because of historical reasons.
 Note, the implementation of the filter can use Perl 5
-syntax and features, where applicable, if running MHonArc
-under Perl 5.
+syntax and features, when applicable.
 </p>
 </td>
 </tr>
@@ -304,8 +292,20 @@ follow the conventions described in
 <hr>
 <h2>Default Setting</h2>
 
+<table border=0 cellpadding=4>
+<tr valign=top>
+<td><strong>NOTE</strong></td>
+<td><p>It is important to have an explicit entry for
+<b><tt>application/octet-stream</tt></b> for handling unknown
+media-types.
+</p>
+</td>
+</tr>
+</table>
+
 <PRE>
 <b>&lt;MIMEFilters&gt;</b>
+application/octet-stream;  <a href="#m2h_external">m2h_external::filter</a>;	mhexternal.pl
 application/*;		   <a href="#m2h_external">m2h_external::filter</a>;	mhexternal.pl
 application/x-patch;	   <a href="#m2h_text_plain">m2h_text_plain::filter</a>;	mhtxtplain.pl
 audio/*;		   <a href="#m2h_external">m2h_external::filter</a>;	mhexternal.pl
@@ -313,6 +313,7 @@ chemical/*;		   <a href="#m2h_external">m2h_external::filter</a>;	mhexternal.pl
 model/*;		   <a href="#m2h_external">m2h_external::filter</a>;	mhexternal.pl
 image/*;		   <a href="#m2h_external">m2h_external::filter</a>;	mhexternal.pl
 message/delivery-status;   <a href="#m2h_text_plain">m2h_text_plain::filter</a>;	mhtxtplain.pl
+message/external-body;     <a href="#m2h_msg_extbody">m2h_msg_extbody::filter</a>;	mhmsgextbody.pl
 message/partial;	   <a href="#m2h_text_plain">m2h_text_plain::filter</a>;	mhtxtplain.pl
 text/*;			   <a href="#m2h_text_plain">m2h_text_plain::filter</a>;	mhtxtplain.pl
 text/enriched;		   <a href="#m2h_text_enriched">m2h_text_enriched::filter</a>;	mhtxtenrich.pl
@@ -350,18 +351,17 @@ following
 
 <table cellspacing=1 border=0 cellpadding=4>
 <tr valign=top>
-<td><strong><tt>iconurl="<var>url</var>"</tt></strong></td>
-<td><p>Use "<var>url</var>" as the url for the icon to use
-if the <strong><tt>useicon</tt></strong> option is set.
-This option will override any setting defined by the
-<a href="icons.html">ICONS</a> resource.
-The double quotes are required.
+<td><strong><tt>excludeexts=</tt></strong><var>ext1</var><tt>,</tt>...</td>
+<td><p>A comma separated list of message specified filename extensions
+to exclude.  I.e.  If the filename extension matches an extension
+in excludeexts, the content will not be written.  The return markup
+will contain the name of the attachment, but no link to the data.
+This option is best used with application/octet-stream to exclude
+unwanted data that is not tagged with the proper content-type.  The
+<a href="#m2h_null"><tt>m2h_null::filter</tt></a> can be used to
+exclude content by content-type.
 </p>
-</tr>
-<tr valign=top>
-<td><strong><tt>inline</tt></strong></td>
-<td><p>Inline image data by default if content-disposition not defined.
-</p>
+</td>
 </tr>
 <tr valign=top>
 <td><strong><tt>ext=<var>ext</var></tt></strong></td>
@@ -369,7 +369,41 @@ The double quotes are required.
 The filter already has a large list of extensions for various
 content-types.  Use this argument if you process a
 content-type not recognized by the filter.
-</p>
+</p></td>
+</tr>
+<tr valign=top>
+<td><strong><tt>forceattach</tt></strong></td>
+<td><p>Force images to never be displayed inline, overriding any
+Content-Disposition setting.
+</p></td>
+</tr>
+<tr valign=top>
+<td><strong><tt>forceinline</tt></strong></td>
+<td><p>Force images to be displayed inline, overriding any
+Content-Disposition setting.
+</p></td>
+</tr>
+<tr valign=top>
+<td><strong><tt>iconurl="<var>url</var>"</tt></strong></td>
+<td><p>Use "<var>url</var>" as the url for the icon to use
+if the <strong><tt>useicon</tt></strong> option is set.
+This option will override any setting defined by the
+<a href="icons.html">ICONS</a> resource.
+The double quotes are required.
+</p></td>
+</tr>
+<tr valign=top>
+<td><strong><tt>inline</tt></strong></td>
+<td><p>Inline image data by default if content-disposition not defined.
+</p></td>
+</tr>
+<tr valign=top>
+<td><strong><tt>inlineexts=</tt></strong><var>ext1</var><tt>,</tt>...</td>
+<td><p>A comma separated list of message specified filename
+extensions to treat as possible inline data.
+Applicable when content-type is not <tt>image/</tt><var>*</var> and
+<b><tt>usename</tt></b> or <b><tt>usenameext</tt></b> is in effect.
+</p></td>
 </tr>
 <tr valign=top>
 <td><strong><tt>type="<var>description</var>"</tt></strong></td>
@@ -378,22 +412,22 @@ data.  The double quotes are required.
 The filter already has a large list of descriptions for various
 content-types.  Use this argument if you process a
 content-type not recognized by the filter.
-</p>
+</p></td>
 </tr>
 <tr valign=top>
 <td><strong><tt>subdir</tt></strong></td>
 <td><p>Place derived file in a subdirectory of the archive.
-The subdirectory will be called "<tt>msg<var>MSGNUM</var>.dir</tt>".
+The subdirectory will be called "<tt>msg<var>MSGNUM</var></tt>".
 This option may be useful if <strong><tt>usename</tt></strong> is
 specified to avoid security and name conflict problems.
-</p>
+</p></td>
 </tr>
 <tr valign=top>
 <td><strong><tt>target=</tt></strong><var>name</var></td>
 <td><p>Set the TARGET attribute of anchor link to file
 Default value is undefined (ie. no TARGET attribute will be
 written).
-</p>
+</p></td>
 </tr>
 <tr valign=top>
 <td><strong><tt>useicon</tt></strong></td>
@@ -401,7 +435,7 @@ written).
 the derived file.  The icon used is the value of the
 <strong><tt>iconurl</tt></strong> option or the icon
 defined by the <a href="icons.html">ICONS</a> resource.
-</p>
+</p></td>
 </tr>
 <tr valign=top>
 <td><strong><tt>usename</tt></strong></td>
@@ -410,7 +444,7 @@ of derived file.  Use this option with caution
 since it can lead to filename conflicts and
 security problems (however, see the <strong><tt>subdir</tt></strong>
 option).
-</p>
+</p></td>
 </tr>
 <tr valign=top>
 <td><strong><tt>usenameext</tt></strong></td>
@@ -419,7 +453,7 @@ of derived file.  Use this option with caution
 since it can lead to
 security problems (however, see the <strong><tt>subdir</tt></strong>
 option).
-</p>
+</p></td>
 </tr>
 </table>
 
@@ -468,6 +502,18 @@ recognizes:
 <td align=left><strong>application/mbedlet</strong></td>
 <td align=center><tt>mbd</tt></td>
 <td>mbedlet file</td></tr>
+<tr valign="top">
+<td align=left><strong>application/ms-excel</strong></td>
+<td align=center><tt>xls</tt></td>
+<td>MS-Excel spreadsheet</td></tr>
+<tr valign="top">
+<td align=left><strong>application/ms-powerpoint</strong></td>
+<td align=center><tt>ppt</tt></td>
+<td>MS-Powerpoint presentation</td></tr>
+<tr valign="top">
+<td align=left><strong>application/ms-project</strong></td>
+<td align=center><tt>mpp</tt></td>
+<td>MS-Project file</td></tr>
 <tr valign="top">
 <td align=left><strong>application/msword</strong></td>
 <td align=center><tt>doc</tt></td>
@@ -525,6 +571,30 @@ recognizes:
 <td align=center><tt>hpg</tt></td>
 <td>HPGL file</td></tr>
 <tr valign="top">
+<td align=left><strong>application/vnd.lotus-1-2-3</strong></td>
+<td align=center><tt>123</tt></td>
+<td>Lotus 1-2-3</td></tr>
+<tr valign="top">
+<td align=left><strong>application/vnd.lotus-approach</strong></td>
+<td align=center><tt>apr</tt></td>
+<td>Lotus Approach</td></tr>
+<tr valign="top">
+<td align=left><strong>application/vnd.lotus-freelance</strong></td>
+<td align=center><tt>prz</tt></td>
+<td>Lotus Freelance</td></tr>
+<tr valign="top">
+<td align=left><strong>application/vnd.lotus-organizer</strong></td>
+<td align=center><tt>org</tt></td>
+<td>Lotus Organizer</td></tr>
+<tr valign="top">
+<td align=left><strong>application/vnd.lotus-screencam</strong></td>
+<td align=center><tt>scm</tt></td>
+<td>Lotus Screencam</td></tr>
+<tr valign="top">
+<td align=left><strong>application/vnd.lotus-wordpro</strong></td>
+<td align=center><tt>lwp</tt></td>
+<td>Lotus WordPro</td></tr>
+<tr valign="top">
 <td align=left><strong>application/vnd.mif</strong></td>
 <td align=center><tt>mif</tt></td>
 <td>Frame MIF document</td></tr>
@@ -556,6 +626,10 @@ recognizes:
 <td align=left><strong>application/x-bcpio</strong></td>
 <td align=center><tt>bcpio</tt></td>
 <td>BCPIO file</td></tr>
+<tr valign="top">
+<td align=left><strong>application/x-bzip2</strong></td>
+<td align=center><tt>bz2</tt></td>
+<td>BZip2 compressed data</td></tr>
 <tr valign="top">
 <td align=left><strong>application/x-compress</strong></td>
 <td align=center><tt>Z</tt></td>
@@ -841,6 +915,10 @@ recognizes:
 <td align=center><tt>cml</tt></td>
 <td>CML chemical test</td></tr>
 <tr valign="top">
+<td align=left><strong>chemical/cmsl</strong></td>
+<td align=center><tt>cml</tt></td>
+<td>Chemical Structure Markup</td></tr>
+<tr valign="top">
 <td align=left><strong>chemical/cxf</strong></td>
 <td align=center><tt>cxf</tt></td>
 <td>Chemical Exhange Format file</td></tr>
@@ -853,9 +931,17 @@ recognizes:
 <td align=center><tt>emb</tt></td>
 <td>EMBL nucleotide format file</td></tr>
 <tr valign="top">
+<td align=left><strong>chemical/gaussian</strong></td>
+<td align=center><tt>gau</tt></td>
+<td>Gaussian data</td></tr>
+<tr valign="top">
 <td align=left><strong>chemical/gaussian-input</strong></td>
 <td align=center><tt>gau</tt></td>
-<td>Gaussian chemical test</td></tr>
+<td>Gaussian input data</td></tr>
+<tr valign="top">
+<td align=left><strong>chemical/gaussian-log</strong></td>
+<td align=center><tt>gal</tt></td>
+<td>Gaussian log</td></tr>
 <tr valign="top">
 <td align=left><strong>chemical/gcg8-sequence</strong></td>
 <td align=center><tt>gcg</tt></td>
@@ -871,7 +957,7 @@ recognizes:
 <tr valign="top">
 <td align=left><strong>chemical/kinemage</strong></td>
 <td align=center><tt>kin</tt></td>
-<td>Kinemage chemical test</td></tr>
+<td>Kinemage</td></tr>
 <tr valign="top">
 <td align=left><strong>chemical/macromodel-input</strong></td>
 <td align=center><tt>mmd</tt></td>
@@ -901,6 +987,10 @@ recognizes:
 <td align=center><tt>mif</tt></td>
 <td>MIF chemical test</td></tr>
 <tr valign="top">
+<td align=left><strong>chemical/mmd</strong></td>
+<td align=center><tt>mmd</tt></td>
+<td>Macromodel data</td></tr>
+<tr valign="top">
 <td align=left><strong>chemical/mopac-input</strong></td>
 <td align=center><tt>mop</tt></td>
 <td>MOPAC data </td></tr>
@@ -911,11 +1001,15 @@ recognizes:
 <tr valign="top">
 <td align=left><strong>chemical/pdb</strong></td>
 <td align=center><tt>pdb</tt></td>
-<td>PDB chemical test</td></tr>
+<td>Protein Databank data</td></tr>
 <tr valign="top">
 <td align=left><strong>chemical/rosdal</strong></td>
 <td align=center><tt>ros</tt></td>
 <td>Rosdal data</td></tr>
+<tr valign="top">
+<td align=left><strong>chemical/xyz</strong></td>
+<td align=center><tt>xyz</tt></td>
+<td>Xmol XYZ data</td></tr>
 <tr valign="top">
 <td align=left><strong>image/bmp</strong></td>
 <td align=center><tt>bmp</tt></td>
@@ -1113,6 +1207,35 @@ recognizes:
 </center>
 
 <hr size=0 noshade width="50%">
+<H3><a name="m2h_msg_extbody">m2h_msg_extbody::filter</a></h3>
+
+<p>This filter is designed to process <tt>message/external-body</tt>
+data.
+The filter attempts to translate the external-body paramaters
+into a linked URL with some descriptive information,
+if provided.  The following access-types are supported:
+ANON-FTP, FTP, TFTP, LOCAL-FILE, and URL.  Note, LOCAL-FILE is
+only supported if the <tt>local-file</tt> option is specified.
+</p>
+
+<p><strong><tt>m2h_msg_extbody::filter</tt></strong> can take the
+following
+<a href="mimeargs.html">arguments</a>:
+</p>
+
+<table cellspacing=1 border=0 cellpadding=4>
+<tr valign=top>
+<td><strong><tt>local-file</tt></strong></td>
+<td><p>Support LOCAL-FILE access-type.  This option
+is best used for internal local mail archives
+where it is known that readers will have
+direct access to the file.
+</p>
+</tr>
+</table>
+
+
+<hr size=0 noshade width="50%">
 <H3><a name="m2h_text_enriched">m2h_text_enriched::filter</a></h3>
 
 <p>This filter is designed to process text/enriched, or
@@ -1126,63 +1249,63 @@ translation of text/enriched commands to HTML tags:
 <th>Text/Enriched Command</th><th>HTML Translation</th>
 </tr>
 <tr valign=top>
-<td><strong>&lt;Bold></strong></td>
-<td>&lt;B></td>
+<td><strong>&lt;Bold&gt;</strong></td>
+<td>&lt;B&gt;</td>
 </tr>
 <tr valign=top>
-<td><strong>&lt;Italic></strong></td>
-<td>&lt;I></td>
+<td><strong>&lt;Italic&gt;</strong></td>
+<td>&lt;I&gt;</td>
 </tr>
 <tr valign=top>
-<td><strong>&lt;Underline></strong></td>
-<td>&lt;U></td>
+<td><strong>&lt;Underline&gt;</strong></td>
+<td>&lt;U&gt;</td>
 </tr>
 <tr valign=top>
-<td><strong>&lt;Fixed></strong></td>
-<td>&lt;TT></td>
+<td><strong>&lt;Fixed&gt;</strong></td>
+<td>&lt;TT&gt;</td>
 </tr>
 <tr valign=top>
-<td><strong>&lt;Smaller></strong></td>
-<td>&lt;SMALL></td>
+<td><strong>&lt;Smaller&gt;</strong></td>
+<td>&lt;SMALL&gt;</td>
 </tr>
 <tr valign=top>
-<td><strong>&lt;Bigger></strong></td>
-<td>&lt;BIG></td>
+<td><strong>&lt;Bigger&gt;</strong></td>
+<td>&lt;BIG&gt;</td>
 </tr>
 <tr valign=top>
-<td><strong>&lt;FontFamily>&lt;Param><var>family</var>&lt;/Param></strong></td>
-<td>&lt;FONT face="<var>family</var>"></td>
+<td><strong>&lt;FontFamily&gt;&lt;Param&gt;<var>family</var>&lt;/Param&gt;</strong></td>
+<td>&lt;FONT face="<var>family</var>"&gt;</td>
 </tr>
 <tr valign=top>
-<td><strong>&lt;Color>&lt;Param><var>color</var>&lt;/Param></strong></td>
-<td>&lt;FONT color="<var>color</var>"></td>
+<td><strong>&lt;Color&gt;&lt;Param&gt;<var>color</var>&lt;/Param&gt;</strong></td>
+<td>&lt;FONT color="<var>color</var>"&gt;</td>
 </tr>
 <tr valign=top>
 <td><strong>&lt;Center></strong></td>
-<td>&lt;P align="center"></td>
+<td>&lt;P align="center"&gt;</td>
 </tr>
 <tr valign=top>
-<td><strong>&lt;FlushLeft></strong></td>
-<td>&lt;P align="left"></td>
+<td><strong>&lt;FlushLeft&gt;</strong></td>
+<td>&lt;P align="left"&gt;</td>
 </tr>
 <tr valign=top>
-<td><strong>&lt;FlushRight></strong></td>
-<td>&lt;P align="right"></td>
+<td><strong>&lt;FlushRight&gt;</strong></td>
+<td>&lt;P align="right"&gt;</td>
 </tr>
 <tr valign=top>
-<td><strong>&lt;FlushBoth></strong></td>
-<td>&lt;P align="both"> <em>(not supported in HTML)</em></td>
+<td><strong>&lt;FlushBoth&gt;</strong></td>
+<td>&lt;P align="both"&gt; <em>(not supported in HTML)</em></td>
 </tr>
 <tr valign=top>
-<td><strong>&lt;ParaIndent></strong></td>
-<td>&lt;BLOCKQUOTE></td>
+<td><strong>&lt;ParaIndent&gt;</strong></td>
+<td>&lt;BLOCKQUOTE&gt;</td>
 </tr>
 <tr valign=top>
-<td><strong>&lt;Excerpt></strong></td>
-<td>&lt;BLOCKQUOTE></td>
+<td><strong>&lt;Excerpt&gt;</strong></td>
+<td>&lt;BLOCKQUOTE&gt;</td>
 </tr>
 <tr valign=top>
-<td><strong>&lt;Lang></strong></td>
+<td><strong>&lt;Lang&gt;</strong></td>
 <td><em>Stripped</em></td>
 </tr>
 </table>
@@ -1204,8 +1327,8 @@ convert the characters to the appropriate entity references.
 <hr size=0 noshade width="50%">
 <H3><a name="m2h_text_html">m2h_text_html::filter</a></h3>
 
-<p>This filter is designed to process text/html or
-text/x-html data.
+<p>This filter is designed to process <tt>text/html</tt>, or
+<tt>text/x-html</tt>, data.
 The filter modifies HTML documents so they can be
 included into the message pages without causing invalid markup
 to occur.  The following modification are done to HTML documents when
@@ -1217,19 +1340,84 @@ element may be relevant to the rest of the document, the following is
 done when removing the HEAD element:</p>
     <ul>
     <li>The title will be extracted and prepended
-    to the body data.
+    to the body data.</li>
     <li>Any BASE URL will be propogated to any relative URLs in the
-    document.
+    document.</li>
     </ul>
     <p></p>
 </li>
+<li><p>Any markup related to scripting is removed for security
+reasons.  The following tags are removed:
+<tt>&lt;applet&gt;</tt>,
+<tt>&lt;base&gt;</tt>,
+<tt>&lt;embed&gt;</tt>,
+<tt>&lt;form&gt;</tt>,
+<tt>&lt;ilayer&gt;</tt>,
+<tt>&lt;input&gt;</tt>,
+<tt>&lt;layer&gt;</tt>,
+<tt>&lt;link&gt;</tt>,
+<tt>&lt;meta&gt;</tt>,
+<tt>&lt;object&gt;</tt>,
+<tt>&lt;option&gt;</tt>,
+<tt>&lt;param&gt;</tt>,
+<tt>&lt;script&gt;</tt>,
+<tt>&lt;select&gt;</tt>,
+<tt>&lt;style&gt;</tt>,
+<tt>&lt;textarea&gt;</tt>.
+The following attributes are removed:
+<tt>onload</tt>,
+<tt>onunload</tt>,
+<tt>onclick</tt>,
+<tt>ondblclick</tt>,
+<tt>onmousedown</tt>,
+<tt>onmouseup</tt>,
+<tt>onmouseover</tt>,
+<tt>onmousemove</tt>,
+<tt>onmouseout</tt>,
+<tt>onkeypress</tt>,
+<tt>onkeydown</tt>,
+<tt>onkeyup</tt>.
+The <strong><tt>allowscript</tt></strong> option can be
+be used to override the this behavior (see below).
+</p></li>
 <li><p><b><tt>cid:</tt></b> URLs are resolved, if possible.  Therefore,
 if image data related to the HTML document is included with the message,
 the URLs will be modified to the filenames of the images that were
 decoded.</p>
 </li>
 </ul>
+
+<p><strong><tt>m2h_text_html::filter</tt></strong> can take the
+following
+<a href="mimeargs.html">arguments</a>:
 </p>
+
+<table cellspacing=1 border=0 cellpadding=4>
+<tr valign=top>
+<td><strong><tt>allowcomments</tt></strong></td>
+<td><p>Preserve any comment declarations.  Comment declarations
+are sometimes used to contain executable commands, like for
+server-side includes.  Normally, comment declarations are munged
+to protect against potential exploits, but this option will
+disable that behavior.  Use this options with <strong>EXTREME</strong>
+care.
+</p></td>
+</tr>
+<tr valign=top>
+<td><strong><tt>allowscript</tt></strong></td>
+<td><p>Preserve any markup associated with scripting.
+This includes elements and attributes related to scripting.  This option
+can cause security problems for your archive since someone can introduce
+foreign client-side code.  Use this options with <strong>EXTREME</strong>
+care.
+</p></td>
+</tr>
+<tr valign=top>
+<td><strong><tt>nofont</tt></strong></td>
+<td><p>Remove font tags.
+</p></td>
+</tr>
+</table>
 
 <hr size=0 noshade width="50%">
 <H3><a name="m2h_text_plain">m2h_text_plain::filter</a></h3>
@@ -1250,9 +1438,9 @@ convert the characters to the appropriate entity reference.
 <table border=0 cellpadding=4>
 <tr valign=top>
 <td><strong>NOTE</strong></td>
-<td><p>Only the ISO-8859-[1-10] and ISO-2022-JP
-character sets are recognized.  For ISO-2022-JP data, a Web
-client with ISO-2022-JP is required to read the data.
+<td><p>The functions registered via the
+<a href="charsetconverters.html">CHARSETCONVERTERS</a> are used
+to handle character set processing.
 </p>
 </td>
 </tr>
@@ -1269,6 +1457,17 @@ following
 <td><strong><tt>asis=</tt></strong><var>set1</var><tt>:</tt>...</td>
 <td><p>Colon separated lists of charsets to leave as-is.
 Only HTML special characters will be converted into entities.
+The default is "<tt>us-ascii:iso-8859-1</tt>".
+</p>
+</tr>
+<tr valign=top>
+<td><strong><tt>attachcheck</tt></strong></td>
+<td><p>Honor attachment disposition.  By default,
+all text/plain data is displayed inline on
+the message page.  If <tt>attachcheck</tt> is specified
+and Content-Disposition specifies the data as
+an attachment, the data is saved to a file
+with a link to it from the message page.
 </p>
 </tr>
 <tr valign=top>
@@ -1279,6 +1478,21 @@ is defined for the message.  If option not specified,
 </p>
 </tr>
 <tr valign=top>
+<td><strong><tt>inlineexts=</tt></strong><var>ext1</var><tt>,</tt>...</td>
+<td><p>A comma separated list of message specified filename
+extensions to treat as inline data.
+Applicable only when <b><tt>uudecode</tt></b> is specified.
+</p>
+</tr>
+<tr valign=top>
+<td><strong><tt>htmlcheck</tt></strong></td>
+<td><p>Check if message is actually an HTML message
+(to get around abhorrent MUAs).  The message
+is treated as HTML if the first non-whitespace
+data looks like the start of an HTML document.
+</p>
+</tr>
+<tr valign=top>
 <td><strong><tt>keepspace</tt></strong></td>
 <td><p>Preserve all spaces if the <strong><tt>nonfixed</tt></strong>
 option is specified.  All spaces and tabs will be translated to the
@@ -1286,7 +1500,7 @@ equivalent number of <strong>&amp;nbsp;</strong> entity references.
 </p>
 </tr>
 <tr valign=top>
-<td><strong><tt>maxwidth=</strong><var>#</var></tt></td>
+<td><strong><tt>maxwidth=</tt></strong><var>#</var></td>
 <td><p>Force the maximum width of lines to be <var>#</var> characters
 in length.  Any lines longer than <var>#</var> characters will be
 wrapped.
@@ -1317,6 +1531,32 @@ of the message.
 hyperlinking URLs.
 </p>
 </tr>
+<tr valign=top>
+<td><strong><tt>usename</tt></strong></td>
+<td><p>When decoding uuencoded data, use the full filename specified
+when write the data to disk instead of just the filename extension.
+<b>Note:</b> Be aware that there are potential security problems when
+using this option.
+</p></td>
+</tr>
+<tr valign=top>
+<td><strong><tt>uudecode</tt></strong></td>
+<td><p>Decode any embedded uuencoded data.  Including uuencoded data
+within messages was a way to trasmit binary data
+via email before MIME was developed.  The inclusion of uuencoded
+data is deprecated within email, but is still common in the
+USENET (binary) newsgroups.  Note, specifying <b><tt>uudecode</tt></b>
+adds extra
+overhead in the processing of text messages, including messages without
+any uuencoded data.
+</p>
+<p>Uuencoded data is treated as <tt>application/octet-stream</tt>
+data for purposes of checking if the data should be excluded when
+checked against the <a href="mimeexcs.html">MIMEEXCS</a> resource.
+Therefore, if <tt>application/octet-stream</tt> data is listed
+in MIMEEXCS, uudencode data will be excluded.
+</p></td>
+</tr>
 
 </table>
 
@@ -1336,6 +1576,32 @@ to HTML.
 tabular data will be converted into an HTML table.
 </p>
 
+<hr size=0 noshade width="50%">
+<H3><a name="m2h_null">m2h_null::filter</a></h3>
+
+<p>This filter can be used to exclude message content from archives.
+You can register this filter to any content-type you do not want
+to store in your archives.  For example, the following resource setting
+excludes all images:
+</p>
+<pre>
+<b>&lt;MIMEFilters&gt;</b>
+image/*; m2h_null::filter</a>; mhnull.pl
+<b>&lt;/MIMEFilters&gt;</b>
+</pre>
+<p>The markup returned by this filter displays the a one line description
+of what was excluded.  Examples:
+</p>
+<pre>
+&lt;&lt;attachment: HelloWorld.jpg&gt;&gt;
+&lt;&lt;application/postscript&gt;&gt;
+&lt;&lt;inline: image/jpg&gt;&gt;
+</pre>
+<p>If the disposition is available, it will be shown.  If a filename
+was specified, it will be shown.  If there was no filename, the
+content-type is shown.
+</p>
+
 <!-- *************************************************************** -->
 <hr>
 <h2>Resource Variables</h2>
@@ -1353,7 +1619,7 @@ filter used by MHonArc):
 </p>
 <pre>
 ##---------------------------------------------------------------------------##
-##    Copyright (C) 1995-1998	Earl Hood, earlhood@usa.net
+##    Copyright (C) 1995-1998	Earl Hood, mhonarc@mhonarc.org
 ##---------------------------------------------------------------------------##
 
 package m2h_text_html;
@@ -1441,16 +1707,18 @@ sub addbase {
 <p>
 <a href="charsetconverters.html">CHARSETCONVERTERS</a>,
 <a href="mimeargs.html">MIMEARGS</a>,
+<a href="mimedecoders.html">MIMEDECODERS</a>,
+<a href="mimeexcs.html">MIMEEXCS</a>,
 <a href="perlinc.html">PERLINC</a>
 </p>
 
 <!-- *************************************************************** -->
 <hr>
 <address>
-98/10/24 16:57:31<br>
+01/06/10 17:48:19<br>
 <img align="top" src="../monicon.gif" alt="">
-<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"><strong>MHonArc</strong></a><br>
-Copyright &#169; 1997-1998 <a href="http://www.oac.uci.edu/indiv/ehood/">Earl Hood</a>, <a href="mailto:earlhood@usa.net">earlhood@usa.net</a><br>
+<a href="http://www.mhonarc.org"><strong>MHonArc</strong></a><br>
+Copyright &#169; 1997-2001 <a href="http://www.mhonarc.org/~ehood/">Earl Hood</a>, <a href="mailto:mhonarc@mhonarc.org">mhonarc@mhonarc.org</a><br>
 </address>
 
 </body>

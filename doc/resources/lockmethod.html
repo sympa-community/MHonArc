@@ -1,0 +1,246 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
+<html>
+<head>
+<title>MHonArc Resources: LOCKMETHOD</title>
+</head>
+<body>
+
+<address>
+<a href="../resources.html#lockmethod">MHonArc Resource List</a><br>
+</address>
+
+<hr>
+<h1>LOCKMETHOD</h1>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Syntax</h2>
+
+<dl>
+
+<dt><strong>Envariable</strong><dt>
+<dd><p>
+<code>M2H_LOCKMETHOD=</code><var>method</var>
+</p>
+</dd>
+
+<dt><strong>Element</strong><dt>
+<dd><p><br>
+<code>&lt;LOCKMETHOD&gt;</code><br>
+<var>method</var><br>
+<code>&lt;/LOCKMETHOD&gt;</code><br>
+</p>
+</dd>
+
+<dt><strong>Command-line Option</strong><dt>
+<dd><p><br>
+<code>-lockmethod </code><var>method</var>
+</p>
+</dd>
+
+</dl>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Description</h2>
+
+<p>LOCKMETHOD determines how MHonArc should lock archives to protect
+multiple MHonArc processes modifying an archive at the same time.  If
+after reading this page you still are unsure on what method to use, or
+do not understand some of the material, then just stick with the default
+value.
+</p>
+
+<p>The following is a list of possible values for LOCKMETHOD:
+</p>
+<dl>
+
+<dt><tt>directory</tt></dt>
+<dd><p>MHonArc uses a directory file in the archive directory to
+lock an archive.  When MHonArc is to access/modify an archive, it
+will first try to create a directory in the archive directory
+with a name determined by the
+<a href="lockfile.html">LOCKFILE</a> resource.  MHonArc will try
+<a href="locktries.html">LOCKTRIES</a> times to create
+the directory (obtains the lock) before timing out.
+</p>
+</dd>
+
+<dt><tt>flock</tt></dt>
+<dd><p>MHonArc will use Perl's <b>flock()</b> operator.
+<a href="lockfile.html">LOCKFILE</a> will be created in the archive
+directory if does not already exist.  Then MHonArc will try to
+<a href="locktries.html">LOCKTRIES</a> times to obtain
+an exclusive lock on the file via flock() before timing out.
+</p>
+</dd>
+
+</dl>
+
+<table border=0 cellpadding=4>
+<tr valign=top>
+<td><strong><font color="red">WARNING</font></strong></td>
+<td><p>Each locking method is incompatible with each other.  Therefore,
+make sure the same method is specified for all MHonArc processes that
+will be accessing a given archive.
+If you want to change the default
+lock method so it will affect all MHonArc processes, you can set
+it via the default resource file or through <b><tt>mhasiteinit.pl</tt></b>.
+See
+<a href="../install.html#postinstall">Post Installation Configuration</a>
+for more information.
+</p>
+</td>
+</tr>
+</table>
+
+<p>The following sub-sections give more information of each lock method,
+including the pros and cons of each,
+and assumes you have some knowledge about file systems.
+</p>
+
+<h3>Directory File Method</h3>
+<p>The directory file method is the default method used by MHonArc,
+and is the method used by past version of MHonArc.  If you are familiar
+with locking methods used by other software, you may find it strange
+that a directory (which is just a special kind of file) is used instead
+of a plain file.  The reason a directory is used is that it has
+unique properties over regular files on the various operating systems
+MHonArc runs on.  The property that MHonArc takes advantage of is
+that you cannot create a new directory over an existing directory of
+the same name.  This property is not guaranteed for plain files, or
+at least Perl cannot give a common interface for plain files to work
+on all platforms.  It may be possible to use a plain file with
+Perl's <b>sysopen()</b> operator with the proper options, but
+the needed sysopen() options are not guaranteed to be available
+for all ports of Perl.
+</p>
+
+<h4>Pros</h4>
+<ul>
+<li><p>Appears to work for all known platforms.
+</p>
+</li>
+</ul>
+<h4>Cons</h4>
+<ul>
+<li><p>If MHonArc/Perl abnormally terminates, MHonArc may not have the
+chance to delete the directory, failing to release the lock on the archive
+(a stale lock).
+This will cause other MHonArc processes to fail out with "Unable to lock ..."
+messages.  To correct, manual deletion of the directory is required
+(or <a href="force.html">FORCE</a> must be used).
+</p>
+</li>
+</ul>
+
+<h3>flock Method</h3>
+<p>Using flock() is a common method for locking files under Unix-type
+operating systems.  In order to use flock() method, the <b>Symbol</b>
+and <b>Fcntl</b> Perl modules must be available.  If not available, and
+this method is specified, MHonArc will fallback to the directory file
+method.
+</p>
+<p>Unlike the directory method, it is okay if
+<a href="lockfile.html">LOCKFILE</a> stays around, and actually, it
+should never be manual deleted.
+</p>
+
+<h4>Pros</h4>
+<ul>
+<li><p>Lock is automatically released if MHonArc/Perl abnormally terminates,
+eliminating the stale lock problem.
+</p>
+</li>
+</ul>
+<h4>Cons</h4>
+<ul>
+<li><p>Not availabe on all platforms.
+</p>
+</li>
+<li><p>May not work over NFS reliably.  Read the documentation
+for flock() in the Perl documentation for more information.
+</p>
+</ul>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Default Setting</h2>
+
+<p><tt>directory</tt>
+</p>
+<table border=0 cellpadding=4>
+<tr valign=top>
+<td><strong>NOTE</strong></td>
+<td><p>The use of &lt;LOCKMETHOD&gt; within an
+<a href="rcfile.html">RCFILE</a> will take affect <b>ONLY</b> if used in the
+<a href="defrcfile.html">DEFRCFILE</a>.
+</p>
+</td>
+</tr>
+</table>
+<table border=0 cellpadding=4>
+<tr valign=top>
+<td><strong><font color="red">WARNING</font></strong></td>
+<td><p>Each locking method is incompatible with each other.  Therefore,
+make sure the same method is specified for all MHonArc processes that
+will be accessing a given archive.
+If you want to change the default
+lock method so it will affect all MHonArc processes, you can set
+it via the default resource file or through <b><tt>mhasiteinit.pl</tt></b>.
+See
+<a href="../install.html#postinstall">Post Installation Configuration</a>
+for more information.
+</p>
+</td>
+</tr>
+</table>
+
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Resource Variables</h2>
+
+<p>N/A
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Examples</h2>
+
+<p>None.
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Version</h2>
+
+<p>2.4.0
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>See Also</h2>
+
+<p>
+<a href="force.html">FORCE</a>,
+<a href="lock.html">LOCK</a>,
+<a href="lockdelay.html">LOCKDELAY</a>,
+<a href="lockfile.html">LOCKFILE</a>,
+<a href="locktries.html">LOCKTRIES</a>
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<address>
+00/10/28 11:13:03<br>
+<img align="top" src="../monicon.gif" alt="">
+<a href="http://www.pobox.com/~ehood/mhonarc.html"
+><strong>MHonArc</strong></a><br>
+Copyright &#169; 1999, <a href="http://www.pobox.com/~ehood/"
+>Earl Hood</a>, <a href="mailto:mhonarc@pobox.com"
+>mhonarc@pobox.com</a><br>
+</address>
+
+</body>
+</html>

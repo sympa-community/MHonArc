@@ -1,13 +1,13 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##      @(#) mhthread.pl 2.4 98/10/10 16:29:57
+##      @(#) mhthread.pl 2.6 99/06/25 14:18:25
 ##  Author:
-##      Earl Hood       earlhood@usa.net
+##      Earl Hood       mhonarc@pobox.com
 ##  Description:
 ##      Thread routines for MHonArc
 ##---------------------------------------------------------------------------##
 ##    MHonArc -- Internet mail-to-HTML converter
-##    Copyright (C) 1995-1998	Earl Hood, earlhood@usa.net
+##    Copyright (C) 1995-1999	Earl Hood, mhonarc@pobox.com
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by
@@ -92,6 +92,9 @@ sub write_thread_index {
 		die("ERROR: Unable to create $TIDXPATHNAME\n");
 	}
 	print STDOUT "Writing $TIDXPATHNAME ...\n"  unless $QUIET;
+
+	($tmpl = $SSMARKUP) =~ s/$VarExp/&replace_li_var($1,'')/geo;
+	print $handle $tmpl;
 
 	print $handle "<!-- ", &commentize("MHonArc v$VERSION"), " -->\n";
 
@@ -211,19 +214,21 @@ sub compute_threads {
     %SReplies 	 = ();
 
     ##	Sort by date first for subject based threads
-    @ThreadList = sort increase_index keys %Subject;
+    @ThreadList = sort_messages(0,0,0,0);
 
     ##	Find first occurrances of subjects
-    foreach $index (@ThreadList) {
-	$tmp = lc $Subject{$index};
-	1 while (($tmp =~ s/^$SubReplyRxp//io) ||
-		 ($tmp =~ s/\s*-\s*re(ply|sponse)\s*$//io));
+    if (!$NoSubjectThreads) {
+	foreach $index (@ThreadList) {
+	    $tmp = lc $Subject{$index};
+	    1 while (($tmp =~ s/^$SubReplyRxp//io) ||
+		     ($tmp =~ s/\s*-\s*re(ply|sponse)\s*$//io));
 
-	$stripsub{$index} = $tmp;
-	$FirstSub2Index{$tmp} = $index
-	    unless defined($FirstSub2Index{$tmp}) ||
-		   (defined($Refs{$index}) &&
-		    grep($MsgId{$_}, split(/$X/o, $Refs{$index})));
+	    $stripsub{$index} = $tmp;
+	    $FirstSub2Index{$tmp} = $index
+		unless defined($FirstSub2Index{$tmp}) ||
+		       (defined($Refs{$index}) &&
+			grep($MsgId{$_}, split(/$X/o, $Refs{$index})));
+	}
     }
 
     ##	Compute thread data
@@ -251,7 +256,7 @@ sub compute_threads {
 
     } continue {
 	# Check for subject-based threading
-	if (!$HasRef{$index}) {
+	if (!$NoSubjectThreads && !$HasRef{$index}) {
 	    if (($refindex = $FirstSub2Index{$stripsub{$index}}) &&
 		($refindex ne $index)) {
 
@@ -267,7 +272,7 @@ sub compute_threads {
     }
 
     ## Calculate thread listing order
-    @ThreadList = &t_sort_messages();
+    @ThreadList = sort_messages($TNOSORT, $TSUBSORT, 0, $TREVERSE);
     foreach $index (@ThreadList) {
 	unless ($Counted{$index} || $HasRef{$index}) {
 	    &do_thread($index, 0);
@@ -317,8 +322,9 @@ sub do_thread {
 ##
 sub print_thread {
     local($handle, $idx, $top) = ($_[0], $_[1], $_[2]);
-    local(@repls, @srepls) = ();
-    local($attop, $haverepls, $hvnirepls, $single, $depth, $i);
+    my(@repls, @srepls) = ();
+    my($attop, $haverepls, $hvnirepls, $single, $depth, $i);
+    my $didtliend = 0;
 
     ## Get replies
     @repls  = sort increase_index split(/$bs/o, $Replies{$idx})
@@ -351,8 +357,8 @@ sub print_thread {
     } else {
 	## Check for missing messages
 	if ($DoMissingMsgs) {
-	    for ($i = $depth; $i > 0; $i--) {
-		$level++;
+	    for ($i=$depth; $i > 0; --$i) {
+		++$level;
 		&print_thread_var($handle, $idx, *TLINONE);
 		&print_thread_var($handle, $idx, *TSUBLISTBEG)
 		    if $level <= $TLEVELS;
@@ -362,8 +368,12 @@ sub print_thread {
     }
 
     ## Increment level count if their are replies
-    if ($haverepls) {
-	$level++;
+    ++$level  if ($haverepls);
+
+    ## Print list item close if hit max depth
+    if (!$attop && !$single && ($level > $TLEVELS)) {
+	&print_thread_var($handle, $idx, *TLIEND);
+	$didtliend = 1;
     }
 
     ## Mark message printed
@@ -386,23 +396,22 @@ sub print_thread {
     }
 
     ## Decrement level count if their were replies
-    if ($haverepls) {
-	$level--;
-    }
+    --$level  if ($haverepls);
+
     ## Check for missing messages
     if ($DoMissingMsgs && !($attop || $single)) {
-	for ($i = $depth; $i > 0; $i--) {
+	for ($i=$depth; $i > 0; --$i) {
 	    &print_thread_var($handle, $idx, *TLINONEEND);
 	    &print_thread_var($handle, $idx, *TSUBLISTEND)
 		if $level <= $TLEVELS;
-	    $level--;
+	    --$level;
 	}
     }
 
     ## Close entry text
     if ($attop) {
 	&print_thread_var($handle, $idx, *TTOPEND);
-    } elsif (!$single) {
+    } elsif (!$single && !$didtliend) {
 	&print_thread_var($handle, $idx, *TLIEND);
     }
 }
