@@ -2,6 +2,22 @@
 # base64.pl -- A perl package to handle MIME-style BASE64 encoding
 # A. P. Barrett <barrett@ee.und.ac.za>, October 1993
 # $Revision: 1.4 $$Date: 1994/08/11 16:08:51 $
+#
+# Modified March 21, 1996 by ehood@convex.com
+#	-> Changes to base64'uudecode to strip out any begin/end
+#	   lines from input string.
+#
+# Modified April 16, 1996 by ehood@convex.com
+#	-> Change in base64'b64decode to use substr() to extract
+#	   data for decoding instead of a regular expression.
+#	   Results in a huge increase in execution time under Perl 4.
+#	   Perl 5 regular expression capability could be used to
+#	   give comperable performance, but would break Perl 4
+#	   compatibility.  Also, the substr() algorithm appears
+#	   to edge out the perl 5 method.
+#
+#	   Other functions have not been changed to use substr(), but
+#	   may benefit from it.
 
 package base64;
 
@@ -75,27 +91,31 @@ sub b64touu
 
 sub b64decode
 {
-    local ($_) = @_;
-    local ($result);
+    # substr() usage added by ehood, 1996/04/16
+
+    local ($str) = shift;
+    local ($result, $tmp, $offset, $len) = ('','', 0, 0);
     
     # zap bad characters and translate others to uuencode alphabet
     eval qq{
-	tr|$tr_base64||cd;
-	tr|$tr_base64|$tr_uuencode|;
+	\$str =~ tr|$tr_base64||cd;
+	\$str =~ tr|$tr_base64|$tr_uuencode|;
     };
 
     # break into lines of 60 encoded chars, prepending "M" for uuencode,
     # and then using perl's builtin uudecoder to convert to binary.
-    while (s/^(.{60})//) {
-	#warn "chunk :$&:\n";
-	$result .= unpack("u", "M" . $&);
+    #
+    $len = length($str);		    # store length
+    while ($offset+60 <= $len) {		# loop until < 60 chars left
+	$tmp = substr($str, $offset, 60);	# grap 60 char block
+	$offset += 60;				# increment offset
+	$result .= unpack("u", "M" . $tmp);	# decode block
     }
-
     # also decode any leftover chars
-    if ($_ ne "") {
-	#warn "last chunk :$_:\n";
+    if ($offset < $len) {
+	$tmp = substr($str, $offset, $len-$offset);
 	$result .= unpack("u",
-		    substr($uuencode_alphabet, length($_)*3/4, 1) . $_);
+		    substr($uuencode_alphabet, length($tmp)*3/4, 1) . $tmp);
     }
 
     # return result
@@ -182,6 +202,10 @@ sub uudecode
     local ($_) = @_;
     local ($result);
     
+    # strip out begin/end lines		(ehood, 1996/03/21)
+    s/^\s*begin[^\n]+\n//;
+    s/\nend\s*$//;
+
     # use perl's builtin uudecoder to convert each line
     while (s/^([^\n]+\n?)//) {
 	$result .= unpack("u", $&);

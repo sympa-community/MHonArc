@@ -1,0 +1,185 @@
+<HTML>
+<HEAD>
+<TITLE>
+MHonArc v1.2.2 -- Gory Details
+</TITLE></HEAD>
+<BODY>
+[<A HREF=mime.html>Previous</A>][<A HREF=diagnos.html>Next</A>][<A HREF=mhonarc.html>Contents</A>][<A HREF="http://www.oac.uci.edu/indiv/ehood/MHonArc/faq.html">FAQ</A>][<A HREF="http://www.oac.uci.edu/indiv/ehood/MHonArc/bugs.html">Bugs</A>][<A HREF=http://www.oac.uci.edu/indiv/ehood/mhonarc.html>Home</A>]
+<HR>
+
+<H1><A NAME="20814">Gory Details</A>
+</H1>
+
+<P>This sections explain in detail how <EM>MHonArc</EM> functions. Knowing the material 
+covered in this section may help you when trouble shooting.
+</P>
+<HR>
+<H2><A NAME="MMM0">OS Detection
+</A></H2>
+
+<P><EM>MHonArc</EM> will automatically detect which operating system it is running under. If 
+the following list of conditions are true, <EM>MHonArc</EM> assumes it is running under 
+MS-DOS:
+</P>
+<UL>
+<LI>The <CODE>COMSPEC</CODE> environment variable is defined.
+<LI>The value of the <CODE>COMSPEC</CODE> environment variable is a legal MS-DOS 
+pathname.
+<LI><P>The value of the <CODE>COMSPEC</CODE> environment variable is an executable file.
+</P></UL>
+<P>If any of the above conditions is false, <EM>MHonArc</EM> assumes it is running under Unix.
+</P>
+<DL>
+<DT><STRONG>NOTE</STRONG> 
+
+<DD><P> The previous conditions are used since the conditions will exist if Perl has 
+been installed on an MS-DOS machine. None of the above conditions exist 
+when Perl is installed on a Unix system.
+</P></DL>
+<HR>
+<H2><A NAME="MMM1">Processing Steps
+</A></H2>
+
+<P>This section describes the steps <EM>MHonArc</EM> performs when creating/editting an 
+archive. Anytime messages are added or deleted or the index page layout is 
+changed, <EM>MHonArc</EM> will perform the following steps.
+</P>
+<UL>
+<LI><P>Creates a lock file. This insures only one <EM>MHonArc</EM> process is updating the 
+archive at any given moment. See <A HREF="#13308">Archive Integrity</A> for more information.
+</P><LI><P>Reads the database file.  The name, and location, of the database file can be 
+explicitly specified via the <A HREF="overview.html#19406"><CODE>M2H_DBFILE</CODE></A> and <A HREF="overview.html#30949"><CODE>M2H_OUTDIR</CODE></A> environment 
+variables or the command-line options <A HREF="overview.html#13171"><CODE>-dbfile</CODE></A> and <A HREF="overview.html#40416"><CODE>-outdir</CODE></A>. 
+Otherwise, the current working directory is used.
+</P><P> <STRONG>NOTE</STRONG>: <EM>The database file must be in the same location as the archive since the 
+</EM><CODE>M2H_OUTDIR</CODE><EM> variable and </EM><CODE>-outdir</CODE><EM> option also specify the location of the 
+archive</EM>.
+</P><P> The database file contains data to update any mail threads and the 
+resource settings when <EM>MHonArc</EM> was last invoked. This allows new 
+messages to contain the same formatting/resource specifications as 
+existing messages in the archive without having to re-specify the resources 
+each time new messages are added. Resources defined in the database file 
+override the environment variables.
+</P><P> <STRONG>NOTE</STRONG>: <EM>If no database file is found, MHonArc will create a new archive</EM>.
+</P><LI><P>Read the <EM>MHonArc</EM> resource file, <EM>if specified</EM>. The resource file will override 
+any settings contained in the database file.
+</P><LI><P>Read the settings specified on the command-line. Command-line options 
+override any settings in the database and/or resource file.
+</P><LI><P>Update archive.
+</P><LI><P>Rewrites the index pages to reflect the update.
+</P><LI><P>Writes a new database file containing the new state of the archive and all 
+(new) resource settings.
+</P></UL>
+<P>Normally, knowing all the previous steps is unnecessary. However, it may be 
+useful to be aware of them if unexpected behavior, or errors, occur.
+</P>
+<HR>
+<H2><A NAME="13308">Archive Integrity</A>
+</H2>
+
+<P><EM>MHonArc</EM> applies safeguards to try to insure that a mail archive does not get 
+corrupted due to exceptional circumstances. <EM>MHonArc</EM> does the following to insure 
+a mail archive does not get corrupted:
+</P>
+<UL>
+<LI><P><EM>MHonArc</EM> creates a lock file, "<CODE>.mhonarc.lck</CODE>", when creating/updating 
+an archive. The lock file insures that only one <EM>MHonArc</EM> process is 
+modifying an archive at any given moment. The <A HREF="overview.html#38914"><CODE>-locktries</CODE></A> 
+command-line option, or the <A HREF="overview.html#13392"><CODE>M2H_LOCKTRIES</CODE></A> environment variable, 
+allows you to control how long a given <EM>MHonArc</EM> process will wait if an 
+archive is currently locked. If <EM>MHonArc</EM> can not lock the archive after the 
+specified number of tries, <EM>MHonArc</EM> will exit, unless the <A HREF="overview.html#31625"><CODE>-force</CODE></A> option is 
+specified.
+</P><LI><P><EM>MHonArc</EM> will ignore the following signals once messages are actually 
+being written to disk: <CODE>SIGABRT</CODE>, <CODE>SIGHUP</CODE>, <CODE>SIGINT</CODE>, <CODE>SIGQUIT</CODE>, <CODE>SIGPIPE</CODE>, 
+<CODE>SIGTERM</CODE>. Possible archive corruption can still occur if a <CODE>SIGKILL</CODE> signal 
+is received since <CODE>SIGKILL</CODE>s are uncatchable. A <CODE>SIGKILL</CODE> will also prevent 
+<EM>MHonArc</EM> from deleting the lock file.
+</P></UL>
+<HR>
+<H2><A NAME="MMM2">File Formats
+</A></H2>
+
+<H3>Database File
+</H3>
+
+<P>The <EM>MHonArc</EM> database file is actual Perl code. <EM>MHonArc</EM> requires it like any other 
+Perl library to load in the contents of the database.
+</P>
+<DL>
+<DT><STRONG>CAUTION</STRONG> 
+
+<DD><P> You should never modify the database file by hand. Changing the file by 
+hand could cause future incorrect/unpredictable behavior when 
+processing the archive.
+</P></DL>
+<H3>Index and Message Files
+</H3>
+
+<P>The indexes and message files are legal HTML documents. However, manual 
+editting of the documents is discouraged. The documents contain special comment 
+declarations. The comment declarations act as markers which allow <EM>MHonArc</EM> to 
+correctly edit the documents when needed.
+</P>
+<P>The comment declarations look like the following:
+</P>
+<PRE>&lt;!--X-Body-Begin--&gt;
+&lt;!--X-User-Header--&gt;
+&lt;!--X-User-Header-End--&gt;
+&lt;!--X-TopPNI--&gt;
+...
+
+</PRE>
+
+<H3>Derived Files
+</H3>
+
+<P>Derived files are files that are generated by the <A HREF="mime.html#23201">MIME</A> filters. These files are created 
+when the data being processed in messages cannot be converted to HTML (eg. 
+images, postscript, video, binaries). The format of these files depend on the 
+content-type of the data.
+</P>
+<HR>
+<H2><A NAME="MMM3">Notes
+</A></H2>
+
+<UL>
+<LI><P><A NAME="21846"></A>Here is the explicit order of decreasing precedence when setting 
+resources/options:
+</P><UL>
+<LI> command-line options (<EM>highest precedence</EM>)
+<LI> resource file
+<LI> database file
+<LI><P> environment variables (<EM>lowest precedence</EM>)
+</P></UL>
+<LI><P>Mail thread detection is dependent upon the mail messages containing the 
+message id(s) of referenced messages. Most mailers <EM>reply function</EM> will 
+automatically include the message id of the message being replied to.
+</P><LI><P>All mail message being converted into HTML are stored in memory before 
+they are written to disk. This can eat up much memory if many mail 
+messages are being converted. If you are processing multiple 
+mailboxes/folders and worried about memory, you can try the following:
+</P><UL>
+<LI> Invoke <EM>MHonArc</EM> on each one separately using the <CODE>-add</CODE> option.
+<LI><P> Or, invoke <EM>MHonArc</EM> with the <A HREF="overview.html#28456"><CODE>-savemem</CODE></A> option.
+</P></UL>
+<LI><P>The database file, and the index pages, are completely rewritten evertime 
+new messages are added. This may cause slight slow-downs when 
+archives become very large.
+</P><LI><P>When reading <EM>MH</EM> mail folders, mail message are assumed to have 
+numeric filenames.
+</P><LI><P>When sorting by date, <EM>MHonArc</EM> tries to use the date listed in the first 
+<EM>Received</EM> field of the message. If no <EM>Received</EM> field exists, than the <EM>Date</EM> field 
+is used.
+</P><LI><P>No distinction is made, in the output, on which messages came from 
+which mail folder if multiple mail folders are processed.
+</P><LI><P><EM>MHonArc</EM> can probably be modified to handle other types of mailers 
+(which has been done since the original version only supported <EM>MH</EM> mail 
+folders). The <A HREF="rcfile.html#23573"><CODE>MSGSEP</CODE></A> resource gives flexibility in processing Unix style 
+mailbox files.
+</P></UL>
+
+<HR>
+[<A HREF=mime.html>Previous</A>][<A HREF=diagnos.html>Next</A>][<A HREF=mhonarc.html>Contents</A>][<A HREF="http://www.oac.uci.edu/indiv/ehood/MHonArc/faq.html">FAQ</A>][<A HREF="http://www.oac.uci.edu/indiv/ehood/MHonArc/bugs.html">Bugs</A>][<A HREF=http://www.oac.uci.edu/indiv/ehood/mhonarc.html>Home</A>]
+</BODY>
+</HTML>

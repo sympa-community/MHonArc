@@ -1,0 +1,225 @@
+<HTML>
+<HEAD>
+<TITLE>
+MHonArc v1.2.2 -- Thread Index Customization
+</TITLE></HEAD>
+<BODY>
+[<A HREF=indexpg.html>Previous</A>][<A HREF=message.html>Next</A>][<A HREF=mhonarc.html>Contents</A>][<A HREF="http://www.oac.uci.edu/indiv/ehood/MHonArc/faq.html">FAQ</A>][<A HREF="http://www.oac.uci.edu/indiv/ehood/MHonArc/bugs.html">Bugs</A>][<A HREF=http://www.oac.uci.edu/indiv/ehood/mhonarc.html>Home</A>]
+<HR>
+
+<H1><A NAME="35869">Thread Index Customization</A>
+</H1>
+
+<P>The thread index compliments the main index. If a thread index is created, each 
+message in the archive will contain an extra link to the thread index.
+</P>
+<P>Customizing the thread index is very similiar to customizing the main index.
+</P>
+<HR>
+<H2><A NAME="MMM0">Filename
+</A></H2>
+
+<P>By default, the filename of the index page is "<CODE>threads.html</CODE>". However, a 
+different name may be specified with the <A HREF="overview.html#20008"><CODE>M2H_TIDXFNAME</CODE></A> environment variable, 
+the <A HREF="rcfile.html#40246"><CODE>TIDXFNAME</CODE></A> resource element, or the <A HREF="overview.html#31437"><CODE>-tidxfname</CODE></A> command-line option.
+</P>
+<HR>
+<H2><A NAME="22356">Beginning Markup</A>
+</H2>
+
+<P><EM>MHonArc</EM> allows you to completely override the begining markup of the thread 
+index page. I.e. You can control the opening &lt;HTML&gt; tag, the HEAD element 
+contents, the opening &lt;BODY&gt; tag, etc. Therefore, if you are not satisfied with the 
+default behavior of how the TTITLE resource is used, or have other needs that 
+require control on the beginning markup, you can set the <CODE>TIDXPGBEGIN</CODE> resource 
+file element.
+</P>
+<H3><CODE><A NAME="37345">TIDXPGBEGIN</A></CODE> 
+</H3>
+
+<P>The best way to show how the <CODE>TIDXPGBEGIN</CODE> works, the following represents the 
+default setting <EM>MHonArc</EM> uses:
+</P>
+<PRE>&lt;TIDXPGBEGIN&gt;
+&lt;!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN"&gt;
+&lt;HTML&gt;
+&lt;HEAD&gt;
+&lt;TITLE&gt;$TIDXTITLE$&lt;/TITLE&gt;
+&lt;/HEAD&gt;
+&lt;BODY&gt;
+&lt;H1&gt;$TIDXTITLE$&lt;/H1&gt;
+&lt;/TIDXPGBEGIN&gt;
+
+</PRE>
+
+<DL>
+<DT><STRONG>NOTE</STRONG> 
+
+<DD><P> Technically, setting the TTITLE resource, via the <A HREF="overview.html#11415"><CODE>M2H_TTITLE</CODE></A> 
+environment variable, the <A HREF="rcfile.html#14393"><CODE>TTITLE</CODE></A> resource file element, or the <A HREF="overview.html#18016"><CODE>-ttitle</CODE></A> 
+command-line option, sets the <CODE>$TIDXTITLE$</CODE> resource file variable.
+</P></DL>
+<P>The resource variables allowed in the <CODE>TIDXPGBEGIN</CODE> element are the following:
+</P>
+<UL>
+<LI><CODE>$DOCURL$</CODE> -- URL to documentation
+<LI><CODE>$GMTDATE$</CODE> -- Current GMT date.
+<LI><CODE>$IDXFNAME$</CODE> -- Filename of main index page.
+<LI><CODE>$IDXSIZE$</CODE> -- Max number of messages that may be listed in the index.
+<LI><CODE>$IDXTITLE$</CODE> -- The title of the index page.
+<LI><CODE>$LOCALDATE$</CODE> -- Current local date.
+<LI><CODE>$NUMOFIDXMSG$</CODE> -- Number of message listed.
+<LI><CODE>$NUMOFMSG$</CODE> -- Number of messages in the archive.
+<LI><CODE>$OUTDIR$</CODE> -- Pathname of archive.
+<LI><CODE>$PROG$</CODE> -- Program name.
+<LI><CODE>$TIDXFNAME$</CODE> -- Filename of thread index page.
+<LI><CODE>$TIDXTITLE$</CODE> -- Title of thread index page.
+<LI><CODE>$VERSION$</CODE> -- Program version.
+</UL>
+<P>See <A HREF="rcfile.html#33860">Resource Variables</A> for more information on the usage of variables.
+</P>
+<HR>
+<H2><A NAME="MMM1">End Markup
+</A></H2>
+
+<P>Along with controlling the <A HREF="#22356">beginning markup</A>, you can control the ending markup.
+</P>
+<H3><CODE>TIDXPGEND</CODE> 
+</H3>
+
+<P>The <CODE>TIDXPGEND</CODE> resource element may be used to define the ending markup of the 
+index page. The default value is the following:
+</P>
+<PRE>&lt;TIDXPGEND&gt;
+&lt;/BODY&gt;
+&lt;/HTML&gt;
+&lt;/TIDXPGEND&gt;
+
+</PRE>
+
+<P>The resource variables allowed are the same as for <A HREF="#37345"><CODE>TIDXPGBEGIN</CODE></A>.
+</P>
+<HR>
+<H2><A NAME="17901">Listing Layout</A>
+</H2>
+
+<P>By default, <EM>MHonArc</EM> lists the threads in chronological order. The thread with the 
+oldest initital messsage is listed first, and the thread with the newest initital 
+message is listed last. The TREVERSE resource may be set to have the thread listing 
+from newest thread to oldest thread. If the TSUBSORT resource is set, then threads 
+are sorted by subject.
+</P>
+<P>HTML markup can be added to the thread index page by defining the <A HREF="#27908"><CODE>THEAD</CODE></A> and 
+<A HREF="#19874"><CODE>TFOOT</CODE></A> <A HREF="rcfile.html#21846">resource file</A> elements. Usage of <A HREF="#27908"><CODE>THEAD</CODE></A> and <A HREF="#19874"><CODE>TFOOT</CODE></A> is discussed later in this 
+section.
+</P>
+<P><EM>MHonArc</EM> uses HTML unorder lists for formatting the thread index list. Nested list 
+markup is used to show the threads. Since threads can become very large, the 
+TLEVELS resource can be used to limit the number of nested lists allowed. The 
+default nesting level is 3.
+</P>
+<P>Customization over the thread index list format is more restrictive than the main 
+index. All thread index entries are contained in the HTML <CODE>LI</CODE> element, which is 
+contained in an <CODE>UL</CODE> element. The entry text itself can be customized via the <A HREF="#22566"><CODE>TLITXT</CODE></A> 
+<A HREF="rcfile.html#21846">resource file</A> element. Usage of <A HREF="#22566"><CODE>TLITXT</CODE></A> is discussed later in this section.
+</P>
+<H3><CODE><A NAME="27908">THEAD</A></CODE> 
+</H3>
+
+<P>The <CODE>THEAD</CODE> resource element specifies text to be inserted before the thread index 
+listing. The text can be any valid HTML markup. Plus, <EM>MHonArc</EM> defines the 
+following variables you may use which get expanded at run-time:
+</P>
+<UL>
+<LI><CODE>$DOCURL$</CODE> -- URL to documentation
+<LI><CODE>$GMTDATE$</CODE> -- Current GMT date.
+<LI><CODE>$IDXFNAME$</CODE> -- Filename of main index page.
+<LI><CODE>$IDXSIZE$</CODE> -- Max number of messages that may be listed in the index.
+<LI><CODE>$IDXTITLE$</CODE> -- The title of the index page.
+<LI><CODE>$LOCALDATE$</CODE> -- Current local date.
+<LI><CODE>$NUMOFIDXMSG$</CODE> -- Number of message listed.
+<LI><CODE>$NUMOFMSG$</CODE> -- Number of messages in the archive.
+<LI><CODE>$OUTDIR$</CODE> -- Pathname of archive.
+<LI><CODE>$PROG$</CODE> -- Program name.
+<LI><CODE>$TIDXFNAME$</CODE> -- Filename of thread index page.
+<LI><CODE>$TIDXTITLE$</CODE> -- Title of thread index page.
+<LI><CODE>$VERSION$</CODE> -- Program version.
+</UL>
+<P><EM>MHonArc</EM>'s <CODE>THEAD</CODE> default value is the following:
+</P>
+<PRE>&lt;THEAD&gt;
+&lt;UL&gt;
+&lt;LI&gt;&lt;A HREF="$IDXFNAME$"&gt;Main Index&lt;/A&gt;&lt;/LI&gt;
+&lt;/UL&gt;
+&lt;HR&gt;
+&lt;/THEAD&gt;
+
+</PRE>
+
+<H3><CODE><A NAME="22566">TLITXT</A></CODE> 
+</H3>
+
+<P>The <CODE>TLITXT</CODE> specifies the markup to use for each entry in the thread index. Only 
+markup that is legal within the HTML <CODE>LI</CODE> element should be used. When you 
+define the contents for the <CODE>TLITXT</CODE> resource element, you may use the following 
+<EM>variables</EM> defined by <EM>MHonArc</EM> (see <A HREF="rcfile.html#33860">Resource Variables</A> on the usage of variables):
+</P>
+<UL>
+<LI><CODE>$A_ATTR$</CODE> -- The <CODE>NAME</CODE> and <CODE>HREF</CODE> attributes to use in an anchor to link to 
+the archived message. The <CODE>NAME</CODE> attribute links the messages to the index 
+page.
+<LI><CODE>$A_HREF$</CODE> -- The <CODE>HREF</CODE> attribute to use in an anchor to link to the archived 
+message.
+<LI><CODE>$A_NAME$</CODE> -- The <CODE>NAME</CODE> attributes to use in an anchor for messages to link 
+to the index page.
+<LI><CODE>$DATE$</CODE> -- The date of the message.
+<LI><CODE>$DDMMYY$</CODE> -- Message date in dd/mm/yy format.
+<LI><CODE>$ICON$</CODE> -- The context-type sensistive icon. See <A HREF="indexpg.html#20837">Icons</A> for information.
+<LI><CODE>$ICONURL$</CODE> -- The URL to the context-type sensistive icon. See <A HREF="indexpg.html#20837">Icons</A> for 
+information.
+<LI><CODE>$MMDDYY$</CODE> -- Message date in mm/dd/yy format.
+<LI><CODE>$NUMFOLUP$</CODE> -- Number of follow-ups for the given message.
+<LI><CODE>$FROM$</CODE> -- The complete text in the <CODE>From:</CODE> field of the message.
+<LI><CODE>$FROMADDR$</CODE> -- The e-mail address in the <CODE>From:</CODE> field of the message.
+<LI><CODE>$FROMNAME$</CODE> -- The English name of the person in the <CODE>From:</CODE> field of the 
+message. If no English name is found, the username specified in the e-mail 
+address is used.
+<LI><CODE>$MSGNUM$</CODE> -- The message numbers assigned to the message by <EM>MHonArc</EM>.
+<LI><CODE>$ORDNUM$</CODE> -- The current listing number of the message.
+<LI><CODE>$SUBJECT$</CODE> -- The subject text of the message wrapped in an anchor 
+element that hyperlinks to the message.
+<LI><CODE>$SUBJECTNA$</CODE> -- The subject text of the message without the anchor 
+element.
+<LI><CODE>$YYMMDD$</CODE> -- Message date in yy/mm/dd format.
+</UL>
+<P>
+</P>
+<DL>
+<DT><STRONG>NOTE</STRONG> 
+
+<DD><P> Do not specify <CODE>$A_ATTR$</CODE>, <CODE>$A_NAME</CODE>, and <CODE>$SUBJECT$</CODE> together in the 
+<CODE>LITEMPLATE</CODE> element. Since all of these variables contain the <CODE>NAME</CODE> 
+atrribute. Invalid HTML will be created since multiple anchors will have 
+the same <CODE>NAME</CODE> identifier.
+</P></DL>
+<P><CODE>TLITXT</CODE>'s default value is the following:
+</P>
+<PRE>&lt;TLITXT&gt;
+($NUMFOLUP$) &lt;STRONG&gt;$SUBJECT:40$&lt;/STRONG&gt;, &lt;EM&gt;$FROMNAME$&lt;/EM&gt;
+&lt;/TLITXT&gt;
+</PRE>
+
+<H3><CODE><A NAME="19874">TFOOT</A></CODE> 
+</H3>
+
+<P>The <CODE>TFOOT</CODE> resource element specifies the text to use after the end the thread index 
+list. The text can be any valid HTML markup. <CODE>TFOOT</CODE> may contain the same 
+variables as <A HREF="#27908"><CODE>THEAD</CODE></A>.
+</P>
+<P><CODE>TFOOT</CODE>'s default value is nil.
+</P>
+
+<HR>
+[<A HREF=indexpg.html>Previous</A>][<A HREF=message.html>Next</A>][<A HREF=mhonarc.html>Contents</A>][<A HREF="http://www.oac.uci.edu/indiv/ehood/MHonArc/faq.html">FAQ</A>][<A HREF="http://www.oac.uci.edu/indiv/ehood/MHonArc/bugs.html">Bugs</A>][<A HREF=http://www.oac.uci.edu/indiv/ehood/mhonarc.html>Home</A>]
+</BODY>
+</HTML>

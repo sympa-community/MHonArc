@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
-## Library to convert text/setext to HTML.  Adapted for use in MHarc
-## by ehood@convex.com, Sept 1994.
+## Library to convert text/setext to HTML.  Adapted for use in MHonArc
+## by ehood@isogen.com, Sept 1994.
 ## Filter routine can be registered with the following:
 ##		<MIMEFILTERS>
 ##		text/setext:m2h_text_setext'filter:mhtxtsetext.pl
@@ -110,7 +110,7 @@ sub filter {
         $ret .= &htmlize($_). "\n";
     }
     &to_fmt;
-    $ret;
+    ($ret);
 }
 
 sub to_fmt {

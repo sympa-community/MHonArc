@@ -2,37 +2,39 @@
 ##  File:
 ##      mhtxthtml.pl
 ##  Author:
-##      Earl Hood       ehood@convex.com
+##      Earl Hood       ehood@isogen.com
+##  Date:
+##	Fri Jan 19 16:12:01 CST 1996
 ##  Description:
 ##	Library defines routine to filter text/html body parts
-##	for MHarc.
+##	for MHonArc.
 ##	Filter routine can be registered with the following:
 ##		<MIMEFILTERS>
 ##		text/html:m2h_text_html'filter:mhtxthtml.pl
 ##		</MIMEFILTERS>
 ##---------------------------------------------------------------------------##
-##  Copyright (C) 1994  Earl Hood, ehood@convex.com
+##    MHonArc -- Internet mail-to-HTML converter
+##    Copyright (C) 1995	Earl Hood, ehood@isogen.com
 ##
-##  This program is free software; you can redistribute it and/or modify
-##  it under the terms of the GNU General Public License as published by
-##  the Free Software Foundation; either version 2 of the License, or
-##  (at your option) any later version.
-##  
-##  This program is distributed in the hope that it will be useful,
-##  but WITHOUT ANY WARRANTY; without even the implied warranty of
-##  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-##  GNU General Public License for more details.
-##  
-##  You should have received a copy of the GNU General Public License
-##  along with this program; if not, write to the Free Software
-##  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+##    This program is free software; you can redistribute it and/or modify
+##    it under the terms of the GNU General Public License as published by
+##    the Free Software Foundation; either version 2 of the License, or
+##    (at your option) any later version.
+##
+##    This program is distributed in the hope that it will be useful,
+##    but WITHOUT ANY WARRANTY; without even the implied warranty of
+##    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+##    GNU General Public License for more details.
+##
+##    You should have received a copy of the GNU General Public License
+##    along with this program; if not, write to the Free Software
+##    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 ##---------------------------------------------------------------------------##
+
 
 package m2h_text_html;
 
-$Url     = '(http://|ftp://|afs://|wais://|telnet://|gopher://|' .
-	    'news:|nntp:|mid:|cid:|mailto:|prospero:)';
-$UrlExp = $Url . q%[^\s\(\)\|<>"']*[^\.;,"'\|\[\]\(\)\s<>]%;
+$Url	= '(\w+://|\w+:)';	# Beginning of URL match expression
 
 ##---------------------------------------------------------------------------
 ##	The filter must modify HTML content parts for merging into the
@@ -40,12 +42,12 @@ $UrlExp = $Url . q%[^\s\(\)\|<>"']*[^\.;,"'\|\[\]\(\)\s<>]%;
 ##	resulting filtered message is valid HTML.
 ##
 sub filter {
-    local($header, *fields, *data) = @_;
+    local($header, *fields, *data, $isdecode, $args) = @_;
     local($base, $title, $tmp);
 
     ## Get/remove title
     if ($data =~ s%<title\s*>([^<]*)</title\s*>%%i) {
-        $title = "<hr><address>$1</address><hr>\n";
+        $title = "<ADDRESS>Title: <STRONG>$1</STRONG></ADDRESS>\n";
     }
     ## Get/remove BASE url
     if ($data =~ s%(<base\s[^>]*>)%%i) {
@@ -62,21 +64,25 @@ sub filter {
     ## Modify relative urls to absolute using BASE
     if ($base !~ /^\s*$/) {
         $data =~ s%(href\s*=\s*['"])([^'"]+)(['"])%
-                   $1 . &addbase($base,$2) . $3%gei;
+		   &addbase($base,$1,$2,$3)%gei;
         $data =~ s%(src\s*=\s*['"])([^'"]+)(['"])%
-                   $1 . &addbase($base,$2) . $3%gei;
+                   &addbase($base,$1,$2,$3)%gei;
     }
 
-    $title . $data;
+    ($title . $data);
 }
 ##---------------------------------------------------------------------------
 sub addbase {
-    local($b, $u) = @_;
+    local($b, $pre, $u, $suf) = @_;
     local($ret);
-    if ($u =~ m%$Url%o) {
-        $ret = $u;
-    } else {
-        $ret = $b . $u;
+    $u =~ s/^\s+//;
+    if ($u =~ m%^$Url%o) {	# Non-relative URL, do nothing
+        $ret = $pre . $u . $suf;
+    } else {			# Relative URL
+	if ($u =~ m%^/%) {		# Check for "/..."
+	    $b =~ s%^(${Url}[^/]*)/.*%$1%o;	# Get hostname:port number
+	}
+        $ret = $pre . $b . $u . $suf;
     }
     $ret;
 }

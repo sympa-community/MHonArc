@@ -1,0 +1,46 @@
+ACKNOWLEDGEMENTS for MHonArc
+
+	<URL:http://www.oac.uci.edu/indiv/ehood/mhonarc.html>
+
+I would like to thank everyone who has given feedback on MHonArc.
+Sorry for not listing everyone, but it has become too hard to keep
+track of all the names.  However, I'd like to give special thanks to
+the following:
+
+ A. P. Barrett <barrett@ee.und.ac.za>
+	For developing a base64 library.  The library has been adapted
+	to decode base64 messages by MHonArc.
+
+ Susie Blackstock <seads@convex.com>
+	For helping me with the documentation.  Any problems with the
+	documentation is purely my fault.
+
+ Achim Bohnet <ach@rosat.mpe-garching.mpg.de>
+	For his help in testing, and contributing to, mhonarc and for
+	setting up the mhonarc mailing list.
+
+ Roman Czyborra <czyborra@cs.tu-berlin.de>
+	For his help with the MosaicMail script.
+
+ Timothy Finin <Tim.Finin@cs.umbc.edu>
+	Whose initial feedback on mbox2html (my first mail->HTML
+	program) caused the ball rolling on developing a more complete
+	mail-to-HTML program.
+
+ Ken Harward <harward@convex.com>
+	For helping me tackle Perl problems and for bouncing ideas
+	off.
+
+ Phyllis Imperatrice <mymom@home>
+	For the initial sketch of the MHonArc logo.
+
+ Steve Pacenka <sp17@cornell.edu>
+	For his great help in getting MHonArc to run under MS-DOS, and
+	for his help in trouble-shooting.
+
+ NIIBE Yutaka <gniibe@mri.co.jp>
+	For the contribution of a text/plain filter to process
+	ISO-2022 encoded mail messages (ie. Japanese character set).
+
+---------------------------------------------------------------------------
+Earl Hood, ehood@isogen.com

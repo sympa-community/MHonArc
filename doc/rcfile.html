@@ -1,0 +1,648 @@
+<HTML>
+<HEAD>
+<TITLE>
+MHonArc v1.2.2 -- Resource File
+</TITLE></HEAD>
+<BODY>
+[<A HREF=overview.html>Previous</A>][<A HREF=adding.html>Next</A>][<A HREF=mhonarc.html>Contents</A>][<A HREF="http://www.oac.uci.edu/indiv/ehood/MHonArc/faq.html">FAQ</A>][<A HREF="http://www.oac.uci.edu/indiv/ehood/MHonArc/bugs.html">Bugs</A>][<A HREF=http://www.oac.uci.edu/indiv/ehood/mhonarc.html>Home</A>]
+<HR>
+
+<H1><A NAME="21846">Resource File</A>
+</H1>
+
+<P><EM>MHonArc</EM> supports the ability to read in a resource file to control the behavior of 
+<EM>MHonArc</EM>. The resource file allows you to specify most of the resources set by 
+environment variables and command-line options, and it allows you to specify 
+other resources to control <EM>MHonArc</EM>'s behavior.
+</P>
+<P>The resource file is specified by the <A HREF="overview.html#36085"><CODE>M2H_RCFILE</CODE></A> environment variable or the 
+<A HREF="overview.html#31250"><CODE>-rcfile</CODE></A> command-line option. The command-line option overrides the 
+environment variable if both are defined.
+</P>
+<DL>
+<DT><STRONG>NOTE</STRONG> 
+
+<DD><P> <EM>MHonArc</EM> will store the information specified in the resource file in the 
+database for the archive. Therefore, it is unnecessary to respecify the 
+resource file duing archive updates unless changes are required from the 
+current settings.
+</P></DL>
+<HR>
+<H2><A NAME="MMM0">Resource Syntax
+</A></H2>
+
+<P>Resources are set in the file by using <EM>elements</EM> similiar in style to HTML/SGML 
+markup. However, <EM>MHonArc</EM> uses simpler parsing rules for the resource file than 
+standard SGML:
+</P>
+<UL>
+<LI><P>Any line that is not a recognized element open tag, <EM>and</EM> the line is not 
+contained within an element, is ignored.  This implies that regular text can 
+be put anywhere <STRONG>outside</STRONG> of recognized elements for commenting 
+purposes.
+</P><P> <STRONG>NOTE</STRONG>: You should use SGML comment declarations (<CODE>&lt;!-- </CODE>...<CODE> --&gt;</CODE>) when 
+commenting a resource file. This will eliminate possible conflict with later 
+versions of <EM>MHonArc</EM> if more stricter parsing rules are adopted.
+</P><LI><P>The opening tag of an element must occur by itself on a single line. 
+Whitespace is allowed before the the open tag.
+</P><LI><P>No comments are allowed inside elements because the text will be treated 
+as element content.
+</P><LI><P>Each element must be closed with a <CODE>&lt;/</CODE><VAR>element_name</VAR><CODE>&gt;</CODE> tag on its own 
+line unless <EM>explicitly</EM> stated otherwise in the <A HREF="#28308">Resource Elements</A> section. 
+Whitespace is allowed before the close tag.
+</P><LI><P>Some elements can take an optional attribute called "<CODE>Override</CODE>".  This 
+tells <EM>MHonArc</EM> that the contents of the element will completely override 
+the default behavior of <EM>MHonArc</EM>, and previous instances of the element.  
+<STRONG>Example</STRONG>: "<CODE>&lt;EXCS Override&gt;</CODE>". If "<CODE>Override</CODE>" is not specified, then the 
+contents of the element augment the current setting.
+</P><LI><P>Element names are case-insensitive.
+</P><LI><P>Elements can occur in any order in the resource file.
+</P></UL>
+<H3><A NAME="33860">Resource Variables</A>
+</H3>
+
+<P>Some resource element contents may contain variables. Variables get expanded to 
+strings at run-time.
+</P>
+<DL>
+<DT><STRONG>NOTE</STRONG> 
+
+<DD><P> Variable expansion will only take place in resource elements that are 
+intended to have variables as part of their content. If an element is not 
+meant to have variables, the variable text will be taken literally as part of 
+the element content.
+</P></DL>
+<P>The syntax of the <EM>variables</EM> to use in resource elements is as follows:
+</P>
+<P><CODE>$</CODE><EM>VARIABLE</EM>[<CODE>:</CODE>[<EM>N</EM>][<CODE>U</CODE>]]<CODE>$
+</CODE></P>
+<P>The items in []'s are optional. Definition of each part:
+</P>
+<DL>
+<DT><CODE>$</CODE> 
+
+<DD><P> The <CODE>$</CODE> character represents the beginning, and ending, of the variable.
+</P></DL>
+<DL>
+<DT><EM>VARIABLE</EM> 
+
+<DD><P> This is the the actual name of the variable. All variable names must be 
+uppercase.
+</P></DL>
+<DL>
+<DT><CODE>:</CODE>[<EM>N</EM>][<CODE>U</CODE>] (<EM>optional</EM>)
+
+<DD><P> This defines a maximum length of the replacement string for the variable. 
+The option "<CODE>U</CODE>" denotes that the replacement string should be treated as 
+part of a URL string. This can be useful when the variable may contain 
+special characters, and the variable is used withing a URL.
+</P></DL>
+<P><STRONG>No</STRONG> whitespace is allowed between the opening <CODE>$</CODE> and closing <CODE>$</CODE>. If an unrecognized 
+variable is encountered, it gets replaced with an empty string. If a literal "<CODE>$</CODE>" is 
+needed, use "<CODE>$$</CODE>".
+</P>
+<DL>
+<DT><STRONG>SPECIAL NOTE</STRONG> 
+
+<DD><P> The <A HREF="#21351"><CODE>MAILTOURL</CODE></A> resource has different rules for variable expansion. If a 
+variable does not exactly match the set of variables available for the 
+<CODE>MAILTOURL</CODE>, the variable text will be taken literally as part of the element 
+content. Therefore, a single "<CODE>$</CODE>" can be used to represent a "<CODE>$</CODE>" character.
+</P><P> Also, variables in the <CODE>MAILTOURL</CODE> should <STRONG>NOT</STRONG> have "<CODE>:</CODE><VAR>NU</VAR>" modifier. This 
+will prevent the variables from be recognized. <EM>MHonArc</EM> will 
+automatically treat the replacement value as a part of a URL string.
+</P></DL>
+<P>Here are some examples of legal variable usage:
+</P>
+<UL>
+<LI><CODE>$SUBJECT$</CODE> 
+<LI><CODE>$FROMNAME$</CODE> 
+<LI><CODE>$SUBJECT:50$</CODE> 
+<LI><CODE>$SUBJECTNA:60U$</CODE> 
+<LI><CODE>$FROMADDR:U$</CODE> 
+</UL>
+<P>Each resource element will define what variables are defined for it.
+</P>
+<HR>
+<H2><A NAME="28308">Resource Elements</A>
+</H2>
+
+<P>The following are complete listings of all the resource elements defined by 
+<EM>MHonArc</EM>. Many element descriptions will reference to other sections of the 
+documentation on the exact usage of the element.
+</P>
+<H3>Empty Elements
+</H3>
+
+<P>The following list of elements contain no textual content. Therefore, no end tag is 
+required:
+</P>
+<H4><CODE>NODOC</CODE> 
+</H4>
+
+<P>Do not put link to documentation on main index page.
+</P>
+<H4><CODE>NOMAILTO</CODE> 
+</H4>
+
+<P>Do not convert e-mail addresses in mail headers to mailto hyperlinks.
+</P>
+<H4><CODE>NONEWS</CODE> 
+</H4>
+
+<P>Do not convert newsgroups in the <CODE>Newsgroups:</CODE> mail header field to <CODE>news</CODE> 
+hyperlinks.
+</P>
+<H4><CODE>NOREVERSE</CODE> 
+</H4>
+
+<P>Do not perform a reverse listing of the mail messages in the main index page.
+</P>
+<H4><CODE>NOSORT</CODE> 
+</H4>
+
+<P>List messages in the index page in the order they are processed.
+</P>
+<H4><CODE>NOTHREAD</CODE> 
+</H4>
+
+<P>Do not create thread index.
+</P>
+<H4><CODE>NOTREVERSE</CODE> 
+</H4>
+
+<P>List threads in the thread index with oldest thread first.
+</P>
+<H4><CODE>NOTSUBSORT</CODE> 
+</H4>
+
+<P>Do not sort thread by subject in thread index page.
+</P>
+<H4><CODE><A NAME="37391">REVERSE</A></CODE> 
+</H4>
+
+<P>List messages in reverse listing order for the main index page.
+</P>
+<H4><CODE>SORT</CODE> 
+</H4>
+
+<P>List messages in the index page in chronological order.
+</P>
+<H4><CODE>SUBSORT</CODE> 
+</H4>
+
+<P>Sort messages by subject. Subject sorting is case-insensitive, and begining "<CODE>Re:</CODE>", 
+"<CODE>A</CODE>", "<CODE>An</CODE>", and "<CODE>The</CODE>" words are ignored.
+</P>
+<H4><CODE><A NAME="15505">THREAD</A></CODE> 
+</H4>
+
+<P>Create thread index. This is the default.
+</P>
+<H4><CODE>TREVERSE</CODE> 
+</H4>
+
+<P>List threads in the thread index with newest thread first.
+</P>
+<H4><CODE>TSUBSORT</CODE> 
+</H4>
+
+<P>Sort thread by subject in thread index page.
+</P>
+<H3>Non-Empty Elements
+</H3>
+
+<P>The following list of elements contain textual content, therefore, each element must 
+be <STRONG>explicitly</STRONG> closed with an element end tag (examples are given in <A HREF="#34544">Example 
+Resource File</A>):
+</P>
+<H4><CODE>BOTLINKS</CODE> 
+</H4>
+
+<P>Markup for defining the various hyperlinks at the bottom of converted messages. 
+See <A HREF="message.html#10204">Navigational Links</A> of <A HREF="message.html#37242">Message Customization</A> for usage of this element.
+</P>
+<H4><CODE>DBFILE</CODE> 
+</H4>
+
+<P>Use <EM>name</EM> for the name of <EM>MHonArc</EM> database file. The default is "<CODE>.mhonarc.db</CODE>" 
+(or "<CODE>MHONARC.DB</CODE>" under MS-DOS). 
+</P>
+<DL>
+<DT><STRONG>NOTE</STRONG> 
+
+<DD><P> You should not override the default name unless absolutely necessary, and 
+you are confident about what you are doing.
+</P></DL>
+<H4><CODE>DOCURL</CODE> 
+</H4>
+
+<P>URL to <EM>MHonArc</EM> documentation. The default is 
+"<CODE>http://www.oac.uci.edu/indiv/ehood/mhonarc.html</CODE>".
+</P>
+<H4><CODE><A NAME="33245">EXCS</A></CODE> 
+</H4>
+
+<P>Set of message header fields to exclude from messages. See <A HREF="message.html#19364">Excluding Fields</A> of 
+<A HREF="message.html#37242">Message Customization</A> for usage of this element.
+</P>
+<H4><CODE>FIELDORDER</CODE> 
+</H4>
+
+<P>The order the message header fields appear in messages. See <A HREF="message.html#25391">Field Order</A> of 
+<A HREF="message.html#37242">Message Customization</A> for usage of this element.
+</P>
+<H4><CODE><A NAME="27614">FIELDSTYLES</A></CODE> 
+</H4>
+
+<P>The format specification for message header field values. See <A HREF="message.html#21645">Field Formatting</A> of 
+<A HREF="message.html#37242">Message Customization</A> for usage of this element.
+</P>
+<H4><CODE><A NAME="28184">FOOTER</A></CODE> 
+</H4>
+
+<P>File to include at the end of the index page. See <A HREF="indexpg.html#39385">Include Files</A> in <A HREF="indexpg.html#30032">Index Page 
+Customization</A> for more information about the footer file.
+</P>
+<H4><CODE><A NAME="12591">HEADER</A></CODE> 
+</H4>
+
+<P>File to include at the beginning of the index page. See <A HREF="indexpg.html#39385">Include Files</A> in <A HREF="indexpg.html#30032">Index Page 
+Customization</A> for more information about the header file.
+</P>
+<H4><CODE><A NAME="11618">ICONS</A></CODE> 
+</H4>
+
+<P>The <CODE>ICONS</CODE> element is used to specify the icons that represent the different 
+content-types of messages. See <A HREF="indexpg.html#20837">Icons</A> in <A HREF="indexpg.html#30032">Index Page Customization</A> for usage of this 
+element.
+</P>
+<H4><CODE><A NAME="35395">IDXFNAME</A></CODE> 
+</H4>
+
+<P>The name of the index file. The default is "<CODE>maillist.html</CODE>".
+</P>
+<H4><CODE><A NAME="40166">LABELSTYLES</A></CODE> 
+</H4>
+
+<P>The format specification for message header field labels. See <A HREF="message.html#21645">Field Formatting</A> in 
+<A HREF="message.html#37242">Message Customization</A> for usage of this element.
+</P>
+<H4><CODE><A NAME="20295">LISTBEGIN</A></CODE> 
+</H4>
+
+<P>Markup for beginning the main index list. See <A HREF="indexpg.html#18820">Listing Layout</A> in <A HREF="indexpg.html#30032">Index Page 
+Customization</A> for usage of this element.
+</P>
+<H4><CODE>LITEMPLATE</CODE> 
+</H4>
+
+<P>Markup for an entry in the main index list. See <A HREF="indexpg.html#18820">Listing Layout</A> in <A HREF="indexpg.html#30032">Index Page 
+Customization</A> for usage of this element.
+</P>
+<H4><CODE><A NAME="17314">LISTEND</A></CODE> 
+</H4>
+
+<P>Markup for terminating the main index list. See <A HREF="indexpg.html#18820">Listing Layout</A> in <A HREF="indexpg.html#30032">Index Page 
+Customization</A> for usage of this element.
+</P>
+<H4><CODE><A NAME="21351">MAILTOURL</A></CODE> 
+</H4>
+
+<P>Url to use for e-mail hyperlinks. See <A HREF="message.html#42728">E-mail Links</A> in <A HREF="message.html#37242">Message Customization</A> for 
+usage of this element.
+</P>
+<H4><CODE>MIMEARGS</CODE> 
+</H4>
+
+<P>Arguments to MIME filters. See <A HREF="mime.html#19421">Specifying Filters</A> in <A HREF="mime.html#23201">MIME</A> for usage of this 
+element.
+</P>
+<H4><CODE><A NAME="13674">MIMEFILTERS</A></CODE> 
+</H4>
+
+<P>Routines for filtering messages. See <A HREF="mime.html#19421">Specifying Filters</A> in <A HREF="mime.html#23201">MIME</A> for usage of this 
+element.
+</P>
+<H4><CODE>MSGFOOT</CODE> 
+</H4>
+
+<P>Footer text for converted messages. See <A HREF="message.html#20883">Header and Footer</A> in <A HREF="message.html#37242">Message 
+Customization</A> for usage of this element.
+</P>
+<H4><CODE>MSGHEAD</CODE> 
+</H4>
+
+<P>Header text for converted messages. See <A HREF="message.html#20883">Header and Footer</A> in <A HREF="message.html#37242">Message 
+Customization</A> for usage of this element.
+</P>
+<H4><CODE><A NAME="23573">MSGSEP</A></CODE> 
+</H4>
+
+<P>Perl regular expression that represents the message separator for mailbox files. The 
+default expression is "<CODE>^From </CODE>".
+</P>
+<H4><CODE>OTHERINDEXES</CODE> 
+</H4>
+
+<P>List of resource files (one per line) defining other index pages to generate when 
+creating, or updating, an archive. 
+</P>
+<DL>
+<DT><STRONG>CAUTION</STRONG> 
+
+<DD><P> It is very important that each resource file specified defines the <A HREF="#35395"><CODE>IDXFNAME</CODE></A> 
+(or the <A HREF="#40246"><CODE>TIDXFNAME</CODE></A> <STRONG>and</STRONG> <A HREF="#15505"><CODE>THREAD</CODE></A> elements for a thread index) to prevent 
+overwriting of the default index pages.
+</P></DL>
+<P><EM>MHonArc</EM> will only store the name of the resource files listed in the database. 
+Therefore, for any subsequent updates the archive, the extra index resource files 
+must exist inorder to generate the extra index pages.
+</P>
+<DL>
+<DT><STRONG>NOTE</STRONG> 
+
+<DD><P> Since <EM>MHonArc</EM> will look in the archive location for resource files specified 
+with relative pathnames, you can keep the other index resource files in the 
+same location as the archive, and just specify the filenames for the 
+<CODE>OTHERINDEXES</CODE> element in the main resource file.
+</P></DL>
+<P>When create resource files for extra indexes, make sure to explicitly set all 
+resources desired since some resource settings may no longer be set to the defaults 
+due to database settings, or from a previously read resource file. Ie. <EM>MHonArc</EM> does 
+not reset to the default settings when reading in the other resource files.
+</P>
+<H4><CODE><A NAME="33543">PERLINC</A></CODE> 
+</H4>
+
+<P>Each line represents a path to search when requiring MIME filters. See <A HREF="mime.html#19421">Specifying 
+Filters</A> in <A HREF="mime.html#23201">MIME</A> for the use of this element.
+</P>
+<H4><CODE>TFOOT</CODE> 
+</H4>
+
+<P>Markup that appears after the thread index listing. See <A HREF="thread.html#17901">Listing Layout</A> in <A HREF="thread.html#35869">Thread 
+Index Customization</A> for usage of this element.
+</P>
+<H4><CODE>THEAD</CODE> 
+</H4>
+
+<P>Markup that appears before the thread index listing. See <A HREF="thread.html#17901">Listing Layout</A> in <A HREF="thread.html#35869">Thread 
+Index Customization</A> for usage of this element.
+</P>
+<H4><CODE><A NAME="40246">TIDXFNAME</A></CODE> 
+</H4>
+
+<P>The name of the thread index file. The default is "<CODE>threads.html</CODE>".
+</P>
+<H4><CODE><A NAME="13741">TIMEZONES</A></CODE> 
+</H4>
+
+<P>Each line of the <CODE>TIMEZONES</CODE> element defines a timezone acronym and its hour 
+offset from UTC/GMT (<EM>Universal Coordinate Time</EM>). The format of each line is 
+"<VAR>timezone_acronym</VAR><CODE>:</CODE><VAR>hour_offset</VAR>". Examples of timezone acronyms are: 
+<CODE>UTC</CODE>, <CODE>PDT</CODE>, <CODE>EST</CODE>. The hour offset is should be positive for timezones West of UTC, 
+and negative for time zones East of UTC.
+</P>
+<P><EM>MHonArc</EM> has a default list of timezone acronyms defined with hour offsets. 
+Therefore, the list given in the resource file will augment the default list, unless the 
+"<CODE>Override</CODE>" attribute is specified. If "<CODE>Override</CODE>" is specified, the default list, 
+along with any other lists specified in previous <CODE>TIMEZONES</CODE> elements, are 
+discarded, and only the timezone acronyms specified in the <CODE>TIMEZONES</CODE> element 
+will be used.
+</P>
+<P>The following is the default value for <CODE>TIMEZONES</CODE>:
+</P>
+<PRE>&lt;TIMEZONES&gt;
+UTC:0
+GMT:0
+AST:4
+ADT:3
+EST:5
+EDT:4
+CST:6
+CDT:5
+MST:7
+MDT:6
+PST:8
+PDT:7
+&lt;/TIMEZONES&gt;
+
+</PRE>
+
+<P>Most of the time, the date used by <EM>MHonArc</EM> uses a hour offset instead of a 
+timezone acronym. However, mail messages may contain timezone acronyms in 
+received/sent dates and <EM>MHonArc</EM> must be told what the hour offset from UTC the 
+timezone acronym represents in order to properly sort messages by date.
+</P>
+<H4><CODE><A NAME="33814">TITLE</A></CODE> 
+</H4>
+
+<P>Title for the main index page. The default is "<EM>Mail Index</EM>".
+</P>
+<H4><CODE>TLEVELS</CODE> 
+</H4>
+
+<P>The maximum number of nested lists for the thread index. The default is 3.
+</P>
+<H4><CODE>TLITXT</CODE> 
+</H4>
+
+<P>Markup for an entry in the thread index list. See <A HREF="thread.html#17901">Listing Layout</A> in <A HREF="thread.html#35869">Thread Index 
+Customization</A> for usage of this element.
+</P>
+<H4><CODE>TOPLINKS</CODE> 
+</H4>
+
+<P>Markup for defining the various hyperlinks at the top of converted messages. See 
+<A HREF="message.html#10204">Navigational Links</A> in <A HREF="message.html#37242">Message Customization</A> for usage of this element.
+</P>
+<H4><CODE><A NAME="14393">TTITLE</A></CODE> 
+</H4>
+
+<P>Title for the thread index page. The default is "<EM>Mail Thread Index</EM>".
+</P>
+<H4><CODE><A NAME="40326">UMASK</A></CODE> 
+</H4>
+
+<P>Sets the umask for the <EM>MHonArc</EM> process. The value is treated as an octal number. 
+The resource is only applicable on Unix systems.
+</P>
+<HR>
+<H2><A NAME="34544">Example Resource File</A>
+</H2>
+
+<PRE>&lt;!-- MHonArc resource file
+  --&gt;
+&lt;SORT&gt;
+&lt;TITLE&gt;
+MHonArc test
+&lt;/TITLE&gt;
+
+&lt;TTITLE&gt;
+MHonArc test
+&lt;/TTITLE&gt;
+
+&lt;!--=== Index Page Customizations =========================================--&gt;
+
+&lt;!-- Have LISTBEGIN contain last updated information
+  --&gt;
+&lt;LISTBEGIN&gt;
+&lt;address&gt;
+Last updated: $LOCALDATE$&lt;br&gt;
+$NUMOFMSG$ messages in chronological order&lt;br&gt;
+&lt;/address&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="$TIDXFNAME$"&gt;Thread Index&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;
+Listing format is the following:
+&lt;p&gt;
+&lt;ul&gt;&lt;li&gt; 
+&lt;strong&gt;Subject&lt;/strong&gt;
+(# of follow-ups)
+&lt;em&gt;From&lt;/em&gt;&lt;br&gt;
+&lt;/ul&gt;
+&lt;p&gt;
+&lt;hr&gt;
+&lt;ul&gt;
+&lt;/LISTBEGIN&gt;
+
+
+&lt;!-- A compact listing template
+  --&gt;
+&lt;LITEMPLATE&gt;
+&lt;li&gt; 
+&lt;strong&gt;$SUBJECT:40$&lt;/strong&gt;
+($NUMFOLUP$) &lt;em&gt;$FROMNAME$&lt;/em&gt;&lt;br&gt;
+&lt;/LITEMPLATE&gt;
+
+&lt;LISTEND&gt;
+&lt;/ul&gt;
+&lt;p&gt;
+&lt;hr&gt;
+&lt;strong&gt;
+&lt;a href="http://foo.org/"&gt;Home&lt;/a&gt;
+&lt;/strong&gt;
+&lt;p&gt;
+&lt;/LISTEND&gt;
+
+&lt;!--=== Thread Index Page Customizations ==================================--&gt;
+&lt;THEAD&gt;
+&lt;address&gt;
+Thread index&lt;br&gt;
+Last updated: $LOCALDATE$&lt;br&gt;
+$NUMOFMSG$ messages&lt;br&gt;
+&lt;/address&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="$IDXFNAME$"&gt;Main Index&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;/THEAD&gt;
+
+&lt;!--=== Message Customizations ============================================--&gt;
+&lt;EXCS override&gt;
+apparently
+errors-to 
+followup
+forward 
+lines 
+message-id
+mime- 
+nntp- 
+originator 
+path 
+precedence 
+received 
+replied 
+return-path 
+status 
+via 
+x- 
+&lt;/EXCS&gt;
+
+&lt;LABELSTYLES&gt;
+-default-
+subject:strong
+from:strong
+to:strong
+&lt;/LABELSTYLES&gt;
+
+&lt;FIELDSTYLES&gt;
+-default-
+subject:strong
+from:strong
+to:strong
+keywords:em
+newsgroups:strong
+&lt;/FIELDSTYLES&gt;
+
+&lt;MSGHEAD&gt;
+&lt;address&gt;
+MHonArc test archive
+&lt;/address&gt;
+&lt;/MSGHEAD&gt;
+
+&lt;MSGFOOT&gt;
+&lt;strong&gt;
+&lt;a href="http://foo.org/"&gt;Home&lt;/a&gt; |
+&lt;a href="$IDXFNAME$"&gt;Main Index&lt;/a&gt; |
+&lt;a href="$TIDXFNAME$"&gt;Thread Index&lt;/a&gt;
+&lt;/strong&gt;
+&lt;/MSGFOOT&gt;
+
+&lt;!--=== Icons =============================================================--&gt;
+&lt;ICONS&gt;
+application/octet-stream:http://foo.org/icons/binary.xbm
+application/postscript:http://foo.org/icons/postscript.xbm
+audio/basic:http://foo.org/icons/sound.xbm
+image/gif:http://foo.org/icons/image.xbm
+image/jpeg:http://foo.org/icons/image.xbm
+image/tiff:http://foo.org/icons/image.xbm
+multipart/alternative:http://foo.org/icons/alternative.xbm
+multipart/digest:http://foo.org/icons/text.xbm
+multipart/mixed:http://foo.org/icons/mixed.xbm
+multipart/parallel:http://foo.org/icons/mixed.xbm
+text/richtext:http://foo.org/icons/mixed.xbm
+text/html:http://foo.org/icons/mixed.xbm
+text/plain:http://foo.org/icons/text.xbm
+unknown:http://foo.org/icons/unknown.doc.xbm
+video/mpeg:http://foo.org/icons/movie.xbm
+video/quicktime:http://foo.org/icons/movie.xbm
+&lt;/ICONS&gt;
+
+</PRE>
+
+<HR>
+<H2><A NAME="MMM1">Notes on Resource File
+</A></H2>
+
+<UL>
+<LI><P>Elements can be duplicated. The following elements augment previous 
+instances of themselves: 
+</P><UL>
+<LI> <A HREF="#33245"><CODE>EXCS</CODE></A> (can specify <CODE>Override</CODE> attribute)
+<LI> <A HREF="#27614"><CODE>FIELDSTYLES</CODE></A> 
+<LI> <A HREF="#11618"><CODE>ICONS</CODE></A> (can specify <CODE>Override</CODE> attribute)
+<LI> <A HREF="#40166"><CODE>LABELSTYLES</CODE></A> 
+<LI> <A HREF="#13674"><CODE>MIMEFILTERS</CODE></A> (can specify <CODE>Override</CODE> attribute)
+<LI> <A HREF="#33543"><CODE>PERLINC</CODE></A> (can specify <CODE>Override</CODE> attribute)
+<LI><P> <A HREF="#13741"><CODE>TIMEZONES</CODE></A> (can specify <CODE>Override</CODE> attribute)
+</P></UL>
+<P> The <CODE>Override</CODE> attribute will discard previous settings of the element.
+</P><LI><P>If duplicate instances of other elements exist, the last instance takes 
+precedence.
+</P><LI><P>If an element only accepts a single line of content, then the last line is used 
+for the element's content.
+</P><LI><P>If elements have conflicting resource settings (eg. <CODE>NOSORT</CODE> and <CODE>SORT</CODE>), the 
+last element defined takes precedence.
+</P><LI><P>Resource file settings override environment variables.
+</P><LI><P>Command-line options override any settings in the resource file.
+</P><LI><P>If you want to do an exact match of a field in the <CODE>EXCS</CODE> element, append a 
+'<CODE>$</CODE>' after the field name.
+</P></UL>
+
+<HR>
+[<A HREF=overview.html>Previous</A>][<A HREF=adding.html>Next</A>][<A HREF=mhonarc.html>Contents</A>][<A HREF="http://www.oac.uci.edu/indiv/ehood/MHonArc/faq.html">FAQ</A>][<A HREF="http://www.oac.uci.edu/indiv/ehood/MHonArc/bugs.html">Bugs</A>][<A HREF=http://www.oac.uci.edu/indiv/ehood/mhonarc.html>Home</A>]
+</BODY>
+</HTML>

@@ -3,6 +3,7 @@
   -->
 
 <MIMEFILTERS>
+application/mac-binhex40:m2h_external'filter:mhexternal.pl
 application/octet-stream:m2h_external'filter:mhexternal.pl
 application/oda:m2h_external'filter:mhexternal.pl
 application/pdf:m2h_external'filter:mhexternal.pl
@@ -17,6 +18,7 @@ application/x-hdf:m2h_external'filter:mhexternal.pl
 application/x-latex:m2h_external'filter:mhexternal.pl
 application/x-mif:m2h_external'filter:mhexternal.pl
 application/x-netcdf:m2h_external'filter:mhexternal.pl
+application/x-patch:m2h_text_plain'filter:mhtxtplain.pl
 application/x-sh:m2h_external'filter:mhexternal.pl
 application/x-shar:m2h_external'filter:mhexternal.pl
 application/x-sv4cpio:m2h_external'filter:mhexternal.pl

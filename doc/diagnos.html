@@ -1,0 +1,231 @@
+<HTML>
+<HEAD>
+<TITLE>
+MHonArc v1.2.2 -- Diagnostics
+</TITLE></HEAD>
+<BODY>
+[<A HREF=details.html>Previous</A>][<A HREF=glossary.html>Next</A>][<A HREF=mhonarc.html>Contents</A>][<A HREF="http://www.oac.uci.edu/indiv/ehood/MHonArc/faq.html">FAQ</A>][<A HREF="http://www.oac.uci.edu/indiv/ehood/MHonArc/bugs.html">Bugs</A>][<A HREF=http://www.oac.uci.edu/indiv/ehood/mhonarc.html>Home</A>]
+<HR>
+
+<H1><A NAME="30719">Diagnostics</A>
+</H1>
+
+<P>Three types of messages exist in <EM>MHonArc</EM>: <EM>Informative</EM> messages, <EM>Warnings</EM>, and 
+<EM>Errors</EM>. <EM>Informative</EM> messages give you the current status of <EM>MHonArc</EM>'s execution. 
+<EM>Warnings</EM> signify undesired conditions, but are <EM>not</EM> critical in <EM>MHonArc</EM>'s exection. 
+<EM>Errors</EM> signify critical conditions that inhibit <EM>MHonArc</EM> from finishing its task.
+</P>
+<P>Another set of messages exists that are generated from the Perl interpreter itself. 
+<EM>MHonArc</EM> tries its best to catch any conditions that may cause Perl to abnormally 
+abort, but conditions may arise where this is not possible.
+</P>
+<P>This section describes the various diagnostics <EM>MHonArc</EM> may produce and 
+messages Perl may produce.
+</P>
+<HR>
+<H2><A NAME="MMM0">Informative messages
+</A></H2>
+
+<P>Informative messages may be suppressed via the <A HREF="overview.html#11196"><CODE>-quiet</CODE></A> command-line option. 
+Only the more important Informative messages are listed here.
+</P>
+<H3>Could not process message with given Content-Type: ...
+</H3>
+
+<P><EM>MHonArc</EM> will output this statement <EM>in</EM> filtered mail messages for content-types it 
+is unable to process. See <A HREF="mime.html#20677">Default Filters</A> in <A HREF="mime.html#23201">MIME</A> for content-types that <EM>MHonArc</EM> 
+supports by default. See <A HREF="mime.html#24464">Writing Filters</A> for adding new filters into <EM>MHonArc</EM>.
+</P>
+<P>This is the only Informative message that does not go to standard output, but into 
+the actual filtered mail message.
+</P>
+<H3>No new messages
+</H3>
+
+<P>No mail messages exist when performing an add operation to an archive. This can 
+occur if an empty <EM>MH</EM> mail folder, or empty mailbox file, is passed to <EM>MHonArc</EM>.
+</P>
+<H3>Requiring MIME filter libraries ...
+</H3>
+
+<P>Indicates <EM>MHonArc</EM> is loading external libraries for filtering mail messages. 
+<EM>MHonArc</EM> will output each library it loads. See <A HREF="mime.html#23201">MIME</A> for more information of filter 
+libraries.
+</P>
+<H3>Trying to lock mail archive ...
+</H3>
+
+<P>The statement means that a lock file is in place for the archive you are trying to 
+update. Normally, an existing lock file implies that another <EM>MHonArc</EM> process is 
+currently using the archive, and other <EM>MHonArc</EM> processes will wait awhile to see 
+if the archive will be unlocked.
+</P>
+<P>However, there are times when a lock file exists, but no <EM>MHonArc</EM> process is 
+modifying the archive. This can occur if <EM>MHonArc</EM> is abnormally terminated. If you 
+know that no other <EM>MHonArc</EM> process is editting the archive you are try to modify, 
+then manually remove the lock file or use the <A HREF="overview.html#31625"><CODE>-force</CODE></A> option.
+</P>
+<P>See <A HREF="details.html#13308">Archive Integrity</A> for more information.
+</P>
+<HR>
+<H2><A NAME="MMM1">Warnings
+</A></H2>
+
+<P>Warning messages denote some undesired event occurred, but the event is not 
+severe enough to cause program termination.
+</P>
+<H3>Warning: Could not find date for message
+</H3>
+
+<P><EM>MHonArc</EM> was unable to find a received/sent date for a mail message. With respect 
+to other mail messages, a message with no received/sent date is first in 
+chronological order.
+</P>
+<H3>Warning: Database (&lt;dbversion&gt;) != program (&lt;prgversion&gt;) version
+</H3>
+
+<P>Indicates that the version of <EM>MHonArc</EM> updating an archive is different from the 
+version of <EM>MHonArc</EM> that created the database file. Problems can arise if the 
+database file changes in format from different version of <EM>MHonArc</EM>. See the release 
+notes of the <EM>MHonArc</EM> distribution if changes in the databse format has effects on 
+older archives.
+</P>
+<H3>Warning: Unable to create &lt;outdir&gt;/&lt;dbfile&gt;
+</H3>
+
+<P>Indicates <EM>MHonArc</EM> was unable to create the database file <EM>&lt;dbfile&gt;</EM> for the mail 
+archive created/modified in <EM>&lt;outdir&gt;</EM>. This message can occur if <EM>&lt;outdir&gt;</EM> 
+permissions changed during <EM>MHonArc</EM> execution, the existing <EM>&lt;dbfile&gt;</EM> is read-only, 
+or the file system is full.
+</P>
+<P>This message can be severe because no future add operations can be performed to 
+the archive.
+</P>
+<H3>Warning: Unable to open footer: &lt;footer&gt;
+</H3>
+
+<P><EM>MHonArc</EM> was unable to open the footer file, <EM>&lt;footer&gt;</EM>, for inclusion into the index 
+page. Make sure <EM>&lt;footer&gt;</EM> exists, and is readable by you.
+</P>
+<H3>Warning: Unable to open header: &lt;header&gt;
+</H3>
+
+<P><EM>MHonArc</EM> was unable to open the header file, <EM>&lt;header&gt;</EM>, for inclusion into the index 
+page. Make sure <EM>&lt;header&gt;</EM> exists, and is readable by you.
+</P>
+<H3>Warning: Unable to open &lt;folder&gt;
+</H3>
+
+<P><EM>MHonArc</EM> was unable to open the specified mail <EM>&lt;folder&gt;</EM> for reading. Make sure 
+<EM>&lt;folder&gt;</EM> exists and is readable (and executable if a directory) by you.
+</P>
+<H3>Warning: Unable to open message: &lt;folder&gt;/&lt;message&gt;
+</H3>
+
+<P><EM>MHonArc</EM> was unable to open the specified <EM>MH</EM> mail message <EM>&lt;folder&gt;/&lt;message&gt;</EM> 
+for reading. Make sure <EM>&lt;folder&gt;/&lt;message&gt;</EM> exists and is readable by you.
+</P>
+<H3>Warning: Unable to open resource file: &lt;file&gt;
+</H3>
+
+<P><EM>MHonArc</EM> was unable to open the resource file, <EM>&lt;file&gt;</EM>, for reading. Make sure <EM>&lt;file&gt;</EM> 
+exists, and is readable by you.
+</P>
+<H3>Warning: Undefined time zone: "&lt;timezone&gt;"
+</H3>
+
+<P><EM>MHonArc</EM> has found an unrecognized timezone acronym, <EM>&lt;timezone&gt;</EM>, in a mail 
+message. You can tell <EM>MHonArc</EM> about other timezone acronyms, and their hour 
+offset to UTC, by using the <A HREF="rcfile.html#13741"><CODE>TIMEZONES</CODE></A> resource element of the <A HREF="rcfile.html#21846">Resource File</A>.
+</P>
+<P>The timezone UTC (or GMT) is used for an undefined timezone acronym
+</P>
+<HR>
+<H2><A NAME="MMM2">Errors
+</A></H2>
+
+<P>Errors denote conditions that cause <EM>MHonArc</EM> to abort execution.
+</P>
+<P>Some error conditions may cause the <EM>MHonArc</EM> archive to become corrupted. If the 
+error occurs when <EM>MHonArc</EM> is writing files, you may have to recreate the archive 
+from the original messages.
+</P>
+<H3>ERROR: Database read error of &lt;dbfile&gt; 
+</H3>
+
+<P>An error occured when trying to read an archive's database. The error can occur if 
+the database file is not readable or the file got corrupted.
+</P>
+<H3>ERROR: Unable to create &lt;file&gt;
+</H3>
+
+<P><EM>MHonArc</EM> was unable to create <EM>&lt;file&gt;</EM>. This message can occur if the directory being 
+written to is not writable, a read-only file with the same name exists, or the file 
+system is full.
+</P>
+<H3>ERROR: Unable to create &lt;lockfile&gt; after &lt;#&gt; tries
+</H3>
+
+<P>The statement means that a lock file is in place for the archive you are trying to 
+update.
+</P>
+<P>Sometimes a lock file exists, but no <EM>MHonArc</EM> process is modifying the archive. This 
+can occur if <EM>MHonArc</EM> is abnormally terminated. If you know that no other 
+<EM>MHonArc</EM> process is editting the archive you are try to modify, then manually 
+remove the lock file or use the <A HREF="overview.html#31625"><CODE>-force</CODE></A> option.
+</P>
+<H3>ERROR: Unable to open &lt;file&gt;
+</H3>
+
+<P><EM>MHonArc</EM> was unable to open <EM>&lt;file&gt;</EM> for reading. Make sure <EM>&lt;file&gt;</EM> exists, and is 
+readable by you.
+</P>
+<H3>ERROR: Unable to require newgetopt.pl
+</H3>
+
+<P>The <CODE>newgetopt.pl</CODE> library is needed for <EM>MHonArc</EM> to parse the command-line. 
+<CODE>newgetopt.pl</CODE> is part of the standard Perl distribution. Make sure Perl has been 
+correctly installed at your site.
+</P>
+<H3>ERROR: Unable to require timelocal.pl
+</H3>
+
+<P>The <CODE>timelocal.pl</CODE> library is needed for <EM>MHonArc</EM> to process dates in messages. 
+<CODE>timelocal.pl</CODE> is part of the standard Perl distribution. Make sure Perl has been 
+correctly installed at your site.
+</P>
+<H3>ERROR: Unable to require &lt;file&gt;
+</H3>
+
+<P>This message signifies <EM>MHonArc</EM> was unable to require the library <EM>&lt;file&gt;</EM>. Make sure 
+you properly installed <EM>MHonArc</EM> via the installation program. If <EM>&lt;file&gt;</EM> is your own 
+custom filter, make sure you properly registered it in the <A HREF="rcfile.html#21846">Resource File</A>. See also 
+<A HREF="mime.html#19421">Specifying Filters</A> and the <A HREF="rcfile.html#33543"><CODE>PERLINC</CODE></A> resource element.
+</P>
+<HR>
+<H2><A NAME="MMM3">Perl Messages
+</A></H2>
+
+<P>Generally, if execution is aborted and the following error messages appear, then 
+you will have to manually delete the lock file since <EM>MHonArc</EM> will not have the 
+chance to delete the file.
+</P>
+<H3>Can't locate &lt;file&gt; in @INC at &lt;file&gt; line &lt;number&gt;.
+</H3>
+
+<P>A library that <EM>MHonArc</EM> tried to load was not found in the Perl include search 
+paths. This error usually implies that <EM>MHonArc</EM> was not installed correctly. Make 
+sure that <EM>MHonArc</EM> was installed via the <CODE>install.me</CODE> program that is provided in 
+the <EM>MHonArc</EM> distribution.
+</P>
+<H3>&lt;file&gt; did not return a true value at &lt;file&gt; line &lt;number&gt;.
+</H3>
+
+<P>If you are using your own MIME filters with <EM>MHonArc</EM>, make sure the library files 
+return 1.
+</P>
+
+<HR>
+[<A HREF=details.html>Previous</A>][<A HREF=glossary.html>Next</A>][<A HREF=mhonarc.html>Contents</A>][<A HREF="http://www.oac.uci.edu/indiv/ehood/MHonArc/faq.html">FAQ</A>][<A HREF="http://www.oac.uci.edu/indiv/ehood/MHonArc/bugs.html">Bugs</A>][<A HREF=http://www.oac.uci.edu/indiv/ehood/mhonarc.html>Home</A>]
+</BODY>
+</HTML>

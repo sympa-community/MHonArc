@@ -1,0 +1,510 @@
+<HTML>
+<HEAD>
+<TITLE>
+MHonArc v1.2.2 -- Message Customization
+</TITLE></HEAD>
+<BODY>
+[<A HREF=thread.html>Previous</A>][<A HREF=mime.html>Next</A>][<A HREF=mhonarc.html>Contents</A>][<A HREF="http://www.oac.uci.edu/indiv/ehood/MHonArc/faq.html">FAQ</A>][<A HREF="http://www.oac.uci.edu/indiv/ehood/MHonArc/bugs.html">Bugs</A>][<A HREF=http://www.oac.uci.edu/indiv/ehood/mhonarc.html>Home</A>]
+<HR>
+
+<H1><A NAME="37242">Message Customization</A>
+</H1>
+
+<P>This sections shows how to customize the appearance of messages when 
+converted to HTML.
+</P>
+<HR>
+<H2><A NAME="13652">Beginning Markup</A>
+</H2>
+
+<P><EM>MHonArc</EM> allows you to completely override the begining markup of the message 
+pages. I.e. You can control the opening <CODE>&lt;HTML&gt;</CODE> tag, the <CODE>HEAD</CODE> element contents, the 
+opening <CODE>&lt;BODY&gt;</CODE> tag, etc. Therefore, if you are not satisfied with the default 
+markup used, or have other needs that require control on the beginning markup, 
+you can set the <CODE>MSGPGBEGIN</CODE> resource file element.
+</P>
+<H3><CODE><A NAME="18868">MSGPGBEGIN</A></CODE> 
+</H3>
+
+<P>The <CODE>MSGPGBEGIN</CODE> <A HREF="rcfile.html#21846">resource file</A> element has the default value:
+</P>
+<PRE>&lt;MSGPGBEGIN&gt;
+&lt;!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN"&gt;
+&lt;HTML&gt;
+&lt;HEAD&gt;
+&lt;TITLE&gt;$SUBJECTNA:72$&lt;/TITLE&gt;
+&lt;LINK REV="made" HREF="mailto:$FROMADDR$"&gt;
+&lt;/HEAD&gt;
+&lt;BODY&gt;
+&lt;/MSGPGBEGIN&gt;
+
+</PRE>
+
+<P>The following variables may be used in the <CODE>MSGPGBEGIN</CODE> element:
+</P>
+<UL>
+<LI><CODE>$DATE$</CODE> -- Message date.
+<LI><CODE>$DDMMYY$</CODE> -- Message date in dd/mm/yy format.
+<LI><CODE>$DOCURL$</CODE> -- URL to documentation.
+<LI><CODE>$FROM$</CODE> -- Contents of From field of message.
+<LI><CODE>$FROMADDR$</CODE> -- E-mail address contained in From field of message.
+<LI><CODE>$FROMNAME$</CODE> -- "English" name contained in From field of message.
+<LI><CODE>$GMTDATE$</CODE> -- Current GMT date.
+<LI><CODE>$IDXFNAME$</CODE> -- Filename of main index page.
+<LI><CODE>$IDXSIZE$</CODE> -- Max number of messages that may be listed in the index.
+<LI><CODE>$IDXTITLE$</CODE> -- The title of the index page.
+<LI><CODE>$LOCALDATE$</CODE> -- Current local date.
+<LI><CODE>$MMDDYY$</CODE> -- Message date in mm/dd/yy format.
+<LI><CODE>$MSGID$</CODE> -- Message ID of message.
+<LI><CODE>$MSGNUM$</CODE> -- Number assigned to message by <EM>MHonArc</EM>.
+<LI><CODE>$NUMOFIDXMSG$</CODE> -- Number of message listed.
+<LI><CODE>$NUMOFMSG$</CODE> -- Number of messages in the archive.
+<LI><CODE>$OUTDIR$</CODE> -- Pathname of archive.
+<LI><CODE>$PROG$</CODE> -- Program name.
+<LI><CODE>$SUBJECTNA$</CODE> -- Message subject text.
+<LI><CODE>$TIDXFNAME$</CODE> -- Filename of thread index page.
+<LI><CODE>$TIDXTITLE$</CODE> -- Title of thread index page.
+<LI><CODE>$VERSION$</CODE> -- Program version.
+<LI><CODE>$YYMMDD$</CODE> -- Message date in yy/mm/dd format.
+</UL>
+<HR>
+<H2><A NAME="MMM0">End Markup
+</A></H2>
+
+<P>The ending markup of messages can be controlled by the <A HREF="#38360"><CODE>MSGPGEND</CODE></A> resource file 
+element.
+</P>
+<H3><CODE><A NAME="38360">MSGPGEND</A></CODE> 
+</H3>
+
+<P>The <CODE>MSGPGEND</CODE> resource element may be used to define the ending markup of the 
+message pages. The default value is the following:
+</P>
+<PRE>&lt;MSGPGEND&gt;
+&lt;/BODY&gt;
+&lt;/HTML&gt;
+&lt;/MSGPGEND&gt;
+
+</PRE>
+
+<P>The resource variables allowed are the same as for <A HREF="#18868"><CODE>MSGPGBEGIN</CODE></A>.
+</P>
+<HR>
+<H2><A NAME="20883">Header and Footer</A>
+</H2>
+
+<P>The <CODE>MSGHEAD</CODE> resource represents HTML text that should be inserted at the very 
+beginning of each converted message. The <CODE>MSGFOOT</CODE> resource represents HTML 
+text that should be appended to the end of each converted message. The default 
+value for both resources is empty. The following variables may be used in the 
+<CODE>MSGHEAD</CODE> and <CODE>MSGFOOT</CODE> content:
+</P>
+<UL>
+<LI><CODE>$DATE$</CODE> -- Message date.
+<LI><CODE>$DDMMYY$</CODE> -- Message date in dd/mm/yy format.
+<LI><CODE>$DOCURL$</CODE> -- URL to documentation.
+<LI><CODE>$FROM$</CODE> -- Contents of From field of message.
+<LI><CODE>$FROMADDR$</CODE> -- E-mail address contained in From field of message.
+<LI><CODE>$FROMNAME$</CODE> -- "English" name contained in From field of message.
+<LI><CODE>$GMTDATE$</CODE> -- Current GMT date.
+<LI><CODE>$IDXFNAME$</CODE> -- Filename of main index page.
+<LI><CODE>$IDXSIZE$</CODE> -- Max number of messages that may be listed in the index.
+<LI><CODE>$IDXTITLE$</CODE> -- The title of the index page.
+<LI><CODE>$LOCALDATE$</CODE> -- Current local date.
+<LI><CODE>$MMDDYY$</CODE> -- Message date in mm/dd/yy format.
+<LI><CODE>$MSGID$</CODE> -- Message ID of message.
+<LI><CODE>$MSGNUM$</CODE> -- Number assigned to message by <EM>MHonArc</EM>.
+<LI><CODE>$OUTDIR$</CODE> -- Pathname of archive.
+<LI><CODE>$PROG$</CODE> -- Program name.
+<LI><CODE>$SUBJECTNA$</CODE> -- Message subject text.
+<LI><CODE>$TIDXFNAME$</CODE> -- Filename of thread index page.
+<LI><CODE>$TIDXTITLE$</CODE> -- Title of thread index page.
+<LI><CODE>$VERSION$</CODE> -- Program version.
+<LI><CODE>$YYMMDD$</CODE> -- Message date in yy/mm/dd format.
+</UL>
+<HR>
+<H2><A NAME="10204">Navigational Links</A>
+</H2>
+
+<P><EM>MHonArc</EM> gives you the ability to control the layout of the navigational links for 
+each message page. Navigational links include links to previous and next 
+messages, link to main index, link to thread index, etc. The layout of the 
+navigational links are controlled by two resource file elements: <A HREF="#13027"><CODE>TOPLINKS</CODE></A> and 
+BOTLINKS.
+</P>
+<H3><CODE><A NAME="13027">TOPLINKS</A></CODE> 
+</H3>
+
+<P>The <CODE>TOPLINKS</CODE> resource element defines the layout of the navigational links at the 
+top of each message page. The markup defined, will appear after the <A HREF="#20883"><CODE>MSGHEAD</CODE></A> 
+data and before the filtered message data.
+</P>
+<P>The default value for <CODE>TOPLINKS</CODE> is the following:
+</P>
+<PRE>&lt;TOPLINKS&gt;
+&lt;HR&gt;
+$PREVBUTTON$$NEXTBUTTON$&lt;A HREF="$IDXFNAME$#$MSGNUM$"&gt;[Index]&lt;/A&gt;&lt;A 
+HREF="$TIDXFNAME$#$MSGNUM$"&gt;[Thread]&lt;/A&gt;
+&lt;/TOPLINKS&gt;
+</PRE>
+
+<PRE>
+</PRE>
+
+<P>If no thread index is specified, then the thread link markup is removed. The 
+following variables are available:
+</P>
+<UL>
+<LI><CODE>$DATE$</CODE> -- Message date.
+<LI><CODE>$DDMMYY$</CODE> -- Message date in dd/mm/yy format.
+<LI><CODE>$DOCURL$</CODE> -- URL to documentation.
+<LI><CODE>$FROM$</CODE> -- Contents of From field of message.
+<LI><CODE>$FROMADDR$</CODE> -- E-mail address contained in From field of message.
+<LI><CODE>$FROMNAME$</CODE> -- "English" name contained in From field of message.
+<LI><CODE>$GMTDATE$</CODE> -- Current GMT date.
+<LI><CODE>$IDXFNAME$</CODE> -- Filename of main index page.
+<LI><CODE>$IDXSIZE$</CODE> -- Max number of messages that may be listed in the index.
+<LI><CODE>$IDXTITLE$</CODE> -- The title of the index page.
+<LI><CODE>$LOCALDATE$</CODE> -- Current local date.
+<LI><CODE>$MMDDYY$</CODE> -- Message date in mm/dd/yy format.
+<LI><CODE>$MSGID$</CODE> -- Message ID of message.
+<LI><CODE>$MSGNUM$</CODE> -- Number assigned to message by <EM>MHonArc</EM>.
+<LI><CODE>$NEXTBUTTON$</CODE> -- Next button markup. See <A HREF="#34715">Conditional Links</A> for more 
+information.
+<LI><CODE>$NEXTFROM$</CODE> -- Contenst of From field of the next message according to 
+the list order of the main index.
+<LI><CODE>$NEXTFROMADDR$</CODE> -- E-mail address contained in From field of the next 
+message according to the list order of the main index.
+<LI><CODE>$NEXTFROMNAME$</CODE> -- English" name contained in From field of the next 
+message according to the list order of the main index.
+<LI><CODE>$NEXTLINK$</CODE> -- Next link markup. See <A HREF="#34715">Conditional Links</A> for more 
+information.
+<LI><CODE>$NEXTMSG$</CODE> -- Filename of next message according to the list order of the 
+main index.
+<LI><CODE>$NEXTMSGNUM$</CODE> -- Number assigned to next message according to the list 
+order of the main index.
+<LI><CODE>$NEXTSUBJECT$</CODE> -- Subject of next message according to the list order of 
+the main index.
+<LI><CODE>$NUMOFIDXMSG$</CODE> -- Number of message listed.
+<LI><CODE>$NUMOFMSG$</CODE> -- Number of messages in the archive.
+<LI><CODE>$PREVBUTTON$</CODE> -- Previous button markup. See <A HREF="#34715">Conditional Links</A> for 
+more information.
+<LI><CODE>$PREVFROM$</CODE> -- Contenst of From field of the previous message according 
+to the list order of the main index.
+<LI><CODE>$PREVFROMADDR$</CODE> -- E-mail address contained in From field of the 
+previous message according to the list order of the main index.
+<LI><CODE>$PREVFROMNAME$</CODE> -- English" name contained in From field of the 
+previous message according to the list order of the main index.
+<LI><CODE>$PREVLINK$</CODE> -- Previous link markup. See <A HREF="#34715">Conditional Links</A> for more 
+information.
+<LI><CODE>$PREVMSG$</CODE> -- Filename of previous message according to the list order of 
+the main index.
+<LI><CODE>$PREVMSGNUM$</CODE> -- Number assigned to previous message according to the 
+list order of the main index.
+<LI><CODE>$PREVSUBJECT$</CODE> -- Subject of previous message according to the list order 
+of the main index.
+<LI><CODE>$PROG$</CODE> -- Program name.
+<LI><CODE>$SUBJECTNA$</CODE> -- Message subject text.
+<LI><CODE>$TIDXFNAME$</CODE> -- Filename of thread index page.
+<LI><CODE>$TIDXTITLE$</CODE> -- Title of thread index page.
+<LI><CODE>$VERSION$</CODE> -- Program version.
+<LI><CODE>$YYMMDD$</CODE> -- Message date in yy/mm/dd format.
+</UL>
+<H3><CODE><A NAME="35255">BOTLINKS</A></CODE> 
+</H3>
+
+<P>The <CODE>BOTLINKS</CODE> resource element defines the layout of the navigational links at the 
+bottom of each message page. The markup defined, will appear after the filtered 
+message data and any thread links, and before the <A HREF="#20883"><CODE>MSGFOOT</CODE></A> data.
+</P>
+<P>The default value for <CODE>BOTLINKS</CODE> is the following:
+</P>
+<PRE>&lt;BOTLINKS&gt;
+&lt;HR&gt;
+&lt;UL&gt;
+$PREVLINK$
+$NEXTLINK$
+&lt;LI&gt;Index(es):
+&lt;UL&gt;
+&lt;LI&gt;&lt;A HREF="$IDXFNAME$#$MSGNUM$"&gt;&lt;STRONG&gt;Main&lt;/STRONG&gt;&lt;/A&gt;&lt;/LI&gt;
+&lt;LI&gt;&lt;A HREF="$TIDXFNAME$#$MSGNUM$"&gt;&lt;STRONG&gt;Thread&lt;/STRONG&gt;&lt;/A&gt;&lt;/LI&gt;
+&lt;/BOTLINKS&gt;
+</PRE>
+
+<PRE>
+</PRE>
+
+<P>If no thread index is specified, then the thread link markup is removed. The 
+variables available for <CODE>BOTLINKS</CODE> are the same as for <A HREF="#13027"><CODE>TOPLINKS</CODE></A>.
+</P>
+<H3><A NAME="34715">Conditional Links</A>
+</H3>
+
+<P>Since the state of some navigational links can change due the position of the 
+message in the archive (eg. first and last messages), special resources exist that 
+allows you to control the markup of some of the links based upon if the link is valid 
+or not for a given message.
+</P>
+<P>The resource elements for defining the conditional links are the following: 
+<CODE>PREVBUTTON</CODE>, <CODE>NEXTBUTTON</CODE>, <CODE>PREVLINK</CODE>, and <CODE>NEXTLINK</CODE>, and their inactive 
+counterparts, <CODE>PREVBUTTONIA</CODE>, <CODE>NEXTBUTTONIA</CODE>, <CODE>PREVLINKIA</CODE>, and <CODE>NEXTLINKIA</CODE>. 
+The appropriate value of these elements (ie. if it is active, or inactive) are 
+represented by the <CODE>$PREVBUTTON$</CODE>, <CODE>$NEXTBUTTON$</CODE>, <CODE>$PREVLINK$</CODE>, and 
+<CODE>$NEXTLINK$</CODE> resource file variables, respectively, which may be used in other 
+resource elements' contents (<A HREF="#13027"><CODE>TOPLINKS</CODE></A> and <A HREF="#35255"><CODE>BOTLINKS</CODE></A> in particular).
+</P>
+<P>The defaults values for each conditional link resource is as follows:
+</P>
+<P><CODE>PREVBUTTON</CODE> 
+</P>
+<PRE>&lt;PREVBUTTON&gt;
+&lt;A HREF="$PREVMSG$"&gt;[Prev]&lt;/A&gt;
+&lt;/PREVBUTTON&gt;
+
+</PRE>
+
+<P><CODE>NEXTBUTTON</CODE> 
+</P>
+<PRE>&lt;NEXTBUTTON&gt;
+&lt;A HREF="$NEXTMSG$"&gt;[Next]&lt;/A&gt;
+&lt;/NEXTBUTTON&gt;
+
+</PRE>
+
+<P><CODE>PREVLINK</CODE> 
+</P>
+<PRE>&lt;PREVLINK&gt;
+&lt;LI&gt;Prev: &lt;STRONG&gt;&lt;A HREF="$PREVMSG$"&gt;$PREVSUBJECT$&lt;/A&gt;&lt;/STRONG&gt;&lt;/LI&gt;
+&lt;/PREVLINK&gt;
+
+</PRE>
+
+<P><CODE>NEXTLINK</CODE> 
+</P>
+<PRE>&lt;NEXTLINK&gt;
+&lt;LI&gt;Next: &lt;STRONG&gt;&lt;A HREF="$NEXTMSG$"&gt;$NEXTSUBJECT$&lt;/A&gt;&lt;/STRONG&gt;&lt;/LI&gt;
+&lt;/NEXTLINK&gt;
+
+</PRE>
+
+<P>All the "<CODE>IA</CODE>" elements default to empty content.
+</P>
+<DL>
+<DT><STRONG>NOTE</STRONG> 
+
+<DD><P> The last newline for the <CODE>PREVBUTTON</CODE>, <CODE>NEXTBUTTON</CODE>, <CODE>PREVBUTTONIA</CODE>, 
+and <CODE>NEXTBUTTONIA</CODE> elements is ignored by <EM>MHonArc</EM>. This allows a 
+"tight" grouping of button links; ie. no space between buttons. If you 
+desire to have a newline in the content, just insert a trailing blank line at 
+the end of the element's content.
+</P></DL>
+<P>You should note that there is a correlation between the value of the conditional 
+links elements and the contents of the <A HREF="#13027"><CODE>TOPLINKS</CODE></A> and <A HREF="#35255"><CODE>BOTLINKS</CODE></A> elements.
+</P>
+<P>The following variables may be used within the conditional link elements.
+</P>
+<UL>
+<LI><CODE>$NEXTFROM$</CODE> -- Contenst of From field of the next message according to 
+the list order of the main index.
+<LI><CODE>$NEXTFROMADDR$</CODE> -- E-mail address contained in From field of the next 
+message according to the list order of the main index.
+<LI><CODE>$NEXTFROMNAME$</CODE> -- English" name contained in From field of the next 
+message according to the list order of the main index.
+<LI><CODE>$NEXTMSG$</CODE> -- Filename of next message according to the list order of the 
+main index.
+<LI><CODE>$NEXTMSGNUM$</CODE> -- Number assigned to next message according to the list 
+order of the main index.
+<LI><CODE>$NEXTSUBJECT$</CODE> -- Subject of next message according to the list order of 
+the main index.
+<LI><CODE>$PREVFROM$</CODE> -- Contenst of From field of the previous message according 
+to the list order of the main index.
+<LI><CODE>$PREVFROMADDR$</CODE> -- E-mail address contained in From field of the 
+previous message according to the list order of the main index.
+<LI><CODE>$PREVFROMNAME$</CODE> -- English" name contained in From field of the 
+previous message according to the list order of the main index.
+<LI><CODE>$PREVMSG$</CODE> -- Filename of previous message according to the list order of 
+the main index.
+<LI><CODE>$PREVMSGNUM$</CODE> -- Number assigned to previous message according to the 
+list order of the main index.
+<LI><CODE>$PREVSUBJECT$</CODE> -- Subject of previous message according to the list order 
+of the main index.
+</UL>
+<P>
+</P>
+<DL>
+<DT><STRONG>WARNING</STRONG> 
+
+<DD><P> Never include conditional link variables (<CODE>$PREVBUTTON$</CODE>, 
+<CODE>$NEXTBUTTON$</CODE>, <CODE>$PREVLINK$</CODE>, and <CODE>$NEXTLINK$</CODE>) in conditional link 
+element content. This will cause an infinite loop during execution and will 
+eventually lead to a crash due to a lack of memory.
+</P></DL>
+<HR>
+<H2><A NAME="MMM1">Message Layout
+</A></H2>
+
+<P>Defining the format for the actual mail message data is divided into two parts: the 
+message head and the message body. Customizing the message header markup is 
+described in this section, but due to the nature of how messages are processed, the 
+message body format is controlled by the various <A HREF="mime.html#23201">MIME</A> <A HREF="mime.html#20677">filters</A> directly (see the 
+section on <A HREF="mime.html#23201">MIME</A> for further details).
+</P>
+<H3><A NAME="19364">Excluding Fields</A>
+</H3>
+
+<P>The <CODE>EXCS</CODE> resource allows you to specify what fields should be excluded in the 
+HTML output.
+</P>
+<H4><A NAME="38983">EXCS</A>
+</H4>
+
+<P>Each line of the <CODE>EXCS</CODE> element specifies a mail header field to exclude in the 
+converted HTML output. Each line is treated as a Perl regular expression (<STRONG>NOTE</STRONG>: 
+<EM>the regular expression is already anchored to the begining of the line</EM>).
+</P>
+<P>The default value for <CODE>EXCS</CODE> is the following:
+</P>
+<PRE>&lt;EXCS&gt;
+content-
+errors-to
+forward
+lines
+message-id
+mime-
+nntp-
+originator
+path
+precedence
+received
+replied
+return-path
+status
+via
+x-
+&lt;/EXCS&gt;
+
+</PRE>
+
+<P>Any fields you specify for the <CODE>EXCS</CODE> resource will augment the default list, unless 
+the "<CODE>Override</CODE>" attribute is specified. If "<CODE>Override</CODE>" is specified, the default list 
+is discarded along with any other lists specified from previous <CODE>EXCS</CODE> elements; and 
+only header fields specified in the <CODE>EXCS</CODE> element are excluded.
+</P>
+<H3><A NAME="25391">Field Order</A>
+</H3>
+
+<P>The <A HREF="#23118"><CODE>FIELDORDER</CODE></A> resource allows you to control the order the message header 
+fields appear in the HTML output.
+</P>
+<H4><A NAME="23118">FIELDORDER</A>
+</H4>
+
+<P>Each line of the <CODE>FIELDORDER</CODE> element is the exact case-insensitive name of a 
+message header field. The order the fields are listed is the order they will appear in 
+the filtered message. The special field value "<CODE>-extra-</CODE>" represents all fields not 
+explicitly specified in the <CODE>FIELDORDER</CODE> element and not excluded by the <CODE>EXCS</CODE> 
+element. Extra fields are listed in sorted order.
+</P>
+<P>The following represents the default value of the <CODE>FIELDORDER</CODE> resource:
+</P>
+<PRE>&lt;FIELDORDER&gt;
+to
+subject
+from
+date
+-extra-
+&lt;/FIELDORDER&gt;
+
+</PRE>
+
+<H3><A NAME="21645">Field Formatting</A>
+</H3>
+
+<P>The <A HREF="#22334"><CODE>FIELDSTYLES</CODE></A> and <A HREF="#29457"><CODE>LABELSTYLES</CODE></A> resources allow to control how each 
+message header field is formatted.
+</P>
+<H4><A NAME="22334">FIELDSTYLES</A>
+</H4>
+
+<P>Each line in the <CODE>FIELDSTYLES</CODE> element defines HTML elements to wrap around 
+the field text in mail headers (e.g. "<CODE>To:</CODE><VAR> field text</VAR>", "<CODE>From:</CODE><VAR> field text</VAR>"). The format 
+of each line is "<VAR>field_name</VAR><CODE>:</CODE><VAR>html_element</VAR>". This specifies to wrap 
+<VAR>html_element</VAR> around the text associated with <VAR>field_name</VAR>. If <VAR>html_element</VAR> 
+is empty, then the field text is not wrapped in any element.
+</P>
+<P><EM>MHonArc</EM> defines a special <VAR>field_name</VAR> called "<CODE>-default-</CODE>". This is default 
+HTML element to wrap field text in if no explicit specific element is defined for the 
+label.
+</P>
+<P><VAR>field_name</VAR> must be the exact name of a header field name, but character case is 
+ignored.
+</P>
+<P>The default value of <CODE>FIELDSTYLES</CODE> is the following:
+</P>
+<PRE>&lt;FIELDSTYLES&gt;
+-default-
+&lt;/FIELDSTYLES&gt;
+
+</PRE>
+
+<H4><A NAME="29457">LABELSTYLES</A>
+</H4>
+
+<P>Each line in the <CODE>LABELSTYLES</CODE> element defines HTML elements to wrap around 
+labels in mail headers (e.g. "<CODE>To:</CODE>", "<CODE>From:</CODE>"). The format of each line is 
+"<VAR>field_name</VAR><CODE>:</CODE><VAR>html_element</VAR>". This specifies to wrap <VAR>html_element</VAR> around 
+<VAR>field_name</VAR>. If <VAR>html_element</VAR> is empty, then the label is not wrapped in any 
+element.
+</P>
+<P><EM>MHonArc</EM> defines a special <VAR>field_name</VAR> called "<CODE>-default-</CODE>". This is default 
+HTML element to wrap a label in if no explicit specific element is defined for the 
+label.
+</P>
+<P><VAR>field_name</VAR> must be the exact name of a header field name, but character case is 
+ignored.
+</P>
+<P>The default value of <CODE>LABELSTYLES</CODE> is the following:
+</P>
+<PRE>&lt;LABELSTYLES&gt;
+-default-:em
+&lt;/LABELSTYLES&gt;
+
+</PRE>
+
+<HR>
+<H2><A NAME="MMM2">Other Resources
+</A></H2>
+
+<H3><A NAME="42728">E-mail Links</A>
+</H3>
+
+<H4><A NAME="36188">MAILTOURL </A>
+</H4>
+
+<P>URL to use for e-mail address hyperlinks in e-mail message header fields. The 
+following variables are defined for the <CODE>MAILTOURL</CODE> resource:
+</P>
+<UL>
+<LI><CODE>$FROM$</CODE> -- Who the message is from.
+<LI><CODE>$MSGID$</CODE> -- Message ID of the message.
+<LI><CODE>$SUBJECT$</CODE> -- The subject of the message.
+<LI><CODE>$TO$</CODE> -- Destination e-mail address of link.
+</UL>
+<P><EM>MHonArc</EM> will use the following URL by default: "<CODE>mailto:$TO$"</CODE>.
+</P>
+<DL>
+<DT><STRONG>NOTE</STRONG> 
+
+<DD><P> The <CODE>MAILTOURL</CODE> resource has different rules for variable expansion. If a 
+variable does not exactly match the set of variables available for the 
+<CODE>MAILTOURL</CODE>, the variable text will be taken literally as part of the element 
+content. Therefore, a single "<CODE>$</CODE>" can be used to represent a "<CODE>$</CODE>" character.
+</P><P> Also, variables in the <CODE>MAILTOURL</CODE> should <STRONG>NOT</STRONG> have "<CODE>:</CODE><VAR>NU</VAR>" modifier. This 
+will prevent the variables from be recognized. <EM>MHonArc</EM> will 
+automatically treat the replacement value as a part of a URL string.
+</P></DL>
+
+<HR>
+[<A HREF=thread.html>Previous</A>][<A HREF=mime.html>Next</A>][<A HREF=mhonarc.html>Contents</A>][<A HREF="http://www.oac.uci.edu/indiv/ehood/MHonArc/faq.html">FAQ</A>][<A HREF="http://www.oac.uci.edu/indiv/ehood/MHonArc/bugs.html">Bugs</A>][<A HREF=http://www.oac.uci.edu/indiv/ehood/mhonarc.html>Home</A>]
+</BODY>
+</HTML>

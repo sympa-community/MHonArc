@@ -23,11 +23,21 @@
 ##############################################################################
 
 README for MHonArc
+v1.2.3
 
-	An Internet mail-to-HTML converter.
+    <URL:http://www.oac.uci.edu/indiv/ehood/mhonarc.html>
 
 ---------------------------------------------------------------------------
-    Copyright (C) 1994  Earl Hood, ehood@convex.com
+Table of Contents:
+        CONTENTS
+        DOCUMENTATION
+        INSTALLATION
+	MAILING LIST
+        BUGS/COMMENTS/SUGGESTIONS?
+
+---------------------------------------------------------------------------
+    MHonArc -- Internet mail-to-HTML converter
+    Copyright (C) 1995,1996	Earl Hood, ehood@isogen.com
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -43,54 +53,22 @@ README for MHonArc
     along with this program; if not, write to the Free Software
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 ---------------------------------------------------------------------------
----------------------------------------------------------------------------
-CONTENTS of directory:
+CONTENTS
 
-ACKNOWLEDGEMENTS  Thanks to people
+ACKNOWLG	  Thanks to people
 CHANGES		  Revision history of MHonArc
 COPYING		  GNU General Public License
 README		  The file you are reading
-RELEASE_NOTES	  Release notes for MHonArc (_READ_)
+RELNOTES    	  Release notes for MHonArc (please read)
+bat/		  Batch files for MS-DOS users
 doc/		  Documentation for MHonArc
 examples/	  Example resource files for MHonArc
-icons/		  A collection of icons to use with MHonArc
+extras/		  Extra programs for use with MHonArc (See extras/README)
+install.cfg	  Base installation configuration file
 install.me	  Installation program for MHonArc
 lib/		  Libraries/MIME filters used by MHonArc
 logo/		  Gifs of the MHonArc logo
-mail2html	  Symbolic link to mhonarc
-mbox2html	  Symbolic link to mhonarc
-mhf2html	  Symbolic link to mhonarc
-mhonarc*	  The MHonArc Perl program
-
----------------------------------------------------------------------------
-** PLEASE read the RELEASE_NOTES before running MHonArc.
----------------------------------------------------------------------------
----------------------------------------------------------------------------
-INSTALLATION
-
-To install MHonArc, run the following command:
-
-	% perl install.me
-
-The installation process will ask you a series of questions on where
-the Perl executable is and where to put MHonArc files.  Just hit <CR>
-to accept the default values listed in ()'s.
-
-Notes on installation process:
-
-    o The '#!' line in the installed mhonarc program is set to point to
-      the Perl executable specified in the installation process.
-
-    o The installed mhonarc program has code added so it will find its
-      default libraries specified in the installation program.  I.e.
-      The install lib directory is added to mhonarc's search path so it
-      will find its libraries.
-
-    o If you specify paths that do not exist, the install.me program
-      will create the path.
-
-
-** PLEASE read the RELEASE_NOTES before running MHonArc.
+mhonarc*	  The MHonArc program
 
 ---------------------------------------------------------------------------
 DOCUMENTATION
@@ -99,8 +77,17 @@ Documentation for MHonArc is located in the doc/ directory.
 
 html:
     The main documentation for MHonArc is in multiple HTML files.  Load
-    mhonarc.doc.html in the doc/ directory into your Web browser to get
-    started.
+    mhonarc.html in the doc/ directory into your Web browser to get
+    started.  The HTML is generated from the Frame source via
+    MifMucker,
+    <URL:http://www.oac.uci.edu/indiv/ehood/mifmucker.doc.html>.
+
+postscript:
+    The postscript file, mhonarc.ps, is available if a hardcopy version
+    of the documentation is required.  Since the cross-references used
+    are designed for HTML reading (ie they get converted into
+    hyperlinks), they may not be as useful for hardcopy reading.
+    The postscript is generated from the Frame source.
 
 ascii:
     A plain text version of the documentation is in the single file
@@ -108,11 +95,91 @@ ascii:
     into ascii.  See the Makefile in doc/ for how the conversion is
     done.
 
+manpage:
+    For Unix users, there is a manpage in doc/ called mhonarc.1.  It
+    is not very fancy.  It is automatically generated like the
+    ascii version.  The manpage does not follow the standard manpage
+    style and is not intended to be printed via troff.
+
+The installation process does not deal with the manpage or postscript
+file.  If you want to install them, you must do it manually.  The
+installation process does allow you to install the HTML and ASCII
+documentation in a location of your choice.
+
+---------------------------------------------------------------------------
+INSTALLATION
+
+This section gives the basic method for installing MHonArc on a Unix or
+MS-DOS/Windows system.  The documentation (doc/install.html) contains
+an installation section with more detailed information.  You can also
+read the detailed instructions at
+<URL:http://www.oac.uci.edu/indiv/ehood/MHonArc/doc/install.html>
+
+Brief Instructions
+
+    Interactive Installing:
+
+	Run the following command:
+
+	    perl install.me
+
+	The installation program will ask you a series of questions on
+	where the Perl executable is and where to put MHonArc files.
+	Just hit <CR> to accept the default values listed in ()'s.
+
+    Batch Install:
+
+	1. Edit the file 'install.cfg'.
+	2. Run the following command:
+
+	    perl install.me install.cfg
+
+	The installation program will output information on what
+	is being installed and where it is being installed.
+
+Notes on Installation Program
+
+    o The '#!' line in the installed mhonarc program is set to
+      point to the Perl executable specified in the installation
+      process (this has no meaning under MS-DOS).
+
+    o The installed mhonarc program has code added so it will find
+      its default libraries specified in the installation program.
+      I.e.  The install lib directory is added to mhonarc's search
+      path so it will find its libraries.
+
+    o If you specify paths that do not exist, the install.me
+      program will create the path ONLY if running in interactive
+      more.  If using a configuration file (eg: install.cfg) you
+      must check that all paths specified exist.
+
+Bugs in Installation Program
+
+    o In interactive mode, if you change a path after confirmation,
+      the old specified path will still exist, even if install.me
+      created it for you.  Hence, the author recommends batch install.
+
+---------------------------------------------------------------------------
+MAILING LIST
+
+    A MHonArc mailing list exists to provide a general discussion forum
+    for users and developers.  To subscribe to the mailing list, send
+    mail to mhonarc-request@rosat.mpe-garching.mpg.de with the single
+    word "subscribe" (without the quotes) as the message body.
+
+    Mail sent to mhonarc@rosat.mpe-garching.mpg.de will be distributed
+    to all subscribers.
+
+    The WWW archive of the mailing list is located at
+    <URL:http://www.rosat.mpe-garching.mpg.de/mailing-lists/mhonarc/>
+
 ---------------------------------------------------------------------------
 BUGS/COMMENTS/SUGGESTIONS?
 
-    If you have any bugs/comments/suggestions about MHonArc, feel free
-    to drop me an e-mail message at ehood@convex.com.
+    If you have any bugs/comments/suggestions about MHonArc, you may
+    send mail to the proper person(s) listed in the Contacts section of
+    the documentation, or (the prefered method) you may send mail to
+    the MHonArc mailing list, mhonarc@rosat.mpe-garching.mpg.de.
 
     If it is a bug you are reporting, please include the following in
     your message:
@@ -120,13 +187,14 @@ BUGS/COMMENTS/SUGGESTIONS?
         o  Version of Perl (can be retrievied by "perl -v").
         o  Version of the program in question.
         o  The exact command-line used to invoke the program.
-        o  Error/diagnostic message from the program.
+        o  Error/diagnostic messages from the program.
         o  Any other information that might prove useful.
 
+    Before sending e-mail, make sure the documentation does not already
+    have an answer to your question/problem.
 
-    If you have questions on what MHonarc can, or cannot do, please
-    read the documnetation first.  If the docs do not answer your
-    question(s), feel free to e-mail me.
+    The latest information on MHonArc may be obtained at
+    <URL:http://www.oac.uci.edu/indiv/ehood/mhonarc.html>
 
 ---------------------------------------------------------------------------
-Earl Hood, ehood@convex.com
+Earl Hood, ehood@isogen.com

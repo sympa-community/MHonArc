@@ -1,27 +1,32 @@
 HTMLDOCS = \
-            mhonarc.doc.html \
-            mhonarc_intro.doc.html \
-            mhonarc_qstart.doc.html \
-            mhonarc_env.doc.html \
-            mhonarc_clopts.doc.html \
-            mhonarc_rcfile.doc.html \
-            mhonarc_adding.doc.html \
-            mhonarc_mime.doc.html \
-            mhonarc_indexpg.doc.html \
-            mhonarc_icons.doc.html \
-            mhonarc_integrity.doc.html \
-            mhonarc_tips.doc.html \
-            mhonarc_notes.doc.html \
-	    mhonarc_diagnostics.doc.html
+            mhonarc.html \
+            intro.html \
+            install.html \
+            qstart.html \
+            overview.html \
+            rcfile.html \
+            adding.html \
+            removing.html \
+            indexpg.html \
+            message.html \
+            mime.html \
+            details.html \
+            diagnos.html \
+            glossary.html \
+	    contacts.html
 
+TMPFILE = ,mhonarc
 TEXTDOC = mhonarc.txt
+MANPAGE = mhonarc.1
 
-textdoc:
-	/bin/rm -f $(TEXTDOC)
+$(TEXTDOC): $(HTMLDOCS) mktxt
+	/bin/rm -f $(TMPFILE) $(TEXTDOC) $(MANPAGE)
 	@for i in $(HTMLDOCS) ;\
 	do \
 	    echo $$i ;\
-	    lynx -dump $$i >> mhonarc.txt ;\
+	    lynx -dump -nolist $$i >> $(TMPFILE) ;\
 	done
-	chmod 644 $(TEXTDOC)
+	perl mktxt < $(TMPFILE)
+	/bin/rm -f $(TMPFILE)
+	chmod 644 $(TEXTDOC) $(MANPAGE)
 

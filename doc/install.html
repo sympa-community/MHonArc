@@ -1,0 +1,381 @@
+<HTML>
+<HEAD>
+<TITLE>
+MHonArc v1.2.2 -- Installation
+</TITLE></HEAD>
+<BODY>
+[<A HREF=intro.html>Previous</A>][<A HREF=qstart.html>Next</A>][<A HREF=mhonarc.html>Contents</A>][<A HREF="http://www.oac.uci.edu/indiv/ehood/MHonArc/faq.html">FAQ</A>][<A HREF="http://www.oac.uci.edu/indiv/ehood/MHonArc/bugs.html">Bugs</A>][<A HREF=http://www.oac.uci.edu/indiv/ehood/mhonarc.html>Home</A>]
+<HR>
+
+<H1><A NAME="18081">Installation</A>
+</H1>
+
+<P>This section instructs you on how to install and get <EM>MHonArc</EM> running on your 
+machine. The section covers <EM>Unix</EM> installation and <EM>MS-DOS/Windows</EM> installation.
+</P>
+<DL>
+<DT><STRONG>NOTE</STRONG> 
+
+<DD><P> For brevity, anything that applies to MS-DOS also applies to Windows.
+</P></DL>
+<HR>
+<H2><A NAME="MMM0">System Requirements
+</A></H2>
+
+<P><EM>MHonArc</EM> is written in <A HREF="http://www.cis.ufl.edu/perl/">Perl</A> 4. Therefore, you must have Perl 4 or 5 installed on your 
+system. If you do not know if Perl is installed on your system, ask your system 
+administrator.
+</P>
+<P>If Perl is not installed on your system, you can retrieve Perl at 
+&lt;URL:<A HREF="http://www.cis.ufl.edu/perl/ftp.html">http://www.cis.ufl.edu/perl/ftp.html</A>&gt;. I recommend version 4.0 
+patchlevel 34, or later. <EM>MHonArc</EM> has not been tested on earlier versions.
+</P>
+<DL>
+<DT><STRONG>NOTE</STRONG> 
+
+<DD><P> <EM>MHonArc</EM> makes use of the Perl libraries <CODE>newgetopt.pl</CODE> and 
+<CODE>timelocal.pl</CODE>. These libraries are part of the normal Perl distribution.
+</P></DL>
+<HR>
+<H2><A NAME="MMM1">Extracting the Distribution File
+</A></H2>
+
+<P>Before extracting the distribution file, you may want copy the distribution file into 
+scratch directory, and work in there during installation.
+</P>
+<H3>Tar/Gzip Distribution
+</H3>
+
+<P>You must have <EM>gzip</EM> and <EM>tar</EM> installed on your system. If <EM>gzip</EM> is not installed, you 
+may obtain <EM>gzip</EM> at &lt;URL:<A HREF="ftp://prep.ai.mit.edu/pub/gnu">ftp://prep.ai.mit.edu/pub/gnu</A>&gt;. <EM>Tar</EM> comes with all 
+Unix systems. However, MS-DOS users may have to obtain <EM>tar</EM>.
+</P>
+<P>To extract the file, type the following command at your shell's prompt:
+</P>
+<DL>
+<DT><EM>Unix</EM> 
+
+<DD><P> <CODE>zcat MHonArc.tar.gz | tar xvof -</CODE> 
+</P></DL>
+<DL>
+<DT><EM>MS-DOS</EM> 
+
+<DD><P> <CODE>gunzip -dv MHonArc.tar.gz</CODE> <BR>
+<CODE>tar xvf MHonArc.tar</CODE> 
+</P></DL>
+<P>A directory called "<CODE>MHonArc</CODE>" should be created. The directory contains all the 
+files need for installing <EM>MHonArc</EM>.
+</P>
+<DL>
+<DT><STRONG>NOTE</STRONG> 
+
+<DD><P> The actual name of the distribution file may differ from the example given.
+</P></DL>
+<H3>Zip Distribution
+</H3>
+
+<P>You must have <EM>pkzip</EM> or <EM>unzip</EM> installed on your system.
+</P>
+<P>To extract the file, type the following command at your shell's prompt:
+</P>
+<P><CODE>unzip mhonarc.zip<BR>
+</CODE><BR>
+OR<BR>
+<BR>
+<CODE>pkunzip -d mhonarc.zip 
+</CODE></P>
+<DL>
+<DT><STRONG>IMPORTANT</STRONG> 
+
+<DD><P> The directory structure of the zip file must be preserved during extraction 
+to insure proper installation.
+</P></DL>
+<P>A directory called "<CODE>MHonArc</CODE>" should be created. The directory contains all the 
+files need for installing <EM>MHonArc</EM>.
+</P>
+<DL>
+<DT><STRONG>NOTE</STRONG> 
+
+<DD><P> The actual name of the distribution file may differ from the example given.
+</P></DL>
+<HR>
+<H2><A NAME="MMM2">Installing the Software
+</A></H2>
+
+<P>Once you have extracted the distribution file, change your current working 
+directory into the <CODE>MHonArc</CODE> directory created during the extraction of the 
+distribution file.
+</P>
+<P><STRONG>Example</STRONG>: Assuming you are in the directory you extracted the distribution file in, 
+you can type the following on your command-line:
+</P>
+<DL>
+<DT><EM>Unix</EM> 
+
+<DD><P> <CODE>cd MHonArc</CODE> 
+</P></DL>
+<DL>
+<DT><EM>MS-DOS</EM> 
+
+<DD><P> <CODE>cd MHONARC</CODE> 
+</P></DL>
+<H3><A NAME="23395"><CODE></A><A NAME="37671">install.me</A></CODE> 
+</H3>
+
+<P>Contained in the <CODE>MHonArc</CODE> directory is a Perl program called "<CODE>install.me</CODE>". This 
+program will perform the tasks required to install <EM>MHonArc</EM> on you machine. The 
+install program is capable of running <A HREF="#33978">interactively</A>, or in <A HREF="#17108">batch</A>.
+</P>
+<H4><A NAME="33978">Interactive Mode </A>
+</H4>
+
+<P>To run <CODE>install.me</CODE> in interactive mode, type the following at your shell's 
+prompt:
+</P>
+<P><CODE>perl install.me</CODE> 
+</P>
+<DL>
+<DT><STRONG>NOTE</STRONG> 
+
+<DD><P> Make sure you are in the same directory as the <CODE>install.me</CODE> program.
+</P></DL>
+<P>The program will then prompt you for the necessary information to install 
+<EM>MHonArc</EM> on your system.
+</P>
+<P>Here's an example (Unix) session:
+</P>
+<PRE>% perl install.me
+MHonArc Installation
+====================
+The installation process will ask you a series of questions on where
+the Perl executable is and where to put MHonArc files.  Just hit &lt;CR&gt;
+to accept the default values listed in ()'s.
+
+If directory path does not exist on your system, the installation
+program will create the path for you.
+
+-----------------------------------------------
+Note:  Make sure all pathnames are absolute.
+-----------------------------------------------
+
+Hit &lt;CR&gt; to continue ...
+Perl executable ("/usr/local/bin/perl")
+-&gt; /usr/bin/perl
+Location to install programs ("/usr/local/bin")
+-&gt; /mnt/ehood/bin
+Location to install libraries ("/usr/local/lib/MHonArc")
+-&gt; /mnt/ehood/lib/MHonArc
+Install documentation ("y")?  y
+Location to install docs ("/usr/local/lib/MHonArc/doc")
+-&gt; /mnt/ehood/lib/MHonArc/doc
+
+You've specified the following:
+        Perl location: /usr/bin/perl
+        Program directory: /mnt/ehood/bin
+        Library directory: /mnt/ehood/lib/MHonArc
+        Doc directory: /mnt/ehood/lib/MHonArc/doc
+Is this correct ("y")?  y
+Installing the following into /mnt/ehood/bin
+        mhonarc
+Installing the following into /mnt/ehood/lib/MHonArc
+        base64.pl
+        mhexternal.pl
+        mhtxthtml.pl
+        mhtxtplain.pl
+        mhtxtsetext.pl
+        qprint.pl
+        readmail.pl
+Installing the following into /mnt/ehood/lib/MHonArc/doc
+        mhonarc.txt
+        ...
+
+</PRE>
+
+<H4><A NAME="17108">Batch Mode </A>
+</H4>
+
+<P>To run <CODE>install.me</CODE> in batch mode, type the following at your shell's prompt:
+</P>
+<P><CODE>perl install.me install.cfg
+</CODE></P>
+<DL>
+<DT><STRONG>NOTE</STRONG> 
+
+<DD><P> Make sure you are in the same directory as the <CODE>install.me</CODE> program.
+</P></DL>
+<P>The <CODE>install.cfg</CODE> contains the necessary information for intalling <EM>MHonArc</EM> on 
+your system. You will need to edit <CODE>install.cfg</CODE> to reflect your installation 
+requirements.
+</P>
+<P>Here is an example <CODE>install.cfg</CODE>:
+</P>
+<PRE># Should executables be installed. 0 =&gt; NO, non-zero =&gt; YES.
+#
+$dobin = 1;
+
+# Should libraries be installed. 0 =&gt; NO, non-zero =&gt; YES.
+#
+$dolib = 1;
+
+# Should documentation be installed. 0 =&gt; NO, non-zero =&gt; YES.
+#
+$dodoc = 1;
+
+# Location for executable.  If using ms-dos, use something like
+# 'C:\\BIN'.
+#
+$bindir  = '/usr/local/bin';
+
+# Location for libraries.  If using ms-dos, use something like
+# 'C:\\LIB\\MHONARC'.
+#
+$libdir  = '/usr/local/lib/MHonArc';
+
+# Location for documents.  If using ms-dos, use something like
+# 'C:\\DOC\\MHONARC'.
+#
+$docdir  = '/usr/local/lib/MHonArc/doc';
+
+# Location of perl executable.  If using ms-dos, use something like
+# 'C:\\BIN\\PERL.EXE'.
+#
+$perlprg = '/usr/local/bin/perl';
+
+
+1; # DO NOT DELETE THIS LINE
+
+</PRE>
+
+<P>The file is Perl code, and therefore, must follow Perl syntax rules:
+</P>
+<UL>
+<LI>Anything following a `<CODE>#</CODE>' character is ignored.
+<LI>Strings values need to be enclosed in quotes.
+<LI>If you need to use a backslash in a string value, it must be escaped with a 
+backslash.  Example: <CODE>'C:\\LIB\\MHONARC'</CODE>. The same applies to the '<CODE>$</CODE>' 
+character.
+<LI>All statements must end with a semi-colon.
+<LI>The "<CODE>1;</CODE>" line must not be deleted.
+</UL>
+<DL>
+<DT><STRONG>NOTE</STRONG> 
+
+<DD><P> You can verify the syntax of the configuration file by invoking "<CODE>perl -c</CODE>" 
+on the file.
+</P></DL>
+<P>After you have successfully executed <CODE>install.me</CODE>, <EM>MHonArc</EM> is ready to use.
+</P>
+<H4>MS-DOS Post <CODE>install.me</CODE> Note
+</H4>
+
+<P>If you would like the ability to run <EM>MHonArc</EM> like other programs, then create a 
+batch file that contains something like the following:
+</P>
+<PRE>@ECHO OFF
+C:\BIN\PERL.EXE C:\BIN\MHONARC %1 %2 %3 %4 %5 %6 %7 %8 %9
+
+</PRE>
+
+<P>Of course, you will need to change the paths to Perl and <EM>MHonArc</EM> to suit your 
+systems configuration.
+</P>
+<P>Sample batch files are available in the <EM>MHonArc</EM> distribution.
+</P>
+<H3>Notes on <CODE>install.me</CODE> 
+</H3>
+
+<UL>
+<LI><P>If you do not know the location of the Perl executable on your system, ask 
+your system administrator.
+</P><LI><P>All pathnames must be absolute.
+</P><LI><P>If a path does not exist that you specify, the path will be automatically 
+created if running in interactive mode. In batch mode, all paths specified 
+must already exist.
+</P><LI><P>During the installation process, the main <EM>MHonArc</EM> source file is modified 
+to be aware of the location of the Perl executable and <EM>MHonArc</EM>'s library 
+files. If you ever need to install <EM>MHonArc</EM> in a different location, rerun the 
+<CODE>install.me</CODE> program.
+</P><P> <STRONG>NOTE</STRONG>: Location of the Perl exectuble is only relevant for Unix systems. 
+MS-DOS systems do not make use of the "<CODE>#!</CODE>" line in scripts.
+</P><LI><P><EM>MHonArc</EM> requires the use of <CODE>timelocal.pl</CODE>  and <CODE>newgetopt.pl</CODE>. These 
+libraries are part of the normal Perl distribution.
+</P></UL>
+<HR>
+<H2><A NAME="MMM3">Tested Environments
+</A></H2>
+
+<P>This section covers software environments <EM>MHonArc</EM> has worked successfully. 
+Feedback is welcome about other success, or failure, stories covering <EM>MHonArc</EM> 
+usage in other environments.
+</P>
+<H3>Perl
+</H3>
+
+<P><EM>MHonArc</EM> is known to work with the following version of Perl 4, or later:
+</P>
+<P><CODE>$RCSfile: perl.c,v $$Revision: 4.0.1.7 $$Date: 92/06/08 
+14:50:39 $<BR>
+Patch level: 34</CODE> 
+</P>
+<P><EM>MHonArc</EM> is known also to work with Perl 5.001m and Perl 5.002 beta2.
+</P>
+<DL>
+<DT><STRONG>NOTE</STRONG> 
+
+<DD><P> The version numbers are based upon the Unix versions of Perl. DOS 
+version numbers may differ.
+</P></DL>
+<H3>Unix
+</H3>
+
+<H4>Mail Software
+</H4>
+
+<UL>
+<LI><EM>MH</EM> 
+<LI><P><EM>Elm</EM>, <EM>Mail</EM>, <EM>mail</EM>, and any other mail software that stores e-mail in UUCP 
+style mailbox format. UUCP format is where mail messages are separated 
+by a line beginning with "<CODE>From </CODE>" (I.e. the word "From" followed by a 
+space). You may need to utilize the <A HREF="rcfile.html#23573"><CODE>MSGSEP</CODE></A> resource if the message 
+separator is different from standard mailbox files (eg. MMDF format).
+</P></UL>
+<H4>News Software
+</H4>
+
+<P>Different news software store messages differently. Messages are either stored in a 
+format similiar to <EM>MH</EM> or similiar to a mailbox file:
+</P>
+<UL>
+<LI><P><EM>MH</EM> style is where the messages are stored in a directory with each post a 
+separate file, and each file has a numeric filename.
+</P><LI><P>Mailbox style is where messages are stored in a single file. You may need 
+to utilize the <A HREF="rcfile.html#23573"><CODE>MSGSEP</CODE></A> resource if the message separator is different from 
+standard mailbox files.
+</P></UL>
+<H3>MS-DOS
+</H3>
+
+<H4>Mail/News Software
+</H4>
+
+<P><EM>MHonArc</EM> has been tested under MS-DOS with message files created by the 
+following mail and news programs:
+</P>
+<UL>
+<LI><EM>Eudora</EM> 
+<LI><EM>WinVN</EM> 
+<LI><EM>Windows Trumpet</EM> 
+<LI><P><EM>NUPop</EM> 
+</P></UL>
+<P>It also works with individual RFC822 mail messages, but you must run <EM>MHonArc</EM> 
+without a batch file if you need to use redirection.  For example:
+</P>
+<P><CODE>perl c:\bin\mhonarc &lt;one.msg &gt;one.htm<BR>
+perl c:\bin\mhonarc -add &lt;one.msg</CODE> <BR>
+
+</P>
+
+<HR>
+[<A HREF=intro.html>Previous</A>][<A HREF=qstart.html>Next</A>][<A HREF=mhonarc.html>Contents</A>][<A HREF="http://www.oac.uci.edu/indiv/ehood/MHonArc/faq.html">FAQ</A>][<A HREF="http://www.oac.uci.edu/indiv/ehood/MHonArc/bugs.html">Bugs</A>][<A HREF=http://www.oac.uci.edu/indiv/ehood/mhonarc.html>Home</A>]
+</BODY>
+</HTML>

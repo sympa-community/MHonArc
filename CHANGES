@@ -1,18 +1,477 @@
 CHANGES for MHonArc
 
-Revision history for MHonArc.
+	<URL:http://www.oac.uci.edu/indiv/ehood/mhonarc.html>
+
+Revision history for MHonArc.  Changes listed are brief.  Consult
+the documentation for further information/clarification.
 
 MM/DD/YY
-===========================================================================
-###########################################################################
-===========================================================================
+=======================================================================
+#######################################################################
+=======================================================================
+07/12/96	(1.2.3)
+
+	o  Extracted initialization of data structures into mhinit.pl.
+	   The file is just required from the main source.
+
+	o  Use q{} instead of qq{} when trying to read database file.
+	   Should fix require problem under MS-DOS.
+
+	o  Added <!--X-Reference-Id: ... --> comments at beginning
+	   of messages.  May aid in database recovery techniques.
+
+	o  ';'s are now deleted in filenames in mhexternal.pl
+	   (applicable only when "usename" option specified)
+
+	o  Added recognition of '/' when converted e-mail addresses
+	   to mailto links in message headers.
+
+	o  Simple fix to mhtxt2022.pl for execution under Perl 5.
+
+=======================================================================
+#######################################################################
+=======================================================================
+04/18/96	(1.2.2)
+
+	o  Increased the speed performance of base64 decoding.  Speed
+	   increase is much greater under Perl 4 than Perl 5.
+
+	o  Added -time option to print out total CPU execution time.
+	   Mainly used for debugging reasons (like checking on
+	   base64 decoding times).  Time information is sent to
+	   standard error.
+
+	o  Added M2H_LOCKDELAY envariable and -lockdelay option.
+	   Either can be used to adjust the sleep time between
+	   attempts to lock the archive.
+
+	o  Added -force option to override a lock on an archive if
+	   attempts to lock fail.
+
+	o  Added image/x-bmp and image/x-pcx to the default supported
+	   MIME types.
+
+	o  Ignore "Sv:" at the beginning of subjects when sorting by
+	   subject.  "Sv:" is Danish for "Re:".
+
+	o  Fixed bug in mhutil.pl where TIDXPGEND actually set
+	   TIDXPGBEG.
+
+	o  Dynamically define exclude_field routine after reading
+	   user options.  exclude_field is utilized when formatting
+	   a message header in HTML.  Defining the routine at run-time
+	   helps reduce the regular expression overhead the old version
+	   of the routine entailed.  There should be an increase in
+	   overall execution time.
+
+=======================================================================
+03/22/96	(1.2.1)
+
+	o  Added support for x-uuencode content-transfer-encoding.
+
+	o  Added -locktries command-line option.
+
+	o  Added the resource variable $OUTDIR$.
+
+	o  mhexternal.pl filter will use the name parameter string
+	   on the content-type field as the anchor text to the file
+	   if there is no content-description.
+
+	o  application/x-patch is recognized and processed by the
+	   text/plain filter (mhtxtplain.pl).
+
+	o  Fixed bug in install.me and osinit.pl where setting
+	   $'PROG caused perl to terminate if $'DIRSEP was a backslash
+	   (occured under MS-DOS usage).
+
+	o  Fixed bug in install.me in the create_dir routine.
+	   If $DIRSEP was a backslash, the regular expression setting
+	   @a would cause perl to abort with an error.
+
+	o  Fixed database bug where the MIMEARGS resource setting
+	   was not being stored.
+
+	o  Fixed index listing bug where a reverse listing was not
+	   correct if an index size was specified less than the
+	   current size of the archive.
+
+=======================================================================
+03/01/96	(1.2.0)
+
+	o  Rewrote message parser routine so it will work under Perl 5
+	   for multipart messages.  The rewrite also allows some
+	   additional features that are mentioned below.
+
+	o  The -mbox and -mh options are no longer required.  MHonArc
+	   will automatically determine which mode to operate in
+	   based upon the file arguments.  Hence, one can specify
+	   MH folders and mailbox files on the same command-line.
+	   Both options are ignored if specified.
+
+	o  An HTML index of an archive contents can be generated to
+	   standard output (-genidx).
+
+	o  Message header lines not conforming to RFC 822 are ignored.
+	   (Eg: Those pesky "From " lines should not show up anymore --
+	    please do not confuse this with the regular "From:" lines;
+	    note the colon vs the space).
+
+	o  New resources:
+
+		BOTLINKS	- May be used to completely customize
+				  the links at the bottom of messages.
+		IDXPGBEGIN	- Opening markup for main index page.
+				  Allows one to redefine opening HTML
+				  element, HEAD element, TITLE element,
+				  opening BODY element, etc.
+		IDXPGEND	- Closing markup for main index page.
+		IDXSIZE		- Set the maximum number of messages
+				  listed in index.  This is different
+				  in MAXSIZE where MAXSIZE will remove
+				  older messages when the MAXSIZE limit
+				  is reached in the archive.
+		MIMEARGS	- Define arguments to filters
+		MSGPGBEGIN	- Opening markup for message pages.
+				  Allows one to redefine opening HTML
+				  element, HEAD element, TITLE element,
+				  opening BODY element, etc.
+		MSGPGEND	- Closing markup for message pages.
+		NEXTBUTTON	- Defines the 'Next' button.
+		NEXTBUTTONIA	- Defines the 'Next' button when it is
+				  inactive.
+		NEXTLINK	- Defines the 'Next' link.
+		NEXTLINKIA	- Defines the 'Next' link when it is
+				  inactive.
+		NOTSUBSORT	- Do not sort threads by subject.
+		OTHERINDEXES	- List other resource files defining
+				  other indexes to create when creating,
+				  or updating, an archive.
+		PREVBUTTON	- Defines the 'Prev' button.
+		PREVBUTTONIA	- Defines the 'Prev' button when it is
+				  inactive.
+		PREVLINK	- Defines the 'Prev' link.
+		PREVLINKIA	- Defines the 'Prev' link when it is
+				  inactive.
+		TIDXPGBEGIN	- Opening markup for thread index page.
+				  Allows one to redefine opening HTML
+				  element, HEAD element, TITLE element,
+				  opening BODY element, etc.
+		TIDXPGEND	- Closing markup for thread index page.
+		TOPLINKS	- May be used to completely customize
+				  the buttons at the top of messages.
+		TSUBSORT	- Sort threads listed by subject.
+
+	o  Removed resources:
+
+		INDEXBL, INDEXFL, MBOX, MH, NEXTBL, NEXTFL, PREVBL,
+		PREVFL, TINDEXBL, TINDEXFL
+
+	   Resource were removed because they were no longer applicable
+	   and/or have been superceded by other resources.  MHonArc
+	   will still honor old resource settings (where applicable) of
+	   older archives and incorporate them into the new resource
+	   settings.
+
+	o  When specifying the resource file, mhonarc will now do
+	   the following to determine its location:
+
+		1.  If its an absolute pathname, mhonarc uses it.
+		2.  If it is a relative pathname, mhonarc checks for
+		    it relative to the current working directory.
+		3.  Otherwise, mhonarc checks for it relative to
+		    location of the archive as specified by outdir.
+
+	   This resolution will allow you to place resource files with
+	   the archive if desired (can be useful when using the
+	   OTHERINDEXES resource element).
+
+	o  Because of the new resources available, many <HR>'s are no
+	   longer hard-coded and are controllable by resources.  <HR>'s
+	   are still used in message pages to separate message data
+	   from mhonarc data.
+
+	o  Added resource variables:
+	   (NOTE: Some variables are only valid in certain contexts)
+
+		$DDMMYY$	- Date of message in dd/mm/yy format
+		$IDXSIZE$	- Max size of index list
+		$MMDDYY$	- Date of message in mm/dd/yy format
+		$MSGID$		- Message id
+		$NEXTBUTTON$	- Next button markup
+		$NEXTFROM$	- From field of next listed message
+		$NEXTFROMADDR$	- From e-mail address of next listed message
+		$NEXTFROMNAME$	- From name of next listed message
+		$NEXTLINK$	- Next link markup
+		$NEXTMSGNUM$	- Number of next listed message
+		$NEXTSUBJECT$	- Subject text of next listed message
+		$NUMOFIDXMSG$	- Number of messages in index list
+		$PREVBUTTON$	- Previous button markup
+		$PREVFROM$	- From field of previous listed message
+		$PREVFROMADDR$	- From e-mail address of prev listed message
+		$PREVFROMNAME$	- From name of previous listed message
+		$PREVLINK$	- Previous link markup
+		$PREVMSGNUM$	- Number of previous message
+		$PREVSUBJECT$	- Subject text of previous listed message
+		$YYMMDD$	- Date of message in yy/mm/dd format
+
+	o  Can specify a 'U' with variable length specifier to denote
+	   replacement string is to be used in a URL.  Examples:
+
+		$SUBJECTNA:40U$
+		$MSGID:U$
+
+	   The 'U' causes the replace text to have special characters
+	   escaped as denoted by the URL spec.  NOTE: Specify ":U"
+	   should NOT be used in the MAILTOURL resource; the variables
+	   will automatically be expanded according to the URL spec.
+	   Specifyind ":U" or a length specifier in the MAILTOURL
+	   resource will prevent mhonarc from detecting the variable.
+
+	o  New command-line options:
+
+		-genidx		- Generate HTML index of archive contents
+				  to stdout.
+		-idxsize	- Maximum number of messages shown in indexes
+		-notsubsort	- Do not sort threads listed by subject.
+		-savemem	- Write message data while processing
+		-tsubsort	- Sort threads listed by subject.
+
+	o  The library mhtxt2022.pl has been added that provides
+	   a filter to process ISO-2022 (Japanese) encoded mail messages.
+	   See mhtxt2022.pl on how to hook it in.
+
+	o  The mhexternal.pl filter by default ignores any filename
+	   specification in the message for creating derived files.
+	   This avoids name conflicts and security problems.
+	   The "usename" filter option may be used to override this.
+
+	o  Mime filters are now called with two additional arguments:
+
+		$converted_data = &function(
+			$header, *parsed_header_assoc_array,
+			*message_data, $decoded_flag,
+			$optional_filter_arguments);
+
+	   The $decoded_flag is set to 1 if the *message_data has been
+	   decoded.  $optional_filter_arguments contains an optional
+	   argument string as determined by the filter.
+
+	o  Mime filters can now be registered for multipart types
+	   and message types.  This allows one to override mhonarc's
+	   conversion of these types, and completely replace mhonarc's
+	   message->HTML conversion process.
+
+	o  Mime filters should now use $'FieldSep instead of $'X for
+	   accessing parsed message headers.
+
+	o  Mime filters can be registered for a base type.  Ie.
+	   It is no longer required to explicitly list each possible
+	   subtype if a single filter is to be used for them all.
+	   Example:
+
+		<mimefilters>
+		image/*:myfilter'imagefilter:myfilter.pl
+		</mimefilters>
+
+	   Registers "myfilter'filter" for all image data types,
+	   regardless of subtype.  However, if an explicit entry
+	   exists for a subtype, then that filter is called.
+	   Example:
+
+		<mimefilters>
+		image/*:myfilter'imagefilter:myfilter.pl
+		image/gif:myfilter'giffilter:myfilter.pl
+		</mimefilters>
+
+	   "myfilter'giffilter" is called for all image/gif data.
+	   "myfilter'imagefilter" is called for all other image data.
+
+	o  A new resource, MIMEARGS, may be used to pass optional arguments
+	   to filters to control their behavior.  The format of the
+	   argument string is controlled by the various filters.  The
+	   arguments can be specified by a specific content-type, or
+	   for the filter routine in general.  A content-type argument
+	   will be used over any arguments specified for a filter.
+
+	   Example usage:
+
+		<mimeargs>
+		image/gif:inline usename
+		m2h_external'filter:usename
+		</mimeargs>
+
+	   See the documentation for possible arguments to filters.
+
+	o  Installation program can now be invoked in batch mode.
+
+	o  Thread index properly includes docurl as main index.
+	   -nodocurl will prevent the inclusion as with the main index.
+
+	o  Fixed bug in mhtxthtml.pl on properly propogating a base
+	   URL to relative URLs starting with a "/".
+
+	o  Fixed bug where single quotes, and backslashed in keys of
+	   associative arrays in the database file were not getting
+	   escaped.
+
+	o  Fixed bug where spaces and special characters were not
+	   properly escaped in URL strings: spaces were left as-is,
+	   and special characters were deleted.
+
+	o  Removed illegal invocation choices in the Synopsis of the
+	   documentation.
+
+=======================================================================
+04/24/95	(1.1.1)
+
+	o  Fixed bug in -scan output where month in date was off by
+	   one.
+
+=======================================================================
+04/21/95	(1.1.0)
+
+	o  Made modifications to make MHonArc suitable to run
+	   under MS-DOS without modification.  MHonArc will
+	   automatically detect if it is running under Unix or MS-DOS.
+
+	o  Added support for a thread index.  MHonArc will create a
+	   complimentary index to the main index showing message
+	   threads.
+
+	o  Archive messages can be deleted.
+
+	o  A listing to stdout of an archives contents can be
+	   generated.
+
+	o  Maximum number of messages for an archive can be set.
+	   Older messages (based on sort method) are removed
+	   automatically during add operations.
+
+	o  MHonArc will now recognize if you try to add in a message
+	   that already exists in an archive.
+
+	o  The -editdx option will now also cause a updating of all
+	   mail messages.  Guarantees resource changes to affect all
+	   messages.
+
+	o  Added the following resource file elements:
+
+		MSGFOOT		-- Footer text for converted messages
+		MSGHEAD		-- Header text for converted messages
+		NODOC		-- Do not put link to documentation
+		NOTHREAD	-- Do not create thread index
+		TFOOT		-- Text at bottom of thread index page
+		THEAD		-- Text at top of thread index page
+		THREAD		-- Create thread index
+		TLEVELS		-- Depth of thread listing
+		TLITXT		-- Template text for entry in thread
+				   index
+		TIDXFNAME	-- Thread index filename
+		TINDEXBL	-- Top button label in messages to
+				   thread index
+		TINDEXFL	-- Verbose label in message to thread
+				   index
+		TTITLE		-- Title of thread index page
+
+	o  Added the following command-line options:
+
+		-maxsize	-- Maxinum # messages in an archive
+		-nodoc		-- Do not put link to documentation
+		-nothread	-- Do not create thread index
+		-rmm		-- Remove messages from an archive
+		-scan		-- Listing of archive to stdout
+		-thread		-- Create thread index
+		-tidxfname	-- Thread index filename
+		-tlevels	-- Depth of thread listing
+		-ttitle		-- Title of thread index page
+
+	o  Added the following environment variables:
+
+		M2H_MAXSIZE	-- Maxinum # messages in an archive
+		M2H_THREAD	-- If non-zero, create thread index
+		M2H_TIDXFNAME	-- Thread index filename
+		M2H_TLEVELS	-- Depth of thread listing
+		M2H_TTITLE	-- Title of thread index page
+
+	o  Added the following variables for template resources
+	   (applicability of variables vary depending on the resource):
+
+		$DOCURL$	-- URL to documentation
+		$IDXFNAME$	-- Main index page filename
+		$IDXTITLE$	-- Main index page title
+		$NEXTMSG$	-- Next message filename
+		$PREVMSG$	-- Previous message filename
+		$PROG$		-- Program name
+		$TIDXFNAME$	-- Thread index page filename
+		$TIDXTITLE$	-- Thread index page title
+		$VERSION$	-- Version number of the program
+
+	o  Added $FROM$, $MSGID$, and $SUBJECT$ variables to be used
+	   in the MAILTOURL resource.
+
+	o  The string `$$' in template resources will produce a `$' in
+	   the output.
+
+	o  Fixed problem with messages (with follow-ups) getting
+	   unnecessarily updated when messages are added to an archive.
+
+	o  Only a CR/LF, or LF, pair will terminate a message head.
+	   Before, MHonArc was terminating message heads when
+	   encountering an empty line or a line that only contained
+	   whitespace (which was incorrect behavior).
+
+	o  Fixed bug in mhexternal.pl dealing with the `name' parameter
+	   in the content-type field.  Surrounding "s or 's were not
+	   being deleted causing filenames with quotes to be written.
+
+	o  mhexternal.pl: The head of a pathname in the `name'
+	   parameter in the content-type field is stripped off before
+	   writing the external file.  I.e. Only the base filename is
+	   used.
+
+	o  Only one <HR> after the H1 subject in messages will appear
+	   if no message header fields are printed.
+
+	o  Added recognition of the following content-types in
+	   mhexternal.pl:
+
+		application/mac-binhex40
+
+	o  Added a extras/ directory containing useful programs for
+	   MHonArc.  See README in the directory for information on
+	   the programs contained in there.
+
+	o  To support -rmm, MIME filters now return an array.  The
+	   first array value is the HTML for the message, and any other
+	   array values are filenames of files generated by the
+	   filter.  This allows MHonArc to know of any extra files that
+	   must be deleted when a message is removed.
+
+	o  Some routines from the main mhonarc source file have been
+	   moved into a separate librarys: readmail.pl, mhdb.pl,
+	   mhutil.pl
+
+	o  The default URL to the documentation is now,
+
+		http://www.oac.uci.edu/indiv/ehood/mhonarc.html
+
+	   The old URL,
+
+		http://www.oac.uci.edu/indiv/ehood/mhonarc.doc.html
+
+	   is still valid.
+
+	o  There's probably other stuff, but I cannot remember.
+
+
+=======================================================================
 10/01/94	(1.0.0)
 
-	o  First release -- See RELEASE_NOTES about compatibility issues
+	o  First release -- See RELNOTES about compatibility issues
 	   with mail2html.
 
 
-===========================================================================
-###########################################################################
-===========================================================================
-Earl Hood, ehood@convex.com
+=======================================================================
+#######################################################################
+=======================================================================
+Earl Hood, ehood@isogen.com

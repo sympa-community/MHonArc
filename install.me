@@ -1,39 +1,59 @@
 #! /usr/local/bin/perl
 ##---------------------------------------------------------------------------##
 ##  File:
-##      install.me (for MHonArc)
+##      install.me
 ##  Author:
-##      Earl Hood       ehood@convex.com
+##      Earl Hood       ehood@isogen.com
 ##  Description:
 ##      Configurable installation program.
-##	Just edit the variables in the CONFIG section.
+##	Just edit the variables in the CONFIG section for setting defaults
+##	for the particular program.
 ##  To Do:
 ##	o Add support for manpages to go in different section directories.
 ##
 ##---------------------------------------------------------------------------##
-##  Copyright (C) 1994  Earl Hood, ehood@convex.com
+##    Copyright (C) 1995,1996     Earl Hood, ehood@isogen.com
 ##
-##  This program is free software; you can redistribute it and/or modify
-##  it under the terms of the GNU General Public License as published by
-##  the Free Software Foundation; either version 2 of the License, or
-##  (at your option) any later version.
-##  
-##  This program is distributed in the hope that it will be useful,
-##  but WITHOUT ANY WARRANTY; without even the implied warranty of
-##  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-##  GNU General Public License for more details.
-##  
-##  You should have received a copy of the GNU General Public License
-##  along with this program; if not, write to the Free Software
-##  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+##    This program is free software; you can redistribute it and/or modify
+##    it under the terms of the GNU General Public License as published by
+##    the Free Software Foundation; either version 2 of the License, or
+##    (at your option) any later version.
+##
+##    This program is distributed in the hope that it will be useful,
+##    but WITHOUT ANY WARRANTY; without even the implied warranty of
+##    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+##    GNU General Public License for more details.
+##
+##    You should have received a copy of the GNU General Public License
+##    along with this program; if not, write to the Free Software
+##    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 ##---------------------------------------------------------------------------##
 ###############################################################################
 package main;
 
+##  Check what system we are executing under
+{
+    local($tmp);
+    if (($tmp = $ENV{'COMSPEC'}) && ($tmp =~ /[a-zA-Z]:\\/) && (-e $tmp)) {
+        $'MSDOS = 1;  $'MACOS = 0;  $'UNIX = 0;
+        $'DIRSEP = '\\';  $'CURDIR = '.';
+    } elsif (defined($MacPerl'Version)) {
+        $'MSDOS = 0;  $'MACOS = 1;  $'UNIX = 0;
+        $'DIRSEP = ':';  $'CURDIR = ':';
+    } else {
+        $'MSDOS = 0;  $'MACOS = 0;  $'UNIX = 1;
+        $'DIRSEP = '/';  $'CURDIR = '.';
+    }
+    ##  Store name of program
+    ($tmp = $'DIRSEP) =~ s/(\W)/\\$1/g;
+    ($'PROG = $0) =~ s%.*[$tmp]%%o;
+}
+
 ##---------------------------------------------------------------------------
 ##	Begin CONFIG section
 ##
-umask 022;	# Set umask
+
+eval 'umask 022' if $UNIX;	# Set umask
 
 ## Set flags
 $dobin = 1;	# Set to 1 if exectuables to install
@@ -41,10 +61,10 @@ $dolib = 1;	# Set to 1 if libraries to install
 $dodoc = 1;	# Set to 1 if documents to install
 
 ## Set default values
-$bindir  = '/usr/local/bin';
-$libdir  = '/usr/local/lib/MHonArc';
-$docdir  = '/usr/local/lib/MHonArc/doc';
-$perlprg = '/usr/local/bin/perl';
+$bindir  = (!$MSDOS ? '/usr/local/bin' : 'C:\\BIN');
+$libdir  = (!$MSDOS ? '/usr/local/lib/MHonArc' : 'C:\\LIB\\MHONARC');
+$docdir  = (!$MSDOS ? '/usr/local/lib/MHonArc/doc' : 'C:\\DOC\\MHONARC');
+$perlprg = (!$MSDOS ? '/usr/local/bin/perl' : 'C:\\BIN\\PERL.EXE');
 
 ## Set files to install
 $relbin = '.';   	# Location of source bin files relative to install.me
@@ -54,33 +74,41 @@ $relbin = '.';   	# Location of source bin files relative to install.me
 $rellib = 'lib';	# Location of source lib files relative to install.me
 @libfiles = (
     "base64.pl",
+    "mhdb.pl",
     "mhexternal.pl",
+    "mhtxt2022.pl",
     "mhtxthtml.pl",
     "mhtxtplain.pl",
     "mhtxtsetext.pl",
+    "mhinit.pl",
+    "mhutil.pl",
+    "osinit.pl",
     "qprint.pl",
+    "readmail.pl",
 );
 $reldoc = 'doc';	# Location of source doc files relative to install.me
 @docfiles = (
+    "adding.html",
+    "contacts.html",
+    "details.html",
+    "diagnos.html",
+    "indexpg.html",
+    "install.html",
+    "intro.html",
+    "message.html",
+    "mhonarc.html",
     "mhonarc.txt",
-    "mhonarc.doc.html",
-    "mhonarc_adding.doc.html",
-    "mhonarc_clopts.doc.html",
-    "mhonarc_env.doc.html",
-    "mhonarc_icons.doc.html",
-    "mhonarc_indexpg.doc.html",
-    "mhonarc_integrity.doc.html",
-    "mhonarc_intro.doc.html",
-    "mhonarc_mime.doc.html",
-    "mhonarc_notes.doc.html",
-    "mhonarc_qstart.doc.html",
-    "mhonarc_rcfile.doc.html",
-    "mhonarc_stamp_t.gif",
-    "mhonarc_tips.doc.html",
+    "mime.html",
+    "overview.html",
+    "qstart.html",
+    "rcfile.html",
+    "removing.html",
+    "stamp_t.gif",
+    "thread.html",
 );
 
-## Print intro text
-print STDOUT <<EndofIntro;
+## Define intro text
+$introText =<<EndofIntro;
 MHonArc Installation
 ====================
 The installation process will ask you a series of questions on where
@@ -104,74 +132,81 @@ EndofIntro
     $ext_sigcont;	## External CONT handler
 }
 
-&print_note("Make sure all pathnames are absolute.");
-&pause();
+if ($ARGV[0]) {		## Check for batch mode
+    eval qq{require "$ARGV[0]"};
+    die "ERROR: Unable to read $ARGV[0]\n"  if $@;
 
-do {
-    ## Get installation directories and path to Perl
-    while (1) {
-	$tmp = &prompt_user_def("Perl executable", $perlprg, 0, 1);
-	last if -x $tmp;
-	print STDERR "$tmp not executable\n";
-    }
-    $perlprg = $tmp;
-    if ($dobin) {
-	do {
-	    $tmp = &prompt_user_def("Location to install programs",
-				     $bindir, 0, 1);
-	} while (!&create_dir($tmp));
-	$bindir = $tmp;
-    }
-    if ($dolib) {
-	do {
-	    $tmp = &prompt_user_def("Location to install libraries",
-				    $libdir, 0, 1);
-	} while (!&create_dir($tmp));
-	$libdir = $tmp;
-    }
-    if ($dodoc) {
-	if (&ask_question("Install documentation", 1)) {
-	    do {
-		$tmp = &prompt_user_def("Location to install docs",
-					$docdir, 0, 1);
-	    } while (!&create_dir($tmp));
-	    $docdir = $tmp;
-	} else {
-	    $dodoc = 0;
+} else {		## Interactive mode
+    print STDOUT $introText;
+    &print_note("Make sure all pathnames are absolute.");
+    &pause();
+
+    do {
+	## Get installation directories and path to Perl
+	while (1) {
+	    $tmp = &prompt_user_def("Perl executable", $perlprg, 0, 1);
+	    last if -x $tmp;
+	    print STDERR "$tmp not executable\n";
 	}
-    }
-    print STDOUT "\n",
-		 "You've specified the following:\n",
-		 "\tPerl location: $perlprg\n";
-    print STDOUT "\tProgram directory: $bindir\n"  if $dobin;
-    print STDOUT "\tLibrary directory: $libdir\n"  if $dolib;
-    print STDOUT "\tDoc directory: $docdir\n"  if $dodoc;
-} while (!&ask_question("Is this correct", 1));
+	$perlprg = $tmp;
+	if ($dobin) {
+	    do {
+		$tmp = &prompt_user_def("Location to install programs",
+					 $bindir, 0, 1);
+	    } while (!&create_dir($tmp));
+	    $bindir = $tmp;
+	}
+	if ($dolib) {
+	    do {
+		$tmp = &prompt_user_def("Location to install libraries",
+					$libdir, 0, 1);
+	    } while (!&create_dir($tmp));
+	    $libdir = $tmp;
+	}
+	if ($dodoc) {
+	    if (&ask_question("Install documentation", 1)) {
+		do {
+		    $tmp = &prompt_user_def("Location to install docs",
+					    $docdir, 0, 1);
+		} while (!&create_dir($tmp));
+		$docdir = $tmp;
+	    } else {
+		$dodoc = 0;
+	    }
+	}
+	print STDOUT "\n",
+		     "You've specified the following:\n",
+		     "\tPerl location: $perlprg\n";
+	print STDOUT "\tProgram directory: $bindir\n"  if $dobin;
+	print STDOUT "\tLibrary directory: $libdir\n"  if $dolib;
+	print STDOUT "\tDoc directory: $docdir\n"  if $dodoc;
+    } while (!&ask_question("Is this correct", 1));
+}
 
+## Install files
 $perlprg = "#! $perlprg\n";
 $perlprg .= "unshift(\@INC, '$libdir');\n"  if $dolib;
-
 
 if ($dobin && @binfiles) {
     print STDOUT "Installing the following into $bindir\n";
     foreach $file (@binfiles) {
+	&cp("$relbin$DIRSEP$file", "$bindir$DIRSEP$file", $perlprg);
 	print STDOUT "\t", $file, "\n";
-	&cp("$relbin/$file", "$bindir/$file", $perlprg);
 	chmod 0755, "$bindir/$file";
     }
 }
 if ($dolib && @libfiles) {
     print STDOUT "Installing the following into $libdir\n";
     foreach $file (@libfiles) {
+	&cp("$rellib$DIRSEP$file", "$libdir$DIRSEP$file");
 	print STDOUT "\t", $file, "\n";
-	&cp("$rellib/$file", "$libdir/$file");
     }
 }
 if ($dodoc && @docfiles) {
     print STDOUT "Installing the following into $docdir\n";
     foreach $file (@docfiles) {
+	&cp("$reldoc$DIRSEP$file", "$docdir$DIRSEP$file");
 	print STDOUT "\t", $file, "\n";
-	&cp("$reldoc/$file", "$docdir/$file");
     }
 }
 
@@ -182,25 +217,35 @@ exit 0;
 ##---------------------------------------------------------------------------
 sub create_dir {
     local($d) = shift;
-    local(@a) = grep($_ ne '', split(/\//, $d));
+    local($tmp);
+    ($tmp = $DIRSEP) =~ s/(\W)/\\$1/g;
+    local(@a) = grep($_ ne '', split(/$tmp/o, $d));
     local($path, $dir);
 
-    if ($d =~ /^\s*\//) {
-	$path = '';
+    if ($MSDOS) {
+	if ($d =~ m%^\s*([a-zA-Z]:)?[/\\]%) {
+	    $path = shift @a;
+	} else {
+	    $path = '.';
+	}
     } else {
-	$path = '.';
+	if ($d =~ /^\s*\//) {
+	    $path = '';
+	} else {
+	    $path = '.';
+	}
     }
     foreach $dir (@a) {
-	if (! -e "$path/$dir") {
-	    if (!mkdir("$path/$dir", 0777)) {
-		print STDERR "Unable to create $path/$dir: $!\n";
+	if (! -e "$path$DIRSEP$dir") {
+	    if (!mkdir("$path$DIRSEP$dir", 0777)) {
+		print STDERR "Unable to create $path$DIRSEP$dir: $!\n";
 		return 0;
 	    }
-	} elsif (! -d "$path/$dir") {
+	} elsif (! -d "$path$DIRSEP$dir") {
 	    print STDERR "$dir is not a directory\n";
 	    return 0;
 	}
-	$path .= '/' . $dir;
+	$path .= $DIRSEP . $dir;
     }
     if (! -w $d) {
 	print STDERR "$d not writable\n";
@@ -213,6 +258,7 @@ sub cp {
     local($src, $dst, $prepend) = @_;
     open(SRC, $src) || die "Unable to open $src: $!\n";
     open(DST, "> $dst") || die "Unable to create $dst: $!\n";
+    if (-B $src) { binmode( SRC ); binmode( DST ); }
     if ($prepend) {
 	print DST $prepend;
     }

@@ -1,0 +1,27 @@
+#! /usr/local/bin/perl
+
+$manpage = "mhonarc.1";
+$txtfile = "mhonarc.txt";
+
+open(MANPAGE, "> $manpage");
+open(TXTFILE, "> $txtfile");
+
+print MANPAGE ".TH MHonArc 1\n",
+	      ".SH NAME\n",
+	      "MHonArc \\- Mail\\-to\\-HTML converter\n",
+	      ".SH DESCRIPTION\n",
+	      ".in 0\n",
+	      ".nf\n";
+while (<STDIN>) {
+    next  if /^\s*\[IMAGE\]\s*$/i || /\[contents\]/i || /MifMucker/i;
+    print TXTFILE;
+    s/\\/\\\\/g;
+    s/-/\\-/g;
+    print MANPAGE;
+}
+print MANPAGE ".fi\n",
+	      ".in\n";
+close(MANPAGE);
+close(TXTFILE);
+
+exit 0;

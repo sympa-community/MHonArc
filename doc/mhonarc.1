@@ -1,9 +1,15 @@
+.TH MHonArc 1
+.SH NAME
+MHonArc \- Mail\-to\-HTML converter
+.SH DESCRIPTION
+.in 0
+.nf
 
                                   [INLINE]
                                       
                                   MHonArc
                                       
-                    An Internet mail-to-HTML converter.
+                    An Internet mail\-to\-HTML converter.
                                       
      _________________________________________________________________
                                       
@@ -69,7 +75,7 @@ Table of Contents
        
      * MIME
           + Default Filters
-          + Non-MIME Messages
+          + Non\-MIME Messages
           + Writing Filters
           + Specifying Filters
        
@@ -100,8 +106,8 @@ Table of Contents
     2200 North Lamar #230
     Dallas, TX 75202
     
-    Phone: (214) 953-004 x127
-    FAX: (214) 953-3152
+    Phone: (214) 953\-004 x127
+    FAX: (214) 953\-3152
     
      _________________________________________________________________
                                       
@@ -111,7 +117,7 @@ Table of Contents
                                       
                                  Introduction
                                        
-   _MHonArc_ is a Perl program for converting e-mail messages as
+   _MHonArc_ is a Perl program for converting e\-mail messages as
    specified in RFC 822 and RFC 1521 (_MIME_) to HTML. _MHonArc_ can
    perform the following tasks:
    
@@ -142,7 +148,7 @@ Why Use MHonArc?
      * You have a WWW client, but no MIME mail reader. _MHonArc_ will
        allow you to read MIME messages that includes images, audio,
        video, etc via your Web client.
-     * Muli-platform support: MS-DOS and Unix.
+     * Muli\-platform support: MS\-DOS and Unix.
      * You think the _MHonArc_ logo is really cool, and it deserves to be
        used.
      * You like Perl, and you want to see what it can do.
@@ -152,7 +158,7 @@ Why Use MHonArc?
                                       
 Supported Platforms
 
-   _MHonArc_ (version 1.1, or later) will run under Unix or MS-DOS
+   _MHonArc_ (version 1.1, or later) will run under Unix or MS\-DOS
    operating systems with Perl 4 or 5 installed.
    
      _________________________________________________________________
@@ -167,7 +173,7 @@ Availability
 About the Documentation
 
    The documentation is oriented towards Unix users. However, the section
-   on Installation does conver MS-DOS installation instructions. Notes
+   on Installation does conver MS\-DOS installation instructions. Notes
    are made in the documentation when something may differ due to the
    operating system.
    
@@ -180,10 +186,10 @@ About the Documentation
                                        
    This section instructs you on how to install and get _MHonArc_ running
    on your machine. The section covers _Unix_ installation and
-   _MS-DOS/Windows_ installation.
+   _MS\-DOS/Windows_ installation.
    
    _NOTE_
-          For brevity, anything that applies to MS-DOS also applies to
+          For brevity, anything that applies to MS\-DOS also applies to
           Windows.
           
      _________________________________________________________________
@@ -217,16 +223,16 @@ Extracting the Distribution File
    You must have _gzip_ and _tar_ installed on your system. If _gzip_ is
    not installed, you may obtain _gzip_ at
    <URL:ftp://prep.ai.mit.edu/pub/gnu>. _Tar_ comes with all Unix
-   systems. However, MS-DOS users may have to obtain _tar_.
+   systems. However, MS\-DOS users may have to obtain _tar_.
    
    To extract the file, type the following command at your shell's
    prompt:
    
    _Unix_
-          zcat MHonArc.tar.gz | tar xvof -
+          zcat MHonArc.tar.gz | tar xvof \-
           
-   _MS-DOS_
-          gunzip -dv MHonArc.tar.gz
+   _MS\-DOS_
+          gunzip \-dv MHonArc.tar.gz
           tar xvf MHonArc.tar
           
    A directory called "MHonArc" should be created. The directory contains
@@ -247,7 +253,7 @@ Extracting the Distribution File
    
    OR
    
-   pkunzip -d mhonarc.zip
+   pkunzip \-d mhonarc.zip
    
    _IMPORTANT_
           The directory structure of the zip file must be preserved
@@ -269,12 +275,12 @@ Installing the Software
    extraction of the distribution file.
    
    _Example_: Assuming you are in the directory you extracted the
-   distribution file in, you can type the following on your command-line:
+   distribution file in, you can type the following on your command\-line:
    
    _Unix_
           cd MHonArc
           
-   _MS-DOS_
+   _MS\-DOS_
           cd MHONARC
           
   install.me
@@ -310,20 +316,20 @@ to accept the default values listed in ()'s.
 If directory path does not exist on your system, the installation
 program will create the path for you.
 
------------------------------------------------
+\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-
 Note:  Make sure all pathnames are absolute.
------------------------------------------------
+\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-
 
 Hit <CR> to continue ...
 Perl executable ("/usr/local/bin/perl")
--> /usr/bin/perl
+\-> /usr/bin/perl
 Location to install programs ("/usr/local/bin")
--> /mnt/ehood/bin
+\-> /mnt/ehood/bin
 Location to install libraries ("/usr/local/lib/MHonArc")
--> /mnt/ehood/lib/MHonArc
+\-> /mnt/ehood/lib/MHonArc
 Install documentation ("y")?  y
 Location to install docs ("/usr/local/lib/MHonArc/doc")
--> /mnt/ehood/lib/MHonArc/doc
+\-> /mnt/ehood/lib/MHonArc/doc
 
 You've specified the following:
         Perl location: /usr/bin/perl
@@ -362,35 +368,35 @@ Installing the following into /mnt/ehood/lib/MHonArc/doc
    
    Here is an example install.cfg:
    
-# Should executables be installed. 0 => NO, non-zero => YES.
+# Should executables be installed. 0 => NO, non\-zero => YES.
 #
 $dobin = 1;
 
-# Should libraries be installed. 0 => NO, non-zero => YES.
+# Should libraries be installed. 0 => NO, non\-zero => YES.
 #
 $dolib = 1;
 
-# Should documentation be installed. 0 => NO, non-zero => YES.
+# Should documentation be installed. 0 => NO, non\-zero => YES.
 #
 $dodoc = 1;
 
-# Location for executable.  If using ms-dos, use something like
-# 'C:\\BIN'.
+# Location for executable.  If using ms\-dos, use something like
+# 'C:\\\\BIN'.
 #
 $bindir  = '/usr/local/bin';
 
-# Location for libraries.  If using ms-dos, use something like
-# 'C:\\LIB\\MHONARC'.
+# Location for libraries.  If using ms\-dos, use something like
+# 'C:\\\\LIB\\\\MHONARC'.
 #
 $libdir  = '/usr/local/lib/MHonArc';
 
-# Location for documents.  If using ms-dos, use something like
-# 'C:\\DOC\\MHONARC'.
+# Location for documents.  If using ms\-dos, use something like
+# 'C:\\\\DOC\\\\MHONARC'.
 #
 $docdir  = '/usr/local/lib/MHonArc/doc';
 
-# Location of perl executable.  If using ms-dos, use something like
-# 'C:\\BIN\\PERL.EXE'.
+# Location of perl executable.  If using ms\-dos, use something like
+# 'C:\\\\BIN\\\\PERL.EXE'.
 #
 $perlprg = '/usr/local/bin/perl';
 
@@ -402,25 +408,25 @@ $perlprg = '/usr/local/bin/perl';
      * Anything following a `#' character is ignored.
      * Strings values need to be enclosed in quotes.
      * If you need to use a backslash in a string value, it must be
-       escaped with a backslash. Example: 'C:\\LIB\\MHONARC'. The same
+       escaped with a backslash. Example: 'C:\\\\LIB\\\\MHONARC'. The same
        applies to the '$' character.
-     * All statements must end with a semi-colon.
+     * All statements must end with a semi\-colon.
      * The "1;" line must not be deleted.
        
    _NOTE_
           You can verify the syntax of the configuration file by invoking
-          "perl -c" on the file.
+          "perl \-c" on the file.
           
    After you have successfully executed install.me, _MHonArc_ is ready to
    use.
    
-    MS-DOS Post install.me Note
+    MS\-DOS Post install.me Note
     
    If you would like the ability to run _MHonArc_ like other programs,
    then create a batch file that contains something like the following:
    
 @ECHO OFF
-C:\BIN\PERL.EXE C:\BIN\MHONARC %1 %2 %3 %4 %5 %6 %7 %8 %9
+C:\\BIN\\PERL.EXE C:\\BIN\\MHONARC %1 %2 %3 %4 %5 %6 %7 %8 %9
 
    Of course, you will need to change the paths to Perl and _MHonArc_ to
    suit your systems configuration.
@@ -440,7 +446,7 @@ C:\BIN\PERL.EXE C:\BIN\MHONARC %1 %2 %3 %4 %5 %6 %7 %8 %9
        _MHonArc_'s library files. If you ever need to install _MHonArc_
        in a different location, rerun the install.me program.
        _NOTE_: Location of the Perl exectuble is only relevant for Unix
-       systems. MS-DOS systems do not make use of the "#!" line in
+       systems. MS\-DOS systems do not make use of the "#!" line in
        scripts.
      * _MHonArc_ requires the use of timelocal.pl and newgetopt.pl. These
        libraries are part of the normal Perl distribution.
@@ -473,7 +479,7 @@ Tested Environments
     
      * _MH_
      * _Elm_, _Mail_, _mail_, and any other mail software that stores
-       e-mail in UUCP style mailbox format. UUCP format is where mail
+       e\-mail in UUCP style mailbox format. UUCP format is where mail
        messages are separated by a line beginning with "From " (I.e. the
        word "From" followed by a space). You may need to utilize the
        MSGSEP resource if the message separator is different from
@@ -491,11 +497,11 @@ Tested Environments
        may need to utilize the MSGSEP resource if the message separator
        is different from standard mailbox files.
        
-  MS-DOS
+  MS\-DOS
   
     Mail/News Software
     
-   _MHonArc_ has been tested under MS-DOS with message files created by
+   _MHonArc_ has been tested under MS\-DOS with message files created by
    the following mail and news programs:
    
      * _Eudora_
@@ -507,8 +513,8 @@ Tested Environments
    _MHonArc_ without a batch file if you need to use redirection. For
    example:
    
-   perl c:\bin\mhonarc <one.msg >one.htm
-   perl c:\bin\mhonarc -add <one.msg
+   perl c:\\bin\\mhonarc <one.msg >one.htm
+   perl c:\\bin\\mhonarc \-add <one.msg
    
      _________________________________________________________________
                                       
@@ -539,7 +545,7 @@ Converting MH mail folders or Mailbox files
    mail folder _inbox_. If you are in the directory that contains inbox,
    then you can leave out the "<path>/".
    
-   _MHonArc_ prints out messages showing its progress as your e-mail is
+   _MHonArc_ prints out messages showing its progress as your e\-mail is
    processed. When _MHonArc_ finishes, the following files will be
    created:
    
@@ -551,13 +557,13 @@ Converting MH mail folders or Mailbox files
      * msg*.html: HTML versions of the mail messages, where * represents
        a message number from 0 to the number of message processed minus
        1.
-     * .mhonarc.db (or MHONARC.DB under MS-DOS): This database file is
+     * .mhonarc.db (or MHONARC.DB under MS\-DOS): This database file is
        needed inorder for _MHonArc_ to perform additions of new mail
        messages to the archive. Information is stored to perform mail
        threading updates when new messages are added, as well as any
        resources set via Environment variables, Resource File, and/or
-       command-line Options.
-     * _Other_: Depending on the content-types of the e-mail messages
+       command\-line Options.
+     * _Other_: Depending on the content\-types of the e\-mail messages
        converted, other files may be created for images, videos,
        binaries, etc. See the section on MIME for more information.
        
@@ -575,7 +581,7 @@ Converting MH mail folders or Mailbox files
      * Next, follows the mail header with fields listed in a UL element
        surrounded by HR's.
      * Next, the actual body of the mail message.
-     * Next, links to any follow-up, or referenced, messages. The
+     * Next, links to any follow\-up, or referenced, messages. The
        messages are listed by subject and who they are from. These links
        allows you to easily follow mail threads.
      * Last, are verbose links to the previous mail message, next mail
@@ -583,27 +589,27 @@ Converting MH mail folders or Mailbox files
        
    The following is also done for each mail message processed:
    
-     * Links are created in the "References" and "In-Reply-To" header
+     * Links are created in the "References" and "In\-Reply\-To" header
        fields, and possibly the message body, if the destination
-       message-ids are being processed.
-     * E-mail addresses are converted to "mailto" hyperlinks in "To:",
+       message\-ids are being processed.
+     * E\-mail addresses are converted to "mailto" hyperlinks in "To:",
        "From:", "Cc:", and "Sender:" mail header fields. Currently, not
        all Web browsers support the mailto URL.
      * Newsgroups listed in a "Newsgroups:" mail header field are
        converted to news hyperlinks.
        
    _MHonArc_ allows you to specify more than one mail folder to process
-   on the command-line.
+   on the command\-line.
    
    _Example_
           % mhonarc /home/ehood/mail/inbox1 /home/ehood/mail/inbox2 ...
           
    All the files created will be put into the current working directory,
    by default. You can control the destination of the output location by
-   using the -outdir option.
+   using the \-outdir option.
    
    _Example_
-          % mhonarc -outdir /home/ehood/htmlarchive
+          % mhonarc \-outdir /home/ehood/htmlarchive
           /home/ehood/mail/inbox
           
    Here is a sample session converting a mail folder:
@@ -626,7 +632,7 @@ Writing tmp/threads.html ...
 Adding Messages to an Archive
 
    If you have new messages you want to add to an existing archive, you
-   must utilizing the -add command-line option. With the -add, you can do
+   must utilizing the \-add command\-line option. With the \-add, you can do
    the following:
    
      * Add a mail folder to an archive, or
@@ -635,12 +641,12 @@ Adding Messages to an Archive
    Adding a mail folder to an archive in the current working directory
    can be done like the following:
    
-   % mhonarc -add <path>/mailfolder
+   % mhonarc \-add <path>/mailfolder
    
    If you are not in the same directory as the archive, then you can
-   specify the location of the archive to add to with the -outdir option:
+   specify the location of the archive to add to with the \-outdir option:
    
-   % mhonarc -add -outdir <outdir_path> <path>/mailfolder
+   % mhonarc \-add \-outdir <outdir_path> <path>/mailfolder
    
    _NOTE_
           _MHonArc_ will skip any messages that already exist in the
@@ -651,11 +657,11 @@ Adding Messages to an Archive
    to add a _single_ message read in from standard input.
    
    _Example_
-          % mhonarc -add < single.msg
+          % mhonarc \-add < single.msg
           
           Or, from a pipe:
           
-          % cat single.msg | mhonarc -add
+          % cat single.msg | mhonarc \-add
           
    See the section on Adding Messages for more information and examples
    for adding messages to an archive.
@@ -666,8 +672,8 @@ Converting a single message
 
    _MHonArc_ has the ability to process a single mail message independent
    of creating, or modifying, and archive. To convert a single message to
-   HTML use the -single command-line option. The message to process can
-   be specified by a filename on the command-line, or by reading the
+   HTML use the \-single command\-line option. The message to process can
+   be specified by a filename on the command\-line, or by reading the
    message from standard input if no file is specified. The filtered
    message is sent to standard output. All formatting options apply to
    the single message as with messages being processed for an archive,
@@ -677,10 +683,10 @@ Converting a single message
   Examples
   
    Input from standard input:
-          % mhonarc -single < messagefile > file.html
+          % mhonarc \-single < messagefile > file.html
           
-   Filename on command-line:
-          % mhonarc -single messagefile > file.html
+   Filename on command\-line:
+          % mhonarc \-single messagefile > file.html
           
      _________________________________________________________________
                                       
@@ -689,10 +695,10 @@ Converting a single message
                                       
                                    Overview
                                        
-   This section gives an overview of _MHonArc_'s command-line options and
+   This section gives an overview of _MHonArc_'s command\-line options and
    environment variables. The _MHonArc_ resource file is covered in the
    section Resource File. The resource file allows you to specify most of
-   the resources set by environment variables and command-line options,
+   the resources set by environment variables and command\-line options,
    plus it give you the capability of completely customizing the HTML
    output generated by _MHonArc_.
    
@@ -704,10 +710,10 @@ Synopsis
    
    % mhonarc [_options_] _mhfolder_...
    % mhonarc [_options_] _mailbox_ ...
-   % mhonarc -add [_options_] < _message_
-   % mhonarc -single [_options_] < _message_ > _message.html
-   _% mhonarc -single [_options_] _message_ > _message.html
-   _% mhonarc -rmm [_options_] _msg# _..._
+   % mhonarc \-add [_options_] < _message_
+   % mhonarc \-single [_options_] < _message_ > _message.html
+   _% mhonarc \-single [_options_] _message_ > _message.html
+   _% mhonarc \-rmm [_options_] _msg# _..._
    _
      _________________________________________________________________
                                       
@@ -715,40 +721,40 @@ Options
 
    The following options are available:
    
-  -add
+  \-add
   
    Add new messages to an existing archive. If no mail folder arguments
    are given, _MHonArc_ assumes that a _single_ message is being added to
    the archive via _standard input_. Otherwise, _MHonArc_ adds the
    messages contained in the mail folders specified.
    
-  -dbfile name
+  \-dbfile name
   
    Use _name_ for the name of _MHonArc_ database file. The default is
-   ".mhonarc.db" (or "MHONARC.DB" under MS-DOS).
+   ".mhonarc.db" (or "MHONARC.DB" under MS\-DOS).
    
    _NOTE_
           You should not override the default name unless absolutely
           necessary, and you are confident about what you are doing.
           
-  -docurl url
+  \-docurl url
   
    Use _url_ as the URL to _MHonArc_ documentation. The default is
    "http://www.oac.uci.edu/indiv/ehood/mhonarc.html".
    
-  -editidx
+  \-editidx
   
-   This option tells _MHonArc_ to rewrite the index page and re-edit all
+   This option tells _MHonArc_ to rewrite the index page and re\-edit all
    mail messages in the archive. This option is useful if you need to
    change the layout of the index page and/or messages.
    
-  -footer filename
+  \-footer filename
   
    Insert contents of filename at the bottom of the index page. See
    Include Files in Index Page Customization for more information about
    the footer file.
    
-  -force
+  \-force
   
    Override a lock on an archive if attempts to lock fail. I.e. After
    trying unsuccessfully to lock an archive, _MHonArc_ will still perform
@@ -759,48 +765,48 @@ Options
    process that created the lock abnormally terminated and could not
    perform the proper cleanup procedures.
    
-  -genidx
+  \-genidx
   
    Output an index page to standard output based upon the contents of an
    archive, and utilizing any extra formatting options specified.
    
-  -header filename
+  \-header filename
   
    Insert contents of _filename_ at the beginning of the index page. See
    Include Files in Index Page Customization for more information about
    the header file.
    
-  -help
+  \-help
   
    Print out a help message about _MHonArc_.
    
-  -idxfname name
+  \-idxfname name
   
    Sets the name of the main index file to _name_. The default is
    "maillist.html".
    
-  -idxsize #
+  \-idxsize #
   
    Set the maximum number of messages listed in the indexes.
    
-  -lockdelay #
+  \-lockdelay #
   
    The sleep time, in seconds, between attempts to lock the archive. The
    default value is 3.
    
-  -locktries #
+  \-locktries #
   
    Set the number of time _MHonArc_ tries to lock a mail archive before
    processing new messages. The default value is 10. _MHonArc_ waits
    approximately 3 seconds before each try.
    
-   See Archive Integrity for more information on the -locktries options.
+   See Archive Integrity for more information on the \-locktries options.
    
-  -mailtourl url
+  \-mailtourl url
   
-   Use _url_ for e-mail address hyperlinks in mail message headers. The
+   Use _url_ for e\-mail address hyperlinks in mail message headers. The
    url can contain the following _variables_ that get expanded during
-   run-time:
+   run\-time:
    
    $FROM$
           Who the message is from.
@@ -812,21 +818,21 @@ Options
           The subject of the message.
           
    $TO$
-          Destination e-mail address of link.
+          Destination e\-mail address of link.
           
    The default URL is "mailto:$TO$"
    
-   The -mailtourl option has no effect if the -nomailto option is
+   The \-mailtourl option has no effect if the \-nomailto option is
    specified.
    
-  -maxsize #
+  \-maxsize #
   
    Set the maxinum number of messages allowed in the archive to _#_. If
    messages are added to the archive which would cause the total number
    of messages to exceed _#_, older messages (based on sort method) are
    removed automatically.
    
-  -msgsep expression
+  \-msgsep expression
   
    Use the _expression_ as the Perl regular expression that signifies the
    message separator in Unix mailbox files. The default expression is
@@ -835,54 +841,54 @@ Options
    _NOTE_
           There is a space character after the From.
           
-  -nodoc
+  \-nodoc
   
    Do not print link to documentation at end of index page.
    
-  -nomailto
+  \-nomailto
   
-   Do not convert e-mail addresses in mail headers to mailto hyperlinks.
+   Do not convert e\-mail addresses in mail headers to mailto hyperlinks.
    
-  -nonews
+  \-nonews
   
    Do not convert newsgroups in the Newsgroups: mail header field to news
    hyperlinks.
    
-  -noreverse
+  \-noreverse
   
    Do not perform a reverse listing of the mail messages in the index
    page.
    
-  -nosort
+  \-nosort
   
    Do not sort messages by date. Messages will be in the order they
    appear in the mailboxes/folders. By default, _MHonArc_ sorts messages
    by date sent/received.
    
-   -nosort takes precedence over the -sort option.
+   \-nosort takes precedence over the \-sort option.
    
-  -nothread
+  \-nothread
   
    Do not create a thread index page.
    
-  -notsubsort
+  \-notsubsort
   
    Do not sort threads by subject on thread index page.
    
-  -notreverse
+  \-notreverse
   
    List threads in the thread index with oldest thread first.
    
-  -outdir path
+  \-outdir path
   
    Set destination/location of the HTML mail archive to _path_. By
    default, the current working directory is used.
    
-  -quiet
+  \-quiet
   
    Suppress processing messages when _MHonArc_ is running.
    
-  -rcfile file
+  \-rcfile file
   
    Use file as the resource file for _MHonArc_. _MHonArc_ does the
    following to determine the location of file:
@@ -895,19 +901,19 @@ Options
    See Resource File for more information. There is no default resource
    file.
    
-  -reverse
+  \-reverse
   
    List messages in reverse order of the sorting option specified. For
-   example, if date sorting is specified, -reverse will cause messages to
+   example, if date sorting is specified, \-reverse will cause messages to
    be listed in _reverse_ chronological order.
    
-  -rmm
+  \-rmm
   
-   All non-option command-line arguments are treated as messages to
+   All non\-option command\-line arguments are treated as messages to
    remove from the archive. Messages to remove are denoted by their
    message numbers.
    
-  -savemem
+  \-savemem
   
    Normally, all messages are stored in memory and then written in one
    shot. This option causes _MHonArc_ to write the message data as it is
@@ -918,84 +924,84 @@ Options
    _NOTE_
           The reason more disk I/O is required is that when the message
           data is first written, all the archive navigational link
-          information is non-existant. The information required to
+          information is non\-existant. The information required to
           correctly generate the navigational link information will not
           exist until all messages are processed. Therefore, each new
           message file must be reopened to add in the navigational link
           information after all messages are processed.
           
-  -scan
+  \-scan
   
    List contents of archive to standard output.
    
-  -single
+  \-single
   
    Convert a single mail message to HTML. The message can be specified by
-   a filename on the command-line, or read from standard input if no file
+   a filename on the command\-line, or read from standard input if no file
    is given. The filtered message is sent to standard output.
    
-   The -single option is useful tp convert individual messages to HTML
+   The \-single option is useful tp convert individual messages to HTML
    not related to a specific mail archive. Any option related to how
-   message formatting can be used with the -single option.
+   message formatting can be used with the \-single option.
    
-   The -single takes precedence over the -add option.
+   The \-single takes precedence over the \-add option.
    
-  -sort
+  \-sort
   
    Perform chronological date sorting. This is the default.
    
-  -subsort
+  \-subsort
   
-   Sort messages by subject. Subject sorting is case-insensitive, and
+   Sort messages by subject. Subject sorting is case\-insensitive, and
    begining "Re:", "A", "An", and "The" words are ignored.
    
-  -tidxfname name
+  \-tidxfname name
   
    Sets the name of the thread index file to _name_. The default is
    "threads.html".
    
-  -time
+  \-time
   
    Print out total CPU execution time taken when processing messages.
    Time information is written to standard error.
    
-  -title string
+  \-title string
   
    Set the title of the main index page to _string_. The default is
    "_Mail Index_".
    
-  -thread
+  \-thread
   
    Create a thread index page. This is the default.
    
-  -tlevels
+  \-tlevels
   
    Set the maximum number of nested lists for the thread index page. The
    default is 3.
    
-  -treverse
+  \-treverse
   
    List threads in the thread index with newest thread first.
    
-  -tsubsort
+  \-tsubsort
   
    List threads in the thread index by subject.
    
-  -ttitle string
+  \-ttitle string
   
    Set the title of the thread index page to _string_. The default is
    "_Mail Thread Index_".
    
-  -umask umask
+  \-umask umask
   
    Set the umask of the _MHonArc_ process to _umask_. The value is
    treated as an octal number.
    
   NOTE
   
-   The -no* options always take precedence over their counterparts. For
-   example, if -noreverse and -reverse are both specified on the
-   command-line, the -noreverse will be applied.
+   The \-no* options always take precedence over their counterparts. For
+   example, if \-noreverse and \-reverse are both specified on the
+   command\-line, the \-noreverse will be applied.
    
      _________________________________________________________________
                                       
@@ -1008,7 +1014,7 @@ Environment
   M2H_DBFILE
   
    Sets the name of _MHonArc_ database file. The default is ".mhonarc.db"
-   (or "MHONARC.DB" under MS-DOS).
+   (or "MHONARC.DB" under MS\-DOS).
    
    _NOTE_
           You should not override the default name unless absolutely
@@ -1047,7 +1053,7 @@ Environment
   M2H_LOCKFILE
   
    Set the name of the lock file. The default name use is ".mhonarc.lck"
-   (or "MHONARC.LCK" under MS-DOS).
+   (or "MHONARC.LCK" under MS\-DOS).
    
    _NOTE_
           You should not change the default unless absolutely necessary.
@@ -1065,9 +1071,9 @@ Environment
    
   M2H_MAILTOURL
   
-   Sets the URL for e-mail address hyperlinks in mail message headers.
+   Sets the URL for e\-mail address hyperlinks in mail message headers.
    The URL can contain the following _variables_ that get expanded during
-   run-time:
+   run\-time:
    
    $FROM$
           Who the message is from.
@@ -1079,7 +1085,7 @@ Environment
           The subject of the message.
           
    $TO$
-          Destination e-mail address of link.
+          Destination e\-mail address of link.
           
    The default URL is "mailto:$TO$"
    
@@ -1128,7 +1134,7 @@ Environment
   NOTE
   
    Environment variables may be overriden by the Resource File or
-   command-line Options.
+   command\-line Options.
    
      _________________________________________________________________
                                       
@@ -1139,12 +1145,12 @@ Environment
                                        
    _MHonArc_ supports the ability to read in a resource file to control
    the behavior of _MHonArc_. The resource file allows you to specify
-   most of the resources set by environment variables and command-line
+   most of the resources set by environment variables and command\-line
    options, and it allows you to specify other resources to control
    _MHonArc_'s behavior.
    
    The resource file is specified by the M2H_RCFILE environment variable
-   or the -rcfile command-line option. The command-line option overrides
+   or the \-rcfile command\-line option. The command\-line option overrides
    the environment variable if both are defined.
    
    _NOTE_
@@ -1165,7 +1171,7 @@ Resource Syntax
        is not contained within an element, is ignored. This implies that
        regular text can be put anywhere _outside_ of recognized elements
        for commenting purposes.
-       _NOTE_: You should use SGML comment declarations (<!-- ... -->)
+       _NOTE_: You should use SGML comment declarations (<!\-\- ... \-\->)
        when commenting a resource file. This will eliminate possible
        conflict with later versions of _MHonArc_ if more stricter parsing
        rules are adopted.
@@ -1182,13 +1188,13 @@ Resource Syntax
        previous instances of the element. _Example_: "<EXCS Override>".
        If "Override" is not specified, then the contents of the element
        augment the current setting.
-     * Element names are case-insensitive.
+     * Element names are case\-insensitive.
      * Elements can occur in any order in the resource file.
        
   Resource Variables
   
    Some resource element contents may contain variables. Variables get
-   expanded to strings at run-time.
+   expanded to strings at run\-time.
    
    _NOTE_
           Variable expansion will only take place in resource elements
@@ -1263,7 +1269,7 @@ Resource Elements
    
     NOMAILTO
     
-   Do not convert e-mail addresses in mail headers to mailto hyperlinks.
+   Do not convert e\-mail addresses in mail headers to mailto hyperlinks.
    
     NONEWS
     
@@ -1301,7 +1307,7 @@ Resource Elements
    
     SUBSORT
     
-   Sort messages by subject. Subject sorting is case-insensitive, and
+   Sort messages by subject. Subject sorting is case\-insensitive, and
    begining "Re:", "A", "An", and "The" words are ignored.
    
     THREAD
@@ -1316,7 +1322,7 @@ Resource Elements
     
    Sort thread by subject in thread index page.
    
-  Non-Empty Elements
+  Non\-Empty Elements
   
    The following list of elements contain textual content, therefore,
    each element must be _explicitly_ closed with an element end tag
@@ -1331,7 +1337,7 @@ Resource Elements
     DBFILE
     
    Use _name_ for the name of _MHonArc_ database file. The default is
-   ".mhonarc.db" (or "MHONARC.DB" under MS-DOS).
+   ".mhonarc.db" (or "MHONARC.DB" under MS\-DOS).
    
    _NOTE_
           You should not override the default name unless absolutely
@@ -1371,7 +1377,7 @@ Resource Elements
     ICONS
     
    The ICONS element is used to specify the icons that represent the
-   different content-types of messages. See Icons in Index Page
+   different content\-types of messages. See Icons in Index Page
    Customization for usage of this element.
    
     IDXFNAME
@@ -1400,7 +1406,7 @@ Resource Elements
    
     MAILTOURL
     
-   Url to use for e-mail hyperlinks. See E-mail Links in Message
+   Url to use for e\-mail hyperlinks. See E\-mail Links in Message
    Customization for usage of this element.
    
     MIMEARGS
@@ -1547,8 +1553,8 @@ PDT:7
                                       
 Example Resource File
 
-<!-- MHonArc resource file
-  -->
+<!\-\- MHonArc resource file
+  \-\->
 <SORT>
 <TITLE>
 MHonArc test
@@ -1558,10 +1564,10 @@ MHonArc test
 MHonArc test
 </TTITLE>
 
-<!--=== Index Page Customizations =========================================-->
+<!\-\-=== Index Page Customizations =========================================\-\->
 
-<!-- Have LISTBEGIN contain last updated information
-  -->
+<!\-\- Have LISTBEGIN contain last updated information
+  \-\->
 <LISTBEGIN>
 <address>
 Last updated: $LOCALDATE$<br>
@@ -1575,7 +1581,7 @@ Listing format is the following:
 <p>
 <ul><li>
 <strong>Subject</strong>
-(# of follow-ups)
+(# of follow\-ups)
 <em>From</em><br>
 </ul>
 <p>
@@ -1584,8 +1590,8 @@ Listing format is the following:
 </LISTBEGIN>
 
 
-<!-- A compact listing template
-  -->
+<!\-\- A compact listing template
+  \-\->
 <LITEMPLATE>
 <li>
 <strong>$SUBJECT:40$</strong>
@@ -1602,7 +1608,7 @@ Listing format is the following:
 <p>
 </LISTEND>
 
-<!--=== Thread Index Page Customizations ==================================-->
+<!\-\-=== Thread Index Page Customizations ==================================\-\->
 <THEAD>
 <address>
 Thread index<br>
@@ -1615,36 +1621,36 @@ $NUMOFMSG$ messages<br>
 <hr>
 </THEAD>
 
-<!--=== Message Customizations ============================================-->
+<!\-\-=== Message Customizations ============================================\-\->
 <EXCS override>
 apparently
-errors-to
+errors\-to
 followup
 forward
 lines
-message-id
-mime-
-nntp-
+message\-id
+mime\-
+nntp\-
 originator
 path
 precedence
 received
 replied
-return-path
+return\-path
 status
 via
-x-
+x\-
 </EXCS>
 
 <LABELSTYLES>
--default-
+\-default\-
 subject:strong
 from:strong
 to:strong
 </LABELSTYLES>
 
 <FIELDSTYLES>
--default-
+\-default\-
 subject:strong
 from:strong
 to:strong
@@ -1666,9 +1672,9 @@ MHonArc test archive
 </strong>
 </MSGFOOT>
 
-<!--=== Icons =============================================================-->
+<!\-\-=== Icons =============================================================\-\->
 <ICONS>
-application/octet-stream:http://foo.org/icons/binary.xbm
+application/octet\-stream:http://foo.org/icons/binary.xbm
 application/postscript:http://foo.org/icons/postscript.xbm
 audio/basic:http://foo.org/icons/sound.xbm
 image/gif:http://foo.org/icons/image.xbm
@@ -1708,7 +1714,7 @@ Notes on Resource File
      * If elements have conflicting resource settings (eg. NOSORT and
        SORT), the last element defined takes precedence.
      * Resource file settings override environment variables.
-     * Command-line options override any settings in the resource file.
+     * Command\-line options override any settings in the resource file.
      * If you want to do an exact match of a field in the EXCS element,
        append a '$' after the field name.
        
@@ -1719,15 +1725,15 @@ Notes on Resource File
                                       
                                 Adding Messages
                                        
-   Adding messages to an archive is done via the -add option. If no
+   Adding messages to an archive is done via the \-add option. If no
    mailbox/folder arguments are given, _MHonArc_ assumes that a _single_
    message is being added to the archive via _standard input_. Otherwise,
    _MHonArc_ adds the messages contained in the mail folders specified.
    
    _NOTE_
           _MHonArc_ will skip any messages that already exist in an
-          archive. If a message to be added has a message-ID that equals
-          a message-ID of an archived message, the message is skipped.
+          archive. If a message to be added has a message\-ID that equals
+          a message\-ID of an archived message, the message is skipped.
           
      _________________________________________________________________
                                       
@@ -1737,7 +1743,7 @@ Examples
   
    Here is example session adding an mail folder to an existing archive:
    
-% mhonarc -add test/www
+% mhonarc \-add test/www
 Requiring MIME filter libraries ...
         mhexternal.pl
         mhtxthtml.pl
@@ -1754,10 +1760,10 @@ Writing HTML ...
    using the ".forward" file in your home directory. Here is how I would
    set up my .forward file to invoke _MHonArc_ on incoming mail:
    
-\ehood, "|/mnt/ehood/bin/webnewmail #ehood"
+\\ehood, "|/mnt/ehood/bin/webnewmail #ehood"
 
    _NOTE_ on .forward entry:
-          The "\ehood" tells sendmail to still deposit the incoming
+          The "\\ehood" tells sendmail to still deposit the incoming
           message to my mail spool file. The "#ehood" Bourne shell
           comment is needed to insure the command is unique from another
           user. Otherwise, sendmail may not invoke the program for you or
@@ -1770,8 +1776,8 @@ Writing HTML ...
    
 #!/usr/local/bin/perl
 
-$cmd = "/mnt/ehood/bin/mhonarc -add -quiet " .
- "-outdir /mnt/ehood/public_html/newmail";
+$cmd = "/mnt/ehood/bin/mhonarc \-add \-quiet " .
+ "\-outdir /mnt/ehood/public_html/newmail";
 open(M2H, "|$cmd");
 print M2H <STDIN>;
 close(M2H);
@@ -1793,31 +1799,31 @@ close(M2H);
    webmail is a script executed every night that calls _MHonArc_ to
    perform the update:
    
-#! /bin/csh -f
+#! /bin/csh \-f
 
 umask 022
 setenv M2H_RCFILE $HOME/.mhonarc.rc
 ## WWW messages
-mhonarc -add \
-          -outdir $HOME/public_html/doc/wwwmail \
+mhonarc \-add \\
+          \-outdir $HOME/public_html/doc/wwwmail \\
           $HOME/mail/www
 folder +www >& /dev/null
-refile first-last +www.ar >& /dev/null    # Archive original messages
+refile first\-last +www.ar >& /dev/null    # Archive original messages
 
 ## Tools messages
-mhonarc -add \
-          -outdir $HOME/public_html/doc/toolsmail \
+mhonarc \-add \\
+          \-outdir $HOME/public_html/doc/toolsmail \\
           $HOME/mail/tools $HOME/mail/dtd
 folder +tools >& /dev/null
-refile first-last +tools.ar >& /dev/null  # Archive original messages
+refile first\-last +tools.ar >& /dev/null  # Archive original messages
 folder +dtd >& /dev/null
-refile first-last +dtd.ar >& /dev/null    # Archive original messages
+refile first\-last +dtd.ar >& /dev/null    # Archive original messages
 
 folder +inbox >& /dev/null                # Set current folder to inbox
 
 
    To avoid mail everynight from cron due to output from _MHonArc_, the
-   -quiet option can be used for each call to _MHonArc_, or use the
+   \-quiet option can be used for each call to _MHonArc_, or use the
    following line in your crontab file:
    
 0 0 * * * webmail > /dev/null
@@ -1832,13 +1838,13 @@ folder +inbox >& /dev/null                # Set current folder to inbox
                                       
                                Removing Messages
                                        
-   Removing messages from an archive is done via the -rmm option.
+   Removing messages from an archive is done via the \-rmm option.
    Messages to be deleted are designated by message numbers on the
-   command-line.
+   command\-line.
    
    _Example_
    
-% mhonarc -rmm 24 28 39 48
+% mhonarc \-rmm 24 28 39 48
 Removing messages from ./maillist.html ...
         Removing message 24
         Removing message 28
@@ -1875,16 +1881,16 @@ Scanning an Archive
    You will quickly find out that finding the message numbers for a
    messages you want to remove can be a cumbersome task if all you have
    to work with are the message filenames. To ease this task, _MHonArc_
-   gives you the ability to scan an archives contents via the -scan
-   command-line option.
+   gives you the ability to scan an archives contents via the \-scan
+   command\-line option.
    
   Example
   
-% mhonarc -scan
+% mhonarc \-scan
 100 messages in .:
 
 Msg #  YY/MM/DD  From             Subject
------  --------  ---------------  ---------------------------------------------
+\-\-\-\-\-  \-\-\-\-\-\-\-\-  \-\-\-\-\-\-\-\-\-\-\-\-\-\-\-  \-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-
   513  95/02/09  Rick Silterra    EDComment(sic)
   517  95/02/09  Earl Hood        Re: DTD2HTML
   512  95/02/09  Earl Hood        Re: edc2html
@@ -1908,11 +1914,11 @@ Msg #  YY/MM/DD  From             Subject
    the messages listed in message number order when scanning, use the
    following:
    
-% mhonarc -scan -nosort -noreverse
+% mhonarc \-scan \-nosort \-noreverse
 82 messages in .:
 
 Msg #  YY/MM/DD  From             Subject
------  --------  ---------------  ---------------------------------------------
+\-\-\-\-\-  \-\-\-\-\-\-\-\-  \-\-\-\-\-\-\-\-\-\-\-\-\-\-\-  \-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-
     0  94/05/09  Michael O´Sulli  Re: Finger within an html
     1  94/04/31  John M. Troyer   Re: TROFF to HTML Converters
     2  94/05/04  John D. Kilburg  ANNOUNCE: Chimera 1.53
@@ -1920,10 +1926,10 @@ Msg #  YY/MM/DD  From             Subject
     4  94/05/21  C. Emory Tate    Re: government www?
     5  94/05/24  Daniel W. Conno  Re: Comments on HTML 2.0 document/DTD
     6  94/05/24  Dan Connolly     Re: Validating HTML documents:
-    7  94/05/25  Henrik Frystyk   CERN Common World-Wide Web Library 2.16pre2 A
+    7  94/05/25  Henrik Frystyk   CERN Common World\-Wide Web Library 2.16pre2 A
     8  94/06/04  Denesh Bhabuta   Re: Atari on www (revisited)
-    9  94/06/07  Dale Newfield    ANNOUNCE: Come explore The Edge - SIGGRAPH 94
-   10  94/06/11  Roy T. Fielding  Announcing libwww-perl 0.12
+    9  94/06/07  Dale Newfield    ANNOUNCE: Come explore The Edge \- SIGGRAPH 94
+   10  94/06/11  Roy T. Fielding  Announcing libwww\-perl 0.12
 ...
 
      _________________________________________________________________
@@ -1934,10 +1940,10 @@ Msg #  YY/MM/DD  From             Subject
                            Index Page Customization
                                        
    _MHonArc_ creates an index page with links to all mail messages
-   filtered (unless processing a single message with the -single option).
+   filtered (unless processing a single message with the \-single option).
    _MHonArc_ allows you to have complete customization over the
    appearance of the index page by setting various resource either
-   through environment variables, command-line options, or the resource
+   through environment variables, command\-line options, or the resource
    file.
    
      _________________________________________________________________
@@ -1946,8 +1952,8 @@ Filename
 
    By default, the filename of the index page is "maillist.html".
    However, a different name may be specified with the M2H_IDXFNAME
-   environment variable, the IDXFNAME resource element, or the -idxfname
-   command-line option.
+   environment variable, the IDXFNAME resource element, or the \-idxfname
+   command\-line option.
    
      _________________________________________________________________
                                       
@@ -1966,7 +1972,7 @@ Beginning Markup
    represents the default setting _MHonArc_ uses:
    
 <IDXPGBEGIN>
-<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!DOCTYPE HTML PUBLIC "\-//IETF//DTD HTML 2.0//EN">
 <HTML>
 <HEAD>
 <TITLE>$IDXTITLE$</TITLE>
@@ -1977,27 +1983,27 @@ Beginning Markup
 
    _NOTE_
           Technically, setting the TITLE resource, via the M2H_TITLE
-          environment variable, the TITLE resource element, or the -title
-          command-line option, sets the $IDXTITLE$ resource file
+          environment variable, the TITLE resource element, or the \-title
+          command\-line option, sets the $IDXTITLE$ resource file
           variable.
           
    The resource variables allowed in the IDXPGBEGIN element are the
    following:
    
-     * $DOCURL$ -- URL to documentation
-     * $GMTDATE$ -- Current GMT date.
-     * $IDXFNAME$ -- Filename of main index page.
-     * $IDXSIZE$ -- Max number of messages that may be listed in the
+     * $DOCURL$ \-\- URL to documentation
+     * $GMTDATE$ \-\- Current GMT date.
+     * $IDXFNAME$ \-\- Filename of main index page.
+     * $IDXSIZE$ \-\- Max number of messages that may be listed in the
        index.
-     * $IDXTITLE$ -- The title of the index page.
-     * $LOCALDATE$ -- Current local date.
-     * $NUMOFIDXMSG$ -- Number of message listed.
-     * $NUMOFMSG$ -- Number of messages in the archive.
-     * $OUTDIR$ -- Pathname of archive.
-     * $PROG$ -- Program name.
-     * $TIDXFNAME$ -- Filename of thread index page.
-     * $TIDXTITLE$ -- Title of thread index page.
-     * $VERSION$ -- Program version.
+     * $IDXTITLE$ \-\- The title of the index page.
+     * $LOCALDATE$ \-\- Current local date.
+     * $NUMOFIDXMSG$ \-\- Number of message listed.
+     * $NUMOFMSG$ \-\- Number of messages in the archive.
+     * $OUTDIR$ \-\- Pathname of archive.
+     * $PROG$ \-\- Program name.
+     * $TIDXFNAME$ \-\- Filename of thread index page.
+     * $TIDXTITLE$ \-\- Title of thread index page.
+     * $VERSION$ \-\- Program version.
        
    See Resource Variables for more information on the usage of variables.
    
@@ -2034,7 +2040,7 @@ Include Files
           future releases.
           
    The header file is specified via the M2H_HEADER environment variable,
-   the HEADER resource element, or the -header command-line option. The
+   the HEADER resource element, or the \-header command\-line option. The
    contents of the header file are inserted above the message listing,
    and right after the H1 title element.
    
@@ -2044,7 +2050,7 @@ Include Files
           defined by the IDXPGBEGIN resource file element.
           
    The footer file is specified via the M2H_FOOTER environment variable,
-   the FOOTER resource element, or the -footer command-line option. The
+   the FOOTER resource element, or the \-footer command\-line option. The
    contents of the footer file are inserted after the message listing.
    
    _NOTE_
@@ -2052,7 +2058,7 @@ Include Files
           these tags are automatically provided by _MHonArc_, or defined
           by the IDXPGEND resource file element.
           
-   The header and footer files allow you to incorporate search-forms,
+   The header and footer files allow you to incorporate search\-forms,
    hyperlinks to other pages, or any other HTML markup you like.
    
    It is only necessary to specify the header and/or footer files the
@@ -2075,22 +2081,22 @@ Listing Layout
   
    The LISTBEGIN resource element specifies the text to begin the message
    list. The text can be any valid HTML markup. Plus, _MHonArc_ defines
-   the following variables you may use which get expanded at run-time:
+   the following variables you may use which get expanded at run\-time:
    
-     * $DOCURL$ -- URL to documentation
-     * $GMTDATE$ -- Current GMT date.
-     * $IDXFNAME$ -- Filename of main index page.
-     * $IDXSIZE$ -- Max number of messages that may be listed in the
+     * $DOCURL$ \-\- URL to documentation
+     * $GMTDATE$ \-\- Current GMT date.
+     * $IDXFNAME$ \-\- Filename of main index page.
+     * $IDXSIZE$ \-\- Max number of messages that may be listed in the
        index.
-     * $IDXTITLE$ -- The title of the index page.
-     * $LOCALDATE$ -- Current local date.
-     * $NUMOFIDXMSG$ -- Number of message listed.
-     * $NUMOFMSG$ -- Number of messages in the archive.
-     * $OUTDIR$ -- Pathname of archive.
-     * $PROG$ -- Program name.
-     * $TIDXFNAME$ -- Filename of thread index page.
-     * $TIDXTITLE$ -- Title of thread index page.
-     * $VERSION$ -- Program version.
+     * $IDXTITLE$ \-\- The title of the index page.
+     * $LOCALDATE$ \-\- Current local date.
+     * $NUMOFIDXMSG$ \-\- Number of message listed.
+     * $NUMOFMSG$ \-\- Number of messages in the archive.
+     * $OUTDIR$ \-\- Pathname of archive.
+     * $PROG$ \-\- Program name.
+     * $TIDXFNAME$ \-\- Filename of thread index page.
+     * $TIDXTITLE$ \-\- Title of thread index page.
+     * $VERSION$ \-\- Program version.
        
    _MHonArc_'s LISTBEGIN default value is the following:
    
@@ -2115,35 +2121,35 @@ Listing Layout
    message list item. You may use the following variables which are
    expanded at runtime:
    
-     * $A_ATTR$ -- The NAME and HREF attributes to use in an anchor to
+     * $A_ATTR$ \-\- The NAME and HREF attributes to use in an anchor to
        link to the archived message. The NAME attribute links the
        messages to the index page.
-     * $A_HREF$ -- The HREF attribute to use in an anchor to link to the
+     * $A_HREF$ \-\- The HREF attribute to use in an anchor to link to the
        archived message.
-     * $A_NAME$ -- The NAME attributes to use in an anchor for messages
+     * $A_NAME$ \-\- The NAME attributes to use in an anchor for messages
        to link to the index page.
-     * $DATE$ -- The date of the message.
-     * $DDMMYY$ -- Message date in dd/mm/yy format.
-     * $ICON$ -- The context-type sensistive icon. See Icons for
+     * $DATE$ \-\- The date of the message.
+     * $DDMMYY$ \-\- Message date in dd/mm/yy format.
+     * $ICON$ \-\- The context\-type sensistive icon. See Icons for
        information.
-     * $ICONURL$ -- The URL to the context-type sensistive icon. See
+     * $ICONURL$ \-\- The URL to the context\-type sensistive icon. See
        Icons for information.
-     * $MMDDYY$ -- Message date in mm/dd/yy format.
-     * $NUMFOLUP$ -- Number of follow-ups for the given message.
-     * $FROM$ -- The complete text in the From: field of the message.
-     * $FROMADDR$ -- The e-mail address in the From: field of the
+     * $MMDDYY$ \-\- Message date in mm/dd/yy format.
+     * $NUMFOLUP$ \-\- Number of follow\-ups for the given message.
+     * $FROM$ \-\- The complete text in the From: field of the message.
+     * $FROMADDR$ \-\- The e\-mail address in the From: field of the
        message.
-     * $FROMNAME$ -- The English name of the person in the From: field of
+     * $FROMNAME$ \-\- The English name of the person in the From: field of
        the message. If no English name is found, the username specified
-       in the e-mail address is used.
-     * $MSGNUM$ -- The message numbers assigned to the message by
+       in the e\-mail address is used.
+     * $MSGNUM$ \-\- The message numbers assigned to the message by
        _MHonArc_.
-     * $ORDNUM$ -- The current listing number of the message.
-     * $SUBJECT$ -- The subject text of the message wrapped in an anchor
+     * $ORDNUM$ \-\- The current listing number of the message.
+     * $SUBJECT$ \-\- The subject text of the message wrapped in an anchor
        element that hyperlinks to the message.
-     * $SUBJECTNA$ -- The subject text of the message without the anchor
+     * $SUBJECTNA$ \-\- The subject text of the message without the anchor
        element.
-     * $YYMMDD$ -- Message date in yy/mm/dd format.
+     * $YYMMDD$ \-\- Message date in yy/mm/dd format.
        
    _NOTE_
           Do not specify $A_ATTR$, $A_NAME, and $SUBJECT$ together in the
@@ -2176,7 +2182,7 @@ Listing Layout
 Icons
 
    _MHonArc_ supports the ability to insert icons in the index page for
-   each message based on the message's content-type. For example: You can
+   each message based on the message's content\-type. For example: You can
    have text/plain messages use a different icon than text/html messages.
    
   Defining Icons
@@ -2185,11 +2191,11 @@ Icons
    element in the Resource File. The format of each line in the ICONS
    element is as follows:
    
-   _<content-type>_:_<URL for icon>_
+   _<content\-type>_:_<URL for icon>_
    
-   _<content-type>_ represents a MIME content-type. _<URL for icon>_ is
-   the URL to the icon. The special content-type called "unknown" may be
-   defined to specify the icon to use for non-recognized content-types.
+   _<content\-type>_ represents a MIME content\-type. _<URL for icon>_ is
+   the URL to the icon. The special content\-type called "unknown" may be
+   defined to specify the icon to use for non\-recognized content\-types.
    If unknown is not defined, the text/plain icon is used for unknown
    content types.
    
@@ -2225,7 +2231,7 @@ $ICONURL$<strong>$SUBJECT:40$</strong>
 
    The $ICON$ variable expands to the IMG HTML element with the
    appropriate URL in the SRC attribute to the icon. The ALT attribute of
-   the IMG element contains the content-type of the message, surrounded
+   the IMG element contains the content\-type of the message, surrounded
    by []'s, for use with text based browsers.
    
    $ICONURL$ may also be used if you want redefine the format of the IMG
@@ -2249,7 +2255,7 @@ Examples
    It may be easier to see how the LISTBEGIN, LITEMPLATE, LISTEND
    resource elements work when declared together:
    
-<!-- This represents the default values used by MHonArc -->
+<!\-\- This represents the default values used by MHonArc \-\->
 <LISTBEGIN>
 <UL>
 <LI><A HREF="$TIDXFNAME$">Thread Index</A></LI>
@@ -2288,7 +2294,7 @@ Messages listed in chronological order.  Listing format is the following:
 <blockquote>
 <img src="http://foo.org/gifs/gletter.gif" alt="* ">
 <strong>Subject</strong>
-(# of follow-ups)
+(# of follow\-ups)
 <em>From</em>.
 </blockquote>
 <p>
@@ -2329,7 +2335,7 @@ Beginning Markup
    The MSGPGBEGIN resource file element has the default value:
    
 <MSGPGBEGIN>
-<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!DOCTYPE HTML PUBLIC "\-//IETF//DTD HTML 2.0//EN">
 <HTML>
 <HEAD>
 <TITLE>$SUBJECTNA:72$</TITLE>
@@ -2340,30 +2346,30 @@ Beginning Markup
 
    The following variables may be used in the MSGPGBEGIN element:
    
-     * $DATE$ -- Message date.
-     * $DDMMYY$ -- Message date in dd/mm/yy format.
-     * $DOCURL$ -- URL to documentation.
-     * $FROM$ -- Contents of From field of message.
-     * $FROMADDR$ -- E-mail address contained in From field of message.
-     * $FROMNAME$ -- "English" name contained in From field of message.
-     * $GMTDATE$ -- Current GMT date.
-     * $IDXFNAME$ -- Filename of main index page.
-     * $IDXSIZE$ -- Max number of messages that may be listed in the
+     * $DATE$ \-\- Message date.
+     * $DDMMYY$ \-\- Message date in dd/mm/yy format.
+     * $DOCURL$ \-\- URL to documentation.
+     * $FROM$ \-\- Contents of From field of message.
+     * $FROMADDR$ \-\- E\-mail address contained in From field of message.
+     * $FROMNAME$ \-\- "English" name contained in From field of message.
+     * $GMTDATE$ \-\- Current GMT date.
+     * $IDXFNAME$ \-\- Filename of main index page.
+     * $IDXSIZE$ \-\- Max number of messages that may be listed in the
        index.
-     * $IDXTITLE$ -- The title of the index page.
-     * $LOCALDATE$ -- Current local date.
-     * $MMDDYY$ -- Message date in mm/dd/yy format.
-     * $MSGID$ -- Message ID of message.
-     * $MSGNUM$ -- Number assigned to message by _MHonArc_.
-     * $NUMOFIDXMSG$ -- Number of message listed.
-     * $NUMOFMSG$ -- Number of messages in the archive.
-     * $OUTDIR$ -- Pathname of archive.
-     * $PROG$ -- Program name.
-     * $SUBJECTNA$ -- Message subject text.
-     * $TIDXFNAME$ -- Filename of thread index page.
-     * $TIDXTITLE$ -- Title of thread index page.
-     * $VERSION$ -- Program version.
-     * $YYMMDD$ -- Message date in yy/mm/dd format.
+     * $IDXTITLE$ \-\- The title of the index page.
+     * $LOCALDATE$ \-\- Current local date.
+     * $MMDDYY$ \-\- Message date in mm/dd/yy format.
+     * $MSGID$ \-\- Message ID of message.
+     * $MSGNUM$ \-\- Number assigned to message by _MHonArc_.
+     * $NUMOFIDXMSG$ \-\- Number of message listed.
+     * $NUMOFMSG$ \-\- Number of messages in the archive.
+     * $OUTDIR$ \-\- Pathname of archive.
+     * $PROG$ \-\- Program name.
+     * $SUBJECTNA$ \-\- Message subject text.
+     * $TIDXFNAME$ \-\- Filename of thread index page.
+     * $TIDXTITLE$ \-\- Title of thread index page.
+     * $VERSION$ \-\- Program version.
+     * $YYMMDD$ \-\- Message date in yy/mm/dd format.
        
      _________________________________________________________________
                                       
@@ -2394,28 +2400,28 @@ Header and Footer
    converted message. The default value for both resources is empty. The
    following variables may be used in the MSGHEAD and MSGFOOT content:
    
-     * $DATE$ -- Message date.
-     * $DDMMYY$ -- Message date in dd/mm/yy format.
-     * $DOCURL$ -- URL to documentation.
-     * $FROM$ -- Contents of From field of message.
-     * $FROMADDR$ -- E-mail address contained in From field of message.
-     * $FROMNAME$ -- "English" name contained in From field of message.
-     * $GMTDATE$ -- Current GMT date.
-     * $IDXFNAME$ -- Filename of main index page.
-     * $IDXSIZE$ -- Max number of messages that may be listed in the
+     * $DATE$ \-\- Message date.
+     * $DDMMYY$ \-\- Message date in dd/mm/yy format.
+     * $DOCURL$ \-\- URL to documentation.
+     * $FROM$ \-\- Contents of From field of message.
+     * $FROMADDR$ \-\- E\-mail address contained in From field of message.
+     * $FROMNAME$ \-\- "English" name contained in From field of message.
+     * $GMTDATE$ \-\- Current GMT date.
+     * $IDXFNAME$ \-\- Filename of main index page.
+     * $IDXSIZE$ \-\- Max number of messages that may be listed in the
        index.
-     * $IDXTITLE$ -- The title of the index page.
-     * $LOCALDATE$ -- Current local date.
-     * $MMDDYY$ -- Message date in mm/dd/yy format.
-     * $MSGID$ -- Message ID of message.
-     * $MSGNUM$ -- Number assigned to message by _MHonArc_.
-     * $OUTDIR$ -- Pathname of archive.
-     * $PROG$ -- Program name.
-     * $SUBJECTNA$ -- Message subject text.
-     * $TIDXFNAME$ -- Filename of thread index page.
-     * $TIDXTITLE$ -- Title of thread index page.
-     * $VERSION$ -- Program version.
-     * $YYMMDD$ -- Message date in yy/mm/dd format.
+     * $IDXTITLE$ \-\- The title of the index page.
+     * $LOCALDATE$ \-\- Current local date.
+     * $MMDDYY$ \-\- Message date in mm/dd/yy format.
+     * $MSGID$ \-\- Message ID of message.
+     * $MSGNUM$ \-\- Number assigned to message by _MHonArc_.
+     * $OUTDIR$ \-\- Pathname of archive.
+     * $PROG$ \-\- Program name.
+     * $SUBJECTNA$ \-\- Message subject text.
+     * $TIDXFNAME$ \-\- Filename of thread index page.
+     * $TIDXTITLE$ \-\- Title of thread index page.
+     * $VERSION$ \-\- Program version.
+     * $YYMMDD$ \-\- Message date in yy/mm/dd format.
        
      _________________________________________________________________
                                       
@@ -2444,61 +2450,61 @@ HREF="$TIDXFNAME$#$MSGNUM$">[Thread]</A>
    If no thread index is specified, then the thread link markup is
    removed. The following variables are available:
    
-     * $DATE$ -- Message date.
-     * $DDMMYY$ -- Message date in dd/mm/yy format.
-     * $DOCURL$ -- URL to documentation.
-     * $FROM$ -- Contents of From field of message.
-     * $FROMADDR$ -- E-mail address contained in From field of message.
-     * $FROMNAME$ -- "English" name contained in From field of message.
-     * $GMTDATE$ -- Current GMT date.
-     * $IDXFNAME$ -- Filename of main index page.
-     * $IDXSIZE$ -- Max number of messages that may be listed in the
+     * $DATE$ \-\- Message date.
+     * $DDMMYY$ \-\- Message date in dd/mm/yy format.
+     * $DOCURL$ \-\- URL to documentation.
+     * $FROM$ \-\- Contents of From field of message.
+     * $FROMADDR$ \-\- E\-mail address contained in From field of message.
+     * $FROMNAME$ \-\- "English" name contained in From field of message.
+     * $GMTDATE$ \-\- Current GMT date.
+     * $IDXFNAME$ \-\- Filename of main index page.
+     * $IDXSIZE$ \-\- Max number of messages that may be listed in the
        index.
-     * $IDXTITLE$ -- The title of the index page.
-     * $LOCALDATE$ -- Current local date.
-     * $MMDDYY$ -- Message date in mm/dd/yy format.
-     * $MSGID$ -- Message ID of message.
-     * $MSGNUM$ -- Number assigned to message by _MHonArc_.
-     * $NEXTBUTTON$ -- Next button markup. See Conditional Links for more
+     * $IDXTITLE$ \-\- The title of the index page.
+     * $LOCALDATE$ \-\- Current local date.
+     * $MMDDYY$ \-\- Message date in mm/dd/yy format.
+     * $MSGID$ \-\- Message ID of message.
+     * $MSGNUM$ \-\- Number assigned to message by _MHonArc_.
+     * $NEXTBUTTON$ \-\- Next button markup. See Conditional Links for more
        information.
-     * $NEXTFROM$ -- Contenst of From field of the next message according
+     * $NEXTFROM$ \-\- Contenst of From field of the next message according
        to the list order of the main index.
-     * $NEXTFROMADDR$ -- E-mail address contained in From field of the
+     * $NEXTFROMADDR$ \-\- E\-mail address contained in From field of the
        next message according to the list order of the main index.
-     * $NEXTFROMNAME$ -- English" name contained in From field of the
+     * $NEXTFROMNAME$ \-\- English" name contained in From field of the
        next message according to the list order of the main index.
-     * $NEXTLINK$ -- Next link markup. See Conditional Links for more
+     * $NEXTLINK$ \-\- Next link markup. See Conditional Links for more
        information.
-     * $NEXTMSG$ -- Filename of next message according to the list order
+     * $NEXTMSG$ \-\- Filename of next message according to the list order
        of the main index.
-     * $NEXTMSGNUM$ -- Number assigned to next message according to the
+     * $NEXTMSGNUM$ \-\- Number assigned to next message according to the
        list order of the main index.
-     * $NEXTSUBJECT$ -- Subject of next message according to the list
+     * $NEXTSUBJECT$ \-\- Subject of next message according to the list
        order of the main index.
-     * $NUMOFIDXMSG$ -- Number of message listed.
-     * $NUMOFMSG$ -- Number of messages in the archive.
-     * $PREVBUTTON$ -- Previous button markup. See Conditional Links for
+     * $NUMOFIDXMSG$ \-\- Number of message listed.
+     * $NUMOFMSG$ \-\- Number of messages in the archive.
+     * $PREVBUTTON$ \-\- Previous button markup. See Conditional Links for
        more information.
-     * $PREVFROM$ -- Contenst of From field of the previous message
+     * $PREVFROM$ \-\- Contenst of From field of the previous message
        according to the list order of the main index.
-     * $PREVFROMADDR$ -- E-mail address contained in From field of the
+     * $PREVFROMADDR$ \-\- E\-mail address contained in From field of the
        previous message according to the list order of the main index.
-     * $PREVFROMNAME$ -- English" name contained in From field of the
+     * $PREVFROMNAME$ \-\- English" name contained in From field of the
        previous message according to the list order of the main index.
-     * $PREVLINK$ -- Previous link markup. See Conditional Links for more
+     * $PREVLINK$ \-\- Previous link markup. See Conditional Links for more
        information.
-     * $PREVMSG$ -- Filename of previous message according to the list
+     * $PREVMSG$ \-\- Filename of previous message according to the list
        order of the main index.
-     * $PREVMSGNUM$ -- Number assigned to previous message according to
+     * $PREVMSGNUM$ \-\- Number assigned to previous message according to
        the list order of the main index.
-     * $PREVSUBJECT$ -- Subject of previous message according to the list
+     * $PREVSUBJECT$ \-\- Subject of previous message according to the list
        order of the main index.
-     * $PROG$ -- Program name.
-     * $SUBJECTNA$ -- Message subject text.
-     * $TIDXFNAME$ -- Filename of thread index page.
-     * $TIDXTITLE$ -- Title of thread index page.
-     * $VERSION$ -- Program version.
-     * $YYMMDD$ -- Message date in yy/mm/dd format.
+     * $PROG$ \-\- Program name.
+     * $SUBJECTNA$ \-\- Message subject text.
+     * $TIDXFNAME$ \-\- Filename of thread index page.
+     * $TIDXTITLE$ \-\- Title of thread index page.
+     * $VERSION$ \-\- Program version.
+     * $YYMMDD$ \-\- Message date in yy/mm/dd format.
        
   BOTLINKS
   
@@ -2583,29 +2589,29 @@ $NEXTLINK$
    The following variables may be used within the conditional link
    elements.
    
-     * $NEXTFROM$ -- Contenst of From field of the next message according
+     * $NEXTFROM$ \-\- Contenst of From field of the next message according
        to the list order of the main index.
-     * $NEXTFROMADDR$ -- E-mail address contained in From field of the
+     * $NEXTFROMADDR$ \-\- E\-mail address contained in From field of the
        next message according to the list order of the main index.
-     * $NEXTFROMNAME$ -- English" name contained in From field of the
+     * $NEXTFROMNAME$ \-\- English" name contained in From field of the
        next message according to the list order of the main index.
-     * $NEXTMSG$ -- Filename of next message according to the list order
+     * $NEXTMSG$ \-\- Filename of next message according to the list order
        of the main index.
-     * $NEXTMSGNUM$ -- Number assigned to next message according to the
+     * $NEXTMSGNUM$ \-\- Number assigned to next message according to the
        list order of the main index.
-     * $NEXTSUBJECT$ -- Subject of next message according to the list
+     * $NEXTSUBJECT$ \-\- Subject of next message according to the list
        order of the main index.
-     * $PREVFROM$ -- Contenst of From field of the previous message
+     * $PREVFROM$ \-\- Contenst of From field of the previous message
        according to the list order of the main index.
-     * $PREVFROMADDR$ -- E-mail address contained in From field of the
+     * $PREVFROMADDR$ \-\- E\-mail address contained in From field of the
        previous message according to the list order of the main index.
-     * $PREVFROMNAME$ -- English" name contained in From field of the
+     * $PREVFROMNAME$ \-\- English" name contained in From field of the
        previous message according to the list order of the main index.
-     * $PREVMSG$ -- Filename of previous message according to the list
+     * $PREVMSG$ \-\- Filename of previous message according to the list
        order of the main index.
-     * $PREVMSGNUM$ -- Number assigned to previous message according to
+     * $PREVMSGNUM$ \-\- Number assigned to previous message according to
        the list order of the main index.
-     * $PREVSUBJECT$ -- Subject of previous message according to the list
+     * $PREVSUBJECT$ \-\- Subject of previous message according to the list
        order of the main index.
        
    _WARNING_
@@ -2641,22 +2647,22 @@ Message Layout
    The default value for EXCS is the following:
    
 <EXCS>
-content-
-errors-to
+content\-
+errors\-to
 forward
 lines
-message-id
-mime-
-nntp-
+message\-id
+mime\-
+nntp\-
 originator
 path
 precedence
 received
 replied
-return-path
+return\-path
 status
 via
-x-
+x\-
 </EXCS>
 
    Any fields you specify for the EXCS resource will augment the default
@@ -2672,10 +2678,10 @@ x-
    
     FIELDORDER
     
-   Each line of the FIELDORDER element is the exact case-insensitive name
+   Each line of the FIELDORDER element is the exact case\-insensitive name
    of a message header field. The order the fields are listed is the
    order they will appear in the filtered message. The special field
-   value "-extra-" represents all fields not explicitly specified in the
+   value "\-extra\-" represents all fields not explicitly specified in the
    FIELDORDER element and not excluded by the EXCS element. Extra fields
    are listed in sorted order.
    
@@ -2686,7 +2692,7 @@ to
 subject
 from
 date
--extra-
+\-extra\-
 </FIELDORDER>
 
   Field Formatting
@@ -2703,7 +2709,7 @@ date
    field_name. If html_element is empty, then the field text is not
    wrapped in any element.
    
-   _MHonArc_ defines a special field_name called "-default-". This is
+   _MHonArc_ defines a special field_name called "\-default\-". This is
    default HTML element to wrap field text in if no explicit specific
    element is defined for the label.
    
@@ -2713,7 +2719,7 @@ date
    The default value of FIELDSTYLES is the following:
    
 <FIELDSTYLES>
--default-
+\-default\-
 </FIELDSTYLES>
 
     LABELSTYLES
@@ -2724,7 +2730,7 @@ date
    html_element around field_name. If html_element is empty, then the
    label is not wrapped in any element.
    
-   _MHonArc_ defines a special field_name called "-default-". This is
+   _MHonArc_ defines a special field_name called "\-default\-". This is
    default HTML element to wrap a label in if no explicit specific
    element is defined for the label.
    
@@ -2734,25 +2740,25 @@ date
    The default value of LABELSTYLES is the following:
    
 <LABELSTYLES>
--default-:em
+\-default\-:em
 </LABELSTYLES>
 
      _________________________________________________________________
                                       
 Other Resources
 
-  E-mail Links
+  E\-mail Links
   
     MAILTOURL
     
-   URL to use for e-mail address hyperlinks in e-mail message header
+   URL to use for e\-mail address hyperlinks in e\-mail message header
    fields. The following variables are defined for the MAILTOURL
    resource:
    
-     * $FROM$ -- Who the message is from.
-     * $MSGID$ -- Message ID of the message.
-     * $SUBJECT$ -- The subject of the message.
-     * $TO$ -- Destination e-mail address of link.
+     * $FROM$ \-\- Who the message is from.
+     * $MSGID$ \-\- Message ID of the message.
+     * $SUBJECT$ \-\- The subject of the message.
+     * $TO$ \-\- Destination e\-mail address of link.
        
    _MHonArc_ will use the following URL by default: "mailto:$TO$".
    
@@ -2775,21 +2781,21 @@ Other Resources
                                       
                                      MIME
                                        
-   _MHonArc_ has support for e-mail messages with _Multipurpose Internet
+   _MHonArc_ has support for e\-mail messages with _Multipurpose Internet
    Mail Extensions_ (MIME) as defined in RFC 1521. _MHonArc_ handles the
-   filtering of the various content-types used in MIME in a modular
-   fashion. Since new content-types are occasionally defined for MIME,
+   filtering of the various content\-types used in MIME in a modular
+   fashion. Since new content\-types are occasionally defined for MIME,
    this modularity allows users to add new filters to accomodate new
-   content-types. Also, filters can be hooked in to override _MHonArc's_
+   content\-types. Also, filters can be hooked in to override _MHonArc's_
    default filters, or provide _MHonArc_ with the ability to process
-   existing content-types that it cannot handle currently.
+   existing content\-types that it cannot handle currently.
    
      _________________________________________________________________
                                       
 Default Filters
 
    The default filters provided by _MHonArc_ supports the following MIME
-   content-types, which may be overriden by user-defined filters:
+   content\-types, which may be overriden by user\-defined filters:
    
      * application/*
      * audio/*
@@ -2809,7 +2815,7 @@ Default Filters
    For more information on how to write your filters, or replace existing
    filters, see Writing Filters.
    
-   The next sections describes how _MHonArc_ processes the content-types
+   The next sections describes how _MHonArc_ processes the content\-types
    listed above.
    
   application/*
@@ -2818,9 +2824,9 @@ Default Filters
    to the file into the HTMLized message.
    
    By default, _MHonArc_ ignores any filename specification (the "_name_"
-   attribute as defined in the Content-Type header field) given in the
+   attribute as defined in the Content\-Type header field) given in the
    message when writing the data to disk. _MHonArc_ generates a unique
-   filename with an extenstion based upon sub-type.
+   filename with an extenstion based upon sub\-type.
    
    If you want _MHonArc_ to use the filename, then you can use the
    MIMEARGS resource and specify an argument string of "usename".
@@ -2842,39 +2848,39 @@ application/*:usename
           The use of "usename" is discouraged since it can lead to
           filename conflicts and security problems.
           
-   Here is the current list of _application_ sub-types (with their
+   Here is the current list of _application_ sub\-types (with their
    filename extensions) supported by _MHonArc_:
    
-     * mac-binhex40 (hqx)
-     * octet-stream (bin)
+     * mac\-binhex40 (hqx)
+     * octet\-stream (bin)
      * oda (oda)
      * pdf (pdf)
      * postscript (ps)
      * rtf (rtf)
-     * x-bcpio (bcpio)
-     * x-cpio (cpio)
-     * x-csh (csh)
-     * x-dvi (dvi)
-     * x-gtar (gtar)
-     * x-hdf (hdf)
-     * x-latex (latex)
-     * x-mif (mif)
-     * x-netcdf (cdf)
-     * x-patch (_no extension_; processed by the text/plain filter)
-     * x-sh (sh)
-     * x-shar (shar)
-     * x-sv4cpio (sv4cpio)
-     * x-sv4crc (sv4crc)
-     * x-tar (tar)
-     * x-tcl (tcl)
-     * x-tex (tex)
-     * x-texinfo (texinfo)
-     * x-troff (roff)
-     * x-troff-man (man)
-     * x-troff-me (me)
-     * x-troff-ms (ms)
-     * x-ustar (ustar)
-     * x-wais-source (src)
+     * x\-bcpio (bcpio)
+     * x\-cpio (cpio)
+     * x\-csh (csh)
+     * x\-dvi (dvi)
+     * x\-gtar (gtar)
+     * x\-hdf (hdf)
+     * x\-latex (latex)
+     * x\-mif (mif)
+     * x\-netcdf (cdf)
+     * x\-patch (_no extension_; processed by the text/plain filter)
+     * x\-sh (sh)
+     * x\-shar (shar)
+     * x\-sv4cpio (sv4cpio)
+     * x\-sv4crc (sv4crc)
+     * x\-tar (tar)
+     * x\-tcl (tcl)
+     * x\-tex (tex)
+     * x\-texinfo (texinfo)
+     * x\-troff (roff)
+     * x\-troff\-man (man)
+     * x\-troff\-me (me)
+     * x\-troff\-ms (ms)
+     * x\-ustar (ustar)
+     * x\-wais\-source (src)
      * zip (zip)
        
   audio/*
@@ -2883,12 +2889,12 @@ application/*:usename
    to the file into the HTMLized message. The name of the file created
    follows the same guidelines mentioned under application/*.
    
-   Here is the current list of _audio_ sub-types (with their filename
+   Here is the current list of _audio_ sub\-types (with their filename
    extensions) supported by _MHonArc_:
    
      * basic (snd)
-     * x-aiff (aif)
-     * x-wav (wav)
+     * x\-aiff (aif)
+     * x\-wav (wav)
        
   image/*
   
@@ -2909,7 +2915,7 @@ image/gif:inline
    attribute as the filename if defined:
    
 <MIMEARGS>
-image/x-xbm:inline usename
+image/x\-xbm:inline usename
 </MIMEARGS>
 
    The following represents the default argument settings used by
@@ -2917,39 +2923,39 @@ image/x-xbm:inline usename
    
 <MIMEARGS>
 image/gif:inline
-image/x-xbitmap:inline
-image/x-xbm:inline
+image/x\-xbitmap:inline
+image/x\-xbm:inline
 </MIMEARGS>
 
-   Here is the current list of _image_ sub-types (with their filename
+   Here is the current list of _image_ sub\-types (with their filename
    extensions) supported by _MHonArc_:
    
      * gif (gif)
      * ief (ief)
      * jpeg (jpg)
      * tiff (tif)
-     * x-bmp (bmp)
-     * x-cmu-raster (ras)
-     * x-pcx (pcx)
-     * x-pict (pict)
-     * x-portable-anymap (pnm)
-     * x-pnm (pnm)
-     * x-portable-bitmap (pbm)
-     * x-pbm (pbm)
-     * x-portable-graymap (pgm)
-     * x-pgm (pgm)
-     * x-portable-pixmap (ppm)
-     * x-ppm (ppm)
-     * x-rgb (rgb)
-     * x-xbitmap (xbm)
-     * x-xbm (xbm)
-     * x-xpixmap (xpm)
-     * x-xpm (xpm)
-     * x-xwindowdump (xwd)
-     * x-xwd (xwd)
+     * x\-bmp (bmp)
+     * x\-cmu\-raster (ras)
+     * x\-pcx (pcx)
+     * x\-pict (pict)
+     * x\-portable\-anymap (pnm)
+     * x\-pnm (pnm)
+     * x\-portable\-bitmap (pbm)
+     * x\-pbm (pbm)
+     * x\-portable\-graymap (pgm)
+     * x\-pgm (pgm)
+     * x\-portable\-pixmap (ppm)
+     * x\-ppm (ppm)
+     * x\-rgb (rgb)
+     * x\-xbitmap (xbm)
+     * x\-xbm (xbm)
+     * x\-xpixmap (xpm)
+     * x\-xpm (xpm)
+     * x\-xwindowdump (xwd)
+     * x\-xwd (xwd)
        
    If the image is a GIF or XBM (X bitmap), the HTML IMG element will be
-   used to in-line the image into the HTMLized message.
+   used to in\-line the image into the HTMLized message.
    
   message/news
   
@@ -2971,20 +2977,20 @@ image/x-xbm:inline
    
   multipart/alternative
   
-   _multipart/alternative_ signifies multiple content-types with the same
+   _multipart/alternative_ signifies multiple content\-types with the same
    (or similiar) information. _MHonArc_ processes only the latest part
-   that has a content-type filter.
+   that has a content\-type filter.
    
   multipart/digest
   
    mulltipart/digest signifies a series of included mail messages. Each
    part is processed in the same manner as message/rfc822 unless an
-   explicit content-type is specifed for each part.
+   explicit content\-type is specifed for each part.
    
   multipart/mixed
   
-   _multipart/mixed_ signifies data with multiple content-types. _MHonArc_
-   extracts each part and calls the appropriate content-type filter for
+   _multipart/mixed_ signifies data with multiple content\-types. _MHonArc_
+   extracts each part and calls the appropriate content\-type filter for
    each part, if defined.
    
   multipart/parallel
@@ -3034,19 +3040,19 @@ image/x-xbm:inline
    to the file into the HTMLized message. The name of the file created
    follows the same guidelines mentioned under application/*.
    
-   Here is the current list of _video_ sub-types (with their filename
+   Here is the current list of _video_ sub\-types (with their filename
    extensions) supported by _MHonArc_:
    
      * mpeg (mpg)
      * quicktime (mov)
-     * x-msvideo (avi)
-     * x-sgi-movie (movie)
+     * x\-msvideo (avi)
+     * x\-sgi\-movie (movie)
        
      _________________________________________________________________
                                       
-Non-MIME Messages
+Non\-MIME Messages
 
-   Messages that do not contain a MIME Content-Type header field are
+   Messages that do not contain a MIME Content\-Type header field are
    processed as text/plain messages.
    
      _________________________________________________________________
@@ -3083,15 +3089,15 @@ sub filter {
    *fields
           This is a pointer to an associative array that has broken down
           $head into field label/field value components. The keys are the
-          lower-case representations of the field values. _Example_: If
-          you would like to retrieve the value of the Content-Type field,
-          then use the following: $fields{`content-type'}.
+          lower\-case representations of the field values. _Example_: If
+          you would like to retrieve the value of the Content\-Type field,
+          then use the following: $fields{`content\-type'}.
           
           If a field occurs more than once in a header, _MHonArc_
-          separates the field values in the associative array by a `\034'
+          separates the field values in the associative array by a `\\034'
           character. To make your filter less likely to break due to
           changes in _MHonArc_, you may use the $'X variable instead of
-          `\034'.
+          `\\034'.
           
    $data
           This is a copy of the message (or body part if called in a
@@ -3102,10 +3108,10 @@ sub filter {
           $data represents the orginal data before encoded by the sender.
           If set to 0, $data has not been decoded. The failure to decode
           occurs if _MHonArc_ does not recognizeed the encoding specified
-          in the Content-Transfer-Encoding field.
+          in the Content\-Transfer\-Encoding field.
           
           _MHonArc_ has decoded the data for you if it was encoded in
-          7-Bit, 8-Bit, Binary, Quoted-Printable, Base64, or X-Uuencode.
+          7\-Bit, 8\-Bit, Binary, Quoted\-Printable, Base64, or X\-Uuencode.
           
    $argstring
           This is an optional argument string that may be used to modify
@@ -3148,8 +3154,8 @@ sub filter {
   Using C
   
    If a MIME filter requires the utilization of a C program, or other
-   non-Perl executable, a Perl wrapper must be written for the program
-   in-order to interface with _MHonArc_. The wrapper must follow the
+   non\-Perl executable, a Perl wrapper must be written for the program
+   in\-order to interface with _MHonArc_. The wrapper must follow the
    rules as specified in Function Interface of Filter.
    
      _________________________________________________________________
@@ -3166,20 +3172,20 @@ Specifying Filters
    in user specifed filters into _MHonArc_. The syntax for each line of
    the the MIMEFILTERS element is as follows:
    
-   _<content-type>_:_<routine-name>_:_<file-of-routine>_
+   _<content\-type>_:_<routine\-name>_:_<file\-of\-routine>_
    
-   The definition of each colon-separated value is as follows:
+   The definition of each colon\-separated value is as follows:
    
-   _<content-type>_
-          The MIME content-type the filter processes.
+   _<content\-type>_
+          The MIME content\-type the filter processes.
           
-   _<routine-name>_
+   _<routine\-name>_
           The actual routine name of the filter. The name should be fully
           qualified by the package it is definedi (e.g.
           "mypackage'filter").
           
-   _<file-of-routine>_
-          The name of the file that defines _<routine-name>_. If the file
+   _<file\-of\-routine>_
+          The name of the file that defines _<routine\-name>_. If the file
           is not a full pathname, _MHonArc_ finds the file by looking in
           the standard include paths of Perl, and the paths specified by
           the PERLINC resource element.
@@ -3191,96 +3197,96 @@ Specifying Filters
    The following represents the default value of MIMEFILTERS:
    
 <MIMEFILTERS>
-application/mac-binhex40:m2h_external'filter:mhexternal.pl
-application/octet-stream:m2h_external'filter:mhexternal.pl
+application/mac\-binhex40:m2h_external'filter:mhexternal.pl
+application/octet\-stream:m2h_external'filter:mhexternal.pl
 application/oda:m2h_external'filter:mhexternal.pl
 application/pdf:m2h_external'filter:mhexternal.pl
 application/postscript:m2h_external'filter:mhexternal.pl
 application/rtf:m2h_external'filter:mhexternal.pl
-application/x-bcpio:m2h_external'filter:mhexternal.pl
-application/x-cpio:m2h_external'filter:mhexternal.pl
-application/x-csh:m2h_external'filter:mhexternal.pl
-application/x-dvi:m2h_external'filter:mhexternal.pl
-application/x-gtar:m2h_external'filter:mhexternal.pl
-application/x-hdf:m2h_external'filter:mhexternal.pl
-application/x-latex:m2h_external'filter:mhexternal.pl
-application/x-mif:m2h_external'filter:mhexternal.pl
-application/x-netcdf:m2h_external'filter:mhexternal.pl
-application/x-patch:m2h_text_plain'filter:mhtxtplain.pl
-application/x-sh:m2h_external'filter:mhexternal.pl
-application/x-shar:m2h_external'filter:mhexternal.pl
-application/x-sv4cpio:m2h_external'filter:mhexternal.pl
-application/x-sv4crc:m2h_external'filter:mhexternal.pl
-application/x-tar:m2h_external'filter:mhexternal.pl
-application/x-tcl:m2h_external'filter:mhexternal.pl
-application/x-tex:m2h_external'filter:mhexternal.pl
-application/x-texinfo:m2h_external'filter:mhexternal.pl
-application/x-troff-man:m2h_external'filter:mhexternal.pl
-application/x-troff-me:m2h_external'filter:mhexternal.pl
-application/x-troff-ms:m2h_external'filter:mhexternal.pl
-application/x-troff:m2h_external'filter:mhexternal.pl
-application/x-ustar:m2h_external'filter:mhexternal.pl
-application/x-wais-source:m2h_external'filter:mhexternal.pl
+application/x\-bcpio:m2h_external'filter:mhexternal.pl
+application/x\-cpio:m2h_external'filter:mhexternal.pl
+application/x\-csh:m2h_external'filter:mhexternal.pl
+application/x\-dvi:m2h_external'filter:mhexternal.pl
+application/x\-gtar:m2h_external'filter:mhexternal.pl
+application/x\-hdf:m2h_external'filter:mhexternal.pl
+application/x\-latex:m2h_external'filter:mhexternal.pl
+application/x\-mif:m2h_external'filter:mhexternal.pl
+application/x\-netcdf:m2h_external'filter:mhexternal.pl
+application/x\-patch:m2h_text_plain'filter:mhtxtplain.pl
+application/x\-sh:m2h_external'filter:mhexternal.pl
+application/x\-shar:m2h_external'filter:mhexternal.pl
+application/x\-sv4cpio:m2h_external'filter:mhexternal.pl
+application/x\-sv4crc:m2h_external'filter:mhexternal.pl
+application/x\-tar:m2h_external'filter:mhexternal.pl
+application/x\-tcl:m2h_external'filter:mhexternal.pl
+application/x\-tex:m2h_external'filter:mhexternal.pl
+application/x\-texinfo:m2h_external'filter:mhexternal.pl
+application/x\-troff\-man:m2h_external'filter:mhexternal.pl
+application/x\-troff\-me:m2h_external'filter:mhexternal.pl
+application/x\-troff\-ms:m2h_external'filter:mhexternal.pl
+application/x\-troff:m2h_external'filter:mhexternal.pl
+application/x\-ustar:m2h_external'filter:mhexternal.pl
+application/x\-wais\-source:m2h_external'filter:mhexternal.pl
 application/zip:m2h_external'filter:mhexternal.pl
 audio/basic:m2h_external'filter:mhexternal.pl
-audio/x-aiff:m2h_external'filter:mhexternal.pl
-audio/x-wav:m2h_external'filter:mhexternal.pl
+audio/x\-aiff:m2h_external'filter:mhexternal.pl
+audio/x\-wav:m2h_external'filter:mhexternal.pl
 image/gif:m2h_external'filter:mhexternal.pl
 image/ief:m2h_external'filter:mhexternal.pl
 image/jpeg:m2h_external'filter:mhexternal.pl
 image/tiff:m2h_external'filter:mhexternal.pl
-image/x-bmp:m2h_external'filter:mhexternal.pl
-image/x-cmu-raster:m2h_external'filter:mhexternal.pl
-image/x-pbm:m2h_external'filter:mhexternal.pl
-image/x-pcx:m2h_external'filter:mhexternal.pl
-image/x-pgm:m2h_external'filter:mhexternal.pl
-image/x-pict:m2h_external'filter:mhexternal.pl
-image/x-pnm:m2h_external'filter:mhexternal.pl
-image/x-portable-anymap:m2h_external'filter:mhexternal.pl
-image/x-portable-bitmap:m2h_external'filter:mhexternal.pl
-image/x-portable-graymap:m2h_external'filter:mhexternal.pl
-image/x-portable-pixmap:m2h_external'filter:mhexternal.pl
-image/x-ppm:m2h_external'filter:mhexternal.pl
-image/x-rgb:m2h_external'filter:mhexternal.pl
-image/x-xbitmap:m2h_external'filter:mhexternal.pl
-image/x-xbm:m2h_external'filter:mhexternal.pl
-image/x-xpixmap:m2h_external'filter:mhexternal.pl
-image/x-xpm:m2h_external'filter:mhexternal.pl
-image/x-xwd:m2h_external'filter:mhexternal.pl
-image/x-xwindowdump:m2h_external'filter:mhexternal.pl
+image/x\-bmp:m2h_external'filter:mhexternal.pl
+image/x\-cmu\-raster:m2h_external'filter:mhexternal.pl
+image/x\-pbm:m2h_external'filter:mhexternal.pl
+image/x\-pcx:m2h_external'filter:mhexternal.pl
+image/x\-pgm:m2h_external'filter:mhexternal.pl
+image/x\-pict:m2h_external'filter:mhexternal.pl
+image/x\-pnm:m2h_external'filter:mhexternal.pl
+image/x\-portable\-anymap:m2h_external'filter:mhexternal.pl
+image/x\-portable\-bitmap:m2h_external'filter:mhexternal.pl
+image/x\-portable\-graymap:m2h_external'filter:mhexternal.pl
+image/x\-portable\-pixmap:m2h_external'filter:mhexternal.pl
+image/x\-ppm:m2h_external'filter:mhexternal.pl
+image/x\-rgb:m2h_external'filter:mhexternal.pl
+image/x\-xbitmap:m2h_external'filter:mhexternal.pl
+image/x\-xbm:m2h_external'filter:mhexternal.pl
+image/x\-xpixmap:m2h_external'filter:mhexternal.pl
+image/x\-xpm:m2h_external'filter:mhexternal.pl
+image/x\-xwd:m2h_external'filter:mhexternal.pl
+image/x\-xwindowdump:m2h_external'filter:mhexternal.pl
 message/partial:m2h_text_plain'filter:mhtxtplain.pl
 text/html:m2h_text_html'filter:mhtxthtml.pl
 text/plain:m2h_text_plain'filter:mhtxtplain.pl
 text/richtext:m2h_text_plain'filter:mhtxtplain.pl
 text/setext:m2h_text_setext'filter:mhtxtsetext.pl
-text/tab-separated-values:m2h_text_plain'filter:mhtxtplain.pl
-text/x-html:m2h_text_html'filter:mhtxthtml.pl
-text/x-setext:m2h_text_setext'filter:mhtxtsetext.pl
+text/tab\-separated\-values:m2h_text_plain'filter:mhtxtplain.pl
+text/x\-html:m2h_text_html'filter:mhtxthtml.pl
+text/x\-setext:m2h_text_setext'filter:mhtxtsetext.pl
 video/mpeg:m2h_external'filter:mhexternal.pl
 video/quicktime:m2h_external'filter:mhexternal.pl
-video/x-msvideo:m2h_external'filter:mhexternal.pl
-video/x-sgi-movie:m2h_external'filter:mhexternal.pl
+video/x\-msvideo:m2h_external'filter:mhexternal.pl
+video/x\-sgi\-movie:m2h_external'filter:mhexternal.pl
 </MIMEFILTERS>
 
   MIMEARGS
   
    The MIMEARGS resource may be used to pass optional arguments to
    filters to control their behavior. Arguments may be defined on a per
-   content-type basis, or for a specific filter itself. The syntax for
+   content\-type basis, or for a specific filter itself. The syntax for
    each line of the the MIMEARGS element is as follows:
    
-   _<content-type>_:_<argument-string>_
+   _<content\-type>_:_<argument\-string>_
    
    Or,
    
-   _<filter-name>_:_<argument-string>_
+   _<filter\-name>_:_<argument\-string>_
    
    The format of argument strings is dependent on the filter that
-   processes _<content-type>_ or by the specified filter,
-   _<filter-name>_.
+   processes _<content\-type>_ or by the specified filter,
+   _<filter\-name>_.
    
    If an argument string is defined for a filter explicitly and for a
-   content-type that the filter processes, the content-type string will
+   content\-type that the filter processes, the content\-type string will
    override the filter string.
    
     Examples
@@ -3290,13 +3296,13 @@ video/x-sgi-movie:m2h_external'filter:mhexternal.pl
    
 <MIMEARGS>
 image/gif:inline
-image/x-xbitmap:inline
-image/x-xbm:inline
+image/x\-xbitmap:inline
+image/x\-xbm:inline
 </MIMEARGS>
 
    The following example tells the filter that deals handles
-   content-types that cannot be converted directly into HTML to use the
-   "_name_" attribute as defined in the Content-Type header field as the
+   content\-types that cannot be converted directly into HTML to use the
+   "_name_" attribute as defined in the Content\-Type header field as the
    name of the file generated:
    
 <MIMARGS>
@@ -3307,7 +3313,7 @@ m2h_external'filter:usename
    attribute as the filename if defined:
    
 <MIMEARGS>
-image/x-xbm:inline usename
+image/x\-xbm:inline usename
 </MIMEARGS>
 
      _________________________________________________________________
@@ -3326,10 +3332,10 @@ OS Detection
 
    _MHonArc_ will automatically detect which operating system it is
    running under. If the following list of conditions are true, _MHonArc_
-   assumes it is running under MS-DOS:
+   assumes it is running under MS\-DOS:
    
      * The COMSPEC environment variable is defined.
-     * The value of the COMSPEC environment variable is a legal MS-DOS
+     * The value of the COMSPEC environment variable is a legal MS\-DOS
        pathname.
      * The value of the COMSPEC environment variable is an executable
        file.
@@ -3339,7 +3345,7 @@ OS Detection
    
    _NOTE_
           The previous conditions are used since the conditions will
-          exist if Perl has been installed on an MS-DOS machine. None of
+          exist if Perl has been installed on an MS\-DOS machine. None of
           the above conditions exist when Perl is installed on a Unix
           system.
           
@@ -3357,22 +3363,22 @@ Processing Steps
        for more information.
      * Reads the database file. The name, and location, of the database
        file can be explicitly specified via the M2H_DBFILE and M2H_OUTDIR
-       environment variables or the command-line options -dbfile and
-       -outdir. Otherwise, the current working directory is used.
+       environment variables or the command\-line options \-dbfile and
+       \-outdir. Otherwise, the current working directory is used.
        _NOTE_: _The database file must be in the same location as the
-       archive since the _M2H_OUTDIR_ variable and _-outdir_ option also
+       archive since the _M2H_OUTDIR_ variable and _\-outdir_ option also
        specify the location of the archive_.
        The database file contains data to update any mail threads and the
        resource settings when _MHonArc_ was last invoked. This allows new
        messages to contain the same formatting/resource specifications as
-       existing messages in the archive without having to re-specify the
+       existing messages in the archive without having to re\-specify the
        resources each time new messages are added. Resources defined in
        the database file override the environment variables.
        _NOTE_: _If no database file is found, MHonArc will create a new
        archive_.
      * Read the _MHonArc_ resource file, _if specified_. The resource
        file will override any settings contained in the database file.
-     * Read the settings specified on the command-line. Command-line
+     * Read the settings specified on the command\-line. Command\-line
        options override any settings in the database and/or resource
        file.
      * Update archive.
@@ -3395,11 +3401,11 @@ Archive Integrity
      * _MHonArc_ creates a lock file, ".mhonarc.lck", when
        creating/updating an archive. The lock file insures that only one
        _MHonArc_ process is modifying an archive at any given moment. The
-       -locktries command-line option, or the M2H_LOCKTRIES environment
+       \-locktries command\-line option, or the M2H_LOCKTRIES environment
        variable, allows you to control how long a given _MHonArc_ process
        will wait if an archive is currently locked. If _MHonArc_ can not
        lock the archive after the specified number of tries, _MHonArc_
-       will exit, unless the -force option is specified.
+       will exit, unless the \-force option is specified.
      * _MHonArc_ will ignore the following signals once messages are
        actually being written to disk: SIGABRT, SIGHUP, SIGINT, SIGQUIT,
        SIGPIPE, SIGTERM. Possible archive corruption can still occur if a
@@ -3429,10 +3435,10 @@ File Formats
    
    The comment declarations look like the following:
    
-<!--X-Body-Begin-->
-<!--X-User-Header-->
-<!--X-User-Header-End-->
-<!--X-TopPNI-->
+<!\-\-X\-Body\-Begin\-\->
+<!\-\-X\-User\-Header\-\->
+<!\-\-X\-User\-Header\-End\-\->
+<!\-\-X\-TopPNI\-\->
 ...
 
   Derived Files
@@ -3440,7 +3446,7 @@ File Formats
    Derived files are files that are generated by the MIME filters. These
    files are created when the data being processed in messages cannot be
    converted to HTML (eg. images, postscript, video, binaries). The
-   format of these files depend on the content-type of the data.
+   format of these files depend on the content\-type of the data.
    
      _________________________________________________________________
                                       
@@ -3448,7 +3454,7 @@ Notes
 
      * Here is the explicit order of decreasing precedence when setting
        resources/options:
-          + command-line options (_highest precedence_)
+          + command\-line options (_highest precedence_)
           + resource file
           + database file
           + environment variables (_lowest precedence_)
@@ -3461,11 +3467,11 @@ Notes
        many mail messages are being converted. If you are processing
        multiple mailboxes/folders and worried about memory, you can try
        the following:
-          + Invoke _MHonArc_ on each one separately using the -add
+          + Invoke _MHonArc_ on each one separately using the \-add
             option.
-          + Or, invoke _MHonArc_ with the -savemem option.
+          + Or, invoke _MHonArc_ with the \-savemem option.
      * The database file, and the index pages, are completely rewritten
-       evertime new messages are added. This may cause slight slow-downs
+       evertime new messages are added. This may cause slight slow\-downs
        when archives become very large.
      * When reading _MH_ mail folders, mail message are assumed to have
        numeric filenames.
@@ -3505,14 +3511,14 @@ Notes
                                       
 Informative messages
 
-   Informative messages may be suppressed via the -quiet command-line
+   Informative messages may be suppressed via the \-quiet command\-line
    option. Only the more important Informative messages are listed here.
    
-  Could not process message with given Content-Type: ...
+  Could not process message with given Content\-Type: ...
   
    _MHonArc_ will output this statement _in_ filtered mail messages for
-   content-types it is unable to process. See Default Filters in MIME for
-   content-types that _MHonArc_ supports by default. See Writing Filters
+   content\-types it is unable to process. See Default Filters in MIME for
+   content\-types that _MHonArc_ supports by default. See Writing Filters
    for adding new filters into _MHonArc_.
    
    This is the only Informative message that does not go to standard
@@ -3542,7 +3548,7 @@ Informative messages
    process is modifying the archive. This can occur if _MHonArc_ is
    abnormally terminated. If you know that no other _MHonArc_ process is
    editting the archive you are try to modify, then manually remove the
-   lock file or use the -force option.
+   lock file or use the \-force option.
    
    See Archive Integrity for more information.
    
@@ -3573,7 +3579,7 @@ Warnings
    Indicates _MHonArc_ was unable to create the database file _<dbfile>_
    for the mail archive created/modified in _<outdir>_. This message can
    occur if _<outdir>_ permissions changed during _MHonArc_ execution,
-   the existing _<dbfile>_ is read-only, or the file system is full.
+   the existing _<dbfile>_ is read\-only, or the file system is full.
    
    This message can be severe because no future add operations can be
    performed to the archive.
@@ -3635,7 +3641,7 @@ Errors
   ERROR: Unable to create <file>
   
    _MHonArc_ was unable to create _<file>_. This message can occur if the
-   directory being written to is not writable, a read-only file with the
+   directory being written to is not writable, a read\-only file with the
    same name exists, or the file system is full.
    
   ERROR: Unable to create <lockfile> after <#> tries
@@ -3647,7 +3653,7 @@ Errors
    the archive. This can occur if _MHonArc_ is abnormally terminated. If
    you know that no other _MHonArc_ process is editting the archive you
    are try to modify, then manually remove the lock file or use the
-   -force option.
+   \-force option.
    
   ERROR: Unable to open <file>
   
@@ -3657,7 +3663,7 @@ Errors
   ERROR: Unable to require newgetopt.pl
   
    The newgetopt.pl library is needed for _MHonArc_ to parse the
-   command-line. newgetopt.pl is part of the standard Perl distribution.
+   command\-line. newgetopt.pl is part of the standard Perl distribution.
    Make sure Perl has been correctly installed at your site.
    
   ERROR: Unable to require timelocal.pl
@@ -3707,7 +3713,7 @@ Perl Messages
           
    _MIME_
           Multipurpose Internet Mail Extensions. MIME allows the
-          transmission of non-ASCII data, and mixed content data, in
+          transmission of non\-ASCII data, and mixed content data, in
           electronic mail messages.
           
    _MH_
@@ -3735,24 +3741,24 @@ Perl Messages
                                       
 Mailing List
 
-   A mailing list, mhonarc@rosat.mpe-garching.mpg.de, is available to
+   A mailing list, mhonarc@rosat.mpe\-garching.mpg.de, is available to
    provide a discussion forum on the usage and development of _MHonArc_.
    Appropriate topics for the list include: usage questions, bug reports,
    behavioral enhancements, documentation bugs, and general help.
    
    To subscribe to the mailing list, send mail to
-   mhonarc-request@rosat.mpe-garching.mpg.de with the command,
+   mhonarc\-request@rosat.mpe\-garching.mpg.de with the command,
    
 subscribe
 
    as the message body.
    
-   If you send mail mhonarc@rosat.mpe-garching.mpg.de, your message will
+   If you send mail mhonarc@rosat.mpe\-garching.mpg.de, your message will
    be distributed to all subscribers on the list.
    
    The mailing list is archived by Majordomo. You can also use the WWW to
    access the archive (with full text search using _glimpse_) at
-   <URL:http://www.rosat.mpe-garching.mpg.de/mailing-lists/mhonarc/>
+   <URL:http://www.rosat.mpe\-garching.mpg.de/mailing\-lists/mhonarc/>
    
      _________________________________________________________________
                                       
@@ -3767,13 +3773,15 @@ People
    _Steve Pacenka_
           sp17@cornell.edu
           Contributing developer. Worked on isolating code that would
-          conflict with MS-DOS. Contact for MS-DOS installation problems
-          or MS-DOS usage issues.
+          conflict with MS\-DOS. Contact for MS\-DOS installation problems
+          or MS\-DOS usage issues.
           
    _Achim Bohnet_
-          ach@rosat.mpe-garching.mpg.de
+          ach@rosat.mpe\-garching.mpg.de
           Contributing developer. Administrator, and maintainer, of the
           _MHonArc_ mailing list.
           
      _________________________________________________________________
                                       
+.fi
+.in
