@@ -6,7 +6,7 @@
 
 <!--X-NavButtons-Start-->
 <p align=center>
-[<a href="usage.html">Prev</a>][<a href="indexpgs.html">Next</a>][<a href="faq.html">TOC</a>][<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html">Home</a>]
+[<a href="usage.html">Prev</a>][<a href="indexpgs.html">Next</a>][<a href="faq.html">TOC</a>][<a href="http://www.mhonarc.org/">Home</a>]
 </p>
 <!--X-NavButtons-End-->
 
@@ -28,29 +28,30 @@
 <li><a href="#jumps">Why are there "jumps" in message numbers?</a></li>
 <li><a href="#dups">Why do some messages get re-added each time MHonArc processes a mail folder?</a></li>
 <li><a href="#remove">How do I remove messages from an archive?</a></li>
+<li><a href="#tombox">Can I convert an archive back to mailbox format?</a></li>
 </ul>
 <!--X-TOC-End-->
 
 <!-- ??????????????????????????????????????????????????????????????? -->
 <hr noshade size=1>
 <table border=0>
-<tr valign=top><td><img src="monicon.gif" align="bottom" alt=""></td><td>
+<tr valign=top><td><img src="monicon.png" align="bottom" alt=""></td><td>
 <h3><b><a name="split">Why does a message get split into mulitple messages with no headers?</a></b></h3>
 </td></tr></table>
 
 <P>If you are processing UUCP mailbox files, messages are
-separated by a line starting with "<CODE>From </CODE>" (ie. The
-word "<CODE>From</CODE>" followed by a space). Some mail software
-will prefix lines in message bodies with a `<CODE>&gt;</CODE>'
+separated by a line starting with "<code>From </code>" (ie. The
+word "<code>From</code>" followed by a space). Some mail software
+will prefix lines in message bodies with a `<code>&gt;</code>'
 to avoid MUA's from incorrectly treating the line as a message
 separator. However, some mail software doesn't.  </P>
 
 <P>To avoid incorrect separator detection, many MUAs perform
-a more stricter detection of separators beyond "<CODE>From </CODE>".
+a more stricter detection of separators beyond "<code>From </code>".
 MHonArc, by default, will treat lines starting
-with "<CODE>From </CODE>" as a message separator, which can lead to
+with "<code>From </code>" as a message separator, which can lead to
 incorrect message termination if the From line has not been escaped
-with a `<CODE>&gt;</CODE>'.  </P>
+with a `<code>&gt;</code>'.  </P>
 
 <P>To fix the problem, use the <strong>MSGSEP</strong> resource to
 instruct MHonArc to use a stricter test detecting a message
@@ -81,13 +82,74 @@ environments.
 resource available in v2.0 and later.  The CONLEN resource, when set, tells
 MHonArc to utilize the <code>Content-Length</code> fields
 in the message head.  If your MTA defines this field accurately,
-then you can utilize this
-feature.  </p>
+then you can utilize this feature.
+Sun Solaris' delivery agent will define the
+<tt>Content-Length</tt> field for messages delivered to local users.
+</p>
+<p>If you use Procmail to filter your mail,
+you can try the following Procmail recipe (contributed by
+<a href="mailto:lindsey@ncsa.uiuc.edu">Christopher Lindsey</a>):
+</p>
+<blockquote>
+<p>However, one can add a Content-Length: header with everyone's favorite
+tool, procmail.  :)  Here's a recipe borrowed from David Tamkin about
+9 moons ago:
+</p>
+<pre>
+  :0fhw # B won't help; size conditions ignore H and B flags on the :0 line
+  * ! ^Content-Length:.*[0-9]
+  * 1^1 B ?? &gt;1
+  | formail -a "Content-Length:  $="
+</pre>
+<p>So if you want to count on Content-Length, the message could be
+piped into procmail with a specific procmailrc file which would 
+do this counting and then call MHonArc.
+</p>
+</blockquote>
+
+<p>If <a href="http://www.sendmail.org/">sendmail</a> is
+your system's MTA and you use Procmail as your local delivery agent,
+you can configure things to have <tt>Content-Length</tt> defined
+for all locally delivered mail.  The following technique is
+contributed by
+<a href="mailto:tibbs@math.uh.edu">Jason L Tibbitts III</a>:
+</p>
+<blockquote>
+<p>I use Procmail as my local delivery agent.  I have the following extremely
+disgusting settings in my .mc (M4 config) file to add in a Content-Length:
+header, <u>but I'm <b>not</b> sure if I would recommend that anyone
+actually think of using this</u>:
+</p>
+<pre>
+define(`LOCAL_MAILER_FLAGS',`SPfhn9Z')
+define(`LOCAL_MAILER_ARGS',`procmail -a $h -d $u')
+
+LOCAL_CONFIG
+#
+# Add fake Content-Length Header for local mailer
+# This is corrected by Procmail
+# Note that the Z flag is used here; if Z is ever defined, this
+#  will break something
+H?Z?Content-Length: 0000000000
+</pre>
+</blockquote>
+
+<p>If possible, try to avoid relying on the use of
+<tt>Content-Length</tt> since it is hard to guarantee that it is
+set properly.  When <b>CONLEN</b> is specified, MHonArc will read at
+least the number of bytes specified by <tt>Content-Length</tt> before
+checking for the message separator, as defined by the <b>MSGSEP</b>
+resource.  Therefore, the value of <tt>Content-Length</tt> can be less
+than the actual message size, and message extraction will probably
+work as expected.  However, if <tt>Content-Length</tt> for a message
+has a value that is larger than the actual size, MHonArc may include
+the content of the next message as part of the current message.
+</p>
 
 <!-- ??????????????????????????????????????????????????????????????? -->
 <hr noshade size=1>
 <table border=0>
-<tr valign=top><td><img src="monicon.gif" align="bottom" alt=""></td><td>
+<tr valign=top><td><img src="monicon.png" align="bottom" alt=""></td><td>
 <h3><b><a name="move">Can I move a message from one archive to another?</a></b></h3>
 </td></tr></table>
 
@@ -98,7 +160,7 @@ appropriate HTML version of the message from the source archive.  </P>
 <!-- ??????????????????????????????????????????????????????????????? -->
 <hr noshade size=1>
 <table border=0>
-<tr valign=top><td><img src="monicon.gif" align="bottom" alt=""></td><td>
+<tr valign=top><td><img src="monicon.png" align="bottom" alt=""></td><td>
 <h3><b><a name="reconstruct">Can I reconstruct a database from the HTML messages?</a></b></h3>
 </td></tr></table>
 
@@ -112,7 +174,7 @@ usage information.
 <!-- ??????????????????????????????????????????????????????????????? -->
 <hr noshade size=1>
 <table border=0>
-<tr valign=top><td><img src="monicon.gif" align="bottom" alt=""></td><td>
+<tr valign=top><td><img src="monicon.png" align="bottom" alt=""></td><td>
 <h3><b><a name="dynamic">Is it safe to add messages to an archive as they are received?</a></b></h3>
 </td></tr></table>
 
@@ -139,7 +201,7 @@ from MHonArc.
 <!-- ??????????????????????????????????????????????????????????????? -->
 <hr noshade size=1>
 <table border=0>
-<tr valign=top><td><img src="monicon.gif" align="bottom" alt=""></td><td>
+<tr valign=top><td><img src="monicon.png" align="bottom" alt=""></td><td>
 <h3><b><a name="forward">So it is safe.  How do I do it??</a></b></h3>
 </td></tr></table>
 
@@ -169,15 +231,15 @@ assume it is my account.
 Here is how to set up the <tt>.forward</tt> file
 to invoke MHonArc on incoming mail: </P>
 
-<PRE>
+<pre>
 \ehood, "|/home/ehood/bin/webnewmail #ehood"
-</PRE>
+</pre>
 
 <DL>
-<DT><STRONG>NOTE</STRONG> on <tt>.forward</tt> entry:
-<DD><P> The "<CODE>\ehood</CODE>" tells <tt>sendmail</tt>
+<DT><strong>NOTE</strong> on <tt>.forward</tt> entry:
+<DD><P> The "<code>\ehood</code>" tells <tt>sendmail</tt>
 to still deposit the incoming message to my mail spool file. The
-"<CODE>#ehood</CODE>" Bourne shell comment is needed to insure the
+"<code>#ehood</code>" Bourne shell comment is needed to insure the
 command is unique from another user. Otherwise, <tt>sendmail</tt>
 may not invoke the program for you or the other user.
 </P></DL>
@@ -189,7 +251,7 @@ the <tt>.forward</tt> file simple, but you can call MHonArc
 directly if you want. Here is the code to the
 <tt>webnewmail</tt> program: </P>
 
-<PRE>
+<pre>
 #!/usr/local/bin/perl
 # Edit above path to point to where perl is on your system.
 
@@ -213,16 +275,29 @@ $MHonArc = "/home/ehood/bin/mhonarc";
 
 require $MHonArc;
 
-</PRE>
+</pre>
 
 <p>The <tt>webnewmail</tt> program has to have the executable
 bit set.  This is achieved by using "<tt><b>chmod a+x webnewmail</b></tt>".
 </p>
 
+<table border=0 cellpadding=4>
+<tr valign=top>
+<td><strong>NOTE</strong></td>
+<td><p>For better scalability and resource usage, the author
+recommends calling MHonArc from a facility like <b><tt>cron</tt></b>,
+which is provided on Unix-based operating systems.
+For those unfamiliar cron, it is a daemon that allows the execution
+of commands on scheduled basis.
+</p>
+</td>
+</tr>
+</table>
+
 <!-- ??????????????????????????????????????????????????????????????? -->
 <hr noshade size=1>
 <table border=0>
-<tr valign=top><td><img src="monicon.gif" align="bottom" alt=""></td><td>
+<tr valign=top><td><img src="monicon.png" align="bottom" alt=""></td><td>
 <h3><b><a name="majordomo">How can I do it with Majordomo lists?</a></b></h3>
 </td></tr></table>
 
@@ -270,7 +345,7 @@ matter.
 <!-- ??????????????????????????????????????????????????????????????? -->
 <hr noshade size=1>
 <table border=0>
-<tr valign=top><td><img src="monicon.gif" align="bottom" alt=""></td><td>
+<tr valign=top><td><img src="monicon.png" align="bottom" alt=""></td><td>
 <h3><b><a name="different">Can I get MHonArc to filter messages to different archives?</a></b></h3>
 </td></tr></table>
 
@@ -282,7 +357,21 @@ Or. you can use a tool like
 <b>Procmail</b>
 <a href="http://www.ii.com/internet/robots/procmail/"
 >&lt;http://www.ii.com/internet/robots/procmail/&gt;</a>.
-Here are a some messages from users about using Procmail:
+</p>
+
+<table border=0 cellpadding=4>
+<tr valign=top>
+<td><strong>NOTE</strong></td>
+<td><p>You may want to check out the following:
+<strong><a href="http://www.mhonarc.org/release/mharc/">mharc</a></strong>
+at <a href="http://www.mhonarc.org/release/mharc/"
+>&lt;http://www.mhonarc.org/release/mharc/&gt;</a>:
+Mharc is a web-based mail archiving system for multiple mailing
+lists using Procmail, MHonArc, and Namazu.
+</p>
+</td><tr></table>
+
+<p>Here are a some messages from users about using Procmail:
 </p>
 
 <blockquote>
@@ -290,7 +379,7 @@ Here are a some messages from users about using Procmail:
 <LI><em>From</em>: Achim Bohnet &lt;<A HREF="mailto:ach@rosat.mpe-garching.mpg.de">ach@rosat.mpe-garching.mpg.de</A>&gt;</LI>
 <LI><em>Date</em>: Wed, 13 Nov 1996 13:56:08 +0100</LI>
 </UL>
-<PRE>
+<pre>
 <var>... some text deleted ...</var>
 
 Here is what I use in .procmailrc to archive the mhonarc list:
@@ -314,15 +403,16 @@ Achim
 P.S. Procmail itself comes with an example manual page. It's worth
      looking into it.
 
-</PRE>
+</pre>
 </blockquote>
 
 <blockquote>
+<hr noshade size=1>
 <UL>
 <LI><em>From</em>: "Eric D. Friedman" &lt;<A HREF="mailto:friedman@hydra.acs.uci.edu">friedman@hydra.acs.uci.edu</A>&gt;</LI>
 <LI><em>Date</em>: Wed, 13 Nov 1996 06:38:42 -0800</LI>
 </UL>
-<PRE>
+<pre>
 You can actually dispense with the wrapper if you use environment
 variables to pass options to MHonArc, but I'm sure Achim has a good
 reason for doing it his way.  Just for the purposes of comparion,
@@ -368,15 +458,16 @@ on the Originator: of the message), lots of the following:
 
 Eric D. Friedman
 friedman@uci.edu
-</PRE>
+</pre>
 </blockquote>
 
 <blockquote>
+<hr noshade size=1>
 <UL>
 <LI><em>From</em>: Paul McKinley &lt;<A HREF="mailto:mckinley@austin.asc.slb.com">mckinley@austin.asc.slb.com</A>&gt;</LI>
 <LI><em>Date</em>: Mon, 21 Apr 1997 15:29:08 -0500</LI>
 </UL>
-<PRE>
+<pre>
 <var>... some text deleted ...</var>
 
 I use procmail to drive mhonarc archives from Majordomo.  I set up a
@@ -453,13 +544,13 @@ Hope this helps
 
 Paul McKinley
 Unix SysAdmin Contractor
-</PRE>
+</pre>
 </blockquote>
 
 <!-- ??????????????????????????????????????????????????????????????? -->
 <hr noshade size=1>
 <table border=0>
-<tr valign=top><td><img src="monicon.gif" align="bottom" alt=""></td><td>
+<tr valign=top><td><img src="monicon.png" align="bottom" alt=""></td><td>
 <h3><b><a name="exclude">Does MHonArc support the "no archive" flag in messages?</a></b></h3>
 </td></tr></table>
 
@@ -469,7 +560,7 @@ Unix SysAdmin Contractor
 <p>If using an earlier version, or if you are already doing some preprocessing,
 you can use a pre-processor like <b>Procmail</b>
 to do the filtering.  Here is a message sent to the
-<a href="mailto:mhonarc@ncsa.uiuc.edu">MHonArc mailing list</a>:
+<a href="mailto:mhonarc-users@mhonarc.org">MHonArc mailing list</a>:
 </p>
 
 <blockquote>
@@ -478,7 +569,7 @@ to do the filtering.  Here is a message sent to the
 <LI><em>From</em>: Christopher Lindsey &lt;<A HREF="mailto:lindsey@ncsa.uiuc.edu">lindsey@ncsa.uiuc.edu</A>&gt;</LI>
 <LI><em>Date</em>: Thu, 1 Oct 1998 11:33:07 -0500 (CDT)</LI>
 </UL>
-<PRE>
+<pre>
 &gt; Subscribers who don't want their messages to be archived
 &gt; could add a "no archive" flag within their mail.
 
@@ -497,13 +588,13 @@ Very easy:
    /dev/null
 
 Chris
-</PRE>
+</pre>
 </blockquote>
 
 <!-- ??????????????????????????????????????????????????????????????? -->
 <hr noshade size=1>
 <table border=0>
-<tr valign=top><td><img src="monicon.gif" align="bottom" alt=""></td><td>
+<tr valign=top><td><img src="monicon.png" align="bottom" alt=""></td><td>
 <h3><b><a name="addsafe">Is it safe to specify <tt>-add</tt> when no archive exists?</a></b></h3>
 </td></tr></table>
 
@@ -511,21 +602,25 @@ Chris
 an add, it will automatically create the archive.
 </p>
 
-<dl>
-<dt><b>WARNING</b></dt>
-<dd><p>Make sure the file <tt>maillist.html</tt> (or the value
+<table border=0 cellpadding=4>
+<tr valign=top>
+<td><strong><font color="red">WARNING</font></strong></td>
+<td><p>If using MHonArc versions 2.4, or earlier, make sure the file
+<tt>maillist.html</tt> (or the value
 of the IDXFNAME resource) does not exist if no archive exists and
 <tt>-add</tt> has been specified.  Otherwise, unpredictable output
 of the <tt>maillist.html</tt> file may result if <tt>maillist.html</tt>
 is not in the proper format.
 </p>
-</dd>
-</dl>
+</td>
+</tr>
+</table>
+
 
 <!-- ??????????????????????????????????????????????????????????????? -->
 <hr noshade size=1>
 <table border=0>
-<tr valign=top><td><img src="monicon.gif" align="bottom" alt=""></td><td>
+<tr valign=top><td><img src="monicon.png" align="bottom" alt=""></td><td>
 <h3><b><a name="jumps">Why are there "jumps" in message numbers?</a></b></h3>
 </td></tr></table>
 
@@ -557,7 +652,7 @@ a message number).  </p>
 <!-- ??????????????????????????????????????????????????????????????? -->
 <hr noshade size=1>
 <table border=0>
-<tr valign=top><td><img src="monicon.gif" align="bottom" alt=""></td><td>
+<tr valign=top><td><img src="monicon.png" align="bottom" alt=""></td><td>
 <h3><b><a name="dups">Why do some messages get re-added each time MHonArc processes a mail folder?</a></b></h3>
 </td></tr></table>
 
@@ -602,7 +697,7 @@ via RMM, make sure to remove the message from input source.
 <!-- ??????????????????????????????????????????????????????????????? -->
 <hr noshade size=1>
 <table border=0>
-<tr valign=top><td><img src="monicon.gif" align="bottom" alt=""></td><td>
+<tr valign=top><td><img src="monicon.png" align="bottom" alt=""></td><td>
 <h3><b><a name="remove">How do I remove messages from an archive?</a></b></h3>
 </td></tr></table>
 
@@ -615,22 +710,37 @@ resource.  Please read the RMM resource page for more information
 and examples.
 </p>
 
+<!-- ??????????????????????????????????????????????????????????????? -->
+<hr noshade size=1>
+<table border=0>
+<tr valign=top><td><img src="monicon.png" align="bottom" alt=""></td><td>
+<h3><b><a name="tombox">Can I convert an archive back to mailbox format?</a></b></h3>
+</td></tr></table>
+
+<p><a href="mailto:anthonyw@albany.net">Anthony W</a> provides a
+Perl program called <tt>mhn2mbox</tt> for converting archives back
+into mailbox format.  To obtain more information and to download
+the program, goto
+<a href="http://www.albany.net/~anthonyw/mhonarc/"
+>&lt;http://www.albany.net/~anthonyw/mhonarc/&gt;</a>.
+</p>
+
 <!-- ===================================================================== -->
 <hr>
 
 <!--X-NavButtons-Start-->
 <p align=center>
-[<a href="usage.html">Prev</a>][<a href="indexpgs.html">Next</a>][<a href="faq.html">TOC</a>][<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html">Home</a>]
+[<a href="usage.html">Prev</a>][<a href="indexpgs.html">Next</a>][<a href="faq.html">TOC</a>][<a href="http://www.mhonarc.org/">Home</a>]
 </p>
 <!--X-NavButtons-End-->
 
 <hr>
 <address>
-01/06/10 17:47:20<br>
-<img align="top" src="monicon.gif" alt="">
-<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"
+$Date: 2002/06/21 22:28:16 $ <br>
+<img align="top" src="monicon.png" alt="">
+<a href="http://www.mhonarc.org/"
 ><strong>MHonArc</strong></a><br>
-Copyright &#169; 1997-1999, <a href="http://www.oac.uci.edu/indiv/ehood/"
+Copyright &#169; 1997-2001, <a href="http://www.earlhood.com/"
 >Earl Hood</a>, <a href="mailto:mhonarc@mhonarc.org"
 >mhonarc@mhonarc.org</a><br>
 </address>

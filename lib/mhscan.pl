@@ -1,13 +1,13 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##      @(#) mhscan.pl 1.2 99/06/25 14:23:50
+##      $Id: mhscan.pl,v 1.3 2001/09/17 16:10:37 ehood Exp $
 ##  Author:
-##      Earl Hood       mhonarc@pobox.com
+##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
 ##      Scan routine for MHonArc
 ##---------------------------------------------------------------------------##
 ##    MHonArc -- Internet mail-to-HTML converter
-##    Copyright (C) 1995-1999   Earl Hood, mhonarc@pobox.com
+##    Copyright (C) 1995-1999   Earl Hood, mhonarc@mhonarc.org
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by

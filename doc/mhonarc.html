@@ -1,12 +1,12 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
 <HTML>
 <HEAD>
-<TITLE>MHonArc v2.4 Documentation</TITLE>
+<TITLE>MHonArc v2.5 Documentation</TITLE>
 </HEAD>
 <BODY background="ssbg75.jpg"
       text="#000000" link="#0000ee" vlink="#551a8b" alink="ff0000">
 <hr>
-<h1 align="center"><img src="stampwb2.gif" alt="[Cool Logo Here]"><br>
+<h1 align="center"><img src="stampwb2.png" alt="[Cool Logo Here]"><br>
 <br>
 MHonArc</h1>
 <p align="center">
@@ -24,6 +24,14 @@ An Email-to-HTML converter.
 <li><a name="whyuse" href="intro.html#whyuse">Why Use MHonArc?</a></li>
 <li><a name="platforms" href="intro.html#platforms">Supported Platforms</a></li>
 <li><a name="availability" href="intro.html#availability">Availability</a></li>
+<li><a name="license" href="intro.html#license">License</a></li>
+</ul>
+</ul>
+<ul>
+<li><a name="relnotes" href="relnotes.html">Release Notes</a>
+<ul>
+<li><a name="important" href="relnotes.html#important">Compatibility Notes</a></li>
+<li><a name="general" href="relnotes.html#general">General Notes</a></li>
 </ul>
 </ul>
 <ul>
@@ -53,8 +61,9 @@ An Email-to-HTML converter.
 <li><a name="commontasks" href="commontasks.html">Common Tasks</a>
 <ul>
 <li><a name="chgtitle" href="commontasks.html#chgtitle">Setting the Index Title</a></li>
-<li><a name="rmm" href="commontasks.html#rmm">Changing Index Listing Order</a></li>
+<li><a name="chg-idx-order" href="commontasks.html#chg-idx-order">Changing Index Listing Order</a></li>
 <li><a name="rmm" href="commontasks.html#rmm">Removing Messages</a></li>
+<li><a name="layout" href="commontasks.html#layout">Customizing Page Layout</a></li>
 </ul>
 </ul>
 <ul>
@@ -85,7 +94,8 @@ An Email-to-HTML converter.
 <ul>
 <li><a name="contacts" href="contacts.html">Contacts</a>
 <ul>
-<li><a name="mailinglist" href="contacts.html#mailinglist">Mailing List</a></li>
+<li><a name="mailinglist" href="contacts.html#mailinglist">User's Mailing List</a></li>
+<li><a name="devlist" href="contacts.html#devlist">Development Mailing List</a></li>
 <li><a name="people" href="contacts.html#people">People</a></li>
 </ul>
 </ul>
@@ -120,6 +130,15 @@ An Email-to-HTML converter.
 </ul>
 </ul>
 <ul>
+<li><a name="appendixA" href="app-api.html">Appendix: Application Programming Interface</a>
+<ul>
+<li><a name="init" href="app-api.html#init">Initialization</a></li>
+<li><a name="process_input" href="app-api.html#process_input">Processing Input</a></li>
+<li><a name="callback" href="app-api.html#callback">Callbacks</a></li>
+<li><a name="notes" href="app-api.html#notes">Notes</a></li>
+</ul>
+</ul>
+<ul>
 <li><a name="appendix-mimeconf" href="app-mimeconf.html">Appendix: MIME Conformance</a>
 <ul>
 <li><a name="mime-conformance" href="app-mimeconf.html#mime-conformance">MIME-Conformance</a></li>
@@ -130,15 +149,16 @@ An Email-to-HTML converter.
 <li><a name="bugs" href="app-bugs.html">Appendix: Bugs</a>
 <ul>
 <li><a name="bugreport" href="app-bugs.html#bugreport">Reporting Bugs</a></li>
-<li><a name="buglist" href="app-bugs.html#buglist">Bug List</a></li>
+<li><a name="open-bugs" href="app-bugs.html#open-bugs">Open Bugs</a></li>
+<li><a name="fixed-bugs" href="app-bugs.html#fixed-bugs">Fixed Bugs</a></li>
 </ul>
 </ul>
 <!--X-TOC-End-->
 
 <hr>
 <address>
-01/06/10 17:47:40<br>
-<img align="top" src="monicon.gif" alt="">
+$Date: 2002/05/27 20:07:10 $ <br>
+<img align="top" src="monicon.png" alt="">
 <a href="http://www.mhonarc.org"
 ><strong>MHonArc</strong></a><br>
 Copyright &#169; 1995-2001, <a href="http://www.mhonarc.org/~ehood/"

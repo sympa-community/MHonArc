@@ -3,50 +3,78 @@ TODO List for MHonArc
 
 Items are in no particular order:
 
-=> Remove all use of Perl 4 style of representing nested data structures.
-   Impact on existing archives (%Refs)?
+===========================================================================
+
+=> Fix all open bugs. :-)
+
+=> Enhance locale support, especially for message sorting.
+
+=> Add resource to disable use of MD5 if no message-id.
+
+=> Generalize message page layout so converted header and body can
+   be placed in any order.  XXX: Old versions did not delimit
+   converted head and body, so what should be done for this case
+   or should any kind of compatibility be dropped?
+
+=> Log-style output when showing progress.  I.e. Prefix text with
+   date/time stamp.
+
+=> "Global" filter options.  For example, have something like
+   "subdir" be applied to all filters that write files.
 
 => Fix unfolding problem where there is only a single space on
    the next line.  Can this be done w/o adding extra overhead in
-   parsing?
+   parsing?  XXX: Need to remember input case where the unfolding was
+   a problem.
 
 => Define $MhaStdout and $MhaStdin.  Should help in embedded usage.
 
-=> Subject detection case-sensitive: Should this behavior be conditional?
-   Should it even be implemented?
-
 => Support for text/uri-list.
 
-=> XHTML defaults for resources.
-
-=> TSLICE version of resources.  I.e. A separate set of layout resource
-   exist for formatting $TSLICE$ output instead of using same resource
-   set for thread index page.  Would have a separate set make things
-   too complicated for the user?  Could reasonable fallback logic to
-   index page-based resources be done?
-
-=> Restructure head parsing to support "hooks".  Probably make DB
-   hooks easier.  A cleaning-up of data structures would make hook API
-   easier to add.
-
-=> Add support for "format=flowed" for text/plain.
+=> XHTML defaults for resources (XXX: Browser impact?)
 
 => "00" year => 1900 (need test case that verifies this).
 
-=> Output number of messages added along with total message count.
-
-=> Exclude writing files based on size in bytes.  Is this really the
-   domain of MHonArc?
-
-=> Add resource to set initial message number.
-
-=> Remove HEADER and FOOTER resources.  How many people use these
-   resources?  These resource exploit some bug in perl(!?) that
-   causes main index pages from getting screwed up.  Cannot see any
-   error in MHonArc code that can cause this.
-
-=> Get source moved to CVS.  Is preserving SCCS history files
-   important.
+=> Add resource to set initial message number.  XXX: Use of this?
 
 => Redo MHonArc using modules/class structure.  Basically a redesign
    and implementation (MHonArc 3.x?).
+
+=> Provide attachment listing at top of each messages page
+   (suggested by Lars Aronsson).  This can be tricky since filters
+   have ultimate control of how parts are treated, including overriding
+   attachment disposition.  Would also require changes to how base
+   parsing cooperates with content filters.
+
+=> Unicode support (waiting for Perl to be mature enough).
+    (related to "UTF8 charsetconverter below").
+
+=> Make Content-Disposition check at the readmail.pl level so
+   each filter does not have to handle it.
+
+=> Subject-based threading enhancements:
+      . Messages with no "Re:" are in different threads.  Related to
+	this is grouping follow-ups under proper message based upon
+	date.
+
+=> Use the link tag to specify the first, prev, next, and last
+   relationships among indices and messages.  These are specified in
+   the standard and supported by Mozilla's Site Navigation Toolbar.
+   (see http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=115991)
+
+=> Add a reasource (ICONURLPREFIX?) to prepend to icon url to support
+   relative-based archives (see message from Oliver Creighton).
+
+=> Add ability to decode all non-ASCII encoded headers.  Maybe useful
+   for sites that want to force everything to be treated as a single
+   character set and not mess with multiple encoding headache.
+
+=> Support filter chains: pre- and port-filters to MIMEFILTERS.
+
+=> Hashify all resources.
+
+=> Use message-IDs as filenames: Internal impacts, OS support problems.
+   Should be configurable?
+
+===========================================================================
+$Id: TODO,v 1.22 2002/07/28 23:25:39 ehood Exp $

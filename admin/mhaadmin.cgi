@@ -1,7 +1,7 @@
 #!/usr/local/bin/perl
 ##---------------------------------------------------------------------------##
 ##  File:
-##	@(#) mhaadmin.cgi 1.2 99/08/11 22:16:37
+##	$Id: mhaadmin.cgi,v 1.3 2001/12/24 13:31:57 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@pobox.com
 ##  Description:
@@ -65,8 +65,8 @@ MAIN: {
 
     if ($Debug) { warn '@INC=', join(':', @INC), "\n"; }
 
-    $menulogo	= "$Rc->{'iconurl'}/mhaicon.gif";
-    $noteicon	= "$Rc->{'iconurl'}/mhanote_s.gif";
+    $menulogo	= "$Rc->{'iconurl'}/mhaicon.png";
+    $noteicon	= "$Rc->{'iconurl'}/mhanote_s.png";
 
     $ENV{'M2H_LOCKMETHOD'} = $Rc->{'lockmethod'}
 	if defined($Rc->{'lockmethod'});

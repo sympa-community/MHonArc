@@ -1,0 +1,57 @@
+A_ATTR:IT:The <tt>NAME</tt> and <tt>HREF</tt> attributes to use in an anchor to link to the archived message. The <tt>NAME</tt> attribute links the messages to the index page.
+A_HREF:IT:The <tt>HREF</tt> attribute to use in an anchor to link to the archived message.
+A_NAME:IT:The <tt>NAME</tt> attribute to use in an anchor for messages to link to the index page.
+BUTTON(M):M:Button markup linking to a message.
+DATE(M):ITMF:The date of the message.
+DDMMYYYY(M):ITMF:Message date in dd/mm/yyyy format.
+DOCURL:itM:URL to documentation.
+ENV:itITMF:Value of an environment variable.
+FROM(M):ITMF:The complete text in the <tt>From:</tt> field of the message.
+FROMADDR(M):ITMFU:The e-mail address in the <tt>From:</tt> field of the message.
+FROMADDRNAME(M):ITMFU:The e-mail address "username" (or local-part) of the <tt>From:</tt> field of the message.
+FROMADDRDOMAIN(M):ITMFU:The e-mail address domain of the <tt>From:</tt> field of the message.
+FROMNAME(M):ITMFU:The human name of the person in the <tt>From:</tt> field of the message. If no human name is found, the username specified in the e-mail address is used.
+GMTDATE(T):itM:Current GMT date.
+ICON(M):ITM:The context-type sensitive icon.
+ICONURL(M):ITM:The URL to the context-type sensitive icon.
+IDXFNAME:itM:Filename of main index page.
+IDXLABEL:itM:Label for main index page.
+IDXPREFIX:itM:Prefix of filenames of main index pages.
+IDXSIZE:itM:Max number of messages that may be listed in index page.
+IDXTITLE:itM:The title of the main index page.
+LINK(M):M:Link markup linking to a message.
+LOCALDATE(T):itM:Current local date.
+MMDDYYYY(M):ITMF:Message date in mm/dd/yyyy format.
+MSG(M):M:Filename of message.
+MSGGMTDATE(T):ITMFU:GMT date of current message.
+MSGID(M):ITMFU:The message-id of the message.
+MSGLOCALDATE(T):ITMFU:Local date of current message.
+MSGNUM(M):ITM:The message number assigned to the message by MHonArc (includes leading zeros).
+MSGPREFIX:ITMF:Filename prefix for message files.
+MSGTORDNUM(T):ITMF:The ordinal message number of the current discussion thread.
+NOTE(M):ITM:Message annotation.
+NOTETEXT(M)::Base text of message annotation.
+PG(P):i:Filename of an index page.
+PGLINK(P):i:Markup linking to an index page.
+PGLINKLIST:i:List of links to index pages.
+NUMFOLUP(M):ITM:Number of explicit follow-ups to the message.
+NUMOFIDXMSG:it:Number of message listed.
+NUMOFMSG:itM:Number of messages in the archive.
+NUMOFPAGES:itM:Number of index pages.
+ORDNUM(M):ITM:The current listing number of the message.
+OUTDIR:itM:Pathname of archive.
+PAGENUM:i:Current index page number.
+PROG:itM:Program name
+SUBJECT(M):ITM:The subject text of the message, and if no arguments, wrapped in an anchor element that hyperlinks to the message.
+SUBJECTNA(M):ITMF:The subject text of the message without the anchor element.
+TIDXFNAME:itM:Filename of thread index page.
+TIDXLABEL:itM:Label for thread index page.
+TIDXPREFIX:itM:Prefix of filenames of thread index pages.
+TIDXTITLE:itM:Title of thread index.
+TLEVEL:TM:Numeric level of message in thread, starting with 0.
+TO:U:The email address (MAILTOURL only).
+TOADDRNAME:U:The e-mail address "username" (or local-part) (MAILTOURL only).
+TOADDRDOMAIN:U:The e-mail address domain (MAILTOURL only).
+TSLICE:M:A <em>slice</em> of the thread listing relative to the current message.  Size of slice determined by the TSLICE resource.
+VERSION:itM:Program version.
+YYYYMMDD:ITMF:Message date in yyyy/mm/dd format.

@@ -1,0 +1,163 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
+<HTML>
+<HEAD>
+<TITLE>MHonArc FAQ: Security</TITLE></HEAD>
+<BODY>
+
+<!--X-NavButtons-Start-->
+<p align=center>
+[<a href="mime.html">Prev</a>][Next][<a href="faq.html">TOC</a>][<a href="http://www.mhonarc.org/">Home</a>]
+</p>
+<!--X-NavButtons-End-->
+
+<!-- ===================================================================== -->
+<HR>
+<H2><a name="security">Security</a></H2>
+
+<!--X-TOC-Start-->
+<ul>
+<li><a href="#spam">Can I obscure email addresses?</a></li>
+<li><a href="#spam">How can I prevent web access to <tt>.mhonarc.db</tt> files?</a></li>
+<li><a href="#htmldata">Why are HTML messages a security risk?</a></li>
+<li><a href="#attachments">Why doesn't MHonArc, by default, use the specified filename when saving attachments?</a></li>
+</ul>
+<!--X-TOC-End-->
+
+<!-- ??????????????????????????????????????????????????????????????? -->
+<hr noshade size=1>
+<table border=0>
+<tr valign=top><td><img src="monicon.png" align="bottom" alt=""></td><td>
+<h3><b><a name="spam">Can I obscure email addresses?</a></b></h3>
+</td></tr></table>
+
+<p>See the <b>SPAMMODE</b> resource.
+</p>
+
+<!-- ??????????????????????????????????????????????????????????????? -->
+<hr noshade size=1>
+<table border=0>
+<tr valign=top><td><img src="monicon.png" align="bottom" alt=""></td><td>
+<h3><b><a name="spam">How can I prevent web access to <tt>.mhonarc.db</tt> files?</a></b></h3>
+</td></tr></table>
+
+<p>MHonArc database files may contain information that you do
+not want web users to directly access.  The best example is when
+your archive is customized to obscure email addresses.  However,
+in the MHonArc database file, the original, unobscured, addresses
+exist.
+</p>
+
+<p>Practically, all web servers provide the ability deny access
+to files.  Refer to your web server's documentation for the specifies.
+If you are using the <a href="http://httpd.apache.org/">Apache HTTP server</a>,
+the following configuration directive can be used:
+</p>
+<pre>
+&lt;Files .mhonarc.db&gt;
+    Order allow,deny
+    Deny from all
+&lt;/Files&gt;
+</pre>
+<p>If you have <tt>mod_rewrite</tt> enabled, you could use the following
+instead:
+</p>
+<pre>
+RewriteRule ^(.*)/.mhonarc.db $1 [R=permanent]
+</pre>
+<p>This will redirect browsers to the parent directory, which is
+the actual archive associated with database file.
+</p>
+
+<!-- ??????????????????????????????????????????????????????????????? -->
+<hr noshade size=1>
+<table border=0>
+<tr valign=top><td><img src="monicon.png" align="bottom" alt=""></td><td>
+<h3><b><a name="htmldata">Why are HTML messages a security risk?</a></b></h3>
+</td></tr></table>
+
+<p>HTML can contain dynamic content, like JavaScript.  If an
+HTML message is blindly archived, you are introducing foreign dynamic
+content to your web site that you have no control over.  The best
+example of this danger is the problem web-based email sites (e.g.
+Hotmail) encountered when malicious people were sending HTML messages
+to web-based email users and the messages contained dynamic content
+that would popup windows (which had a similiar style of the web-based
+email hosting provider) requesting sensitive information from
+users (like passwords).
+</p>
+
+<p>The following is a brief list of some of the security issues
+related to HTML messages:
+</p>
+<ul>
+<li>Can contain foreign dynamic content.
+    </li>
+<li>Can autoload URLs (via IMG, and similiar, elements) which
+    can be used to collect statistics on unsuspected readers.
+    </li>
+<li>Contain hidden contents (like server-side include comments)
+    which may be processed by web servers to execute arbitrary
+    programs or extract arbitrary system files.
+    </li>
+</ul>
+
+<p>MHonArc's HTML filter (documented under the <b>MIMEFILTERS</b>) resource
+provides functionality of stripping out HTML data to minimize security
+exploits.  Check the document for full details.  The general recommendation
+for the security conscience is to exclude any HTML message data, especially
+for publicly accessible archives.
+</p>
+
+<!-- ??????????????????????????????????????????????????????????????? -->
+<hr noshade size=1>
+<table border=0>
+<tr valign=top><td><img src="monicon.png" align="bottom" alt=""></td><td>
+<h3><b><a name="attachments">Why doesn't MHonArc, by default, use the specified filename when saving attachments?</a></b></h3>
+</td></tr></table>
+
+<p>A malicious person could send a message with an attachment filename
+that could overwrite existing content or be interpreted by the web
+server in some special manner to execute actions.  Example: Apache
+allows for the support for creating <tt>.htaccess</tt> files to allow
+configuration settings within a directory.  If you have this feature
+enabled and a message containes an attachment with the specified
+filename <tt>.htaccess</tt> and MHonArc blindly used the attachment
+filename, the attachment will override any existing <tt>.htaccess</tt>
+file you created with a version defined by the sender of the message.
+</p>
+
+<p>Another possibility is that web servers sometimes interpret
+filenames with certain extensions as executable content, like
+<tt>.shtml</tt>, <tt>.cgi</tt>, <tt>.phtml</tt>.  If MHonArc used the
+attachment filename, or even just the attachment filename extension,
+anyone who can send mail that will be archived on your site can
+introduce executable content.
+</p>
+
+<p>It is because of the above reasons that the
+<tt><b>m2h_external::filter</b></tt> documented in the <b>MIMEFILTERS</b>
+resource advises caution when using the filter options that enable
+the usage of attachment filenames or filename extensions.
+</p>
+
+<!-- ===================================================================== -->
+<hr>
+
+<!--X-NavButtons-Start-->
+<p align=center>
+[<a href="mime.html">Prev</a>][Next][<a href="faq.html">TOC</a>][<a href="http://www.mhonarc.org/">Home</a>]
+</p>
+<!--X-NavButtons-End-->
+
+<HR>
+<address>
+$Date: 2002/04/02 06:57:57 $ <br>
+<img align="top" src="monicon.png" alt="">
+<a href="http://www.mhonarc.org/"
+><strong>MHonArc</strong></a><br>
+Copyright &#169; 2002, <a href="http://www.earlhood.com/"
+>Earl Hood</a>, <a href="mailto:mhonarc@mhonarc.org"
+>mhonarc@mhonarc.org</a><br>
+</address>
+</BODY>
+</HTML>

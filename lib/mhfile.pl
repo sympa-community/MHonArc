@@ -1,13 +1,13 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	@(#) mhfile.pl 2.4 99/06/25 14:13:41
+##	$Id: mhfile.pl,v 2.6 2002/05/14 00:04:40 ehood Exp $
 ##  Author:
-##      Earl Hood       mhonarc@pobox.com
+##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
 ##      File routines for MHonArc
 ##---------------------------------------------------------------------------##
 ##    MHonArc -- Internet mail-to-HTML converter
-##    Copyright (C) 1997-1999	Earl Hood, mhonarc@pobox.com
+##    Copyright (C) 1997-1999	Earl Hood, mhonarc@mhonarc.org
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by
@@ -27,12 +27,14 @@
 
 package mhonarc;
 
+use Symbol;
+
 ##---------------------------------------------------------------------------##
 
 sub file_open {
-    local($file) = shift;
-    local($handle) = q/mhonarc::FOPEN/ . ++$_fo_cnt;
-    local($gz) = $file =~ /\.gz$/i;
+    my($file) = shift;
+    my($handle) = gensym;
+    my($gz) = $file =~ /\.gz$/i;
 
     if ($gz) {
 	return $handle  if open($handle, "$GzipExe -cd $file |");
@@ -47,9 +49,9 @@ sub file_open {
 }
 
 sub file_create {
-    local($file) = shift;
-    local($gz) = shift;
-    local($handle) = q/mhonarc::FCREAT/ . ++$_fc_cnt;
+    my($file) = shift;
+    my($gz) = shift;
+    my($handle) = gensym;
 
     if ($gz) {
 	$file .= ".gz"  unless $file =~ /\.gz$/;
@@ -65,8 +67,8 @@ sub file_exists {
 }
 
 sub file_copy {
-    local($src, $dst) = ($_[0], $_[1]);
-    local($gz) = $src =~ /\.gz$/i;
+    my($src, $dst) = ($_[0], $_[1]);
+    my($gz) = $src =~ /\.gz$/i;
 
     if ($gz || (-e "$src.gz")) {
 	$src .= ".gz"  unless $gz;
@@ -76,8 +78,8 @@ sub file_copy {
 }
 
 sub file_rename {
-    local($src, $dst) = ($_[0], $_[1]);
-    local($gz) = $src =~ /\.gz$/i;
+    my($src, $dst) = ($_[0], $_[1]);
+    my($gz) = $src =~ /\.gz$/i;
 
     if ($gz || (-e "$src.gz")) {
 	$src .= ".gz"  unless $gz;
@@ -89,15 +91,15 @@ sub file_rename {
 }
 
 sub file_remove {
-    local($file) = shift;
+    my($file) = shift;
 
     unlink($file);
     unlink("$file.gz");
 }
 
 sub file_utime {
-    local($atime) = shift;
-    local($mtime) = shift;
+    my($atime) = shift;
+    my($mtime) = shift;
     foreach (@_) {
 	utime($atime, $mtime, $_, "$_.gz");
     }
@@ -106,19 +108,19 @@ sub file_utime {
 ##---------------------------------------------------------------------------##
 
 sub dir_remove {
-    local($file) = shift;
+    my($file) = shift;
 
     if (-d $file) {
-	local(@files) = ();
-
+	local(*DIR);
+	local($_);
 	if (!opendir(DIR, $file)) {
 	    warn qq{Warning: Unable to open "$file"\n};
 	    return 0;
 	}
-	@files = grep(!/^(\.|\..)$/i, readdir(DIR));
+	my @files = grep(!/^(\.|\..)$/i, readdir(DIR));
 	closedir(DIR);
 	foreach (@files) {
-	    &dir_remove($file . $mhonarc'DIRSEP . $_);
+	    &dir_remove($file . $mhonarc::DIRSEP . $_);
 	}
 	if (!rmdir($file)) {
 	    warn qq{Warning: Unable to remove "$file": $!\n};

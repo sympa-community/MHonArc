@@ -1,8 +1,8 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	@(#) mhexternal.pl 2.8 01/04/10 21:36:40
+##	$Id: mhexternal.pl,v 2.10 2001/10/06 14:02:38 ehood Exp $
 ##  Author:
-##      Earl Hood       mhonarc@pobox.com
+##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
 ##	Library defines a routine for MHonArc to filter content-types
 ##	that cannot be directly filtered into HTML, but a linked to an
@@ -19,7 +19,7 @@
 ##
 ##---------------------------------------------------------------------------##
 ##    MHonArc -- Internet mail-to-HTML converter
-##    Copyright (C) 1995-1999	Earl Hood, mhonarc@pobox.com
+##    Copyright (C) 1995-2001	Earl Hood, mhonarc@mhonarc.org
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by
@@ -66,7 +66,10 @@ package m2h_external;
 ##
 ##	forceinline 	Inline image data, always
 ##
+##	frame		Draw a frame around the attachment link.
+##
 ##	iconurl="url"	Use "url" for location of icon to use.
+##			The quotes are required around the url.
 ##
 ##	inline  	Inline image data by default if
 ##			content-disposition not defined.
@@ -101,7 +104,7 @@ package m2h_external;
 ##			problems.
 ##
 sub filter {
-    local($header, *fields, *data, $isdecode, $args) = @_;
+    my($fields, $data, $isdecode, $args) = @_;
     my($ret, $filename, $urlfile, $disp);
     require 'mhmimetypes.pl';
 
@@ -115,8 +118,6 @@ sub filter {
     my $inline	   =  0;
     my $inext	   = '';
     my $intype	   = '';
-    my $iconurl	   = '';
-    my $icon_mu	   = '';
     my $target	   = '';
     my $path       = '';
     my $subdir     = $args =~ /\bsubdir\b/i;
@@ -136,12 +137,12 @@ sub filter {
     }
 
     ## Get content-type
-    ($ctype) = $fields{'content-type'} =~ m%^\s*([\w\-\./]+)%;
+    ($ctype) = $fields->{'content-type'}[0] =~ m%^\s*([\w\-\./]+)%;
     $ctype =~ tr/A-Z/a-z/;
     $type = (mhonarc::get_mime_ext($ctype))[1];
 
     ## Get disposition
-    ($disp, $nameparm) = &readmail::MAILhead_get_disposition(*fields);
+    ($disp, $nameparm) = readmail::MAILhead_get_disposition($fields);
     $name = $nameparm  if $usename;
     &debug("Content-type: $ctype",
 	   "Disposition: $disp; filename=$nameparm",
@@ -189,14 +190,6 @@ sub filter {
 	$inline = ($args =~ /\binline\b/i);
     }
 
-    ## Check if using icon
-    if ($args =~ /\buseicon\b/i) {
-	$iconurl = $mhonarc::Icons{$ctype} || $mhonarc::Icons{'unknown'};
-	if ($args =~ /\biconurl="([^"]+)"/i) { $iconurl = $1; }
-	$icon_mu = qq/<IMG SRC="$iconurl" BORDER=0 ALT=""> /
-	    if $iconurl;
-    }
-
     ## Check if target specified
     if    ($args =~ /target="([^"]+)"/i) { $target = $1; }
     elsif ($args =~ /target=(\S+)/i)     { $target = $1; }
@@ -204,7 +197,7 @@ sub filter {
     $target = qq/ TARGET="$target"/  if $target;
 
     ## Write file
-    $filename = mhonarc::write_attachment($ctype, \$data, $path, $name, $inext);
+    $filename = mhonarc::write_attachment($ctype, $data, $path, $name, $inext);
     ($urlfile = $filename) =~ s/([^\w.\-\/])/sprintf("%%%X",unpack("C",$1))/ge;
     &debug("File-written: $filename")  if $debug;
 
@@ -221,16 +214,67 @@ sub filter {
 
     ## Create HTML markup
     if ($inline) {
-	$ret  = "<P>" . &htmlize($fields{'content-description'}) . "</P>\n"
-	    if ($fields{'content-description'});
-	$ret .= qq|<P><A HREF="$urlfile" $target><IMG SRC="$urlfile" | .
-		qq|ALT="$type"></A></P>\n|;
+	$ret  = "<p>".htmlize($fields->{'content-description'}[0])."</p>\n"
+	    if (defined $fields{'content-description'});
+	$ret .= qq|<p><a href="$urlfile" $target><img src="$urlfile" | .
+		qq|alt="$type"></a></p>\n|;
 
     } else {
-	$ret  = qq|<P><A HREF="$urlfile" $target>$icon_mu| .
-		(&htmlize($fields{'content-description'}) ||
-		 $nameparm || $type) .
-		qq|</A></P>\n|;
+	my $namelabel = $nameparm || $urlfile;
+	my $desc = htmlize($fields->{'content-description'}[0]) ||
+		   $type;
+	# check if using icon
+	my($icon_mu, $iconurl, $iw, $ih);
+	if ($args =~ /\buseicon\b/i) {
+	    if ($args =~ /\biconurl="([^"]+)"/i) {
+		$iconurl = $1;
+		if ($iconurl =~ s/\[(\d+)x(\d+)\]//) {
+		    ($iw, $ih) = ($1, $2);
+		}
+	    } else {
+		($iconurl, $iw, $ih) = mhonarc::get_icon_url($ctype);
+	    }
+	    if ($iconurl) {
+		$icon_mu  = join('', '<img src="', $iconurl,
+				 '" align="left" border=0 alt="Attachment:"');
+		$icon_mu .= join('', ' width="',  $iw, '"')  if $iw;
+		$icon_mu .= join('', ' height="', $ih, '"')  if $ih;
+		$icon_mu .= '>';
+	    }
+	}
+	my $frame = $args =~ /\bframe\b/;
+	if (!$frame) {
+	    if ($icon_mu) {
+	      $ret =<<EOT;
+
+<p><strong><a href="$urlfile" $target>$icon_mu</a>
+<a href="$urlfile" $target><tt>$namelabel</tt></a></strong><br>
+<em>Description:</em> $desc</p>
+EOT
+	    } else {
+	      $ret =<<EOT;
+<p><strong>Attachment:
+<a href="$urlfile" $target><tt>$namelabel</tt></a></strong><br>
+<em>Description:</em> $desc</p>
+EOT
+	    }
+	} else {
+	    if ($icon_mu) {
+	      $ret =<<EOT;
+<table border="1" cellspacing="0" cellpadding="4">
+<tr valign="top"><td><strong><a href="$urlfile" $target>$icon_mu</a>
+<a href="$urlfile" $target><tt>$namelabel</tt></a></strong><br>
+<em>Description:</em> $desc</td></tr></table>
+EOT
+	    } else {
+	      $ret =<<EOT;
+<table border="1" cellspacing="0" cellpadding="4">
+<tr><td><strong>Attachment:
+<a href="$urlfile" $target><tt>$namelabel</tt></a></strong><br>
+<em>Description:</em> $desc</td></tr></table>
+EOT
+	    }
+	}
     }
     ($ret, $path || $filename);
 }

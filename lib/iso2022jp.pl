@@ -1,13 +1,17 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	@(#) iso2022jp.pl 1.2 00/01/15 17:54:50
+##	$Id: iso2022jp.pl,v 1.7 2002/07/28 23:21:53 ehood Exp $
 ##  Author(s):
-##      Earl Hood       mhonarc@pobox.com
+##      Earl Hood       mhonarc@mhonarc.org
 ##      NIIBE Yutaka	gniibe@mri.co.jp
+##	Takashi P.KATOH p-katoh@shiratori.riec.tohoku.ac.jp
 ##  Description:
 ##	Library defines routine to process iso-2022-jp data.
 ##---------------------------------------------------------------------------##
-##    Copyright (C) 1995-1999	Earl Hood, mhonarc@pobox.com
+##    Copyright (C) 1995-2002
+##	  Earl Hood, mhonarc@mhonarc.org
+##	  NIIBE Yutaka, gniibe@mri.co.jp
+##	  Takashi P.KATOH, p-katoh@shiratori.riec.tohoku.ac.jp
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by
@@ -36,7 +40,7 @@ $HUrlExp	= $Url . q%[^\s\(\)\|<>"'\&]*[^\.?!;,"'\|\[\]\(\)\s<>\&]%;
 ##	str2html(): Convert an iso-2022-jp string into HTML.  Function
 ##	interface similiar as iso8859.pl function.
 ##
-sub str2html { jp2022_to_html($_[0], 0); }
+sub str2html { jp2022_to_html($_[0], 1); }
 
 ##---------------------------------------------------------------------------##
 ##	Function to convert ISO-2022-JP data into HTML.  Function is based
@@ -50,12 +54,6 @@ sub str2html { jp2022_to_html($_[0], 0); }
 ##		M. Ohta, K. Handa, "ISO-2022-JP-2: Multilingual Extension of  
 ##		ISO-2022-JP", 12/23/1993. (Pages=6)
 ##
-##  Author of function:
-##      NIIBE Yutaka	gniibe@mri.co.jp
-##	(adapted for mhtxtplain.pl by Earl Hood <mhonarc@pobox.com>)
-##	(some changes made to remove use of $& and few other optimizations)
-##	(extracted as separate, general, function from mhtxtplain.pl)
-##
 sub jp2022_to_html {
     my($body) = shift;
     my($nourl) = shift;
@@ -65,28 +63,8 @@ sub jp2022_to_html {
 
     $ret = "";
     foreach (@lines) {
-	# Process preceding ASCII text
-	while(1) {
-	    if (s/^([^\033]+)//) {	# ASCII plain text
-		$ascii_text = $1;
-
-		# Replace meta characters in ASCII plain text
-		$ascii_text =~ s%\&%\&amp;%g;
-		$ascii_text =~ s%<%\&lt;%g;
-		$ascii_text =~ s%>%\&gt;%g;
-		## Convert URLs to hyperlinks
-		$ascii_text =~ s%($HUrlExp)%<A HREF="$1">$1</A>%gio
-		    unless $nourl;
-
-		$ret .= $ascii_text;
-	    } elsif (s/(\033\.[A-F])//) { # G2 Designate Sequence
-		$ret .= $1;
-	    } elsif (s/(\033N[ -])//) { # Single Shift Sequence
-		$ret .= $1;
-	    } else {
-		last;
-	    }
-	}
+	# a trick to process preceding ASCII text
+	$_ = "\033(B" . $_ unless /^\033/;
 
 	# Process Each Segment
 	while(1) {
@@ -101,7 +79,7 @@ sub jp2022_to_html {
 			$ascii_text =~ s%<%\&lt;%g;
 			$ascii_text =~ s%>%\&gt;%g;
 			## Convert URLs to hyperlinks
-			$ascii_text =~ s%($HUrlExp)%<A HREF="$1">$1</A>%gio
+			$ascii_text =~ s%($HUrlExp)%<a href="$1">$1</a>%gio
 			    unless $nourl;
 
 			$ret .= $ascii_text;
@@ -133,11 +111,95 @@ sub jp2022_to_html {
 	    }
 	}
 
+	# remove a `trick'
+	$ret =~ s/^\033\(B//;
+
 	$ret .= "\n";
     }
 
     ($ret);
 }
 
+
+##---------------------------------------------------------------------------##
+##	clip($str, $length, $html): Clip an iso-2022-jp string.
+##
+##   The last argument $html specifies '&' should be treated
+##   as HTML character or not.
+##   (i.e., the length of '&amp;' will be 1 if $html).
+##
+sub clip {	# &clip($str, 10, 1);
+    my($str) = shift;
+    my($length) = shift;
+    my($html) = shift;
+    my($tags) = shift;	# Not implemented, yet
+    my($ret, $inascii);
+    local($_) = $str;
+
+    $ret = "";
+    # a trick to process preceding ASCII text
+    $_ = "\033(B" . $_ unless /^\033/;
+
+    # Process Each Segment
+    CLIP: while(1) {
+	if (s/^(\033\([BJ])//) { # Single Byte Segment
+	    $inascii = 1;
+	    $ret .= $1;
+	    while(1) {
+		if (s/^([^\033])//) {      # ASCII plain text
+		    if ($html) {
+			if ($1 eq '&') {
+			    s/^([^\;]*\;)//;
+			    $ret .= "&$1";
+			} else {
+			    $ret .= $1;
+			}
+		    } else {
+			$ret .= $1;
+		    }
+		    $length--;
+		} elsif (s/(\033\.[A-F])//) { # G2 Designate Sequence
+		    $ret .= $1;
+		} elsif (s/(\033N[ -])//) { # Single Shift Sequence
+		    $ret .= $1;
+		    $length--;
+		} else {
+		    last;
+		}
+		last CLIP if ($length <= 0);
+	    }
+	} elsif (s/^(\033\$[\@AB]|\033\$\([CD])//) { # Double Byte Segment
+	    $inascii = 0;
+	    $ret .= $1;
+	    while (1) {
+		if (s/^([!-~][!-~])//) { # Double Char plain text
+		    $ret .= $1;
+		    $length -= 2;
+		} elsif (s/(\033\.[A-F])//) { # G2 Designate Sequence
+		    $ret .= $1;
+		} elsif (s/(\033N[ -])//) { # Single Shift Sequence
+		    $ret .= $1;
+		    $length--;
+		} else {
+		    last;
+		}
+		last CLIP if ($length <= 0);
+	    }
+	} else {
+	    # Something wrong in text
+	    $ret .= $_;
+	    last;
+	}
+    }
+
+    # remove a `trick'
+    $ret =~ s/^\033\(B//;
+
+    # Shuold we check the last \033\([BJ] sequence?
+    # (I believe it is too paranoid).
+    $ret .= "\033(B" unless $inascii;
+
+    ($ret);
+}
 ##---------------------------------------------------------------------------##
 1;

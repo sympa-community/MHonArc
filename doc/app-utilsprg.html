@@ -1,16 +1,19 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
 <HTML>
 <HEAD>
-<TITLE>MHonArc v2.4 -- Appendix: Utility Programs
+<TITLE>MHonArc v2.5 -- Appendix: Utility Programs
 </TITLE>
 </HEAD>
+<!--
 <BODY background="ssbg75.jpg"
       text="#000000" link="#0000ee" vlink="#551a8b" alink="ff0000">
+-->
+<BODY>
 
 <!--X-NavButtons-Start-->
-<p align=center>
-<a href="app-diagnos.html"><img src="prev.gif" border=0 alt="[Prev]"></a><a href="app-mimeconf.html"><img src="next.gif" border=0 alt="[Next]"></a><a href="mhonarc.html"><img src="up.gif" border=0 alt="[TOC]"></a><a href="faq/faq.html"><img src="faq.gif" border=0 alt="[FAQ]"></a><a href="app-bugs.html"><img src="bug.gif" border=0 alt="[Bugs]"></a><a href="http://www.mhonarc.org/"><img src="home.gif" border=0 alt="[Home]"></a>
-</p>
+<table width="100%">
+<tr valign="top">
+<td align="left"><nobr><a href="app-diagnos.html"><img src="prev.png"border=0 alt="[Prev]"></a>&nbsp;&nbsp;&nbsp;</nobr></td><td align="center" width="99%"><a href="mhonarc.html"><img src="up.png" border=0 alt="[TOC]"></a><a href="faq/faq.html"><img src="faq.png" border=0 alt="[FAQ]"></a><a href="app-bugs.html"><img src="bug.png" border=0 alt="[Bugs]"></a><a href="http://www.mhonarc.org/"><img src="home.png" border=0 alt="[Home]"></a></td><td align="right"><nobr>&nbsp;&nbsp;&nbsp;<a href="app-api.html"><img src="next.png" border=0 alt="[Next]"></a></nobr></td></tr></table>
 <!--X-NavButtons-End-->
 <HR>
 
@@ -25,7 +28,14 @@ are installed with <b>mhonarc</b> during the installation process.
 <ul>
 <li><a href="#mha-dbedit">mha-dbedit</a>
 <li><a href="#mha-dbrecover">mha-dbrecover</a>
+<ul>
+<li><small><a href="#mha-dbrecover-options">Additional Options</a></small>
+</ul>
 <li><a href="#mha-decode">mha-decode</a>
+<ul>
+<li><small><a href="#mha-decode-options">Additional Options</a></small>
+<li><small><a href="#mha-decode-examples">Examples</a></small>
+</ul>
 </ul>
 <!--X-TOC-End-->
 
@@ -75,6 +85,64 @@ invoking <b>mha-dbrecover</b>.  For example:
     shell&gt; <b>mha-dbrecover -rcfile <var>res.mrc</var> -outdir <var>/path/to/archive</var></b>
 </pre>
 
+<h3><a name="mha-dbrecover-options">Additional Options</a></h3>
+
+<p><b>mha-dbrecover</b> supports the additional command-line options:
+</p>
+
+<dl>
+<dt><tt>-dbr-startnum <var>#</var></tt></dt>
+<dd>The starting message number to recover data from.  This option is
+    useful if you have many message files in a directory, but you only
+    want to recover a subset of the files.
+    If this option is not specified, the starting number is 0.
+    </dd>
+</dl>
+<dl>
+<dt><tt>-dbr-endnum <var>#</var></tt></dt>
+<dd>The ending message number to recover data from.  This option is
+    useful if you have many message files in a directory, but you only
+    want to recover a subset of the files.
+    If this option is not specified, all messages starting from
+    <tt>-dbr-startnum</tt> will be recovered.
+    </dd>
+</dl>
+
+<p>Using the number range options are typically not needed, but may
+be useful if the archive is maintained with a
+<a href="resources/maxsize.html">MAXSIZE</a> (or
+<a href="resources/expireage.html">EXPIREAGE</a>),
+and
+<a href="resources/keeponrmm.html">KEEPONRMM</a> is active.  The
+message number range options will allow you to minimize recovering
+processing by having <b>mha-dbrecover</b> skip messaages that will
+be dropped from the database due to the
+<a href="resources/maxsize.html">MAXSIZE</a>,
+or <a href="resources/expireage.html">EXPIREAGE</a>,
+setting.
+</p>
+<p>For example, say you have an archive directory with 1000 message
+pages numbered 0 through 999, and the maximum size of the archive
+is 200.  The following command will make recovering more efficient
+by skipping the first 800 messages since they will be dropped from
+the database anyway:
+</p>
+<pre>
+    shell&gt; <b>mha-dbrecover -dbr-startnum 800 -outdir <var>/path/to/archive</var></b>
+</pre>
+
+<table border=0 cellpadding=4>
+<tr valign=top>
+<td><strong>NOTE</strong></td>
+<td><p>It is possible that message number order may not exactly match
+date order.  You may want to increase the number range to take in
+account of possible anomolies where message number order may vary from
+message date order.
+</p>
+</td>
+</tr>
+</table>
+
 <hr>
 <H2><a name="mha-decode">mha-decode</a></H2>
 
@@ -104,7 +172,24 @@ for <b>mha-decode</b>.  The following options are applicable:
 <tt>-single</tt>,
 <tt>-umask</tt>.
 
-<p>Example usage:
+<h3><a name="mha-decode-options">Additional Options</a></h3>
+
+<p><b>mha-decode</b> supports the additional command-line options:
+</p>
+
+<dl>
+<dt><tt>-dcd-digest</tt></dt>
+<dd>Do not parse message/rfc822 and message/news attachments.
+    Normally, <b>mha-decode</b> will recursively parse message
+    attachments and decode any parts contained within.  With this
+    option, any message attachment encountered will be saved
+    intact.
+    </dd>
+</dl>
+
+<h3><a name="mha-decode-examples">Examples</a></h3>
+
+<p>Basic usage:
 </p>
 <pre>
     shell&gt; <b>mha-decode inbox</b>
@@ -123,18 +208,33 @@ separate directory:
 <pre>
     shell&gt; <b><var>some_program</var> | mha-decode -single</b>
 </pre>
+<p>Save out attached messages and then pass them into MHonArc
+to be added to a archive:
+</p>
+<pre>
+    shell&gt; <b>mha-decode -dcd-digest -single <var>digest</var></b>
+    shell&gt; <b>mhonarc -outdir <var>/path/to/archive</var> -mhpattern '^822.*\.822$' .</b>
+</pre>
+<p><b>Note:</b> There is a trailing dot, '<tt>.</tt>', at the end of the
+called to <b>mhonarc</b> to tell <b>mhonarc</b> to process the
+current working directory.
+</p>
+<p><b>Note:</b> You may need to reset the
+<a href="resources/mhpattern.html">MHPATTERN</a> resource if normal
+input into the archive is from MH-style mail folders.
+</p>
 
 <hr>
 <!--X-NavButtons-Start-->
-<p align=center>
-<a href="app-diagnos.html"><img src="prev.gif" border=0 alt="[Prev]"></a><a href="app-mimeconf.html"><img src="next.gif" border=0 alt="[Next]"></a><a href="mhonarc.html"><img src="up.gif" border=0 alt="[TOC]"></a><a href="faq/faq.html"><img src="faq.gif" border=0 alt="[FAQ]"></a><a href="app-bugs.html"><img src="bug.gif" border=0 alt="[Bugs]"></a><a href="http://www.mhonarc.org/"><img src="home.gif" border=0 alt="[Home]"></a>
-</p>
+<table width="100%">
+<tr valign="top">
+<td align="left"><nobr><a href="app-diagnos.html"><img src="prev.png"border=0 alt="[Prev]"></a>&nbsp;&nbsp;&nbsp;</nobr></td><td align="center" width="99%"><a href="mhonarc.html"><img src="up.png" border=0 alt="[TOC]"></a><a href="faq/faq.html"><img src="faq.png" border=0 alt="[FAQ]"></a><a href="app-bugs.html"><img src="bug.png" border=0 alt="[Bugs]"></a><a href="http://www.mhonarc.org/"><img src="home.png" border=0 alt="[Home]"></a></td><td align="right"><nobr>&nbsp;&nbsp;&nbsp;<a href="app-api.html"><img src="next.png" border=0 alt="[Next]"></a></nobr></td></tr></table>
 <!--X-NavButtons-End-->
 
 <HR>
 <address>
-01/06/10 17:47:40<br>
-<img align="top" src="monicon.gif" alt="">
+$Date: 2002/05/03 04:30:50 $ <br>
+<img align="top" src="monicon.png" alt="">
 <a href="http://www.mhonarc.org"
 ><strong>MHonArc</strong></a><br>
 Copyright &#169; 1998-1999, <a href="http://www.mhonarc.org/~ehood/"

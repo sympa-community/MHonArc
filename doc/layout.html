@@ -1,15 +1,18 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
 <HTML>
 <HEAD>
-<TITLE>MHonArc v2.4 -- Page Layout</TITLE>
+<TITLE>MHonArc v2.5 -- Page Layout</TITLE>
 </HEAD>
+<!--
 <BODY background="ssbg75.jpg"
       text="#000000" link="#0000ee" vlink="#551a8b" alink="ff0000">
+-->
+<BODY>
 
 <!--X-NavButtons-Start-->
-<p align=center>
-<a href="commontasks.html"><img src="prev.gif" border=0 alt="[Prev]"></a><a href="resources.html"><img src="next.gif" border=0 alt="[Next]"></a><a href="mhonarc.html"><img src="up.gif" border=0 alt="[TOC]"></a><a href="faq/faq.html"><img src="faq.gif" border=0 alt="[FAQ]"></a><a href="app-bugs.html"><img src="bug.gif" border=0 alt="[Bugs]"></a><a href="http://www.mhonarc.org/"><img src="home.gif" border=0 alt="[Home]"></a>
-</p>
+<table width="100%">
+<tr valign="top">
+<td align="left"><nobr><a href="commontasks.html"><img src="prev.png"border=0 alt="[Prev]"></a>&nbsp;&nbsp;&nbsp;</nobr></td><td align="center" width="99%"><a href="mhonarc.html"><img src="up.png" border=0 alt="[TOC]"></a><a href="faq/faq.html"><img src="faq.png" border=0 alt="[FAQ]"></a><a href="app-bugs.html"><img src="bug.png" border=0 alt="[Bugs]"></a><a href="http://www.mhonarc.org/"><img src="home.png" border=0 alt="[Home]"></a></td><td align="right"><nobr>&nbsp;&nbsp;&nbsp;<a href="resources.html"><img src="next.png" border=0 alt="[Next]"></a></nobr></td></tr></table>
 <!--X-NavButtons-End-->
 <HR>
 
@@ -37,6 +40,9 @@ appearence you desire for your mail archives.
 <li><a href="#msgpg">Message Page</a>
 <ul>
 <li><small><a href="#msgpglayout">Message page resource layout</a></small>
+<li><small><a href="#msgheaderlayout">Converted message header</a></small>
+<li><small><a href="#msgbodylayout">Converted message body</a></small>
+<li><small><a href="#tslice">Thread slices</a></small>
 </ul>
 </ul>
 <!--X-TOC-End-->
@@ -53,6 +59,11 @@ by MHonArc, the following notation is used:
 <dl>
 <dt><strong>(&#160;)</strong></dt>
 <dd>Parentheses denote a <em>group</em> of resources.
+</dd>
+<dt><strong>|</strong></dt>
+<dd>The vertical bar is use within a <em>group</em> to denote
+a boolean OR.  For example, "<tt>(X&nbsp;|&nbsp;Y&nbsp;|&nbsp;Z)</tt>"
+states that either X, Y, or Z may apply.
 </dd>
 <dt><strong>?</strong></dt>
 <dd>Denotes that preceding resource, or group, is
@@ -82,8 +93,8 @@ main index is commonly referred to as the date index.
 <h3><a name="mainidxlayout">Main index page resource layout</a></h3>
 
 <pre>
+<a href="resources/idxpgssmarkup.html"><b>IDXPGSSMARKUP</b></a>
 <a href="resources/idxpgbegin.html"><b>IDXPGBEGIN</b></a>
-    <a href="resources/header.html"><b>HEADER</b></a>
     <a href="resources/listbegin.html"><b>LISTBEGIN</b></a>
 	<b>(</b><a href="resources/authorbegin.html"><b>AUTHORBEGIN</b></a> <b>|</b>
 	 <a href="resources/daybegin.html"><b>DAYBEGIN</b></a> <b>|</b>
@@ -93,23 +104,17 @@ main index is commonly referred to as the date index.
 	 <a href="resources/dayend.html"><b>DAYEND</b></a> <b>|</b>
 	 <a href="resources/subjectend.html"><b>SUBJECTEND</b></a><b>)?</b>
      <a href="resources/listend.html"><b>LISTEND</b></a>
-    <a href="resources/footer.html"><b>FOOTER</b></a>
     <a href="resources/doc.html"><b>DOC</b></a><b>?</b>
 <a href="resources/idxpgend.html"><b>IDXPGEND</b></a>
 </pre>
-
-<p>Main index pages also contain comment declarations.  Some of the
-comment declarations are vital markers to allow MHonArc
-to properly edit the index during archive updates.
-</p>
 
 <!-- ******************************************************************** -->
 <hr>
 <h2><a name="threadidxpg">Thread Index Page</a></h2>
 
 <p>The thread index list messages by thread.  Threads
-are based upon <em>In-Reply-To</em> and <em>References</em> fields of
-messages and by same <em>Subject</em>s.
+are based upon <tt>In-Reply-To</tt> and <tt>References</tt> fields of
+messages and by same <tt>Subject</tt>s.
 </p>
 
 <p>The layout of a thread index page is more complicated
@@ -122,6 +127,7 @@ flexibility for customizing thread listing layout.
 <h3><a name="tidxlayout">Thread index page resource layout</a></h3>
 
 <pre>
+<a href="resources/tidxpgssmarkup.html"><b>TIDXPGSSMARKUP</b></a>
 <a href="resources/tidxpgbegin.html"><b>TIDXPGBEGIN</b></a>
     <a href="resources/thead.html"><b>THEAD</b></a>
 	<b>((</b><a href="resources/ttopbegin.html"><b>TTOPBEGIN</b></a>
@@ -132,7 +138,6 @@ flexibility for customizing thread listing layout.
 		<b>(</b><a href="resources/tlinone.html"><b>TLINONE</b></a>
 		    <small>[possible subthread listing]</small>
 		 <a href="resources/tlinoneend.html"><b>TLINONEEND</b></a><b>))+</b>
-	    <a href="resources/tsublistend.html"><b>TSUBLISTEND</b></a><b></b>
 	    <b>(</b><a href="resources/tsubjectbeg.html"><b>TSUBJECTBEG</b></a>
 		<b>((</b><a href="resources/tlitxt.html"><b>TLITXT</b></a>
 		    <small>[possible subthread listing]</small>
@@ -141,6 +146,7 @@ flexibility for customizing thread listing layout.
 		    <small>[possible subthread listing]</small>
 		 <a href="resources/tlinoneend.html"><b>TLINONEEND</b></a><b>))+</b>
 	     <a href="resources/tsubjectend.html"><b>TSUBJECTEND</b></a><b>)?</b>
+	    <a href="resources/tsublistend.html"><b>TSUBLISTEND</b></a><b></b>
 	  <a href="resources/ttopend.html"><b>TTOPEND</b></a><b>)</b>
 	 <b>|</b>
 	 <a href="resources/tsingletxt.html"><b>TSINGLETXT</b></a><b>)*</b> <small>[message w/o references or follow-ups]</small>
@@ -172,13 +178,14 @@ to HTML and archive navigational links.
 <h3><a name="msgpglayout">Message page resource layout</a></h3>
 
 <pre>
+<a href="resources/msgpgssmarkup.html"><b>MSGPGSSMARKUP</b></a>
 <a href="resources/msgpgbegin.html"><b>MSGPGBEGIN</b></a>
     <a href="resources/msghead.html"><b>MSGHEAD</b></a>
     <a href="resources/toplinks.html"><b>TOPLINKS</b></a>
     <a href="resources/subjectheader.html"><b>SUBJECTHEADER</b></a>
-    <i>Converted message header</i>
+    <a href="#msgheaderlayout"><i>Converted message header</i></a>
     <a href="resources/headbodysep.html"><b>HEADBODYSEP</b></a>
-    <i>Converted message body</i>
+    <a href="#msgbodylayout"><i>Converted message body</i></a>
     <a href="resources/msgbodyend.html"><b>MSGBODYEND</b></a>
     <b>(</b><a href="resources/folupbegin.html"><b>FOLUPBEGIN</b></a>
 	<a href="resources/foluplitxt.html"><b>FOLUPLITXT</b></a><b>+</b>
@@ -216,18 +223,100 @@ comment declarations are vital markers to allow MHonArc
 to properly edit the message when needed during updates.
 </p>
 
+<h3><a name="msgheaderlayout">Converted message header</a></h3>
+
+<p>The format of converted message headers are determined by the
+following resource layout:
+</p>
+<pre>
+<a href="resources/fieldsbeg.html">FIELDSBEG</a>
+    (<a href="resources/labelbeg.html">LABELBEG</a>
+     <i>label text</i>
+     <a href="resources/labelend.html">LABELEND</a>
+     <a href="resources/fldbeg.html">FLDBEG</a>
+     <i>field text</i>
+     <a href="resources/fldend.html">FLDEND</a>)*
+<a href="resources/fieldsend.html">FIELDSEND</a>
+</pre>
+
+<table border=0 cellpadding=4>
+<tr valign=top>
+<td><strong>NOTE</strong></td>
+<td><p>The line breaks above are used to show the sequence order of
+the resources and do not indicate any actual line breaks in the final
+markup generated.
+</p>
+</td>
+</tr>
+</table>
+
+<h3><a name="msgbodylayout">Converted message body</a></h3>
+
+<p>The formatting of message body data is controled by filter routines.
+See the <a href="resources/mimefilters.html">MIMEFILTERS</a> resource
+page for more information.
+</p>
+
+<h3><a name="tslice">Thread slices</a></h3>
+
+<p>MHonArc supports the ability to include thread listings on messages
+pages via the
+<a href="rcvars.html#TSLICE"><tt>$TSLICE$</tt></a> resource variable.
+The formatting of the <tt>$TSLICE$</tt> resource variable is controled
+by the following resources:
+<a href="resources/tslicebeg.html">TSLICEBEG</a>,
+<a href="resources/tslicecontbeg.html">TSLICECONTBEG</a>,
+<a href="resources/tslicecontend.html">TSLICECONTEND</a>,
+<a href="resources/tsliceend.html">TSLICEEND</a>,
+<a href="resources/tsliceindentbeg.html">TSLICEINDENTBEG</a>,
+<a href="resources/tsliceindentend.html">TSLICEINDENTEND</a>,
+<a href="resources/tsliceliend.html">TSLICELIEND</a>,
+<a href="resources/tsliceliendcur.html">TSLICELIENDCUR</a>,
+<a href="resources/tslicelinone.html">TSLICELINONE</a>,
+<a href="resources/tslicelinoneend.html">TSLICELINONEEND</a>,
+<a href="resources/tslicelitxt.html">TSLICELITXT</a>,
+<a href="resources/tslicelitxtcur.html">TSLICELITXTCUR</a>,
+<a href="resources/tslicesingletxt.html">TSLICESINGLETXT</a>,
+<a href="resources/tslicesingletxtcur.html">TSLICESINGLETXTCUR</a>,
+<a href="resources/tslicesubjectbeg.html">TSLICESUBJECTBEG</a>,
+<a href="resources/tslicesubjectend.html">TSLICESUBJECTEND</a>,
+<a href="resources/tslicesublistbeg.html">TSLICESUBLISTBEG</a>,
+<a href="resources/tslicesublistend.html">TSLICESUBLISTEND</a>,
+<a href="resources/tslicetopbeg.html">TSLICETOPBEG</a>,
+<a href="resources/tslicetopbegcur.html">TSLICETOPBEGCUR</a>,
+<a href="resources/tslicetopend.html">TSLICETOPEND</a>, and
+<a href="resources/tslicetopendcur.html">TSLICETOPENDCUR</a>
+</p>
+
+<p>The structure of the resources parallels the thread resource
+layout structure described for the <a href="#threadidxpg">thread
+index page</a>, and the above thread slice resources will default to
+the corresponding non-tslice resources, allowing you to provide a
+consistent look to all thread listings without having to define two
+sets of resources.
+</p>
+
+<p>One key difference to the <tt>TSLICE</tt>* resources is the ability
+to customize the look for current message item in the
+the slice listing.  I.e.  You can actually highlight, grey-out, etc,
+the current message to give the reader a visual cue of where they are
+in the thread.  See
+<a href="resources/tslicetopbegcur.html">TSLICETOPBEGCUR</a> for
+an example.
+</p>
+
 <hr>
 <!--X-NavButtons-Start-->
-<p align=center>
-<a href="commontasks.html"><img src="prev.gif" border=0 alt="[Prev]"></a><a href="resources.html"><img src="next.gif" border=0 alt="[Next]"></a><a href="mhonarc.html"><img src="up.gif" border=0 alt="[TOC]"></a><a href="faq/faq.html"><img src="faq.gif" border=0 alt="[FAQ]"></a><a href="app-bugs.html"><img src="bug.gif" border=0 alt="[Bugs]"></a><a href="http://www.mhonarc.org/"><img src="home.gif" border=0 alt="[Home]"></a>
-</p>
+<table width="100%">
+<tr valign="top">
+<td align="left"><nobr><a href="commontasks.html"><img src="prev.png"border=0 alt="[Prev]"></a>&nbsp;&nbsp;&nbsp;</nobr></td><td align="center" width="99%"><a href="mhonarc.html"><img src="up.png" border=0 alt="[TOC]"></a><a href="faq/faq.html"><img src="faq.png" border=0 alt="[FAQ]"></a><a href="app-bugs.html"><img src="bug.png" border=0 alt="[Bugs]"></a><a href="http://www.mhonarc.org/"><img src="home.png" border=0 alt="[Home]"></a></td><td align="right"><nobr>&nbsp;&nbsp;&nbsp;<a href="resources.html"><img src="next.png" border=0 alt="[Next]"></a></nobr></td></tr></table>
 <!--X-NavButtons-End-->
 
 <!-- ******************************************************************** -->
 <HR>
 <address>
-01/06/10 17:47:40<br>
-<img align="top" src="monicon.gif" alt="">
+$Date: 2002/06/27 00:06:14 $ <br>
+<img align="top" src="monicon.png" alt="">
 <a href="http://www.mhonarc.org"
 ><strong>MHonArc</strong></a><br>
 Copyright &#169; 1997-1999, <a href="http://www.mhonarc.org/~ehood/"

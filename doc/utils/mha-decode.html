@@ -1,0 +1,107 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>mha-decode - Decode MIME messages</title>
+<link rev="made" href="mailto:lindsey@valinor.mallorn.com" />
+</head>
+
+<body style="background-color: white">
+<table border="0" width="100%" cellspacing="0" cellpadding="3">
+<tr><td class="block" style="background-color: #cccccc" valign="middle">
+<big><strong><span class="block">&nbsp;mha-decode - Decode MIME messages</span></strong></big>
+</td></tr>
+</table>
+
+<p><a name="__index__"></a></p>
+<!-- INDEX BEGIN -->
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#options">OPTIONS</a></li>
+	<li><a href="#notes">NOTES</a></li>
+	<li><a href="#availability">AVAILABILITY</a></li>
+	<li><a href="#author">AUTHOR</a></li>
+</ul>
+<!-- INDEX END -->
+
+<hr />
+<p>
+</p>
+<h1><a name="name">NAME</a></h1>
+<p>mha-decode - Decode MIME messages</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<p><strong>mha-decode</strong>&nbsp;[<em>options</em>]&nbsp;<em>mailfolder</em>&nbsp;...</p>
+<p><strong>mha-decode</strong>&nbsp;[<em>options</em>]&nbsp;-single&nbsp;<em>msg.822</em></p>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p><strong>mha-decode</strong> is a utility program that is part of the <strong>MHonArc</strong>
+software package.  <strong>mha-decode</strong> provides basic MIME decoding for
+mail messages.</p>
+<p>If given mail folders as input, all messages within in the mail
+folders will be decoded.  All message parts are written to files.  If a
+filename is specified for a message part, that filename will be used
+when writing the part to a file.  If no filename is specified in the
+message, a unique name will be used based upon the content-type of
+the message part.</p>
+<p>A single message can be decoded by using the <code>-single</code> option.</p>
+<p>
+</p>
+<hr />
+<h1><a name="options">OPTIONS</a></h1>
+<p><strong>mha-decode</strong> takes options available to <strong>mhonarc</strong>, but only those
+options affect parsing of mail folders are applicable:
+<code>-conlen</code>,
+<code>-mhpattern</code>,
+<code>-msgsep</code>,
+<code>-noconlen</code>,
+<code>-outdir</code>,
+<code>-perlinc</code>,
+<code>-rcfile</code>,
+<code>-single</code>,
+<code>-umask</code>.</p>
+<p>Also, <strong>mha-decode</strong> supports the following additional options:</p>
+<dl>
+<dt><strong><a name="item_%2ddcd%2ddigest"><code>-dcd-digest</code></a></strong><br />
+</dt>
+<dd>
+Run in message digest mode.  When this option is specified, any
+embedded <code>message/rfc822</code> and <code>message/news</code> parts will be saved
+instead of recursively decoding any parts contained within.
+</dd>
+<p></p></dl>
+<p>
+</p>
+<hr />
+<h1><a name="notes">NOTES</a></h1>
+<p>The documentation for <strong>MHonArc</strong> is distributed in HTML format.
+Due to its size and organization, it is not suited for manpage
+format.  Consult your system administrator for where the documentation
+has been installed, or see <a href="#availability">AVAILABILITY</a> on where you can
+access the documentation on the web.</p>
+<p>
+</p>
+<hr />
+<h1><a name="availability">AVAILABILITY</a></h1>
+<p>&lt;<em><a href="http://www.mhonarc.org/">http://www.mhonarc.org/</a></em>&gt;</p>
+<p>
+</p>
+<hr />
+<h1><a name="author">AUTHOR</a></h1>
+<p>Earl Hood, <a href="mailto:mhonarc@mhonarc.org">mhonarc@mhonarc.org</a></p>
+<table border="0" width="100%" cellspacing="0" cellpadding="3">
+<tr><td class="block" style="background-color: #cccccc" valign="middle">
+<big><strong><span class="block">&nbsp;mha-decode - Decode MIME messages</span></strong></big>
+</td></tr>
+</table>
+
+</body>
+
+</html>

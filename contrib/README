@@ -1,0 +1,17 @@
+README for MHonArc/contrib
+
+  The files in this directory are contributed by others and are not
+  directly supported by the MHonArc development team.  They are
+  provided AS-IS and on the terms specified by the contributers
+  themselves.
+
+---------------------------------------------------------------------------
+CONTENTS of directory:
+
+prsfrom.pl	Contributer: A.R. Burgers, burgers(AT)ecn.nl
+		Supply missing Date: and From: fields to mailboxes.
+		Documentation in POD format included in the source.
+		Use the pod2* utilities provided with Perl to convert
+		POD documentation into desired format.
+
+---------------------------------------------------------------------------

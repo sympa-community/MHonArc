@@ -1,14 +1,14 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##      @(#) mhusage.pl 2.14 01/04/10 21:36:41
+##      $Id: mhusage.pl,v 2.19 2002/06/07 17:45:09 ehood Exp $
 ##  Author:
-##      Earl Hood       mhonarc@pobox.com
+##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
 ##      Usage output.  Just require the file to have usage info
 ##	printed to STDOUT.
 ##---------------------------------------------------------------------------##
 ##    MHonArc -- Internet mail-to-HTML converter
-##    Copyright (C) 1995-1999   Earl Hood, mhonarc@pobox.com
+##    Copyright (C) 1995-1999   Earl Hood, mhonarc@mhonarc.org
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by
@@ -55,8 +55,8 @@ Description:
   of UUCP-style mailbox files and MH style mail folders.  The -single
   option can be used to convert a single mail message to standard output.
 
-  Read the full documentation included with the distribution for more
-  complete usage information.
+  Read the full documentation included with the distribution, or at
+  <http://www.mhonarc.org/>, for more complete usage information.
 
 Options:
   -add                     : Add message(s) to archive
@@ -74,14 +74,12 @@ Options:
                              (def: ".mhonarc.db")
   -doc                     : Print link to doc at end of index page
   -docurl <url>            : URL to MHonArc documentation
-                             (def: "http://www.oac.uci.edu/indiv/ehood/
-                                    mhonarc.html")
+                             (def: "http://www.mhonarc.org/")
   -editidx                 : Edit/change index page(s) and messages, only
   -expiredate <date>       : Message cut-off date
   -expireage <secs>        : Time from current when messages expire
   -folrefs                 : Print links to follow-ups/references
   -force                   : Perform archive operations even if unable to lock
-  -footer <file>           : Include File for bottom of index page
   -fromfields <list>       : Fields to detemine whom the message is from
   -genidx                  : Output index to stdout based upon archive contents
   -gmtdatefmt <fmt>        : Format for GMT date
@@ -89,7 +87,6 @@ Options:
                              (def: "gzip")
   -gzipfiles               : Gzip files
   -gziplinks               : Add ".gz" to filenames in links
-  -header <file>           : User text to include at top of index page
   -help                    : This message
   -htmlext <ext>           : Filename extension for generated HTML files
                              (def: "html")
@@ -148,6 +145,7 @@ Options:
   -nosort                  : Do not sort messages
   -nospammode              : Do not obfuscate addresses
   -nosubjectthreads        : Do not check subjects for threads
+  -nosubjecttxt <text>     : Text to use if message has no subject
   -nosubsort               : Do not sort messages by subject
   -notetext <text>         : Text data of annotation if -annotation specified
   -nothread                : Do not create threaded index
@@ -190,7 +188,9 @@ Options:
   -tlevels <#>             : Maximum # of nested lists in threaded index
                              (def: "3")
   -treverse                : List threads in reverse order
-  -tslice <#:#>            : Set size of thread slice listing
+  -tslice <#:#:#>          : Set size of thread slice listing
+  -tslicelevels <#>        : Maximum # of nested lists in thread slices
+                             (def: TLEVELS resource value)
   -tsort                   : List threads by date (the default)
   -tsubsort                : List threads by subject
   -ttitle <string>         : Title of thread index page

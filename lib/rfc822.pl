@@ -1,6 +1,6 @@
 # rfc822.pl -- A perl package to manipulate RFC822 mail headers
 # A. P. Barrett <barrett@ee.und.ac.za>, June 1993
-# $Revision: 1.1 $$Date: 1993/06/28 11:28:18 $
+# $Revision: 1.1 $$Date: 1996/09/17 13:37:40 $
 
 # Synopsis:
 #	require 'rfc822.pl';

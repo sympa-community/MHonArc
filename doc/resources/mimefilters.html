@@ -4,11 +4,10 @@
 <title>MHonArc Resources: MIMEFILTERS</title>
 </head>
 <body>
-
-<address>
-<a href="../resources.html#mimefilters">MHonArc Resource List</a><br>
-</address>
-
+<!--x-rc-nav-->
+<table border=0><tr valign="top">
+<td align="left" width="50%">[Prev:&nbsp;<a href="mimeexcs.html">MIMEEXCS</a>]</td><td><nobr>[<a href="../resources.html#mimefilters">Resources</a>][<a href="../mhonarc.html">TOC</a>]</nobr></td><td align="right" width="50%">[Next:&nbsp;<a href="modtime.html">MODTIME</a>]</td></tr></table>
+<!--/x-rc-nav-->
 <hr>
 <h1>MIMEFILTERS</h1>
 
@@ -18,21 +17,21 @@
 
 <dl>
 
-<dt><strong>Envariable</strong><dt>
+<dt><strong>Envariable</strong></dt>
 <dd><p>N/A
 </p>
 </dd>
 
-<dt><strong>Element</strong><dt>
+<dt><strong>Element</strong></dt>
 <dd><p>
-<code>&lt;MIMEFILTERS&gt;</code></br>
+<code>&lt;MIMEFILTERS&gt;</code><br>
 <var>filter-specification</var><br>
 <var>...</var><br>
-<code>&lt;/MIMEFILTERS&gt;</code></br>
+<code>&lt;/MIMEFILTERS&gt;</code><br>
 </p>
 </dd>
 
-<dt><strong>Command-line Option</strong><dt>
+<dt><strong>Command-line Option</strong></dt>
 <dd><p>N/A
 </p>
 </dd>
@@ -43,13 +42,10 @@
 <hr>
 <h2>Description</h2>
 
-<P>The resource MIMEFILTERS
-is used to hook in user
-specifed filters into MHonArc. 
-The MIMEFILTERS resource can only be set via the
-<CODE>MIMEFILTERS</CODE> element.
-The syntax for each line of
-the the <CODE>MIMEFILTERS</CODE> element is as follows: </P>
+<P>The resource MIMEFILTERS is used to hook in user specifed filters
+into MHonArc.  The MIMEFILTERS resource can only be set via the
+<CODE>MIMEFILTERS</CODE> element.  The syntax for each line of the
+the <CODE>MIMEFILTERS</CODE> element is as follows: </P>
 
 <P><var>content-type</var><CODE>;</CODE><var>routine-name</var><CODE>;</CODE><var>file-of-routine</var> </P>
 
@@ -93,10 +89,9 @@ information assumes you know Perl.
 <table border=0 cellpadding=4>
 <tr valign=top>
 <td><strong>NOTE</strong></td>
-<td><p>The filter model follows Perl 4 syntax conventions
-and constructs.  This is because of historical reasons.
-Note, the implementation of the filter can use Perl 5
-syntax and features, when applicable.
+<td><p>As of v2.5 of MHonArc, the API for filters is different from
+v2.4.x, and earlier.  The following describes the v2.5 API for
+filters.
 </p>
 </td>
 </tr>
@@ -120,7 +115,7 @@ routine is as follows: </P>
 
 <PRE>
 sub <var>filter</var> {
-    local(<b>$head</b>, <b>*fields</b>, <b>$data</b>, <b>$decoded</b>, <b>$argstring</b>) = @_;
+    my(<b>$fields_hash_ref</b>, <b>$body_data_ref</b>, <b>$is_decoded</b>, <b>$filter_args</b>) = @_;
 
     <var># Filter code here
 
@@ -130,80 +125,51 @@ sub <var>filter</var> {
 }
 </PRE>
 
-<H5>Argument Descriptions</H5>
+<H5>Parameter Descriptions</H5>
 
 <table cellspacing=1 border=0 cellpadding=4>
 
 <tr valign=top>
-<td><strong><CODE>$head</CODE></strong></td>
-<td><P>This is the header text of the message (or body part if called
-in a multipart message).
-</P>
-</td>
-</tr>
-
-<tr valign=top>
-<td><strong><CODE>*fields</CODE></strong></td>
-<td><P>A pointer (typeglob) to an associative array that has broken down
-<strong><CODE>$head</CODE></strong>
-into field label/field value components. The
-keys are the lower-case representations of the field
-values. <STRONG>Example</STRONG>: If you would like to retrieve
-the value of the Content-Type field, then use the following:
-<strong><CODE>$fields{'content-type'}</CODE></strong>.
-</P>
-<P>If a field occurs more than once in a header, MHonArc
-separates the field values in the associative array by a
-`<strong><CODE>\034</CODE></strong>' character.
-To make your filter less likely to break
-due to changes in MHonArc, you may use the
-<strong><CODE>$readmail::FieldSep</CODE></strong>
-variable instead of `<strong><CODE>\034</CODE></strong>'.
-</P>
-
-<table border=0 cellpadding=4>
-<tr valign=top>
-<td><strong>NOTE</strong></td>
-<td><p>Since the <strong><CODE>*fields</CODE></strong> argument
-is a typeglob, <strong><code>my</code></strong> cannot be used
-when assigning the typeglob from the <strong><code>@_</code></strong> array.
-<strong><code>my</code></strong> can be used for creating local copies
-of the other arguments.
+<td><strong><code>$fields_hash_ref</code></strong></td>
+<td><p>A reference to hash of message/part header
+fields.  Keys are field names in lowercase
+and values are array references containing the
+field values.  For example, to obtain the
+content-type, if defined, you would do:
+</p>
+<pre>
+  $fields_hash_ref-&gt;{'content-type'}[0]</pre>
+<p>Values for a fields are stored in arrays since
+duplication of fields are possible.  For example,
+the <tt>Received:</tt> header field is typically repeated
+multiple times.  For fields that only occur once,
+then array for the field will only contain one
+item.
 </p>
 </td>
 </tr>
-</table>
 
+<tr valign=top>
+<td><strong><code>$body_data_ref</code></strong></td>
+<td><p>Reference to body data.  It is okay for the
+filter to modify the text in-place.
+</p>
 </td>
 </tr>
 
 <tr valign=top>
-<td><strong><CODE>$data</CODE></strong></td>
-<td><P>This is a copy of the message (or body part if called in
-a mulitpart message) body.
-</P>
+<td><strong><code>$is_decoded</code></strong></td>
+<td><p>Boolean flag if body data has been decoded.
+This is normally true unless some non-standard
+content-transfer-encoding is used.  See
+<a href="mimedecoders.html">MIMEDECODERS</a> on how
+to register decoders for various content-transfer-encodings.
+</p>
 </td>
 </tr>
 
 <tr valign=top>
-<td><strong><CODE>$decoded</CODE></strong></td>
-<td><P>This flag is set to 1 if MHonArc decoded the message
-and <strong><code>$data</code></strong>
-represents the orginal data before encoded by the sender. If
-set to 0, <strong><code>$data</code></strong>
-has not been decoded. The failure to decode occurs
-if MHonArc does not recognizeed the encoding specified in
-the Content-Transfer-Encoding field.
-</P>
-<P>MHonArc has decoded the data for you if it was encoded
-in 7-Bit, 8-Bit, Binary, Quoted-Printable, Base64, Uuencode
-(x-uuencode, uuencode, x-uue, uue).
-</P>
-</td>
-</tr>
-
-<tr valign=top>
-<td><strong><CODE>$argstring</CODE></strong></td>
+<td><strong><code>$filter_args</code></strong></td>
 <td><P>This is an optional argument string that may be used to modify the 
 behavior of the filter. The format of this string is determined by the filter 
 itself.  The value of the string is set by the
@@ -216,17 +182,27 @@ itself.  The value of the string is set by the
 
 <H5>Return Value</H5>
 
-<P>The return value is treated as a list. The first item of the list
+<p>The return value is treated as a list. The first item of the list
 is a string representing the HTML markup to insert in the HTMLized
-message. An empty string may be returned to tell MHonArc
-that the routine was unable to filter data.  </P>
-
-<P>Any other list items are treated as names of any files that were
+message. An empty string, or <tt>undef</tt> may be returned to tell MHonArc
+that the routine was unable to filter data.
+</p>
+<p>Any other list items are treated as names of any files that were
 generated by the filter. MHonArc needs to keep track if any
 extra files that a filter may generate in order for MHonArc to
 delete those files if the message gets removed from the archive.
-</P>
+</p>
 
+<table border=0 cellpadding=4>
+<tr valign=top>
+<td><strong>NOTE</strong></td>
+<td><p>If you want MHonArc to treat the data as filtered, but not
+have anything displayed on the page, just return a string with
+a single space character.
+</p>
+</td>
+</tr>
+</table>
 <table border=0 cellpadding=4>
 <tr valign=top>
 <td><strong>NOTE</strong></td>
@@ -252,8 +228,8 @@ variable/routine conflicts with MHonArc.
 <LI><P>If the filter creates derived files (like the image filters),
 you may use the variable <strong><CODE>$mhonarc::OUTDIR</CODE></strong>
 to determine the
-location of the mail archive.  </P>
-
+location of the mail archive.
+</P>
 <table border=0 cellpadding=4>
 <tr valign=top>
 <td><strong>NOTE</strong></td>
@@ -261,9 +237,11 @@ location of the mail archive.  </P>
 <strong><CODE>$mhonarc::OUTDIR</CODE></strong> as part as the
 filename that is returned to MHonArc.  If the filter
 does create files, just return the base name.
+</p>
 </td>
 </tr>
 </table>
+<p></p>
 
 <LI><P>Look at the default filters contained in the distribution
 of MHonArc. You can use these as templates for writing
@@ -276,6 +254,7 @@ on the file, and if the file does not return
 true, Perl will abort execution.  </P>
 
 <li><p>Test your filter before production use.
+</p>
 
 </UL>
 
@@ -336,7 +315,31 @@ x-sun-attachment;	   <a href="#m2h_text_plain">m2h_text_plain::filter</a>;	mhtxt
 <H3><a name="m2h_external">m2h_external::filter</a></h3>
 
 <P>The filter extracts the data into a separate file and puts
-a hyperlink to the file into the HTMLized message.  </P>
+a hyperlink to the file into the HTMLized message.  The following
+is an example how the link is formatted:
+</P>
+<dl>
+<dd><p><strong>Attachment:
+<a href=""><tt>blueball.gif</tt></a></strong><br>
+<em>Description:</em> Blue ball GIF icon</p>
+</dd></dl>
+
+<p>The description text is retrieved from the <tt>Content-Disposition</tt>
+message header field, if defined.  If not defined, a generic description
+will be provided based on the specified content-type of the data.
+</p>
+
+<p>If the <tt>useicon</tt> filter argument has been specified for the
+filter, the following format will be used:
+</p>
+<dl><dd><p><strong><a href="" ><img src="../monicon.png" align="left" border=0 alt="Attachment:"></a>
+<a href="" ><tt>blueball.gif</tt></a></strong><br>
+<em>Description:</em> Blue ball GIF icon</p>
+</dd></dl>
+
+<p>The actual icon used is based upon the <a href="icons.html">ICONS</a>
+resource.
+</p>
 
 <P>By default, the filter ignores any filename specification
 given in the message when writing the data to disk. 
@@ -381,6 +384,11 @@ Content-Disposition setting.
 <td><strong><tt>forceinline</tt></strong></td>
 <td><p>Force images to be displayed inline, overriding any
 Content-Disposition setting.
+</p></td>
+</tr>
+<tr valign=top>
+<td><strong><tt>frame</tt></strong></td>
+<td><p>Draw a frame around the attachment link.
 </p></td>
 </tr>
 <tr valign=top>
@@ -1043,6 +1051,14 @@ recognizes:
 <td align=center><tt>jpg</tt></td>
 <td>JPEG image</td></tr>
 <tr valign="top">
+<td align=left><strong>image/pbm</strong></td>
+<td align=center><tt>pbm</tt></td>
+<td>Portable bitmap</td></tr>
+<tr valign="top">
+<td align=left><strong>image/pgm</strong></td>
+<td align=center><tt>pgm</tt></td>
+<td>Portable graymap</td></tr>
+<tr valign="top">
 <td align=left><strong>image/png</strong></td>
 <td align=center><tt>png</tt></td>
 <td>PNG image</td></tr>
@@ -1130,6 +1146,14 @@ recognizes:
 <td align=left><strong>image/x-xwindowdump</strong></td>
 <td align=center><tt>xwd</tt></td>
 <td>X window dump</td></tr>
+<tr valign="top">
+<td align=left><strong>message/news</strong></td>
+<td align=center><tt>822</tt></td>
+<td>News post</td></tr>
+<tr valign="top">
+<td align=left><strong>message/rfc822</strong></td>
+<td align=center><tt>822</tt></td>
+<td>Mail message</td></tr>
 <tr valign="top">
 <td align=left><strong>model/iges</strong></td>
 <td align=center><tt>iges</tt></td>
@@ -1327,6 +1351,19 @@ convert the characters to the appropriate entity references.
 <hr size=0 noshade width="50%">
 <H3><a name="m2h_text_html">m2h_text_html::filter</a></h3>
 
+<table border=0 cellpadding=4>
+<tr valign=top>
+<td><strong><font color="red">CAUTION</font></strong></td>
+<td><p>
+If you are worried about security, it is recommended that you disable
+support of text/html messages in your mail archives.  There is no
+guarantee that this filter is robust enough to eliminate all possible
+exploits that can occur with HTML data.
+</p>
+</td>
+</tr>
+</table>
+
 <p>This filter is designed to process <tt>text/html</tt>, or
 <tt>text/x-html</tt>, data.
 The filter modifies HTML documents so they can be
@@ -1378,7 +1415,7 @@ The following attributes are removed:
 <tt>onkeydown</tt>,
 <tt>onkeyup</tt>.
 The <strong><tt>allowscript</tt></strong> option can be
-be used to override the this behavior (see below).
+be used to override this behavior (see below).
 </p></li>
 <li><p><b><tt>cid:</tt></b> URLs are resolved, if possible.  Therefore,
 if image data related to the HTML document is included with the message,
@@ -1404,6 +1441,19 @@ care.
 </p></td>
 </tr>
 <tr valign=top>
+<td><strong><tt>allownoncidurls</tt></strong></td>
+<td><p>Preserve URL-based attributes that are not cid: URLs.
+Normally, any URL-based attribute -- <tt>href</tt>, <tt>src</tt>,
+<tt>background</tt>, <tt>classid</tt>, <tt>data</tt>, <tt>longdesc</tt>
+-- will be stripped if it is not a cid: URL.  This is to prevent
+malicious URLs that verify mail addresses for spam purposes, secretly
+set cookies, or gather some statistical data automatically with the
+use of elements that cause browsers to automatically fetch data:
+<tt>IMG</tt>, <tt>BODY</tt>, <tt>IFRAME</tt>, <tt>FRAME</tt>,
+<tt>OBJECT</tt>, <tt>SCRIPT</tt>, <tt>INPUT</tt>.
+</p></td>
+</tr>
+<tr valign=top>
 <td><strong><tt>allowscript</tt></strong></td>
 <td><p>Preserve any markup associated with scripting.
 This includes elements and attributes related to scripting.  This option
@@ -1413,10 +1463,32 @@ care.
 </p></td>
 </tr>
 <tr valign=top>
+<td><strong><tt>attachcheck</tt></strong></td>
+<td><p>Honor attachment disposition.  By default,
+all text/html data is displayed inline on
+the message page.  If <tt>attachcheck</tt> is specified
+and Content-Disposition specifies the data as
+an attachment, the data is saved to a file
+with a link to it from the message page.
+</p>
+<p><b>CAUTION:</b> If <tt>attachcheck</tt> is specified, the HTML
+data is saved "as-is".  For example, no stripping of scripting-based
+markup is performed and no resolution of cid URLs are performed.
+</p>
+</tr>
+<tr valign=top>
 <td><strong><tt>nofont</tt></strong></td>
 <td><p>Remove font tags.
 </p></td>
 </tr>
+<tr valign=top>
+<td><strong><tt>notitle</tt></strong></td>
+<td><p>Do not print extracted title at the beginning of converted
+output.  Since this filter strips out HEAD markup so the document
+can be included into the message page, this filter will extract
+the title and print the title of the document before the document
+body.  The <tt>notitle</tt> argument disables this behavior.
+</p></td>
 </table>
 
 <hr size=0 noshade width="50%">
@@ -1554,7 +1626,7 @@ any uuencoded data.
 data for purposes of checking if the data should be excluded when
 checked against the <a href="mimeexcs.html">MIMEEXCS</a> resource.
 Therefore, if <tt>application/octet-stream</tt> data is listed
-in MIMEEXCS, uudencode data will be excluded.
+in MIMEEXCS, uuencoded data will be excluded.
 </p></td>
 </tr>
 
@@ -1613,82 +1685,29 @@ content-type is shown.
 <hr>
 <h2>Examples</h2>
 
-<p>The following code is an example filter for HTML message data
-(note, this example has a subset of the functionality of the HTML
-filter used by MHonArc):
+<p>The following code is an example filter for converting
+<tt>text/tab-separated-values</tt> into an HTML table:
 </p>
 <pre>
-##---------------------------------------------------------------------------##
-##    Copyright (C) 1995-1998	Earl Hood, mhonarc@mhonarc.org
-##---------------------------------------------------------------------------##
+package m2h_text_tsv;
 
-package m2h_text_html;
-
-$Url	= '(\w+://|\w+:)';	# Beginning of URL match expression
-
-##---------------------------------------------------------------------------
-##	The filter must modify HTML content parts for merging into the
-##	final filtered HTML messages.  Modification is needed so the
-##	resulting filtered message is valid HTML.
-##
 sub filter {
-    local($header, *fields, *data, $isdecode, $args) = @_;
-    local($base, $title, $tmp);
-    $base 	= '';
-    $title	= '';
-    $tmp	= '';
+    my($fields, $data, $isdecode, $args) = @_;
+    my($field, $line, $ret);
+    local($_);
 
-    ## Get/remove title
-    if ($data =~ s%&lt;title\s*&gt;([^&lt;]*)&lt;/title\s*&gt;%%i) {
-        $title = "&lt;ADDRESS&gt;Title: &lt;STRONG&gt;$1&lt;/STRONG&gt;&lt;/ADDRESS&gt;\n";
-    }
-    ## Get/remove BASE url
-    if ($data =~ s%(&lt;base\s[^&gt;]*&gt;)%%i) {
-        $tmp = $1;
-        if ($tmp =~ m|href\s*=\s*['"]([^'"]+)['"]|i) {
-	    $base = $1;
-	} elsif ($tmp =~ m|href\s*=\s*([^\s&gt;]+)|i) {
-	    $base = $1;
+    $$data =~ s/^\s+//;
+    $ret  = "&lt;table border=1&gt;\n";
+    foreach $line (split(/\r?\n/, $$data)) {
+	$ret .= "&lt;tr&gt;";
+	foreach $field (split(/\t/, $line)) {
+	    $ret .= "&lt;td&gt;$field&lt;/td&gt;";
 	}
-    } elsif ((defined($tmp = $fields{'content-base'}) ||
-	      defined($tmp = $fields{'content-location'})) &amp;&amp;
-	     ($tmp =~ m%/%)) {
-	($base = $tmp) =~ s/['"\s]//g;
+	$ret .= "&lt;/tr&gt;\n";
     }
-    $base =~ s%(.*/).*%$1%;
-
-    ## Strip out certain elements/tags
-    $data =~ s%&lt;!doctype\s[^&gt;]*&gt;%%i;
-    $data =~ s%&lt;/?html[^&gt;]*&gt;%%ig;
-    $data =~ s%&lt;/?body[^&gt;]*&gt;%%ig;
-    $data =~ s%&lt;head\s*&gt;[\s\S]*&lt;/head\s*&gt;%%i;
-
-    ## Modify relative urls to absolute using BASE
-    if ($base =~ /\S/) {
-        $data =~ s%(href\s*=\s*['"])([^'"]+)(['"])%
-		   &amp;addbase($base,$1,$2,$3)%gei;
-        $data =~ s%(src\s*=\s*['"])([^'"]+)(['"])%
-                   &amp;addbase($base,$1,$2,$3)%gei;
-    }
-
-    ($title . $data);
+    $ret .= "&lt;/table&gt;\n";
+    ($ret);
 }
-##---------------------------------------------------------------------------
-sub addbase {
-    local($b, $pre, $u, $suf) = @_;
-    local($ret);
-    $u =~ s/^\s+//;
-    if ($u =~ m%^$Url%o) {	# Non-relative URL, do nothing
-        $ret = $pre . $u . $suf;
-    } else {			# Relative URL
-	if ($u =~ m%^/%) {		# Check for "/..."
-	    $b =~ s%^(${Url}[^/]*)/.*%$1%o;	# Get hostname:port number
-	}
-        $ret = $pre . $b . $u . $suf;
-    }
-    $ret;
-}
-##---------------------------------------------------------------------------
 
 1;
 </pre>
@@ -1714,9 +1733,14 @@ sub addbase {
 
 <!-- *************************************************************** -->
 <hr>
+<!--x-rc-nav-->
+<table border=0><tr valign="top">
+<td align="left" width="50%">[Prev:&nbsp;<a href="mimeexcs.html">MIMEEXCS</a>]</td><td><nobr>[<a href="../resources.html#mimefilters">Resources</a>][<a href="../mhonarc.html">TOC</a>]</nobr></td><td align="right" width="50%">[Next:&nbsp;<a href="modtime.html">MODTIME</a>]</td></tr></table>
+<!--/x-rc-nav-->
+<hr>
 <address>
-01/06/10 17:48:19<br>
-<img align="top" src="../monicon.gif" alt="">
+$Date: 2002/07/27 05:13:10 $ <br>
+<img align="top" src="../monicon.png" alt="">
 <a href="http://www.mhonarc.org"><strong>MHonArc</strong></a><br>
 Copyright &#169; 1997-2001 <a href="http://www.mhonarc.org/~ehood/">Earl Hood</a>, <a href="mailto:mhonarc@mhonarc.org">mhonarc@mhonarc.org</a><br>
 </address>

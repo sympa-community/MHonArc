@@ -4,11 +4,10 @@
 <title>MHonArc Resources: THEAD</title>
 </head>
 <body>
-
-<address>
-<a href="../resources.html#thead">MHonArc Resource List</a>
-</address>
-
+<!--x-rc-nav-->
+<table border=0><tr valign="top">
+<td align="left" width="50%">[Prev:&nbsp;<a href="tfoot.html">TFOOT</a>]</td><td><nobr>[<a href="../resources.html#thead">Resources</a>][<a href="../mhonarc.html">TOC</a>]</nobr></td><td align="right" width="50%">[Next:&nbsp;<a href="thread.html">THREAD</a>]</td></tr></table>
+<!--/x-rc-nav-->
 <hr>
 <h1>THEAD</h1>
 
@@ -18,20 +17,20 @@
 
 <dl>
 
-<dt><strong>Envariable</strong><dt>
+<dt><strong>Envariable</strong></dt>
 <dd><p>N/A
 </p>
 </dd>
 
-<dt><strong>Element</strong><dt>
-<dd><p><br>
+<dt><strong>Element</strong></dt>
+<dd><p>
 <code>&lt;THEAD&gt;<br></code>
 <var>markup ...</var><br>
 <code>&lt;/THEAD&gt;<br></code>
 </p>
 </dd>
 
-<dt><strong>Command-line Option</strong><dt>
+<dt><strong>Command-line Option</strong></dt>
 <dd><p>N/A
 </p>
 </dd>
@@ -56,12 +55,12 @@ thread listing.
 
 <pre>
 <b>&lt;THead&gt;</b>
-&lt;UL>
-&lt;LI>&lt;A HREF="<a href="#IDXFNAME">$IDXFNAME$</a>">Main Index&lt;/A>&lt;/LI>
-&lt;/UL>
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="<a href="#IDXFNAME">$IDXFNAME$</a>"&gt;Main Index&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
 <a href="#PGLINK">$PGLINK(TPREV)$</a><a href="#PGLINK">$PGLINK(TNEXT)$</a>
-&lt;HR>
-&lt;UL>
+&lt;hr&gt;
+&lt;ul&gt;
 <b>&lt;/THead&gt;</b>
 </pre>
 
@@ -70,11 +69,11 @@ thread listing.
 
 <pre>
 <b>&lt;THead&gt;</b>
-&lt;UL>
-&lt;LI>&lt;A HREF="<a href="#IDXFNAME">$IDXFNAME$</a>">Main Index&lt;/A>&lt;/LI>
-&lt;/UL>
-&lt;HR>
-&lt;UL>
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="<a href="#IDXFNAME">$IDXFNAME$</a>"&gt;Main Index&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;ul&gt;
 <b>&lt;/THead&gt;</b>
 </pre>
 
@@ -174,23 +173,23 @@ for a multi-page thread index:
 
 <pre>
 <b>&lt;THead&gt;</b>
-&lt;ul>
-&lt;li>&lt;a href="<a href="#IDXFNAME">$IDXFNAME$</a>">Date Index&lt;/a>&lt;/li>
-&lt;/ul>
-&lt;hr>
-&lt;table border=0 width="100%">
-&lt;tbody>
-&lt;tr align="center">
-&lt;th colspan=4>Page <a href="#PAGENUM">$PAGENUM$</a> of <a href="#NUMOFPAGES">$NUMOFPAGES$</a>
-&lt;tr>
-&lt;td align="left"><a href="#PGLINK">$PGLINK(TPREV)$</a>
-&lt;td align="right">[&lt;a href="<a href="#PG">$TFIRSTPG(TFIRST)$</a>">First Page&lt;/a>]
-&lt;td align="left">[&lt;a href="<a href="#PG">$PG(TLAST)$</a>">Last Page&lt;/a>]
-&lt;td align="right"><a href="#PGLINK">$PGLINK(TNEXT)$</a>
-&lt;/tbody>
-&lt;/table>
-&lt;hr>
-&lt;ul>
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="<a href="#IDXFNAME">$IDXFNAME$</a>"&gt;Date Index&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;table border=0 width="100%"&gt;
+&lt;tbody&gt;
+&lt;tr align="center"&gt;
+&lt;th colspan=4&gt;Page <a href="#PAGENUM">$PAGENUM$</a> of <a href="#NUMOFPAGES">$NUMOFPAGES$</a>
+&lt;tr&gt;
+&lt;td align="left"&gt;<a href="#PGLINK">$PGLINK(TPREV)$</a>
+&lt;td align="right"&gt;[&lt;a href="<a href="#PG">$TFIRSTPG(TFIRST)$</a>"&gt;First Page&lt;/a&gt;]
+&lt;td align="left"&gt;[&lt;a href="<a href="#PG">$PG(TLAST)$</a>"&gt;Last Page&lt;/a&gt;]
+&lt;td align="right"&gt;<a href="#PGLINK">$PGLINK(TNEXT)$</a>
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;hr&gt;
+&lt;ul&gt;
 <b>&lt;/THead&gt;</b>
 </pre>
 
@@ -214,11 +213,16 @@ for a multi-page thread index:
 
 <!-- *************************************************************** -->
 <hr>
+<!--x-rc-nav-->
+<table border=0><tr valign="top">
+<td align="left" width="50%">[Prev:&nbsp;<a href="tfoot.html">TFOOT</a>]</td><td><nobr>[<a href="../resources.html#thead">Resources</a>][<a href="../mhonarc.html">TOC</a>]</nobr></td><td align="right" width="50%">[Next:&nbsp;<a href="thread.html">THREAD</a>]</td></tr></table>
+<!--/x-rc-nav-->
+<hr>
 <address>
-00/10/28 11:13:10<br>
-<img align="top" src="../monicon.gif" alt="">
-<a href="http://www.pobox.com/~ehood/mhonarc.html"><strong>MHonArc</strong></a><br>
-Copyright &#169; 1997-1998, <a href="http://www.pobox.com/~ehood/">Earl Hood</a>, <a href="mailto:mhonarc@pobox.com">mhonarc@pobox.com</a><br>
+$Date: 2002/07/27 05:13:11 $ <br>
+<img align="top" src="../monicon.png" alt="">
+<a href="http://www.mhonarc.org/"><strong>MHonArc</strong></a><br>
+Copyright &#169; 1997-1998, <a href="http://www.earlhood.com/">Earl Hood</a>, <a href="mailto:mhonarc@mhonarc.org">mhonarc@mhonarc.org</a><br>
 </address>
 
 </body>

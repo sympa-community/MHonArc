@@ -1,14 +1,14 @@
 #!/usr/local/bin/perl
 ##---------------------------------------------------------------------------##
 ##  File:
-##	@(#) mha-dbrecover 1.3 00/04/24 00:13:55
+##	$Id: mha-dbrecover,v 1.6 2001/11/18 07:25:34 ehood Exp $
 ##  Author:
-##      Earl Hood       mhonarc@pobox.com
+##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
 ##      Program to rebuild the MHonArc database file from message files.
 ##---------------------------------------------------------------------------##
 ##    MHonArc -- Internet mail-to-HTML converter
-##    Copyright (C) 1998	Earl Hood, mhonarc@pobox.com
+##    Copyright (C) 1998,2001	Earl Hood, mhonarc@mhonarc.org
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by
@@ -28,12 +28,27 @@
 
 package mha_dbrecover;
 
+use Getopt::Long;
+
 ##---------------------------------------------------------------------------##
 ##				Main routine				     ##
 ##---------------------------------------------------------------------------##
 
 MAIN: {
     unshift(@INC, 'lib');	# Should I leave this line in?
+
+    ## Grab options from @ARGV unique to this program
+    my %opts = ( );
+    Getopt::Long::Configure('pass_through');
+    GetOptions(\%opts,
+      'dbr-startnum=i',
+      'dbr-endnum=i'
+    );
+    my $startnum = $opts{'dbr-startnum'} || 0;
+    my $endnum   = $opts{'dbr-endnum'}   || -1;
+
+    ## Reset pass-through of options
+    Getopt::Long::Configure('no_pass_through');
 
     ## Initialize MHonArc
     require 'mhamain.pl' || die qq/ERROR: Unable to require "mhamain.pl"\n/;
@@ -43,54 +58,75 @@ MAIN: {
     require 'mhmsgfile.pl' ||
     	die qq/ERROR: Unable to require "mhmsgfile.pl"\n/;
 
-    ## Open archive
+    ## Open archive: We use special -noarg option to tell mhonarc
+    ## to not do any processing, just open archive and lock it.
     unshift(@ARGV, '-noarg', '-lock');
     if (!mhonarc::open_archive()) {
-	die "ERROR: Unable to open archive\n"; }
+	# unable to open, so abort processing
+	die "ERROR: Unable to open archive\n";
+    }
 
     ## do it
     eval {
 	local(*DIR);
 	if (!opendir(DIR, $mhonarc::OUTDIR)) {
-	    die qq/ERROR: Unable to open "$mhonarc::OUTDIR": $!\n"/; }
+	    # unable to open archive directory
+	    die qq/ERROR: Unable to open "$mhonarc::OUTDIR": $!\n"/;
+	}
 
 	print STDOUT "Rebuilding database in $mhonarc::OUTDIR ...\n"
 	    unless $mhonarc::QUIET;
 
-	## Define regular expressing for matching message files
+	## Define regular expressing for matching message files:
+	## we use message prefix and extension settings as defined
+	## by mhonarc.  Make sure to capture message number from
+	## filename.
 	my $msgrex = '^'.
 		     "\Q$mhonarc::MsgPrefix".
 		     '(\d+)\.'.
 		     "\Q$mhonarc::HtmlExt".
 		     '$';
-	my @file = grep(/$msgrex/o, readdir(DIR));
-	closedir(DIR);
-	
-	if (!@file) {
-	    die qq/ERROR: No message files found\n/; }
-
 	local($_);
-	my($file);
+	my(@file);
+	foreach (readdir(DIR)) {
+	    # skip if not a message file
+	    next  unless /$msgrex/o;
+	    # skip if number less than start
+	    next  if $1 < $startnum;
+	    # skip if number greater than end
+	    next  if ($endnum >= 0) && ($1 > $endnum);
 
-	## Read files.  Use function in mhmsgfile.pl to extract data
+	    # add file to list to process
+	    push @file, $_;
+	}
+	closedir(DIR);
+	if (!@file) {
+	    # nothing found to process
+	    die qq/ERROR: No message files found\n/;
+	}
+
+	## Read files.  Use function in mhmsgfile.pl to extract data.
+	my($file, $num);
 	foreach (@file) {
-	    print STDOUT "."  unless $mhonarc::QUIET;
+	    # get number for loading into mhonarc data structures
 	    ($num) = $_ =~ /$msgrex/o;
+	    print STDOUT "."  unless $mhonarc::QUIET;
 	    $file = join($mhonarc::DIRSEP, $mhonarc::OUTDIR, $_);
+	    # load date from message file into mhonarc
 	    mhonarc::load_data_from_msg_file($file, $num);
 	}
 
-	## Define other data structures
+	## Define other data structures that need to be recovered.
 	$mhonarc::NumOfMsgs = scalar(@file);
 	@mhonarc::MListOrder = mhonarc::sort_messages();
 	mhonarc::compute_follow_ups(\@mhonarc::MListOrder);
 	mhonarc::compute_threads();
 
+	## Output recovered database file
 	print STDOUT "\nWriting database ...\n"
 	    unless $mhonarc::QUIET;
 	mhonarc::output_db($mhonarc::DBPathName);
     };
-
     my $ec = 0;
     if ($@) { warn $@; $ec = 1; }
 
@@ -125,13 +161,43 @@ format.  Consult your system administrator for where the documentation
 has been installed, or see L<"AVAILABILITY"> on where you can
 access the documentation on the web.
 
+=head1 OPTIONS
+
+B<mha-dbrecover> takes all the options available to B<mhonarc> along
+with the following additional options:
+
+=over
+
+=item C<-dbr-startnum> I<#>
+
+The starting message number to recover data from.  This option is
+useful if you have many message files in a directory, but you only
+want to recover a subset of the files.
+
+If this option is not specified, the starting number is 0.
+
+=item C<-dbr-endnum> I<#>
+
+The ending message number to recover data from.  This option is
+useful if you have many message files in a directory, but you only
+want to recover a subset of the files.
+
+If this option is not specified, all messages starting from
+C<-dbr-startnum> will be recovered.
+
+=back
+
+B<NOTE:> Only a subset of the options available to B<mhonarc>
+are actually supported since many options are not applicable for
+recovering operations.
+
 =head1 AVAILABILITY
 
 E<lt>I<http://www.mhonarc.org/>E<gt>
 
 =head1 AUTHOR
 
-Earl Hood, mhonarc@pobox.com
+Earl Hood, mhonarc@mhonarc.org
 
 =cut
 

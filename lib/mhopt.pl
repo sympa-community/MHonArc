@@ -1,13 +1,13 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##      @(#) mhopt.pl 2.20 01/04/10 21:36:41
+##      $Id: mhopt.pl,v 2.30 2002/07/27 05:13:13 ehood Exp $
 ##  Author:
-##      Earl Hood       mhonarc@pobox.com
+##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
 ##      Routines to set options for MHonArc.
 ##---------------------------------------------------------------------------##
 ##    MHonArc -- Internet mail-to-HTML converter
-##    Copyright (C) 1997-1999	Earl Hood, mhonarc@pobox.com
+##    Copyright (C) 1997-1999	Earl Hood, mhonarc@mhonarc.org
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by
@@ -63,6 +63,7 @@ sub get_resources {
 	"expireage=i",	# Time in seconds from current if message expires
 	"folrefs",	# Print links to explicit follow-ups/references
 	"footer=s",	# File containing user text for bottom of index page
+			# 	(option no longer applicable)
 	"force",	# Perform archive operation even if unable to lock
 	"fromfields=s", # Fields that contains the "from" of a message
 	"genidx",	# Generate an index based upon archive contents
@@ -71,6 +72,7 @@ sub get_resources {
 	"gzipfiles",	# Gzip files
 	"gziplinks",	# Add ".gz" extensions to files
 	"header=s",	# File containing user text for top of index page
+			# 	(option no longer applicable)
 	"htmlext=s",	# Extension for HTML files
 	"idxfname=s",	# Filename of index page
 	"idxprefix=s",	# Filename prefix for multi-page main index
@@ -127,6 +129,8 @@ sub get_resources {
 	"nosubsort",	# Do not sort by subject
 	"nosubjectthreads",
 			# Do not do subject based threading
+	"nosubjecttxt=s",
+			# Text to use if message has no subject
 	"notedir",	# Location of notes
 	"notetext=s@",	# Text data of note
 	"nothread",	# Do not create threaded index
@@ -176,6 +180,8 @@ sub get_resources {
 	"tlevels=i",	# Maximum # of nested lists in threaded index
 	"treverse",	# Reverse order of thread listing
 	"tslice=s",	# Set size of thread slice listing
+	"tslicelevels=i",
+			# Maximum # of nested lists in thread slices
 	"tsort",	# List threads by date
 	"tsubsort",	# List threads by subject
 	"umask=i",	# Set umask of process
@@ -198,7 +204,9 @@ sub get_resources {
 
     ## Check std{in,out,err} options
     DUP: {
-	$MhaStdin = \*STDIN;
+	$MhaStdin  = \*STDIN;
+	#$MhaStdout = \*STDOUT;
+	#$MhaStderr = \*STDERR;
 	STDOUTERR: {
 	    if (defined($opt{'stdout'}) && !ref($opt{'stdout'})) {
 		open(STDOUT, ">>$opt{'stdout'}") ||
@@ -276,26 +284,33 @@ sub get_resources {
     require 'mhrmm.pl'  	if $RMM;
     require 'mhnote.pl'  	if $ANNOTATE;
 
+    print STDOUT "This is MHonArc v$VERSION, Perl $] $^O\n"  unless $QUIET;
+
     ## Evaluate site local initialization
     delete($INC{'mhasiteinit.pl'});      # force re-evaluation
     eval { require 'mhasiteinit.pl'; };  # ignore status
 
     ## Read default resource file
-    if ($DefRcFile) {
-	&read_fmt_file($DefRcFile);
-    } else {
-	$tmp = join($DIRSEP, $ENV{'HOME'}, $DefRcName);
-	if (! -e $tmp) {
-	    local $_;
-	    foreach (@INC) {
-		if (-e join($DIRSEP, $_, 'mhamain.pl')) {
-		    $tmp = join($DIRSEP, $_, $DefRcName);
-		    last;
-		}
+    DEFRCFILE: {
+	if ($DefRcFile) {
+	    read_fmt_file($DefRcFile);
+	    last DEFRCFILE;
+	}
+	if (defined $ENV{'HOME'}) {
+	    # check if in home directory
+	    $tmp = join($DIRSEP, $ENV{'HOME'}, $DefRcName);
+	    if (-e $tmp) {
+		read_fmt_file($tmp);
+		last DEFRCFILE;
 	    }
 	}
-	if (-e $tmp) {
-	    &read_fmt_file($tmp);
+	local $_;
+	foreach (@INC) {
+	    $tmp = join($DIRSEP, $_, $DefRcName);
+	    if (-e $tmp) {
+		read_fmt_file($tmp);
+		last DEFRCFILE;
+	    }
 	}
     }
 
@@ -339,6 +354,10 @@ sub get_resources {
 		   (!-e join($DIRSEP, $OUTDIR, ".mail2html.db"));
 	$DBPathName = join($DIRSEP, $OUTDIR, $DBFILE);
 
+	## Invoke preload callback
+	if (defined($CBDbPreLoad) && defined(&$CBDbPreLoad)) {
+	    &$CBDbPreLoad($DBPathName);
+	}
 	if (-e $DBPathName) {
 	    print STDOUT "Reading database ...\n"  unless $QUIET;
 
@@ -356,9 +375,20 @@ sub get_resources {
 
 	    ## Check for 1.x archive, and update data as needed
 	    if ($DbVERSION =~ /^1\./) {
-		print STDOUT "Updating database data to 2.0 ...\n"
+		print STDOUT "Updating database $DbVERSION data ...\n"
 		    unless $QUIET;
 		&update_data_1_to_2();
+		&update_data_2_1_to_later();
+		&update_data_2_4_to_later();
+	    }
+	    ## Check for 2.[0-4] archive
+	    if ($DbVERSION =~ /^2\.[0-4]\./) {
+		print STDOUT "Updating database $DbVERSION data ...\n"
+		    unless $QUIET;
+		if ($DbVERSION =~ /^2\.[01]\./) {
+		    &update_data_2_1_to_later();
+		}
+		&update_data_2_4_to_later();
 	    }
 
 	    ## Set %Follow here just incase it does not get recomputed
@@ -413,8 +443,8 @@ sub get_resources {
 	unshift(@PerlINC, @array);
     }
 
-    &remove_dups(*OtherIdxs);
-    &remove_dups(*PerlINC);
+    @OtherIdxs = remove_dups(\@OtherIdxs);
+    @PerlINC   = remove_dups(\@PerlINC);
 
     ## Require mail parsing library
     unshift(@INC, @PerlINC);
@@ -423,6 +453,8 @@ sub get_resources {
 	require 'readmail.pl' || die("ERROR: Unable to require readmail.pl\n");
 	$readmail::FormatHeaderFunc = \&mhonarc::htmlize_header;
 	$MHeadCnvFunc = \&readmail::MAILdecode_1522_str;
+	readmail::MAILset_alternative_prefs(@MIMEAltPrefs);
+	$IsDefault{'MIMEALTPREFS'} = !scalar(@MIMEAltPrefs);
     }
 
     ## Get other command-line options
@@ -430,9 +462,7 @@ sub get_resources {
     $DBPathName = join($DIRSEP, $OUTDIR, $DBFILE);
 
     $DOCURL	= $opt{'docurl'}     if $opt{'docurl'};
-    $FOOTER	= $opt{'footer'}     if $opt{'footer'};
     $FROM	= $opt{'msgsep'}     if $opt{'msgsep'};
-    $HEADER	= $opt{'header'}     if $opt{'header'};
     $IDXPREFIX	= $opt{'idxprefix'}  if $opt{'idxprefix'};
     $IDXSIZE	= $opt{'idxsize'}    if defined($opt{'idxsize'});
 	$IDXSIZE *= -1  if $IDXSIZE < 0;
@@ -447,7 +477,9 @@ sub get_resources {
     $TTITLE	= $opt{'ttitle'}     if $opt{'ttitle'};
     $MsgPrefix	= $opt{'msgprefix'}  if defined($opt{'msgprefix'});
     $GzipExe	= $opt{'gzipexe'}    if $opt{'gzipexe'};
-    $VarExp	= $opt{'varregex'}   if $opt{'varregex'};
+    $VarExp	= $opt{'varregex'}   if $opt{'varregex'} &&
+				        ($opt{'varregex'} =~ /\S/);
+    $TSLICELEVELS = $opt{'tslicelevels'}  if $opt{'tslicelevels'};
 
     $IDXNAME	= $opt{'idxfname'} || $IDXNAME || $ENV{'M2H_IDXFNAME'} ||
 		  "maillist.$HtmlExt";
@@ -466,6 +498,8 @@ sub get_resources {
     $SubReplyRxp   = $opt{'subjectreplyrxp'}    if $opt{'subjectreplyrxp'};
     $SubStripCode  = $opt{'subjectstripcode'}   if $opt{'subjectstripcode'};
     $MsgExcFilter  = $opt{'msgexcfilter'}    if defined($opt{'msgexcfilter'});
+
+    $NoSubjectTxt  = $opt{'nosubjecttxt'}	if $opt{'nosubjecttxt'};
 
     $IdxPageNum  = $opt{'pagenum'}   if defined($opt{'pagenum'});
 
@@ -540,8 +574,8 @@ sub get_resources {
     @FromFields	 = split(/:/, $opt{'fromfields'})  if $opt{'fromfields'};
     foreach (@FromFields) { s/\s//g; tr/A-Z/a-z/; }
 
-    ($TSliceNBefore, $TSliceNAfter) = split(/:/, $opt{'tslice'})
-	if $opt{'tslice'};
+    ($TSliceNBefore, $TSliceNAfter, $TSliceInclusive) =
+	split(/[:;]/, $opt{'tslice'})  if $opt{'tslice'};
 
     @Months   = split(/:/, $opt{'months'}) 	if defined($opt{'months'});
     @months   = split(/:/, $opt{'monthsabr'})  	if defined($opt{'monthsabr'});
@@ -608,6 +642,19 @@ sub get_resources {
     require 'mhthread.pl';
     require 'mhdb.pl'	    unless $SCAN || $IDXONLY || !$DoArchive;
 
+    ## Load text clipping function
+    if (defined($TextClipSrc)) {
+	eval { require $TextClipSrc; };
+	if ($@) { warn qq/Warning: $@\n/; }
+    }
+    if (!defined($TextClipFunc) || !defined(&$TextClipFunc)) {
+	$TextClipFunc = \&clip_text;
+	$TextClipSrc  = undef;
+	$IsDefault{'TEXTCLIPFUNC'} = 1;
+    } else {
+	$IsDefault{'TEXTCLIPFUNC'} = 0;
+    }
+
     ## Predefine %Index2TLoc in case of message deletion
     if (@TListOrder) {
 	@Index2TLoc{@TListOrder} = (0 .. $#TListOrder);
@@ -645,6 +692,11 @@ sub get_resources {
     delete($ContentType{''});
     delete($Refs{''});
 
+    # update DOCURL if default old value
+    if ($DOCURL eq 'http://www.oac.uci.edu/indiv/ehood/mhonarc.html') {
+	$DOCURL = 'http://www.mhonarc.org/';
+    }
+
     ## Check if printing process time
     $TIME = $opt{'time'};
 
@@ -673,7 +725,7 @@ sub usage {
 ##
 sub read_fmt_file {
     require 'mhrcfile.pl';
-    &read_resource_file($_[0]);
+    &read_resource_file;  # implicit passing of @_
 }
 
 ##---------------------------------------------------------------------------
@@ -697,15 +749,47 @@ sub update_data_1_to_2 {
     #--------------------------------------
     my($index);
     foreach $index (keys %From) {
-	$From{$index} =~ s/\&([\w-.]+);/&entname_to_char($1)/ge;
+	$From{$index} =~ s/\&([\w\-.]+);/&entname_to_char($1)/ge;
     }
     foreach $index (keys %Subject) {
-	$Subject{$index} =~ s/\&([\w-.]+);/&entname_to_char($1)/ge;
+	$Subject{$index} =~ s/\&([\w\-.]+);/&entname_to_char($1)/ge;
     }
     delete $IndexNum{''};
-    $TLITXT = '<LI>' . $TLITXT  unless ($TLITXT) && ($TLITXT =~ /<li>/i);
-    $THEAD .= "<UL>\n"   unless ($THEAD) && ($THEAD =~ m%<ul>\s*$%i);
-    $TFOOT  = "</UL>\n"  unless ($TFOOT) && ($TFOOT =~ m%^\s*</ul>%i);
+    $TLITXT = '<li>' . $TLITXT  unless ($TLITXT) && ($TLITXT =~ /<li>/i);
+    $THEAD .= "<ul>\n"   unless ($THEAD) && ($THEAD =~ m%<ul>\s*$%i);
+    $TFOOT  = "</ul>\n"  unless ($TFOOT) && ($TFOOT =~ m%^\s*</ul>%i);
+}
+
+##---------------------------------------------------------------------------
+##	Update 2.1, or earlier, data.
+##
+sub update_data_2_1_to_later {
+    # we can preserve filter arguments
+    if (defined(%main::MIMEFiltersArgs)) {
+	warn qq/         preserving MIMEARGS...\n/;
+	%readmail::MIMEFiltersArgs = %main::MIMEFiltersArgs;
+	$IsDefault{'MIMEARGS'} = 0;
+    }
+}
+
+##---------------------------------------------------------------------------
+##	Update 2.4, or earlier, data.
+##
+sub update_data_2_4_to_later {
+    # convert Perl 4 style data to Perl 5 style
+    my($index, $value);
+    while (($index, $value) = each(%Refs)) {
+	next  if ref($value);
+	$Refs{$index} = [ split(/$X/o, $value) ];
+    }
+    while (($index, $value) = each(%FollowOld)) {
+	next  if ref($value);
+	$FollowOld{$index} = [ split(/$bs/o, $value) ];
+    }
+    while (($index, $value) = each(%Derived)) {
+	next  if ref($value);
+	$Derived{$index} = [ split(/$X/o, $value) ];
+    }
 }
 
 ##---------------------------------------------------------------------------

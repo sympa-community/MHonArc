@@ -1,13 +1,13 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	@(#) mhidxrc.pl 2.7 00/10/28 10:47:42
+##	$Id: mhidxrc.pl,v 2.11 2001/11/23 20:42:39 ehood Exp $
 ##  Author:
-##      Earl Hood       mhonarc@pobox.com
+##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
 ##      MHonArc library defining values for various index resources
 ##---------------------------------------------------------------------------##
 ##    MHonArc -- Internet mail-to-HTML converter
-##    Copyright (C) 1996-1999	Earl Hood, mhonarc@pobox.com
+##    Copyright (C) 1996-1999	Earl Hood, mhonarc@mhonarc.org
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by
@@ -49,7 +49,7 @@ $IdxTypeStr = $NOSORT ? 'Message' :
     ##	Beginning of main index page
     unless ($IDXPGBEG) {
 	$IDXPGBEG =<<'EndOfStr';
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
+<!doctype html public "-//W3C//DTD HTML//EN">
 <html>
 <head>
 <title>$IDXTITLE$</title>
@@ -130,7 +130,7 @@ EndOfStr
     ##	Beginning of thread index page
     unless ($TIDXPGBEG) {
 	$TIDXPGBEG =<<'EndOfStr';
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
+<!doctype html public "-//W3C//DTD HTML//EN">
 <html>
 <head>
 <title>$TIDXTITLE$</title>
@@ -212,12 +212,12 @@ EndOfStr
 
     ## Template for the start of subject based section
     unless ($TSUBJECTBEG) {
-	$TSUBJECTBEG  = "<li>&lt;Possible follow-up(s)&gt;</li>\n";
+	$TSUBJECTBEG  = "<li>&lt;Possible follow-ups&gt;</li>\n";
 	$IsDefault{'TSUBJECTBEG'} = 1;
     }
     ## Template for the end of subject based section
     unless ($TSUBJECTEND) {
-	$TSUBJECTEND  = "";
+	$TSUBJECTEND  = " ";
 	$IsDefault{'TSUBJECTEND'} = 1;
     }
 
@@ -259,6 +259,7 @@ EndOfStr
 
 ## }
 
+## Thread Slice Resources
 unless ($TSLICEBEG) {
     $TSLICEBEG = "<blockquote><ul>\n";
     $IsDefault{'TSLICEBEG'} = 1;
@@ -266,6 +267,93 @@ unless ($TSLICEBEG) {
 unless ($TSLICEEND) {
     $TSLICEEND = "</ul></blockquote>\n";
     $IsDefault{'TSLICEEND'} = 1;
+}
+
+if ($TSLICELEVELS < 0) {
+    $TSLICELEVELS = $TLEVELS;
+    $IsDefault{'TSLICELEVELS'} = 1;
+}
+
+unless ($TSLICESINGLETXT) {
+    $TSLICESINGLETXT = $TSINGLETXT;
+    $IsDefault{'TSLICESINGLETXT'} = 1;
+}
+unless ($TSLICETOPBEG) {
+    $TSLICETOPBEG = $TTOPBEG;
+    $IsDefault{'TSLICETOPBEG'} = 1;
+}
+unless ($TSLICETOPEND) {
+    $TSLICETOPEND = $TTOPEND;
+    $IsDefault{'TSLICETOPEND'} = 1;
+}
+unless ($TSLICESUBLISTBEG) {
+    $TSLICESUBLISTBEG = $TSUBLISTBEG;
+    $IsDefault{'TSLICESUBLISTBEG'} = 1;
+}
+unless ($TSLICESUBLISTEND) {
+    $TSLICESUBLISTEND = $TSUBLISTEND;
+    $IsDefault{'TSLICESUBLISTEND'} = 1;
+}
+unless ($TSLICELITXT) {
+    $TSLICELITXT = $TLITXT;
+    $IsDefault{'TSLICELITXT'} = 1;
+}
+unless ($TSLICELIEND) {
+    $TSLICELIEND = $TLIEND;
+    $IsDefault{'TSLICELIEND'} = 1;
+}
+unless ($TSLICELINONE) {
+    $TSLICELINONE = $TLINONE;
+    $IsDefault{'TSLICELINONE'} = 1;
+}
+unless ($TSLICELINONEEND) {
+    $TSLICELINONEEND = $TLINONEEND;
+    $IsDefault{'TSLICELINONEEND'} = 1;
+}
+unless ($TSLICESUBJECTBEG) {
+    $TSLICESUBJECTBEG = $TSUBJECTBEG;
+    $IsDefault{'TSLICESUBJECTBEG'} = 1;
+}
+unless ($TSLICESUBJECTEND) {
+    $TSLICESUBJECTEND = $TSUBJECTEND;
+    $IsDefault{'TSLICESUBJECTEND'} = 1;
+}
+unless ($TSLICEINDENTBEG) {
+    $TSLICEINDENTBEG = $TINDENTBEG;
+    $IsDefault{'TSLICEINDENTBEG'} = 1;
+}
+unless ($TSLICEINDENTEND) {
+    $TSLICEINDENTEND = $TINDENTEND;
+    $IsDefault{'TSLICEINDENTEND'} = 1;
+}
+unless ($TSLICECONTBEG) {
+    $TSLICECONTBEG = $TCONTBEG;
+    $IsDefault{'TSLICECONTBEG'} = 1;
+}
+unless ($TSLICECONTEND) {
+    $TSLICECONTEND = $TCONTEND;
+    $IsDefault{'TSLICECONTEND'} = 1;
+}
+
+unless ($TSLICESINGLETXTCUR) {
+    $TSLICESINGLETXTCUR = $TSLICESINGLETXT;
+    $IsDefault{'TSLICESINGLETXTCUR'} = 1;
+}
+unless ($TSLICETOPBEGCUR) {
+    $TSLICETOPBEGCUR = $TSLICETOPBEG;
+    $IsDefault{'TSLICETOPBEGCUR'} = 1;
+}
+unless ($TSLICETOPENDCUR) {
+    $TSLICETOPENDCUR = $TSLICETOPEND;
+    $IsDefault{'TSLICETOPENDCUR'} = 1;
+}
+unless ($TSLICELITXTCUR) {
+    $TSLICELITXTCUR = $TSLICELITXT;
+    $IsDefault{'TSLICELITXTCUR'} = 1;
+}
+unless ($TSLICELIENDCUR) {
+    $TSLICELIENDCUR = $TSLICELIEND;
+    $IsDefault{'TSLICELIENDCUR'} = 1;
 }
 
 ##-------------------##
@@ -285,10 +373,10 @@ unless (@FromFields) {
 ## Beginning of message page
 unless ($MSGPGBEG) {
     $MSGPGBEG =<<'EndOfStr';
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
+<!doctype html public "-//W3C//DTD HTML//EN">
 <html>
 <head>
-<title>$SUBJECTNA:72$</title>
+<title>$SUBJECTNA$</title>
 EndOfStr
     
     $MSGPGBEG .= qq|<link rev="made" href="mailto:\$FROMADDR\$">\n|
@@ -382,7 +470,25 @@ $TNEXTBUTTONIA = '[Thread Next]',
 $TPREVBUTTONIA = '[Thread Prev]',
     $IsDefault{'TPREVBUTTONIA'} = 1	unless $TPREVBUTTONIA;
 
-## Next message in thread link
+$TNEXTINBUTTON = '[<a href="$MSG(TNEXTIN)$">Next in Thread</a>]',
+    $IsDefault{'TNEXTINBUTTON'} = 1	unless $TNEXTINBUTTON;
+$TNEXTINBUTTONIA = '[Next in Thread]',
+    $IsDefault{'TNEXTINBUTTONIA'} = 1	unless $TNEXTINBUTTONIA;
+$TPREVINBUTTON = '[<a href="$MSG(TPREVIN)$">Prev in Thread</a>]',
+    $IsDefault{'TPREVINBUTTON'} = 1	unless $TPREVINBUTTON;
+$TPREVINBUTTONIA = '[Prev in Thread]',
+    $IsDefault{'TPREVINBUTTONIA'} = 1	unless $TPREVINBUTTONIA;
+
+$TNEXTTOPBUTTON = '[<a href="$MSG(TNEXTTOP)$">Next Thread</a>]',
+    $IsDefault{'TNEXTTOPBUTTON'} = 1	unless $TNEXTTOPBUTTON;
+$TNEXTTOPBUTTONIA = '[Next Thread]',
+    $IsDefault{'TNEXTTOPBUTTONIA'} = 1	unless $TNEXTTOPBUTTONIA;
+$TPREVTOPBUTTON = '[<a href="$MSG(TPREVTOP)$">Prev Thread</a>]',
+    $IsDefault{'TPREVTOPBUTTON'} = 1	unless $TPREVTOPBUTTON;
+$TPREVTOPBUTTONIA = '[Prev Thread]',
+    $IsDefault{'TPREVTOPBUTTONIA'} = 1	unless $TPREVTOPBUTTONIA;
+
+## Next message by thread link
 unless ($TNEXTLINK) {
     $TNEXTLINK =<<'EndOfStr';
 <li>Next by thread:
@@ -391,22 +497,68 @@ unless ($TNEXTLINK) {
 EndOfStr
     $IsDefault{'TNEXTLINK'} = 1;
 }
-
 ## Inactive next message in thread link
 $TNEXTLINKIA = '', $IsDefault{'TNEXTLINKIA'} = 1  unless $TNEXTLINKIA;
 
-## Previous message in thread link
+## Previous message by thread link
 unless ($TPREVLINK) {
     $TPREVLINK =<<'EndOfStr';
-<li>Prev by thread:
+<li>Previous by thread:
 <strong><a href="$MSG(TPREV)$">$SUBJECT(TPREV)$</a></strong>
 </li>
 EndOfStr
     $IsDefault{'TPREVLINK'} = 1;
 }
-
 ## Inactive previous message in thread link
 $TPREVLINKIA = '', $IsDefault{'TPREVLINKIA'} = 1  unless $TPREVLINKIA;
+
+## Next message within thread link
+unless ($TNEXTINLINK) {
+    $TNEXTINLINK =<<'EndOfStr';
+<li>Next in thread:
+<strong><a href="$MSG(TNEXTIN)$">$SUBJECT(TNEXTIN)$</a></strong>
+</li>
+EndOfStr
+    $IsDefault{'TNEXTINLINK'} = 1;
+}
+## Inactive next message within thread link
+$TNEXTINLINKIA = '', $IsDefault{'TNEXTINLINKIA'} = 1  unless $TNEXTINLINKIA;
+
+## Previous message within thread link
+unless ($TPREVINLINK) {
+    $TPREVINLINK =<<'EndOfStr';
+<li>Previous in thread:
+<strong><a href="$MSG(TPREVIN)$">$SUBJECT(TPREVIN)$</a></strong>
+</li>
+EndOfStr
+    $IsDefault{'TPREVINLINK'} = 1;
+}
+## Inactive previous message within thread link
+$TPREVINLINKIA = '', $IsDefault{'TPREVINLINKIA'} = 1  unless $TPREVINLINKIA;
+
+## Next thread
+unless ($TNEXTTOPLINK) {
+    $TNEXTTOPLINK =<<'EndOfStr';
+<li>Next thread:
+<strong><a href="$MSG(TNEXTTOP)$">$SUBJECT(TNEXTTOP)$</a></strong>
+</li>
+EndOfStr
+    $IsDefault{'TNEXTTOPLINK'} = 1;
+}
+## Inactive next thread
+$TNEXTTOPLINKIA = '', $IsDefault{'TNEXTTOPLINKIA'} = 1  unless $TNEXTTOPLINKIA;
+
+## Previous thread
+unless ($TPREVTOPLINK) {
+    $TPREVTOPLINK =<<'EndOfStr';
+<li>Previous thread:
+<strong><a href="$MSG(TPREVTOP)$">$SUBJECT(TPREVTOP)$</a></strong>
+</li>
+EndOfStr
+    $IsDefault{'TPREVTOPLINK'} = 1;
+}
+## Inactive prev thread
+$TPREVTOPLINKIA = '', $IsDefault{'TPREVTOPLINKIA'} = 1  unless $TPREVTOPLINKIA;
 
 ## Top links in message
 if (!$TOPLINKS) {
@@ -499,13 +651,22 @@ EndOfVar
 ## Next/previous main/thread index page links ##
 ##--------------------------------------------##
 
+$FIRSTPGLINK = '[<a href="$PG(FIRST)$">First Page</a>]',
+    $IsDefault{'FIRSTPGLINK'} = 1	unless $FIRSTPGLINK;
+$LASTPGLINK  = '[<a href="$PG(LAST)$">Last Page</a>]',
+    $IsDefault{'LASTPGLINK'} = 1	unless $LASTPGLINK;
 $NEXTPGLINK  = '[<a href="$PG(NEXT)$">Next Page</a>]',
     $IsDefault{'NEXTPGLINK'} = 1	unless $NEXTPGLINK;
 $PREVPGLINK  = '[<a href="$PG(PREV)$">Prev Page</a>]',
     $IsDefault{'PREVPGLINK'} = 1	unless $PREVPGLINK;
-$TNEXTPGLINK = '[<a href="$PG(TNEXT)$">Next Page</a>]',
+
+$TFIRSTPGLINK = '[<a href="$PG(TFIRST)$">First Page</a>]',
+    $IsDefault{'TFIRSTPGLINK'} = 1	unless $TFIRSTPGLINK;
+$TLASTPGLINK  = '[<a href="$PG(TLAST)$">Last Page</a>]',
+    $IsDefault{'TLASTPGLINK'} = 1	unless $TLASTPGLINK;
+$TNEXTPGLINK  = '[<a href="$PG(TNEXT)$">Next Page</a>]',
     $IsDefault{'TNEXTPGLINK'} = 1	unless $TNEXTPGLINK;
-$TPREVPGLINK = '[<a href="$PG(TPREV)$">Prev Page</a>]',
+$TPREVPGLINK  = '[<a href="$PG(TPREV)$">Prev Page</a>]',
     $IsDefault{'TPREVPGLINK'} = 1	unless $TPREVPGLINK;
 
 $NEXTPGLINKIA  = '[Next Page]',

@@ -1,0 +1,163 @@
+<html>
+<body>
+<pre>
+&lt;!-- ================================================================== --&gt;
+&lt;!-- File:
+	$Id: blog.mrc,v 1.2 2002/05/04 04:57:23 ehood Exp $
+     Author:
+	Earl Hood &lt;earl@earlhood.com&gt;
+
+     Description:
+	MHonArc, &lt;http://www.mhonarc.org/&gt;, resource file to
+	generate a "blogger"-style archive.  I.e.  All messages
+	are displayed on a single page.
+
+     Dependencies:
+	For things to work, server-side includes must be enabled
+	for .shtml files in the directory the archive will exist.
+  --&gt;
+&lt;!-- ================================================================== --&gt;
+
+&lt;!-- Sort messages by date. --&gt;
+<b><a href="../resources/sort.html">&lt;Sort&gt;</a></b>
+
+&lt;!-- We do not care for threading here. --&gt;
+<b><a href="../resources/thread.html">&lt;NoThread&gt;</a></b>
+
+&lt;!-- ================================================================== --&gt;
+&lt;!--  Main Index Page							--&gt;
+&lt;!-- ================================================================== --&gt;
+
+&lt;!-- Make sure main index page has proper extension for SSI. --&gt;
+<b><a href="../resources/idxfname.html">&lt;IdxFname&gt;</a></b>
+index.shtml
+<b>&lt;/IdxFname&gt;</b>
+
+&lt;!-- We define beginning markup to include style definitions. --&gt;
+<b><a href="../resources/idxpgbegin.html">&lt;IdxPgBegin&gt;</a></b>
+&lt;!doctype html public "-//W3C//DTD HTML//EN"&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;title&gt;<b><a href="../rcvars.html#IDXTITLE">$IDXTITLE$</a></b>&lt;/title&gt;
+&lt;/head&gt;
+&lt;style type="text/css"&gt;
+.msg_subject {
+  border-color: black;
+  border-style: solid;
+  border-width: thin;
+  color: white;
+  background-color: gray;
+  font-weight: bold;
+  padding-bottom: 0em;
+  margin-bottom: 0.25em;
+}
+.msg_fields {
+  font-size: 0.9em;
+  font-style: italic;
+  margin: 0em 0em 0em 0em;
+  padding: 0em 0em 0em 1em;
+}
+&lt;/style&gt;
+&lt;body&gt;
+&lt;h1&gt;<b><a href="../rcvars.html#IDXTITLE">$IDXTITLE$</a></b>&lt;/h1&gt;
+<b>&lt;/IdxPgBegin&gt;</b>
+
+&lt;!-- The index listing will just be a list of SSI directives. --&gt;
+<b><a href="../resources/listbegin.html">&lt;ListBegin&gt;</a></b>
+
+<b>&lt;/ListBegin&gt;</b>
+<b><a href="../resources/litemplate.html">&lt;LiTemplate&gt;</a></b>
+&lt;!--#include virtual="<b><a href="../rcvars.html#MSG">$MSG$</a></b>" --&gt;
+<b>&lt;/LiTemplate&gt;</b>
+<b><a href="../resources/listend.html">&lt;ListEnd&gt;</a></b>
+
+<b>&lt;/ListEnd&gt;</b>
+
+&lt;!-- ================================================================== --&gt;
+&lt;!--  Message Page							--&gt;
+&lt;!-- ================================================================== --&gt;
+&lt;!--	For message pages, we remove any &lt;html&gt;, et. al. markup
+	since they will not be stand-alone documents but included
+	by the index page.
+  --&gt;
+
+&lt;!-- Disable follow-up/references section.  This is probably a matter
+     of personal preference,  If enabled, the FOLUPLITXT and REFSLITXT
+     resources will need to be modified to have relative links to
+     messages.
+  --&gt;
+<b><a href="../resources/folrefs.html">&lt;NoFolRefs&gt;</a></b>
+
+&lt;!-- Make sure message-id links (e.g. in-reply-to, references) are
+     relative since all messages are on the same page.
+  --&gt;
+<b><a href="../resources/msgidlink.html">&lt;MsgIdLink&gt;</a></b>
+&lt;a href="#<b><a href="../rcvars.html#MSGNUM">$MSGNUM$</a></b>"&gt;<b><a href="../rcvars.html#MSGID">$MSGID$</a></b>&lt;/a&gt;
+<b>&lt;/MsgIdLink&gt;</b>
+
+&lt;!-- Clear out beginning markup. --&gt;
+<b><a href="../resources/msgpgbegin.html">&lt;MsgPgBegin&gt;</a></b>
+
+<b>&lt;/MsgPgBegin&gt;</b>
+<b><a href="../resources/toplinks.html">&lt;TopLinks&gt;</a></b>
+
+<b>&lt;/TopLinks&gt;</b>
+
+&lt;!-- This will be are physical separator for messages. --&gt;
+<b><a href="../resources/subjectheader.html">&lt;SubjectHeader&gt;</a></b>
+&lt;h3 class="msg_subject"&gt;&lt;a name="<b><a href="../rcvars.html#MSGNUM">$MSGNUM$</a></b>"&gt;<b><a href="../rcvars.html#SUBJECTNA">$SUBJECTNA$</a></b>&lt;/a&gt;&lt;/h3&gt;
+&lt;p class="msg_fields"&gt;
+&lt;b&gt;Date:&lt;/b&gt; <b><a href="../rcvars.html#MSGLOCALDATE">$MSGLOCALDATE$</a></b>&lt;br&gt;
+&lt;b&gt;From:&lt;/b&gt; <b><a href="../rcvars.html#FROM">$FROM$</a></b>
+&lt;/p&gt;
+<b>&lt;/SubjectHeader&gt;</b>
+
+&lt;!-- Only display a very minimal message header.  We already
+     rolled a mini-header in SUBJECTHEADER, so we only include
+     any additional fields that cannot be referenced via resource
+     variables.
+     
+     We make the style the same as the mini-header above.
+  --&gt;
+<b><a href="../resources/fieldsbeg.html">&lt;FieldsBeg&gt;</a></b>
+&lt;p class="msg_fields"&gt;
+<b>&lt;/FieldsBeg&gt;</b>
+<b><a href="../resources/labelbeg.html">&lt;LabelBeg&gt;</a></b>
+&lt;b&gt;
+<b>&lt;/LabelBeg&gt;</b>
+<b><a href="../resources/labelend.html">&lt;LabelEnd&gt;</a></b>
+:&lt;/b&gt;
+<b>&lt;/LabelEnd&gt;</b>
+<b><a href="../resources/fldbeg.html">&lt;FldBeg&gt;</a></b>
+
+<b>&lt;/FldBeg&gt;</b>
+<b><a href="../resources/fldend.html">&lt;FldEnd&gt;</a></b>
+&lt;br&gt;
+<b>&lt;/FldEnd&gt;</b>
+<b><a href="../resources/fieldsend.html">&lt;FieldsEnd&gt;</a></b>
+&lt;/p&gt;
+<b>&lt;/FieldsEnd&gt;</b>
+
+<b><a href="../resources/fieldorder.html">&lt;FieldOrder&gt;</a></b>
+in-reply-to
+references
+<b>&lt;/FieldOrder&gt;</b>
+
+<b><a href="../resources/headbodysep.html">&lt;HeadBodySep&gt;</a></b>
+
+<b>&lt;/HeadBodySep&gt;</b>
+
+&lt;!-- Clear out ending markup. --&gt;
+<b><a href="../resources/msgbodyend.html">&lt;MsgBodyEnd&gt;</a></b>
+
+<b>&lt;/MsgBodyEnd&gt;</b>
+<b><a href="../resources/botlinks.html">&lt;BotLinks&gt;</a></b>
+
+<b>&lt;/BotLinks&gt;</b>
+<b><a href="../resources/msgpgend.html">&lt;MsgPgEnd&gt;</a></b>
+
+<b>&lt;/MsgPgEnd&gt;</b>
+
+</pre>
+</body>
+</html>

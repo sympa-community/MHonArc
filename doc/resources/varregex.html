@@ -4,11 +4,10 @@
 <title>MHonArc Resources: VARREGEX</title>
 </head>
 <body>
-
-<address>
-<a href="../resources.html#varregex">MHonArc Resource List</a><br>
-</address>
-
+<!--x-rc-nav-->
+<table border=0><tr valign="top">
+<td align="left" width="50%">[Prev:&nbsp;<a href="usinglastpg.html">USINGLASTPG</a>]</td><td><nobr>[<a href="../resources.html#varregex">Resources</a>][<a href="../mhonarc.html">TOC</a>]</nobr></td><td align="right" width="50%">[Next:&nbsp;<a href="weekdays.html">WEEKDAYS</a>]</td></tr></table>
+<!--/x-rc-nav-->
 <hr>
 <h1>VARREGEX</h1>
 
@@ -18,23 +17,20 @@
 
 <dl>
 
-<dt><strong>Envariable</strong><dt>
-<dd><p>
-<code>M2H_VARREGEX=</code><var>Perl-regex</var>
+<dt><strong>Envariable</strong></dt>
+<dd><p><code>M2H_VARREGEX=</code><var>Perl-regex</var>
 </p>
 </dd>
 
-<dt><strong>Element</strong><dt>
-<dd><p><br>
-<code>&lt;VARREGEX&gt;</code><br>
+<dt><strong>Element</strong></dt>
+<dd><p><code>&lt;VARREGEX&gt;</code><br>
 <var>Perl-regex</var><br>
 <code>&lt;/VARREGEX&gt;</code><br>
 </p>
 </dd>
 
-<dt><strong>Command-line Option</strong><dt>
-<dd><p><br>
-<code>-varregex </code><var>Perl-regex</var>
+<dt><strong>Command-line Option</strong></dt>
+<dd><p><code>-varregex </code><var>Perl-regex</var>
 </p>
 </dd>
 
@@ -49,9 +45,19 @@
 define a back reference that contains the name of the resource
 variable and its arguments surround by parentheses.
 </p>
-<p>Do not mess with this resource unless you know what you are
-doing.
+<table border=0 cellpadding=4>
+<tr valign=top>
+<td><strong><font color="red">WARNING</font></strong></td>
+<td><p><b>DO NOT MESS WITH THIS RESOURCE UNLESS YOU KNOW WHAT YOU ARE
+DOING</b>.  If not set properly, page output can become munged.
+One symptom of a bad VARREGEX setting is the occurrence of numerous
+'<tt>$</tt>' characters in generated pages.  Make sure to test
+your VARREGEX setting before using it with production archives.
 </p>
+</td>
+</tr>
+</table>
+
 
 <!-- *************************************************************** -->
 <hr>
@@ -97,14 +103,19 @@ in resource files encoded in multi-byte character sets like SJIS.
 
 <!-- *************************************************************** -->
 <hr>
+<!--x-rc-nav-->
+<table border=0><tr valign="top">
+<td align="left" width="50%">[Prev:&nbsp;<a href="usinglastpg.html">USINGLASTPG</a>]</td><td><nobr>[<a href="../resources.html#varregex">Resources</a>][<a href="../mhonarc.html">TOC</a>]</nobr></td><td align="right" width="50%">[Next:&nbsp;<a href="weekdays.html">WEEKDAYS</a>]</td></tr></table>
+<!--/x-rc-nav-->
+<hr>
 <address>
-00/10/28 11:13:13<br>
-<img align="top" src="../monicon.gif" alt="">
-<a href="http://www.pobox.com/~ehood/mhonarc.html"
+$Date: 2002/07/27 05:13:11 $ <br>
+<img align="top" src="../monicon.png" alt="">
+<a href="http://www.mhonarc.org/"
 ><strong>MHonArc</strong></a><br>
-Copyright &#169; 2000, <a href="http://www.pobox.com/~ehood"
->Earl Hood</a>, <a href="mailto:mhonarc@pobox.com"
->mhonarc@pobox.com</a><br>
+Copyright &#169; 2000, <a href="http://www.earlhood.com/"
+>Earl Hood</a>, <a href="mailto:mhonarc@mhonarc.org"
+>mhonarc@mhonarc.org</a><br>
 </address>
 
 </body>

@@ -1,13 +1,13 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	@(#) mhrcvars.pl 2.13 01/04/10 21:36:41
+##	$Id: mhrcvars.pl,v 2.21 2002/07/27 05:13:13 ehood Exp $
 ##  Author:
-##      Earl Hood       mhonarc@pobox.com
+##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
 ##      Defines routine for expanding resource variables.
 ##---------------------------------------------------------------------------##
 ##    MHonArc -- Internet mail-to-HTML converter
-##    Copyright (C) 1996-1999	Earl Hood, mhonarc@pobox.com
+##    Copyright (C) 1996-2001	Earl Hood, mhonarc@mhonarc.org
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by
@@ -86,7 +86,6 @@ sub replace_li_var {
     my($jstr) = (0);
     my($expand) = (0);
     my($n) = (0);
-    my($isfirst, $islast, $tisfirst, $tislast);
     my($lref, $key, $pos);
     my($arg, $opt) = ("", "");
 
@@ -104,23 +103,16 @@ sub replace_li_var {
 
     ##	Check if variable in a URL string
     $isurl = 1  if ($len =~ s/u//ig);	
+    ##	Check if variable in a JavaScript string
     $jstr  = 1  if ($len =~ s/j//ig);	
-
-    ##	Set index related variables
-    if ($index ne '') {
-	if ($REVSORT) {
-	    $isfirst	= ($Index2MLoc{$index} == $#MListOrder);
-	    $islast	= ($Index2MLoc{$index} == 0);
-	} else {
-	    $isfirst	= ($Index2MLoc{$index} == 0);
-	    $islast	= ($Index2MLoc{$index} == $#MListOrder);
-	}
-	$tisfirst	= ($Index2TLoc{$index} == 0);
-	$tislast	= ($Index2TLoc{$index} == $#TListOrder);
-    }
 
     ##	Do variable replacement
     REPLACESW: {
+	## Invoke callback if defined
+	if (defined($CBRcVarExpand) && defined(&$CBRcVarExpand)) {
+	    ($tmp, $expand, $canclip) = &$CBRcVarExpand($index, $var, $arg);
+	    last REPLACESW  if defined($tmp);
+	}
 
 	## -------------------------------------- ##
 	## Message information resource variables ##
@@ -168,21 +160,23 @@ sub replace_li_var {
 	}
     	if ($var eq 'ICON') {		## Message icon
 	    ($lref, $key, $pos) = compute_msg_pos($index, $var, $arg);
-	    if (!defined($key)) { $tmp = ""; last REPLACESW; }
-	    $tmp = $Icons{$ContentType{$key}} ?
-			join("", qq|<img src="$Icons{$ContentType{$key}}" |,
-			     qq|alt="[$ContentType{$key}]">|) :
-			qq|<img src="$Icons{'unknown'}" alt="[unknown]">|;
+	    if (!defined($key)) {
+		$tmp = "";
+		last REPLACESW;
+	    }
+	    my($iconurl, $iw, $ih) = mhonarc::get_icon_url($ContentType{$key});
+	    my $alttext = $iconurl ? $ContentType{$key} : 'unknown';
+	    $tmp  = qq|<img src="$iconurl" border="0" alt="[$alttext]"|;
+	    $tmp .= ' width="' .  $iw . '"'  if $iw;
+	    $tmp .= ' height="' . $ih . '"'  if $ih;
+	    $tmp .= '>';
 	    last REPLACESW;
 	}
     	if ($var eq 'ICONURL') {	## URL to message icon
 	    $isurl = 0;
-	    ($lref, $key, $pos) = compute_msg_pos($index, $var, $arg);
-	    if ($Icons{$ContentType{$key}}) {
-		$tmp = $Icons{$ContentType{$key}};
-	    } else {
-		$tmp = $Icons{'unknown'};
-	    }
+	    ($lref, $key, $pos)    = compute_msg_pos($index, $var, $arg);
+	    my($iconurl, $iw, $ih) = mhonarc::get_icon_url($ContentType{$key});
+	    $tmp = $iconurl  if defined($iconurl);
 	    last REPLACESW;
 	}
     	if ($var eq 'MSG') {		## Filename of message page
@@ -198,7 +192,7 @@ sub replace_li_var {
 	}
     	if ($var eq 'MSGID') {		## Message-ID
 	    ($lref, $key, $pos) = compute_msg_pos($index, $var, $arg);
-	    $tmp = defined($key) ? $Index2MsgId{$index} : "";
+	    $tmp = defined($key) ? $Index2MsgId{$key} : "";
 	    last REPLACESW;
 	}
     	if ($var eq 'MSGLOCALDATE') {	## Message local date
@@ -255,13 +249,28 @@ sub replace_li_var {
     	if ($var eq 'SUBJECT') {	## Message subject
 	    $canclip = 1; $raw = 1; $isurl = 0;
 	    ($lref, $key, $pos) = compute_msg_pos($index, $var, $arg);
-	    $tmp = defined($key) ? $Subject{$key} : "";
+	    if (defined($key)) {
+		$tmp = $Subject{$key};
+		$tmp = $NoSubjectTxt  if $tmp eq "";
+	    } else {
+		$tmp = "";
+	    }
 	    last REPLACESW;
 	}
     	if ($var eq 'SUBJECTNA') {	## Message subject (not linked)
 	    $canclip = 1; $raw = 1;
 	    ($lref, $key, $pos) = compute_msg_pos($index, $var, $arg);
-	    $tmp = defined($key) ? $Subject{$key} : "";
+	    if (defined($key)) {
+		$tmp = $Subject{$key};
+		$tmp = $NoSubjectTxt  if $tmp eq "";
+	    } else {
+		$tmp = "";
+	    }
+	    last REPLACESW;
+	}
+    	if ($var eq 'TLEVEL') {		## Thread level
+	    ($lref, $key, $pos) = compute_msg_pos($index, $var, $arg);
+	    $tmp = $ThreadLevel{$key};
 	    last REPLACESW;
 	}
 
@@ -270,44 +279,81 @@ sub replace_li_var {
 	## ------------------------------------- ##
 	if ($var eq 'BUTTON') {
 	    $expand = 1;
+	    ($lref, $key, $pos) = compute_msg_pos($index, $var, $arg);
 	    SW: {
 		if ($arg eq 'NEXT') {
-		    $tmp = (!$islast) ? $NEXTBUTTON : $NEXTBUTTONIA;
+		    $tmp = defined($key) ? $NEXTBUTTON : $NEXTBUTTONIA;
 		    last SW; }
 		if ($arg eq 'PREV') {
-		    $tmp = (!$isfirst) ? $PREVBUTTON : $PREVBUTTONIA;
+		    $tmp = defined($key) ? $PREVBUTTON : $PREVBUTTONIA;
 		    last SW; }
 		if ($arg eq 'TNEXT') {
-		    $tmp = (!$tislast) ? $TNEXTBUTTON : $TNEXTBUTTONIA;
+		    $tmp = defined($key) ? $TNEXTBUTTON : $TNEXTBUTTONIA;
 		    last SW; }
 		if ($arg eq 'TPREV') {
-		    $tmp = (!$tisfirst) ? $TPREVBUTTON : $TPREVBUTTONIA;
+		    $tmp = defined($key) ? $TPREVBUTTON : $TPREVBUTTONIA;
+		    last SW; }
+		if ($arg eq 'TNEXTIN') {
+		    $tmp = defined($key) ? $TNEXTINBUTTON : $TNEXTINBUTTONIA;
+		    last SW; }
+		if ($arg eq 'TPREVIN') {
+		    $tmp = defined($key) ? $TPREVINBUTTON : $TPREVINBUTTONIA;
+		    last SW; }
+		if ($arg eq 'TNEXTTOP') {
+		    $tmp = defined($key) ? $TNEXTTOPBUTTON : $TNEXTTOPBUTTONIA;
+		    last SW; }
+		if ($arg eq 'TPREVTOP') {
+		    $tmp = defined($key) ? $TPREVTOPBUTTON : $TPREVTOPBUTTONIA;
 		    last SW; }
 	    }
 	    last REPLACESW;
 	}
 	if ($var eq 'LINK') {
 	    $expand = 1;
+	    ($lref, $key, $pos) = compute_msg_pos($index, $var, $arg);
 	    SW: {
 		if ($arg eq 'NEXT') {
-		    $tmp = (!$islast) ? $NEXTLINK : $NEXTLINKIA;
+		    $tmp = defined($key) ? $NEXTLINK : $NEXTLINKIA;
 		    last SW; }
 		if ($arg eq 'PREV') {
-		    $tmp = (!$isfirst) ? $PREVLINK : $PREVLINKIA;
+		    $tmp = defined($key) ? $PREVLINK : $PREVLINKIA;
 		    last SW; }
 		if ($arg eq 'TNEXT') {
-		    $tmp = (!$tislast) ? $TNEXTLINK : $TNEXTLINKIA;
+		    $tmp = defined($key) ? $TNEXTLINK : $TNEXTLINKIA;
 		    last SW; }
 		if ($arg eq 'TPREV') {
-		    $tmp = (!$tisfirst) ? $TPREVLINK : $TPREVLINKIA;
+		    $tmp = defined($key) ? $TPREVLINK : $TPREVLINKIA;
+		    last SW; }
+		if ($arg eq 'TNEXTIN') {
+		    $tmp = defined($key) ? $TNEXTINLINK : $TNEXTINLINKIA;
+		    last SW; }
+		if ($arg eq 'TPREVIN') {
+		    $tmp = defined($key) ? $TPREVINLINK : $TPREVINLINKIA;
+		    last SW; }
+		if ($arg eq 'TNEXTTOP') {
+		    $tmp = defined($key) ? $TNEXTTOPLINK : $TNEXTTOPLINKIA;
+		    last SW; }
+		if ($arg eq 'TPREVTOP') {
+		    $tmp = defined($key) ? $TPREVTOPLINK : $TPREVTOPLINKIA;
 		    last SW; }
 	    }
 	    last REPLACESW;
 	}
 
     	if ($var eq 'TSLICE') {
-	    $tmp = &make_thread_slice($index, $TSliceNBefore, $TSliceNAfter)
-	    	if ($TSliceNBefore != 0 || $TSliceNAfter != 0);
+	    my($bcnt, $acnt, $inclusive);
+	    if ($arg) {
+	      ($bcnt, $acnt, $inclusive) = split(/[;:]/, $arg);
+	      $bcnt = $TSliceNBefore  if (!defined($bcnt) || $bcnt !~ /^\d+$/);
+	      $acnt = $TSliceNAfter   if (!defined($acnt) || $acnt !~ /^\d+$/);
+	      $inclusive = $TSliceInclusive  if (!defined($inclusive));
+	    } else {
+	      $bcnt = $TSliceNBefore;
+	      $acnt = $TSliceNAfter;
+	      $inclusive = $TSliceInclusive;
+	    }
+	    $tmp = &make_thread_slice($index, $bcnt, $acnt, $inclusive)
+	    	if ($bcnt != 0 || $acnt != 0);
 	    last REPLACESW;
 	}
 
@@ -425,6 +471,18 @@ sub replace_li_var {
 		if ($arg eq 'TPREV') {
 		    $tmp = $PageNum > 1 ? $TPREVPGLINK : $TPREVPGLINKIA;
 		    last SW; }
+		if ($arg eq 'FIRST') {
+		    $tmp = $FIRSTPGLINK;
+		    last SW; }
+		if ($arg eq 'LAST') {
+		    $tmp = $LASTPGLINK;
+		    last SW; }
+		if ($arg eq 'TFIRST') {
+		    $tmp = $TFIRSTPGLINK;
+		    last SW; }
+		if ($arg eq 'TLAST') {
+		    $tmp = $TLASTPGLINK;
+		    last SW; }
 	    }
 	    last REPLACESW;
 	}
@@ -435,12 +493,21 @@ sub replace_li_var {
 	    my $prefix  = $t ? $TIDXPREFIX : $IDXPREFIX;
 	    my $suffix  = $HtmlExt;
 	       $suffix .= '.gz'  if $GzipLinks;
-	    $before = $num - abs($before);
-	    $after  = $num + abs($after);
+	    if ($before ne "") {
+		$before = $num - abs($before);
+		$before = 1  unless $before > 1;
+	    } else {
+		$before = 1;
+	    }
+	    if ($after ne "") {
+		$after  = $num + abs($after);
+		$after  = $NumOfPages  unless $after < $NumOfPages;
+	    } else {
+		$after  = $NumOfPages;
+	    }
 	    $tmp = "";
 	    for ($i=$before; $i < $num; ++$i) {
-		next  if $i < 1;
-		if ($i < 2) {
+		if ($i == 1) {
 		    $tmp .= sprintf('<a href="%s%s">%d</a> | ',
 				    ($t ? $TIDXNAME : $IDXNAME),
 				    ($GzipLinks ? '.gz' : ""), $i);
@@ -450,7 +517,7 @@ sub replace_li_var {
 			        $prefix, $i, $suffix, $i);
 	    }
 	    $tmp .= $num;
-	    for ($i=$num+1; $i <= $after && $i <= $NumOfPages; ++$i) {
+	    for ($i=$num+1; $i <= $after; ++$i) {
 		$tmp .= sprintf(' | <a href="%s%d.%s">%d</a>',
 			        $prefix, $i, $suffix, $i);
 	    }
@@ -570,8 +637,9 @@ sub replace_li_var {
 	}
 
 	# Check for clipping
-	$ret = join("", ($ret =~ /(\&[^;\s]*;|.)/g)[0 .. $len - 1])
-	    if ($len > 0 && $canclip);
+	if ($len > 0 && $canclip && (length($ret) > 0)) {
+	    $ret = &$TextClipFunc($ret, $len, 1);
+	}
 
 	# Check if JavaScript string
 	if ($jstr) {
@@ -595,17 +663,26 @@ sub replace_li_var {
 
 ##---------------------------------------------------------------------------##
 ##	compute_msg_pos(): Get message location data.
+##	Return:
+##	    ($aref,	: Reference to message listing array.
+##	     $key,	: Message index key
+##	     $pos,	: Integer offset location in $aref
+##	     $opt)	: Left-over option string
+##	$key will be undefined and $post will be set to -1 if message
+##	position cannot be computed or is out-of-bounds.
 ##
 sub compute_msg_pos {
     my($idx, $var, $arg, $usethread) = @_;
     my($ofs, $pos, $aref, $href, $key);
     my $opt  = undef;
     my $flip = 0;
+    my $orgarg = $arg;
 
     ## Determine what list type
     if (($arg =~ s/^T//) || $usethread) {
 	$aref = \@TListOrder;
 	$href = \%Index2TLoc;
+	$usethread = 1;
     } else {
 	$aref = \@MListOrder;
 	$href = \%Index2MLoc;
@@ -613,18 +690,58 @@ sub compute_msg_pos {
     }
 
     ## Extract out optional data
-    ($arg, $opt) = split(/;/, $arg);
+    ($arg, $opt) = split(/;/, $arg, 2);
 
     SW: {
+	if ($usethread && $TREVERSE) {
+	    # when threads are listed in reverse, we preserve the
+	    # sematics of "next/prev thread"
+	    if ($arg eq 'NEXTTOP') {
+		$arg = 'PREVTOP';
+	    } elsif ($arg eq 'PREVTOP') {
+		$arg = 'NEXTTOP';
+	    }
+	}
+
 	$ofs =  0, last SW
-	    if $arg eq "" or $arg eq 'CUR';
-	$ofs = ($flip ? 1 : -1), last SW
-	    if $arg eq 'PREV';
-	$ofs = ($flip ? -1 : 1), last SW
-	    if $arg eq 'NEXT';
+	    if (!defined($arg)) || ($arg eq '') || ($arg eq 'CUR');
 	$ofs = ($flip ? -$arg : $arg), last SW
 	    if $arg =~ /^-?\d+$/;
 
+	if ($arg eq 'NEXT') {		# next message
+	    if (!$usethread || !$TREVERSE) {
+	      $ofs = ($flip ? -1 : 1);
+	      last SW;
+	    }
+	    # get here, it is thread and reverse
+	    undef $ofs;
+	    $pos = $href->{$idx};
+	    if (($pos < $#$aref) && ($ThreadLevel{$aref->[$pos+1]} > 0)) {
+		++$pos;
+		last SW;
+	    }
+	    # get here, must goto physical previous top
+	    # note no `last SW' statement
+	    $arg = 'PREVTOP';
+	}
+	if ($arg eq 'PREV') {		# prev message
+	    if (!$usethread || !$TREVERSE) {
+	      $ofs = ($flip ? 1 : -1);
+	      last SW;
+	    }
+	    # get here, it is thread and reverse
+	    undef $ofs;
+	    if ($ThreadLevel{$idx} > 0) {
+		$pos = $href->{$idx};
+		if (($pos > 0) && ($ThreadLevel{$aref->[$pos-1]} >= 0)) {
+		    --$pos;
+		    last SW;
+		}
+	    }
+	    # get here, must goto physical next top
+	    # note no `last SW' statement
+	    $arg = 'NEXTTOP';
+	}
 	if ($arg eq 'FIRST') {
 	    $pos = $flip ? $#$aref : 0;
 	    undef $ofs;
@@ -635,13 +752,40 @@ sub compute_msg_pos {
 	    undef $ofs;
 	    last SW;
 	}
-	if ($arg eq 'PARENT') {
+
+	# if not thread variable, no more checking
+	if (!$usethread) {
+	    warn qq/Warning: $var: Invalid variable argument: "$orgarg"\n/;
+	    $ofs = 0;
+	    last SW;
+	}
+
+	if ($arg eq 'NEXTIN') {		# next message within a thread
+	    $pos = $href->{$idx} + 1;
+	    if ($pos > $#$aref || $ThreadLevel{$aref->[$pos]} <= 0) {
+		$pos = -1;
+	    }
+	    undef $ofs;
+	    last SW;
+	}
+	if ($arg eq 'PREVIN') {		# previous message within a thread
+	    undef $ofs;
+	    $pos = $href->{$idx};
+	    if ($ThreadLevel{$aref->[$pos]} <= 0) {
+		$pos = -1;
+		last SW;
+	    }
+	    --$pos;
+	    $pos = -1  if ($pos < 0);
+	    last SW;
+	}
+	if ($arg eq 'PARENT') {		# parent message in thread
 	    undef $ofs;
 	    my $level = $ThreadLevel{$idx};
 	    $pos = $Index2TLoc{$idx};
 	    last SW  if ($level <= 0);
 	    for (--$pos; $pos >= 0; --$pos) {
-		last  if $ThreadLevel{$TListOrder[$pos]} < $level;
+		last  if $ThreadLevel{$aref->[$pos]} < $level;
 	    }
 	    last SW;
 	}
@@ -649,19 +793,41 @@ sub compute_msg_pos {
 	    undef $ofs;
 	    $pos = $Index2TLoc{$idx};
 	    for (; $pos >= 0; --$pos) {
-		last  if $ThreadLevel{$TListOrder[$pos]} <= 0;
+		last  if $ThreadLevel{$aref->[$pos]} <= 0;
 	    }
 	    last SW;
 	}
-	if ($arg eq 'END') {
+	if (($arg eq 'NEXTTOP') ){	# start of next thread
 	    undef $ofs;
 	    $pos = $Index2TLoc{$idx};
-	    for (; $pos < $#TListOrder; ++$pos) {
-		last  if $ThreadLevel{$TListOrder[$pos+1]} <= 0;
+	    for (++$pos; $pos <= $#$aref; ++$pos) {
+		last  if $ThreadLevel{$aref->[$pos]} <= 0;
 	    }
 	    last SW;
 	}
-	warn qq/Warning: $var: Unrecognized variable argument: "$arg"\n/;
+	if (($arg eq 'PREVTOP') ){	# start of previous thread
+	    undef $ofs;
+	    # Find current top first, then find previous top
+	    for ($pos = $Index2TLoc{$idx}; $pos >= 0; --$pos) {
+		last  if $ThreadLevel{$aref->[$pos]} <= 0;
+	    }
+	    if ($pos >= 0) {
+		for (--$pos; $pos >= 0; --$pos) {
+		    last  if $ThreadLevel{$aref->[$pos]} <= 0;
+		}
+	    }
+	    last SW;
+	}
+	if ($arg eq 'END') {		# last message of thread
+	    undef $ofs;
+	    $pos = $Index2TLoc{$idx};
+	    for (; $pos < $#$aref; ++$pos) {
+		last  if $ThreadLevel{$aref->[$pos+1]} <= 0;
+	    }
+	    last SW;
+	}
+
+	warn qq/Warning: $var: Unrecognized variable argument: "$orgarg"\n/;
 	$ofs = 0;
     }
     $pos = $href->{$idx} + $ofs  if defined($ofs);

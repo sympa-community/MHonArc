@@ -1,6 +1,6 @@
 <!-- ================================================================== -->
-<!--    @(#) def-mime.mrc 1.8 00/10/28 11:14:10
-        Earl Hood <mhonarc@pobox.com>
+<!--    $Id: def-mime.mrc,v 1.13 2002/06/28 03:28:10 ehood Exp $
+        Earl Hood <earl@earlhood.com>
   -->
 <!--    MHonArc Resource File                                           --
   --                                                                    --
@@ -13,22 +13,26 @@
 plain;          mhonarc::htmlize;
 us-ascii;       mhonarc::htmlize;
 iso-8859-1;     mhonarc::htmlize;
-iso-8859-2;     iso_8859::str2sgml;     iso8859.pl
-iso-8859-3;     iso_8859::str2sgml;     iso8859.pl
-iso-8859-4;     iso_8859::str2sgml;     iso8859.pl
-iso-8859-5;     iso_8859::str2sgml;     iso8859.pl
-iso-8859-6;     iso_8859::str2sgml;     iso8859.pl
-iso-8859-7;     iso_8859::str2sgml;     iso8859.pl
-iso-8859-8;     iso_8859::str2sgml;     iso8859.pl
-iso-8859-9;     iso_8859::str2sgml;     iso8859.pl
-iso-8859-10;    iso_8859::str2sgml;     iso8859.pl
+iso-8859-2;     MHonArc::CharEnt::str2sgml;	MHonArc/CharEnt.pm
+iso-8859-3;     MHonArc::CharEnt::str2sgml;	MHonArc/CharEnt.pm
+iso-8859-4;     MHonArc::CharEnt::str2sgml;	MHonArc/CharEnt.pm
+iso-8859-5;     MHonArc::CharEnt::str2sgml;	MHonArc/CharEnt.pm
+iso-8859-6;     MHonArc::CharEnt::str2sgml;	MHonArc/CharEnt.pm
+iso-8859-7;     MHonArc::CharEnt::str2sgml;	MHonArc/CharEnt.pm
+iso-8859-8;     MHonArc::CharEnt::str2sgml;	MHonArc/CharEnt.pm
+iso-8859-9;     MHonArc::CharEnt::str2sgml;	MHonArc/CharEnt.pm
+iso-8859-10;    MHonArc::CharEnt::str2sgml;	MHonArc/CharEnt.pm
+iso-8859-15;    MHonArc::CharEnt::str2sgml;	MHonArc/CharEnt.pm
 iso-2022-jp;    iso_2022_jp::str2html;  iso2022jp.pl
 latin1;         mhonarc::htmlize;
-latin2;         iso_8859::str2sgml;     iso8859.pl
-latin3;         iso_8859::str2sgml;     iso8859.pl
-latin4;         iso_8859::str2sgml;     iso8859.pl
-latin5;         iso_8859::str2sgml;     iso8859.pl
-latin6;         iso_8859::str2sgml;     iso8859.pl
+latin2;         MHonArc::CharEnt::str2sgml;	MHonArc/CharEnt.pm
+latin3;         MHonArc::CharEnt::str2sgml;	MHonArc/CharEnt.pm
+latin4;         MHonArc::CharEnt::str2sgml;	MHonArc/CharEnt.pm
+latin5;         MHonArc::CharEnt::str2sgml;	MHonArc/CharEnt.pm
+latin6;         MHonArc::CharEnt::str2sgml;	MHonArc/CharEnt.pm
+latin9;         MHonArc::CharEnt::str2sgml;	MHonArc/CharEnt.pm
+windows-1250;   MHonArc::CharEnt::str2sgml;	MHonArc/CharEnt.pm
+windows-1252;   MHonArc::CharEnt::str2sgml;	MHonArc/CharEnt.pm
 default;        -ignore-
 </CharsetConverters>
 
@@ -58,11 +62,11 @@ x-sun-attachment;          m2h_text_plain::filter;      mhtxtplain.pl
 </MIMEFilters>
 
 <MIMEArgs>
-image/gif;       inline
-image/jpeg;      inline
-image/x-xbitmap; inline
-image/x-xbm;     inline
+m2h_external::filter; inline
 </MIMEArgs>
+
+<MIMEAltPrefs>
+</MIMEAltPrefs>
 
 <MIMEDecoders>
 7bit;   	  as-is;

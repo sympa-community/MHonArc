@@ -1,13 +1,13 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	@(#) mhindex.pl 1.6 99/10/01 02:03:44
+##	$Id: mhindex.pl,v 1.10 2002/06/27 04:56:41 ehood Exp $
 ##  Author:
-##      Earl Hood       mhonarc@pobox.com
+##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
 ##	Main index routines for mhonarc
 ##---------------------------------------------------------------------------##
 ##    MHonArc -- Internet mail-to-HTML converter
-##    Copyright (C) 1995-1999	Earl Hood, mhonarc@pobox.com
+##    Copyright (C) 1995-2001	Earl Hood, mhonarc@mhonarc.org
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by
@@ -31,12 +31,12 @@ package mhonarc;
 ##	write_main_index outputs main index of archive
 ##
 sub write_main_index {
-    local($onlypg) = @_;
-    local($MLCP);
-    local($outhandle, $i, $i_p0, $filename, $tmpl, $isfirst, $tmp,
-	  $mlfh, $mlinfh, $tmpfile, $offstart, $offend);
+    my $onlypg = shift;
+    my($outhandle, $i, $i_p0, $filename, $tmpl, $isfirst, $tmp,
+	  $offstart, $offend);
+    local($PageNum, $PageSize); # XXX: Use in replace_li_vars()
+    my($totalpgs);
     local(*a);
-    local($PageNum, $PageSize, $totalpgs);
 
     &compute_page_total();
     $PageNum    = $onlypg || 1;
@@ -51,7 +51,6 @@ sub write_main_index {
 	next  if $PageNum < $IdxMinPg;
 
 	$isfirst = 1;
-	$MLCP = 0;
 
         if ($MULTIIDX) {
             $offstart = ($PageNum-1) * $IDXSIZE;
@@ -85,20 +84,13 @@ sub write_main_index {
 	   $outhandle = 'STDOUT';
 
 	} else {
-	    if ($ADD && &file_exists($IDXPATHNAME)) {
-		$tmpfile = join($DIRSEP, $OUTDIR, "tmp.$$");
-		&file_rename($IDXPATHNAME, $tmpfile);
-		($mlinfh = &file_open($tmpfile))
-		    || die("ERROR: Unable to open $tmpfile\n");
-		$MLCP = 1;
-	    }
-	    ($outhandle = &file_create($IDXPATHNAME, $GzipFiles)) ||
+	    $outhandle = &file_create($IDXPATHNAME, $GzipFiles) ||
 		die("ERROR: Unable to create $IDXPATHNAME\n");
 	}
 	print STDOUT "Writing $IDXPATHNAME ...\n"  unless $QUIET;
 
 	## Print top part of index
-	&output_maillist_head($outhandle, $mlinfh);
+	&output_maillist_head($outhandle);
 
 	## Output links to messages
 
@@ -109,9 +101,9 @@ sub write_main_index {
 	    }
 
 	} elsif ($SUBSORT) {
-	    local($prevsub) = '';
+	    my($prevsub) = '';
 	    foreach $index (@a) {
-		if (($tmp = &get_base_subject($index)) ne $prevsub) {
+		if (($tmp = get_base_subject($index)) ne $prevsub) {
 		    $prevsub = $tmp;
 		    if (!$isfirst) {
 			($tmpl = $SUBJECTEND) =~
@@ -153,8 +145,8 @@ sub write_main_index {
 	    print $outhandle $tmpl;
 
 	} else {
-	    local($prevdate) = '';
-	    local($time);
+	    my($prevdate) = '';
+	    my($time);
 	    foreach $index (@a) {
 		$time = &get_time_from_index($index);
 		$tmp = join("", $UseLocalTime ? (localtime($time))[3,4,5] :
@@ -180,12 +172,8 @@ sub write_main_index {
 	}
 
 	## Print bottom part of index
-	&output_maillist_foot($outhandle, $mlinfh);
+	&output_maillist_foot($outhandle);
 	close($outhandle)  unless $IDXONLY;
-	if ($MLCP) {
-	    close($mlinfh);
-	    &file_remove($tmpfile);
-	}
     }
 }
 
@@ -193,48 +181,23 @@ sub write_main_index {
 ##	output_maillist_head() outputs the beginning of the index page.
 ##
 sub output_maillist_head {
-    local($handle, $cphandle) = @_;
-    local($tmp, $index, $headfh);
-    $index = "";
+    my $handle = shift;
+    local $index = "";
+    my($tmp);
 
-    ($tmp = $SSMARKUP) =~ s/$VarExp/&replace_li_var($1,'')/geo;
-    print $handle $tmp;
+    $tmp = ($IDXPGSSMARKUP ne '') ? $IDXPGSSMARKUP : $SSMARKUP;
+    if ($tmp ne '') {
+	$tmp =~ s/$VarExp/&replace_li_var($1,'')/geo;
+	print $handle $tmp;
+    }
 
     print $handle "<!-- ", &commentize("MHonArc v$VERSION"), " -->\n";
 
     ## Output title
     ($tmp = $IDXPGBEG) =~ s/$VarExp/&replace_li_var($1,'')/geo;
     print $handle $tmp;
-    print $handle "<!--X-ML-Title-H1-End-->\n";
 
-    if ($MLCP) {
-	while (<$cphandle>) { last  if /<!--X-ML-Title-H1-End/; }
-    }
-
-    ## Output header file
-    if ($HEADER) {				# Read external header
-	print $handle "<!--X-ML-Header-->\n";
-	if ($headfh = &file_open($HEADER)) {
-	    while (<$headfh>) { print $handle $_; }
-	    close($headfh);
-	} else {
-	    warn "Warning: Unable to open header: $HEADER\n";
-	}
-	if ($MLCP) {
-	    while (<$cphandle>) { last  if /<!--X-ML-Header-End/; }
-	}
-	print $handle "<!--X-ML-Header-End-->\n";
-    } elsif ($MLCP) {				# Preserve maillist header
-	while (<$cphandle>) {
-	    print $handle $_;
-	    last  if /<!--X-ML-Header-End/;
-	}
-    } else {					# No header
-	print $handle "<!--X-ML-Header-->\n",
-		      "<!--X-ML-Header-End-->\n";
-    }
-
-    print $handle "<!--X-ML-Index-->\n";
+    ## Output start of index
     ($tmp = $LIBEG) =~ s/$VarExp/&replace_li_var($1,'')/geo;
     print $handle $tmp;
 }
@@ -243,41 +206,13 @@ sub output_maillist_head {
 ##	output_maillist_foot() outputs the end of the index page.
 ##
 sub output_maillist_foot {
-    local($handle, $cphandle) = @_;
-    local($tmp, $index, $footfh);
-    $index = "";
+    my $handle = shift;
+    local $index = "";
+    my($tmp);
 
+    ## Close message listing
     ($tmp = $LIEND) =~ s/$VarExp/&replace_li_var($1,'')/geo;
     print $handle $tmp;
-    print $handle "<!--X-ML-Index-End-->\n";
-
-    ## Skip past index in old maillist file
-    if ($MLCP) {
-	while (<$cphandle>) { last  if /<!--X-ML-Index-End/; }
-    }
-
-    ## Output footer file
-    if ($FOOTER) {				# Read external footer
-	print $handle "<!--X-ML-Footer-->\n";
-	if ($footfh = &file_open($FOOTER)) {
-	    while (<$footfh>) { print $handle $_; }
-	    close($footfh);
-	} else {
-	    warn "Warning: Unable to open footer: $FOOTER\n";
-	}
-	if ($MLCP) {
-	    while (<$cphandle>) { last  if /<!--X-ML-Footer-End/; }
-	}
-	print $handle "<!--X-ML-Footer-End-->\n";
-    } elsif ($MLCP) {				# Preserve maillist footer
-	while (<$cphandle>) {
-	    print $handle $_;
-	    last  if /<!--X-ML-Footer-End/;
-	}
-    } else {					# No footer
-	print $handle "<!--X-ML-Footer-->\n",
-		      "<!--X-ML-Footer-End-->\n";
-    }
 
     &output_doclink($handle);
 
@@ -294,12 +229,12 @@ sub output_maillist_foot {
 sub output_doclink {
     local($handle) = ($_[0]);
     if (!$NODOC && $DOCURL) {
-	print $handle "<HR>\n";
+	print $handle "<hr>\n";
 	print $handle
-		"<ADDRESS>\n",
+		"<address>\n",
 		"Mail converted by ",
-		qq|<A HREF="$DOCURL"><CODE>MHonArc</CODE></A> $VERSION\n|,
-		"</ADDRESS>\n";
+		qq|<a href="$DOCURL">MHonArc</a> $VERSION\n|,
+		"</address>\n";
     }
 }
 

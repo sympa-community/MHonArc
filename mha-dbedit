@@ -1,14 +1,14 @@
 #!/usr/local/bin/perl
 ##---------------------------------------------------------------------------##
 ##  File:
-##	@(#) mha-dbedit 1.3 00/04/24 00:13:52
+##	$Id: mha-dbedit,v 1.6 2002/05/03 04:12:17 ehood Exp $
 ##  Author:
-##      Earl Hood       mhonarc@bigfoot.com
+##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
 ##      Program to modify database w/o editing archive files.
 ##---------------------------------------------------------------------------##
 ##    MHonArc -- Internet mail-to-HTML converter
-##    Copyright (C) 1998-1999	Earl Hood, mhonarc@pobox.com
+##    Copyright (C) 1998-1999	Earl Hood, mhonarc@mhonarc.org
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by
@@ -76,13 +76,19 @@ format.  Consult your system administrator for where the documentation
 has been installed, or see L<"AVAILABILITY"> on where you can
 access the documentation on the web.
 
+=head1 EXAMPLE
+
+Typical usage:
+
+  shell> mha-dbedit -rcfile res.mrc -outdir /path/to/archive
+
 =head1 AVAILABILITY
 
 E<lt>I<http://www.mhonarc.org/>E<gt>
 
 =head1 AUTHOR
 
-Earl Hood, mhonarc@pobox.com
+Earl Hood, mhonarc@mhonarc.org
 
 =cut
 

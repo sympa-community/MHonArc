@@ -1,0 +1,266 @@
+#!/usr/local/bin/perl
+##---------------------------------------------------------------------------##
+##  File:
+##	$Id: mha-preview,v 1.2 2002/05/03 20:52:43 ehood Exp $
+##  Author:
+##      Earl Hood       earl@earlhood.com
+##  Description:
+##      Custom MHonArc-based program that supports $X-MSG-PREVIEW$
+##	resource variable using the callback API.
+##
+##	Invoke program with -man option to see manpage.
+##---------------------------------------------------------------------------##
+##    Copyright (C) 2002	Earl Hood, earl@earlhood.com
+##    This program is free software; you can redistribute it and/or modify
+##    it under the same terms as MHonArc itself.
+##---------------------------------------------------------------------------##
+
+# Uncomment and modify the following if MHonArc libraries were not
+# installed in a perl's site directory or in perl's normal search path.
+#use lib qw(/path/to/mhonarc/libraries);
+
+package MHAPreview;
+
+use Getopt::Long;
+
+# Max size of preview text: This is the maximum amount that will be
+# saved for each message.  The resource variable length modifier can
+# be used to always display less than max, but it is best to avoid
+# doing that since it is a slow operation.  We have a custom command-line
+# option to set the max size if code change is not desired.
+my $PreviewLen = 256;
+
+##-----------------------------------------------------------------------##
+##  Main Block
+##-----------------------------------------------------------------------##
+
+MAIN: {
+    unshift(@INC, 'lib');	# Should I leave this line in?
+
+    ## Grab options from @ARGV unique to this program
+    my %opts = ( );
+    Getopt::Long::Configure('pass_through');
+    GetOptions(\%opts,
+      'prv-maxlen=i',
+      'help',
+      'man'
+    );
+    usage(1) if $opts{'help'};
+    usage(2) if $opts{'man'};
+
+    if ($opts{'prv-maxlen'} && ($opts{'prv-maxlen'} > 0)) {
+      $PreviewLen = $opts{'prv-maxlen'};
+    }
+
+    ## Reset pass-through of options
+    Getopt::Long::Configure('no_pass_through');
+
+    ## Initialize MHonArc
+    require 'mhamain.pl' || die qq/ERROR: Unable to require "mhamain.pl"\n/;
+    mhonarc::initialize();
+
+    ## Register callbacks for handling preview text
+    register_callbacks();
+
+    ## Process input.
+    mhonarc::process_input() ? exit(0) : exit($mhonarc::CODE);
+}
+
+##-----------------------------------------------------------------------##
+##  Callback Functions
+##-----------------------------------------------------------------------##
+
+sub register_callbacks {
+  $mhonarc::CBMessageBodyRead = \&msg_body_read;
+  $mhonarc::CBRcVarExpand     = \&rc_var_expand;
+  $mhonarc::CBDbSave	      = \&db_save;
+}
+
+sub msg_body_read {
+  my($fields, $html, $files) = @_;
+  my $mha_index = $fields->{'x-mha-index'};
+  my $preview = extract_preview($html, $PreviewLen);
+  $X_MessagePreview{$mha_index} = $preview;
+}
+
+
+sub rc_var_expand {
+  my($mha_index, $var_name, $arg_str) = @_;
+
+  # $X-MSG-PREVIEW(mesg_spec)$
+  if ($var_name eq 'X-MSG-PREVIEW') {
+    # Use MHonArc function to support a mesg_spec argument
+    my ($lref, $key, $pos, $opt) =
+	mhonarc::compute_msg_pos($mha_index, $var_name, $arg_str);
+    return ($X_MessagePreview{$key}, 0, 1);
+  }
+
+  # If we do not recognize $var_name, make sure to tell
+  # MHonArc we do not so it will try.
+  (undef, 0, 0);
+}
+
+
+sub db_save {
+  my($db_fh) = @_;
+  # Make sure variable is package qualified!
+  mhonarc::print_var($db_fh, 'MHAPreview::X_MessagePreview',
+		     \%X_MessagePreview);
+}
+
+##-----------------------------------------------------------------------##
+##  Support Functions
+##-----------------------------------------------------------------------##
+
+sub extract_preview {
+  # Extracting the preview text of the message body is not as
+  # trivial as you may expect.  We have to deal with HTML tags
+  # and entity references, but want to avoid the overhead of doing
+  # using a full-blown HTML parser.
+
+  my $html     = shift;	# reference to HTML message body
+  my $prev_len = shift;	# length of preview to extract
+
+  my $text = "";
+  my $html_len = length($$html);
+  my($pos, $sublen, $erlen, $real_len);
+  
+  for ( $pos=0, $sublen=$prev_len; $pos < $html_len; ) {
+    $text .= substr($$html, $pos, $sublen);
+    $pos += $sublen;
+
+    # strip tags
+    $text =~ s/\A[^<]*>//; # clipped tag
+    $text =~ s/<[^>]*>//g;
+    $text =~ s/<[^>]*\Z//; # clipped tag
+
+    # check for clipped entity reference
+    while (($pos < $html_len) && ($text =~ s/\&[^;]*\Z//)) {
+      $text .= substr($$html, $pos, 1);
+      ++$pos;
+    }
+
+    # minimize whitespace
+    $text =~ s/\s+/ /g;
+
+    # compute entity reference lengths to determine "real" character
+    # count and not raw character count.
+    $er_len = 0;
+    while ($text =~ /(\&[^;]+);/g) {
+      $er_len += length($1);
+    }
+
+    # done if we have enough
+    $real_len = length($text)-$er_len;
+    if ($real_len >= $prev_len) {
+      if ($real_len < $html_len) {
+	$text .= '...';
+      }
+      last;
+    }
+
+    $sublen = $prev_len - (length($text)-$er_len);
+  }
+
+  $text;
+}
+
+sub usage {
+  require Pod::Usage;
+  my $verbose = shift;
+  if ($verbose == 0) {
+    Pod::Usage::pod2usage(-verbose => $verbose);
+  } else {
+    my $pager = $ENV{'PAGER'} || 'more';
+    local(*PAGER);
+    my $fh = (-t STDOUT && open(PAGER, "|$pager")) ? \*PAGER : \*STDOUT;
+    Pod::Usage::pod2usage(-verbose => $verbose,
+                          -output  => $fh);
+  }
+  exit 0;
+}
+
+##-----------------------------------------------------------------------##
+__END__
+
+=head1 NAME
+
+mha-preview - MHonArc front-end to support message preview variable
+
+=head1 SYNOPSIS
+
+S<B<mha-preview> [I<options>] [I<arguments>]>
+
+=head1 DESCRIPTION
+
+B<mha-preview> is an example program the utilizes MHonArc's callback
+API to support the special resource variable C<$X-MSG-PREVIEW$>.
+The C<$X-MSG-PREVIEW$> represents the initial text of a message body.
+With this variable, index pages can contain be customized to give
+a listing like some MUAs that provide a glimpse of the message body
+in the mail listing of a mail folder.
+
+When extracting the preview text of the message body, all HTML tags
+are removed and whitespace is compressed.
+
+B<CAUTION>: If B<mha-preview> is used for an archive, it should
+always be used to process the archive.  Otherwise, the message preview
+data will be lost.
+
+=head1 OPTIONS
+
+B<mha-preview> takes the same options available to B<mhonarc> along
+with the following additional options:
+
+=over
+
+=item C<-help>
+
+Print a usage summary of this program (this option overrides
+B<mhonarc>'s C<-help> option).
+
+=item C<-man>
+
+Print the manpage for this program.
+
+=item C<-prv-maxlen>
+
+Maximum amount of characters of the message body to store for each
+message.  The default value is 256.
+
+=back
+
+=head1 NOTES
+
+=over
+
+=item *
+
+The functionality of this program could be placed into the
+C<mhasiteinit.pl> library to avoid the need for this program and
+to make it part of the locally installed B<mhonarc>.  This would
+avoid the problem noted in the CAUTION mentioned
+in the L<DESCRIPTION section|"DESCRIPTION">.
+
+=item *
+
+The body preview resource variable may be worth putting into the
+MHonArc code base directly.
+
+=back
+
+=head1 SEE ALSO
+
+mhonarc(1)
+
+=head1 LICENSE
+
+B<mha-preview> comes with ABSOLUTELY NO WARRANTY and can be distributed
+under the same terms as MHonArc itself.
+
+=head1 AUTHOR
+
+Earl Hood, earl@earlhood.com
+
+=cut
+

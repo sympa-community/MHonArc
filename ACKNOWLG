@@ -1,54 +1,101 @@
-ACKNOWLEDGEMENTS for MHonArc
-----------------------------
-<http://www.mhonarc.org/>
+		  ACKNOWLEDGEMENTS for MHonArc
+		  ----------------------------
+		   <http://www.mhonarc.org/>
 
 I would like to thank everyone who has given feedback on MHonArc.
 Sorry for not listing everyone, but it has become too hard to keep
 track of all the names.  However, I'd like to give special thanks to
 the following:
 
- A. P. Barrett <barrett@ee.und.ac.za>
-	For developing a base64 library.  The library has been adapted
-	to decode base64 messages by MHonArc.
+      [If you know of someone left out that deserves mentioning,
+       please send a message to mhonarc@mhonarc.org.]
+---------------------------------------------------------------------------
 
- Susie Blackstock <seads@convex.hp.com>
+ A. P. Barrett <barrett AT ee DOT und DOT ac DOT za>
+	For developing a base64 library in pure Perl.  The library
+	has been adapted to decode base64 messages by MHonArc.
+
+ A.R. Burgers <burgers AT ecn DOT nl>
+	For contributing the prsfrom.pl program (included in the
+	extras/ directory).
+
+ Susie Blackstock <seads AT rsn DOT hp DOT com>
 	For helping me with the documentation.  Any problems with the
 	documentation is purely my fault.  And she's cute too.
 
- Achim Bohnet <ach@rosat.mpe-garching.mpg.de>
+ Achim Bohnet <ach AT rosat DOT mpe-garching DOT mpg DOT de>
 	For his help in testing, and contributing to, mhonarc and for
-	setting up, and maintaining, the mhonarc mailing list.
+	setting up, and maintaining, the first mhonarc mailing list.
+	Even though list ownership has changed, he still maintains
+	a very useful archive of the list.
 
- Roman Czyborra <czyborra@cs.tu-berlin.de>
+ Jeff Breidenbach <jeff AT jab DOT org>
+	For his feedback and his usage of MHonArc at a scale that
+	it was really never designed for,
+	<http://www.mail-archive.com/>, to influence the development
+	MHonArc (which still has scalability problems :-)
+
+ Roman Czyborra <czyborra AT cs DOT tu-berlin DOT de>
 	For his help with the MosaicMail script.
 
- Timothy Finin <Tim.Finin@cs.umbc.edu>
+ Brian Foster <Brian.Foster AT ireland DOT sun DOT com>
+	For his useful, detailed, bug reports.
+
+ Timothy Finin <Tim.Finin AT cs DOT umbc DOT edu>
 	Whose initial feedback on mbox2html (my first mail->HTML
 	program) caused the ball rolling on developing a more complete
 	mail-to-HTML program.
 
- Stephen Franlin <franklin@uci.edu>
-	For providing the machine facilities for housing the MHonArc
-	home page.
+ Stephen Franklin <franklin AT uci DOT edu>
+	For providing the machine facilities for housing the first
+	MHonArc home page:
+	<http://www.nacs.uci.edu/indiv/ehood/mhonarc.html>.  Location
+	still functions a primary mirror/backup for MHonArc.
 
- Ken Harward <harward@convex.com>
+ Ken Harward <harward AT convex DOT com>
 	For helping me tackle Perl problems and for bouncing ideas
 	off.
 
- Phyllis Imperatrice <mymom@home>
+ Phyllis Imperatrice <mymom AT home>
 	For the initial sketch of the MHonArc logo.
 
- Steve Pacenka <sp17@cornell.edu>
+ Eddie Kohler <kohler AT aciri DOT org>
+	Provided useful set of patches and ideas to spark
+	improvements in index ordering, thread slice formatting, and
+	other features.
+
+ Christoper Lindsey <lindsey AT ncsa DOT uiuc DOT edu>
+	For providing hosting services for mhonarc.org and for
+	taking over administration responsibilities of the mhonarc
+	mailing list.
+
+ Frank J. Manion <FJ_Manion AT fccc DOT edu>
+	For his contributions in improving date parsing.
+
+ Steve Pacenka <sp17 AT cornell DOT edu>
 	For his great help in getting MHonArc to run under MS-DOS, and
 	for his help in trouble-shooting.
 
- Achille Petrilli <Achille.Petrilli@MACMAIL.CERN.CH>
+ Achille Petrilli <Achille.Petrilli AT MACMAIL DOT CERN DOT CH>
 	For his initial patches for MacPerl support to get the
 	ball rolling for MacPerl usage.
 
- NIIBE Yutaka <gniibe@mri.co.jp>
+ John C. Ring, Jr. <jcring AT switch DOT com>
+	For tipping me off on how <img src> can be used by spammers,
+	which lead me to update mhtxthtml.pl to address this abuse.
+
+ Olivier Salaün <olivier.salaun AT cru DOT fr>
+	For providing test case that consistantly caused perl
+	to crash when MHonArc processes HTML messages.  Crash due
+	to regex engine bug exposed by the HTML comment declaration
+	stripping expression.  This problem could be culprit
+	to mysterious stale archive locks reported by some users
+	in the past.  Code changed to avoid bug.
+
+ NIIBE Yutaka <gniibe AT mri DOT co DOT jp>
 	For the contribution of a text/plain filter to process
 	ISO-2022 encoded mail messages (ie. Japanese character set).
 
 ---------------------------------------------------------------------------
-Earl Hood, mhonarc@pobox.com
+$Date: 2001/11/23 21:08:29 $ 
+Earl Hood, mhonarc@mhonarc.org

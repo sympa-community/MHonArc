@@ -1,9 +1,9 @@
 #!/usr/bin/perl
 # base64.pl -- A perl package to handle MIME-style BASE64 encoding
 # A. P. Barrett <barrett@ee.und.ac.za>, October 1993
-# $Revision: 1.4 $$Date: 1994/08/11 16:08:51 $
+# $Revision: 2.2 $$Date: 2001/09/05 11:53:01 $
 #
-#	@(#) base64.pl 2.1 98/03/02 20:24:23
+#	$Id: base64.pl,v 2.2 2001/09/05 11:53:01 ehood Exp $
 #
 # Modified March 21, 1996 by ehood@convex.com
 #	-> Changes to base64'uudecode to strip out any begin/end
@@ -29,12 +29,12 @@ package base64;
 # Synopsis:
 #       require 'base64.pl';
 #
-#       $uuencode_string = &base64'b64touu($base64_string);
-#       $binary_string = &base64'b64decode($base64_string);
-#       $base64_string = &base64'uutob64($uuencode_string);
-#       $base64_string = &base64'b64encode($binary_string);
-#       $uuencode_string = &base64'uuencode($binary_string);
-#       $binary_string = &base64'uudecode($uuencode_string);
+#       $uuencode_string = &base64::b64touu($base64_string);
+#       $binary_string = &base64::b64decode($base64_string);
+#       $base64_string = &base64::uutob64($uuencode_string);
+#       $base64_string = &base64::b64encode($binary_string);
+#       $uuencode_string = &base64::uuencode($binary_string);
+#       $binary_string = &base64::uudecode($uuencode_string);
 #
 #       uuencode and base64 input strings may contain multiple lines,
 #       but may not contain any headers or trailers.  (For uuencode,
@@ -68,8 +68,8 @@ $tr_base64 =~ s/(\W)/\\$1/g;
 
 sub b64touu
 {
-    local ($_) = @_;
-    local ($result);
+    local ($_) = shift;
+    my ($result);
     
     # zap bad characters and translate others to uuencode alphabet
     eval qq{
@@ -145,8 +145,8 @@ sub uutob64
 sub b64encode
 {
     local ($_) = @_;
-    local ($chunk);
-    local ($result);
+    my ($chunk);
+    my ($result);
     
     # break into chunks of 45 input chars, use perl's builtin
     # uuencoder to convert each chunk to uuencode format,
@@ -206,8 +206,8 @@ sub uuencode
 
 sub uudecode
 {
-    local ($_) = @_;
-    local ($result);
+    local ($_) = shift;
+    my $result = '';
     
     # strip out begin/end lines		(ehood, 1996/03/21)
     s/^\s*begin[^\n]+\n//;
@@ -215,7 +215,8 @@ sub uudecode
 
     # use perl's builtin uudecoder to convert each line
     while (s/^([^\n]+\n?)//) {
-	$result .= unpack("u", $1);
+	last  if substr($1, 0, 1) eq '`';
+	$result .= unpack('u', $1);
     }
 
     # return result

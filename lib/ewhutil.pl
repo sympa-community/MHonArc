@@ -1,12 +1,12 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	@(#) ewhutil.pl 2.7 00/02/08 10:04:07
+##	$Id: ewhutil.pl,v 2.8 2001/08/25 19:52:48 ehood Exp $
 ##  Author:
-##      Earl Hood       mhonarc@pobox.com
+##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
 ##      Generic utility routines
 ##---------------------------------------------------------------------------##
-##    Copyright (C) 1996-1999	Earl Hood, mhonarc@pobox.com
+##    Copyright (C) 1996-2001	Earl Hood, mhonarc@mhonarc.org
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by
@@ -35,12 +35,13 @@ my %HTMLSpecials = (
 
 ##---------------------------------------------------------------------------
 ##	Remove duplicates in an array.
+##	Returns list with duplicates removed.
 ##
 sub remove_dups {
-    local(*array) = shift;
-    return ()  unless scalar(@array);
-    my %dup  = ();
-    @array = grep(!$dup{$_}++, @array);
+    my $a = shift;
+    return ()  unless scalar(@$a);
+    my %dup = ();
+    grep(!$dup{$_}++, @$a);
 }
 
 ##---------------------------------------------------------------------------

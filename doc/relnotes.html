@@ -1,0 +1,319 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
+<html>
+<head>
+<title>MHonArc v2.5 -- Release Notes</title>
+</head>
+<!--
+<body background="ssbg75.jpg"
+      text="#000000" link="#0000ee" vlink="#551a8b" alink="ff0000">
+-->
+<body>
+
+<!--X-NavButtons-Start-->
+<table width="100%">
+<tr valign="top">
+<td align="left"><nobr><a href="intro.html"><img src="prev.png"border=0 alt="[Prev]"></a>&nbsp;&nbsp;&nbsp;</nobr></td><td align="center" width="99%"><a href="mhonarc.html"><img src="up.png" border=0 alt="[TOC]"></a><a href="faq/faq.html"><img src="faq.png" border=0 alt="[FAQ]"></a><a href="app-bugs.html"><img src="bug.png" border=0 alt="[Bugs]"></a><a href="http://www.mhonarc.org/"><img src="home.png" border=0 alt="[Home]"></a></td><td align="right"><nobr>&nbsp;&nbsp;&nbsp;<a href="install.html"><img src="next.png" border=0 alt="[Next]"></a></nobr></td></tr></table>
+<!--X-NavButtons-End-->
+<hr>
+
+<h1><a name="relnotes">Release Notes</a></h1>
+
+<p>Read the <tt>CHANGES</tt> document included in the distribution
+for a more complete summary of changes to
+MHonArc.  This document highlights important changes that have occurred
+and important usage details which you should be aware of before using
+MHonArc.  If you are upgrading from a previous release, make sure to
+check for the
+<a href="#important">highlighted incompatibilites</a>
+from earlier releases.
+</p>
+
+<!--X-TOC-Start-->
+<ul>
+<li><a href="#important">Compatibility Notes</a>
+<ul>
+<li><small><a href="#v2.4.x-defrcname">UPGRADING FROM v2.4.x OR EARLIER: DEFRCNAME Change</a></small>
+<li><small><a href="#v2.4.x-header-footer">UPGRADING FROM v2.4.x OR EARLIER: HEADER and FOOTER Removed</a></small>
+<li><small><a href="#v2.4.x-mimefilters">UPGRADING FROM v2.4.x OR EARLIER: MIMEFILTERS API Change</a></small>
+<li><small><a href="#v2.1.x-dbedit">UPGRADING FROM v2.1.x OR EARLIER: Database Format Change</a></small>
+<li><small><a href="#down">DOWNGRADING TO OLDER VERSIONS</a></small>
+</ul>
+<li><a href="#general">General Notes</a>
+</ul>
+<!--X-TOC-End-->
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="important">Compatibility Notes</a></h2>
+
+<p>This sections provides notes dealing with compatibility issues
+if upgrading from a previous release of MHonArc:
+</p>
+
+<h3><a name="v2.4.x-defrcname">UPGRADING FROM v2.4.x OR EARLIER: DEFRCNAME Change</a></h3>
+
+    <p>The default value for the <a
+    href="resources/defrcname.html">DEFRCNAME</a> is now called
+    "<tt>.mhonarc.mrc</tt>", or "<tt>mhonarc.mrc</tt>" under
+    Windows and VMS.  The old value was "<tt>.mhonarc.rc</tt>", or
+    "<tt>mhonarc.rc</tt>".  If you use the default resource file,
+    you will need to rename the file to match the filenames used for
+    v2.5 and later.
+    </p>
+
+<h3><a name="v2.4.x-header-footer">UPGRADING FROM v2.4.x OR EARLIER: HEADER and FOOTER Removed</a></h3>
+
+    <p>The HEADER and FOOTER resources are no longer supported.
+    If you are using these resources, the HEADER content and
+    FOOTER content will be lost once v2.5, or later, of
+    MHonArc processes an archive containing these resources.
+    </p>
+    <p>The HEADER and FOOTER resources have been deprecated for
+    a long time since they only applied to the main index; the
+    thread index has no equivalent.  The
+    <a href="resources/idxpgbegin.html">IDXPGBEGIN</a>
+    or <a href="resources/listbegin.html">LISTBEGIN</a>
+    resources can be used to achieve the same effect of HEADER.
+    The <a href="resources/idxpgend.html">IDXPGEND</a>
+    or <a href="resources/listend.html">LISTEND</a>
+    can be used to achieve the same effect
+    of FOOTER.
+    </p>
+
+<h3><a name="v2.4.x-mimefilters">UPGRADING FROM v2.4.x OR EARLIER: MIMEFILTERS API Change</a></h3>
+
+    <p>The API for data filters registered via
+    <a href="resources/mimefilters.html">MIMEFILTERS</a>
+    is not capability with filters written for v2.4.x and
+    earlier.  See CHANGES and the documentation for the
+    <a href="resources/mimefilters.html">MIMEFILTERS</a> resource
+    for the API.
+    </p>
+    <p>If you use custom style filters written for v2.4.x, or earlier,
+    you will need to update them for them to work properly under
+    v2.5, and later.
+    </p>
+
+<h3><a name="v2.1.x-dbedit">UPGRADING FROM v2.1.x OR EARLIER: Database Format Change</a></h3>
+    
+    <p>If you have archives created with v2.1.x, or earlier, the
+    format of mime-related resources is not compatible with v2.2, and
+    later, versions.  MHonArc will reset the mime-related resources
+    <a href="resources/charsetconverters.html">CHARSETCONVERTERS</a>
+    and <a href="resources/mimefilters.html">MIMEFILTERS</a> to their
+    default values.
+    <a href="resources/mimeargs.html">MIMEARGS</a> will also be
+    reset to the default value unless you are upgrading to v2.5.8, or
+    later, where the MIMEARGS settings will be preserved.
+    </p>
+    <p>To avoid the resetting of the mime-related resource if you
+    are using customized settings, you will need to re-specify your
+    settings the next time you update an archive.  If you always
+    specify your resource settings each time you invoke MHonArc, then
+    your settings should to still take effect.
+    </p>
+    <p>You can also use the
+    <a href="app-utilsprg.html#mha-dbedit"><tt>mha-dbedit</tt></a>
+    program to apply
+    your settings directly without processing the archive.
+    </p>
+
+<h3><a name="down">DOWNGRADING TO OLDER VERSIONS</a></h3>
+    
+    <p>Downgrading to an earlier version of MHonArc can be
+    dangerous, especially if downgrading to an older version that
+    used different storage formats in archive database files from
+    the current version in use.
+    If an older version of MHonArc is
+    used to process an archive last updated by a new version, archive
+    data can get lost and/or unexpected output can occur.
+    </p>
+    <p>Changes in archive format are not common, so downgrading
+    can be okay depending on the versions involved.  The key versions
+    to watch out for are the ones noted in this section where
+    database format changes have occured.  The following lists
+    release numbers where a format change occured:
+    </p>
+    <ul>
+	<li>2.0.0</li>
+	<li>2.2.0</li>
+	<li>2.5.0</li>
+    </ul>
+    <p>For example, if an archive was last updated with v2.5.0,
+    processing the archive with a previous release will cause problems.
+    </p>
+    <p>A possible method for successfully downgrading to a release
+    with differences in the database format,
+    is to try to reconstruct the database file using
+    the <a href="app-utilsprg.html#mha-dbrecover"><tt>mha-dbrecover</tt></a>
+    utility contained in the MHonArc version the archive is being
+    downgraded to.
+    </p>
+    <p>Of course, the safest way to downgrade is to recreate an archive
+    from the original raw mail data.  It is good practice to preserve
+    the raw mail data in some form for cases like these and for
+    general archive recovering situations due to file corruption or other
+    system failures.
+    </p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="general">General Notes</a></h2>
+
+<ul>
+
+<li><p>For v2.5, the default text/html filter (mhtxthtml.pl) will
+    now convert auto-loaded URL attributes to
+    '<tt>javascript:void(0);</tt>' for some HTML elements --
+    <tt>IMG</tt>, <tt>BODY</tt>, <tt>IFRAME</tt>, <tt>FRAME</tt>,
+    <tt>OBJECT</tt>, <tt>SCRIPT</tt>, <tt>INPUT</tt> -- except for cid:
+    URLs.    This behavior can be disabled if the '<tt>allownoncidurls</tt>'
+    filter argument is specified.
+    </p>
+    <p>The new behavior is to prevent malicious URLs that verify
+    mail addresses for spam purposes, secretly set cookies, or
+    gather some statistical data automatically with the use of
+    elements that cause browsers to automatically fetch data.
+    </p>
+    </li>
+
+<li><p>ISO-8859 character set data processing now defaults to using
+    the <tt>MHonArc::CharEnt</tt> module in v2.5.  The old <tt>iso8859.pl</tt>
+    library is still provided for compatibility with older
+    archives.  To update archives to use the new settings, you
+    can run the following command,
+    </p>
+    <pre>
+    <a href="app-utilsprg.html#mha-dbedit">mha-dbedit</a> -rcfile examples/<a href="rcfileexs/def-mime.mrc.html">def-mime.mrc</a> \
+	       -outdir /path/to/archive </pre>
+    <p>where "examples/<a href="rcfileexs/def-mime.mrc.html">def-mime.mrc</a>" represents the default MIME
+    processing resources for MHonArc provided within the MHonArc
+    distribution.
+    </p>
+    <table border=0 cellpadding=4>
+    <tr valign="top">
+    <td><strong>NOTE</strong></td>
+    <td><p>v2.5.4, and later, generated archives will automatically
+    inherit new
+    <a href="resources/charsetconverters.html">CHARSETCONVERTERS</a>
+    if the built-in defaults are being used.
+    However, if you have defined CHARSETCONVERTERS for your archives, you
+    will need to explicitly update your archives if you want them
+    applied to your archives.
+    </p>
+    </td>
+    </tr>
+    </table>
+    </li>
+
+<li><p>The value of the <a href="resources/tslice.html">TSLICE</a>
+    resource is used to determine the number of messages to update,
+    before and after by thread, of each new message added.  To
+    insure that messages within a thread slice are updated when
+    a new message is added, make sure the before and after ranges
+    specified for <a href="resources/tslice.html">TSLICE</a> is
+    equal to maximum before and the maximum after range arguments
+    specifed in the uses of the
+    <a href="rcvars.html#TSLICE"><tt>$TSLICE$</tt></a> resource
+    variable.  For example, if you have <tt>$TSLICE(0;4)$</tt> and
+    <tt>$TSLICE(3;3)$</tt> in message layout resources, you should
+    set TSLICE to <tt>3:4</tt>.
+    </p>
+    <p>If you only use <tt>$TSLICE$</tt> once, it is best to
+    set options for thread slice formatting via the
+    TSLICE resource so you will not have anything to worry about.
+    </p>
+
+<li><p>If updgrading from v2.4.x, or earlier, reference and follow-up
+    information of a message is now stored in a different format
+    in the database (and internally).  MHonArc will auto-update
+    older archives to the new format, so no action should be
+    required on your part.
+    </p>
+    </li>
+
+<li><p>If upgrading from v2.1.x, or earlier, any custom filters you
+    have developed may need to modified.  If your filter accessed
+    some main variables, your filter will not operate properly.
+    All variables that used to be in package "main" are no longer.
+    The major variables are now in package "mhonarc".  For example,
+    <tt>$::OUTDIR</tt> is now <tt>$mhonarc::OUTDIR</tt>.  See the
+    <a href="resources/mimefilters.html">MIMEFILTERS</a>
+    resource page for more information.
+    </p>
+    </li>
+
+<li><p>See the warnings in the documentation for the
+    <a href="resources/htmlext.html">HTMLEXT</a> and
+    <a href="resources/msgprefix.html">MSGPREFIX</a>
+    resources before using them.
+    </p>
+    </li>
+
+<li><p>Occasionally, a new release of MHonArc may contain new
+    MIME filters.  See the <tt>CHANGES</tt> file to check if any new filters
+    have been added.
+    </p>
+    <p>If you confirm that new filters have been added, and you want
+    to apply them to your archives, you use the
+    <a href="app-utilsprg.html#mha-dbedit"><tt>mha-dbedit</tt></a>
+    program
+    using the <tt><a href="rcfileexs/def-mime.mrc.html">def-mime.mrc</a></tt>
+    in the examples directory.
+    </p>
+    <table border=0 cellpadding=4>
+    <tr valign="top">
+    <td><strong>NOTE</strong></td>
+    <td><p>v2.5.4, and later, generated archives will automatically
+    inherit new MIMEFILTERS if the built-in defaults are being used.
+    However, if you have defined MIMEFILTERS for your archives, you
+    will need to explicitly update your archives if you want them
+    applied to your archives.
+    </p>
+    </td>
+    </tr>
+    </table>
+    <p>Example usage of <tt>mha-dbedit</tt>:
+    </p>
+    <pre>
+    mha-dbedit -rcfile examples/<a href="rcfileexs/def-mime.mrc.html">def-mime.mrc</a> \
+	       -outdir /path/to/archive </pre>
+    <p>Change the <a href="resources/rcfile.html">-rcfile</a>
+    and <a href="resources/outdir.html">-outdir</a> pathnames to reflect where
+    you are running mhonarc and where your archive is located,
+    respectively.
+    </p>
+    <p>Note, if your archives are using custom settings of
+    <a href="resources/mimefilters.html">MIMEFILTERS</a>,
+    <a href="resources/mimeargs.html">MIMEARGS</a>, and/or
+    <a href="resources/charsetconverters.html">CHARSETCONVERTERS</a>
+    resources,
+    you will need to create a variant version of
+    <tt><a href="rcfileexs/def-mime.mrc.html">def-mime.mrc</a></tt>
+    (included in the examples directory) to include your settings
+    and use the variant version when updating your archives.
+    </p>
+    </li>
+
+</ul>
+
+<hr>
+<!--X-NavButtons-Start-->
+<table width="100%">
+<tr valign="top">
+<td align="left"><nobr><a href="intro.html"><img src="prev.png"border=0 alt="[Prev]"></a>&nbsp;&nbsp;&nbsp;</nobr></td><td align="center" width="99%"><a href="mhonarc.html"><img src="up.png" border=0 alt="[TOC]"></a><a href="faq/faq.html"><img src="faq.png" border=0 alt="[FAQ]"></a><a href="app-bugs.html"><img src="bug.png" border=0 alt="[Bugs]"></a><a href="http://www.mhonarc.org/"><img src="home.png" border=0 alt="[Home]"></a></td><td align="right"><nobr>&nbsp;&nbsp;&nbsp;<a href="install.html"><img src="next.png" border=0 alt="[Next]"></a></nobr></td></tr></table>
+<!--X-NavButtons-End-->
+
+<!-- *************************************************************** -->
+<hr>
+<address>
+$Date: 2002/06/27 05:00:01 $ <br>
+<img align="top" src="monicon.png" alt="">
+<a href="http://www.mhonarc.org/"><strong>MHonArc</strong></a><br>
+Copyright &#169; 1997-2001, <a href="http://www.mhonarc.org/~ehood/"
+>Earl Hood</a>, <a href="mailto:mhonarc@mhonarc.org"
+>mhonarc@mhonarc.org</a><br>
+</address>
+
+</BODY>
+</HTML>

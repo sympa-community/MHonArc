@@ -4,11 +4,10 @@
 <title>MHonArc Resources: SPAMMODE</title>
 </head>
 <body>
-
-<address>
-<a href="../resources.html#spammode">MHonArc Resource List</a><br>
-</address>
-
+<!--x-rc-nav-->
+<table border=0><tr valign="top">
+<td align="left" width="50%">[Prev:&nbsp;<a href="sort.html">SORT</a>]</td><td><nobr>[<a href="../resources.html#spammode">Resources</a>][<a href="../mhonarc.html">TOC</a>]</nobr></td><td align="right" width="50%">[Next:&nbsp;<a href="ssmarkup.html">SSMARKUP</a>]</td></tr></table>
+<!--/x-rc-nav-->
 <hr>
 <h1>SPAMMODE</h1>
 
@@ -18,21 +17,21 @@
 
 <dl>
 
-<dt><strong>Envariable</strong><dt>
+<dt><strong>Envariable</strong></dt>
 <dd><p>
 <code>M2H_SPAMMODE=</code>[ <code>0</code> | <code>1</code> ]
 </p>
 </dd>
 
-<dt><strong>Element</strong><dt>
-<dd><p><br>
+<dt><strong>Element</strong></dt>
+<dd><p>
 <code>&lt;SPAMMODE&gt;</code><br>
 <code>&lt;NOSPAMMODE&gt;</code><br>
 </p>
 </dd>
 
-<dt><strong>Command-line Option</strong><dt>
-<dd><p><br>
+<dt><strong>Command-line Option</strong></dt>
+<dd><p>
 <code>-spammode</code><br>
 <code>-nospammode</code>
 </p>
@@ -51,28 +50,38 @@ following default resource values are affected:
 </p>
 <dl>
 <dt><a href="litemplate.html">LITEMPLATE</a></dt>
-<dd><a href="../rcvars.html#FROMNAME"><tt>$FROMNAME$</tt></a> is used
-instead of <a href="../rcvars.html#FROM"><tt>$FROM$</tt></a>.</dd>
+<dd><p><a href="../rcvars.html#FROMNAME"><tt>$FROMNAME$</tt></a> is used
+instead of <a href="../rcvars.html#FROM"><tt>$FROM$</tt></a>.</p></dd>
 <dt><a href="msgpgbegin.html">MSGPGBEGIN</a></dt>
-<dd>The <tt>&lt;LINK REV="made" ...&gt;</tt> is removed.</dd>
+<dd><p>The <tt>&lt;link rev="made" ...&gt;</tt> is removed.</p></dd>
 <dt><a href="foluplitxt.html">FOLUPLITXT</a></dt>
-<dd><a href="../rcvars.html#FROMNAME"><tt>$FROMNAME$</tt></a> is used
-instead of <a href="../rcvars.html#FROM"><tt>$FROM$</tt></a>.</dd>
+<dd><p><a href="../rcvars.html#FROMNAME"><tt>$FROMNAME$</tt></a> is used
+instead of <a href="../rcvars.html#FROM"><tt>$FROM$</tt></a>.</p></dd>
 <dt><a href="refslitxt.html">REFSLITXT</a></dt>
-<dd><a href="../rcvars.html#FROMNAME"><tt>$FROMNAME$</tt></a> is used
-instead of <a href="../rcvars.html#FROM"><tt>$FROM$</tt></a>.</dd>
+<dd><p><a href="../rcvars.html#FROMNAME"><tt>$FROMNAME$</tt></a> is used
+instead of <a href="../rcvars.html#FROM"><tt>$FROM$</tt></a>.</p></dd>
 <dt><a href="addressmodifycode.html">ADDRESSMODIFYCODE</a></dt>
-<dd>Is defined as
+<dd><p>Is defined as
 "<tt>s|([\!\%\w\.\-+=/]+@)([\w\.\-]+)|$1.('x' x length($2))|ge"</tt>
 (this has the effect of preserving the local-part of the address and
-complete masking out the domain portion).</dd>
+complete masking out the domain portion).</p></dd>
 <dt><a href="mailtourl.html">MAILTOURL</a></dt>
-<dd>Is defined as
-"<tt>mailto:<a href="../rcvars.html#TOADDRNAME">$TOADDRNAME$</a>@DOMAIN.HIDDEN</tt>"</dd>
+<dd><p>Is defined as
+"<tt>mailto:<a href="../rcvars.html#TOADDRNAME">$TOADDRNAME$</a>@DOMAIN.HIDDEN</tt>"</p></dd>
 </dl>
-<p>Note, a user defined setting of an above resource will override
-any effects that SPAMMODE has on the resource.
+
+<table border=0 cellpadding=4>
+<tr valign=top>
+<td><strong>NOTE</strong></td>
+<td><p>A user defined setting of an above resource will override
+any effects that SPAMMODE has on the resource.  SPAMMODE is mainly
+a convenience to set the above resources to default values that
+hide email addresses.  The same effect can be achieved by explicitly
+modifying each resource.
 </p>
+</td>
+</tr>
+</table>
 
 <!-- *************************************************************** -->
 <hr>
@@ -117,14 +126,19 @@ any effects that SPAMMODE has on the resource.
 
 <!-- *************************************************************** -->
 <hr>
+<!--x-rc-nav-->
+<table border=0><tr valign="top">
+<td align="left" width="50%">[Prev:&nbsp;<a href="sort.html">SORT</a>]</td><td><nobr>[<a href="../resources.html#spammode">Resources</a>][<a href="../mhonarc.html">TOC</a>]</nobr></td><td align="right" width="50%">[Next:&nbsp;<a href="ssmarkup.html">SSMARKUP</a>]</td></tr></table>
+<!--/x-rc-nav-->
+<hr>
 <address>
-00/10/28 11:13:09<br>
-<img align="top" src="../monicon.gif" alt="">
-<a href="http://www.pobox.com/~ehood/mhonarc.html"
+$Date: 2002/07/27 05:13:11 $ <br>
+<img align="top" src="../monicon.png" alt="">
+<a href="http://www.mhonarc.org/"
 ><strong>MHonArc</strong></a><br>
-Copyright &#169; 1999, <a href="http://www.pobox.com/~ehood/"
->Earl Hood</a>, <a href="mailto:mhonarc@pobox.com"
->mhonarc@pobox.com</a><br>
+Copyright &#169; 1999, <a href="http://www.earlhood.com/"
+>Earl Hood</a>, <a href="mailto:mhonarc@mhonarc.org"
+>mhonarc@mhonarc.org</a><br>
 </address>
 
 </body>

@@ -1,22 +1,27 @@
 <html>
 <body>
 <pre>
-&lt;!--	MHonArc resource file
-
-	icons.mrc 1.3 99/06/25
+&lt;!-- ================================================================== --&gt;
+&lt;!--    $Id: icons.mrc,v 1.5 2002/05/04 04:52:52 ehood Exp $
+        Earl Hood &lt;earl@earlhood.com&gt;
 
 	This example file makes use of the icons feature of
-	MHonArc.
+	MHonArc.  The icon mappings used work with the
+	default set of icons provided with the Apache HTTP
+	server.
   --&gt;
+&lt;!-- ================================================================== --&gt;
 
-<b><a href="../resources/main.html">&lt;main&gt;</a></b>
-<b><a href="../resources/sort.html">&lt;sort&gt;</a></b>
-<b><a href="../resources/thread.html">&lt;nothread&gt;</a></b>
-<b><a href="../resources/reverse.html">&lt;noreverse&gt;</a></b>
+&lt;!--	In this example, we only do a chronological index.
+  --&gt;
+<b><a href="../resources/main.html">&lt;Main&gt;</a></b>
+<b><a href="../resources/sort.html">&lt;Sort&gt;</a></b>
+<b><a href="../resources/thread.html">&lt;NoThread&gt;</a></b>
+<b><a href="../resources/reverse.html">&lt;NoReverse&gt;</a></b>
 
 &lt;!--	Have LISTBEGIN contain last updated information
   --&gt;
-<b><a href="../resources/listbegin.html">&lt;listbegin&gt;</a></b>
+<b><a href="../resources/listbegin.html">&lt;ListBegin&gt;</a></b>
 &lt;address&gt;
 Last update: <b><a href="../rcvars.html#LOCALDATE">$LOCALDATE$</a></b>&lt;br&gt;
 <b><a href="../rcvars.html#NUMOFMSG">$NUMOFMSG$</a></b> messages&lt;br&gt;
@@ -24,54 +29,76 @@ Last update: <b><a href="../rcvars.html#LOCALDATE">$LOCALDATE$</a></b>&lt;br&gt;
 &lt;p&gt;
 Messages listed in chronological order.  Listing format is the following:
 &lt;blockquote&gt;
-&lt;img src="/icons/gletter.gif" alt="* "&gt;
-&lt;strong&gt;Subject&lt;/strong&gt;&lt;code&gt;  &lt;/code&gt;
-(# of follow-ups)&lt;code&gt;  &lt;/code&gt;
-&lt;em&gt;From&lt;/em&gt;.
+&lt;img src="/icons/generic.gif" width="20" height="22" alt="* "&gt;
+&lt;strong&gt;Subject&lt;/strong&gt;&lt;code&gt;  &lt;/code&gt;&lt;em&gt;From&lt;/em&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;
 &lt;hr&gt;
-<b>&lt;/listbegin&gt;</b>
+<b>&lt;/ListBegin&gt;</b>
 
-&lt;!--	A compact listing template with icon usage
+&lt;!--	A listing template with icon usage.  We use <b><a href="../rcvars.html#ICONURL">$ICONURL$</a></b> so
+	we can customize the IMG element inorder to specify the
+	an alternate ALT attribute value from what <b><a href="../rcvars.html#ICON">$ICON$</a></b> would give us.
   --&gt;
-<b><a href="../resources/litemplate.html">&lt;litemplate&gt;</a></b>
-&lt;img src="<b><a href="../rcvars.html#ICONURL">$ICONURL$</a></b>" alt="* "&gt;&lt;strong&gt;<b><a href="../rcvars.html#SUBJECT">$SUBJECT:40$</a></b>&lt;/strong&gt;
-(<b><a href="../rcvars.html#NUMFOLUP">$NUMFOLUP$</a></b>) &lt;em&gt;<b><a href="../rcvars.html#FROMNAME">$FROMNAME$</a></b>&lt;/em&gt;&lt;br&gt;
-<b>&lt;/litemplate&gt;</b>
+<b><a href="../resources/litemplate.html">&lt;LiTemplate&gt;</a></b>
+&lt;img src="<b><a href="../rcvars.html#ICONURL">$ICONURL$</a></b>" width="20" height="22" alt="* "
+&gt;&lt;strong&gt;<b><a href="../rcvars.html#SUBJECT">$SUBJECT$</a></b>&lt;/strong&gt; &lt;em&gt;<b><a href="../rcvars.html#FROMNAME">$FROMNAME$</a></b>&lt;/em&gt;&lt;br&gt;
+<b>&lt;/LiTemplate&gt;</b>
 
-<b><a href="../resources/listend.html">&lt;listend&gt;</a></b>
-<b>&lt;/listend&gt;</b>
+<b><a href="../resources/listend.html">&lt;ListEnd&gt;</a></b>
 
-<b><a href="../resources/labelstyles.html">&lt;labelstyles&gt;</a></b>
+<b>&lt;/ListEnd&gt;</b>
+
+<b><a href="../resources/labelstyles.html">&lt;LabelStyles&gt;</a></b>
 -default-
 subject:strong
 from:strong
-<b>&lt;/labelstyles&gt;</b>
+<b>&lt;/LabelStyles&gt;</b>
 
-<b><a href="../resources/fieldstyles.html">&lt;fieldstyles&gt;</a></b>
+<b><a href="../resources/fieldstyles.html">&lt;FieldStyles&gt;</a></b>
 -default-
 subject:strong
 from:strong
-<b>&lt;/fieldstyles&gt;</b>
+<b>&lt;/FieldStyles&gt;</b>
 
-&lt;!--	Specify icons for message types
+&lt;!--	Specify icons for media-types
   --&gt;
-<b><a href="../resources/icons.html">&lt;icons&gt;</a></b>
-audio/basic:/icons/gsound.gif
-image/gif:/icons/gimage.gif
-image/jpeg:/icons/gimage.gif
-image/tiff:/icons/ggraphic.gif
-multipart/alternative:/icons/gmulti.gif
-multipart/digest:/icons/gtext.gif
-multipart/mixed:/icons/gdoc2.gif
-multipart/parallel:/icons/gdoc.gif
-text/enriched:/icons/gdoc.gif
-text/html:/icons/gdoc.gif
-text/plain:/icons/gletter.gif
-unknown:/icons/gunknown.gif
-video/mpeg:/icons/gmovie.gif
-<b>&lt;/icons&gt;</b>
+<b><a href="../resources/icons.html">&lt;Icons&gt;</a></b>
+*/*;[20x22]/icons/generic.gif
+application/*;[20x22]/icons/generic.gif
+application/msword;[20x22]/icons/layout.gif
+application/octet-stream;[20x22]/icons/binary.gif
+application/pdf;[20x22]/icons/pdf.gif
+application/postscript;[20x22]/icons/ps.gif
+application/rtf;[20x22]/icons/layout.gif
+application/x-csh;[20x22]/icons/script.gif
+application/x-dvi;[20x22]/icons/dvi.gif
+application/x-gtar;[20x22]/icons/tar.gif
+application/x-gzip;[20x22]/icons/compressed.gif
+application/x-ksh;[20x22]/icons/script.gif
+application/x-latex;[20x22]/icons/tex.gif
+application/x-patch;[20x22]/icons/patch.gif
+application/x-script;[20x22]/icons/script.gif
+application/x-sh;[20x22]/icons/script.gif
+application/x-tar;[20x22]/icons/tar.gif
+application/x-tex;[20x22]/icons/tex.gif
+application/x-zip-compressed;[20x22]/icons/compressed.gif
+application/zip;[20x22]/icons/compressed.gif
+audio/*;[20x22]/icons/sound1.gif
+chemical/*;[20x22]/icons/sphere2.gif
+image/*;[20x22]/icons/image2.gif
+message/external-body;[20x22]/icons/link.gif
+multipart/*;[20x22]/icons/layout.gif
+text/*;[20x22]/icons/text.gif
+video/*;[20x22]/icons/movie.gif
+<b>&lt;/Icons&gt;</b>
+
+&lt;!--	Override MIMEArgs settings to specify external filter to
+	use icons as part of the link to attachments.
+  --&gt;
+<b><a href="../resources/mimeargs.html">&lt;MIMEArgs override&gt;</a></b>
+m2h_external::filter; useicon inline
+<b>&lt;/MIMEArgs&gt;</b>
 </pre>
 </body>
 </html>

@@ -1,15 +1,18 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
 <html>
 <head>
-<title>MHonArc v2.4 -- Resource Variables</title>
+<title>MHonArc v2.5 -- Resource Variables</title>
 </head>
+<!--
 <BODY background="ssbg75.jpg"
       text="#000000" link="#0000ee" vlink="#551a8b" alink="ff0000">
+-->
+<BODY>
 
 <!--X-NavButtons-Start-->
-<p align=center>
-<a href="resources.html"><img src="prev.gif" border=0 alt="[Prev]"></a><a href="contacts.html"><img src="next.gif" border=0 alt="[Next]"></a><a href="mhonarc.html"><img src="up.gif" border=0 alt="[TOC]"></a><a href="faq/faq.html"><img src="faq.gif" border=0 alt="[FAQ]"></a><a href="app-bugs.html"><img src="bug.gif" border=0 alt="[Bugs]"></a><a href="http://www.mhonarc.org/"><img src="home.gif" border=0 alt="[Home]"></a>
-</p>
+<table width="100%">
+<tr valign="top">
+<td align="left"><nobr><a href="resources.html"><img src="prev.png"border=0 alt="[Prev]"></a>&nbsp;&nbsp;&nbsp;</nobr></td><td align="center" width="99%"><a href="mhonarc.html"><img src="up.png" border=0 alt="[TOC]"></a><a href="faq/faq.html"><img src="faq.png" border=0 alt="[FAQ]"></a><a href="app-bugs.html"><img src="bug.png" border=0 alt="[Bugs]"></a><a href="http://www.mhonarc.org/"><img src="home.png" border=0 alt="[Home]"></a></td><td align="right"><nobr>&nbsp;&nbsp;&nbsp;<a href="contacts.html"><img src="next.png" border=0 alt="[Next]"></a></nobr></td></tr></table>
 <!--X-NavButtons-End-->
 <hr>
 <h1><a name="rcvars">Resource Variables</a></h1>
@@ -75,7 +78,7 @@ the next message in the archive.
 
 <table border=0 cellpadding=4>
 <tr valign=top>
-<td><strong><a name="note1">*</a> NOTE</strong></td>
+<td><strong><a name="note1">*</a>&nbsp;NOTE</strong></td>
 <td><p>In the two examples given, the replacement value of
 <tt>$SUBJECT$</tt> is different (excluding the variable argument difference).
 For compatibility of older versions of MHonArc, when <tt>$SUBJECT$</tt>
@@ -129,22 +132,42 @@ next <tt>$</tt> is part of the resource variable.
 <dd><p>The optional grouping starting with a colon are variable
 modifiers.  The definition of each modifier is as follows:
 </p>
-    <dl compact>
-    <dt><i>N</i></dt>
-    <dd>Length specification.  MHonArc will clip the expanded text
+<table border=0 cellpadding=4>
+<tr valign="top">
+    <td><i>N</i></td>
+    <td><p>Length specification.  MHonArc will clip the expanded text
     to <i>N</i> if the text length is greater than <i>N</i>.
-    </dd>
-    <dt><tt>U</tt></dt>
-    <dd>Treat the text as part of a URL string.  MHonArc will escape
+    </p>
+    <table border=0 cellpadding=4>
+    <tr valign=top>
+    <td><strong>NOTE</strong></td>
+    <td>Not all resource variables support clipping.
+	If a length specification is given for these variables, then
+	it will be ignored.
+    </td></tr>
+    </table>
+    <p>How MHonArc clips text is determined by the
+    <a href="resources/textclipfunc.html">TEXTCLIPFUNC</a> resource.
+    </p>
+    </td>
+</tr>
+<tr valign="top">
+    <td><tt>U</tt></td>
+    <td><p>Treat the text as part of a URL string.  MHonArc will escape
     any characters that are considered special in a URL.
-    </dd>
-    <dt><tt>J</tt></dt>
-    <dd>Treat the text as a JavaScript string.  MHonArc will escape
+    </p>
+    </td>
+</tr>
+<tr valign="top">
+    <td><tt>J</tt></td>
+    <td><p>Treat the text as a JavaScript string.  MHonArc will escape
     any quote characters so the text can be part of a JavaScript
     string.
-    </dd>
-    </dl>
-<p></p>
+    </p>
+    </td>
+</tr>
+</table>
+</dd>
 
 <dt><tt>(<i>arglist</i>)</tt> <em>(optional)</em></dt>
 <dd>An optional argument list delimited by parentheses: <tt>(&nbsp;)</tt>.
@@ -206,56 +229,73 @@ expanded will be based upon. Possible values are:
 </p>
 <table border=0>
 <tr valign=top>
-<th align=right>Value</th><th align=left>- Meaning</th>
+<th align=right>Value&nbsp;-</th><th align=left>Meaning</th>
 </tr>
 <tr valign=top>
-<td align=right><tt>CUR</tt></td>
-  <td>- Current message.</td>
+<td align=right><tt>CUR</tt>&nbsp;-</td>
+  <td>Current message.</td>
 </tr>
 <tr valign=top>
-<td align=right><tt>FIRST</tt></td>
-  <td>- First message listed in main index.</td>
+<td align=right><tt>FIRST</tt>&nbsp;-</td>
+  <td>First message listed in main index.</td>
 </tr>
 <tr valign=top>
-<td align=right><tt>LAST</tt></td>
-  <td>- Last message listed in main index.</td>
+<td align=right><tt>LAST</tt>&nbsp;-</td>
+  <td>Last message listed in main index.</td>
 </tr>
 <tr valign=top>
-<td align=right><tt>NEXT</tt></td>
-  <td>- Next message by main sort order.</td>
+<td align=right><tt>NEXT</tt>&nbsp;-</td>
+  <td>Next message by main sort order.</td>
 </tr>
 <tr valign=top>
-<td align=right><tt>PREV</tt></td>
-  <td>- Previous message by main sort order.</td>
+<td align=right><tt>PREV</tt>&nbsp;-</td>
+  <td>Previous message by main sort order.</td>
 </tr>
 <tr valign=top>
-<td align=right><tt>TEND</tt></td>
-  <td>- Last message of current discussion thread.</td>
+<td align=right><tt>TEND</tt>&nbsp;-</td>
+  <td>Last message of current discussion thread.</td>
 </tr>
 <tr valign=top>
-<td align=right><tt>TFIRST</tt></td>
-  <td>- First message listed thread index.</td>
+<td align=right><tt>TFIRST</tt>&nbsp;-</td>
+  <td>First message listed thread index.</td>
 </tr>
 <tr valign=top>
-<td align=right><tt>TLAST</tt></td>
-  <td>- Last message listed thread index.</td>
+<td align=right><tt>TLAST</tt>&nbsp;-</td>
+  <td>Last message listed thread index.</td>
 </tr>
 <tr valign=top>
-<td align=right><tt>TNEXT</tt></td>
-  <td>- Next message by thread.</td>
+<td align=right><tt>TNEXT</tt>&nbsp;-</td>
+  <td>Next message by thread.</td>
 </tr>
 <tr valign=top>
-<td align=right><tt>TPARENT</tt></td>
-  <td>- Parent message of current
-thread.</td>
+<td align=right><tt>TNEXTIN</tt>&nbsp;-</td>
+  <td>Next message within current thread.  This differs from
+  <tt>TNEXT</tt> in that it does not cross discussion thread boundaries.</td>
 </tr>
 <tr valign=top>
-<td align=right><tt>TPREV</tt></td>
-  <td>- Previous message by thread.</td>
+<td align=right><tt>TNEXTTOP</tt>&nbsp;-</td>
+  <td>First message of next discussion thread.</td>
 </tr>
 <tr valign=top>
-<td align=right><tt>TTOP</tt></td>
-  <td>- Top/root message of current discussion thread.</td>
+<td align=right><tt>TPARENT</tt>&nbsp;-</td>
+  <td>Parent message of current thread.</td>
+</tr>
+<tr valign=top>
+<td align=right><tt>TPREV</tt>&nbsp;-</td>
+  <td>Previous message by thread.</td>
+</tr>
+<tr valign=top>
+<td align=right><tt>TPREVIN</tt>&nbsp;-</td>
+  <td>Previous message within current thread.  This differs from
+  <tt>TPREV</tt> in that it does not cross discussion thread boundaries.</td>
+</tr>
+<tr valign=top>
+<td align=right><tt>TPREVTOP</tt>&nbsp;-</td>
+  <td>First message of previous discussion thread.</td>
+</tr>
+<tr valign=top>
+<td align=right><tt>TTOP</tt>&nbsp;-</td>
+  <td>Top/root message of current discussion thread.</td>
 </tr>
 </table>
 <p>"<tt>CUR</tt>" is the default if nothing is specified for
@@ -328,7 +368,9 @@ the <a href="resources/gmtdatefmt.html">GMTDATEFMT</a> and
 <td>The <tt>NAME</tt> and <tt>HREF</tt> attributes to use in an anchor
 to link to the archived message.
 The <tt>NAME</tt> attribute provides a destination location when a message
-links to the index page.</td>
+links to the index page.  This resource variable is equivalent to
+"<nobr><tt><a href="#A_NAME">$A_NAME$</a>&nbsp;<a href="#A_HREF">$A_HREF$</a></tt></nobr>".
+</td>
 </tr>
 </table><br></dd>
 <dt><strong><a name="A_HREF"><tt>$A_HREF$</tt></a></strong></dt>
@@ -339,7 +381,11 @@ links to the index page.</td>
 </tr>
 <tr valign=top>
 <td align=right><b>Description:</b></td>
-<td>The <tt>HREF</tt> attribute to use in an anchor to link to the archived message.</td>
+<td>The <tt>HREF</tt> attribute to use in an anchor to link to the
+archived message.
+This variable is equivalent to
+"<tt>href="<a href="#MSG">$MSG$</a>"</tt>".
+</td>
 </tr>
 </table><br></dd>
 <dt><strong><a name="A_NAME"><tt>$A_NAME$</tt></a></strong></dt>
@@ -350,7 +396,11 @@ links to the index page.</td>
 </tr>
 <tr valign=top>
 <td align=right><b>Description:</b></td>
-<td>The <tt>NAME</tt> attribute to use in an anchor for messages to link to the index page.</td>
+<td>The <tt>NAME</tt> attribute to use in an anchor for messages to link
+to the index page.
+This variable is equivalent to
+"<tt>name="<a href="#MSGNUM">$MSGNUM$</a>"</tt>".
+</td>
 </tr>
 </table><br></dd>
 <dt><strong><a name="BUTTON"><tt>$BUTTON$</tt></a></strong></dt>
@@ -361,14 +411,25 @@ links to the index page.</td>
 </tr>
 <tr valign=top>
 <td align=right><b>Description:</b></td>
-<td>Button markup linking to a message. The value of $BUTTON$ is determined
-by the following resources:
+<td>Button markup linking to a message. The value of <tt>$BUTTON$</tt>
+is determined by the following resources based on
+<tt><i><a href="#mesg_spec">mesg_spec</a></i></tt> value:
 <a href="resources/nextbutton.html">NEXTBUTTON</a>,
 <a href="resources/nextbuttonia.html">NEXTBUTTONIA</a>,
 <a href="resources/prevbutton.html">PREVBUTTON</a>,
 <a href="resources/prevbuttonia.html">PREVBUTTONIA</a>,
 <a href="resources/tnextbutton.html">TNEXTBUTTON</a>,
-<a href="resources/tnextbuttonia.html">TNEXTBUTTONIA</a>.
+<a href="resources/tnextbuttonia.html">TNEXTBUTTONIA</a>,
+<a href="resources/tnextinbutton.html">TNEXTINBUTTON</a>,
+<a href="resources/tnextinbuttonia.html">TNEXTINBUTTONIA</a>,
+<a href="resources/tnexttopbutton.html">TNEXTTOPBUTTON</a>,
+<a href="resources/tnexttopbuttonia.html">TNEXTTOPBUTTONIA</a>,
+<a href="resources/tprevbutton.html">TPREVBUTTON</a>,
+<a href="resources/tprevbuttonia.html">TPREVBUTTONIA</a>,
+<a href="resources/tprevinbutton.html">TPREVINBUTTON</a>,
+<a href="resources/tprevinbuttonia.html">TPREVINBUTTONIA</a>,
+<a href="resources/tprevtopbutton.html">TPREVTOPBUTTON</a>,
+<a href="resources/tprevtopbuttonia.html">TPREVTOPBUTTONIA</a>.
 </td>
 </tr>
 </table><br></dd>
@@ -450,7 +511,7 @@ HOME environment variable.</td>
 <tr valign=top>
 <td align=right><b>Description:</b></td>
 <td>The username/local-part of the mail address in the <tt>From:</tt>
-field of the message.  For example, given the address "someuser@foo.com",
+field of the message.  For example, given the address "someuser@mhonarc.org",
 <tt>$FROMADDRNAME$</tt> would equal "someuser".</td>
 </tr>
 </table><br></dd>
@@ -463,8 +524,8 @@ field of the message.  For example, given the address "someuser@foo.com",
 <tr valign=top>
 <td align=right><b>Description:</b></td>
 <td>The domain part of the mail address in the <tt>From:</tt>
-field of the message.  For example, given the address "someuser@foo.com",
-<tt>$FROMADDRDOMAIN$</tt> would equal "foo.com".</td>
+field of the message.  For example, given the address "someuser@mhonarc.org",
+<tt>$FROMADDRDOMAIN$</tt> would equal "mhonarc.org".</td>
 </tr>
 </table><br></dd>
 <dt><strong><a name="FROMNAME"><tt>$FROMNAME$</tt></a></strong></dt>
@@ -596,16 +657,25 @@ Value set by the <a href="resources/title.html">TITLE</a> resource.
 <tr valign=top>
 <td align=right><b>Description:</b></td>
 <td>Link markup linking to a message.
-Value set by the
+The value of <tt>$LINK$</tt> is determined
+by the following resources based on
+<tt><i><a href="#mesg_spec">mesg_spec</a></i></tt> value:
 <a href="resources/nextlink.html">NEXTLINK</a>,
 <a href="resources/nextlinkia.html">NEXTLINKIA</a>,
 <a href="resources/prevlink.html">PREVLINK</a>,
 <a href="resources/prevlinkia.html">PREVLINKIA</a>,
 <a href="resources/tnextlink.html">TNEXTLINK</a>,
 <a href="resources/tnextlinkia.html">TNEXTLINKIA</a>,
-<a href="resources/tprevlink.html">TPREVLINK</a>, and
-<a href="resources/tprevlinkia.html">TPREVLINKIA</a>
-resources.
+<a href="resources/tnextinlink.html">TNEXTINLINK</a>,
+<a href="resources/tnextinlinkia.html">TNEXTINLINKIA</a>,
+<a href="resources/tnexttoplink.html">TNEXTTOPLINK</a>,
+<a href="resources/tnexttoplinkia.html">TNEXTTOPLINKIA</a>,
+<a href="resources/tprevlink.html">TPREVLINK</a>,
+<a href="resources/tprevlinkia.html">TPREVLINKIA</a>,
+<a href="resources/tprevinlink.html">TPREVINLINK</a>,
+<a href="resources/tprevinlinkia.html">TPREVINLINKIA</a>,
+<a href="resources/tprevtoplink.html">TPREVTOPLINK</a>,
+<a href="resources/tprevtoplinkia.html">TPREVTOPLINKIA</a>.
 </td>
 </tr>
 </table><br></dd>
@@ -874,10 +944,14 @@ context.
 <td align=right><b>Description:</b></td>
 <td>Markup linking to a main index page.
 Value determined by the
+<a href="resources/firstpglink.html">FIRSTPGLINK</a>,
+<a href="resources/lastpglink.html">LASTPGLINK</a>,
 <a href="resources/nextpglink.html">NEXTPGLINK</a>,
 <a href="resources/nextpglinkia.html">NEXTPGLINKIA</a>,
 <a href="resources/prevpglink.html">PREVPGLINK</a>,
 <a href="resources/prevpglinkia.html">PREVPGLINKIA</a>,
+<a href="resources/tfirstpglink.html">TFIRSTPGLINK</a>,
+<a href="resources/tlastpglink.html">TLASTPGLINK</a>,
 <a href="resources/tnextpglink.html">TNEXTPGLINK</a>,
 <a href="resources/tnextpglinkia.html">TNEXTPGLINKIA</a>,
 <a href="resources/tprevpglink.html">TPREVPGLINK</a>, and
@@ -903,6 +977,10 @@ with a '<tt><b>T</b></tt>', then the list of links apply to the thread index.
 Examples: <tt>$PGLINKLIST(3;3)$</tt>, <tt>$PGLINKLIST(T2;T3)$</tt>.  The
 link text for to a give page is the page number.
 </p>
+<p>If no arguments are provided to <tt>$PGLINKLIST$</tt>, then the
+links to all index pages will be printed.  To get the entire list
+for a thread index, use <tt>$PGLINKLIST(T)$</tt>.
+</p>
 </td>
 </tr>
 </table><br></dd>
@@ -925,10 +1003,13 @@ link text for to a give page is the page number.
 </tr>
 <tr valign=top>
 <td align=right><b>Description:</b></td>
-<td>The subject text of the message, and if no arguments, wrapped in an
-anchor element that hyperlinks to the message.  This behavior exists
+<td>The subject text of the message, <em>and if no arguments</em>, wrapped in
+an anchor element that hyperlinks to the message.  This behavior exists
 for backwards capatibility and a simple way to provide a link to
-the current message using the subject as the link text.</td>
+the current message using the subject as the link text.  The
+no argument version is equivalent to:
+"<nobr><tt>&lt;a&nbsp;<a href="#A_ATTR">$A_ATTR$</a>&gt;<a href="#SUBJECTNA">$SUBJECTNA$</a>&lt;/a&gt;</tt></nobr>".
+</td>
 </tr>
 </table><br></dd>
 <dt><strong><a name="SUBJECTNA"><tt>$SUBJECTNA$</tt></a></strong></dt>
@@ -999,6 +1080,18 @@ Value set by the <a href="resources/ttitle.html">TTITLE</a> resource.
 </td>
 </tr>
 </table><br></dd>
+<dt><strong><a name="TLEVEL"><tt>$TLEVEL$</tt></a></strong></dt>
+<dd><table border=0>
+<tr valign=top>
+<td align=right><b>Arguments:</b></td>
+<td><tt><i><a href="#mesg_spec">mesg_spec</a></i></tt></td>
+</tr>
+<tr valign=top>
+<td align=right><b>Description:</b></td>
+<td>Numeric level of message in current thread, starting with zero.
+</td>
+</tr>
+</table><br></dd>
 <dt><strong><a name="TO"><tt>$TO$</tt></a></strong></dt>
 <dd><table border=0>
 <tr valign=top>
@@ -1021,7 +1114,7 @@ This variable is only applicable for use in the
 <tr valign=top>
 <td align=right><b>Description:</b></td>
 <td>The username/local-part of the e-mail address.
-For example, given the address "someuser@foo.com",
+For example, given the address "someuser@mhonarc.org",
 <tt>$TOADDRNAME$</tt> would equal "someuser".
 This variable is only applicable for use in the
 <a href="resources/mailtourl.html">MAILTOURL</a>.</td>
@@ -1036,8 +1129,8 @@ This variable is only applicable for use in the
 <tr valign=top>
 <td align=right><b>Description:</b></td>
 <td>The domain part of the e-mail address.
-For example, given the address "someuser@foo.com",
-<tt>$TOADDRDOMAIN$</tt> would equal "foo.com".
+For example, given the address "someuser@mhonarc.org",
+<tt>$TOADDRDOMAIN$</tt> would equal "mhonarc.org".
 This variable is only applicable for use in the
 <a href="resources/mailtourl.html">MAILTOURL</a>.</td>
 </tr>
@@ -1046,22 +1139,45 @@ This variable is only applicable for use in the
 <dd><table border=0>
 <tr valign=top>
 <td align=right><b>Arguments:</b></td>
-<td>N/A</td>
+<td><tt><i>number</i>;<i>number</i>;<i>flag</i></tt></td>
 </tr>
 <tr valign=top>
 <td align=right><b>Description:</b></td>
 <td>A <em>slice</em> of the thread listing relative to the current message.
-Size of slice determined by the <a href="resources/tslice.html">TSLICE</a>
-resource.  Layout appearance of <tt>$TSLICE$</tt> determined by
-<a href="tslicebeg.html">TSLICEBEG</a>,
-<a href="tsliceend.html">TSLICEEND</a>,
-<a href="ttopbegin.html">TTOPBEGIN</a>,
-<a href="tlitxt.html">TLITXT</a>,
-<a href="tliend.html">TLIEND</a>,
-<a href="tsingletxt.html">TSINGLETXT</a>,
-<a href="tsubjectbeg.html">TSUBJECTBEG</a>, and
-<a href="ttopend.html">TTOPEND</a>
+Size of slice is determined by the <a href="resources/tslice.html">TSLICE</a>
+resource, or explicitly by the arguments provided.  The first argument
+is the number of maximum messages to list before the current message.
+The second argument is the number of maximum message messages to list
+after the current message.  The third argument is a flag, <tt>0</tt>
+or <tt>1</tt>, denoting if slice should cross discussion thread
+boundaries or not.  If any of the arguments are blank, the value
+defined in the <a href="resources/tslice.html">TSLICE</a> resource
+will be used.
+<p>Layout appearance of <tt>$TSLICE$</tt> is determined by
+<a href="resources/tslicebeg.html">TSLICEBEG</a>,
+<a href="resources/tslicecontbeg.html">TSLICECONTBEG</a>,
+<a href="resources/tslicecontend.html">TSLICECONTEND</a>,
+<a href="resources/tsliceend.html">TSLICEEND</a>,
+<a href="resources/tsliceindentbeg.html">TSLICEINDENTBEG</a>,
+<a href="resources/tsliceindentend.html">TSLICEINDENTEND</a>,
+<a href="resources/tsliceliend.html">TSLICELIEND</a>,
+<a href="resources/tsliceliendcur.html">TSLICELIENDCUR</a>,
+<a href="resources/tslicelinone.html">TSLICELINONE</a>,
+<a href="resources/tslicelinoneend.html">TSLICELINONEEND</a>,
+<a href="resources/tslicelitxt.html">TSLICELITXT</a>,
+<a href="resources/tslicelitxtcur.html">TSLICELITXTCUR</a>,
+<a href="resources/tslicesingletxt.html">TSLICESINGLETXT</a>,
+<a href="resources/tslicesingletxtcur.html">TSLICESINGLETXTCUR</a>,
+<a href="resources/tslicesubjectbeg.html">TSLICESUBJECTBEG</a>,
+<a href="resources/tslicesubjectend.html">TSLICESUBJECTEND</a>,
+<a href="resources/tslicesublistbeg.html">TSLICESUBLISTBEG</a>,
+<a href="resources/tslicesublistend.html">TSLICESUBLISTEND</a>,
+<a href="resources/tslicetopbeg.html">TSLICETOPBEG</a>,
+<a href="resources/tslicetopbegcur.html">TSLICETOPBEGCUR</a>,
+<a href="resources/tslicetopend.html">TSLICETOPEND</a>, and
+<a href="resources/tslicetopendcur.html">TSLICETOPENDCUR</a>
 resources.
+</p>
 </td>
 </tr>
 </table><br></dd>
@@ -1093,16 +1209,16 @@ resources.
 <!-- *************************************************************** -->
 <hr>
 <!--X-NavButtons-Start-->
-<p align=center>
-<a href="resources.html"><img src="prev.gif" border=0 alt="[Prev]"></a><a href="contacts.html"><img src="next.gif" border=0 alt="[Next]"></a><a href="mhonarc.html"><img src="up.gif" border=0 alt="[TOC]"></a><a href="faq/faq.html"><img src="faq.gif" border=0 alt="[FAQ]"></a><a href="app-bugs.html"><img src="bug.gif" border=0 alt="[Bugs]"></a><a href="http://www.mhonarc.org/"><img src="home.gif" border=0 alt="[Home]"></a>
-</p>
+<table width="100%">
+<tr valign="top">
+<td align="left"><nobr><a href="resources.html"><img src="prev.png"border=0 alt="[Prev]"></a>&nbsp;&nbsp;&nbsp;</nobr></td><td align="center" width="99%"><a href="mhonarc.html"><img src="up.png" border=0 alt="[TOC]"></a><a href="faq/faq.html"><img src="faq.png" border=0 alt="[FAQ]"></a><a href="app-bugs.html"><img src="bug.png" border=0 alt="[Bugs]"></a><a href="http://www.mhonarc.org/"><img src="home.png" border=0 alt="[Home]"></a></td><td align="right"><nobr>&nbsp;&nbsp;&nbsp;<a href="contacts.html"><img src="next.png" border=0 alt="[Next]"></a></nobr></td></tr></table>
 <!--X-NavButtons-End-->
 
 <!-- *************************************************************** -->
 <hr>
 <address>
-01/06/10 17:47:40<br>
-<img align="top" src="monicon.gif" alt="">
+$Date: 2002/07/27 05:13:10 $ <br>
+<img align="top" src="monicon.png" alt="">
 <a href="http://www.mhonarc.org"
 ><strong>MHonArc</strong></a><br>
 Copyright &#169; 1998-1999, <a href="http://www.mhonarc.org/~ehood/"

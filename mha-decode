@@ -1,14 +1,14 @@
 #!/usr/local/bin/perl
 ##---------------------------------------------------------------------------##
 ##  File:
-##	@(#) mha-decode 1.3 00/04/24 00:13:53
+##	$Id: mha-decode,v 1.6 2002/05/02 23:50:18 ehood Exp $
 ##  Author:
-##      Earl Hood       mhonarc@pobox.com
+##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
 ##      Program to decode MIME messages.
 ##---------------------------------------------------------------------------##
 ##    MHonArc -- Internet mail-to-HTML converter
-##    Copyright (C) 1998	Earl Hood, mhonarc@pobox.com
+##    Copyright (C) 1998	Earl Hood, mhonarc@mhonarc.org
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by
@@ -28,12 +28,25 @@
 
 package mha_decode;
 
+use Getopt::Long;
+
 ##---------------------------------------------------------------------------##
 ##				Main routine				     ##
 ##---------------------------------------------------------------------------##
 
 MAIN: {
     unshift(@INC, 'lib');	# Should I leave this line in?
+
+    ## Grab options from @ARGV unique to this program
+    my %opts = ( );
+    Getopt::Long::Configure('pass_through');
+    GetOptions(\%opts,
+      'dcd-digest'
+    );
+    my $digest_mode = $opts{'dcd-digest'} || 0;
+
+    ## Reset pass-through of options
+    Getopt::Long::Configure('no_pass_through');
 
     ## Initialize MHonArc
     require 'mhamain.pl' || die qq/ERROR: Unable to require "mhamain.pl"\n/;
@@ -63,6 +76,11 @@ MAIN: {
     %readmail::MIMEFiltersArgs = (
 	'm2h_external::filter'	=> 'usename',
     );
+
+    if ($digest_mode) {
+      $readmail::MIMEFilters{'message/*'}    = 'm2h_external::filter';
+      $readmail::MIMEFiltersSrc{'message/*'} = 'mhexternal.pl';
+    }
 
     mhonarc::process_input() || exit($mhonarc::CODE);
     mhonarc::close_archive() || exit($mhonarc::CODE);
@@ -99,8 +117,10 @@ the message part.
 
 A single message can be decoded by using the C<-single> option.
 
-Only B<MHonArc> options that affect parsing of mail folders are applicable
-for B<mha-decode>.  The following options are applicable:
+=head1 OPTIONS
+
+B<mha-decode> takes options available to B<mhonarc>, but only those
+options affect parsing of mail folders are applicable:
 C<-conlen>,
 C<-mhpattern>,
 C<-msgsep>,
@@ -110,6 +130,18 @@ C<-perlinc>,
 C<-rcfile>,
 C<-single>,
 C<-umask>.
+
+Also, B<mha-decode> supports the following additional options:
+
+=over
+
+=item C<-dcd-digest>
+
+Run in message digest mode.  When this option is specified, any
+embedded C<message/rfc822> and C<message/news> parts will be saved
+instead of recursively decoding any parts contained within.
+
+=back
 
 =head1 NOTES
 
@@ -125,7 +157,7 @@ E<lt>I<http://www.mhonarc.org/>E<gt>
 
 =head1 AUTHOR
 
-Earl Hood, mhonarc@pobox.com
+Earl Hood, mhonarc@mhonarc.org
 
 =cut
 

@@ -1,16 +1,19 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
 <HTML>
 <HEAD>
-<TITLE>MHonArc v2.4 -- Appendix: MIME Conformance
+<TITLE>MHonArc v2.5 -- Appendix: MIME Conformance
 </TITLE>
 </HEAD>
+<!--
 <BODY background="ssbg75.jpg"
       text="#000000" link="#0000ee" vlink="#551a8b" alink="ff0000">
+-->
+<BODY>
 
 <!--X-NavButtons-Start-->
-<p align=center>
-<a href="app-utilsprg.html"><img src="prev.gif" border=0 alt="[Prev]"></a><a href="app-bugs.html"><img src="next.gif" border=0 alt="[Next]"></a><a href="mhonarc.html"><img src="up.gif" border=0 alt="[TOC]"></a><a href="faq/faq.html"><img src="faq.gif" border=0 alt="[FAQ]"></a><a href="app-bugs.html"><img src="bug.gif" border=0 alt="[Bugs]"></a><a href="http://www.mhonarc.org/"><img src="home.gif" border=0 alt="[Home]"></a>
-</p>
+<table width="100%">
+<tr valign="top">
+<td align="left"><nobr><a href="app-api.html"><img src="prev.png"border=0 alt="[Prev]"></a>&nbsp;&nbsp;&nbsp;</nobr></td><td align="center" width="99%"><a href="mhonarc.html"><img src="up.png" border=0 alt="[TOC]"></a><a href="faq/faq.html"><img src="faq.png" border=0 alt="[FAQ]"></a><a href="app-bugs.html"><img src="bug.png" border=0 alt="[Bugs]"></a><a href="http://www.mhonarc.org/"><img src="home.png" border=0 alt="[Home]"></a></td><td align="right"><nobr>&nbsp;&nbsp;&nbsp;<a href="app-bugs.html"><img src="next.png" border=0 alt="[Next]"></a></nobr></td></tr></table>
 <!--X-NavButtons-End-->
 <HR>
 
@@ -62,7 +65,7 @@ Always generate a "MIME-Version: 1.0" header field in
 </p>
 <table border=0 cellpadding=4>
 <tr valign=top>
-<td><strong><img src="monicon.gif" alt="MHonArc"></strong></td>
+<td><strong><img src="monicon.png" alt="MHonArc"></strong></td>
 <td><p>Not applicable.
 </p>
 <br>
@@ -78,7 +81,7 @@ Recognize the Content-Transfer-Encoding header field
 </p>
 <table border=0 cellpadding=4>
 <tr valign=top>
-<td><strong><img src="monicon.gif" alt="MHonArc"></strong></td>
+<td><strong><img src="monicon.png" alt="MHonArc"></strong></td>
 <td><p>Base64, quoted-printable, 7bit, 8bit, and binary are supported.
 Also, uuencode is supported: <tt>uuencode</tt>, <tt>x-uuencode</tt>, and
 <tt>x-uue</tt>.
@@ -97,7 +100,7 @@ Also, uuencode is supported: <tt>uuencode</tt>, <tt>x-uuencode</tt>, and
 </p>
 <table border=0 cellpadding=4>
 <tr valign=top>
-<td><strong><img src="monicon.gif" alt="MHonArc"></strong></td>
+<td><strong><img src="monicon.png" alt="MHonArc"></strong></td>
 <td><p>Not applicable.
 </p>
 <br>
@@ -112,7 +115,7 @@ Must treat any unrecognized Content-Transfer-Encoding
 </p>
 <table border=0 cellpadding=4>
 <tr valign=top>
-<td><strong><img src="monicon.gif" alt="MHonArc"></strong></td>
+<td><strong><img src="monicon.png" alt="MHonArc"></strong></td>
 <td><p>Currently, MHonArc will still call the registered
 <a href="resources/mimefilters.html">content-type filter</a> for the specified
 Content-Type, but the <b><tt>$isdecoded</tt></b> will be set to a false
@@ -135,7 +138,7 @@ Recognize and interpret the Content-Type header field,
 </p>
 <table border=0 cellpadding=4>
 <tr valign=top>
-<td><strong><img src="monicon.gif" alt="MHonArc"></strong></td>
+<td><strong><img src="monicon.png" alt="MHonArc"></strong></td>
 <td><p>MHonArc conforms to the first sentence of the paragraph
 The second sentence is not applicable.
 </p>
@@ -150,7 +153,7 @@ Ignore any content type parameters whose names they do
 </p>
 <table border=0 cellpadding=4>
 <tr valign=top>
-<td><strong><img src="monicon.gif" alt="MHonArc"></strong></td>
+<td><strong><img src="monicon.png" alt="MHonArc"></strong></td>
 <td><p>Yes.
 </p>
 <br>
@@ -171,7 +174,7 @@ Explicitly handle the following media type values, to
 </p>
 <table border=0 cellpadding=4>
 <tr valign=top>
-<td><strong><img src="monicon.gif" alt="MHonArc"></strong></td>
+<td><strong><img src="monicon.png" alt="MHonArc"></strong></td>
 <td><p>Yes.
 </p>
 <br>
@@ -184,7 +187,7 @@ Explicitly handle the following media type values, to
 </p>
 <table border=0 cellpadding=4>
 <tr valign=top>
-<td><strong><img src="monicon.gif" alt="MHonArc"></strong></td>
+<td><strong><img src="monicon.png" alt="MHonArc"></strong></td>
 <td><p>Not really applicable.  Warnings are generated during processing
 if a character set is encountered that is not recognized.
 </p>
@@ -199,7 +202,7 @@ if a character set is encountered that is not recognized.
 </p>
 <table border=0 cellpadding=4>
 <tr valign=top>
-<td><strong><img src="monicon.gif" alt="MHonArc"></strong></td>
+<td><strong><img src="monicon.png" alt="MHonArc"></strong></td>
 <td><p>Yes.
 </p>
 <br>
@@ -213,7 +216,7 @@ if a character set is encountered that is not recognized.
 </p>
 <table border=0 cellpadding=4>
 <tr valign=top>
-<td><strong><img src="monicon.gif" alt="MHonArc"></strong></td>
+<td><strong><img src="monicon.png" alt="MHonArc"></strong></td>
 <td><p>MHonArc will treat the data as text/plain and convert.
 </p>
 <br>
@@ -225,7 +228,7 @@ if a character set is encountered that is not recognized.
 </p>
 <table border=0 cellpadding=4>
 <tr valign=top>
-<td><strong><img src="monicon.gif" alt="MHonArc"></strong></td>
+<td><strong><img src="monicon.png" alt="MHonArc"></strong></td>
 <td><p>No.  A warning is generated for unknown character sets.  The
 data will be shown in raw form, with HTML special characters converted
 to entity references.  This behavior is the default because some MUAs
@@ -246,7 +249,7 @@ are known to give incorrect charset parameters.
 </p>
 <table border=0 cellpadding=4>
 <tr valign=top>
-<td><strong><img src="monicon.gif" alt="MHonArc"></strong></td>
+<td><strong><img src="monicon.png" alt="MHonArc"></strong></td>
 <td><p>All image, audio, and video types are saved to an external file
 with a link to the file created in the HTML.  For applicable image types, they
 are inlined unless the image has an attachment content-disposition.
@@ -266,7 +269,7 @@ are inlined unless the image has an attachment content-disposition.
 </p>
 <table border=0 cellpadding=4>
 <tr valign=top>
-<td><strong><img src="monicon.gif" alt="MHonArc"></strong></td>
+<td><strong><img src="monicon.png" alt="MHonArc"></strong></td>
 <td><p>Most application types are decoded and saved to an external file
 with a link to the file created in the HTML.  Some application types
 can be converted directly to HTML.
@@ -286,7 +289,7 @@ can be converted directly to HTML.
 </p>
 <table border=0 cellpadding=4>
 <tr valign=top>
-<td><strong><img src="monicon.gif" alt="MHonArc"></strong></td>
+<td><strong><img src="monicon.png" alt="MHonArc"></strong></td>
 <td><p>Yes.  Each part is automatically processed according to its
 media-type.
 </p>
@@ -300,7 +303,7 @@ media-type.
 </p>
 <table border=0 cellpadding=4>
 <tr valign=top>
-<td><strong><img src="monicon.gif" alt="MHonArc"></strong></td>
+<td><strong><img src="monicon.png" alt="MHonArc"></strong></td>
 <td><p>Yes.
 </p>
 <br>
@@ -314,7 +317,7 @@ media-type.
 </p>
 <table border=0 cellpadding=4>
 <tr valign=top>
-<td><strong><img src="monicon.gif" alt="MHonArc"></strong></td>
+<td><strong><img src="monicon.png" alt="MHonArc"></strong></td>
 <td><p>Yes.
 </p>
 <br>
@@ -326,7 +329,7 @@ media-type.
 </p>
 <table border=0 cellpadding=4>
 <tr valign=top>
-<td><strong><img src="monicon.gif" alt="MHonArc"></strong></td>
+<td><strong><img src="monicon.png" alt="MHonArc"></strong></td>
 <td><p>Yes.
 </p>
 <br>
@@ -346,7 +349,7 @@ media-type.
 </p>
 <table border=0 cellpadding=4>
 <tr valign=top>
-<td><strong><img src="monicon.gif" alt="MHonArc"></strong></td>
+<td><strong><img src="monicon.png" alt="MHonArc"></strong></td>
 <td><p>Yes.
 </p>
 <br>
@@ -358,7 +361,7 @@ media-type.
 </p>
 <table border=0 cellpadding=4>
 <tr valign=top>
-<td><strong><img src="monicon.gif" alt="MHonArc"></strong></td>
+<td><strong><img src="monicon.png" alt="MHonArc"></strong></td>
 <td><p>Yes.
 </p>
 <br>
@@ -378,7 +381,7 @@ media-type.
 </p>
 <table border=0 cellpadding=4>
 <tr valign=top>
-<td><strong><img src="monicon.gif" alt="MHonArc"></strong></td>
+<td><strong><img src="monicon.png" alt="MHonArc"></strong></td>
 <td><p>Yes.  The data is passed to the
 <a href="resources/mimefilters.html#m2h_external">m2h_external::filter</a>
 to be saved to an external file.
@@ -404,7 +407,7 @@ to be saved to an external file.
 </p>
 <table border=0 cellpadding=4>
 <tr valign=top>
-<td><strong><img src="monicon.gif" alt="MHonArc"></strong></td>
+<td><strong><img src="monicon.png" alt="MHonArc"></strong></td>
 <td><p>The
 <a href="resources/mimefilters.html#m2h_text_plain">m2h_text_plain::filter</a>
 supports an option to specify what character set to use if no character
@@ -425,7 +428,7 @@ set is specified.  By default, ISO-8859-1 is assumed.
 </p>
 <table border=0 cellpadding=4>
 <tr valign=top>
-<td><strong><img src="monicon.gif" alt="MHonArc"></strong></td>
+<td><strong><img src="monicon.png" alt="MHonArc"></strong></td>
 <td><p>Not applicable.
 </p>
 <br>
@@ -444,7 +447,7 @@ set is specified.  By default, ISO-8859-1 is assumed.
 </p>
 <table border=0 cellpadding=4>
 <tr valign=top>
-<td><strong><img src="monicon.gif" alt="MHonArc"></strong></td>
+<td><strong><img src="monicon.png" alt="MHonArc"></strong></td>
 <td><p>Yes.
 </p>
 <br>
@@ -464,7 +467,7 @@ set is specified.  By default, ISO-8859-1 is assumed.
 </p>
 <table border=0 cellpadding=4>
 <tr valign=top>
-<td><strong><img src="monicon.gif" alt="MHonArc"></strong></td>
+<td><strong><img src="monicon.png" alt="MHonArc"></strong></td>
 <td><p>MHonArc supports non-ASCII encoding of text in message headers,
 including the "B" and "Q" encodings.  By default, US-ASCII,
 ISO-8859-[1-10], and ISO-2022-JP are supported.  For encoded
@@ -526,15 +529,15 @@ URLs in list header fields will be converted into hypertext links.
 
 <hr>
 <!--X-NavButtons-Start-->
-<p align=center>
-<a href="app-utilsprg.html"><img src="prev.gif" border=0 alt="[Prev]"></a><a href="app-bugs.html"><img src="next.gif" border=0 alt="[Next]"></a><a href="mhonarc.html"><img src="up.gif" border=0 alt="[TOC]"></a><a href="faq/faq.html"><img src="faq.gif" border=0 alt="[FAQ]"></a><a href="app-bugs.html"><img src="bug.gif" border=0 alt="[Bugs]"></a><a href="http://www.mhonarc.org/"><img src="home.gif" border=0 alt="[Home]"></a>
-</p>
+<table width="100%">
+<tr valign="top">
+<td align="left"><nobr><a href="app-api.html"><img src="prev.png"border=0 alt="[Prev]"></a>&nbsp;&nbsp;&nbsp;</nobr></td><td align="center" width="99%"><a href="mhonarc.html"><img src="up.png" border=0 alt="[TOC]"></a><a href="faq/faq.html"><img src="faq.png" border=0 alt="[FAQ]"></a><a href="app-bugs.html"><img src="bug.png" border=0 alt="[Bugs]"></a><a href="http://www.mhonarc.org/"><img src="home.png" border=0 alt="[Home]"></a></td><td align="right"><nobr>&nbsp;&nbsp;&nbsp;<a href="app-bugs.html"><img src="next.png" border=0 alt="[Next]"></a></nobr></td></tr></table>
 <!--X-NavButtons-End-->
 
 <HR>
 <address>
-01/06/10 17:47:39<br>
-<img align="top" src="monicon.gif" alt="">
+$Date: 2001/12/24 14:38:07 $ <br>
+<img align="top" src="monicon.png" alt="">
 <a href="http://www.mhonarc.org/"><strong>MHonArc</strong></a><br>
 Copyright &#169; 1999, <a href="http://www.mhonarc.org/~ehood/"
 >Earl Hood</a>, <a href="mailto:mhonarc@mhonarc.org"

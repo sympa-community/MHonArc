@@ -1,15 +1,18 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
 <HTML>
 <HEAD>
-<TITLE>MHonArc v2.4 -- Installation</TITLE>
+<TITLE>MHonArc v2.5 -- Installation</TITLE>
 </HEAD>
+<!--
 <BODY background="ssbg75.jpg"
       text="#000000" link="#0000ee" vlink="#551a8b" alink="ff0000">
+-->
+<BODY>
 
 <!--X-NavButtons-Start-->
-<p align=center>
-<a href="intro.html"><img src="prev.gif" border=0 alt="[Prev]"></a><a href="quickstart.html"><img src="next.gif" border=0 alt="[Next]"></a><a href="mhonarc.html"><img src="up.gif" border=0 alt="[TOC]"></a><a href="faq/faq.html"><img src="faq.gif" border=0 alt="[FAQ]"></a><a href="app-bugs.html"><img src="bug.gif" border=0 alt="[Bugs]"></a><a href="http://www.mhonarc.org/"><img src="home.gif" border=0 alt="[Home]"></a>
-</p>
+<table width="100%">
+<tr valign="top">
+<td align="left"><nobr><a href="relnotes.html"><img src="prev.png"border=0 alt="[Prev]"></a>&nbsp;&nbsp;&nbsp;</nobr></td><td align="center" width="99%"><a href="mhonarc.html"><img src="up.png" border=0 alt="[TOC]"></a><a href="faq/faq.html"><img src="faq.png" border=0 alt="[FAQ]"></a><a href="app-bugs.html"><img src="bug.png" border=0 alt="[Bugs]"></a><a href="http://www.mhonarc.org/"><img src="home.png" border=0 alt="[Home]"></a></td><td align="right"><nobr>&nbsp;&nbsp;&nbsp;<a href="quickstart.html"><img src="next.png" border=0 alt="[Next]"></a></nobr></td></tr></table>
 <!--X-NavButtons-End-->
 <HR>
 
@@ -18,6 +21,20 @@
 <p>The following section describes how to install MHonArc on your
 system.
 </p>
+<table border=0 cellpadding=4>
+<tr valign=top>
+<td><strong>NOTE</strong></td>
+<td><p>Make sure to read the
+<a href="relnotes.html">release notes</a> before installing MHonArc,
+especially if you are upgrading from a previous release.  If you
+are reading the text version of this installation document, a text
+version of the release notes is contained in the file <tt>RELNOTES</tt>
+contained within the root of the MHonArc distribution.
+</p>
+</td>
+</tr>
+</table>
+
 
 <!--X-TOC-Start-->
 <ul>
@@ -54,15 +71,7 @@ system.
 </p>
 </li>
 <li><p><b>Getopt::Long</b> and <b>Time::Local</b> modules are installed.
-These modules are part of the standard Perl distribution.  The
-following command can be used to verify that the modules
-are installed on your system:
-</p>
-<pre>
-shell&gt; <b>perl -MGetopt::Long -MTime::Local -e ';'</b>
-</pre>
-<p>If you get any error messages, you either have an incomplete
-installation of Perl, or Perl is misconfigured.
+These modules are part of the standard Perl distribution.
 </p>
 </li>
 <li><p>The following modules are optional:
@@ -85,6 +94,16 @@ not available.
 </li>
 </ul>
 
+<table border=0 cellpadding=4>
+<tr valign=top>
+<td><strong>NOTE</strong></td>
+<td><p>The MHonArc installation program will check that required modules
+are available before installing MHonArc on your system.
+</p>
+</td>
+</tr>
+</table>
+
 <!-- *************************************************************** -->
 <hr>
 <h2><a name="download">Downloading MHonArc</a></h2>
@@ -100,10 +119,17 @@ familiar with
 >&lt;http://www.perl.com/CPAN/authors/id/EHOOD/&gt;</a>.
 </p>
 
-<p>MHonArc is distributed in either a tar/gzip file or a zip file.  The
-tar/gzip file will have a name like <tt>MHonArc<var>X.X.X</var>.tar.gz</tt>,
-and the zip file have a name like <tt>MHonArc<var>X.X.X</var>.zip</tt>;
-where <tt><var>X.X.X</var></tt> represents the version number.
+<p>MHonArc is distributed in the following formats:
+</p>
+<ul>
+<li><b>tar-bz2</b>: <tt>MHonArc<var>X.X.X</var>.tar.bz2</tt>
+    </li>
+<li><b>tar-gzip</b>: <tt>MHonArc<var>X.X.X</var>.tar.gz</tt>
+    </li>
+<li><b>zip</b>: <tt>MHonArc<var>X.X.X</var>.zip</tt>
+    </li>
+</ul>
+<p>where <tt><var>X.X.X</var></tt> represents the version number.
 </p>
 <p>Alternate distribution formats for MHonArc may be available, like
 Linux RPM.  Alternate distribution formats are not covered in this
@@ -115,32 +141,38 @@ document.
 <h2><a name="extraction">Extracting the MHonArc Distribution</a></h2>
 
 <p>After downloading MHonArc, it is best to move the file to a
-temporary location for extraction.  To extract a tar/gzip distribution,
-use the following command:
+temporary location for extraction.  To extract the distribution
+under Unix-like systems, use one of the following commands based upon the
+distribution format you downloaded:
 </p>
-<pre>
-    shell&gt; <b>gzip -dc MHonArc<var>X.X.X</var>.tar.gz | tar xvf -</b>
-</pre>
-<p>To extract the zip distribution, you can use a program like WinZip,
-or any other program that supports zip archives.  When extracting, make
-sure to preserve the directory structure.
+<dl>
+<dt><b>tar-bz2</b></dt>
+<dd><pre>
+    shell&gt; <b>bzip2 -dc MHonArc<var>X.X.X</var>.tar.bz2 | tar xvf -</b></pre>
+<dt><b>tar-gzip</b></dt>
+<dd><pre>
+    shell&gt; <b>gzip -dc MHonArc<var>X.X.X</var>.tar.gz | tar xvf -</b></pre>
+    </dd>
+<dt><b>zip</b></dt>
+<dd><pre>
+    shell&gt; <b>unzip MHonArc<var>X.X.X</var>.zip</b></pre>
+    </dd>
+</dl>
+
+<p>For Win32 systems, you can use a program like <em>WinZip</em> to
+extract the tar-gzip or zip formats.  If using
+<em><a href="http://www.cygwin.com/">Cygwin</a></em>, you can use
+the Unix-based extraction methods.
 </p>
-<table border=0 cellpadding=4>
-<tr valign=top>
-<td><strong>NOTE</strong></td>
-<td><p>WinZip does support tar/gzip files.
-</p>
-</td>
-</tr>
-</table>
+
 <p>After extraction, the subdirectory <tt>MHonArc<var>X.X.X</var></tt> will
 have been created containing all the files comprising MHonArc.
 </p>
 <table border=0 cellpadding=4>
 <tr valign=top>
 <td><strong>IMPORTANT</strong></td>
-<td><p>Please read the file RELNOTES included in the MHonArc
-distribution before continuing for any news about compatibility
+<td><p>Please read the <a href="relnotes.html">release notes</a>
+before continuing for any news about compatibility
 with previous versions and/or important usage information.
 </p>
 </td>
@@ -195,6 +227,7 @@ is the list of options available:
   -filelist &lt;file&gt;      : List of files to install (def="FILELIST")
   -manpath &lt;path&gt;       : Directory path to manpages
   -nobin                : Do not install programs
+  -nodep                : Skip module dependency check
   -nodoc                : Do not install documentation
   -nolib                : Do not install library files
   -noman                : Do not install manpages
@@ -222,7 +255,7 @@ following:
 <pre>
     shell&gt; <b>perl install.me -prefix $HOME</b>
 </pre>
-<br>
+
 <h3><a name="installmenotes"><tt>install.me</tt> Notes</a></h3>
 <ul>
 <li><p>The "#!" line in the installed programs are set to point to
@@ -290,7 +323,7 @@ Ctrl-C; for Win32 systems, it is normally Ctrl-Z.
 <tr valign=top>
 <td><strong>NOTE</strong></td>
 <td><p><b><tt>install.me</tt></b> is actually called "behind the scenes"
-to install the files.
+in batch mode to install the files.
 </p>
 </td>
 </tr>
@@ -327,6 +360,8 @@ directory.  Then through the file types editor of the file
 explorer, you can specify <b><tt>mhaicon.bmp</tt></b> as the icon for MHonArc
 resource (<b><tt>.mrc</tt></b>) files.
 </p>
+<p>This method of associating the icon to MHonArc resource files
+is known to work with Win9x systems.
 </li>
 </ul>
 
@@ -392,10 +427,10 @@ configuration.
 
 <p>You have the ability to create a default
 <a href="resources/rcfile.html">resource file</a>
-to make site-wide defaults for MHonArc.  The name of the
-resource file should be <b><tt>mhonarc.rc</tt></b> and should
-be placed in the MHonArc library directory as specified during
-installation.  For more information on what can be put in
+to make site-wide defaults for MHonArc.  See
+the <a href="resources/defrcfile.html">DEFRCFILE</a> resource
+on valid pathname locations for the default resource file.
+For more information on what can be put in
 a resource file, see the
 <a href="resources.html">Resources</a> section.
 </p>
@@ -426,7 +461,8 @@ to make site customizations not possible through a
 MHonArc library directory as specified during installation.
 A sample <b><tt>mhasiteinit.pl</tt></b> file is provied in the
 <b><tt>examples</tt></b> directory of the distribution to get you
-started.
+started, which includes comments on some of the things you
+can do with <tt>mhasiteinit.pl</tt>.
 </p>
 
 <!-- *************************************************************** -->
@@ -459,18 +495,18 @@ color-capable terminals.
 
 <HR>
 <!--X-NavButtons-Start-->
-<p align=center>
-<a href="intro.html"><img src="prev.gif" border=0 alt="[Prev]"></a><a href="quickstart.html"><img src="next.gif" border=0 alt="[Next]"></a><a href="mhonarc.html"><img src="up.gif" border=0 alt="[TOC]"></a><a href="faq/faq.html"><img src="faq.gif" border=0 alt="[FAQ]"></a><a href="app-bugs.html"><img src="bug.gif" border=0 alt="[Bugs]"></a><a href="http://www.mhonarc.org/"><img src="home.gif" border=0 alt="[Home]"></a>
-</p>
+<table width="100%">
+<tr valign="top">
+<td align="left"><nobr><a href="relnotes.html"><img src="prev.png"border=0 alt="[Prev]"></a>&nbsp;&nbsp;&nbsp;</nobr></td><td align="center" width="99%"><a href="mhonarc.html"><img src="up.png" border=0 alt="[TOC]"></a><a href="faq/faq.html"><img src="faq.png" border=0 alt="[FAQ]"></a><a href="app-bugs.html"><img src="bug.png" border=0 alt="[Bugs]"></a><a href="http://www.mhonarc.org/"><img src="home.png" border=0 alt="[Home]"></a></td><td align="right"><nobr>&nbsp;&nbsp;&nbsp;<a href="quickstart.html"><img src="next.png" border=0 alt="[Next]"></a></nobr></td></tr></table>
 <!--X-NavButtons-End-->
 
 <!-- *************************************************************** -->
 <hr>
 <address>
-01/06/10 17:47:40<br>
-<img align="top" src="monicon.gif" alt="">
+$Date: 2002/05/27 20:07:10 $ <br>
+<img align="top" src="monicon.png" alt="">
 <a href="http://www.mhonarc.org/"><strong>MHonArc</strong></a><br>
-Copyright &#169; 1997-1999, <a href="http://www.mhonarc.org/~ehood/"
+Copyright &#169; 1997-2002, <a href="http://www.mhonarc.org/~ehood/"
 >Earl Hood</a>, <a href="mailto:mhonarc@mhonarc.org"
 >mhonarc@mhonarc.org</a><br>
 </address>

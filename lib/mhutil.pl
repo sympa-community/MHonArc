@@ -1,13 +1,13 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	@(#) mhutil.pl 2.9 00/01/17 17:18:15
+##	$Id: mhutil.pl,v 2.15 2002/07/27 05:13:13 ehood Exp $
 ##  Author:
-##      Earl Hood       mhonarc@pobox.com
+##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
 ##      Utility routines for MHonArc
 ##---------------------------------------------------------------------------##
 ##    MHonArc -- Internet mail-to-HTML converter
-##    Copyright (C) 1995-1999	Earl Hood, mhonarc@pobox.com
+##    Copyright (C) 1995-1999	Earl Hood, mhonarc@mhonarc.org
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by
@@ -55,21 +55,88 @@ my %HFieldsAddr = (
     'to'		=> 1,
 );
 
+
+##---------------------------------------------------------------------------
+##    Clip text to specified length.
+##
+sub clip_text {
+    my $str      = \shift;  # Prevent unnecessary copy.
+    my $len      = shift;   # Clip length
+    my $is_html  = shift;   # If entity references should be considered
+    my $has_tags = shift;   # If html tags should be stripped
+
+    if (!$is_html) {
+      return substr($$str, 0, $len);
+    }
+
+    my $text = "";
+    my $subtext = "";
+    my $html_len = length($$str);
+    my($pos, $sublen, $erlen, $real_len);
+    my $er_len = 0;
+    
+    for ( $pos=0, $sublen=$len; $pos < $html_len; ) {
+	$subtext = substr($$str, $pos, $sublen);
+	$pos += $sublen;
+
+	# strip tags
+	if ($has_tags) {
+	    $subtext =~ s/\A[^<]*>//; # clipped tag
+	    $subtext =~ s/<[^>]*>//g;
+	    $subtext =~ s/<[^>]*\Z//; # clipped tag
+	}
+
+	# check for clipped entity reference
+	if (($pos < $html_len) && ($subtext =~ /\&[^;]*\Z/)) {
+	    my $semi = index($$str, ';', $pos);
+	    if ($semi < 0) {
+		# malformed entity reference
+		$subtext .= substr($$str, $pos);
+		$pos = $html_len;
+	    } else {
+		$subtext .= substr($$str, $pos, $semi-$pos+1)
+		    if $semi > $pos;
+		$pos = $semi+1;
+	    }
+	}
+
+	# compute entity reference lengths to determine "real" character
+	# count and not raw character count.
+	while ($subtext =~ /(\&[^;]+);/g) {
+	    $er_len += length($1);
+	}
+
+	$text .= $subtext;
+
+	# done if we have enough
+	$real_len = length($text)-$er_len;
+	if ($real_len >= $len) {
+	    last;
+	}
+	$sublen = $len - (length($text)-$er_len);
+    }
+    $text;
+}
+
 ##---------------------------------------------------------------------------
 ##	Get an e-mail address from (HTML) $str.
 ##
 sub extract_email_address {
-    my($str) = shift;
-    my($ret);
+    return ''  unless defined $_[0];
+    my $str = shift;
 
-    if ($str =~ /<(\S+)>/) {
-	$ret = $1;
-    } elsif ($str =~ s/\([^\)]+\)//) {
-	$str =~ /\s*(\S+)\s*/;  $ret = $1;
-    } else {
-	$str =~ /\s*(\S+)\s*/;  $ret = $1;
+    if ($str =~ /($AddrExp)/o) {
+	return $1;
     }
-    $ret;
+    if ($str =~ /<(\S+)>/) {
+	return $1;
+    }
+    if ($str =~ s/\([^\)]+\)//) {
+	$str =~ /\s*(\S+)\s*/;
+	return $1;
+    }
+    $str =~ /\s*(\S+)\s*/;
+    return $1;
 }
 
 ##---------------------------------------------------------------------------
@@ -118,6 +185,7 @@ sub sort_messages {
     } elsif ($subsort) {
 	## Subject order
 	my(%sub, $idx, $sub);
+	use locale;
 	eval {
 	    my $hs = scalar(%Subject);  $hs =~ s|^[^/]+/||;
 	    keys(%sub) = $hs;
@@ -129,7 +197,7 @@ sub sort_messages {
 	    $sub{$idx} = $sub;
 	}
 	if ($revsort) {
-	    return sort { ($sub{$b} cmp $sub{$a}) ||
+	    return sort { ($sub{$a} cmp $sub{$b}) ||
 			  (get_time_from_index($b) <=> get_time_from_index($a))
 			} keys %Subject;
 	} else {
@@ -141,6 +209,7 @@ sub sort_messages {
     } elsif ($authsort) {
 	## Author order
 	my(%from, $idx, $from);
+	use locale;
 	eval {
 	    my $hs = scalar(%From);  $hs =~ s|^[^/]+/||;
 	    keys(%from) = $hs;
@@ -150,7 +219,7 @@ sub sort_messages {
 	    $from{$idx} = $from;
 	}
 	if ($revsort) {
-	    return sort { ($from{$b} cmp $from{$a}) ||
+	    return sort { ($from{$a} cmp $from{$b}) ||
 			  (get_time_from_index($b) <=> get_time_from_index($a))
 			} keys %Subject;
 	} else {
@@ -255,8 +324,8 @@ sub get_base_author {
 ##	Determine time from date.  Use %Zone for timezone offsets
 ##
 sub get_time_from_date {
-    local($mday, $mon, $yr, $hr, $min, $sec, $zone) = @_;
-    local($time) = 0;
+    my($mday, $mon, $yr, $hr, $min, $sec, $zone) = @_;
+    my($time) = 0;
 
     $yr -= 1900  if $yr >= 1900;  # if given full 4 digit year
     $yr += 100   if $yr <= 37;    # in case of 2 digit years
@@ -332,32 +401,34 @@ sub get_header_tags {
 
 ##---------------------------------------------------------------------------
 ##	Format message headers in HTML.
+##	$html = htmlize_header($fields_hash_ref);
 ##
 sub htmlize_header {
-    local(*fields, *l2o) = @_;
+    my $fields = shift;
     my($key,
        $tago, $tagc,
        $ftago, $ftagc,
-       $mesg, $item,
-       @array, %hf);
-    local($tmp);
+       $item,
+       @array);
+    my($tmp);
 
-    $mesg = "";
-    %hf = %fields;
+    my $mesg = "";
+    my %hf = %$fields;
     foreach $item (@FieldOrder) {
 	if ($item eq '-extra-') {
 	    foreach $key (sort keys %hf) {
 		next  if $FieldODefs{$key};
+		next  if $key =~ /^x-mha-/;
 		delete $hf{$key}, next  if &exclude_field($key);
 
-		@array = split(/$readmail::FieldSep/o, $hf{$key});
+		@array = @{$hf{$key}};
 		foreach $tmp (@array) {
 		    $tmp = $HFieldsList{$key} ? mlist_field_add_links($tmp) :
 						&$MHeadCnvFunc($tmp);
-		    &field_add_links($key, *tmp);
-		    ($tago, $tagc, $ftago, $ftagc) = &get_header_tags($key);
+		    $tmp = field_add_links($key, $tmp, $fields);
+		    ($tago, $tagc, $ftago, $ftagc) = get_header_tags($key);
 		    $mesg .= join('', $LABELBEG,
-				  $tago, $l2o{$key}, $tagc, $LABELEND,
+				  $tago, ucfirst($key), $tagc, $LABELEND,
 				  $FLDBEG, $ftago, $tmp, $ftagc, $FLDEND,
 				  "\n");
 		}
@@ -365,14 +436,14 @@ sub htmlize_header {
 	    }
 	} else {
 	    if (!&exclude_field($item) && $hf{$item}) {
-		@array = (split(/$readmail::FieldSep/o, $hf{$item}));
+		@array = @{$hf{$item}};
 		foreach $tmp (@array) {
 		    $tmp = $HFieldsList{$item} ? mlist_field_add_links($tmp) :
 						 &$MHeadCnvFunc($tmp);
-		    &field_add_links($item, *tmp);
+		    $tmp = field_add_links($item, $tmp, $fields);
 		    ($tago, $tagc, $ftago, $ftagc) = &get_header_tags($item);
 		    $mesg .= join('', $LABELBEG,
-				  $tago, $l2o{$item}, $tagc, $LABELEND,
+				  $tago, ucfirst($item), $tagc, $LABELEND,
 				  $FLDBEG, $ftago, $tmp, $ftagc, $FLDEND,
 				  "\n");
 		}
@@ -406,12 +477,17 @@ sub mlist_field_add_links {
 ##
 sub field_add_links {
     my $label = lc shift;
-    local(*fld_text) = shift;
+    my $fld_text = shift;
+    my $fields	 = shift;
 
     LBLSW: {
 	if ($HFieldsAddr{$label}) {
 	    if (!$NOMAILTO) {
-		$fld_text =~ s|([\!\%\w\.\-+=/]+@[\w\.\-]+)|&mailUrl($1)|ge;
+		$fld_text =~ s|([\!\%\w\.\-+=/]+@[\w\.\-]+)
+			      |&mailUrl($1, $fields->{'x-mha-message-id'},
+					    $fields->{'x-mha-subject'},
+					    $fields->{'x-mha-from'});
+			      |gex;
 	    } else {
 		$fld_text =~ s|([\!\%\w\.\-+=/]+@[\w\.\-]+)
 			      |&htmlize(&rewrite_address($1))
@@ -420,11 +496,12 @@ sub field_add_links {
 	    last LBLSW;
 	}
 	if ($label eq 'newsgroup') {
-	    &newsurl(*fld_text)  unless $NONEWS;
+	    $fld_text = newsurl($fld_text)  unless $NONEWS;
 	    last LBLSW;
 	}
 	last LBLSW;
     }
+    $fld_text;
 }
 
 
@@ -432,26 +509,28 @@ sub field_add_links {
 ##	Routine to add news links of newsgroups names
 ##
 sub newsurl {
-    local(*str) = shift;
-    my(@groups) = ();
+    my $str = shift;
     my $h = "";
 
     if ($str =~ s/^([^:]*:\s*)//) {
 	$h = $1;
     }
     $str =~ s/\s//g;			# Strip whitespace
-    @groups = split(/,/, $str);		# Split groups
+    my @groups = split(/,/, $str);	# Split groups
     foreach (@groups) {			# Make hyperlinks
 	s|(.*)|<A HREF="news:$1">$1</A>|;
     }
-    $str = $h . join(', ', @groups);	# Rejoin string
+    $h . join(', ', @groups);	# Rejoin string
 }
 
 ##---------------------------------------------------------------------------
-##	$sub, $msgid, $from come from read_mail_header() (ugly!!!!)
+##	$html = mailUrl($email_addr, $msgid, $subject, $from);
 ##
 sub mailUrl {
-    my($eaddr) = shift;
+    my $eaddr = shift || '';
+    my $msgid = shift || '';
+    my $sub = shift || '';
+    my $from = shift || '';
 
     local $_;
     my($url) = ($MAILTOURL);
@@ -464,8 +543,8 @@ sub mailUrl {
     my($subjectl);
 
     # Add "Re:" to subject if not present
-    if ($sub !~ /^\s*Re:/) {
-	$subjectl = &urlize("Re: ") . &urlize($sub);
+    if ($sub !~ /^$SubReplyRxp/io) {
+	$subjectl = 'Re:%20' . &urlize($sub);
     } else {
 	$subjectl = &urlize($sub);
     }
@@ -534,6 +613,74 @@ sub msgid_to_filename {
 	$msgid =~ s/([^\w.\-\@])/sprintf("=%02X",unpack("C",$1))/geo;
     }
     $msgid;
+}
+
+##---------------------------------------------------------------------------##
+##	Check if new follow up list for a message is different from
+##	old follow up list.
+##
+sub is_follow_ups_diff {
+    my $f	= $Follow{$_[0]};
+    my $o	= $FollowOld{$_[0]};
+    if (defined($f) && defined($o)) {
+	return 1  unless @$f == @$o;
+	local $^W = 0;
+	my $i;
+	for ($i=0; $i < @$f; ++$i) {
+	    return 1  if $f->[$i] ne $o->[$i];
+	}
+	return 0;
+    }
+    return (defined($f) || defined($o));
+}
+
+##---------------------------------------------------------------------------##
+##	Retrieve icon URL for specified content-type.
+##
+sub get_icon_url {
+    my $ctype = shift;
+    my $icon = $Icons{$ctype};
+    ICON: {
+	last ICON  if defined $icon;
+	if ($ctype =~ s|/.*||) {
+	  $ctype .= '/*';
+	  $icon = $Icons{$ctype};
+	  last ICON  if defined $icon;
+	}
+	$icon = $Icons{'*/*'} || $Icons{'unknown'};
+    }
+    if (!defined($icon)) {
+	return (undef, undef, undef);
+    }
+    if ($icon =~ s/\[(\d+)x(\d+)\]//) {
+	return ($icon, $1, $2);
+    }
+    ($icon, undef, undef);
+}
+
+##---------------------------------------------------------------------------##
+
+sub log_mesg {
+    my $fh	= shift;
+    my $doDate	= shift;
+
+    if ($doDate) {
+	my($sec,$min,$hour,$mday,$mon,$year) = localtime(time);
+	print $fh sprintf("[%4d-%02d-%02d %02d:%02d:%02d] ",
+			  $year+1900, $mon+1, $mday, $hour, $min, $sec);
+    }
+    print $fh @_;
+}
+
+##---------------------------------------------------------------------------##
+
+sub dump_hash {
+    my $fh = shift;
+    my $h = shift;
+    local $_;
+    foreach (sort keys %$h) {
+	print $fh "$_ => ", $h->{$_}, "\n";
+    }
 }
 
 ##---------------------------------------------------------------------------##

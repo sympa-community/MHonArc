@@ -1,15 +1,15 @@
 #!/usr/local/bin/perl
 ##---------------------------------------------------------------------------##
 ##  File:
-##	@(#) mhonarc 2.5 00/04/24 00:13:37
+##	$Id: mhonarc,v 2.7 2001/09/05 16:01:54 ehood Exp $
 ##  Author:
-##      Earl Hood       mhonarc@pobox.com
+##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
 ##      MHonArc is a Perl program to convert mail to HTML.  See
 ##	accompany documentation for full details.
 ##---------------------------------------------------------------------------##
 ##    MHonArc -- Internet mail-to-HTML converter
-##    Copyright (C) 1995-1999	Earl Hood, mhonarc@pobox.com
+##    Copyright (C) 1995-1999	Earl Hood, mhonarc@mhonarc.org
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by
@@ -91,7 +91,7 @@ Mail
 
 =head1 AUTHOR
 
-Earl Hood, mhonarc@pobox.com
+Earl Hood, mhonarc@mhonarc.org
 
 =cut
 

@@ -4,11 +4,10 @@
 <title>MHonArc Resources: TTOPBEGIN</title>
 </head>
 <body>
-
-<address>
-<a href="../resources.html#ttopbegin">MHonArc Resource List</a>
-</address>
-
+<!--x-rc-nav-->
+<table border=0><tr valign="top">
+<td align="left" width="50%">[Prev:&nbsp;<a href="ttitle.html">TTITLE</a>]</td><td><nobr>[<a href="../resources.html#ttopbegin">Resources</a>][<a href="../mhonarc.html">TOC</a>]</nobr></td><td align="right" width="50%">[Next:&nbsp;<a href="ttopend.html">TTOPEND</a>]</td></tr></table>
+<!--/x-rc-nav-->
 <hr>
 <h1>TTOPBEGIN</h1>
 
@@ -18,20 +17,19 @@
 
 <dl>
 
-<dt><strong>Envariable</strong><dt>
+<dt><strong>Envariable</strong></dt>
 <dd><p>N/A
 </p>
 </dd>
 
-<dt><strong>Element</strong><dt>
-<dd><p><br>
-<code>&lt;TTOPBEGIN&gt;<br></code>
+<dt><strong>Element</strong></dt>
+<dd><p><code>&lt;TTOPBEGIN&gt;<br></code>
 <var>markup ...</var><br>
 <code>&lt;/TTOPBEGIN&gt;<br></code>
 </p>
 </dd>
 
-<dt><strong>Command-line Option</strong><dt>
+<dt><strong>Command-line Option</strong></dt>
 <dd><p>N/A
 </p>
 </dd>
@@ -53,8 +51,8 @@ for the thread and markup for the root message of the thread.
 
 <pre>
 <b>&lt;TTopBegin&gt;</b>
-&lt;LI>&lt;STRONG><a href="#SUBJECT">$SUBJECT$</a>&lt;/STRONG>,
-&lt;EM><a href="#FROMNAME">$FROMNAME$</a>&lt;/EM>
+&lt;li&gt;&lt;strong&gt;<a href="#SUBJECT">$SUBJECT$</a>&lt;/strong&gt;,
+&lt;em&gt;<a href="#FROMNAME">$FROMNAME$</a>&lt;/em&gt;
 <b>&lt;/TTopBegin&gt;</b>
 </pre>
 
@@ -112,11 +110,11 @@ for the thread and markup for the root message of the thread.
 </tr>
 <tr valign=top>
 <td align=center><a name="ICON" href="../rcvars.html#ICON"><strong><code>$ICON$</code></strong></a></td>
-<td>The context-type sensistive icon.</td>
+<td>The context-type sensitive icon.</td>
 </tr>
 <tr valign=top>
 <td align=center><a name="ICONURL" href="../rcvars.html#ICONURL"><strong><code>$ICONURL$</code></strong></a></td>
-<td>The URL to the context-type sensistive icon.</td>
+<td>The URL to the context-type sensitive icon.</td>
 </tr>
 <tr valign=top>
 <td align=center><a name="MMDDYYYY" href="../rcvars.html#MMDDYYYY"><strong><code>$MMDDYYYY$</code></strong></a></td>
@@ -167,6 +165,10 @@ for the thread and markup for the root message of the thread.
 <td>The subject text of the message without the anchor element.</td>
 </tr>
 <tr valign=top>
+<td align=center><a name="TLEVEL" href="../rcvars.html#TLEVEL"><strong><code>$TLEVEL$</code></strong></a></td>
+<td>Numeric level of message in thread, starting with 0.</td>
+</tr>
+<tr valign=top>
 <td align=center><a name="YYYYMMDD" href="../rcvars.html#YYYYMMDD"><strong><code>$YYYYMMDD$</code></strong></a></td>
 <td>Message date in yyyy/mm/dd format.</td>
 </tr>
@@ -194,45 +196,45 @@ Unique messages are show in normal text.
 <pre>
 &lt;!--    TTOPBEGIN is the markup for the beginning of a thread, and the
         first message in a thread.
-  -->
+  --&gt;
 <b>&lt;TTOPBEGIN&gt;</b>
-&lt;p>
-&lt;li>&lt;a <a href="#A_NAME">$A_NAME$</a>>&lt;strong><a href="#SUBJECTNA">$SUBJECTNA$</a>&lt;/strong>&lt;/a>&lt;br>
-&lt;a <a href="#A_HREF">$A_HREF$</a>><a href="#FROMNAME">$FROMNAME$</a>&lt;/a>
+&lt;p&gt;
+&lt;li&gt;&lt;a <a href="#A_NAME">$A_NAME$</a>&gt;&lt;strong&gt;<a href="#SUBJECTNA">$SUBJECTNA$</a>&lt;/strong&gt;&lt;/a&gt;&lt;br&gt;
+&lt;a <a href="#A_HREF">$A_HREF$</a>&gt;<a href="#FROMNAME">$FROMNAME$</a>&lt;/a&gt;
 <b>&lt;/TTOPBEGIN></b>
  
 &lt;!--    <a href="ttopend.html">TTOPEND</a> is the markup for closing a main thread.
-  -->
+  --&gt;
 <b>&lt;<a href="ttopend.html">TTOPEND</a>></b>
-&lt;/li>
-&lt;/p>
+&lt;/li&gt;
+&lt;/p&gt;
 <b>&lt;/TTOPEND></b>
  
 &lt;!--    <a href="tlitxt.html">TLITXT</a> is the markup for a message *within* a thread
-  -->
+  --&gt;
 <b>&lt;<a href="tlitxt.html">TLITXT</a>></b>
-&lt;li>&lt;a <a href="#A_ATTR">$A_ATTR$</a>><a href="#FROMNAME">$FROMNAME$</a>&lt;/a>
+&lt;li&gt;&lt;a <a href="#A_ATTR">$A_ATTR$</a>&gt;<a href="#FROMNAME">$FROMNAME$</a>&lt;/a&gt;
 <b>&lt;/TLITXT></b>
  
 <b>&lt;<a href="tliend.html">TLIEND</a>></b>
-&lt;/li>
+&lt;/li&gt;
 <b>&lt;/TLIEND></b>
  
 &lt;!--    <a href="tsingletxt.html">TSINGLETXT</a> is the markup for a message not in a thread.  I.e.
         it does not start a thread or is part of a thread.
-  -->
+  --&gt;
 <b>&lt;<a href="tsingletxt.html">TSINGLETXT</a>></b>
-&lt;li>&lt;a <a href="#A_NAME">$A_NAME$</a>><a href="#SUBJECTNA">$SUBJECTNA$</a>&lt;/a>,
-&lt;a <a href="#A_HREF">$A_HREF$</a>><a href="#FROMNAME">$FROMNAME$</a>&lt;/a>
-&lt;/li>
+&lt;li&gt;&lt;a <a href="#A_NAME">$A_NAME$</a>&gt;<a href="#SUBJECTNA">$SUBJECTNA$</a>&lt;/a&gt;,
+&lt;a <a href="#A_HREF">$A_HREF$</a>&gt;<a href="#FROMNAME">$FROMNAME$</a>&lt;/a&gt;
+&lt;/li&gt;
 <b>&lt;/TSINGLETXT></b>
  
 &lt;!--    <a href="tsubjectbeg.html">TSUBJECTBEG</a> is any markup at the beginning of a sub-thread that
         is based on the subject of the message.  We just put in a
 	comment declaration so the reader will see nothing.
-  -->
+  --&gt;
 <b>&lt;<a href="tsubjectbeg.html">TSUBJECTBEG</a>></b>
-&lt;!-- Possible follow-ups -->
+&lt;!-- Possible follow-ups --&gt;
 <b>&lt;/TSUBJECTBEG></b>
 </pre>
 
@@ -264,11 +266,16 @@ index hyperlinks in messages to behave properly.
 
 <!-- *************************************************************** -->
 <hr>
+<!--x-rc-nav-->
+<table border=0><tr valign="top">
+<td align="left" width="50%">[Prev:&nbsp;<a href="ttitle.html">TTITLE</a>]</td><td><nobr>[<a href="../resources.html#ttopbegin">Resources</a>][<a href="../mhonarc.html">TOC</a>]</nobr></td><td align="right" width="50%">[Next:&nbsp;<a href="ttopend.html">TTOPEND</a>]</td></tr></table>
+<!--/x-rc-nav-->
+<hr>
 <address>
-00/10/28 11:13:12<br>
-<img align="top" src="../monicon.gif" alt="">
-<a href="http://www.pobox.com/~ehood/mhonarc.html"><strong>MHonArc</strong></a><br>
-Copyright &#169; 1997-1998, <a href="http://www.pobox.com/~ehood/">Earl Hood</a>, <a href="mailto:mhonarc@pobox.com">mhonarc@pobox.com</a><br>
+$Date: 2002/07/27 05:13:11 $ <br>
+<img align="top" src="../monicon.png" alt="">
+<a href="http://www.mhonarc.org/"><strong>MHonArc</strong></a><br>
+Copyright &#169; 1997-1998, <a href="http://www.earlhood.com/">Earl Hood</a>, <a href="mailto:mhonarc@mhonarc.org">mhonarc@mhonarc.org</a><br>
 </address>
 
 </body>

@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	@(#) readmail.pl 2.10 01/06/10 17:39:42
+##	$Id: readmail.pl,v 2.18 2002/06/28 03:28:10 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -12,23 +12,15 @@
 ##
 ##	Public Functions:
 ##	----------------
-##	($data) =
-##	    &MAILdecode_1522_str($str);
-##	($data, @files) =
-##	    &MAILread_body($header, $body, $ctypeArg, $encodingArg);
-##	($header) =
-##	    &MAILread_file_header($handle, *fields, *l2o);
-##	($header) =
-##	    &MAILread_header(*mesg, *fields, *l2o);
+##	$data 		= MAILdecode_1522_str($str);
+##	($data, @files) = MAILread_body($fields_hash_ref, $body_ref);
+##	$hash_ref 	= MAILread_file_header($handle);
+##	$hash_ref 	= MAILread_header($mesg_str_ref);
 ##
-##	($disposition, $filename) =
-##	    &MAILhead_get_disposition(*fields);
-##	$boolean =
-##	    &MAILis_excluded($content_type);
-##	$parm_hash_ref =
-##	    &MAILparse_parameter_str($header_field);
-##	$parm_hash_ref =
-##	    &MAILparse_parameter_str($header_field, 1);
+##	($disp, $file)  = MAILhead_get_disposition($fields_hash_ref);
+##	$boolean 	= MAILis_excluded($content_type);
+##	$parm_hash_ref  = MAILparse_parameter_str($header_field);
+##	$parm_hash_ref  = MAILparse_parameter_str($header_field, 1);
 ##
 ##---------------------------------------------------------------------------##
 ##    Copyright (C) 1996-2001	Earl Hood, mhonarc@mhonarc.org
@@ -51,14 +43,30 @@
 
 package readmail;
 
+###############################################################################
+##	Private Globals							     ##
+###############################################################################
+
+my @_MIMEAltPrefs = ();
+my %_MIMEAltPrefs = ();
+
+###############################################################################
+##	Public Globals							     ##
+###############################################################################
+
+##---------------------------------------------------------------------------##
+##	Constants
+##
+
+##  Constants for use as second argument to MAILdecode_1522_str().
+sub JUST_DECODE() { 1; }
+sub DECODE_ALL()  { 2; }
+
+##---------------------------------------------------------------------------##
+
 ##---------------------------------------------------------------------------##
 ##	Scalar Variables
 ##
-
-##  Variable storing the mulitple fields separator value for the
-##  the read header routines.
-
-$FieldSep	= "\034";
 
 ##  Flag if message headers are decoded in the parse header routines:
 ##  MAILread_header, MAILread_file_header.  This only affects the
@@ -71,7 +79,7 @@ $FieldSep	= "\034";
 $DecodeHeader	= 0;
 
 ##---------------------------------------------------------------------------##
-##	Variables for folding information related to the functions used
+##	Variables for holding information related to the functions used
 ##	for processing MIME data.  Variables are defined in the scope
 ##	of main.
 
@@ -292,14 +300,15 @@ $FormatHeaderFunc		= undef
 ##
 ##	Usage:
 ##
-##	    $ret_data = &MAILdecode_1522_str($str, $justdecode);
+##	    $ret_data = &MAILdecode_1522_str($str, $decoding_flag);
 ##
-##	If $justdecode is non-zero, $str will be decoded for only
-##	the charsets specified as "-decode-".
+##	If $decoding_flag is JUST_DECODE, $str will be decoded for only
+##	the charsets specified as "-decode-".  If it is equal to
+##	DECODE_ALL, all encoded data is decoded without any conversion.
 ##
 sub MAILdecode_1522_str {
     my($str) = shift;
-    my($justdecode) = shift;
+    my($decoding_flag) = shift;
     my($charset,
        $lcharset,
        $encoding,
@@ -335,7 +344,7 @@ sub MAILdecode_1522_str {
 	}
 
 	# Convert before (unencoded) text
-	if ($justdecode) {				# ignore if just decode
+	if ($decoding_flag) {				# ignore if just decode
 	    $ret .= $str_before;
 	} elsif (defined(&$plaincnv)) {			# decode and convert
 	    $ret .= &$plaincnv($str_before,'');
@@ -348,16 +357,20 @@ sub MAILdecode_1522_str {
 
 	# Convert encoded text
 	($lcharset = $charset) =~ tr/A-Z/a-z/;
-	$charcnv = &load_charset($lcharset);
-	$charcnv = $defcharcnv  unless $charcnv;
+	if ($decoding_flag == DECODE_ALL) {
+	    $charcnv = '-decode-';
+	} else {
+	    $charcnv = &load_charset($lcharset);
+	    $charcnv = $defcharcnv  unless $charcnv;
+	}
 
 	# Decode only
-	if ($charcnv eq "-decode-") {
+	if ($charcnv eq '-decode-') {
 	    $strtxt =~ s/_/ /g;
 	    $ret .= &$dec($strtxt);
 
 	# Ignore if just decoding
-	} elsif ($justdecode) {
+	} elsif ($decoding_flag) {
 	    $ret .= "=?$charset?$encoding?$strtxt?=";
 
 	# Decode and convert
@@ -377,7 +390,7 @@ sub MAILdecode_1522_str {
     }
 
     # Convert left-over unencoded text
-    if ($justdecode) {				# ignore if just decode
+    if ($decoding_flag) {			# ignore if just decode
 	$ret .= $str;
     } elsif (defined(&$plaincnv)) {		# decode and convert
 	$ret .= &$plaincnv($str,'');
@@ -392,34 +405,58 @@ sub MAILdecode_1522_str {
 }
 
 ##---------------------------------------------------------------------------##
-##	MAILread_body() parses a MIME message body.  $header is the
-##	header of the message.  $body is the actual message body.
-##	$ctypeArg is the value of the Content-Type field and $encodingArg
-##	is the value of the Content-Transfer-Encoding field (both
-##	should be obtained from $header from the calling routine).  The
-##	return value is an array:  The first item is the converted data
-##	generated, and the other items are filenames of any derived
-##	files.
+##	MAILread_body() parses a MIME message body.
+##	Usage:
+##	  ($data, @files) =
+##	      MAILread_body($fields_hash_ref, $body_date_ref);
+##
+##	Parameters:
+##	  $fields_hash_ref
+##		      A reference to hash of message/part header
+##		      fields.  Keys are field names in lowercase
+##		      and values are array references containing the
+##		      field values.  For example, to obtain the
+##		      content-type, if defined, one would do:
+##
+##			$fields_hash_ref->{'content-type'}[0]
+##
+##		      Values for a fields are stored in arrays since
+##		      duplication of fields are possible.  For example,
+##		      the Received: header field is typically repeated
+##		      multiple times.  For fields that only occur once,
+##		      then array for the field will only contain one
+##		      item.
+##
+##	  $body_data_ref
+##		      Reference to body data.  It is okay for the
+##		      filter to modify the text in-place.
+##
+##	Return:
+##	  The first item in the return list is the text that should
+##	  printed to the message page.	Any other items in the return
+##	  list are derived filenames created.
+##
+##	See Also:
+##	  MAILread_header(), MAILread_file_header()
 ##
 sub MAILread_body {
-    local($header, $body, $ctypeArg, $encodingArg, $inaltArg) = @_;
+    my($fields,		# Parsed header hash
+       $body,		# Reference to raw body text
+       $inaltArg) = @_; # Flag if in multipart/alternative
 
-    # the following must be local's due to legacy use of typeglobs
-    local(%partfields, %partl2o) = ();
-    local($part, $decoded);
-
-    my($parthead, $partcontent, $partencoding);
     my($type, $subtype, $boundary, $content, $ctype, $pos,
-       $encoding, $decodefunc, $args);
+       $encoding, $decodefunc, $args, $part);
     my(@parts) = ();
     my(@files) = ();
     my(@array) = ();
     my $ret = "";
 
     ## Get type/subtype
-    $content = $ctypeArg || 'text/plain';	# Default to text/plain 
-						# 	if no content-type
-    ($ctype) = $content =~ m%^\s*([\w-\./]+)%;	# Extract content-type
+    if (defined($fields->{'content-type'})) {
+	$content = $fields->{'content-type'}->[0];
+    }
+    $content = 'text/plain'  unless $content;
+    ($ctype) = $content =~ m%^\s*([\w\-\./]+)%;	# Extract content-type
     $ctype =~ tr/A-Z/a-z/;			# Convert to lowercase
     if ($ctype =~ m%/%) {			# Extract base and sub types
 	($type,$subtype) = split(/\//, $ctype, 2);
@@ -439,7 +476,7 @@ sub MAILread_body {
     if ( (!defined($filter = &load_filter($ctype)) || !defined(&$filter)) &&
 	 (!defined($filter = &load_filter("$type/*")) || !defined(&$filter)) &&
 	 (!$inaltArg &&
-	  (!defined($filter = &load_filter("*/*")) || !defined(&$filter)) &&
+	  (!defined($filter = &load_filter('*/*')) || !defined(&$filter)) &&
 	     $ctype !~ m^\bmessage/(?:rfc822|news)\b^i &&
 	     $type  !~ /\bmultipart\b/) ) {
 	warn qq|Warning: Unrecognized content-type, "$ctype", |,
@@ -448,14 +485,11 @@ sub MAILread_body {
     }
 
     ## Check for filter arguments
-    $args = $MIMEFiltersArgs{$ctype};
-    $args = $MIMEFiltersArgs{"$type/*"} if !defined($args) || $args eq '';
-    $args = $MIMEFiltersArgs{$filter}   if defined($filter) &&
-					   (!defined($args) || $args eq '');
+    $args = get_filter_args($ctype, "$type/*", $filter);
 
     ## Check encoding
-    if (defined($encodingArg)) {
-	$encoding = lc $encodingArg;
+    if (defined($fields->{'content-transfer-encoding'})) {
+	$encoding = lc $fields->{'content-transfer-encoding'}[0];
 	$encoding =~ s/\s//g;
 	$decodefunc = &load_decoder($encoding);
     } else {
@@ -465,22 +499,17 @@ sub MAILread_body {
 
     ## A filter is defined for given content-type
     if ($filter && defined(&$filter)) {
-	local $tmphead	= $header . "\n";
-
-	## Parse message header for filter
-	&MAILread_header(*tmphead, *partfields, *partl2o);
-
 	## decode data
 	if (defined($decodefunc)) {
 	    if (defined(&$decodefunc)) {
-		$decoded = &$decodefunc($body);
-		@array = &$filter($header, *partfields, *decoded, 1, $args);
+		$decoded = &$decodefunc($$body);
+		@array = &$filter($fields, \$decoded, 1, $args);
 	    } else {
-		@array = &$filter($header, *partfields, *body,
+		@array = &$filter($fields, $body,
 				  $decodefunc =~ /as-is/i, $args);
 	    }
 	} else {
-	    @array = &$filter($header, *partfields, *body, 0, $args);
+	    @array = &$filter($fields, $body, 0, $args);
 	}
 
 	## Setup return variables
@@ -507,79 +536,94 @@ sub MAILread_body {
 	    if ($boundary =~ /\S/) {
 		my $found = 0;
 		my $start_pos = 0;
-		substr($body, 0, 0) = "\n";
+		substr($$body, 0, 0) = "\n";
 		substr($boundary, 0, 0) = "\n--";
 		my $blen = length($boundary);
 		my $bchkstr;
 
-		while (($pos = index($body, $boundary, $start_pos)) > -1) {
+		while (($pos = index($$body, $boundary, $start_pos)) > -1) {
 		    # have to check for case when boundary is a substring
 		    #	of another boundary, yuck!
-		    $bchkstr = substr($body, $pos+$blen, 2);
+		    $bchkstr = substr($$body, $pos+$blen, 2);
 		    unless ($bchkstr =~ /\A\r?\n/ || $bchkstr =~ /\A--/) {
 			# incomplete match, continue search
 			$start_pos = $pos+$blen;
 			next;
 		    }
 		    $found = 1;
-		    if ($isalt) {
-			# if alternative, do things in reverse
-			unshift(@parts, substr($body, 0, $pos));
-			$parts[0] =~ s/^\r//;
-		    } else {
-			push(@parts, substr($body, 0, $pos));
-			$parts[$#parts] =~ s/^\r//;
-		    }
+		    push(@parts, substr($$body, 0, $pos));
+		    $parts[$#parts] =~ s/^\r//;
+
 		    # prune out part data just grabbed
-		    substr($body, 0, $pos+$blen) = "";
+		    substr($$body, 0, $pos+$blen) = "";
 
 		    # check if hit end
-		    last  if $body =~ /\A--/;
+		    last  if $$body =~ /\A--/;
 
 		    # remove EOL at the beginning
-		    $body =~ s/\A\r?\n//;
+		    $$body =~ s/\A\r?\n//;
 		    $start_pos = 0;
 		}
 		if ($found) {
 		    # discard front-matter
-		    if ($isalt) { pop(@parts); } else { shift(@parts); }
+		    shift(@parts);
 		} else {
 		    # no boundary separators in message!
 		    warn qq/Warning: No boundaries found in message body\n/;
-		    if ($body =~ m/\A\n[\w\-]+:\s/) {
+		    if ($$body =~ m/\A\n[\w\-]+:\s/) {
 			# remove \n added above if part looks like it has
 			# headers.  we keep if it does not to avoid body
 			# data being parsed as a header below.
-			substr($body, 0, 1) = "";
+			substr($$body, 0, 1) = "";
 		    }
-		    push(@parts, $body);
+		    push(@parts, $$body);
 		}
 
 	    ## Else treat body as one part
 	    } else {
-		@parts = ($body);
+		@parts = ($$body);
 	    }
 
 	    ## Process parts
 	    my(@entity) = ();
-	    my($cid, $href);
+	    my($cid, $href, $pctype);
+	    my %alt_exc = ( );
+	    my $have_alt_prefs = $isalt && scalar(@_MIMEAltPrefs);
+	    @parts = \(@parts);
 	    while (defined($part = shift(@parts))) {
 		$href = { };
-		$href->{'head'} =
-		    &MAILread_header(*part, *partfields, *partl2o);
-		$href->{'fields'}   = { %partfields };
-		$href->{'l2o'}	    = { %partl2o };
-		$href->{'body'}	    = $part;
+		$partfields = $href->{'fields'} = (MAILread_header($part))[0];
+		$href->{'body'} = $part;
 		$href->{'filtered'} = 0;
-		push(@entity, $href);
+		$pctype = extract_ctype(
+		    $partfields->{'content-type'}, $ctype);
+
+		## check alternative preferences
+		if ($have_alt_prefs) {
+		  next  if ($alt_exc{$pctype});
+		  my $pos = $_MIMEAltPrefs{$pctype};
+		  if (defined($pos)) {
+		      for (++$pos; $pos <= $#_MIMEAltPrefs; ++$pos) {
+			  $alt_exc{$_MIMEAltPrefs[$pos]} = 1;
+		      }
+		  }
+		}
 
 		## only add to %Cid if not excluded
-		if (!&MAILis_excluded($partfields{'content-type'})) {
-		    $cid = $partfields{'content-id'} ||
-			   $partfields{'message-id'};
-		    $cid =~ s/[\s<>]//g;
-		    $Cid{"cid:$cid"} = $href  if $cid =~ /\S/;
-		    if ($cid = $partfields{'content-location'}) {
+		if (!&MAILis_excluded($pctype)) {
+		    if ($isalt) {
+			unshift(@entity, $href);
+		    } else {
+			push(@entity, $href);
+		    }
+		    $cid = $partfields->{'content-id'}[0] ||
+			   $partfields->{'message-id'}[0];
+		    if (defined($cid)) {
+			$cid =~ s/[\s<>]//g;
+			$Cid{"cid:$cid"} = $href  if $cid =~ /\S/;
+		    }
+		    if (defined($partfields->{'content-location'}) &&
+			    ($cid = $partfields->{'content-location'}[0])) {
 			$cid =~ s/^\s+//;
 			$cid =~ s/\s+$//;
 			if ($cid =~ /\S/ && !$Cid{$cid}) {
@@ -595,21 +639,21 @@ sub MAILread_body {
 
 		## If content-type not defined for part, then determine
 		## content-type based upon multipart subtype.
-		$partcontent  = $entity->{'fields'}{'content-type'};
-		if (!$partcontent) {
-		    $partcontent = ($subtype =~ /digest/) ?
-					'message/rfc822' : 'text/plain';
+		$partfields = $entity->{'fields'};
+		if (!defined($partfields->{'content-type'})) {
+		    $partfields->{'content-type'} =
+		      [ ($subtype =~ /digest/) ?
+			    'message/rfc822' : 'text/plain' ];
 		}
 
 		## Process part
-		@array = &MAILread_body(
-			    $entity->{'head'}, $entity->{'body'},
-			    $partcontent,
-			    $entity->{'fields'}{'content-transfer-encoding'},
+		@array = MAILread_body(
+			    $partfields,
+			    $entity->{'body'},
 			    $isalt);
 
 		## Only use last filterable part in alternate
-		if ($subtype =~ /alternative/) {
+		if ($isalt) {
 		    $ret = shift @array;
 		    if ($ret) {
 			push(@files, @array);
@@ -619,7 +663,7 @@ sub MAILread_body {
 		} else {
 		    if (!$array[0]) {
 			$array[0] = &$CantProcessPartFunc(
-					$entity->{'fields'}{'content-type'});
+					$partfields->{'content-type'}[0]);
 		    }
 		    $ret .= shift @array;
 		}
@@ -628,15 +672,13 @@ sub MAILread_body {
 	    }
 
 	    ## Check if multipart/alternative, and no success
-	    if (!$ret && ($subtype =~ /alternative/)) {
+	    if (!$ret && $isalt) {
 		warn qq|Warning: No recognized part in multipart/alternative; |,
-		     qq|will try to decode last part as |,
-		     qq|application/octet-stream\n|;
+		     qq|will try to decode last part\n|;
 		$entity = $entity[0];
 		@array = &MAILread_body(
-			    $entity->{'head'}, $entity->{'body'},
-			    'application/octet-stream',
-			    $entity->{'fields'}{'content-transfer-encoding'});
+			    $entity->{'fields'},
+			    $entity->{'body'});
 		$ret = shift @array;
 		if ($ret) {
 		    push(@files, @array);
@@ -647,20 +689,19 @@ sub MAILread_body {
 
 	## Else if message/rfc822 or message/news
 	} elsif ($ctype =~ m^\bmessage/(?:rfc822|news)\b^i) {
-	    $parthead = &MAILread_header(*body, *partfields, *partl2o);
-	    $partcontent = $partfields{'content-type'};
-	    $partencoding = $partfields{'content-transfer-encoding'};
+	    $partfields = (MAILread_header($body))[0];
 
 	    $ret = &$BeginEmbeddedMesgFunc();
 	    if ($FormatHeaderFunc && defined(&$FormatHeaderFunc)) {
-		$ret .= &$FormatHeaderFunc(*partfields, *partl2o);
+		$ret .= &$FormatHeaderFunc($partfields);
 	    } else {
 		warn "Warning: readmail: No message header formatting ",
 		     "function defined\n";
 	    }
-	    @array = &MAILread_body($parthead, $body,
-				    $partcontent, $partencoding);
-	    $ret .= shift @array || &$CantProcessPartFunc($partcontent);
+	    @array = MAILread_body($partfields, $body);
+	    $ret .= shift @array ||
+			&$CantProcessPartFunc(
+			    $partfields->{'content-type'}[0] || 'text/plain');
 	    $ret .= &$EndEmbeddedMesgFunc();
 
 	    push(@files, @array);
@@ -676,100 +717,104 @@ sub MAILread_body {
 
 ##---------------------------------------------------------------------------##
 ##	MAILread_header reads (and strips) a mail message header from the
-##	variable *mesg.  *mesg is a pointer to the mail message.
+##	variable $mesg.  $mesg is a reference to the mail message in
+##	a string.
 ##
-##	*fields is a pointer to an associative array to put field
-##	values indexed by field labels that have been converted to all
-##	lowercase.  If a field repeats (eg Received fields), then each
-##	value in $fields{$fieldname} will be a $FieldSep separated
-##	string representing the multiple values.
+##	$fields is a reference to a hash to put field values indexed by
+##	field labels that have been converted to all lowercase.
+##	Field values are array references to the values
+##	for each field.
 ##
-##	*l2o is an associative array to get the original label text
-##	from the lowercase field label keys.
-##	
-##	The return value is the original (extracted) header text.
+##	($fields_hash_ref, $header_txt) = MAILread_header($mesg_data);
 ##
 sub MAILread_header {
-    local(*mesg, *fields, *l2o) = @_;
-    local($label, $olabel, $value, $tmp, $header);
+    my($mesg) = shift;
 
-    $header = '';  %fields = ();  %l2o = ();  $label = '';
+    my $fields = { };
+    my $label = '';
+    my $header = '';
+    my($value, $tmp, $pos);
 
     ## Read a line at a time.
-    while ($mesg =~ s/^([^\n]*\n)//) {
-	$tmp = $1;			# Save off match
-	last  if $tmp =~ /^[\r]?$/;	# Done if blank line
+    for ($pos=0; $pos >= 0; ) {
+	$pos = index($$mesg, "\n");
+	if ($pos >= 0) {
+	    $tmp = substr($$mesg, 0, $pos+1);
+	    substr($$mesg, 0, $pos+1) = "";
+	    last  if $tmp =~ /^\r?$/;	# Done if blank line
 
-	$header .= $tmp;		# Store original text
-	$tmp =~ s/[\r\n]//g;		# Delete eol characters
+	    $header .= $tmp;
+	    chop $tmp;			# Chop newline
+	    $tmp =~ s/\r$//;		# Delete <CR> characters
+	} else {
+	    $tmp = $$mesg;
+	    $header .= $tmp;
+	}
 
 	## Decode text if requested
-	$tmp = &MAILdecode_1522_str($tmp,1)  if $DecodeHeader;
+	$tmp = &MAILdecode_1522_str($tmp,JUST_DECODE)  if $DecodeHeader;
 
 	## Check for continuation of a field
 	if ($tmp =~ s/^\s//) {
-	    $fields{$label} .= $tmp  if $label;
+	    $fields->{$label}[-1] .= $tmp  if $label;
 	    next;
 	}
 
 	## Separate head from field text
 	if ($tmp =~ /^([^:\s]+):\s*([\s\S]*)$/) {
-	    ($olabel, $value) = ($1, $2);
-	    ($label = $olabel) =~ tr/A-Z/a-z/;
-	    $l2o{$label} = $olabel;
-	    if ($fields{$label}) {
-		$fields{$label} .= $FieldSep . $value;
+	    ($label, $value) = (lc($1), $2);
+	    if ($fields->{$label}) {
+		push(@{$fields->{$label}}, $value);
 	    } else {
-		$fields{$label} = $value;
+		$fields->{$label} = [ $value ];
 	    }
 	}
     }
-    $header;
+    ($fields, $header);
 }
 
 ##---------------------------------------------------------------------------##
 ##	MAILread_file_header reads (and strips) a mail message header
 ##	from the filehandle $handle.  The routine behaves in the
 ##	same manner as MAILread_header;
+##
+##	($fields_hash, $header_text) = MAILread_file_header($filehandle);
 ##	
 sub MAILread_file_header {
-    local($handle, *fields, *l2o) = @_;
-    local($label, $olabel, $value, $tmp, $header);
-    local($d) = ($/);
+    my($handle) = @_;
+    my $label  = '';
+    my $header = '';
+    my $fields = { };
+    local $/   = "\n";
 
-    $/ = "\n";  $label = '';
-    $header = '';  %fields = ();  %l2o = ();
+    my($value, $tmp);
     while (($tmp = <$handle>) !~ /^[\r]?$/) {
-
-	## Store original header
+	## Save raw text
 	$header .= $tmp;
 
 	## Delete eol characters
 	$tmp =~ s/[\r\n]//g;
 
 	## Decode text if requested
-	$tmp = &MAILdecode_1522_str($tmp,1)  if $DecodeHeader;
+	$tmp = &MAILdecode_1522_str($tmp,JUST_DECODE)  if $DecodeHeader;
 
 	## Check for continuation of a field
 	if ($tmp =~ s/^\s//) {
-	    $fields{$label} .= $tmp  if $label;
+	    $fields->{$label}[-1] .= $tmp  if $label;
 	    next;
 	}
 
 	## Separate head from field text
 	if ($tmp =~ /^([^:\s]+):\s*([\s\S]*)$/) {
-	    ($olabel, $value) = ($1, $2);
-	    ($label = $olabel) =~ tr/A-Z/a-z/;
-	    $l2o{$label} = $olabel;
-	    if ($fields{$label}) {
-		$fields{$label} .= $FieldSep . $value;
+	    ($label, $value) = (lc($1), $2);
+	    if (defined($fields->{$label})) {
+		push(@{$fields->{$label}}, $value);
 	    } else {
-		$fields{$label} = $value;
+		$fields->{$label} = [ $value ];
 	    }
 	}
     }
-    $/ = $d;
-    $header;
+    ($fields, $header);
 }
 
 ##---------------------------------------------------------------------------##
@@ -777,9 +822,7 @@ sub MAILread_file_header {
 ##	specified to be excluded.
 ##
 sub MAILis_excluded {
-    my $content = $_[0] || 'text/plain';
-    my($ctype) = $content =~ m|^\s*([\w-\./]+)|;
-    $ctype =~ tr/A-Z/a-z/;
+    my $content = lc($_[0]) || 'text/plain';
     if ($MIMEExcs{$ctype}) {
 	return 1;
     }
@@ -791,30 +834,31 @@ sub MAILis_excluded {
 
 ##---------------------------------------------------------------------------##
 ##	MAILhead_get_disposition gets the content disposition and
-##	filename from *hfields, *hfields is a hash produced by the
-##	MAILread_head* routines.
+##	filename from $hfields, $hfields is a hash produced by the
+##	MAILread_header and MAILread_file_header routines.
 ##
 sub MAILhead_get_disposition {
-    local(*hfields) = shift;
+    my($hfields) = shift;
     my($disp, $filename) = ('', '');
     local($_);
 
-    if ($_ = $hfields{'content-disposition'}) {
-	($disp)	    = /^\s*([^\s;]+)/;
+    if (defined($hfields->{'content-disposition'}) &&
+	    ($_ = $hfields->{'content-disposition'}->[0])) {
+	($disp)	= /^\s*([^\s;]+)/;
 	if (/filename="([^"]+)"/i) {
 	    $filename = $1;
 	} elsif (/filename=(\S+)/i) {
 	    ($filename = $1) =~ s/;\s*$//g;
 	}
     }
-    if (!$filename) {
-	$_ = $hfields{'content-type'};
+    if (!$filename && defined($_ = $hfields->{'content-type'}[0])) {
 	if (/name="([^"]+)"/i) {
 	    $filename = $1;
 	} elsif (/name=(\S+)/i) {
 	    ($filename = $1) =~ s/;\s*$//g;
 	}
     }
+    $filename = MAILdecode_1522_str($filename, DECODE_ALL);
     $filename =~ s%.*[/\\:]%%;	# Remove any path component
     $filename =~ s/^\s+//;	# Remove leading whitespace
     $filename =~ s/\s+$//;	# Remove trailing whitespace
@@ -839,8 +883,10 @@ sub MAILhead_get_disposition {
 ##	    The special key, 'x-main', is the main value if the
 ##	    $hasmain flag is set.
 ##
-##	    Each hash value is a hash reference with three keys: 'charset',
-##	    'lang', 'value'.  'charset' and 'lang' may be undef.
+##	    Each hash value is a hash reference with three keys:
+##	    'charset', 'lang', 'value'.  'charset' and 'lang' may be
+##	    undef if character set or language information is not
+##	    specified.
 ##
 ##	Example Usage:
 ##
@@ -894,13 +940,39 @@ sub MAILparse_parameter_str {
         $parm->{$name}{'vlist'}[$part] = $value;
     }
 
-    ## Now we loop thru each parameter an define the final values from
+    ## Now we loop thru each parameter and define the final values from
     ## the parts
     foreach $name (keys %$parm) {
+	next  if $name eq 'x-main';
         $parm->{$name}{'value'} = join("", @{$parm->{$name}{'vlist'}});
     }
 
     $parm;
+}
+
+##---------------------------------------------------------------------------##
+##	MAILset_alternative_prefs() is used to set content-type
+##	preferences for multipart/alternative entities.  The list
+##	specified will supercede the prefered format as denoted by
+##	the ording of parts in the entity.
+##
+##	A content-type listed earlier in the array will be prefered
+##	over one later.  For example:
+##
+##	  MAILset_alternative_prefs('text/plain', 'text/html');
+##
+##	States that if a multipart/alternative entity contains a
+##	text/plain part and a text/html part, the text/plain part will
+##	be prefered over the text/html part.
+##
+sub MAILset_alternative_prefs {
+    @_MIMEAltPrefs = map { lc } @_;
+    %_MIMEAltPrefs = ();
+    my $i = 0;
+    my $ctype;
+    foreach $ctype (@_MIMEAltPrefs) {
+	$_MIMEAltPrefs{$ctype} = $i++;
+    }
 }
 
 ###############################################################################
@@ -915,37 +987,36 @@ sub cantProcessPart {
     my($ctype) = $_[0];
     warn "Warning: Could not process part with given Content-Type: ",
 	 "$ctype\n";
-    "<BR><TT>&lt;&lt;&lt; $ctype: Unrecognized &gt;&gt;&gt;</TT><BR>\n";
+    "<br><tt>&lt;&lt;&lt; $ctype: Unrecognized &gt;&gt;&gt;</tt><br>\n";
 }
 ##---------------------------------------------------------------------------##
 ##	Default function returning message for content-types excluded.
 ##
 sub excludedPart {
     my($ctype) = $_[0];
-    "<BR><TT>&lt;&lt;&lt; $ctype: EXCLUDED &gt;&gt;&gt;</TT><BR>\n";
+    "<br><tt>&lt;&lt;&lt; $ctype: EXCLUDED &gt;&gt;&gt;</tt><br>\n";
 }
 ##---------------------------------------------------------------------------##
 ##	Default function for unrecognizeable part in multipart/alternative.
 ##
 sub unrecognizedAltPart {
     warn "Warning: No recognizable part in multipart/alternative\n";
-    "<BR><TT>&lt;&lt;&lt; multipart/alternative: ".
-    "No recognizable part &gt;&gt;&gt;</TT><BR>\n";
+    "<br><tt>&lt;&lt;&lt; multipart/alternative: ".
+    "No recognizable part &gt;&gt;&gt;</tt><br>\n";
 }
 ##---------------------------------------------------------------------------##
 ##	Default function for beggining of embedded message
 ##	(ie message/rfc822 or message/news).
 ##
 sub beginEmbeddedMesg {
-    qq|<BLOCKQUOTE><BR><HR ALIGN="LEFT" WIDTH="80%">\n|;
+qq|<blockquote><small>---&nbsp;<i>Begin&nbsp;Message</i>&nbsp;---</small>\n|;
 }
 ##---------------------------------------------------------------------------##
 ##	Default function for end of embedded message
 ##	(ie message/rfc822 or message/news).
 ##
 sub endEmbeddedMesg {
-    qq|<HR ALIGN="LEFT" WIDTH="80%"></BLOCKQUOTE><BR>\n|;
-	    
+qq|<small>---&nbsp;<i>End Message</i>&nbsp;---</small></blockquote>\n|;
 }
 
 ##---------------------------------------------------------------------------##
@@ -968,6 +1039,54 @@ sub load_filter {
 	if defined($MIMEFiltersSrc{$_[0]}) &&
 	   $MIMEFiltersSrc{$_[0]};
     $MIMEFilters{$_[0]};
+}
+sub get_filter_args {
+    my $args	= '';
+    my $s;
+    foreach $s (@_) {
+	next  unless defined $s;
+	$args = $MIMEFiltersArgs{$s};
+	last  if defined($args) && ($args ne '');
+    }
+    $args;
+}
+
+##---------------------------------------------------------------------------##
+##	extract_ctype() extracts the content-type specification from
+##	the beginning of given string.
+##
+sub extract_ctype {
+    if (!defined($_[0]) ||
+	  (ref($_[0]) && ($_[0][0] !~ /\S/)) ||
+	  ($_[0] !~ /\S/)) {
+	return 'message/rfc822'
+	    if (defined($_[1]) && ($_[1] eq 'multipart/digest'));
+	return 'text/plain';
+    }
+    if (ref($_[0])) {
+	$_[0][0] =~ m|^\s*([\w\-\./]+)|;
+	return lc($1);
+    }
+    $_[0] =~ m|^\s*([\w\-\./]+)|;
+    lc($1);
+}
+
+##---------------------------------------------------------------------------##
+
+sub dump_header {
+    my $fh	= shift;
+    my $fields	= shift;
+    my($key, $a, $value);
+    foreach $key (sort keys %$fields) {
+	$a = $fields->{$key};
+	if (ref($a)) {
+	    foreach $value (@$a) {
+		print $fh "$key: $value\n";
+	    }
+	} else {
+	    print $fh "$key: $a\n";
+	}
+    }
 }
 
 ##---------------------------------------------------------------------------##

@@ -24,11 +24,11 @@
 
 ---------------------------------------------------------------------------
                             README for MHonArc
-                                 v2.4.9
+                                   v2.5
 
 			<http://www.mhonarc.org/>
 
-			 Copyright (C) 1995-2001
+			 Copyright (C) 1995-2002
 		       Earl Hood, mhonarc@mhonarc.org
 
 ---------------------------------------------------------------------------
@@ -38,7 +38,7 @@ USING/COPYING
     The rules for using and copying MHonArc are explained in the file
     COPYING.  If you cannot agree to the conditions of the GPL but
     still want to use/copy the program, you must contact the author of
-    MHonarc, mhonarc@mhonarc.org, about arranging an alternative license.
+    MHonArc, mhonarc@mhonarc.org, about arranging an alternative license.
 
 ---------------------------------------------------------------------------
 SUMMARY
@@ -72,10 +72,10 @@ INSTALL         Instructions on how to install MHonArc
 README          The file you are reading
 RELNOTES        Release notes for MHonArc (PLEASE READ BEFORE INSTALL)
 TODO		TODO list for MHonArc development
-VERSIONS	List of SCCS versions of MHonArc source
-admin/		Experimental web-based archive administration tool.
+admin/		Experimental web-based archive administration tool
+contrib/	Contributed programs
 doc/            Documentation for MHonArc
-examples/       Example resource files for MHonArc
+examples/       Example files for use with MHonArc
 extras/         Extra programs for use with MHonArc (See extras/README)
 install.me      Installation program for MHonArc
 lib/            Libraries/MIME filters used by MHonArc
@@ -88,7 +88,8 @@ mhonarc*        The MHonArc program
 ---------------------------------------------------------------------------
 INSTALLATION
 
-    Please read RELNOTES before installing MHonArc for any news
+    Please read RELNOTES, or load doc/relnotes.html into your
+    favorite web client, before installing MHonArc for any news
     about compatibility with previous versions and/or important
     usage information.
 
@@ -119,11 +120,11 @@ MAILING LIST
     the latest news about MHonArc.
 
     To subscribe to the mailing list, send mail to
-    mhonarc-request@ncsa.uiuc.edu with the single word "subscribe"
+    majordomo@mhonarc.org with the text, "subscribe mhonarc-users"
     (without the quotes) as the message body.
 
-    Mail sent to mhonarc@ncsa.uiuc.edu will be distributed to all
-    subscribers.
+    Mail sent to mhonarc-users@mhonarc.org will be distributed to
+    all subscribers.
 
     The list is restricted to subscribers only.  Messages sent to the
     list by non-subscribers are manually screened before distribution;
@@ -134,33 +135,28 @@ MAILING LIST
     The WWW searchable archives of the mailing list are located at
     the following URLs:
       <http://www.xray.mpe.mpg.de/mailing-lists/mhonarc/>
-      <http://www.mail-archive.com/mhonarc@ncsa.uiuc.edu/>
+      <http://www.mail-archive.com/mhonarc-users@mhonarc.org/>
+
+    For more information about the mailing list and contact
+    information, see doc/contacts.html.
 
 ---------------------------------------------------------------------------
 BUGS/COMMENTS/SUGGESTIONS?
 
-    If you have any bugs/comments/suggestions about MHonArc, you may
-    send mail to the MHonArc mailing list,
-    <mailto:mhonarc@ncsa.uiuc.edu>.
+    If you have any comments and suggestions about
+    MHonArc, you may send mail to the MHonArc mailing list,
+    <mailto:mhonarc-users@mhonarc.org>, or to the author at
+    <mailto:mhonarc@mhonarc.org> if you are not subscribed to the list.
 
-    NOTE: The author of MHonArc *IS* subscribed to the list.
+    NOTE: The author of MHonArc *IS* subscribed to the list so there
+	  is no need to carbon-copy the author.
 
-    If it is a bug you are reporting, please include the following in
-    your message:
-
-        o  Version of Perl (can be retrievied by "perl -v").
-        o  Version of the program (can be retrievied by "mhonarc -v").
-	o  The operating system you are using (on Unix the output
-	   of "uname -a" is useful).
-        o  The exact command-line used to invoke the program.
-        o  Error/diagnostic messages from the program.
-        o  Any other information that might prove useful (eg. input
-           files, resource files, environment settings, etc).
-
-    Before sending e-mail, make sure the documentation, or FAQ, does
-    not already have an answer to your question/problem.  Also, check
-    the MHonArc home page to see if you have the latest version of
-    MHonArc.
+    If it is a bug you want to report, please goto
+    <http://savannah.gnu.org/bugs/?group_id=1968> to submit your
+    report.  Before submitting a report, make sure the documentation,
+    or FAQ, does not already have an answer to your question/problem.
+    Also, check the MHonArc home page to see if you have the latest
+    version of MHonArc.
 
 ---------------------------------------------------------------------------
 
@@ -173,5 +169,5 @@ BUGS/COMMENTS/SUGGESTIONS?
     development of the program.
 
 ---------------------------------------------------------------------------
-Copyright (C) 1995-2001,		Earl Hood, mhonarc@mhonarc.org
-@(#) README 01/06/10 18:10:37
+Earl Hood, mhonarc@mhonarc.org
+$Date: 2002/06/21 22:28:16 $

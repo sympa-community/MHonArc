@@ -1,14 +1,14 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	@(#) mhdysub.pl 2.4 99/07/25 02:02:34
+##	$Id: mhdysub.pl,v 2.6 2002/06/07 17:45:09 ehood Exp $
 ##  Author:
-##      Earl Hood       mhonarc@pobox.com
+##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
 ##      Definition of create_routines() that creates routines are
 ##	runtime.
 ##---------------------------------------------------------------------------##
 ##    MHonArc -- Internet mail-to-HTML converter
-##    Copyright (C) 1996-1999	Earl Hood, mhonarc@pobox.com
+##    Copyright (C) 1996-2001	Earl Hood, mhonarc@mhonarc.org
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by
@@ -119,6 +119,9 @@ EndOfRoutine
     sub get_base_subject {
 	my($ret) = ($Subject{$_[0]});
 	1 while $ret =~ s/$SubReplyRxp//io;
+	if ($ret eq "") {
+	    return $NoSubjectTxt;
+	}
 	$ret;
     }
 EndOfRoutine

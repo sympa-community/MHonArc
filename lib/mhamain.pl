@@ -1,13 +1,13 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	@(#) mhamain.pl 2.23 01/06/10 17:37:25
+##	$Id: mhamain.pl,v 2.45 2002/07/28 23:24:35 ehood Exp $
 ##  Author:
-##      Earl Hood       mhonarc@pobox.com
+##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
 ##	Main library for MHonArc.
 ##---------------------------------------------------------------------------##
 ##    MHonArc -- Internet mail-to-HTML converter
-##    Copyright (C) 1995-2001	Earl Hood, mhonarc@pobox.com
+##    Copyright (C) 1995-2001	Earl Hood, mhonarc@mhonarc.org
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by
@@ -27,10 +27,12 @@
 
 package mhonarc;
 
-$VERSION = "2.4.9";
+require 5;
+
+$VERSION = "2.5.10";
 $VINFO =<<EndOfInfo;
-  MHonArc v$VERSION (Perl $])
-  Copyright (C) 1995-2001  Earl Hood, mhonarc\@mhonarc.org
+  MHonArc v$VERSION (Perl $] $^O)
+  Copyright (C) 1995-2002  Earl Hood, mhonarc\@mhonarc.org
   MHonArc comes with ABSOLUTELY NO WARRANTY and MHonArc may be copied only
   under the terms of the GNU General Public License, which may be found in
   the MHonArc distribution.
@@ -230,7 +232,7 @@ sub doit {
     ## HTML message listing to standard output.
     if ($IDXONLY) {
 	IDXPAGE: {
-	    &compute_page_total();
+	    compute_page_total();
 	    if ($IdxPageNum && $MULTIIDX) {
 		if ($IdxPageNum =~ /first/i) {
 		    $IdxPageNum = 1;
@@ -248,18 +250,16 @@ sub doit {
 	    $NumOfPages = 1;
 	}
 	if ($THREAD) {
-	    &compute_threads();
-	    &write_thread_index($IdxPageNum);
+	    compute_threads();
+	    write_thread_index($IdxPageNum);
 	} else {
-	    &write_main_index($IdxPageNum);
+	    write_main_index($IdxPageNum);
 	}
 	return 1;
     }
 
     ## Get here, we are processing mail folders
-
-    local($mesg, $tmp, $index, $sub, $from, $i, $date, $fh);
-    local(%fields);
+    my($index, $fields, $fh, $i);
 
     $i = $NumOfMsgs;
     ##-------------------##
@@ -275,24 +275,17 @@ sub doit {
 	$handle = $ADD;
 
 	## Read mail head
-	($index,$from,$date,$sub,$header) =
-	    &read_mail_header($handle, *mesg, *fields);
+	($index, $fields) = read_mail_header($handle);
 
-	if ($index ne '') {
-	    ($From{$index},$Date{$index},$Subject{$index}) =
-		($from,$date,$sub);
-
+	if ($index) {
 	    $AddIndex{$index} = 1;
 	    $IndexNum{$index} = &getNewMsgNum();
-
-	    $MsgHead{$index} = $mesg;
 
 	    ## Read rest of message
 	    $Message{$index} = &read_mail_body(
 					$handle,
 					$index,
-					$header,
-				        *fields,
+				        $fields,
 					$NoMsgPgs);
 	}
 
@@ -300,9 +293,9 @@ sub doit {
     } else {
 	print STDOUT ($ADD ? "Adding" : "Converting"), " messages to $OUTDIR"
 	    unless $QUIET;
-	local($mbox, $mesgfile, @files);
+	my($mbox, $mesgfile, @files);
 
-	foreach $mbox (@ARGV) {
+	MAILFOLDER: foreach $mbox (@ARGV) {
 
 	    ## MH mail folder (a directory)
 	    if (-d $mbox) {
@@ -315,36 +308,36 @@ sub doit {
 		@files = sort { $a <=> $b } grep(/$MHPATTERN/o,
 						 readdir(MAILDIR));
 		closedir(MAILDIR);
-		foreach (@files) {
+
+		local($_);
+		MHFILE: foreach (@files) {
 		    $mesgfile = "${mbox}${DIRSEP}${_}";
-		    if (!($fh = &file_open($mesgfile))) {
-			warn "\nWarning: Unable to open message $mesgfile\n";
-			next;
+		    eval {
+			$fh = file_open($mesgfile);
+		    };
+		    if ($@) {
+			warn $@,
+			     qq/...Skipping "$mesgfile"\n/;
+			next MHFILE;
 		    }
 		    print STDOUT "."  unless $QUIET;
-		    $mesg = '';
-		    ($index,$from,$date,$sub,$header) =
-			&read_mail_header($fh, *mesg, *fields);
+		    ($index, $fields) = read_mail_header($fh);
 
 		    #  Process message if valid
-		    if ($index ne '') {
-			($From{$index},$Date{$index},$Subject{$index}) =
-			    ($from,$date,$sub);
-			$MsgHead{$index} = $mesg;
-
+		    if ($index) {
 			if ($ADD && !$SLOW) { $AddIndex{$index} = 1; }
 			$IndexNum{$index} = &getNewMsgNum();
-
 			$Message{$index} = &read_mail_body(
 						$fh,
 						$index,
-						$header,
-					        *fields,
+					        $fields,
 						$NoMsgPgs);
 			#  Check if conserving memory
 			if ($SLOW && $DoArchive) {
-			    &output_mail($index, 1, 1);
-			    $Update{$IndexNum{$index}} = 1;
+			    output_mail($index, 1, 1);
+			    if (defined($IndexNum{$index})) {
+				$Update{$IndexNum{$index}} = 1;
+			    }
 			}
 			if ($SLOW || !$DoArchive) {
 			    delete $MsgHead{$index};
@@ -358,9 +351,15 @@ sub doit {
 	    } else {
 		if ($mbox eq "-") {
 		    $fh = $MhaStdin;
-		} elsif (!($fh = &file_open($mbox))) {
-		    warn "\nWarning: Unable to open $mbox\n";
-		    next;
+		} else {
+		    eval {
+			$fh = file_open($mbox);
+		    };
+		    if ($@) {
+			warn $@,
+			     qq/...Skipping "$mbox"\n/;
+			next MAILFOLDER;
+		    }
 		}
 
 		$MBOX = 1;  $MH = 0;
@@ -368,27 +367,21 @@ sub doit {
 		# while (<$fh>) { last if /$FROM/o; }
 		MBOX: while (!eof($fh)) {
 		    print STDOUT "."  unless $QUIET;
-		    $mesg = '';
-		    ($index,$from,$date,$sub,$header) =
-			&read_mail_header($fh, *mesg, *fields);
+		    ($index, $fields) = read_mail_header($fh);
 
-		    if ($index ne '') {
-			($From{$index},$Date{$index},$Subject{$index}) =
-			    ($from,$date,$sub);
-			$MsgHead{$index} = $mesg;
-
+		    if ($index) {
 			if ($ADD && !$SLOW) { $AddIndex{$index} = 1; }
 			$IndexNum{$index} = &getNewMsgNum();
-
-			$Message{$index} = &read_mail_body(
+			$Message{$index} = read_mail_body(
 						$fh,
 						$index,
-						$header,
-						*fields,
+						$fields,
 						$NoMsgPgs);
 			if ($SLOW && $DoArchive) {
-			    &output_mail($index, 1, 1);
-			    $Update{$IndexNum{$index}} = 1;
+			    output_mail($index, 1, 1);
+			    if (defined($IndexNum{$index})) {
+				$Update{$IndexNum{$index}} = 1;
+			    }
 			}
 			if ($SLOW || !$DoArchive) {
 			    delete $MsgHead{$index};
@@ -396,7 +389,7 @@ sub doit {
 			}
 
 		    } else {
-			&read_mail_body($fh, $index, $header, *fields, 1);
+			read_mail_body($fh, $index, $fields, 1);
 		    }
 		}
 		close($fh);
@@ -416,6 +409,7 @@ sub doit {
 	print STDOUT "No new messages\n"  unless $QUIET;
 	return 1;
     }
+    $NewMsgCnt = $NumOfMsgs - $i;
 
     ## Write pages
     &write_pages();
@@ -426,8 +420,9 @@ sub doit {
 ##	write_pages writes out all archive pages and db
 ##
 sub write_pages {
-    local($i, $key, $index, $tmp, $tmp2);
+    my($i, $j, $key, $index, $tmp, $tmp2);
     my(@array2);
+    my($mloc, $tloc);
 
     ## Remove old message if hit maximum size or expiration
     if (($MAXSIZE && ($NumOfMsgs > $MAXSIZE)) ||
@@ -445,7 +440,6 @@ sub write_pages {
 	&ign_signals();
 
 	## Expiration based upon time
-	my($mloc, $tloc);
 	foreach $index (sort_messages(0,0,0,0)) {
 	    last  unless
 		    ($MAXSIZE && ($NumOfMsgs > $MAXSIZE)) ||
@@ -472,7 +466,7 @@ sub write_pages {
 		    $Update{$IndexNum{$TListOrder[$tloc+$i]}} = 1
 			if $tloc-$i >= $#TListOrder;
 		}
-		foreach (split(/$bs/o, $FollowOld{$index})) {
+		foreach (@{$FollowOld{$index}}) {
 		    $Update{$IndexNum{$_}} = 1;
 		}
 	    }
@@ -494,10 +488,10 @@ sub write_pages {
     @Index2MLoc{@MListOrder} = (0 .. $#MListOrder);
 
     ## Compute follow up messages
-    &compute_follow_ups(\@MListOrder);
+    compute_follow_ups(\@MListOrder);
 
-    ##	Compute thread information (sets ThreadList, TListOrder, Index2TLoc)
-    &compute_threads();
+    ## Compute thread information (sets ThreadList, TListOrder, Index2TLoc)
+    compute_threads();
 
     ## Check for which messages to update when adding to archive
     if ($ADD) {
@@ -510,7 +504,7 @@ sub write_pages {
 	    $i = 0;
 	    foreach $index (@MListOrder) {
 		## Check for New follow-up links
-		if ($FollowOld{$index} ne $Follow{$index}) {
+		if (is_follow_ups_diff($index)) {
 		    $Update{$IndexNum{$index}} = 1;
 		}
 		## Check if new message; must update links in prev/next msgs
@@ -530,7 +524,7 @@ sub write_pages {
 			if $i < $#MListOrder;
 		}
 		## Check for New reference links
-		foreach (split(/$X/o, $Refs{$index})) {
+		foreach (@{$Refs{$index}}) {
 		    $tmp = $MsgId{$_};
 		    if (defined($IndexNum{$tmp}) && $AddIndex{$tmp}) {
 			$Update{$IndexNum{$index}} = 1;
@@ -555,6 +549,16 @@ sub write_pages {
 			if $i > 0;
 		    $Update{$IndexNum{$TListOrder[$i+1]}} = 1
 			if $i < $#TListOrder;
+
+		    $tloc = $Index2TLoc{$index};
+		    for ($j=2; $j <= $TSliceNBefore; ++$j) {
+			$Update{$IndexNum{$TListOrder[$tloc-$j]}} = 1
+			    if $tloc-$j >= 0;
+		    }
+		    for ($j=2; $j <= $TSliceNAfter; ++$j) {
+			$Update{$IndexNum{$TListOrder[$tloc+$j]}} = 1
+			    if $tloc-$j >= $#TListOrder;
+		    }
 		}
 		$i++;
 	    }
@@ -563,7 +567,7 @@ sub write_pages {
 
     ##	Compute total number of pages
     $i = $NumOfPages;
-    &compute_page_total();
+    compute_page_total();
 
     ## Update all pages for $LASTPG$
     if ($UsingLASTPG && ($i != $NumOfPages)) {
@@ -574,17 +578,17 @@ sub write_pages {
     ##------------##
     ## Write Data ##
     ##------------##
-    &ign_signals();		# Ignore termination signals
+    ign_signals();		# Ignore termination signals
     print STDOUT "\n"  unless $QUIET;
 
     ## Write indexes and mail
-    &write_mail()		unless $NoMsgPgs;
-    &write_main_index() 	if $MAIN;
-    &write_thread_index()	if $THREAD;
+    write_mail()		unless $NoMsgPgs;
+    write_main_index()  	if $MAIN;
+    write_thread_index()	if $THREAD;
 
     ## Write database
     print STDOUT "Writing database ...\n"  unless $QUIET;
-    &output_db($DBPathName);
+    output_db($DBPathName);
 
     ## Write any alternate indexes
     $IdxMinPg = 0; $TIdxMinPg = 0;
@@ -594,41 +598,56 @@ sub write_pages {
 
 	## find other index resource file
 	IDXFIND: {
-	    if (! -e $rc) {
-		$rcfile = join($DIRSEP, $OUTDIR, $rc);
-		if (! -e $rcfile) {
-		    # look thru @INC to find file
-		    local($_);
-		    foreach (@INC) {
-			$rcfile = join($DIRSEP, $_, $rc);
-			if (-e $rcfile) {
-			    last IDXFIND;
-			}
-		    }
-		    warn qq/Warning: Unable to find resource file "$rc"\n/;
-		    next OTHERIDX;
-		}
-
-	    } else {
+	    if (-e $rc) {
+		# in current working directory
 		$rcfile = $rc;
+		last IDXFIND;
 	    }
+	    if (defined $MainRcDir) {
+		# check if located with main resource file
+		$rcfile = join($DIRSEP, $MainRcDir, $rc);
+		last IDXFIND  if -e $rcfile;
+	    }
+	    if (defined $ENV{'HOME'}) {
+		# check if in home directory
+		$rcfile = join($DIRSEP, $ENV{'HOME'}, $rc);
+		last IDXFIND  if -e $rcfile;
+	    }
+
+	    # check if in archive directory
+	    $rcfile = join($DIRSEP, $OUTDIR, $rc);
+	    last IDXFIND  if -e $rcfile;
+
+	    # look thru @INC to find file
+	    local($_);
+	    foreach (@INC) {
+		$rcfile = join($DIRSEP, $_, $rc);
+		if (-e $rcfile) {
+		    last IDXFIND;
+		}
+	    }
+	    warn qq/Warning: Unable to find resource file "$rc"\n/;
+	    next OTHERIDX;
 	}
 	    
 	## read resource file and print index
-	if (&read_fmt_file($rcfile)) {
+	if (read_fmt_file($rcfile)) {
 	    if ($THREAD) {
 		@TListOrder = ();
-		&write_thread_index();
+		write_thread_index();
 	    } else {
 		@MListOrder = ();
-		&write_main_index();
+		write_main_index();
 	    }
 	}
     }
 
-    print STDOUT "$NumOfMsgs messages\n"  unless $QUIET;
+    unless ($QUIET) {
+	print STDOUT "$NewMsgCnt new messages\n"  if $NewMsgCnt > 0;
+	print STDOUT "$NumOfMsgs total messages\n";
+    }
 
-}
+} ## End: write_pages()
 
 ##---------------------------------------------------------------------------
 ##	Compute follow-ups
@@ -636,20 +655,17 @@ sub write_pages {
 sub compute_follow_ups {
     my $idxlst = shift;
     my($index, $tmp, $tmp2);
-    my(@array);
 
     %Follow = ();
     foreach $index (@$idxlst) {
 	$FolCnt{$index} = 0  unless $FolCnt{$index};
-	if ( defined($Refs{$index}) &&
-	     (@array = split(/$X/o, $Refs{$index}))) {
-
-	    $tmp2 = $array[$#array];
+	if (defined($Refs{$index}) && scalar(@{$Refs{$index}})) {
+	    $tmp2 = $Refs{$index}->[-1];
 	    next  unless defined($MsgId{$tmp2}) &&
 			 defined($IndexNum{$MsgId{$tmp2}});
 	    $tmp = $MsgId{$tmp2};
-	    if ($Follow{$tmp}) { $Follow{$tmp} .= $bs . $index; }
-	    else { $Follow{$tmp} = $index; }
+	    if ($Follow{$tmp}) { push(@{$Follow{$tmp}}, $index); }
+	    else { $Follow{$tmp} = [ $index ]; }
 	    ++$FolCnt{$tmp};
 	}
     }
@@ -673,7 +689,7 @@ sub compute_page_total {
 ##	array containing indexes of messages to output.
 ##
 sub write_mail {
-    local($hack) = (0);
+    my($hack) = (0);
     print STDOUT "Writing mail "  unless $QUIET;
 
     if ($SLOW && !$ADD) {
@@ -683,7 +699,7 @@ sub write_mail {
 
     foreach $index (@MListOrder) {
 	print STDOUT "."  unless $QUIET;
-	&output_mail($index, $AddIndex{$index}, 0);
+	output_mail($index, $AddIndex{$index}, 0);
     }
 
     if ($hack) {
@@ -695,40 +711,44 @@ sub write_mail {
 
 ##---------------------------------------------------------------------------
 ##	read_mail_header() is responsible for parsing the header of
-##	a mail message.
+##	a mail message and loading message information into hash
+##	structures.
+##
+##	($index, $header_fields_ref) = read_mail_header($filehandle);
 ##
 sub read_mail_header {
-    local($handle, *mesg, *fields) = @_;
-    my(%l2o, $header, $index, $date, $tmp, @array);
-    local(@refs);
-    local($from, $sub, $msgid);
+    my $handle = shift;
+    my($index, $date, $tmp);
+    my($from, $sub, $msgid, $ctype);
     local($_);
 
-    $header = &readmail::MAILread_file_header($handle, *fields, *l2o);
-    @refs = ();
-    @array = ();
+    my @refs = ();
+    my @array = ();
+    my($fields, $header) = readmail::MAILread_file_header($handle);
 
     ##---------------------------##
     ## Check for no archive flag ##
     ##---------------------------##
     if ( $CheckNoArchive &&
-	 ($fields{'restrict'} =~ /no-external-archive/i ||
-	  $fields{'x-no-archive'} =~ /yes/i) ) {
-	return ("", "", "", "", "");
+	 ((defined($fields->{'restrict'}) &&
+	  grep { /no-external-archive/i } @{$fields->{'restrict'}}) ||
+	  (defined($fields->{'x-no-archive'}) &&
+	   grep { /yes/i } @{$fields->{'x-no-archive'}})) ) {
+	return undef;
     }
 
     ##----------------------------------##
     ## Check for user-defined exclusion ##
     ##----------------------------------##
-    if ( $MsgExcFilter ) {
-	return ("", "", "", "", "") if &mhonarc::message_exclude($header);
+    if ($MsgExcFilter) {
+	return undef  if mhonarc::message_exclude($header);
     }
 
     ##------------##
     ## Get Msg-ID ##
     ##------------##
-    $msgid = $fields{'message-id'} || $fields{'msg-id'} || 
-	     $fields{'content-id'};
+    $msgid = $fields->{'message-id'}[0] || $fields->{'msg-id'}[0] || 
+	     $fields->{'content-id'}[0];
     if (defined($msgid)) {
 	if ($msgid =~ /<([^>]*)>/) {
 	    $msgid = $1;
@@ -754,34 +774,33 @@ sub read_mail_header {
 
     ## Return if message already exists in archive
     if ($msgid && defined($MsgId{$msgid})) {
-	return ("", "", "", "", "");
+	return undef;
     }
 
     ##----------##
     ## Get date ##
     ##----------##
-    $date = "";  $index = "";
+    $date = "";
     foreach (@DateFields) {
-	next  unless $fields{$_};
+	next  unless defined($fields->{$_});
 
 	## Treat received field specially
 	if ($_ eq 'received') {
-	    @array = split(/;/,
-			   (split(/$readmail::FieldSep/o, $fields{$_}))[0]);
+	    @array = split(/;/, $fields->{$_}[0]);
 	    $date = pop @array;
 	## Any other field should just be a date
 	} else {
-	    $date = (split(/$readmail::FieldSep/o, $fields{$_}))[0];
+	    $date = $fields->{$_}[0];
 	}
 	$date =~ s/^\s+//;  $date =~ s/\s+$//;
 
 	## See if time_t can be determined.
-	if (($date =~ /\w/) && (@array = &parse_date($date))) {
-	    $index = &get_time_from_date(@array[1..$#array]);
+	if (($date =~ /\w/) && (@array = parse_date($date))) {
+	    $index = get_time_from_date(@array[1..$#array]);
 	    last;
 	}
     }
-    if ($index eq "") {
+    if (!$index) {
 	warn qq/\nWarning: Could not parse date for message\n/,
 	       qq/         Message-Id: <$msgid>\n/;
 	# Use current time
@@ -790,19 +809,19 @@ sub read_mail_header {
 	$date  = &time2str("", $index, 1)  unless $date =~ /\S/;
     }
 
-    ## Return if message too old to add
+    ## Return if message too old to add (note, $index just contains time).
     if (&expired_time($index)) {
-	return ("", "", "", "", "");
+	return undef;
     }
 
     ##-------------##
     ## Get Subject ##
     ##-------------##
-    if (defined($fields{'subject'}) and $fields{'subject'} =~ /\S/) {
-	($sub = $fields{'subject'}) =~ s/\s+$//;
+    if (defined($fields->{'subject'}) && ($fields->{'subject'}[0] =~ /\S/)) {
+	($sub = $fields->{'subject'}[0]) =~ s/\s+$//;
 	$sub = subject_strip($sub)  if $SubStripCode;
     } else {
-	$sub = 'No Subject';
+	$sub = '';
     }
 
     ##----------##
@@ -810,74 +829,91 @@ sub read_mail_header {
     ##----------##
     $from = "";
     foreach (@FromFields) {
-	next  unless $fields{$_};
-	$from = $fields{$_};
+	next  unless defined $fields->{$_};
+	$from = $fields->{$_}[0];
 	last;
     }
-    $from = 'Anonymous'  unless $from;
+    $from = 'Unknown'  unless $from;
 
     ##----------------##
     ## Get References ##
     ##----------------##
-    if (defined($tmp = $fields{'references'})) {
+    if (defined($fields->{'references'})) {
+	$tmp = $fields->{'references'}[0];
 	while ($tmp =~ s/<([^<>]+)>//) {
 	    push(@refs, $1);
 	}
     }
-    if (defined($tmp = $fields{'in-reply-to'})) {
-	my $irtoid = "";
-	while ($tmp =~ s/<([^<>]+)>//) { $irtoid = $1 };
-	push(@refs, $irtoid)  if $irtoid;
+    if (defined($fields->{'in-reply-to'})) {
+	my $irtoid;
+	foreach (@{$fields->{'in-reply-to'}}) {
+	    $tmp = $_;
+	    $irtoid = "";
+	    while ($tmp =~ s/<([^<>]+)>//) { $irtoid = $1 };
+	    push(@refs, $irtoid)  if $irtoid;
+	}
     }
+    @refs = remove_dups(\@refs);        # Remove duplicate msg-ids
 
-    ##------------------------##
-    ## Create HTML for header ##
-    ##------------------------##
-    $mesg .= &htmlize_header(*fields, *l2o);
+    ##------------------##
+    ## Get Content-Type ##
+    ##------------------##
+    if (defined($fields->{'content-type'})) {
+	($ctype = $fields->{'content-type'}[0]) =~ m%^\s*([\w\-\./]+)%;
+	$ctype = lc ($1 || 'text/plain');
+    } else {
+	$ctype = 'text/plain';
+    }
 
     ## Insure uniqueness of index
     $index .= $X . sprintf("%d",$LastMsgNum+1);
 
-    if ($fields{'content-type'}) {
-	($tmp = $fields{'content-type'}) =~ m%^\s*([\w-\./]+)%;
-	$tmp = $1 || 'text/plain';
-	$tmp =~ tr/A-Z/a-z/;
-    } else {
-	$tmp = 'text/plain';
-    }
-    $ContentType{$index} = $tmp;
+    ## Set mhonarc fields.  Note how values are NOT arrays.
+    $fields->{'x-mha-index'} = $index;
+    $fields->{'x-mha-message-id'} = $msgid;
+    $fields->{'x-mha-from'} = $from;
+    $fields->{'x-mha-subject'} = $sub;
+    $fields->{'x-mha-content-type'} = $ctype;
 
+    ## Invoke callback if defined
+    if (defined($CBMessageHeadRead) && defined(&$CBMessageHeadRead)) {
+	return undef  unless &$CBMessageHeadRead($fields, $header);
+    }
+
+    $From{$index} = $from;
+    $Date{$index} = $date;
+    $Subject{$index} = $sub;
+    $MsgHead{$index} = htmlize_header($fields);
+    $ContentType{$index} = $ctype;
     if ($msgid) {
 	$MsgId{$msgid} = $index;
 	$NewMsgId{$msgid} = $index;	# Track new message-ids
 	$Index2MsgId{$index} = $msgid;
     }
-    &remove_dups(*refs);                # Remove duplicate msg-ids
-    $Refs{$index} = join($X, @refs)  if (@refs);
 
-    ($index,$from,$date,$sub,$header);
+    $Refs{$index} = [ @refs ]  if (@refs);
+
+    ($index, $fields);
 }
 
 ##---------------------------------------------------------------------------
 ##	read_mail_body() reads in the body of a message.  The returned
 ##	filtered body is in $ret.
 ##
+##	$html = read_mail_body($fh, $index, $fields_hash_ref,
+##			       $skipConversion);
+##
 sub read_mail_body {
-    local($handle, $index, $header, *fields, $skip) = @_;
+    my($handle, $index, $fields, $skip) = @_;
     my($ret, $data) = ('', '');
-    my(@files) = ();
+    my(@files);
     local($_);
-
-    ## Define "globals" for use by filters
-    ##	NOTE: This stuff can be handled better, and will be done
-    ##	      when/if I get around to rewriting mhonarc in (OO) Perl 5.
-    $MHAmsgnum = &fmt_msgnum($IndexNum{$index}) unless $skip;
 
     ## Slurp up message body
     ##	UUCP mailbox
     if ($MBOX) {
-	if ($CONLEN && $fields{"content-length"}) { # Check for content-length
-	    my($len, $cnt) = ($fields{"content-length"}, 0);
+	if ($CONLEN && defined($fields->{"content-length"})) {
+	    my($len, $cnt) = ($fields->{"content-length"}[0], 0);
 	    if ($len) {
 		while (<$handle>) {
 		    $cnt += length($_);		# Increment byte count
@@ -903,28 +939,44 @@ sub read_mail_body {
 	$data = <$handle>;
     }
 
-    ## Filter data
     return ''  if $skip;
-    $fields{'content-type'} = 'text/plain'
-	if (!defined($fields{'content-type'})) ||
-	   ($fields{'content-type'} !~ /\S/);
-    ($ret, @files) = &readmail::MAILread_body($header, $data,
-				    $fields{'content-type'},
-				    $fields{'content-transfer-encoding'});
-    if ($ret) {
-	# no-op
-    } else {
+
+    ## Invoke callback if defined
+    if (defined($CBRawMessageBodyRead) && defined(&$CBRawMessageBodyRead)) {
+	&$CBRawMessageBodyRead($fields, \$data);
+    }
+
+    ## Define "globals" for use by filters
+    ##	NOTE: This stuff can be handled better, and will be done
+    ##	      when/if I get around to rewriting mhonarc in (OO) Perl 5.
+    $MHAindex  = $index;
+    $MHAmsgnum = &fmt_msgnum($IndexNum{$index});
+    $MHAmsgid  = $Index2MsgId{$index};
+
+    ## Filter data
+    ($ret, @files) = &readmail::MAILread_body($fields, \$data);
+    $ret = ''     unless defined $ret;
+    @files = ( )  unless @files;
+
+    ## Invoke callback if defined
+    if (defined($CBMessageBodyRead) && defined(&$CBMessageBodyRead)) {
+	&$CBMessageBodyRead($fields, \$ret, \@files);
+    }
+
+    if (!defined($ret) || $ret eq "") {
 	$ret = join('',
-		    "<DL>\n",
-		    "<DT><STRONG>Warning</STRONG></DT>\n",
-		    "<DD>Could not process message with given Content-Type: \n",
-		    "<CODE>", &htmlize($fields{'content-type'}), "</CODE>\n",
-		    "</DD>\n",
-		    "</DL>\n"
+		    "<dl>\n",
+		    "<dt><strong>Warning</strong></dt>\n",
+		    "<dd>Unable to process data: \n",
+		    "<tt>",
+		    htmlize($fields->{'content-type'}[0] || 'text/plain'),
+		    "</tt>\n",
+		    "</dd>\n",
+		    "</dl>\n"
 		    );
     }
     if (@files) {
-	$Derived{$index} = join($X, @files);
+	$Derived{$index} = [ @files ];
     }
     $ret;
 }
@@ -935,28 +987,49 @@ sub read_mail_body {
 ##	    $force	=> flag if mail is written and not editted, regardless
 ##	    $nocustom	=> ignore sections with user customization
 ##
+##	This function returns ($msgnum, $filename) if everything went
+##	okay, but no calls to this routine check the return values.
+##
 sub output_mail {
-    local($index, $force, $nocustom) = @_;
-    local($msgi, $tmp, $tmp2, $template, @array2);
-    local($filepathname, $tmppathname, $i_p0, $filename, $msghandle,
-	  $msginfh, $drvfh);
-    local($adding) = ($ADD && !$force && !$SINGLE);
+    my($index, $force, $nocustom) = @_;
+    my($msgi, $tmp, $tmp2, $template, @array2);
+    my($msghandle, $msginfh, $drvfh);
 
-    $i_p0 = &fmt_msgnum($IndexNum{$index});
+    my $msgnum	     = $IndexNum{$index};
+    if (!$SINGLE && !defined($msgnum)) {
+      # Something bad must have happened to message, so we just
+      # quietly return.
+      return;
+    }
 
-    $filename     = &msgnum_filename($IndexNum{$index});
-    $filepathname = join($DIRSEP, $OUTDIR, $filename);
-    $tmppathname  = join($DIRSEP, $OUTDIR, "msgtmp.$$");
+    my $adding	     = ($ADD && !$force && !$SINGLE);
+    my $i_p0 	     = fmt_msgnum($msgnum);
+    my $filename     = msgnum_filename($msgnum);
+    my $filepathname = join($DIRSEP, $OUTDIR, $filename);
+    my $tmppathname  = join($DIRSEP, $OUTDIR, "msgtmp.$$");
 
     if ($adding) {
-	return ($i_p0,$filename)  unless $Update{$IndexNum{$index}};
+	return ($i_p0, $filename)  unless $Update{$msgnum};
 	#&file_rename($filepathname, $tmppathname);
-	$msginfh = &file_open($filepathname);
+	eval {
+	  $msginfh = file_open($filepathname);
+	};
+	if ($@) {
+	  # Something is screwed up with archive: We try to delete
+	  # message from database since message file appears to have
+	  # disappeared
+	  warn $@,
+	       qq/...Will attempt to remove message and continue on\n/;
+	  delmsg($index);
+
+	  # Nothing else to do, so return.
+	  return;
+	}
     }
     if ($SINGLE) {
-	$msghandle = 'STDOUT';
+	$msghandle = \*STDOUT;
     } else {
-	$msghandle = &file_create($tmppathname, $GzipFiles);
+	$msghandle = file_create($tmppathname, $GzipFiles);
     }
 
     ## Output HTML header
@@ -968,8 +1041,11 @@ sub output_mail {
     if (!$nocustom) {
 	#&defineIndex2MsgId();
 
-	($template = $SSMARKUP) =~ s/$VarExp/&replace_li_var($1,$index)/geo;
-	print $msghandle $template;
+	$template = ($MSGPGSSMARKUP ne '') ? $MSGPGSSMARKUP : $SSMARKUP;
+	if ($template ne '') {
+	    $template =~ s/$VarExp/&replace_li_var($1,$index)/geo;
+	    print $msghandle $template;
+	}
 
 	# Output comments -- more informative, but can be used for
 	#		     error recovering.
@@ -983,16 +1059,15 @@ sub output_mail {
 		  #ContentType
 
 	if (defined($Refs{$index})) {
-	    foreach (split(/$X/o, $Refs{$index})) {
+	    foreach (@{$Refs{$index}}) {
 		print $msghandle
-		    "<!--X-Reference: ", &commentize($_), " -->\n";
+		    "<!--X-Reference: ", commentize($_), " -->\n";
 			  #Reference-Id
 	    }
 	}
 	if (defined($Derived{$index})) {
-	    foreach (split(/$X/o, $Derived{$index})) {
-		print $msghandle
-		    "<!--X-Derived: ", &commentize($_), " -->\n";
+	    foreach (@{$Derived{$index}}) {
+		print $msghandle "<!--X-Derived: ", commentize($_), " -->\n";
 	    }
 	}
 	print $msghandle "<!--X-Head-End-->\n";
@@ -1103,12 +1178,11 @@ sub output_mail {
     ($template = $MSGBODYEND) =~ s/$VarExp/&replace_li_var($1,$index)/geo;
     print $msghandle $template;
     if (!$nocustom && $DoFolRefs && defined($Follow{$index})) {
-	@array2 = split(/$bs/o, $Follow{$index});
-	if ($#array2 >= 0) {
+	if (scalar(@{$Follow{$index}})) {
 	    ($template = $FOLUPBEGIN) =~
 		s/$VarExp/&replace_li_var($1,$index)/geo;
 	    print $msghandle $template;
-	    foreach (@array2) {
+	    foreach (@{$Follow{$index}}) {
 		($template = $FOLUPLITXT) =~
 		    s/$VarExp/&replace_li_var($1,$_)/geo;
 		print $msghandle $template;
@@ -1126,10 +1200,9 @@ sub output_mail {
     }
     print $msghandle "<!--X-References-->\n";
     if (!$nocustom && $DoFolRefs && defined($Refs{$index})) {
-	@array2 = split(/$X/o, $Refs{$index});
 	$tmp2 = 0;	# flag for when first ref printed
-	if ($#array2 >= 0) {
-	    foreach (@array2) {
+	if (scalar(@{$Refs{$index}})) {
+	    foreach (@{$Refs{$index}}) {
 		next  unless defined($MsgId{$_});
 		next  unless defined($IndexNum{$MsgId{$_}});
 		if (!$tmp2) {
@@ -1186,41 +1259,48 @@ sub output_mail {
 	close($msginfh);
 	#&file_remove($tmppathname);
     }
-    &file_rename($tmppathname, $filepathname)  unless $SINGLE;
+    file_rename($tmppathname, $filepathname)  unless $SINGLE;
 
     ## Create user defined files
     foreach (keys %UDerivedFile) {
 	($tmp = $_) =~ s/$VarExp/&replace_li_var($1,$index)/geo;
 	$tmp2 = join($DIRSEP, $OUTDIR, $tmp);
-	if ($drvfh = &file_create($tmp2, $GzipFiles)) {
+	if ($drvfh = file_create($tmp2, $GzipFiles)) {
 	    ($template = $UDerivedFile{$_}) =~
 		s/$VarExp/&replace_li_var($1,$index)/geo;
 	    print $drvfh $template;
 	    close($drvfh);
-	    if ($Derived{$index}) {
-		$Derived{$index} .= $X . $tmp;
+	    if (defined($Derived{$index})) {
+		push(@{$Derived{$index}}, $tmp);
 	    } else {
-		$Derived{$index} = $tmp;
+		$Derived{$index} = [ $tmp ];
 	    }
 	} else {
 	    warn "Warning: Unable to create $tmp2\n";
 	}
     }
-    if (defined($Derived{$index}) &&
-	    (@array2 = split(/$X/o, $Derived{$index}))) {
-	&remove_dups(*array2);
-	$Derived{$index} = join($X, @array2);
+    if (defined($Derived{$index})) {
+	$Derived{$index} = [ remove_dups($Derived{$index}) ];
     }
 
     ## Set modification times -- Use eval incase OS does not support utime.
     if ($MODTIME && !$SINGLE) {
 	eval {
-	    $tmp = &get_time_from_index($index);
-	    @array2 = split(/$X/o, $Derived{$index});
-	    grep($_ = $OUTDIR . $DIRSEP . $_, @array2);
+	    $tmp = get_time_from_index($index);
+	    if (defined($Derived{$index})) {
+	      @array2 = @{$Derived{$index}};
+	      grep($_ = $OUTDIR . $DIRSEP . $_, @array2);
+	    } else {
+	      @array2 = ( );
+	    }
 	    unshift(@array2, $filepathname);
-	    &file_utime($tmp, $tmp, @array2);
+	    file_utime($tmp, $tmp, @array2);
 	};
+	if ($@) {
+	    warn qq/\nWarning: Your platform does not support setting file/,
+		   qq/         modification times\n/;
+	    $MODTIME = 0;
+	}
     }
 
     ($i_p0, $filename);
@@ -1234,13 +1314,12 @@ sub output_mail {
 ##	delmsg delets a message from the archive.
 ##
 sub delmsg {
-    local($key) = @_;
-    local($filename);
-    local($pathname);
+    my($key) = @_;
+    my($pathname);
 
     #&defineIndex2MsgId();
-    $msgnum = $IndexNum{$key};  return 0  if ($msgnum eq '');
-    $filename = join($DIRSEP, $OUTDIR, &msgnum_filename($msgnum));
+    my $msgnum = $IndexNum{$key};  return 0  if ($msgnum eq '');
+    my $filename = join($DIRSEP, $OUTDIR, &msgnum_filename($msgnum));
     delete $ContentType{$key};
     delete $Date{$key};
     delete $From{$key};
@@ -1248,15 +1327,14 @@ sub delmsg {
     delete $Refs{$key};
     delete $Subject{$key};
     delete $MsgId{$Index2MsgId{$key}};
-    &file_remove($filename)  unless $KeepOnRmm;
-    foreach $filename (split(/$X/o, $Derived{$key})) {
-	$pathname = (&OSis_absolute_path($filename)) ?
-			$filename :
-			join($DIRSEP, $OUTDIR, $filename);
+    file_remove($filename)  unless $KeepOnRmm;
+    foreach $filename (@{$Derived{$key}}) {
+	$pathname = (OSis_absolute_path($filename)) ?
+			$filename : join($DIRSEP, $OUTDIR, $filename);
 	if (-d $pathname) {
-	    &dir_remove($pathname)  unless $KeepOnRmm;
+	    dir_remove($pathname)  unless $KeepOnRmm;
 	} else {
-	    &file_remove($pathname)  unless $KeepOnRmm;
+	    file_remove($pathname)  unless $KeepOnRmm;
 	}
     }
     delete $Derived{$key};
@@ -1268,12 +1346,12 @@ sub delmsg {
 ##	Routine to convert a msgid to an anchor
 ##
 sub link_refmsgid {
-    local($refmsgid, $onlynew) = @_;
+    my($refmsgid, $onlynew) = @_;
 
     if (defined($MsgId{$refmsgid}) &&
 	defined($IndexNum{$MsgId{$refmsgid}}) &&
 	(!$onlynew || $NewMsgId{$refmsgid})) {
-	local($lreftmpl) = $MSGIDLINK;
+	my($lreftmpl) = $MSGIDLINK;
 	$lreftmpl =~ s/$VarExp/&replace_li_var($1,$MsgId{$refmsgid})/geo;
 	$lreftmpl;
     } else {

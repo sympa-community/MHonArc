@@ -1,0 +1,190 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
+<html>
+<head>
+<title>MHonArc Resources: MIMEALTPREFS</title>
+</head>
+<body>
+<!--x-rc-nav-->
+<table border=0><tr valign="top">
+<td align="left" width="50%">[Prev:&nbsp;<a href="mhpattern.html">MHPATTERN</a>]</td><td><nobr>[<a href="../resources.html#mimealtprefs">Resources</a>][<a href="../mhonarc.html">TOC</a>]</nobr></td><td align="right" width="50%">[Next:&nbsp;<a href="mimeargs.html">MIMEARGS</a>]</td></tr></table>
+<!--/x-rc-nav-->
+<hr>
+<h1>MIMEALTPREFS</h1>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Syntax</h2>
+
+<dl>
+
+<dt><strong>Envariable</strong></dt>
+<dd><p>N/A
+</p>
+</dd>
+
+<dt><strong>Element</strong></dt>
+<dd><p>
+<code>&lt;MIMEALTPREFS&gt;</code><br>
+<var>content-type</var><br>
+<var>content-type</var><br>
+...<br>
+<code>&lt;/MIMEALTPREFS&gt;</code><br>
+</p>
+</dd>
+
+<dt><strong>Command-line Option</strong></dt>
+<dd><p>N/A
+</p>
+</dd>
+
+</dl>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Description</h2>
+
+<p>MIMEALTPREFS allows you to specify media-type preferences
+for <tt>multipart/alternative</tt> data, overriding the default
+preferences as specified in mail messages.
+</p>
+
+<p>When a <tt>multipart/alternative</tt> entity is processed,
+the last filterable media-type is normally used.  However, it is sometimes
+desirable to override this behavior for certain media-types.  For example,
+it has become more common for many MUAs to generate the following
+message structures:
+</p>
+<pre>
+  multipart/alternative
+    text/plain
+    text/html</pre>
+
+<p>A message with HTML, and a plain text equivalent for those receiving
+MUAs who may not be able to render HTML in email.  When MHonArc processes
+such a message, MHonArc will use the <tt>text/html</tt> part since it
+is filterable and comes after <tt>text/plain</tt>.
+</p>
+
+<p>There are some who would like to have nothing to do with HTML in
+email.  Or, due to security concerns, would prefer to not minimize the
+amount of HTML from email in their archives.  With MIMEALTPREFS, you
+can tell MHonArc to prefer the <tt>text/plain</tt> over the <tt>text/html</tt>
+part with the following setting:
+</p>
+<pre>
+<b>&lt;MIMEAltPrefs&gt;</b>
+text/plain
+text/html
+<b>&lt;/MIMEAltPrefs&gt;</b>
+</pre>
+
+<p>Media-types listed in MIMEALTPREFS are from most prefered to least
+prefered.
+</p>
+
+<p>Note, MIMEALTPREFS augments the normal processing of
+<tt>multipart/alternative</tt> entities.  For example, say the following
+message entity structure exists,
+</p>
+<pre>
+  multipart/alternative
+    text/plain
+    text/enriched
+    text/html</pre>
+<p>and we are using the MIMEALTPREFS setting,
+</p>
+<pre>
+<b>&lt;MIMEAltPrefs&gt;</b>
+text/plain
+text/html
+<b>&lt;/MIMEAltPrefs&gt;</b>
+</pre>
+
+<p>So which entity will MHonArc actually use?  In this case,
+the <tt>text/enriched</tt> part will be used.  The reason is that
+the <tt>text/html</tt> will be excluded since there does exist a
+<tt>text/plain</tt> alternative entity.  However, MHonArc still
+tries to use the last filterable alternative part, which in this
+case is <tt>text/enriched</tt>.
+</p>
+
+<p>In order to have <tt>text/plain</tt> chosen, the following
+MIMEALTPREFS setting would be needed,
+</p>
+<pre>
+<b>&lt;MIMEAltPrefs&gt;</b>
+text/plain
+text/enriched
+text/html
+<b>&lt;/MIMEAltPrefs&gt;</b>
+</pre>
+<p>This says that <tt>text/enriched</tt> is preferred over
+<tt>text/html</tt>.  And <tt>text/plain</tt> is preferred over
+<tt>text/enriched</tt> and <tt>text/html</tt>.
+</p>
+
+<table border=0 cellpadding=4>
+<tr valign=top>
+<td><strong>NOTE</strong></td>
+<td><p>Each time <tt>&lt;MIMEALTPREFS&gt;</tt> occurs in a resource file,
+the last encountered setting will override any previous values.  Therefore,
+specifying the <tt>override</tt> attribute is redundant.
+</p>
+</td>
+</tr>
+</table>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Default Setting</h2>
+
+<p>Nil
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Resource Variables</h2>
+
+<p>N/A
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Examples</h2>
+
+<p>None.
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Version</h2>
+
+<p>2.5.8
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>See Also</h2>
+
+<p>
+<a href="mimeexcs.html">MIMEEXCS</a>
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<!--x-rc-nav-->
+<table border=0><tr valign="top">
+<td align="left" width="50%">[Prev:&nbsp;<a href="mhpattern.html">MHPATTERN</a>]</td><td><nobr>[<a href="../resources.html#mimealtprefs">Resources</a>][<a href="../mhonarc.html">TOC</a>]</nobr></td><td align="right" width="50%">[Next:&nbsp;<a href="mimeargs.html">MIMEARGS</a>]</td></tr></table>
+<!--/x-rc-nav-->
+<hr>
+<address>
+$Date: 2002/07/27 05:13:10 $<br>
+<img align="top" src="../monicon.png" alt="">
+<a href="http://www.mhonarc.org/"><strong>MHonArc</strong></a><br>
+Copyright &#169; 2002, <a href="http://www.earlhood.com/"
+>Earl Hood</a>, <a href="mailto:mhonarc@mhonarc.org"
+>mhonarc@mhonarc.org</a><br>
+</address>
+
+</body>
+</html>

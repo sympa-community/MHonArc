@@ -1,9 +1,9 @@
 #!/usr/bin/perl
 ##---------------------------------------------------------------------------##
 ##  File:
-##	@(#) install.me 1.16 01/04/06 00:28:49
+##	$Id: install.me,v 1.18 2002/05/14 19:40:46 ehood Exp $
 ##  Author:
-##      Earl Hood, ehood@pobox.com
+##      Earl Hood, earl@earlhood.com
 ##  Summary:
 ##	Installation program for Perl applications.  It is an alternative
 ##	to the MakeMaker/Makefile.PL method for "pure" Perl applications.
@@ -13,7 +13,7 @@
 ##	file to install is listed in the file with a prefix telling
 ##	the installation program the type of file it is.
 ##---------------------------------------------------------------------------##
-##    Copyright (C) 1997-1999	Earl Hood, ehood@pobox.com
+##    Copyright (C) 1997-2002	Earl Hood, earl@earlhood.com
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by
@@ -246,6 +246,7 @@ my %OptValues	= ();
 		   libpath=s
 		   manpath=s
 		   nobin
+		   nodep
 		   nodoc
 		   nolib
 		   noman
@@ -302,7 +303,7 @@ my %OptValues	= ();
 ###############################################################################
 
 {
-    my($dobin, $dolib, $dodoc, $doman);
+    my($dodep, $dobin, $dolib, $dodoc, $doman);
 
     ## Get installation files
     ## ----------------------
@@ -311,6 +312,8 @@ my %OptValues	= ();
 
     $DefValues{'docpath'} .= $DIRSEP . $Files{'name'}[0]
 	if $Files{'name'}[0];
+    $dodep = defined($Files{'dep'}) && scalar(@{$Files{'dep'}}) &&
+	     !$OptValues{'nodep'};
     $dobin = defined($Files{'bin'}) && scalar(@{$Files{'bin'}}) &&
 	     !$OptValues{'nobin'};
     $dolib = defined($Files{'lib'}) && scalar(@{$Files{'lib'}}) &&
@@ -321,6 +324,35 @@ my %OptValues	= ();
 	     !$OptValues{'noman'};
     die "Nothing to install!\n"
 	unless $dobin or $dolib or $dodoc or $doman;
+
+    ## Check for dependencies
+    ## ----------------------
+    if ($dodep) {
+	print STDOUT "Checking dependencies:\n";
+	my($mod);
+	my(@dont_exist) = ();
+	foreach $mod (@{$Files{'dep'}}) {
+	    print STDOUT sprintf("\t%s %s ", $mod, ('.'x(30-length($mod))));
+	    if ($mod =~ /\.pl$/) {
+		eval {
+		    require $mod;
+		};
+	    } else {
+		eval qq{
+		    require $mod;
+		};
+	    }
+	    if ($@) {
+		print STDOUT "NOT OK!\n";
+		push(@dont_exist, $mod);
+	    } else {
+		print STDOUT "ok\n";
+	    }
+	}
+	if (@dont_exist) {
+	    die "ERROR: Dependency check FAILED\n";
+	}
+    }
 
     ## Get path stuff
     ## --------------
@@ -761,6 +793,7 @@ Options:
   -filelist <file>      : List of files to install (def="FILELIST")
   -manpath <path>       : Directory path to manpages
   -nobin                : Do not install programs
+  -nodep                : Skip module dependency check
   -nodoc                : Do not install documentation
   -nolib                : Do not install library files
   -noman                : Do not install manpages

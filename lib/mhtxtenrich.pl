@@ -1,8 +1,8 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	@(#) mhtxtenrich.pl 2.4 00/02/08 10:04:43
+##	$Id: mhtxtenrich.pl,v 2.5 2001/08/25 19:57:59 ehood Exp $
 ##  Author:
-##      Earl Hood       mhonarc@pobox.com
+##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
 ##	Library defines a routine for MHonArc to filter text/enriched
 ##	data.
@@ -16,7 +16,7 @@
 ##
 ##---------------------------------------------------------------------------##
 ##    MHonArc -- Internet mail-to-HTML converter
-##    Copyright (C) 1997-1999	Earl Hood, mhonarc@pobox.com
+##    Copyright (C) 1997-2001	Earl Hood, mhonarc@mhonarc.org
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by
@@ -40,26 +40,26 @@ package m2h_text_enriched;
 ##	Filter routine.
 ##
 sub filter {
-    local($header, *fields, *data, $isdecode, $args) = @_;
-    local($innofill, $chunk, $ret, $charset);
+    my($fields, $data, $isdecode, $args) = @_;
+    my($innofill, $chunk, $ret, $charset);
     $ret  = "";
     $args = ""  unless defined($args);
     $charset = "";
 
     ## Grab charset parameter (if defined)
-    $ctype = $fields{'content-type'} || "";
+    $ctype = $fields->{'content-type'}[0] || "";
     if ($ctype =~ /charset=(\S+)/) {
 	$charset = lc $1;
 	$charset =~ s/['"]//g;
     }
 
     ## Convert specials
-    $data =~ s|&|\&amp;|gi;
-    $data =~ s|<<|\&lt;|gi;
+    $$data =~ s|&|\&amp;|gi;
+    $$data =~ s|<<|\&lt;|gi;
 
     ## Translate text/enriched commands
     $innofill = 0;
-    foreach $chunk (split(m|(</?nofill>)|i, $data)) {
+    foreach $chunk (split(m|(</?nofill>)|i, $$data)) {
 	if ($chunk =~ m|<nofill>|i) {
 	    $ret .= "<PRE>";
 	    $innofill = 1;
@@ -70,7 +70,7 @@ sub filter {
 	    $innofill = 0;
 	    next;
 	}
-	&convert_tags(*chunk);
+	convert_tags(\$chunk);
 	if (!$innofill) {
 	    $chunk =~ s|(\r?\n\s*)|&nl_seq_to_brs($1)|gie;
 	}
@@ -81,7 +81,7 @@ sub filter {
     ## 		(we already did '<' and '&' characters)
     if ($charset =~ /iso-8859-([2-9]|10)/i) {
 	require 'iso8859.pl';
-	$ret = &iso_8859::str2sgml($ret, $charset, 1);
+	$ret = iso_8859::str2sgml($ret, $charset, 1);
     }
 
     $ret;
@@ -91,36 +91,36 @@ sub filter {
 ##	convert_tags translates text/enriched commands to HTML tags.
 ##
 sub convert_tags {
-    local(*str) = shift;
+    my($str) = shift;
 
-    $str =~ s|<(/?)bold>|<$1B>|gi;
-    $str =~ s|<(/?)italic>|<$1I>|gi;
-    $str =~ s|<(/?)underline>|<$1U>|gi;
-    $str =~ s|<(/?)fixed>|<$1TT>|gi;
-    $str =~ s|<(/?)smaller>|<$1SMALL>|gi;
-    $str =~ s|<(/?)bigger>|<$1BIG>|gi;
+    $$str =~ s|<(/?)bold>|<$1B>|gi;
+    $$str =~ s|<(/?)italic>|<$1I>|gi;
+    $$str =~ s|<(/?)underline>|<$1U>|gi;
+    $$str =~ s|<(/?)fixed>|<$1TT>|gi;
+    $$str =~ s|<(/?)smaller>|<$1SMALL>|gi;
+    $$str =~ s|<(/?)bigger>|<$1BIG>|gi;
 
-    $str =~ s|<fontfamily>\s*<param>([^<]+)</param>|<FONT face="$1">|gi;
-    $str =~ s|</fontfamily>|</FONT>|gi;
-    $str =~ s|<color>\s*<param>\s*(\S+)\s*</param>|<FONT color="$1">|gi;
-    $str =~ s|</color>|</FONT>|gi;
-    $str =~ s|<center>|<P align="center">|gi;
-    $str =~ s|</center>|</P>|gi;
-    $str =~ s|<flushleft>|<P align="left">|gi;
-    $str =~ s|</flushleft>|</P>|gi;
-    $str =~ s|<flushright>|<P align="right">|gi;
-    $str =~ s|</flushright>|</P>|gi;
-    $str =~ s|<flushboth>|<P align="both">|gi;	# Not supported in HTML
-    $str =~ s|</flushboth>|</P>|gi;
-    $str =~ s|<paraindent>\s*<param>([^<]*)</param>|<BLOCKQUOTE>|gi;
-    $str =~ s|</paraindent>|</BLOCKQUOTE>|gi;
+    $$str =~ s|<fontfamily>\s*<param>([^<]+)</param>|<FONT face="$1">|gi;
+    $$str =~ s|</fontfamily>|</FONT>|gi;
+    $$str =~ s|<color>\s*<param>\s*(\S+)\s*</param>|<FONT color="$1">|gi;
+    $$str =~ s|</color>|</FONT>|gi;
+    $$str =~ s|<center>|<P align="center">|gi;
+    $$str =~ s|</center>|</P>|gi;
+    $$str =~ s|<flushleft>|<P align="left">|gi;
+    $$str =~ s|</flushleft>|</P>|gi;
+    $$str =~ s|<flushright>|<P align="right">|gi;
+    $$str =~ s|</flushright>|</P>|gi;
+    $$str =~ s|<flushboth>|<P align="both">|gi;	# Not supported in HTML
+    $$str =~ s|</flushboth>|</P>|gi;
+    $$str =~ s|<paraindent>\s*<param>([^<]*)</param>|<BLOCKQUOTE>|gi;
+    $$str =~ s|</paraindent>|</BLOCKQUOTE>|gi;
 
-    $str =~ s|<excerpt>\s*(<param>([^<]*)</param>)?|<BLOCKQUOTE>|gi;
-    $str =~ s|</excerpt>|</BLOCKQUOTE>|gi;
+    $$str =~ s|<excerpt>\s*(<param>([^<]*)</param>)?|<BLOCKQUOTE>|gi;
+    $$str =~ s|</excerpt>|</BLOCKQUOTE>|gi;
 
     # Not supported commands
-    $str =~ s|<lang>\s*<param>([^<]*)</param>||gi;
-    $str =~ s|</lang>||gi;
+    $$str =~ s|<lang>\s*<param>([^<]*)</param>||gi;
+    $$str =~ s|</lang>||gi;
 }
 
 ##---------------------------------------------------------------------------
@@ -128,15 +128,14 @@ sub convert_tags {
 ##	on eols in a string.
 ##
 sub nl_seq_to_brs {
-    local($str) = shift;
-    local($n);
-
+    my($str) = shift;
+    my($n);
     $n = $str =~ tr/\n/\n/;
     --$n;
     if ($n <= 0) {
 	return " ";
     } else {
-	return "<BR>\n" x $n;
+	return "<br>\n" x $n;
     }
 }
 
@@ -145,10 +144,9 @@ sub nl_seq_to_brs {
 ##	converted to nbsps.
 ##
 sub preserve_space {
-    local($str) = shift;
- 
+    my($str) = shift;
     1 while
-    $str =~ s/^([^\t]*)(\t+)/$1 . ' ' x (length($2) * 8 - length($1) % 8)/e;
+      $str =~ s/^([^\t]*)(\t+)/$1 . ' ' x (length($2) * 8 - length($1) % 8)/e;
     $str =~ s/ /\&nbsp;/g;
     $str;
 }

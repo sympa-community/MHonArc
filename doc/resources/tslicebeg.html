@@ -4,11 +4,10 @@
 <title>MHonArc Resources: TSLICEBEG</title>
 </head>
 <body>
-
-<address>
-<a href="../resources.html#tslicebeg">MHonArc Resource List</a>
-</address>
-
+<!--x-rc-nav-->
+<table border=0><tr valign="top">
+<td align="left" width="50%">[Prev:&nbsp;<a href="tslice.html">TSLICE</a>]</td><td><nobr>[<a href="../resources.html#tslicebeg">Resources</a>][<a href="../mhonarc.html">TOC</a>]</nobr></td><td align="right" width="50%">[Next:&nbsp;<a href="tslicecontbeg.html">TSLICECONTBEG</a>]</td></tr></table>
+<!--/x-rc-nav-->
 <hr>
 <h1>TSLICEBEG</h1>
 
@@ -18,20 +17,19 @@
 
 <dl>
 
-<dt><strong>Envariable</strong><dt>
+<dt><strong>Envariable</strong></dt>
 <dd><p>N/A
 </p>
 </dd>
 
-<dt><strong>Element</strong><dt>
-<dd><p><br>
-<code>&lt;TSLICEBEG&gt;</code><br>
+<dt><strong>Element</strong></dt>
+<dd><p><code>&lt;TSLICEBEG&gt;</code><br>
 <var>markup...</var><br>
 <code>&lt;/TSLICEBEG&gt;</code><br>
 </p>
 </dd>
 
-<dt><strong>Command-line Option</strong><dt>
+<dt><strong>Command-line Option</strong></dt>
 <dd><p>N/A
 </p>
 </dd>
@@ -48,16 +46,6 @@ variable.  TSLICEBEG is comparable to
 the <a href="thead.html">THEAD</a> resource.  However, TSLICEBEG scope
 only covers the starting markup of the thread listing while
 THEAD will also includes the header markup for thread indexes.
-Since the
-<a href="ttopbegin.html">TTOPBEGIN</a>,
-<a href="tlitxt.html">TLITXT</a>,
-<a href="tliend.html">TLIEND</a>,
-<a href="tsingletxt.html">TSINGLETXT</a>,
-<a href="tsubjectbeg.html">TSUBJECTBEG</a>,
-and
-<a href="ttopend.html">TTOPEND</a>
-resources are reused in thread slices, TSLICEBEG should normally
-be equivalent to the thread listing start portion of THEAD.
 </p>
 
 <!-- *************************************************************** -->
@@ -66,7 +54,7 @@ be equivalent to the thread listing start portion of THEAD.
 
 <pre>
 <b>&lt;TSliceBeg&gt;</b>
-&lt;BLOCKQUOTE>&lt;UL>
+&lt;blockquote&gt;&lt;ul&gt;
 <b>&lt;/TSliceBeg&gt;</b>
 </pre>
 
@@ -124,11 +112,11 @@ be equivalent to the thread listing start portion of THEAD.
 </tr>
 <tr valign=top>
 <td align=center><a name="ICON" href="../rcvars.html#ICON"><strong><code>$ICON$</code></strong></a></td>
-<td>The context-type sensistive icon.</td>
+<td>The context-type sensitive icon.</td>
 </tr>
 <tr valign=top>
 <td align=center><a name="ICONURL" href="../rcvars.html#ICONURL"><strong><code>$ICONURL$</code></strong></a></td>
-<td>The URL to the context-type sensistive icon.</td>
+<td>The URL to the context-type sensitive icon.</td>
 </tr>
 <tr valign=top>
 <td align=center><a name="IDXFNAME" href="../rcvars.html#IDXFNAME"><strong><code>$IDXFNAME$</code></strong></a></td>
@@ -243,6 +231,10 @@ be equivalent to the thread listing start portion of THEAD.
 <td>Title of thread index.</td>
 </tr>
 <tr valign=top>
+<td align=center><a name="TLEVEL" href="../rcvars.html#TLEVEL"><strong><code>$TLEVEL$</code></strong></a></td>
+<td>Numeric level of message in thread, starting with 0.</td>
+</tr>
+<tr valign=top>
 <td align=center><a name="TSLICE" href="../rcvars.html#TSLICE"><strong><code>$TSLICE$</code></strong></a></td>
 <td>A <em>slice</em> of the thread listing relative to the current message.  Size of slice determined by the TSLICE resource.</td>
 </tr>
@@ -275,25 +267,46 @@ be equivalent to the thread listing start portion of THEAD.
 <h2>See Also</h2>
 
 <p>
+<a href="../rcvars.html#TSLICE"><tt>$TSLICE$</tt></a>,
+<a href="tslice.html">TSLICE</a>,
+<a href="tslicecontbeg.html">TSLICECONTBEG</a>,
+<a href="tslicecontend.html">TSLICECONTEND</a>,
 <a href="tsliceend.html">TSLICEEND</a>,
-<a href="ttopbegin.html">TTOPBEGIN</a>,
-<a href="tlitxt.html">TLITXT</a>,
-<a href="tliend.html">TLIEND</a>,
-<a href="tsingletxt.html">TSINGLETXT</a>,
-<a href="tsubjectbeg.html">TSUBJECTBEG</a>,
-<a href="ttopend.html">TTOPEND</a>
+<a href="tsliceindentbeg.html">TSLICEINDENTBEG</a>,
+<a href="tsliceindentend.html">TSLICEINDENTEND</a>,
+<a href="tsliceliend.html">TSLICELIEND</a>,
+<a href="tsliceliendcur.html">TSLICELIENDCUR</a>,
+<a href="tslicelinone.html">TSLICELINONE</a>,
+<a href="tslicelinoneend.html">TSLICELINONEEND</a>,
+<a href="tslicelitxt.html">TSLICELITXT</a>,
+<a href="tslicelitxtcur.html">TSLICELITXTCUR</a>,
+<a href="tslicesingletxt.html">TSLICESINGLETXT</a>,
+<a href="tslicesingletxtcur.html">TSLICESINGLETXTCUR</a>,
+<a href="tslicesubjectbeg.html">TSLICESUBJECTBEG</a>,
+<a href="tslicesubjectend.html">TSLICESUBJECTEND</a>,
+<a href="tslicesublistbeg.html">TSLICESUBLISTBEG</a>,
+<a href="tslicesublistend.html">TSLICESUBLISTEND</a>,
+<a href="tslicetopbeg.html">TSLICETOPBEG</a>,
+<a href="tslicetopbegcur.html">TSLICETOPBEGCUR</a>,
+<a href="tslicetopend.html">TSLICETOPEND</a>,
+<a href="tslicetopendcur.html">TSLICETOPENDCUR</a>
 </p>
 
 <!-- *************************************************************** -->
 <hr>
+<!--x-rc-nav-->
+<table border=0><tr valign="top">
+<td align="left" width="50%">[Prev:&nbsp;<a href="tslice.html">TSLICE</a>]</td><td><nobr>[<a href="../resources.html#tslicebeg">Resources</a>][<a href="../mhonarc.html">TOC</a>]</nobr></td><td align="right" width="50%">[Next:&nbsp;<a href="tslicecontbeg.html">TSLICECONTBEG</a>]</td></tr></table>
+<!--/x-rc-nav-->
+<hr>
 <address>
-00/10/28 11:13:12<br>
-<img align="top" src="../monicon.gif" alt="">
-<a href="http://www.pobox.com/~ehood/mhonarc.html"
+$Date: 2002/07/27 05:13:11 $ <br>
+<img align="top" src="../monicon.png" alt="">
+<a href="http://www.mhonarc.org/"
 ><strong>MHonArc</strong></a><br>
-Copyright &#169; 1998-1999, <a href="http://www.pobox.com/~ehood/"
->Earl Hood</a>, <a href="mailto:mhonarc@pobox.com"
->mhonarc@pobox.com</a><br>
+Copyright &#169; 1998-1999, <a href="http://www.earlhood.com/"
+>Earl Hood</a>, <a href="mailto:mhonarc@mhonarc.org"
+>mhonarc@mhonarc.org</a><br>
 </address>
 
 </body>

@@ -6,7 +6,7 @@
 
 <!--X-NavButtons-Start-->
 <p align=center>
-[<a href="threads.html">Prev</a>][Next][<a href="faq.html">TOC</a>][<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html">Home</a>]
+[<a href="threads.html">Prev</a>][<a href="security.html">Next</a>][<a href="faq.html">TOC</a>][<a href="http://www.mhonarc.org/">Home</a>]
 </p>
 <!--X-NavButtons-End-->
 
@@ -25,32 +25,34 @@
 <li><a href="#filenames">Can attachments get saved with the filename specified in the message header?</a></li>
 <li><a href="#removepre">Can the &lt;PRE&gt; tags be removed from converted messages?</a></li>
 <li><a href="#lineclip">Can long lines be wrapped in converted messages?</a></li>
+<li><a href="#exclude">Can I exclude specific media-types?</a></li>
+<li><a href="#alternative">Can I tell MHonArc to use the text/plain part over a text/html part in a multipart/alternative message?</a></li>
 </ul>
 <!--X-TOC-End-->
 
 <!-- ??????????????????????????????????????????????????????????????? -->
 <hr noshade size=1>
 <table border=0>
-<tr valign=top><td><img src="monicon.gif" align="bottom" alt=""></td><td>
+<tr valign=top><td><img src="monicon.png" align="bottom" alt=""></td><td>
 <h3><b><a name="whatismime">What is MIME?</a></b></h3>
 </td></tr></table>
 
 <P>MIME stands for <EM>Multipurpose Internet
 Mail Extensions</EM>.
 An HTML version of the RFCs that define MIME are available at (<A
-HREF="http://www.oac.uci.edu/indiv/ehood/MIME/MIME.html">http://www.oac.uci.edu/indiv/ehood/MIME/MIME.html</A>).
+HREF="http://www.nacs.uci.edu/indiv/ehood/MIME/MIME.html">http://www.nacs.uci.edu/indiv/ehood/MIME/MIME.html</A>).
 </P>
 
 <P>In sum, MIME "redefines the format of message bodies to
 allow multi-part textual and non-textual message bodies to
 be represented and exchanged without loss of information." [<A
-HREF="http://www.oac.uci.edu/indiv/ehood/MIME/1521/rfc1521ToC.html">RFC
+HREF="http://www.nacs.uci.edu/indiv/ehood/MIME/1521/rfc1521ToC.html">RFC
 1521</A>] </P>
 
 <!-- ??????????????????????????????????????????????????????????????? -->
 <hr noshade size=1>
 <table border=0>
-<tr valign=top><td><img src="monicon.gif" align="bottom" alt=""></td><td>
+<tr valign=top><td><img src="monicon.png" align="bottom" alt=""></td><td>
 <h3><b><a name="nonascii">Does MHonArc support message header extensions for non-ASCII text?</a></b></h3>
 </td></tr></table>
 
@@ -62,7 +64,7 @@ MHonArc to support other character sets.
 <!-- ??????????????????????????????????????????????????????????????? -->
 <hr noshade size=1>
 <table border=0>
-<tr valign=top><td><img src="monicon.gif" align="bottom" alt=""></td><td>
+<tr valign=top><td><img src="monicon.png" align="bottom" alt=""></td><td>
 <h3><b><a name="howtorecog">How can I get MHonArc to recognize content-types it states it does not recognize?</a></b></h3>
 </td></tr></table>
 
@@ -76,7 +78,7 @@ new filter.
 <!-- ??????????????????????????????????????????????????????????????? -->
 <hr noshade size=1>
 <table border=0>
-<tr valign=top><td><img src="monicon.gif" align="bottom" alt=""></td><td>
+<tr valign=top><td><img src="monicon.png" align="bottom" alt=""></td><td>
 <h3><b><a name="overridedefs">Can I override the default filters in MHonArc?</a></b></h3>
 </td></tr></table>
 
@@ -90,7 +92,7 @@ need.
 <!-- ??????????????????????????????????????????????????????????????? -->
 <hr noshade size=1>
 <table border=0>
-<tr valign=top><td><img src="monicon.gif" align="bottom" alt=""></td><td>
+<tr valign=top><td><img src="monicon.png" align="bottom" alt=""></td><td>
 <h3><b><a name="overridemulti">Can I override the multipart/* processing of MHonArc?</a></b></h3>
 </td></tr></table>
 
@@ -103,7 +105,7 @@ with your own if you so desire.
 <!-- ??????????????????????????????????????????????????????????????? -->
 <hr noshade size=1>
 <table border=0>
-<tr valign=top><td><img src="monicon.gif" align="bottom" alt=""></td><td>
+<tr valign=top><td><img src="monicon.png" align="bottom" alt=""></td><td>
 <h3><b><a name="badtype">Why are attachments saved as a ".bin" files?</a></b></h3>
 </td></tr></table>
 
@@ -120,53 +122,114 @@ solutions.
 <!-- ??????????????????????????????????????????????????????????????? -->
 <hr noshade size=1>
 <table border=0>
-<tr valign=top><td><img src="monicon.gif" align="bottom" alt=""></td><td>
+<tr valign=top><td><img src="monicon.png" align="bottom" alt=""></td><td>
 <h3><b><a name="filenames">Can attachments get saved with the filename specified in the message header?</a></b></h3>
 </td></tr></table>
 
 <p>Yes.  See the <b><tt>m2h_external::filter</tt></b> options documented
 in the MIMEFILTERS page of the documentation.  Make note of the
 security cautions in the documentation.
+Example:
 </p>
+<pre>
+&lt;MIMEArgs&gt;
+m2h_external::filter; usename
+&lt;/MIMEArgs&gt;
+</pre>
+
+<dl>
+<dt>See also:</dt>
+<dd><a href="security.html#attachments"
+    >Why doesn't MHonArc, by default, use the specified filename when
+    saving attachments?</a></dd>
+</dl>
 
 <!-- ??????????????????????????????????????????????????????????????? -->
 <hr noshade size=1>
 <table border=0>
-<tr valign=top><td><img src="monicon.gif" align="bottom" alt=""></td><td>
+<tr valign=top><td><img src="monicon.png" align="bottom" alt=""></td><td>
 <h3><b><a name="removepre">Can the &lt;PRE&gt; tags be removed from converted messages?</a></b></h3>
 </td></tr></table>
 
 <p>Yes.  See the options available for the <b>m2h_text_plain::filter</b>
 described in the MIMEFILTERS resource page of the documentation.
+Example:
 </p>
+<pre>
+&lt;MIMEArgs&gt;
+m2h_text_plain::filter; nonfixed
+&lt;/MIMEArgs&gt;
+</pre>
 
 <!-- ??????????????????????????????????????????????????????????????? -->
 <hr noshade size=1>
 <table border=0>
-<tr valign=top><td><img src="monicon.gif" align="bottom" alt=""></td><td>
+<tr valign=top><td><img src="monicon.png" align="bottom" alt=""></td><td>
 <h3><b><a name="lineclip">Can long lines be wrapped in converted messages?</a></b></h3>
 </td></tr></table>
 
 <p>Yes.  See the options available for the <b>m2h_text_plain::filter</b>
 described in the MIMEFILTERS resource page of the documentation.
+Example:
 </p>
+<pre>
+&lt;-- Make sure lines are no longer than 80 characters --&gt;
+&lt;MIMEArgs&gt;
+m2h_text_plain::filter; maxwidth=80
+&lt;/MIMEArgs&gt;
+</pre>
+
+<!-- ??????????????????????????????????????????????????????????????? -->
+<hr noshade size=1>
+<table border=0>
+<tr valign=top><td><img src="monicon.png" align="bottom" alt=""></td><td>
+<h3><b><a name="exclude">Can I exclude specific media-types?</a></b></h3>
+</td></tr></table>
+
+<p>Yes.  See the MIMEEXCS resource.
+Example:
+</p>
+<pre>
+&lt;-- Exclude all HTML and binary data --&gt;
+&lt;MIMEExcs&gt;
+text/html
+application/octet-steam
+&lt;/MIMEExcs&gt;
+</pre>
+
+<!-- ??????????????????????????????????????????????????????????????? -->
+<hr noshade size=1>
+<table border=0>
+<tr valign=top><td><img src="monicon.png" align="bottom" alt=""></td><td>
+<h3><b><a name="alternative">Can I tell MHonArc to use the text/plain part over a text/html part in a multipart/alternative message?</a></b></h3>
+</td></tr></table>
+
+<p>Yes, in v2.5.8, and later, via the MIMEALTPREFS resource.
+Example:
+</p>
+<pre>
+&lt;MIMEAltPrefs&gt;
+text/plain
+text/html
+&lt;/MIMEAltPrefs&gt;
+</pre>
 
 <!-- ===================================================================== -->
 <hr>
 
 <!--X-NavButtons-Start-->
 <p align=center>
-[<a href="threads.html">Prev</a>][Next][<a href="faq.html">TOC</a>][<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html">Home</a>]
+[<a href="threads.html">Prev</a>][<a href="security.html">Next</a>][<a href="faq.html">TOC</a>][<a href="http://www.mhonarc.org/">Home</a>]
 </p>
 <!--X-NavButtons-End-->
 
 <HR>
 <address>
-01/06/10 17:47:21<br>
-<img align="top" src="monicon.gif" alt="">
-<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"
+$Date: 2002/06/28 03:28:10 $ <br>
+<img align="top" src="monicon.png" alt="">
+<a href="http://www.mhonarc.org/"
 ><strong>MHonArc</strong></a><br>
-Copyright &#169; 1997-1999, <a href="http://www.oac.uci.edu/indiv/ehood/"
+Copyright &#169; 1997-1999, <a href="http://www.earlhood.com/"
 >Earl Hood</a>, <a href="mailto:mhonarc@mhonarc.org"
 >mhonarc@mhonarc.org</a><br>
 </address>

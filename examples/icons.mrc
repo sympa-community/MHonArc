@@ -1,19 +1,24 @@
-<!--	MHonArc resource file
-
-	icons.mrc 1.3 99/06/25
+<!-- ================================================================== -->
+<!--    $Id: icons.mrc,v 1.5 2002/05/04 04:52:52 ehood Exp $
+        Earl Hood <earl@earlhood.com>
 
 	This example file makes use of the icons feature of
-	MHonArc.
+	MHonArc.  The icon mappings used work with the
+	default set of icons provided with the Apache HTTP
+	server.
   -->
+<!-- ================================================================== -->
 
-<main>
-<sort>
-<nothread>
-<noreverse>
+<!--	In this example, we only do a chronological index.
+  -->
+<Main>
+<Sort>
+<NoThread>
+<NoReverse>
 
 <!--	Have LISTBEGIN contain last updated information
   -->
-<listbegin>
+<ListBegin>
 <address>
 Last update: $LOCALDATE$<br>
 $NUMOFMSG$ messages<br>
@@ -21,51 +26,73 @@ $NUMOFMSG$ messages<br>
 <p>
 Messages listed in chronological order.  Listing format is the following:
 <blockquote>
-<img src="/icons/gletter.gif" alt="* ">
-<strong>Subject</strong><code>  </code>
-(# of follow-ups)<code>  </code>
-<em>From</em>.
+<img src="/icons/generic.gif" width="20" height="22" alt="* ">
+<strong>Subject</strong><code>  </code><em>From</em>
 </blockquote>
 <p>
 <hr>
-</listbegin>
+</ListBegin>
 
-<!--	A compact listing template with icon usage
+<!--	A listing template with icon usage.  We use $ICONURL$ so
+	we can customize the IMG element inorder to specify the
+	an alternate ALT attribute value from what $ICON$ would give us.
   -->
-<litemplate>
-<img src="$ICONURL$" alt="* "><strong>$SUBJECT:40$</strong>
-($NUMFOLUP$) <em>$FROMNAME$</em><br>
-</litemplate>
+<LiTemplate>
+<img src="$ICONURL$" width="20" height="22" alt="* "
+><strong>$SUBJECT$</strong> <em>$FROMNAME$</em><br>
+</LiTemplate>
 
-<listend>
-</listend>
+<ListEnd>
 
-<labelstyles>
+</ListEnd>
+
+<LabelStyles>
 -default-
 subject:strong
 from:strong
-</labelstyles>
+</LabelStyles>
 
-<fieldstyles>
+<FieldStyles>
 -default-
 subject:strong
 from:strong
-</fieldstyles>
+</FieldStyles>
 
-<!--	Specify icons for message types
+<!--	Specify icons for media-types
   -->
-<icons>
-audio/basic:/icons/gsound.gif
-image/gif:/icons/gimage.gif
-image/jpeg:/icons/gimage.gif
-image/tiff:/icons/ggraphic.gif
-multipart/alternative:/icons/gmulti.gif
-multipart/digest:/icons/gtext.gif
-multipart/mixed:/icons/gdoc2.gif
-multipart/parallel:/icons/gdoc.gif
-text/enriched:/icons/gdoc.gif
-text/html:/icons/gdoc.gif
-text/plain:/icons/gletter.gif
-unknown:/icons/gunknown.gif
-video/mpeg:/icons/gmovie.gif
-</icons>
+<Icons>
+*/*;[20x22]/icons/generic.gif
+application/*;[20x22]/icons/generic.gif
+application/msword;[20x22]/icons/layout.gif
+application/octet-stream;[20x22]/icons/binary.gif
+application/pdf;[20x22]/icons/pdf.gif
+application/postscript;[20x22]/icons/ps.gif
+application/rtf;[20x22]/icons/layout.gif
+application/x-csh;[20x22]/icons/script.gif
+application/x-dvi;[20x22]/icons/dvi.gif
+application/x-gtar;[20x22]/icons/tar.gif
+application/x-gzip;[20x22]/icons/compressed.gif
+application/x-ksh;[20x22]/icons/script.gif
+application/x-latex;[20x22]/icons/tex.gif
+application/x-patch;[20x22]/icons/patch.gif
+application/x-script;[20x22]/icons/script.gif
+application/x-sh;[20x22]/icons/script.gif
+application/x-tar;[20x22]/icons/tar.gif
+application/x-tex;[20x22]/icons/tex.gif
+application/x-zip-compressed;[20x22]/icons/compressed.gif
+application/zip;[20x22]/icons/compressed.gif
+audio/*;[20x22]/icons/sound1.gif
+chemical/*;[20x22]/icons/sphere2.gif
+image/*;[20x22]/icons/image2.gif
+message/external-body;[20x22]/icons/link.gif
+multipart/*;[20x22]/icons/layout.gif
+text/*;[20x22]/icons/text.gif
+video/*;[20x22]/icons/movie.gif
+</Icons>
+
+<!--	Override MIMEArgs settings to specify external filter to
+	use icons as part of the link to attachments.
+  -->
+<MIMEArgs override>
+m2h_external::filter; useicon inline
+</MIMEArgs>

@@ -4,11 +4,10 @@
 <title>MHonArc Resources: CHARSETCONVERTERS</title>
 </head>
 <body>
-
-<address>
-<a href="../resources.html#charsetconverters">MHonArc Resource List</a>
-</address>
-
+<!--x-rc-nav-->
+<table border=0><tr valign="top">
+<td align="left" width="50%">[Prev:&nbsp;<a href="botlinks.html">BOTLINKS</a>]</td><td><nobr>[<a href="../resources.html#charsetconverters">Resources</a>][<a href="../mhonarc.html">TOC</a>]</nobr></td><td align="right" width="50%">[Next:&nbsp;<a href="checknoarchive.html">CHECKNOARCHIVE</a>]</td></tr></table>
+<!--/x-rc-nav-->
 <hr>
 <h1>CHARSETCONVERTERS</h1>
 
@@ -18,20 +17,20 @@
 
 <dl>
 
-<dt><strong>Envariable</strong><dt>
+<dt><strong>Envariable</strong></dt>
 <dd><p>N/A
 </p>
 </dd>
 
-<dt><strong>Element</strong><dt>
-<dd><p><br>
+<dt><strong>Element</strong></dt>
+<dd><p>
 <code>&lt;CHARSETCONVERTERS&gt;</code><br>
 <var>charset-filter-specification</var><br>
 <code>&lt;/CHARSETCONVERTERS&gt;</code><br>
 </p>
 </dd>
 
-<dt><strong>Command-line Option</strong><dt>
+<dt><strong>Command-line Option</strong></dt>
 <dd><p>N/A
 </p>
 </dd>
@@ -66,7 +65,7 @@ file containing the routine.
 <p>Example:</p>
 <pre>
 <b>&lt;CharsetConverters&gt;</b>
-iso-8859-1;iso_8859::str2sgml;iso8859.pl
+iso-8859-1;MHonArc::CharEnt::str2sgml;MHonArc/CharEnt.pm
 <b>&lt;/CharsetConverters&gt;</b>
 </pre>
 
@@ -76,17 +75,6 @@ The third field is the source file the routine is defined.  The
 source file is optional if the routine is known to be define in
 an already listed source file.
 </p>
-
-<table border=0 cellpadding=4>
-<tr valign=top>
-<td><strong>NOTE</strong></td>
-<td><p>For backwards compatibility, the values of a converter specification
-can be separated with a colon, "<tt>:</tt>".  However, if you use a colon,
-package qualification of a function must use Perl 4 syntax.
-</p>
-</td>
-</tr>
-</table>
 
 <p>There are some special character set specifications.  They are
 as follows:
@@ -128,9 +116,9 @@ the characters set is the native character set for the system.
 <tr valign=top>
 <td><strong><font color=red>WARNING</font></strong></td>
 <td><p>If the decoded data contains the characters '&lt;', '&gt;',
-and '&amp', this may conflict with HTML markup.  See
+and '&amp;', this may conflict with HTML markup.  See
 <a href="decodeheads.html">DECODEHEADS</a>
-where "-decode-" can be used.
+when "-decode-" can be used.
 </td>
 </tr>
 </table>
@@ -159,26 +147,28 @@ included in HTML markup.
 
 <pre>
 <b>&lt;CharsetConverters&gt;</b>
-plain;		mhonarc::htmlize;
-us-ascii;	mhonarc::htmlize;
-iso-8859-1;	mhonarc::htmlize;
-iso-8859-2;	iso_8859::str2sgml;	iso8859.pl
-iso-8859-3;	iso_8859::str2sgml;	iso8859.pl
-iso-8859-4;	iso_8859::str2sgml;	iso8859.pl
-iso-8859-5;	iso_8859::str2sgml;	iso8859.pl
-iso-8859-6;	iso_8859::str2sgml;	iso8859.pl
-iso-8859-7;	iso_8859::str2sgml;	iso8859.pl
-iso-8859-8;	iso_8859::str2sgml;	iso8859.pl
-iso-8859-9;	iso_8859::str2sgml;	iso8859.pl
-iso-8859-10;	iso_8859::str2sgml;	iso8859.pl
+plain;          mhonarc::htmlize;
+us-ascii;       mhonarc::htmlize;
+iso-8859-1;     mhonarc::htmlize;
+iso-8859-2;     MHonArc::CharEnt::str2sgml;     MHonArc/CharEnt.pm
+iso-8859-3;     MHonArc::CharEnt::str2sgml;     MHonArc/CharEnt.pm
+iso-8859-4;     MHonArc::CharEnt::str2sgml;     MHonArc/CharEnt.pm
+iso-8859-5;     MHonArc::CharEnt::str2sgml;     MHonArc/CharEnt.pm
+iso-8859-6;     MHonArc::CharEnt::str2sgml;     MHonArc/CharEnt.pm
+iso-8859-7;     MHonArc::CharEnt::str2sgml;     MHonArc/CharEnt.pm
+iso-8859-8;     MHonArc::CharEnt::str2sgml;     MHonArc/CharEnt.pm
+iso-8859-9;     MHonArc::CharEnt::str2sgml;     MHonArc/CharEnt.pm
+iso-8859-10;    MHonArc::CharEnt::str2sgml;     MHonArc/CharEnt.pm
 iso-2022-jp;    iso_2022_jp::str2html;  iso2022jp.pl
 latin1;         mhonarc::htmlize;
-latin2;         iso_8859::str2sgml;     iso8859.pl
-latin3;         iso_8859::str2sgml;     iso8859.pl
-latin4;         iso_8859::str2sgml;     iso8859.pl
-latin5;         iso_8859::str2sgml;     iso8859.pl
-latin6;         iso_8859::str2sgml;     iso8859.pl
-default;	-ignore-
+latin2;         MHonArc::CharEnt::str2sgml;     MHonArc/CharEnt.pm
+latin3;         MHonArc::CharEnt::str2sgml;     MHonArc/CharEnt.pm
+latin4;         MHonArc::CharEnt::str2sgml;     MHonArc/CharEnt.pm
+latin5;         MHonArc::CharEnt::str2sgml;     MHonArc/CharEnt.pm
+latin6;         MHonArc::CharEnt::str2sgml;     MHonArc/CharEnt.pm
+windows-1250;   MHonArc::CharEnt::str2sgml;     MHonArc/CharEnt.pm
+windows-1252;   MHonArc::CharEnt::str2sgml;     MHonArc/CharEnt.pm
+default;        -ignore-
 <b>&lt;/CharsetConverters&gt;</b>
 </pre>
 
@@ -199,6 +189,7 @@ browsers:
 </p>
 
 <pre>
+<b><a href="decodeheads.html">&lt;DecodeHeads&gt;</a></b>
 <b>&lt;CharsetConverters&gt;</b>
 iso-8859-1;-decode-
 <b>&lt;/CharsetConverters&gt;</b>
@@ -224,11 +215,16 @@ iso-8859-1;-decode-
 
 <!-- *************************************************************** -->
 <hr>
+<!--x-rc-nav-->
+<table border=0><tr valign="top">
+<td align="left" width="50%">[Prev:&nbsp;<a href="botlinks.html">BOTLINKS</a>]</td><td><nobr>[<a href="../resources.html#charsetconverters">Resources</a>][<a href="../mhonarc.html">TOC</a>]</nobr></td><td align="right" width="50%">[Next:&nbsp;<a href="checknoarchive.html">CHECKNOARCHIVE</a>]</td></tr></table>
+<!--/x-rc-nav-->
+<hr>
 <address>
-00/10/28 11:13:00<br>
-<img align="top" src="../monicon.gif" alt="">
-<a href="http://www.pobox.com/~ehood/mhonarc.html"><strong>MHonArc</strong></a><br>
-Copyright &#169; 1997-1999, <a href="http://www.pobox.com/~ehood/">Earl Hood</a>, <a href="mailto:mhonarc@pobox.com">mhonarc@pobox.com</a><br>
+$Date: 2002/07/27 05:13:10 $ <br>
+<img align="top" src="../monicon.png" alt="">
+<a href="http://www.mhonarc.org/"><strong>MHonArc</strong></a><br>
+Copyright &#169; 1997-2001, <a href="http://www.earlhood.com/">Earl Hood</a>, <a href="mailto:mhonarc@mhonarc.org">mhonarc@mhonarc.org</a><br>
 </address>
 
 </body>

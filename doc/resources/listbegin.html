@@ -4,11 +4,10 @@
 <title>MHonArc Resources: LISTBEGIN</title>
 </head>
 <body>
-
-<address>
-<a href="../resources.html#listbegin">MHonArc Resource List</a>
-</address>
-
+<!--x-rc-nav-->
+<table border=0><tr valign="top">
+<td align="left" width="50%">[Prev:&nbsp;<a href="lastpglink.html">LASTPGLINK</a>]</td><td><nobr>[<a href="../resources.html#listbegin">Resources</a>][<a href="../mhonarc.html">TOC</a>]</nobr></td><td align="right" width="50%">[Next:&nbsp;<a href="listend.html">LISTEND</a>]</td></tr></table>
+<!--/x-rc-nav-->
 <hr>
 <h1>LISTBEGIN</h1>
 
@@ -18,12 +17,12 @@
 
 <dl>
 
-<dt><strong>Envariable</strong><dt>
+<dt><strong>Envariable</strong></dt>
 <dd><p>N/A
 </p>
 </dd>
 
-<dt><strong>Element</strong><dt>
+<dt><strong>Element</strong></dt>
 <dd><p>
 <code>&lt;LISTBEGIN&gt;<br></code>
 <var>markup ...</var><br>
@@ -31,7 +30,7 @@
 </p>
 </dd>
 
-<dt><strong>Command-line Option</strong><dt>
+<dt><strong>Command-line Option</strong></dt>
 <dd><p>N/A
 </p>
 </dd>
@@ -59,11 +58,11 @@ to format the main index page(es).
 
 <PRE>
 <b>&lt;ListBegin&gt;</b>
-&lt;UL&gt;
-&lt;LI&gt;&lt;A HREF="<a href="#TIDXFNAME">$TIDXFNAME$</a>"&gt;Thread Index&lt;/A&gt;&lt;/LI&gt;
-&lt;/UL&gt;
-&lt;HR&gt;
-&lt;UL&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="<a href="#TIDXFNAME">$TIDXFNAME$</a>"&gt;Thread Index&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;ul&gt;
 <b>&lt;/ListBegin&gt;</b>
 </PRE>
 
@@ -72,12 +71,12 @@ to format the main index page(es).
 
 <PRE>
 <b>&lt;ListBegin&gt;</b>
-&lt;UL&gt;
-&lt;LI&gt;&lt;A HREF="<a href="#TIDXFNAME">$TIDXFNAME$</a>"&gt;Thread Index&lt;/A&gt;&lt;/LI&gt;
-&lt;/UL&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="<a href="#TIDXFNAME">$TIDXFNAME$</a>"&gt;Thread Index&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
 <a href="#PGLINK">$PGLINK(PREV)$</a><a href="#PGLINK">$PGLINK(NEXT)$</a>
-&lt;HR&gt;
-&lt;UL&gt;
+&lt;hr&gt;
+&lt;ul&gt;
 <b>&lt;/ListBegin&gt;</b>
 </PRE>
 
@@ -193,22 +192,22 @@ last page of the index for a mult-page index:
 
 <PRE>
 <b>&lt;ListBegin&gt;</b>
-&lt;ul>
-&lt;li>&lt;a href="<a href="#TIDXFNAME">$TIDXFNAME$</a>">Thread Index&lt;/a>&lt;/li>
-&lt;/ul>
-&lt;table width="100%" border=0 cols=2 cellpadding=0 cellspacing=0>
-&lt;tbody>
-&lt;tr align="center">
-&lt;th colspan=4>Page <a href="#PAGENUM">$PAGENUM$</a> of <a href="#NUMOFPAGES">$NUMOFPAGES$</a>
-&lt;tr>
-&lt;td align="left"><a href="#PGLINK">$PGLINK(PREV)$</a>
-&lt;td align="right">[&lt;a href="<a href="#FIRSTPG">$PG(FIRST)$</a>">First Page&lt;/a>]
-&lt;td align="left">[&lt;a href="<a href="#LASTPG">$PG(LAST)$</a>">Last Page&lt;/a>]
-&lt;td align="right"><a href="#PGLINK">$PGLINK(NEXT)</a>
-&lt;/tbody>
-&lt;/table>
-&lt;hr>
-&lt;ul>
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="<a href="#TIDXFNAME">$TIDXFNAME$</a>"&gt;Thread Index&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;table width="100%" border=0 cols=2 cellpadding=0 cellspacing=0&gt;
+&lt;tbody&gt;
+&lt;tr align="center"&gt;
+&lt;th colspan=4&gt;Page <a href="#PAGENUM">$PAGENUM$</a> of <a href="#NUMOFPAGES">$NUMOFPAGES$</a>
+&lt;tr&gt;
+&lt;td align="left"&gt;<a href="#PGLINK">$PGLINK(PREV)$</a>
+&lt;td align="right"&gt;[&lt;a href="<a href="#FIRSTPG">$PG(FIRST)$</a>"&gt;First Page&lt;/a&gt;]
+&lt;td align="left"&gt;[&lt;a href="<a href="#LASTPG">$PG(LAST)$</a>"&gt;Last Page&lt;/a&gt;]
+&lt;td align="right"&gt;<a href="#PGLINK">$PGLINK(NEXT)</a>
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;hr&gt;
+&lt;ul&gt;
 <b>&lt;/ListBegin&gt;</b>
 </PRE>
 
@@ -231,11 +230,16 @@ last page of the index for a mult-page index:
 
 <!-- *************************************************************** -->
 <hr>
+<!--x-rc-nav-->
+<table border=0><tr valign="top">
+<td align="left" width="50%">[Prev:&nbsp;<a href="lastpglink.html">LASTPGLINK</a>]</td><td><nobr>[<a href="../resources.html#listbegin">Resources</a>][<a href="../mhonarc.html">TOC</a>]</nobr></td><td align="right" width="50%">[Next:&nbsp;<a href="listend.html">LISTEND</a>]</td></tr></table>
+<!--/x-rc-nav-->
+<hr>
 <address>
-00/10/28 11:13:02<br>
-<img align="top" src="../monicon.gif" alt="">
-<a href="http://www.pobox.com/~ehood/mhonarc.html"><strong>MHonArc</strong></a><br>
-Copyright &#169; 1997-1998, <a href="http://www.pobox.com/~ehood/">Earl Hood</a>, <a href="mailto:mhonarc@pobox.com">mhonarc@pobox.com</a><br>
+$Date: 2002/07/27 05:13:10 $ <br>
+<img align="top" src="../monicon.png" alt="">
+<a href="http://www.mhonarc.org/"><strong>MHonArc</strong></a><br>
+Copyright &#169; 1997-1998, <a href="http://www.earlhood.com/">Earl Hood</a>, <a href="mailto:mhonarc@mhonarc.org">mhonarc@mhonarc.org</a><br>
 </address>
 
 </body>

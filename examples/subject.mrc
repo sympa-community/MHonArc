@@ -1,10 +1,11 @@
-<!-- MHonArc Resource File -->
-<!-- @(#) subject.mrc 99/06/25 13:25:44
-     Earl Hood <mhonarc@pobox.com>
+<!-- ================================================================== -->
+<!--    $Id: subject.mrc,v 1.3 2002/05/04 04:52:52 ehood Exp $
+        Earl Hood <earl@earlhood.com>
+
+	This resource file utilizes the subject grouping feature of
+	MHonArc to format the main index.
   -->
-<!-- This resource file utilizes the subject grouping feature of MHonArc
-     to format the main index.
-  -->
+<!-- ================================================================== -->
 
 <!--	Specify subject sorting.
   -->

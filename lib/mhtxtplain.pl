@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	@(#) mhtxtplain.pl 2.12 01/06/10 17:39:30
+##	$Id: mhtxtplain.pl,v 2.22 2002/07/20 03:07:35 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -41,6 +41,11 @@ $HUrlExp        = $Url . q/(?:&(?![gl]t;)|[^\s\(\)\|<>"'\&])+/ .
 			 q/[^\.?!;,"'\|\[\]\(\)\s<>\&]/;
 $QuoteChars	= '[>\|\]+:]';
 $HQuoteChars	= '&gt;|[\|\]+:]';
+
+$StartFlowedQuote =
+  '<blockquote style="border-left: #0000FF solid 0.1em; '.
+                     'margin-left: 0.0em; padding-left: 1.0em">';
+$EndFlowedQuote   = "</blockquote>";
 
 ##---------------------------------------------------------------------------##
 ##	Text/plain filter for mhonarc.  The following filter arguments
@@ -93,7 +98,7 @@ $HQuoteChars	= '&gt;|[\|\]+:]';
 ##	All arguments should be separated by at least one space
 ##
 sub filter {
-    local($header, *fields, *data, $isdecode, $args) = @_;
+    my($fields, $data, $isdecode, $args) = @_;
     local($_);
 
     ## Parse arguments
@@ -101,11 +106,12 @@ sub filter {
 
     ## Check if content-disposition should be checked
     if ($args =~ /\battachcheck\b/i) {
-	my($disp, $nameparm) = &readmail::MAILhead_get_disposition(*fields);
+	my($disp, $nameparm) = readmail::MAILhead_get_disposition($fields);
 	if ($disp =~ /\battachment\b/i) {
 	    require 'mhexternal.pl';
-	    return (&m2h_external::filter(
-		      $header, *fields, *data, $isdecode, $args));
+	    return (m2h_external::filter(
+		      $fields, $data, $isdecode,
+		      readmail::get_filter_args('m2h_external::filter')));
 	}
     }
 
@@ -119,7 +125,11 @@ sub filter {
 	# $args has uudecode stripped out for recursive calls
 
 	# Make sure we have needed routines
-	require 'base64.pl';
+	my $decoder = readmail::load_decoder("uuencode");
+	if (!defined($decoder) || !defined(&$decoder)) {
+	    require 'base64.pl';
+	    $decoder = \&base64::uudecode;
+	}
 	require 'mhmimetypes.pl';
 
 	# Grab any filename extensions that imply inlining
@@ -130,29 +140,32 @@ sub filter {
 	}
 	my $usename = $args =~ /\busename\b/;
 
-	local($pdata);	# have to use local() since typeglobs used
+	my($pdata);	# have to use local() since typeglobs used
 	my($inext, $uddata, $file, $urlfile);
 	my @files = ( );
 	my $ret = "";
 	my $i = 0;
 
+	# <CR><LF> => <LF> to make parsing easier
+	$$data =~ s/\r\n/\n/g;
+
 	# Split on uuencoded data.  For text portions, recursively call
 	# filter to convert text data: makes it easier to handle all
 	# the various formatting options.
 	foreach $pdata
-		(split(/^(begin \d\d\d \S+\n[!-M].*?\nend\n)/sm, $data)) {
+		(split(/^(begin\s+\d\d\d\s+[^\n]+\n[!-M].*?\nend\n)/sm,
+		       $$data)) {
 	    if ($i % 2) {	# uuencoded data
 		# extract filename extension
-		($file) = $pdata =~ /^begin \d\d\d (\S+)/;
+		($file) = $pdata =~ /^begin\s+\d\d\d\s+([^\n]+)/;
 		if ($file =~ /\.(\w+)$/) { $inext = $1; } else { $inext = ""; }
 
 		# decode data
-		$uddata = base64::uudecode($pdata);
+		$uddata = &$decoder($pdata);
 
 		# save to file
-		if (&readmail::MAILis_excluded('application/octet-stream')) {
-		    $ret .=
-		    "<tt>&lt;&lt;&lt; $file: EXCLUDED &gt;&gt;&gt;</tt><br>\n";
+		if (readmail::MAILis_excluded('application/octet-stream')) {
+		    $ret .= &$readmail::ExcludedPartFunc($file);
 		} else {
 		    push(@files,
 			 mhonarc::write_attachment(
@@ -171,10 +184,12 @@ sub filter {
 		}
 
 	    } elsif ($pdata =~ /\S/) {	# plain text
-		my(@subret) =
-		    &filter($header, *fields, *pdata, $isdecode, $args);
+		my(@subret) = filter($fields, \$pdata, $isdecode, $args);
 		$ret .= shift @subret;
 		push(@files, @subret);
+	    } else {
+		# Make sure readmail thinks we processed
+		$ret .= " ";
 	    }
 	    ++$i;
 	}
@@ -186,13 +201,20 @@ sub filter {
     
     ## Check for HTML data if requested
     if ($args =~ s/\bhtmlcheck\b//i &&
-	    $data =~ /\A\s*<(?:html\b|x-html\b|!doctype\s+html\s)/i) {
-	require 'mhtxthtml.pl';
-	return (&m2h_text_html::filter(
-		  $header, *fields, *data, $isdecode, $args));
+	    $$data =~ /\A\s*<(?:html\b|x-html\b|!doctype\s+html\s)/i) {
+	if (readmail::MAILis_excluded('text/html')) {
+	  return (&$readmail::ExcludedPartFunc('text/plain HTML'));
+	}
+	my $html_filter = readmail::load_filter('text/html');
+	if (defined($html_filter) && defined(&$html_filter)) {
+	    return (&$html_filter($fields, $data, $isdecode, $args));
+	} else {
+	    require 'mhtxthtml.pl';
+	    return (m2h_text_html::filter($fields, $data, $isdecode, $args));
+	}
     }
 
-    my($charset, $nourl, $doquote, $igncharset, $nonfixed,
+    my($charset, $nourl, $doquote, $igncharset, $nonfixed, $textformat,
        $keepspace, $maxwidth, $target, $defset, $xhtml);
     my(%asis) = (
 	'us-ascii'   => 1,
@@ -217,12 +239,20 @@ sub filter {
     $defset =~ s/['"\s]//g;
 
     ## Grab charset parameter (if defined)
-    if ( defined($fields{'content-type'}) and
-	 $fields{'content-type'} =~ /\bcharset\s*=\s*([^\s;]+)/i ) {
+    if ( defined($fields->{'content-type'}[0]) and
+	 $fields->{'content-type'}[0] =~ /\bcharset\s*=\s*([^\s;]+)/i ) {
 	$charset = lc $1;
 	$charset =~ s/['";\s]//g;
     } else {
 	$charset = $defset;
+    }
+    ## Grab format parameter (if defined)
+    if ( defined($fields->{'content-type'}[0]) and
+	 $fields->{'content-type'}[0] =~ /\bformat\s*=\s*([^\s;]+)/i ) {
+	$textformat = lc $1;
+	$textformat =~ s/['";\s]//g;
+    } else {
+	$textformat = "fixed";
     }
 
     ## Check if certain charsets should be left alone
@@ -234,62 +264,130 @@ sub filter {
 
     ## Check MIMECharSetConverters if charset should be left alone
     my $charcnv = &readmail::load_charset($charset);
+    if (!defined($charcnv)) {
+      $charcnv = &readmail::load_charset('default');
+    }
     if (defined($charcnv) && $charcnv eq '-decode-') {
 	$asis{$charset} = 1;
     }
 
     ## Check if max-width set
-    if ($maxwidth) {
-	$data =~ s/^(.*)$/&break_line($1, $maxwidth)/gem;
+    if ($maxwidth && $textformat eq 'fixed') {
+	$$data =~ s/^(.*)$/&break_line($1, $maxwidth)/gem;
     }
 
     ## Convert data according to charset
     if (!$asis{$charset}) {
-	# Japanese we have to handle directly to support nourl flag
-	if ($charset =~ /iso-2022-jp/) {
-	    require "iso2022jp.pl";
-	    if ($nonfixed) {
-		return (&iso_2022_jp::jp2022_to_html($data, $nourl));
-	    } else {
-		return ('<pre>' .
-			&iso_2022_jp::jp2022_to_html($data, $nourl).
-			'</pre>');
-	    }
-
 	# Registered in CHARSETCONVERTERS
-	} elsif (defined($charcnv) && defined(&$charcnv)) {
-	    $data = &$charcnv($data, $charset);
+	if (defined($charcnv) && defined(&$charcnv)) {
+	    $$data = &$charcnv($$data, $charset);
 
 	# Other
 	} else {
-	    warn qq/Warning: Unrecognized character set: $charset\n/;
-	    &esc_chars_inplace(\$data);
+	    warn qq/\n/,
+		 qq/Warning: Unrecognized character set: $charset\n/,
+		 qq/         Message-Id: <$mhonarc::MHAmsgid>\n/,
+		 qq/         Message Number: $mhonarc::MHAmsgnum\n/;
+	    esc_chars_inplace($data);
 	}
 
     } else {
-	&esc_chars_inplace(\$data);
+	esc_chars_inplace($data);
     }
 
-    ##	Check for quoting
-    if ($doquote) {
-	$data =~ s@^( ?${HQuoteChars})(.*)$@$1<I>$2</I>@gom;
-    }
+    if ($textformat eq 'flowed') {
+	# Initial code for format=flowed contributed by Ken Hirsch (May 2002).
+	# text/plain; format=flowed defined in RFC2646
 
-    ## Check if using nonfixed font
-    if ($nonfixed) {
-	$data =~ s/(\r?\n)/<br>$1/g;
-	if ($keepspace) {
-	    $data =~ s/^(.*)$/&preserve_space($1)/gem;
+	my $currdepth = 0;
+	my $ret='';
+	s!^</?x-flowed>\r?\n>!!mg; # we don't know why Eudora puts these in
+	while (length($$data)) {
+	    $$data =~ /^((?:&gt;)*)/;
+	    my $qd = $1;
+	    if ($$data =~ s/^(.*(?:(?:\n|\r\n?)$qd(?!&gt;).*)*\n?)//) {
+		# divide message into chunks by "quote-depth",
+		# which is the number of leading > signs
+		my $chunk = $1;
+		$chunk =~ s/^$qd ?//mg;  # N.B. also takes care of
+					 # space-stuffing
+		$chunk =~ s/^-- $/--/mg; # special case for '-- '
+
+		if ($chunk =~ / \r?\n/) {
+		    # Treat this chunk as format=flowed
+		    # Lines that end with spaces are
+		    # considered to have soft line breaks.
+		    # Lines that end with no spaces are
+		    # considered to have hard line breaks.
+		    # XXX: Negative look-behind assertion not supported
+		    #	   on older versions of Perl 5 (<5.6)
+		    #$chunk =~ s/(?<! )(\r?\n|\Z)/<br>$1/g;
+		    $chunk =~ s/(^|[^ ])(\r?\n|\Z)/$1<br>$2/mg;
+
+		} else {
+		    # Treat this chunk as format=fixed
+		    if ($nonfixed) {
+			$chunk =~ s/(\r?\n)/<br>$1/g;
+			if ($keepspace) {
+			    $chunk =~ s/^(.*)$/&preserve_space($1)/gem;
+			}
+		    } else {
+			$chunk = "<pre>" . $chunk . "</pre>\n";
+		    }
+		}
+		my $newdepth = length($qd)/length('&gt;');
+		if ($currdepth < $newdepth) {
+		    $chunk = $StartFlowedQuote x
+			     ($newdepth - $currdepth) . $chunk;
+		} elsif ($currdepth > $newdepth) {
+		    $chunk = $EndFlowedQuote x
+			     ($currdepth - $newdepth) . $chunk;
+		}
+		$currdepth = $newdepth;
+		$ret .= $chunk;
+
+	    } else {
+		# The above regex should always match, but just in case...
+		warn qq/\n/,
+		     qq/Warning: Dequoting problem with format=flowed data\n/,
+		     qq/         Message-Id: <$MHAmsgid>\n/,
+		     qq/         Message Number: $MHAmsgnum\n/;
+		$ret .= $$data;
+		last;
+	    }
 	}
+	if ($currdepth > 0) {
+	    $ret .= $EndFlowedQuote x $currdepth;
+	}
+
+	## Post-processing cleanup: makes things look nicer
+	$ret =~ s/<br><\/blockquote>/<\/blockquote>/g;
+	$ret =~ s/<\/blockquote><br>/<\/blockquote>/g;
+
+	$$data = $ret;
+
     } else {
-    	$data = "<pre>\n" . $data . "</pre>\n";
+	## Check for quoting
+	if ($doquote) {
+	    $$data =~ s@^( ?${HQuoteChars})(.*)$@$1<i>$2</i>@gom;
+	}
+
+	## Check if using nonfixed font
+	if ($nonfixed) {
+	    $$data =~ s/(\r?\n)/<br>$1/g;
+	    if ($keepspace) {
+		$$data =~ s/^(.*)$/&preserve_space($1)/gem;
+	    }
+	} else {
+	    $$data = "<pre>" . $$data . "</pre>\n";
+	}
     }
 
     ## Convert URLs to hyperlinks
-    $data =~ s@($HUrlExp)@<A $target HREF="$1">$1</A>@gio
+    $$data =~ s@($HUrlExp)@<a $target href="$1">$1</a>@gio
 	unless $nourl;
 
-    ($data);
+    ($$data);
 }
 
 ##---------------------------------------------------------------------------##

@@ -1,8 +1,8 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	@(#) mhtxttsv.pl 2.3 99/06/25 14:21:02
+##	$Id: mhtxttsv.pl,v 2.4 2001/08/25 20:01:01 ehood Exp $
 ##  Author:
-##      Earl Hood       mhonarc@pobox.com
+##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
 ##	Library defines routine to filter text/tab-separated-values body
 ##	parts to HTML
@@ -13,7 +13,7 @@
 ##              </MIMEFILTERS>
 ##---------------------------------------------------------------------------##
 ##    MHonArc -- Internet mail-to-HTML converter
-##    Copyright (C) 1998,1999	Earl Hood, mhonarc@pobox.com
+##    Copyright (C) 1998-2001	Earl Hood, mhonarc@mhonarc.org
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by
@@ -37,20 +37,20 @@ package m2h_text_tsv;
 ##	Text/tab-separated-values filter for mhonarc.
 ##
 sub filter {
-    local($header, *fields, *data, $isdecode, $args) = @_;
-    local($field, $line, $ret);
+    my($fields, $data, $isdecode, $args) = @_;
+    my($field, $line, $ret);
     local($_);
 
-    $data =~ s/^\s+//;
-    $ret  = "<TABLE BORDER=1>\n";
-    foreach $line (split(/\r?\n/, $data)) {
-	$ret .= "<TR>";
+    $$data =~ s/^\s+//;
+    $ret  = "<table border=1>\n";
+    foreach $line (split(/\r?\n/, $$data)) {
+	$ret .= "<tr>";
 	foreach $field (split(/\t/, $line)) {
-	    $ret .= "<TD>$field</TD>";
+	    $ret .= "<td>$field</td>";
 	}
-	$ret .= "</TR>\n";
+	$ret .= "</tr>\n";
     }
-    $ret .= "</TABLE>\n";
+    $ret .= "</table>\n";
     ($ret);
 }
 

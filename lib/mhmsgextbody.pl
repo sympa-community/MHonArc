@@ -1,8 +1,8 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	@(#) mhmsgextbody.pl 1.1 99/09/28 23:17:50
+##	$Id: mhmsgextbody.pl,v 1.3 2001/09/05 15:48:15 ehood Exp $
 ##  Author:
-##      Earl Hood       mhonarc@pobox.com
+##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
 ##	Library defines routine to filter message/external-body parts to
 ##	HTML for MHonArc.
@@ -12,7 +12,7 @@
 ##          </MIMEFILTERS>
 ##---------------------------------------------------------------------------##
 ##    MHonArc -- Internet mail-to-HTML converter
-##    Copyright (C) 1999	Earl Hood, mhonarc@pobox.com
+##    Copyright (C) 1999-2001	Earl Hood, mhonarc@mhonarc.org
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by
@@ -42,10 +42,11 @@ package m2h_msg_extbody;
 ##			direct access to the file.
 ##
 sub filter {
-    local($header, *fields, *data, $isdecode, $args) = @_;
+    my($fields, $data, $isdecode, $args) = @_;
+    $args = ''  unless defined $args;
 
     # grab content-type
-    my $ctype = (split(/$readmail::FieldSep/o, $fields{'content-type'}))[0];
+    my $ctype = $fields->{'content-type'}[0];
     return ''  unless $ctype =~ /\S/;
 
     # parse argument string
@@ -55,14 +56,13 @@ sub filter {
     my $parms = readmail::MAILparse_parameter_str($ctype, 1);
     my $access_type = lc $parms->{'access-type'}{'value'};
        $access_type =~ s/\s//g;
-    my $cdesc = $fields{'content-description'} || "";
+    my $cdesc = $fields->{'content-description'}[0] || "";
 
-    local(%dfields, %dfl2o);
-    $data =~ s/\A\s+//;
-    my $dheader = readmail::MAILread_header(*data, *dfields, *dfl2o);
-    my $dctype  = $dfields{'content-type'} || "";
-    my $dcte 	= $dfields{'content-transfer-encoding'} || "";
-    my $dmd5 	= $dfields{'content-md5'} || "";
+    $$data =~ s/\A\s+//;
+    my $dfields = readmail::MAILread_header($data);
+    my $dctype  = $dfields->{'content-type'}[0] || "";
+    my $dcte 	= $dfields->{'content-transfer-encoding'}[0] || "";
+    my $dmd5 	= $dfields->{'content-md5'}[0] || "";
     my $size 	= $parms->{'size'}{'value'} || "";
     my $perms 	= $parms->{'permission'}{'value'} || "";
     my $expires	= $parms->{'expiration'}{'value'} || "";
@@ -94,6 +94,8 @@ sub filter {
 			    if $size;
 	    $ret	.= qq|Transfer-mode: <tt>$mode</tt><br>\n|
 			    if $mode;
+	    $ret	.= qq|Expires: <tt>$expires</tt><br>\n|
+			    if $expires;
 	    $ret	.= qq|Username/password may be required.<br>\n|
 			    if $access_type eq 'ftp';
 	    $ret	.= "</dd></dl>\n";
@@ -113,6 +115,8 @@ sub filter {
 	    $ret	.= qq|MD5: <tt>$dmd5</tt><br>\n|
 			    if $dmd5;
 	    $ret	.= qq|Size: $size bytes<br>\n|  	if $size;
+	    $ret	.= qq|Expires: <tt>$expires</tt><br>\n|
+			    if $expires;
 	    $ret	.= qq|File accessible from the following domain: | .
 			   qq|$site<br>\n|  if $site;
 	    $ret	.= "</dd></dl>\n";
@@ -136,7 +140,10 @@ sub filter {
 			    if $dctype;
 	    $ret	.= qq|MD5: <tt>$dmd5</tt><br>\n|
 			    if $dmd5;
-	    $ret	.= qq|Size: $size bytes<br>\n|  	if $size;
+	    $ret	.= qq|Size: $size bytes<br>\n|
+			    if $size;
+	    $ret	.= qq|Expires: <tt>$expires</tt><br>\n|
+			    if $expires;
 	    $ret	.= "</dd></dl>\n";
 	    last ATYPE;
 	}

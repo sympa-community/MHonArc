@@ -6,7 +6,7 @@
 
 <table border=0>
 <tr valign=center>
-<td><img src="monsmall_t.gif" alt=""></td>
+<td><img src="monsmall_t.png" alt=""></td>
 <td><h1>MHonArc Frequently Asked Questions</h1></td>
 </tr>
 </table>
@@ -15,7 +15,7 @@
 asked question on MHonArc. MHonArc is
 a <A HREF="http://language.perl.com/">Perl</A> program
 for converting e-mail messages as specified in RFC 822 and <A
-HREF="http://www.oac.uci.edu/indiv/ehood/MIME/MIME.html">MIME</a> to <A
+HREF="http://www.nacs.uci.edu/indiv/ehood/MIME/MIME.html">MIME</a> to <A
 HREF="http://www.w3.org/hypertext/WWW/MarkUp/MarkUp.html">HTML</A>.
 MHonArc has the ability to maintain an archive of converted
 messages, or it can be used as a basic e-mail-&gt;HTML converter.  </P>
@@ -63,10 +63,12 @@ messages, or it can be used as a basic e-mail-&gt;HTML converter.  </P>
 <li><a name="ezmlm" href="envs.html#ezmlm">Can MHonArc process ezmlm archives?</a></li>
 <li><a name="maildir" href="envs.html#maildir">Can MHonArc process qmail's maildir style mail folders?</a></li>
 <li><a name="netscape" href="envs.html#netscape">Can MHonArc process Netscape Messenger folders?</a></li>
+<li><a name="evolution" href="envs.html#evolution">Can MHonArc process Evolution folders?</a></li>
 <li><a name="compuserve" href="envs.html#compuserve">Can MHonArc process Compuserve messages?</a></li>
 <li><a name="otherformats" href="envs.html#otherformats">What about other mailbox/folder formats?</a></li>
 <li><a name="nonenglish" href="envs.html#nonenglish">Can MHonArc create non-English archives?</a></li>
 <li><a name="bilingual" href="envs.html#bilingual">Can I create bilingual archives?</a></li>
+<li><a name="unicode" href="envs.html#unicode">Does MHonArc support Unicode?</a></li>
 </ul>
 </ul>
 <ul>
@@ -75,6 +77,7 @@ messages, or it can be used as a basic e-mail-&gt;HTML converter.  </P>
 <li><a name="resources" href="usage.html#resources">What are "resources"?</a></li>
 <li><a name="rfileedit" href="usage.html#rfileedit">Is there a resource file editor?</a></li>
 <li><a name="nilresource" href="usage.html#nilresource">How do you set a resource to nil?</a></li>
+<li><a name="todefaults" href="usage.html#todefaults">How do I reset an archive's resources to the default values?</a></li>
 <li><a name="newgetopt" href="usage.html#newgetopt">I get an error that "newgetopt.pl" cannot be required, where is it?</a></li>
 <li><a name="searching" href="usage.html#searching">Does MHonArc provide searching of archives?</a></li>
 <li><a name="webui" href="usage.html#webui">Is there a Web interface for MHonArc?</a></li>
@@ -102,6 +105,7 @@ messages, or it can be used as a basic e-mail-&gt;HTML converter.  </P>
 <li><a name="jumps" href="archives.html#jumps">Why are there "jumps" in message numbers?</a></li>
 <li><a name="dups" href="archives.html#dups">Why do some messages get re-added each time MHonArc processes a mail folder?</a></li>
 <li><a name="remove" href="archives.html#remove">How do I remove messages from an archive?</a></li>
+<li><a name="tombox" href="archives.html#tombox">Can I convert an archive back to mailbox format?</a></li>
 </ul>
 </ul>
 <ul>
@@ -147,6 +151,17 @@ messages, or it can be used as a basic e-mail-&gt;HTML converter.  </P>
 <li><a name="filenames" href="mime.html#filenames">Can attachments get saved with the filename specified in the message header?</a></li>
 <li><a name="removepre" href="mime.html#removepre">Can the &lt;PRE&gt; tags be removed from converted messages?</a></li>
 <li><a name="lineclip" href="mime.html#lineclip">Can long lines be wrapped in converted messages?</a></li>
+<li><a name="exclude" href="mime.html#exclude">Can I exclude specific media-types?</a></li>
+<li><a name="alternative" href="mime.html#alternative">Can I tell MHonArc to use the text/plain part over a text/html part in a multipart/alternative message?</a></li>
+</ul>
+</ul>
+<ul>
+<li><a name="security" href="security.html">Security</a>
+<ul>
+<li><a name="spam" href="security.html#spam">Can I obscure email addresses?</a></li>
+<li><a name="spam" href="security.html#spam">How can I prevent web access to <tt>.mhonarc.db</tt> files?</a></li>
+<li><a name="htmldata" href="security.html#htmldata">Why are HTML messages a security risk?</a></li>
+<li><a name="attachments" href="security.html#attachments">Why doesn't MHonArc, by default, use the specified filename when saving attachments?</a></li>
 </ul>
 </ul>
 <!--X-TOC-End-->
@@ -154,11 +169,11 @@ messages, or it can be used as a basic e-mail-&gt;HTML converter.  </P>
 <!-- ===================================================================== -->
 <HR>
 <address>
-01/06/10 17:47:21<br>
-<img align="top" src="monicon.gif" alt="">
-<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"
+$Date: 2002/07/20 00:48:48 $ <br>
+<img align="top" src="monicon.png" alt="">
+<a href="http://www.mhonarc.org/"
 ><strong>MHonArc</strong></a><br>
-Copyright &#169; 1997-1999, <a href="http://www.oac.uci.edu/indiv/ehood/"
+Copyright &#169; 1997-1999, <a href="http://www.earlhood.com/"
 >Earl Hood</a>, <a href="mailto:mhonarc@mhonarc.org"
 >mhonarc@mhonarc.org</a><br>
 </address>

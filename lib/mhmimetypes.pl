@@ -1,13 +1,13 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	@(#) mhmimetypes.pl 1.6 01/06/10 17:37:44
+##	$Id: mhmimetypes.pl,v 1.9 2002/05/02 17:20:04 ehood Exp $
 ##  Author:
-##      Earl Hood       mhonarc@pobox.com
+##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
 ##	MIME type mappings.
 ##---------------------------------------------------------------------------##
 ##    MHonArc -- Internet mail-to-HTML converter
-##    Copyright (C) 1998,1999	Earl Hood, mhonarc@pobox.com
+##    Copyright (C) 1998,1999	Earl Hood, mhonarc@mhonarc.org
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by
@@ -181,6 +181,8 @@ $UnknownExt     = 'bin';
     'image/ief',			'ief:IEF image',
     'image/ifs',			'ifs:IFS image',
     'image/jpeg',			'jpg,jpeg,jpe:JPEG image',
+    'image/pbm',			'pbm:Portable bitmap',
+    'image/pgm',			'pgm:Portable graymap',
     'image/png',			'png:PNG image',
     'image/tiff',			'tif,tiff:TIFF image',
     'image/vnd',			'dwg:VND image',
@@ -203,6 +205,9 @@ $UnknownExt     = 'bin';
     'image/x-xpm',			'xpm:X pixmap',
     'image/x-xwd',			'xwd:X window dump',
     'image/x-xwindowdump',		'xwd:X window dump',
+
+    'message/rfc822',			'822:Mail message',
+    'message/news',			'822:News post',
 
     'model/iges',			'iges:IGES model',
     'model/vrml',			'wrl:VRML model',

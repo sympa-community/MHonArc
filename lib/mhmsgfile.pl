@@ -1,15 +1,15 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	@(#) mhmsgfile.pl 1.4 99/08/04 23:14:15
+##	$Id: mhmsgfile.pl,v 1.6 2001/09/17 16:10:28 ehood Exp $
 ##  Author:
-##      Earl Hood       mhonarc@pobox.com
+##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
 ##	MHonArc library for dealing with HTML message files.  Mainly
 ##	for parsing existing message files inorder to extract archive
 ##	related data.
 ##---------------------------------------------------------------------------##
 ##    MHonArc -- Internet mail-to-HTML converter
-##    Copyright (C) 1998-1999	Earl Hood, mhonarc@pobox.com
+##    Copyright (C) 1998-1999	Earl Hood, mhonarc@mhonarc.org
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by
@@ -115,13 +115,13 @@ sub load_data_from_msg_file {
     }
 
     if (defined($href->{'reference'})) {
-	$Refs{$index} = join($X, @{$href->{'reference'}});
+	$Refs{$index} = $href->{'reference'};
     } elsif (defined($href->{'reference-id'})) {	# older versions
-	$Refs{$index} = join($X, @{$href->{'reference-id'}});
+	$Refs{$index} = $href->{'reference-id'};
     }
 
     if (defined($href->{'derived'})) {
-	$Derived{$index} = join($X, @{$href->{'derived'}});
+	$Derived{$index} = $href->{'derived'};
     }
 
     $IndexNum{$index} = int($msgnum);

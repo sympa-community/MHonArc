@@ -4,11 +4,10 @@
 <title>MHonArc Resources: TSLICE</title>
 </head>
 <body>
-
-<address>
-<a href="../resources.html#tslice">MHonArc Resource List</a>
-</address>
-
+<!--x-rc-nav-->
+<table border=0><tr valign="top">
+<td align="left" width="50%">[Prev:&nbsp;<a href="tsingletxt.html">TSINGLETXT</a>]</td><td><nobr>[<a href="../resources.html#tslice">Resources</a>][<a href="../mhonarc.html">TOC</a>]</nobr></td><td align="right" width="50%">[Next:&nbsp;<a href="tslicebeg.html">TSLICEBEG</a>]</td></tr></table>
+<!--/x-rc-nav-->
 <hr>
 <h1>TSLICE</h1>
 
@@ -18,23 +17,21 @@
 
 <dl>
 
-<dt><strong>Envariable</strong><dt>
+<dt><strong>Envariable</strong></dt>
 <dd><p>
-<code>M2H_TSLICE=</code><var>number</var><code>:</code><var>number</var>
+<code>M2H_TSLICE=</code><var>number</var><code>:</code><var>number</var><code>:</code><var>inclusive-flag</var>
 </p>
 </dd>
 
-<dt><strong>Element</strong><dt>
-<dd><p><br>
-<code>&lt;TSLICE&gt;</code><br>
-<var>number</var><code>:</code><var>number</var><br>
+<dt><strong>Element</strong></dt>
+<dd><p><code>&lt;TSLICE&gt;</code><br>
+<var>number</var><code>:</code><var>number</var><code>:</code><var>inclusive-flag</var><br>
 <code>&lt;/TSLICE&gt;</code><br>
 </p>
 </dd>
 
-<dt><strong>Command-line Option</strong><dt>
-<dd><p>
-<code>-tslice </code><var>number</var><code>:</code><var>number</var>
+<dt><strong>Command-line Option</strong></dt>
+<dd><p><code>-tslice </code><var>number</var><code>:</code><var>number</var><code>:</code><var>inclusive-flag</var>
 </p>
 </dd>
 
@@ -44,21 +41,58 @@
 <hr>
 <h2>Description</h2>
 
-<p>TSLICE sets the size of the thread listing "slice" (ie. a portion
-of the complete thread listing) when the
-<b><tt>$TSLICE$</tt></b> resource variable is used.  The value
-of the TSLICE resource is two numbers separated by a colon.
+<p>TSLICE sets the default argument values for the the
+<b><tt><a href="../rcvars.html#TSLICE">$TSLICE$</a></tt></b>
+resource variable: the thread listing
+"<em>slice</em>" (ie. a portion of the complete thread listing).
+The value of the TSLICE resource is two numbers and an inclusive flag,
+where each value is separated by a colon.
 The first number is the number of messages listed <b>before</b> the
 current message in the thread slice.  The second number is
 the number of messages listed <b>after</b> the current message.
+The inclusive flag is either a <tt><b>1</b></tt> or
+<tt><b>0</b></tt>.  If <tt><b>1</b></tt>, <tt>$TSLICE$</tt>
+will only include in the thread listing messages in the same thread
+as the current thread.  If <tt><b>0</b></tt>, <tt>$TSLICE$</tt> will
+include messages in neighboring threads if before and/or after count 
+extend beyond the current thread.  If the inclusive flag is not
+set, then <tt>0</tt> will be used.
 </p>
+<p>The default values can be overridden by providing different
+values as arguments to
+<tt><a href="../rcvars.html#TSLICE">$TSLICE$</a></tt>.
+</p>
+
+<table border=0 cellpadding=4>
+<tr valign=top>
+<td><strong>NOTE</strong></td>
+<td><p>The value of the TSLICE
+resource is used to determine the number of messages to update,
+before and after by thread, when a new message is added.  To
+insure that messages within a thread slice are updated when
+a new message is added, make sure the before and after ranges
+specified for TSLICE is
+equal to maximum before and the maximum after range arguments
+specifed in the uses of the
+<a href="../rcvars.html#TSLICE"><tt>$TSLICE$</tt></a> resource
+variable.  For example, if you have <tt>$TSLICE(0;4)$</tt> and
+<tt>$TSLICE(3;3)$</tt> in message layout resources, you should
+set TSLICE to <tt>3:4</tt>.
+</p>
+<p>If you only use <tt>$TSLICE$</tt> once, it is best to
+set options for thread slice formatting via the
+TSLICE resource so you will not have anything to worry about.
+</p>
+</td>
+</tr>
+</table>
 
 <!-- *************************************************************** -->
 <hr>
 <h2>Default Setting</h2>
 
 <pre>
-0:4
+0:4:0
 </pre>
 
 <!-- *************************************************************** -->
@@ -76,13 +110,13 @@ the number of messages listed <b>after</b> the current message.
 current message.  However, you may want to have the current message
 in the middle so the reader can see message that come before along
 with after the current message.  The following causes the
-previous two and next two messages to be listed, with the current
-in the middle:
+previous two and next two messages to be listed with the current
+in the middle and only if the messages are part of the current thread:
 </p>
 
 <pre>
 <b>&lt;TSlice></b>
-2:2
+2:2:1
 <b>&lt;/TSlice></b>
 </pre>
 
@@ -98,20 +132,46 @@ in the middle:
 <h2>See Also</h2>
 
 <p>
+<a href="../rcvars.html#TSLICE"><tt>$TSLICE$</tt></a>,
 <a href="tslicebeg.html">TSLICEBEG</a>,
-<a href="tsliceend.html">TSLICEEND</a>
+<a href="tslicecontbeg.html">TSLICECONTBEG</a>,
+<a href="tslicecontend.html">TSLICECONTEND</a>,
+<a href="tsliceend.html">TSLICEEND</a>,
+<a href="tsliceindentbeg.html">TSLICEINDENTBEG</a>,
+<a href="tsliceindentend.html">TSLICEINDENTEND</a>,
+<a href="tsliceliend.html">TSLICELIEND</a>,
+<a href="tsliceliendcur.html">TSLICELIENDCUR</a>,
+<a href="tslicelinone.html">TSLICELINONE</a>,
+<a href="tslicelinoneend.html">TSLICELINONEEND</a>,
+<a href="tslicelitxt.html">TSLICELITXT</a>,
+<a href="tslicelitxtcur.html">TSLICELITXTCUR</a>,
+<a href="tslicesingletxt.html">TSLICESINGLETXT</a>,
+<a href="tslicesingletxtcur.html">TSLICESINGLETXTCUR</a>,
+<a href="tslicesubjectbeg.html">TSLICESUBJECTBEG</a>,
+<a href="tslicesubjectend.html">TSLICESUBJECTEND</a>,
+<a href="tslicesublistbeg.html">TSLICESUBLISTBEG</a>,
+<a href="tslicesublistend.html">TSLICESUBLISTEND</a>,
+<a href="tslicetopbeg.html">TSLICETOPBEG</a>,
+<a href="tslicetopbegcur.html">TSLICETOPBEGCUR</a>,
+<a href="tslicetopend.html">TSLICETOPEND</a>,
+<a href="tslicetopendcur.html">TSLICETOPENDCUR</a>
 </p>
 
 <!-- *************************************************************** -->
 <hr>
+<!--x-rc-nav-->
+<table border=0><tr valign="top">
+<td align="left" width="50%">[Prev:&nbsp;<a href="tsingletxt.html">TSINGLETXT</a>]</td><td><nobr>[<a href="../resources.html#tslice">Resources</a>][<a href="../mhonarc.html">TOC</a>]</nobr></td><td align="right" width="50%">[Next:&nbsp;<a href="tslicebeg.html">TSLICEBEG</a>]</td></tr></table>
+<!--/x-rc-nav-->
+<hr>
 <address>
-00/10/28 11:13:12<br>
-<img align="top" src="../monicon.gif" alt="">
-<a href="http://www.pobox.com/~ehood/mhonarc.html"
+$Date: 2002/07/27 05:13:11 $ <br>
+<img align="top" src="../monicon.png" alt="">
+<a href="http://www.mhonarc.org/"
 ><strong>MHonArc</strong></a><br>
-Copyright &#169; 1998-1999, <a href="http://www.pobox.com/~ehood/"
->Earl Hood</a>, <a href="mailto:mhonarc@pobox.com"
->mhonarc@pobox.com</a><br>
+Copyright &#169; 1998-1999, <a href="http://www.earlhood.com/"
+>Earl Hood</a>, <a href="mailto:mhonarc@mhonarc.org"
+>mhonarc@mhonarc.org</a><br>
 </address>
 
 </body>

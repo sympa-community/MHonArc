@@ -1,8 +1,8 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	@(#) mhnull.pl 1.5 01/06/10 17:35:03
+##	$Id: mhnull.pl,v 1.7 2001/09/17 16:10:30 ehood Exp $
 ##  Author:
-##      Earl Hood       mhonarc@pobox.com
+##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
 ##	Library defines the null filter routine for MHonArc.  Its use
 ##	is for dropping unwanted data from messages.
@@ -12,7 +12,7 @@
 ##              </MIMEFILTERS>
 ##---------------------------------------------------------------------------##
 ##    MHonArc -- Internet mail-to-HTML converter
-##    Copyright (C) 1998,1999	Earl Hood, mhonarc@pobox.com
+##    Copyright (C) 1998,1999	Earl Hood, mhonarc@mhonarc.org
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by
@@ -33,9 +33,9 @@
 package m2h_null;
 
 sub filter {
-    local($header, *fields, *data, $isdecode, $args) = @_;
-    my($ctype) = $fields{'content-type'} =~ m%^\s*([\w\-\./]+)%;
-    my($disp, $nameparm) = &readmail::MAILhead_get_disposition(*fields);
+    my($fields, $data, $isdecode, $args) = @_;
+    my($ctype) = $fields->{'content-type'}[0] =~ m%^\s*([\w\-\./]+)%;
+    my($disp, $nameparm) = readmail::MAILhead_get_disposition($fields);
     join("", '<p><tt>&lt;&lt;',
 	     ($disp ? "$disp: " : ""),
 	     ($nameparm ? $nameparm : $ctype),
