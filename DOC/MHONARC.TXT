@@ -1,0 +1,2504 @@
+         [IMAGE]
+
+                                    MHONARC
+                                       
+    mail2html, mbox2html, mhf2html
+    
+     An Internet mail-to-HTML converter.
+     
+   
+   
+   
+     _________________________________________________________________
+   
+Table of Contents
+
+   
+   
+     * Introduction 
+          + Why Use MHonArc? 
+          + Requirements 
+          + Availability 
+     * Quick Start 
+          + Converting MH mail folders, or Mailbox files 
+          + Converting a single message 
+     * Environment Variables 
+     * Command-Line Options 
+     * Resource File 
+          + Resource File Elements 
+          + Example Resource Settings 
+          + Notes on Resource File 
+     * Adding New Messages to an Archive 
+          + Examples 
+          + Notes on Adding New Messages 
+     * MIME 
+          + Default Filters 
+          + Writing Filters 
+          + Specifying Filters 
+     * Index Page Customization 
+          + Filename 
+          + Title 
+          + Include Files 
+          + Listing Layout 
+          + Examples 
+     * Icons 
+          + Defining Icons 
+          + Using Icons 
+     * Archive Integrity 
+     * Tips 
+     * Notes 
+     * Diagnostics 
+          + Informative messages 
+          + Warnings 
+          + Errors 
+            
+   
+   
+   
+     _________________________________________________________________
+   
+    Earl Hood <ehood@convex.com>
+    CONVEX Computer Corporation
+    3000 Waterview Parkway
+    P.O. Box 833851
+    Richardson, TX 75083-3851
+    
+    Phone: (214) 497-4387
+    FAX: (214) 497-4500
+
+                                       
+   __________________________________________________________________________
+                                       
+                                INTRODUCTION
+                                       
+   MHonArc is a Perl program for converting e-mail messages as specified
+   in RFC 822 and RFC 1521 (MIME) to HTML. MHonArc can perform the
+   following tasks:
+   
+     * Convert mh(1) mail folders or mail(1) style mailboxes into an HTML
+       mail archive.
+     * Add new e-mail messages to an existing HTML mail archive generated
+       by MHonArc.
+     * Convert a single message to HTML.
+       
+   An index page is created when an archive is generated. MHonArc allows
+   complete customization over the appearance of the index page including
+   the ability to insert user defined HTML markup and content-type
+   sensitive icons for the mail messages processed.
+   
+
+   
+     _________________________________________________________________
+   
+Why Use MHonArc? 
+
+   Here are some reasons for using MHonArc:
+   
+     * You need to archive mailing lists for use in a World Wide Web
+       (WWW) server.
+     * You want to archive newsgroup postings for use in a WWW server.
+     * You have a WWW client, but no MIME mail reader. MHonArc will allow
+       you to read MIME messages that includes images, audio, video, etc
+       via your Web client.
+     * You think the MHonArc logo is really cool, and it deserves to be
+       used.
+     * You like Perl, and you want to see what it can do.
+     * Just cuz.
+       
+   
+     _________________________________________________________________
+   
+Requirements 
+
+   In order to run MHonArc, you must be using it on a UNIX based system
+   with Perl 4 installed. It is recommed to have patchlevels 34 or later
+   of Perl.
+   
+
+   
+     _________________________________________________________________
+   
+Availability 
+
+   The latest information on MHonArc, and its availability, may be
+   obtained at <URL:http://www.oac.uci.edu/indiv/ehood/mhonarc.doc.html>.
+   
+   
+
+   
+     _________________________________________________________________
+   
+   [Next:Quick Start]
+   [ToC]
+   
+   
+   
+     _________________________________________________________________
+   
+    MHonArc 1.0.0 -- Introduction
+
+                                       
+   __________________________________________________________________________
+                                       
+                                 QUICK START
+                                       
+   If you cannot wait to get started, this section will give you a "quick
+   start" on using MHonArc. However, I recommend reading through the
+   entire documentation to take full advantage of all the features of
+   MHonArc.
+   
+
+   
+     _________________________________________________________________
+   
+Converting MH mail folders, or Mailbox files 
+
+   Since MHonArc supports MH mail folders and mailbox files, the term
+   "inbox" will represent the MH mail folder or mailbox file you want
+   to process. To convert your inbox to an HTML archive, use one of the
+   following commands:
+   
+   For an MH mail folder:
+          % mhonarc <path>/inbox
+          
+   For a mailbox file:
+          % mhonarc -mbox <path>/inbox
+          
+   Where <path> represents the path to the directory that contains inbox.
+   If you are in the directory that contains inbox, then you can leave
+   out the "<path>/".
+   
+   NOTES:
+          An MH mail folder is actually a UNIX directory file, and
+          MHonArc expects the filename arguments you give to be
+          directory files. If -mbox is specified, then the filename
+          arguments should be UNIX plain files in mailbox format.
+          
+
+   MHonArc prints out messages showing its progress as your e-mail is
+   processed. When MHonArc finishes, the following files will be created:
+   
+   
+     * maillist.html: The index file containing links to all mail
+       messages converted. Messages are listed with subjects and who the
+       messages are from. All messages are listed in sorted order by date
+       received/sent.
+       
+     * msg*.html: HTML versions of the mail messages, where * represents
+       a number from 0 to the number of message processed minus 1.
+       
+     * .mhonarc.db: This database file is needed inorder for MHonArc to
+       perform additions of new mail messages to the archive. Information
+       is stored to perform mail threading updates when new messages are
+       added, as well as any resources set via Environment Variables,
+       Resource File, and/or Command-Line Options.
+       
+     * Other: Depending on the content-types of the e-mail messages
+       converted, other files may be created for images, videos,
+       binaries, etc. See the section on MIME for more information.
+       
+   The format of each converted mail message is as follows:
+   
+     * A <LINK REV="made" HREF="mailto:from_address"> is inserted in the
+       HEAD element of HTML mail message file. This allows readers of the
+       message to send comments to the author of the mail message within
+       Web browsers that support such functionality (like Lynx).
+       
+     * The title (i.e. TITLE element) contains the subject of the
+       message.
+       
+     * Hyperlinks to the previous and next messages and the index page
+       are located at the top of the message.
+       
+     * Next, the subject appears in a H1 element.
+       
+     * Next, follows the mail header with fields listed in a UL element
+       surrounded by HR's.
+       
+     * Next, the actual body of the mail message.
+       
+     * Next, links to any follow-up, or referenced, messages. The
+       messages are listed by subject and who they are from. These links
+       allows you to easily follow mail threads.
+       
+     * Last, are verbose links to the previous mail message, next mail
+       message, and mail index page.
+       
+   The following is also done for each mail message processed:
+   
+     * Links are created in the "References" and "In-Reply-To" header
+       fields, and possibly the message body, if the destination
+       message-ids are being processed.
+       
+     * E-mail addresses are converted to "mailto" hyperlinks in "To:",
+       "From:", "Cc:", and "Sender:" mail header fields. Currently, not
+       all Web browsers support the mailto URL.
+       
+     * Newsgroups listed in a "Newsgroups:" mail header field are
+       converted to news hyperlinks.
+       
+
+   NOTE:
+          MHonArc allows you to specify more than one MH mail folder, or
+          mailbox, to process on the command-line. However, you may not
+          specify both MH mail folders and mailbox files at the same
+          time.
+          
+
+   
+     _________________________________________________________________
+   
+Converting a single message 
+
+   To convert a single message to HTML use the -single command-line
+   option. The message to process can be specified by a filename in the
+   command-line, or by reading the message from standard input if no file
+   is specified. The filtered message is sent to standard output. All
+   formatting options apply to the single message as with messages being
+   processed for an archive, with the exception of formatting related
+   specificly to archive processing, like index links and mail thread
+   links.
+   
+   Examples:
+   
+   Input from standard input:
+          % mhonarc -single < messagefile > file.html
+          
+   Filename on command-line:
+          % mhonarc -single messagefile > file.html
+          
+
+   
+     _________________________________________________________________
+   
+   [Prev:Introduction]
+   [Next:Environment Variables]
+   [ToC]
+   
+   
+   
+     _________________________________________________________________
+   
+    mhonarc 1.0.0 -- Quick Start
+
+                                       
+   __________________________________________________________________________
+                                       
+                            ENVIRONMENT VARIABLES
+                                       
+   MHonArc supports the use of environment variables. The environment
+   variables allow you to set default options everytime you invoke
+   MHonArc. The following environment variables may be used:
+   
+   M2H_DBFILE
+          Sets the name of MHonArc database file. The default is
+          ".mhonarc.db". You should not override the default name unless
+          absolutely necessary, and you are confident about what you are
+          doing.
+          
+   M2H_DOCURL
+          Set the URL used to point to MHonArc documentation. The default
+          is, "http://www.oac.uci.edu/indiv/ehood/mhonarc.doc.html".
+          
+   M2H_FOOTER
+          Set the HTML footer file to insert at the bottom of the index
+          page. No default footer file is defined. See Include Files in
+          Index Page Customization for more information about the
+          footer file.
+          
+   M2H_HEADER
+          Set the HTML header file to insert at the top of the index
+          page. No default header file is defined. See Include Files in
+          Index Page Customization for more information about the
+          header file.
+          
+   M2H_IDXFNAME
+          Set the name of the index file. The default is,
+          "maillist.html".
+          
+   M2H_LOCKFILE
+          Set the name of the lock file. The default name use is
+          ".mhonarc.lck". You should not change the default unless
+          absolutely necessary. See Archive Integrity for more
+          information about the lock file.
+          
+   M2H_LOCKTRIES
+          Set the number of time MHonArc tries to lock a mail archive
+          before processing new messages. The default value is 10.
+          MHonArc waits approximately 3 seconds before each try. See
+          Archive Integrity for more information on the M2H_LOCKTRIES
+          environment variable.
+          
+   M2H_MAILTOURL
+          Sets the URL for e-mail address hyperlinks. If the environment
+          variable contains the string, "$TO$", the string is replaced
+          with the e-mail address being hyperlinked at runtime. MHonArc
+          uses the following URL by default: mailto:$TO$
+          
+   M2H_OUTDIR
+          Set the destination/location of the HTML mail archive. The
+          default is the current working directory.
+          
+   M2H_RCFILE
+          Set the Resource File for MHonArc. No default resource file is
+          defined.
+          
+   M2H_TITLE
+          Set the default title of the index page. The default is "Main
+          Index".
+          
+   Environment variables may be overriden by the Resource File or
+   Command-Line Options.
+   
+
+   
+     _________________________________________________________________
+   
+   [Prev:Quick Start]
+   [Next:Command-Line Options]
+   [ToC]
+   
+   
+   
+     _________________________________________________________________
+   
+    MHonArc 1.0.0 -- Environment Variables
+
+                                       
+   __________________________________________________________________________
+                                       
+                            COMMAND-LINE OPTIONS
+                                       
+   Invoke MHonArc from your Unix shell with the following syntax:
+   
+   % mhonarc [options] mhfolder...
+   % mhonarc -mbox [options] mailbox ...
+   % mhonarc -add [options] < message
+   % mhonarc -add [options] < mhfolder ...
+   % mhonarc -add -mbox [options] < mailbox
+   % mhonarc -single [options] < message > message.html
+   % mhonarc -single [options] message > message.html
+   
+   
+   MHonArc has many command-line options. If you do not want to specify a
+   ton of command-line options each time you use MHonArc, see Resource
+   File.
+   
+   The following options are available:
+   
+   -add
+          Add new messages to an existing archive. See Adding New
+          Messages to an Archive for more information.
+          
+   -dbfile name
+          Use name for the name of MHonArc database file. The default is
+          ".mhonarc.db". You should not override the default name unless
+          absolutely necessary, and you are confident about what you are
+          doing.
+          
+   -docurl url
+          Use url as the URL to MHonArc documentation. The default is
+          "http://www.oac.uci.edu/indiv/ehood/mhonarc.doc.html".
+          
+   -editidx
+          This option tells MHonArc to rewite only the index file. This
+          option is useful if you need to reformat the index page without
+          adding new messages. See Index Page Customization on how to
+          format the index page. -editidx takes precedence over -add and
+          -single.
+          
+   -footer filename
+          Insert contents of filename at the bottom of the index page.
+          See Include Files in Index Page Customization for more
+          information about the footer file.
+          
+   -header filename
+          Insert contents of filename at the beginning of the index page.
+          See Include Files in Index Page Customization for more
+          information about the header file.
+          
+   -help
+          Print out a help message about MHonArc.
+          
+   -idxfname name
+          Sets the name of the index file to name. The default is
+          "maillist.html".
+          
+   -mailtourl url
+          Use url for e-mail address hyperlinks in mail message headers.
+          If the url contains the string, "$TO$", the string will be
+          replaced with the e-mail address being hyperlinked at runtime.
+          The default URL is "mailto:$TO$"
+          
+          The -mailtourl option has no effect if the -nomailto option is
+          specified.
+          
+   -mbox
+          Treat file arguments as mail(1) mailboxes instead of MH mail
+          folders. This option overrides the -mh option.
+          
+   -msgsep expression
+          Use the expression as the Perl regular expression that
+          signifies the message separator in mailbox files. The default
+          expression is (without the quotes): "^From " (there is a space
+          character after the From).
+          
+   -mh
+          Treat file arguments as mh(1) mail folders. This option is the
+          default unless the program name is mbox2html.
+          
+   -nomailto
+          Do not convert e-mail addresses in mail headers to mailto
+          hyperlinks.
+          
+   -nonews
+          Do not convert newsgroups in the Newsgroups: mail header field
+          to news hyperlinks.
+          
+   -noreverse
+          Do not perform a reverse listing of the mail messages in the
+          index page.
+          
+   -nosort
+          Do not sort messages by date. Messages will be in the order
+          they appear in the mailboxes/folders. By default, MHonArc sorts
+          messages by date sent/received. -nosort takes precedence over
+          the -sort option.
+          
+   -outdir path
+          Set destination/location of the HTML mail archive to path. By
+          default, the current working directory is used.
+          
+   -quiet
+          Suppress processing messages when MHonArc is running.
+          
+   -rcfile file
+          Use file as the resource file for MHonArc. See Resource File
+          for more information. There is no default resource file.
+          
+   -reverse
+          List messages in reverse order of the sorting option specified.
+          For example, if date sorting is specified, -reverse will cause
+          messages to be listed in reverse chronological order.
+          
+   -single
+          Convert a single mail message to HTML. The message can be
+          specified by a filename on the command-line, or read from
+          standard input if no file is given. The filtered message is
+          sent to standard output. The -single option is useful tp
+          convert individual messages to HTML not related to a specific
+          mail archive. Any option related to how message formatting can
+          be used with the -single option.
+          
+          The -single takes precedence over the -add option.
+          
+   -sort
+          Perform chronological date sorting. This is the default.
+          
+   -subsort
+          Sort messages by subject. Subject sorting is case-insensitive,
+          and begining "Re:", "A", "An", and "The" words are ignored.
+          
+   -title string
+          Set the title of the index page to string. The default is "Mail
+          Index".
+          
+   -umask umask
+          Set the umask of the MHonArc process to umask. The value is
+          treated as an octal number.
+          
+
+   NOTE:
+          The -no* options always take precedence over their
+          counterparts. For example, if -noreverse and -reverse are both
+          specified on the command-line, the -noreverse will be applied.
+          
+   Any arguments that are not part of the command-line options are
+   treated as mail folders, or mailboxes, containing e-mail messages.
+   
+
+   
+     _________________________________________________________________
+   
+   [Prev:Environment Variables]
+   [Next:Resource File]
+   [ToC]
+   
+   
+   
+     _________________________________________________________________
+   
+    MHonArc 1.0.0 -- Command-Line Options
+
+                                       
+   __________________________________________________________________________
+                                       
+                                RESOURCE FILE
+                                       
+   MHonArc supports the ability to read in a resource file to control the
+   behavior of MHonArc. The resource file allows you to specify most of
+   the resources set by environment variables, and command-line options.
+   The resource file also allows you to affect MHonArc behavior that
+   cannot be specified by environment variables, or command-line options.
+   
+   
+   The resource file is specified by the M2H_RCFILE environment variable
+   or the -rcfile command-line option. The command-line option overrides
+   the environment variable if both are defined.
+   
+   Resources are set in the file by using elements similiar in style to
+   HTML/SGML markup. However, MHonArc uses simpler parsing rules for the
+   resource file than standard SGML:
+   
+     * Any line that is not a recognized element open tag, and the line
+       is not contained within an element, is ignored. This implies that
+       regular text can be put anywhere OUTSIDE of recognized elements
+       for commenting purposes.
+       
+       NOTE: You should use SGML comment declarations (<!-- ... -->) when
+       commenting a resource file. This will eliminate possible conflict
+       with later versions of MHonArc if more stricter parsing rules are
+       adopted.
+       
+     * The opening tag of an element must occur by itself on a single
+       line. Whitespace is allowed before the the open tag.
+       
+     * No comments are allowed inside elements because the text will be
+       treated as element content.
+       
+     * Each format element must be closed with a </element_name> tag on
+       its own line unless explicitly stated otherwise in the Resource
+       File Elements section. Whitespace is allowed before the close
+       tag.
+       
+     * Some elements can take an optional attribute called "Override".
+       This tells MHonArc that the contents of the element will
+       completely override the default behavior of MHonArc, and previous
+       instances of the element. Example: "<EXCS Override>". If
+       "Override" is not specified, then the contents of the element
+       augment the current behavior.
+       
+     * Element names are case-insensitive.
+       
+     * Elements can occur in any order in the resource file.
+       
+
+   
+     _________________________________________________________________
+   
+Resource File Elements
+
+   The following list of elements contain no textual content so no end
+   tag is required:
+   
+   MBOX
+          Treat filename arguments as mailbox files.
+          
+   MH
+          Treat filename arguments as MH mail folders.
+          
+   NOMAILTO
+          Do not convert e-mail addresses in mail headers to mailto
+          hyperlinks.
+          
+   NONEWS
+          Do not convert newsgroups in the Newsgroups: mail header field
+          to news hyperlinks.
+          
+   NOREVERSE
+          Do not perform a reverse listing of the mail messages in the
+          index page.
+          
+   NOSORT
+          List messages in the index page in the order they are
+          processed.
+          
+   REVERSE
+          List messages in reverse chronological order if date sorting is
+          being done, or list messages in reverse processing order if no
+          date sorting is being done.
+          
+   SORT
+          List messages in the index page in chronological order.
+          
+   SUBSORT
+          Sort messages by subject. Subject sorting is case-insensitive,
+          and begining "Re:", "A", "An", and "The" words are ignored.
+          
+
+   The following list of elements contain textual content, therefore,
+   each element must be explicitly closed with an element end tag
+   (examples are given in Example Resource Settings to help you
+   understand how the elements are used):
+   
+   DBFILE
+          The name of the MHonArc database file. The default is
+          ".mhonarc.db". You should not override the default name unless
+          absolutely necessary, and you are confident about what you are
+          doing.
+          
+   DOCURL
+          URL to use for MHonArc documentation. The default is
+          "http://www.oac.uci.edu/indiv/ehood/mhonarc.doc.html".
+          
+   EXCS
+          Each line of the EXCS element specifies a mail header field to
+          exclude in the converted HTML output. Each line is treated as a
+          Perl regular expression (NOTE: the regular expression is
+          already anchored to the begining of the line). MHonArc has a
+          default list of fields to exclude from mail headers (see
+          Example (EXCS)). Therefore, the list given in the resource
+          file will augment the default list, unless the "Override"
+          attribute is specified. If "Override" is specified, the default
+          list is discarded along with any other lists specified from
+          previous EXCS elements; and only header fields specified in the
+          EXCS element are excluded (see Example (EXCS 2)).
+          
+   FIELDORDER
+          Each line of the FIELDORDER element is the exact
+          case-insensitive name of a message header field. The order the
+          fields are listed is the order they will appear in the filtered
+          message. The special field value "-extra-" represents all
+          fields not explicitly specified in the FIELDORDER element and
+          not excluded by the EXCS element. Extra fields are listed in
+          sorted order. See Example (FIELDORDER) for the default value of
+          the FIELDORDER used by MHonArc.
+          
+   FIELDSTYLES
+          Each line in the FIELDSTYLES element defines HTML elements to
+          wrap around the field text in mail headers (e.g. "To: field
+          text", "From: field text"). The format of each line is
+          "field_name:html_element". This specifies to wrap html_element
+          around the text associated with field_name. If html_element is
+          empty, then the field text is not wrapped in any element.
+          MHonArc defines a special field_name called "-default-". This
+          is default HTML element to wrap field text in if no explicit
+          specific element is defined for the label.
+          
+          field_name must be the exact name of a header field name, but
+          character case is ignored.
+          
+          See Example (FIELDSTYLES) for the default formatting rules used
+          by MHonArc.
+          
+          See also LABELSTYLES.
+          
+   FOOTER
+          File to include at the end of the index page. See Include Files
+          in Index Page Customization for more information about the
+          footer file.
+          
+   HEADER
+          File to include at the beginning of the index page. See Include
+          Files in Index Page Customization for more information about
+          the header file.
+          
+   ICONS
+          The ICONS element is used to specify the icons that represent
+          the different content-types of messages. See the Icons section
+          on usage of this element.
+          
+   INDEXBL
+          The single line value of the INDEXBL element represents the
+          label text to use for the "Index" button link at the top of
+          filtered messages. Any HTML markup is allowed as long as it is
+          legal within the anchor element. See Example (INDEXBL) for
+          usage of an icon as the Index link. The default value of
+          INDEXBL is "[Index]".
+          
+   INDEXFL
+          The single line value of the INDEXFL element represents the
+          text to use before the verbose name "Index" link in the footer
+          of filtered messages. Normal text should be used for this
+          element since the text will appear in an HTML LI element inside
+          a UL. Unlike INDEXBL, the text is not wrapped in an anchor. The
+          default value of INDEXFL is "Index".
+          
+   IDXFNAME
+          The name of the index file. The default is "maillist.html".
+          
+   LABELSTYLES
+          Each line in the LABELSTYLES element defines HTML elements to
+          wrap around labels in mail headers (e.g. "To:", "From:"). The
+          format of each line is "field_name:html_element". This
+          specifies to wrap html_element around field_name. If
+          html_element is empty, then the label is not wrapped in any
+          element. MHonArc defines a special field_name called
+          "-default-". This is default HTML element to wrap a label in if
+          no explicit specific element is defined for the label.
+          
+          field_name must be the exact name of a header field name, but
+          character case is ignored.
+          
+          See Example (LABELSTYLES) for the default formatting rules used
+          by MHonArc.
+          
+          See also FIELDSTYLES.
+          
+   LISTBEGIN
+          See LISTBEGIN in Index Page Customization for usage of this
+          element.
+          
+   LITEMPLATE
+          See LITEMPLATE in Index Page Customization for usage of this
+          element.
+          
+   LISTEND
+          See LISTEND in Index Page Customization for usage of this
+          element.
+          
+   MAILTOURL
+          URL to use for e-mail address hyperlinks. If the URL contains
+          the string, "$TO$", the string will be replaced with e-mail
+          address being hyperlinked. MHonArc will use the following URL
+          by default: mailto:$TO$
+          
+   MIMEFILTERS
+          See MIMEFILTERS in Specifying Filters for usage of this
+          element.
+          
+   MSGSEP
+          Perl regular expression that represents the message separator
+          for mailbox files. The default expression is "^From ".
+          
+   NEXTBL
+          The single line value of the NEXTBL element represents the
+          label text to use for the "Next" button link at the top of
+          filtered messages. Any HTML markup is allowed as long as it is
+          legal within the anchor element. See Example (NEXTBL) for usage
+          of an icon for the Next link. The default value of NEXTBL is
+          "[Next]".
+          
+   NEXTFL
+          The single line value of the NEXTFL element represents the text
+          to use before the verbose subject "Next" link in the footer of
+          filtered messages. Normal text should be used for this element
+          since the text will appear in an HTML LI element inside a UL.
+          Unlike NEXTBL, the text is not wrapped in an anchor. The
+          default value of NEXTFL is "Next".
+          
+   PERLINC
+          Each line represents a path to search when requiring MIME
+          filters. See Specifying Filters in MIME for the use of this
+          element.
+          
+   PREVBL
+          The single line value of the PREVBL element represents the
+          label text to use for the "Prev" button link at the top of
+          filtered messages. Any HTML markup is allowed as long as it is
+          legal within the anchor element. See Example (PREVBL) for usage
+          of an icon for the Prev link. The default value of PREVBL is
+          "[Prev]".
+          
+   PREVFL
+          The single line value of the PREVFL element represents the text
+          to use before the verbose subject "Prev" link in the footer of
+          filtered messages. Normal text should be used for this element
+          since the text will appear in an HTML LI element inside a UL.
+          Unlike PREVBL, the text is not wrapped in an anchor. The
+          default value of PREVFL is "Prev".
+          
+   TIMEZONES
+          Each line of the TIMEZONES element defines a timezone acronym
+          and its hour offset from UTC/GMT (Universal Coordinate Time).
+          The format of each line is "timezone_acronym:hour_offset".
+          Examples of timezone acronyms are: UTC, PDT, EST. The hour
+          offset is should be positive for timezones West of UTC, and
+          negative for time zones East of UTC. MHonArc has a default list
+          of timezone acronyms defined with hour offsets (see Example
+          (TIMEZONES)). Therefore, the list given in the resource file
+          will augment the default list, unless the "Override" attribute
+          is specified. If "Override" is specified, the default list,
+          along with any other lists specified in previous TIMEZONES
+          elements, are discarded, and only the timezone acronyms
+          specified in the TIMEZONES element will be used.
+          
+          Most of the time, the date used by MHonArc uses a hour offset
+          instead of a timezone acronym. However, mail messages may
+          contain timezone acronyms in received/sent dates and MHonArc
+          must be told what the hour offset from UTC the timezone acronym
+          represents in order to properly sort messages by date.
+          
+   TITLE
+          Title for the index page. The default is "Mail Index".
+          
+   UMASK
+          Sets the umask for the MHonArc process. The value is treated as
+          an octal number.
+          
+
+   
+     _________________________________________________________________
+   
+Example Resource Settings
+
+   This section gives examples of how to use some of the resource file
+   elements.
+   
+  EXAMPLE (DOCURL)
+<!--  DOCURL element specifies the URL to use for pointing to
+      MHonArc documentation.  All whitespace is stripped out of the
+      line.
+  -->
+<DOCURL>
+http://www.oac.uci.edu/indiv/ehood/mhonarc.doc.html
+</DOCURL>
+
+  EXAMPLE (EXCS)
+<!--  Each line in the EXCS element is treated as a Perl
+      (case-insensitive) regular expression for excluding mail header
+      fields from the HTML output.  All whitespace is stripped out of
+      each expression.
+
+      "Override" attribute may be specified to clear the default
+      exclusion fields.
+
+      The following list represents the default exclusions made by
+      MHonArc.
+  -->
+<EXCS>
+content-
+errors-to
+forward
+lines
+message-id
+mime-
+nntp-
+originator
+path
+precedence
+received
+replied
+return-path
+status
+via
+x-
+</EXCS>
+
+  EXAMPLE (EXCS 2)
+<!--  This example overrides the default exclusion fields, and requires
+      that header fields must EXACTLY match what is listed inorder
+      to be excluded (this is done by appending a '$' at the end
+      of each field listed.
+  -->
+<EXCS override>
+apparently-to$
+apparently-from$
+replied$
+received$
+</EXCS>
+
+  EXAMPLE (FIELDORDER)
+<!--  This represents the default values used by MHonarc
+  -->
+<FIELDORDER>
+to
+subject
+from
+date
+-extra-
+</FIELDORDER>
+
+  EXAMPLE (FIELDSTYLES)
+<!--  Each line in the FIELDSTYLES element specifies the exact
+      (case-insensitive) name of a mail header field label and what HTML
+      element to wrap the field text in.  The label and the element are
+      separated by a colon.  Specifying no HTML element for a field will
+      cause the field text to appear in regular text.
+
+      The special field "-default-" can be defined to tell what fields
+      are wrapped in if no explicit style is specified for the field.
+
+      The following reflects the default formatting used by MHonArc.
+  -->
+<FIELDSTYLES>
+-default-
+</FIELDSTYLES>
+
+  EXAMPLE (FIELDSTYLES 2)
+<!--  Alternate formatting for field text.
+  -->
+<FIELDSTYLES>
+-default-
+subject:strong
+from:strong
+to:strong
+keywords:em
+</FIELDSTYLES>
+
+  EXAMPLE (FOOTER)
+<!--  FOOTER element specifies the file to include at the bottom of the
+      index page.
+  -->
+<FOOTER>
+/mnt/ehood/public_html/mail/indexfooter.html
+</FOOTER>
+
+  EXAMPLE (HEADER)
+<!--  HEADER element specifies the file to include at the beginning of
+      the index page.
+  -->
+<HEADER>
+/mnt/ehood/public_html/mail/indexheader.html
+</HEADER>
+
+  EXAMPLE (IDXFNAME)
+<!--  IDXFNAME element specifies the filename to give the message
+      index file.
+  -->
+<IDXFNAME>
+maillist.html
+</IDXFNAME>
+
+  EXAMPLE (INDEXBL)
+<!--  This shows how you can use an icon for the Index link in messages
+  -->
+<INDEXBL>
+<img src="up.gif" alt="[Index]">
+</INDEXBL>
+
+  EXAMPLE (LABELSTYLES)
+<!--  Each line in the LABELSTYLES element specifies the exact
+      (case-insensitive) name of a mail header field label and what HTML
+      element to wrap it in.  The label and the element are separated by
+      a colon.  Specifying no HTML element for a label will cause the
+      label to appear in regular text.
+
+      The special label "-default-" can be defined to tell what labels
+      are wrapped in if no explicit style is specified
+
+      The following reflects the default formatting used by MHonArc.
+  -->
+<LABELSTYLES>
+-default-:em
+</LABELSTYLES>
+
+  EXAMPLE (LABELSTYLES 2)
+<!--  Remove the default <EM> tag used on field labels, and apply our
+      format to specific labels
+  -->
+<LABELSTYLES>
+-default-
+subject:strong
+from:strong
+to:strong
+</LABELSTYLES>
+
+  EXAMPLE(MAILTOURL)
+<!--  MAILTOURL element specifies the URL to use for e-mail address
+      hyperlinks.  The URL can contain the string `$TO$' embedded in it.
+      This will get expanded to the e-mail address the link is for.
+
+      All whitespace is stripped out of the line.
+  -->
+<MAILTOURL>
+mailto:$TO$
+</MAILTOURL>
+
+  EXAMPLE (NEXTBL)
+<!--  This shows how you can use an icon for the Next link in messages
+  -->
+<NEXTBL>
+<img src="next.gif" alt="[Next]">
+</NEXTBL>
+
+  EXAMPLE (PREVBL)
+<!--  This shows how you can use an icon for the Prev link in messages
+  -->
+<PREVBL>
+<img src="up.gif" alt="[Prev]">
+</PREVBL>
+
+  EXAMPLE (TIMEZONES)
+<!--  Time zone acronym definitions.  The TIMEZONES element can be uesd
+      to define time zone acronyms and their hour offset from UTC/GMT.
+      The acronym and the hour offset are separated by a colon.
+      Time zones West of UTC/GMT should have postive hour offsets.
+      Time zones East of UTC/GMT should have negative hour offsets.
+      "Override" attribute may be specified to clear the default
+      time zone acronym definitions.
+
+      The timzones below define what MHonArc recognize by default.
+      All timezones are US based.
+  -->
+<TIMEZONES>
+UTC:0
+GMT:0
+AST:4
+ADT:3
+EST:5
+EDT:4
+CST:6
+CDT:5
+MST:7
+MDT:6
+PST:8
+PDT:7
+</TIMEZONES>
+
+  EXAMPLE (TITLE)
+<!--  TITLE element specifies the message index page title.
+  -->
+<TITLE>
+HTML Mail Archive
+</TITLE>
+
+
+   
+     _________________________________________________________________
+   
+Notes on Resource File 
+
+     * Elements can be duplicated. For example, multiple EXCS elements
+       can be specified to define mail header fields to exclud from
+       filtered messages. Each EXCS element augments the previous element
+       instances (unless the Override attribute is set). If an element
+       only accepts a single line of content, then the last element, or
+       line, defined takes precedence.
+       
+     * If elements have conflicting resource settings (eg. NOSORT and
+       SORT), the last element defined takes precedence.
+       
+     * Resource file settings override environment variables.
+       
+     * Command-line options override any settings in the resource file.
+       
+     * If you want to do an exact match of a field in the EXCS element,
+       append a '$' after the field name.
+       
+
+   
+     _________________________________________________________________
+   
+   [Prev:Command-Line Options]
+   [Next:Adding New Messages to an Archive]
+   [ToC]
+   
+   
+   
+     _________________________________________________________________
+   
+    MHonArc 1.0.0 -- Resource File
+
+                                       
+   __________________________________________________________________________
+                                       
+                      ADDING NEW MESSAGES TO AN ARCHIVE
+                                       
+   MHonArc supports the ability to add new messages to an existing
+   archive via the -add option. If no mailbox/folder arguments are given,
+   MHonArc assumes that a SINGLE message is being added to the archive
+   via standard input. Otherwise, MHonArc adds the messages contained in
+   the mailboxes/folders specified.
+   
+   When adding new messages to the archive, MHonArc performs the
+   following steps:
+   
+     * Creates a lock file. This insures only one MHonArc process is
+       updating the archive at any given moment. See Archive Integrity
+       for more information.
+       
+     * Reads the database file. The name, and location, of the database
+       file can be explicitly specified via the M2H_DBFILE and M2H_OUTDIR
+       environment variables or the command-line options -dbfile and
+       -outdir. Otherwise, the current working directory is used.
+       
+       NOTE: The database file must be in the same location as the
+       archive since the M2H_OUTDIR variable and -outdir option also
+       specify the location of the archive.
+       
+       The database file contains data to update any mail threads and the
+       resource settings when MHonArc was last invoked. This allows new
+       messages to contain the same formatting/resource specifications as
+       existing messages in the archive without having to re-specify the
+       resources each time new messages are added. Resources defined in
+       the database file override the environment variables.
+       
+       NOTE: If no database file is found, MHonArc will creates a new
+       archive.
+       
+     * Read the MHonArc resource file, if specified. The resource file
+       will override any settings contained in the database file.
+       
+     * Read the settings specified on the command-line. Command-line
+       options override any settings in the database and/or resource
+       file.
+       
+     * Processes the new messages and writes them out to HTML.
+       
+     * Rewrites the index page to reflect the update.
+       
+     * Writes a new database file containing the new state of the archive
+       and all (new) resource settings.
+       
+   See Notes on Adding New Messages for more information on adding new
+   messages to an archive.
+   
+
+   
+     _________________________________________________________________
+   
+Examples 
+
+  ADDING A SINGLE MESSAGE TO ARCHIVE
+  
+   MHonArc can be used to add new messages as they are received by using
+   the ".forward" file in your home directory. Here is how I would set up
+   my .forward file to invoke MHonArc on incoming mail:
+   
+\ehood, "|/mnt/ehood/bin/webnewmail #ehood"
+
+   NOTE on .forward entry:
+          The "\ehood" tells sendmail to still deposit the incoming
+          message to my mail spool file. The "#ehood" Bourne shell
+          comment is needed to insure the command is unique from another
+          user. Otherwise, sendmail will not invoke the program for you
+          or the other user.
+          
+   "webnewmail" is a Perl program that calls MHonArc with the appropriate
+   arguments. A wrapper program is used instead of calling MHonArc
+   directly to keep the .forward file simple. Here is the code to the
+   webnewmail program:
+   
+#!/usr/local/bin/perl
+
+$cmd = "/mnt/ehood/bin/mhonarc -add -quiet " .
+         "-outdir /mnt/ehood/public_html/newmail";
+open(M2H, "|$cmd");
+print M2H <STDIN>;
+close(M2H);
+
+   The webnewmail can be modified to check the mail header before calling
+   MHonArc to perform selective archiving of messages. For example,
+   webnewmail can check the To: field and only archive messages that come
+   from a specific mailing list.
+   
+
+  CRON EXAMPLE
+  
+   This example uses cron(1) to update some mail archives from MH mail
+   folders.
+   
+   The following entry is in my crontab file:
+   
+0 0 * * * webmail
+
+   webmail is a script executed every night that calls MHonArc to perform
+   the update:
+   
+#! /bin/csh -f
+
+umask 022
+setenv M2H_RCFILE $HOME/.mhonarc.rc
+## WWW messages
+mhonarc -add \
+          -outdir $HOME/public_html/doc/wwwmail \
+          $HOME/mail/www
+folder +www >& /dev/null
+refile first-last +www.ar >& /dev/null    # Archive original messages
+
+## Tools messages
+mhonarc -add \
+          -outdir $HOME/public_html/doc/toolsmail \
+          $HOME/mail/tools $HOME/mail/dtd
+folder +tools >& /dev/null
+refile first-last +tools.ar >& /dev/null  # Archive original messages
+folder +dtd >& /dev/null
+refile first-last +dtd.ar >& /dev/null    # Archive original messages
+
+folder +inbox >& /dev/null                # Set current folder to inbox
+
+
+   To avoid mail everynight from cron due to output from MHonArc, the
+   -quiet option can be used for each call to MHonArc, or use the
+   following line in your crontab file:
+   
+0 0 * * * webmail > /dev/null
+
+   Standard error is not redirected to /dev/null so mail is still
+   received if errors occured during MHonArc execution.
+   
+
+   
+     _________________________________________________________________
+   
+Notes on Adding New Messages
+
+     * As stated earlier, the database file must be in the same location
+       as the index page and HTML mail messages.
+       
+     * Sorting options can be changed when adding new messages to an
+       archive. I.e. You can change from "chronological sorting" to
+       "reverse chronological sorting" and vice-versa by specifying the
+       appropriate command-line option, or changing the resource file.
+       
+     * The index page can be reformatted during an add operation. See
+       Index Page Customization for more information on controlling
+       list formatting.
+       
+     * Changes in mail header formatting rules (via the Resource File)
+       will not affect existing messages in an archive. If formatting
+       changes are required for existing messages, you must regenerate
+       the archive from the source mail messages.
+       
+
+   
+     _________________________________________________________________
+   
+   [Prev:Resource File]
+   [Next:MIME]
+   [ToC]
+   
+   
+   
+     _________________________________________________________________
+   
+    MHonArc 1.0.0 -- Adding New Messages
+
+                                       
+   __________________________________________________________________________
+                                       
+                                    MIME
+                                       
+   MHonArc has some support for e-mail messages with Multipurpose
+   Internet Mail Extensions (MIME) as defined in RFC 1521. MHonArc
+   handles the filtering of the various content-types used in MIME in a
+   modular fashion. Since new content-types occasionally are defined for
+   MIME, this modularity allows users to add new filters to accomodate
+   new content-types. Also, filters can be hooked in to override
+   MHonArc's default filters, or provide MHonArc with the ability to
+   process existing content-types that it cannot handle currently.
+   
+   
+   
+   
+     _________________________________________________________________
+   
+Default Filters
+
+   The default filters provided by MHonArc supports the following MIME
+   content-types, which may be overriden by user-defined filters, except
+   where noted:
+   
+     * application/*
+     * audio/*
+     * image/*
+     * message/news (cannot override)
+     * message/partial
+     * message/rfc822 (cannot override)
+     * multipart/alternative (cannot override)
+     * mulltipart/digest (cannot override)
+     * multipart/mixed (cannot override)
+     * multipart/parallel (cannot override)
+     * text/html
+     * text/plain
+     * text/setext
+     * video/mpeg
+     * video/quicktime
+       
+   For more information on how to write your filters, or replace existing
+   filters, see Writing Filters.
+   
+   The next sections describes how MHonArc processes the content-types
+   listed above.
+   
+
+  APPLICATION/*
+  
+   MHonArc extracts the data into a separate file and puts a hyperlink to
+   the file into the HTMLized message. If the "name" attribute is defined
+   in the Content-Type header field, then the separate file will use the
+   attribute as the filename. Otherwise, MHonArc generates a unique
+   filename with an extenstion based upon sub-type.
+   
+   Here is the current list of application sub-types (with their filename
+   extensions) supported by MHonArc:
+   
+     * octet-stream (bin)
+     * oda (oda)
+     * pdf (pdf)
+     * postscript (ps)
+     * rtf (rtf)
+     * x-bcpio (bcpio)
+     * x-cpio (cpio)
+     * x-csh (csh)
+     * x-dvi (dvi)
+     * x-gtar (gtar)
+     * x-hdf (hdf)
+     * x-latex (latex)
+     * x-mif (mif)
+     * x-netcdf (cdf)
+     * x-sh (sh)
+     * x-shar (shar)
+     * x-sv4cpio (sv4cpio)
+     * x-sv4crc (sv4crc)
+     * x-tar (tar)
+     * x-tcl (tcl)
+     * x-tex (tex)
+     * x-texinfo (texinfo)
+     * x-troff (roff)
+     * x-troff-man (man)
+     * x-troff-me (me)
+     * x-troff-ms (ms)
+     * x-ustar (ustar)
+     * x-wais-source (src)
+     * zip (zip)
+       
+  AUDIO/*
+  
+   MHonArc extracts the data into a separate file and puts a hyperlink to
+   the file into the HTMLized message. If the "name" attribute is defined
+   in the Content-Type header field, then the separate file will use the
+   attribute as the filename. Otherwise, MHonArc generates a unique
+   filename with an extenstion based upon sub-type.
+   
+   Here is the current list of audio sub-types (with their filename
+   extensions) supported by MHonArc:
+   
+     * basic (snd)
+     * x-aiff (aif)
+     * x-wav (wav)
+       
+  IMAGE/*
+  
+   MHonArc will extract the data into a separate file and puts a
+   hyperlink to the file into the HTMLized message. If the "name"
+   attribute is defined in the Content-Type header field, then the
+   separate file will use the attribute as the filename. Otherwise,
+   MHonArc will generate a unique filename with an extenstion based
+   upon sub-type.
+   
+   Here is the current list of image sub-types (with their filename
+   extensions) supported by MHonArc:
+   
+     * gif (gif)
+     * ief (ief)
+     * jpeg (jpg)
+     * tiff (tif)
+     * x-cmu-raster (ras)
+     * x-pict (pict)
+     * x-portable-anymap (pnm)
+     * x-pnm (pnm)
+     * x-portable-bitmap (pbm)
+     * x-pbm (pbm)
+     * x-portable-graymap (pgm)
+     * x-pgm (pgm)
+     * x-portable-pixmap (ppm)
+     * x-ppm (ppm)
+     * x-rgb (rgb)
+     * x-xbitmap (xbm)
+     * x-xbm (xbm)
+     * x-xpixmap (xpm)
+     * x-xpm (xpm)
+     * x-xwindowdump (xwd)
+     * x-xwd (xwd)
+       
+   If the image is a GIF or XBM (X bitmap), the HTML IMG element will be
+   used to in-line the image into the HTMLized message.
+   
+  MESSAGE/NEWS
+  
+   message/news signifies an included (MIME) USENET news message. The
+   data associated with a message/news part is processed by MHonArc in
+   the same manner as a regular mail message.
+   
+  MESSAGE/PARTIAL
+  
+   message/partial signifies that the content is a single part of a
+   message split into multiple mail messages. message/partial is treated
+   in the same manner as text/plain.
+   
+  MESSAGE/RFC822
+  
+   message/rfc822 signifies an included (MIME) mail message. The data
+   associated with a message/rfc822 part is processed by MHonArc in the
+   same manner as a regular mail message.
+   
+  MULTIPART/ALTERNATIVE
+  
+   multipart/alternative signifies multiple content-types with the same
+   (or similiar) information. MHonArc processes only the latest part that
+   has a content-type filter.
+   
+  MULLTIPART/DIGEST
+  
+   mulltipart/digest signifies a series of included mail messages. Each
+   part is processed in the same manner as message/rfc822 unless an
+   explicit content-type is specifed for each part.
+   
+  MULTIPART/MIXED
+  
+   multipart/mixed signifies data with multiple content-types. MHonArc
+   extracts each part and calls the appropriate content-type filter for
+   each part, if defined.
+   
+  MULTIPART/PARALLEL
+  
+   multipart/parallel is processed in the same manner as multipart/mixed.
+   
+   
+  TEXT/HTML
+  
+   text/html signifies that the data is HTML markup. The data as left "as
+   is" with the exception of some processing to legally include the HTML
+   into the HTMLized mail message. I.e. MHonArc removes the HEAD an BODY
+   tags, the TITLE element will be replaced with an ADDRESS element
+   surrounded by HR's, and the BASE element URL will be propogated to
+   relative URLs.
+   
+  TEXT/PLAIN
+  
+   text/plain signifies ASCII character data. In the HTMLized message,
+   the data is wrapped in a PRE element with special characters (< > &)
+   converted to entity references. MHonArc will also make any URLs into
+   hyperlinks. The following URL types are recognized:
+   
+     * http://...
+     * ftp://...
+     * afs://...
+     * wais://...
+     * telnet://...
+     * gopher://...
+     * news:...
+     * nntp:...
+     * mid:...
+     * cid:...
+     * mailto:...
+     * prospero:...
+       
+  TEXT/SETEXT
+  
+   text/setext signifies "structure enhanced text". The data is converted
+   into HTML containing hyperlinks as defined by the setext data. For
+   more information on setext, see <URL:http://www.bsdi.com/setext/>.
+   
+  VIDEO/*
+  
+   MHonArc extracts the data into a separate file and puts a hyperlink to
+   the file into the HTMLized message. If the "name" attribute is defined
+   in the Content-Type header field, then the separate file will use the
+   attribute as the filename. Otherwise, MHonArc generates a unique
+   filename with an extenstion based upon sub-type.
+   
+   Here is the current list of video sub-types (with their filename
+   extensions) supported by MHonArc:
+   
+     * mpeg (mpg)
+     * quicktime (mov)
+     * x-msvideo (avi)
+     * x-sgi-movie (movie)
+
+   
+     _________________________________________________________________
+   
+Writing Filters
+
+   If you want to write your own filter for use in MHonArc, you need to
+   know the Perl programming language. The following information assumes
+   you know Perl. To learn how to hook in your filters into MHonArc, see
+   Specifying Filters.
+   
+  FUNCTION INTERFACE OF FILTER
+  
+   MHonArc interfaces with MIME filters by calling a routine with a
+   specific set of arguments and treats the return value as the HTML
+   markup to include in the message. The prototype of the interface
+   routine is as follows:
+   
+sub filter {
+    local($head, *fields, $data) = @_;
+
+    # Filter code here
+
+    # The last statement should be the HTML return value, unless an
+    # explicit return is done.
+}
+
+    Argument Descriptions
+    
+   $head
+          This is the header text of the message (or body part if called
+          in a mulitpart message).
+          
+   *fields
+          This is a pointer to an associative array that has broken down
+          $head into field label/field value components. The keys are the
+          lower-case representations of the field values. Example: If you
+          would like to retrieve the value of the Content-Type field,
+          then use the following: $fields{`content-type'}. If a field
+          occurs more than once in a header, MHonArc separates the field
+          values in the associative array by a `\034' character. To make
+          your filter less likely to break due to changes in MHonArc, you
+          may use the $'X variable instead of `\034'.
+          
+   $data
+          This is a copy of the message (or body part if called in a
+          mulitpart message) body. MHonArc has decoded the data for you
+          if it was encoded in Quoted-Printable, or Base64.
+          
+    Return Value
+    
+   The return value should be a string representing the HTML markup to
+   insert in the HTMLized message. An empty string may be returned to
+   tell MHonArc that the routine was unable to filter data.
+   
+
+  FILTER WRITING TIPS
+  
+   The following recommendations/tips are given to help you write
+   filters:
+   
+     * Qualify your filter in its own package. This eliminates possible
+       variable/routine conflicts with MHonArc.
+       
+     * If the filter creates derived files (like the image filters), you
+       may use the variable $'OUTDIR to determine the location of the
+       mail archive.
+       
+     * Look at the default filters contained in the distribution of
+       MHonArc. You can use these as templates for writing your own.
+       
+     * Make sure your Perl source file ends with a true statement (like
+       "1;"). MHonArc just performs a require on the file, and if the
+       file does not return true, Perl will abort execution.
+       
+
+  USING C
+  
+   If a MIME filter requires the utilization of a C program, or other
+   non-Perl executable, a Perl wrapper must be written for the program
+   in-order to interface with MHonArc. The wrapper must follow the rules
+   as specified in Function Interface of Filter.
+   
+
+   
+     _________________________________________________________________
+   
+Specifying Filters
+
+   Adding new filters, or overriding existing ones, are done via the
+   Resource File.
+   
+  MIMEFILTERS
+  
+   The resource element MIMEFILTERS in the Resource File is used to hook
+   in user specifed filters into MHonArc. The syntax for each line of the
+   the MIMEFILTERS element is as follows:
+   
+   <content-type>:<routine-name>:<file-of-routine>
+   
+   The definition of each colon-separated value is as follows:
+   
+   <content-type>
+          The MIME content-type the filter processes. The mulitpart types
+          and the message/rfc822 content-types cannot not be overridden.
+          
+   <routine-name>
+          The actual routine name of the filter. The name should be fully
+          qualified by the package it is definedi (e.g.
+          "mypackage'filter").
+          
+   <file-of-routine>
+          The name of the file that defines <routine-name>. If the file
+          is not a full pathname, MHonArc finds the file by looking in
+          the standard include paths of Perl, and the paths specified by
+          the PERLINC resource element.
+          
+   Any whitespace is stripped out before processing.
+   
+  EXAMPLE
+  
+   The following represents the default value of MIMEFILTERS:
+   
+<MIMEFILTERS>
+application/octet-stream:m2h_external'filter:mhexternal.pl
+application/oda:m2h_external'filter:mhexternal.pl
+application/pdf:m2h_external'filter:mhexternal.pl
+application/postscript:m2h_external'filter:mhexternal.pl
+application/rtf:m2h_external'filter:mhexternal.pl
+application/x-bcpio:m2h_external'filter:mhexternal.pl
+application/x-cpio:m2h_external'filter:mhexternal.pl
+application/x-csh:m2h_external'filter:mhexternal.pl
+application/x-dvi:m2h_external'filter:mhexternal.pl
+application/x-gtar:m2h_external'filter:mhexternal.pl
+application/x-hdf:m2h_external'filter:mhexternal.pl
+application/x-latex:m2h_external'filter:mhexternal.pl
+application/x-mif:m2h_external'filter:mhexternal.pl
+application/x-netcdf:m2h_external'filter:mhexternal.pl
+application/x-sh:m2h_external'filter:mhexternal.pl
+application/x-shar:m2h_external'filter:mhexternal.pl
+application/x-sv4cpio:m2h_external'filter:mhexternal.pl
+application/x-sv4crc:m2h_external'filter:mhexternal.pl
+application/x-tar:m2h_external'filter:mhexternal.pl
+application/x-tcl:m2h_external'filter:mhexternal.pl
+application/x-tex:m2h_external'filter:mhexternal.pl
+application/x-texinfo:m2h_external'filter:mhexternal.pl
+application/x-troff-man:m2h_external'filter:mhexternal.pl
+application/x-troff-me:m2h_external'filter:mhexternal.pl
+application/x-troff-ms:m2h_external'filter:mhexternal.pl
+application/x-troff:m2h_external'filter:mhexternal.pl
+application/x-ustar:m2h_external'filter:mhexternal.pl
+application/x-wais-source:m2h_external'filter:mhexternal.pl
+application/zip:m2h_external'filter:mhexternal.pl
+audio/basic:m2h_external'filter:mhexternal.pl
+audio/x-aiff:m2h_external'filter:mhexternal.pl
+audio/x-wav:m2h_external'filter:mhexternal.pl
+image/gif:m2h_external'filter:mhexternal.pl
+image/ief:m2h_external'filter:mhexternal.pl
+image/jpeg:m2h_external'filter:mhexternal.pl
+image/tiff:m2h_external'filter:mhexternal.pl
+image/x-cmu-raster:m2h_external'filter:mhexternal.pl
+image/x-pbm:m2h_external'filter:mhexternal.pl
+image/x-pgm:m2h_external'filter:mhexternal.pl
+image/x-pict:m2h_external'filter:mhexternal.pl
+image/x-pnm:m2h_external'filter:mhexternal.pl
+image/x-portable-anymap:m2h_external'filter:mhexternal.pl
+image/x-portable-bitmap:m2h_external'filter:mhexternal.pl
+image/x-portable-graymap:m2h_external'filter:mhexternal.pl
+image/x-portable-pixmap:m2h_external'filter:mhexternal.pl
+image/x-ppm:m2h_external'filter:mhexternal.pl
+image/x-rgb:m2h_external'filter:mhexternal.pl
+image/x-xbitmap:m2h_external'filter:mhexternal.pl
+image/x-xbm:m2h_external'filter:mhexternal.pl
+image/x-xpixmap:m2h_external'filter:mhexternal.pl
+image/x-xpm:m2h_external'filter:mhexternal.pl
+image/x-xwd:m2h_external'filter:mhexternal.pl
+image/x-xwindowdump:m2h_external'filter:mhexternal.pl
+message/partial:m2h_text_plain'filter:mhtxtplain.pl
+text/html:m2h_text_html'filter:mhtxthtml.pl
+text/plain:m2h_text_plain'filter:mhtxtplain.pl
+text/richtext:m2h_text_plain'filter:mhtxtplain.pl
+text/setext:m2h_text_setext'filter:mhtxtsetext.pl
+text/tab-separated-values:m2h_text_plain'filter:mhtxtplain.pl
+text/x-html:m2h_text_html'filter:mhtxthtml.pl
+text/x-setext:m2h_text_setext'filter:mhtxtsetext.pl
+video/mpeg:m2h_external'filter:mhexternal.pl
+video/quicktime:m2h_external'filter:mhexternal.pl
+video/x-msvideo:m2h_external'filter:mhexternal.pl
+video/x-sgi-movie:m2h_external'filter:mhexternal.pl
+</MIMEFILTERS>
+
+   
+     _________________________________________________________________
+   
+   [Prev:Adding New Messages to an Archive]
+   [Next:Index Page Customization]
+   [ToC]
+   
+   
+   
+     _________________________________________________________________
+   
+    MHonArc 1.0.0 -- MIME
+
+                                       
+   __________________________________________________________________________
+                                       
+                          INDEX PAGE CUSTOMIZATION
+                                       
+   MHonArc creates an index page with links to all mail messages filtered
+   (unless processing a single message with the -single option). MHonArc
+   allows you to have complete customization over the appearance of the
+   index page.
+   
+
+   
+     _________________________________________________________________
+   
+Filename 
+
+   By default, the filename of the index page is "maillist.html".
+   However, a different name may be specified with the M2H_IDXFNAME
+   environment variable, the IDXFNAME resource element, or the -idxfname
+   command-line option.
+   
+
+   
+     _________________________________________________________________
+   
+Title 
+
+   The title of the index page is controlled by the M2H_TITLE environment
+   variable, the IDXFNAME resource element, or the -title command-line
+   option. The text for the title is placed in the HTML TITLE element of
+   the index page, and the text also occurs at the very top of the body
+   in a H1 element.
+   
+
+   
+     _________________________________________________________________
+   
+Include Files
+
+   MHonArc allows you to include the contents of files into the index
+   page via the header and footer resources.
+   
+   The header file is specified via the M2H_HEADER environment variable,
+   the HEADER resource element, or the -header command-line option. The
+   contents of the header file are inserted above the message listing,
+   and right after the H1 title element. NOTE: filename should not
+   contain the <HTML>, <HEAD>, and <BODY> tags; these tags are
+   automatically provided by MHonArc.
+   
+   The footer file is specified via the M2H_FOOTER environment variable,
+   the FOOTER resource element, or the -footer command-line option. The
+   contents of the footer file are inserted after the message listing.
+   NOTE: filename should not contain the </BODY>, and </HTML> tags;
+   these tags are automatically provided by MHonArc.
+   
+   The header and footer files allow you to incorporate search-forms,
+   hyperlinks to other pages, or any other HTML markup you like.
+   
+   It is only necessary to specify the header and/or footer files the
+   first time you create an archive. The contents included from the
+   header and/or footer files are preserved in any subsequent additions
+   to the archive. Only respecify the header and/or footer files if you
+   need to make changes to the header/footer contents.
+   
+
+   
+     _________________________________________________________________
+   
+Listing Layout 
+
+   MHonArc lists messages in the order specified by the various sort
+   options. However, you have complete control on how the message listing
+   are formatted via the LISTBEGIN, LITEMPLATE, and LISTEND resource
+   elements in the Resource File. These elements allow you to specify the
+   HTML markup to use in the index page. When you define the contents for
+   the LISTBEGIN, LITEMPLATE, and LISTEND resource elements, you may use
+   special variables defined by MHonArc which are expanded to strings
+   during run-time.
+   
+  VARIABLE SYNTAX
+  
+   The syntax of the variables to use in the LISTBEGIN, LITEMPLATE, and
+   LISTEND resource elements is as follows:
+   
+   $VARIABLE[:N]$
+   
+   The items in []'s are optional. Definition of each part:
+   
+   $
+          The $ character represents the beginning, and ending, of the
+          variable.
+          
+   VARIABLE
+          This is the the actual name of the variable. All variable names
+          must be uppercase.
+          
+   :N
+          This defines a maximum length of the replacement string for the
+          variable. The length specifier is optional.
+          
+   No whitespace is allowed between the opening $ and closing $.
+   
+   Here are some examples of legal variable usage:
+   
+     * $SUBJECT$
+     * $FROMNAME$
+     * $SUBJECT:50$
+
+   
+     _________________________________________________________________
+   
+  LISTBEGIN
+  
+   The LISTBEGIN resource element specifies the text to begin the message
+   list. The text can be any valid HTML markup. Plus, MHonArc defines the
+   following variables you may use which get expanded at run-time:
+   
+   $GMTDATE$
+          Expands to the current UTC/GMT date and time.
+          
+   $LOCALDATE$
+          Expands to the current local date and time.
+          
+   $NUMOFMSG$
+          The number of messages in the archive.
+          
+   MHonArc's LISTBEGIN default value is the following:
+   
+   <LISTBEGIN>
+   <UL>
+   </LISTBEGIN>
+   
+   
+
+   
+     _________________________________________________________________
+   
+  LITEMPLATE
+  
+   The LITEMPLATE resoure element defines the HTML text to represent each
+   message list item. You may use the following variables which are
+   expanded at runtime:
+   
+   $A_ATTR$
+          The NAME and HREF attributes to use in an anchor to link to the
+          archived message. The NAME attribute links the messages to the
+          index page.
+          
+   $A_HREF$
+          The HREF attribute to use in an anchor to link to the archived
+          message.
+          
+   $A_NAME$
+          The NAME attributes to use in an anchor for messages to link to
+          the index page.
+          
+   $DATE$
+          The date of the message.
+          
+   $ICON$
+          The context-type sensistive icon. See Icons for information.
+          
+   $ICONURL$
+          The URL to the context-type sensistive icon. See Icons for
+          information.
+          
+   $NUMFOLUP$
+          Number of follow-up messages for the given message.
+          
+   $FROM$
+          The complete text in the From field of the message.
+          
+   $FROMADDR$
+          Just the actual e-mail address in the From field of the
+          message.
+          
+   $FROMNAME$
+          The English name of the person in the From field of the
+          message. If no English name is found, the username specified in
+          the e-mail address is used.
+          
+   $MSGNUM$
+          The message numbers assigned to the message by MHonArc.
+          
+   $ORDNUM$
+          The current listing number of the message.
+          
+   $SUBJECT$
+          The subject text of the message wrapped in an anchor element
+          that hyperlinks to the message.
+          
+   $SUBJECTNA$
+          The subject text of the message without the anchor element.
+          
+
+   NOTE:
+          Do not specify $A_ATTR$, $A_NAME, and $SUBJECT$ together in the
+          LITEMPLATE element. Since all of these variables contain the
+          NAME atrribute, invalid HTML will be created since multiple
+          anchors will have the same NAME identifier.
+          
+   LITEMPLATE's default value is the following:
+   
+   <LITEMPLATE>
+   <LI><STRONG>$SUBJECT$</STRONG>
+   <UL><LI><EM>From</EM>: $FROM$</LI></UL>
+   </LI>
+   </LITEMPLATE>
+   
+   
+
+   
+     _________________________________________________________________
+   
+  LISTEND
+  
+   The LISTEND resource element specifies the text to use to end the
+   message list. The text can be any valid HTML markup. Plus, MHonArc
+   defines the following variables you may use which are expanded at
+   run-time:
+   
+   $CURDATE$
+          Expands to the current date and time.
+          
+   $NUMOFMSG$
+          The number of messages in the archive.
+          
+   LISTEND's default value is the following:
+   
+   <LISTEND>
+   </UL>
+   </LISTEND>
+   
+   
+
+   
+     _________________________________________________________________
+   
+Examples 
+
+  EXAMPLE 1
+  
+   It may be easier to see how the LISTBEGIN, LITEMPLATE, LISTEND
+   resource elements work when declared together:
+   
+<!-- This represents the default values used by MHonArc -->
+<LISTBEGIN>
+<UL>
+</LISTBEGIN>
+
+<LITEMPLATE>
+<LI><STRONG>$SUBJECT$</STRONG>
+<UL><LI><EM>From</EM>: $FROM$</LI></UL>
+</LI>
+</LITEMPLATE>
+
+<LISTEND>
+</UL>
+</LISTEND>
+
+  EXAMPLE 2
+  
+   Here's another example that changes the layout into a more compact
+   listing, adds Icons usage, and adds a time stamp information on when
+   the index page was last updated:
+   
+<listbegin>
+<address>
+Last update: $CURDATE$<br>
+$NUMOFMSG$ messages<br>
+</address>
+<p>
+Messages listed in chronological order.  Listing format is the following:
+<blockquote>
+<img src="http://foo.org/gifs/gletter.gif" alt="* ">
+<strong>Subject</strong><code>  </code>
+(# of follow-ups)<code>  </code>
+<em>From</em>.
+</blockquote>
+<p>
+<hr>
+</listbegin>
+
+<litemplate>
+<img src="$ICONURL$" alt="* "><strong>$SUBJECT:40$</strong>
+($NUMFOLUP$) <em>$FROMNAME$</em><br>
+</litemplate>
+
+<listend>
+</listend>
+
+
+   
+     _________________________________________________________________
+   
+   [Prev:MIME]
+   [Next:Icons]
+   [ToC]
+   
+   
+   
+     _________________________________________________________________
+   
+    MHonArc 1.0.0 -- Index Page Customization
+
+                                       
+   __________________________________________________________________________
+                                       
+                                    ICONS
+                                       
+   MHonArc supports the ability to insert icons in the index page for
+   each message based on the message's content-type. For example: You can
+   have text/plain messages use a different icon than text/html messages.
+   
+   
+
+   
+     _________________________________________________________________
+   
+Defining Icons 
+
+   To specify the icons for MHonArc to use, you use the ICONS resource
+   element in the Resource File. The format of each line in the ICONS
+   element is as follows:
+   
+   <content-type>:<URL for icon>
+   
+   <content-type> represents a MIME content-type. <URL for icon> is the
+   URL to the icon. The special content-type called "unknown" may be
+   defined to specify the icon to use for non-recognized content-types.
+   If unknown is not defined, the text/plain icon is used for unknown
+   content types.
+   
+  EXAMPLE
+<icons>
+audio/basic:http://foo.org/gifs/gsound.gif
+image/gif:http://foo.org/gifs/gimage.gif
+image/jpeg:http://foo.org/gifs/gimage.gif
+image/tiff:http://foo.org/gifs/ggraphic.gif
+multipart/alternative:http://foo.org/gifs/gmulti.gif
+multipart/digest:http://foo.org/gifs/gtext.gif
+multipart/mixed:http://foo.org/gifs/gdoc2.gif
+multipart/parallel:http://foo.org/gifs/gdoc.gif
+text/richtext:http://foo.org/gifs/gdoc.gif
+text/html:http://foo.org/gifs/gdoc.gif
+text/plain:http://foo.org/gifs/gletter.gif
+unknown:http://foo.org/gifs/gunknown.gif
+video/mpeg:http://foo.org/gifs/gmovie.gif
+</icons>
+
+
+   
+     _________________________________________________________________
+   
+Using Icons 
+
+   In order to incorporate icons into the index page, insert the $ICON$
+   variable into the LITEMPLATE resource element.
+   
+  EXAMPLE
+<litemplate>
+$ICONURL$<strong>$SUBJECT:40$</strong>
+($NUMFOLUP$) <em>$FROMNAME$</em><br>
+</litemplate>
+
+   The $ICON$ variable expands to the IMG HTML element with the
+   appropriate URL in the SRC attribute to the icon. The ALT attribute of
+   the IMG element contains the content-type of the message, surrounded
+   by []'s, for use with text based browsers.
+   
+
+   $ICONURL$ may also be used if you want redefine the format of the IMG
+   element.
+   
+  EXAMPLE
+<litemplate>
+<img src="$ICONURL$" alt="* "><strong>$SUBJECT:40$</strong>
+($NUMFOLUP$) <em>$FROMNAME$</em><br>
+</litemplate>
+
+   This example overrides what is normally used in the ALT attribute.
+   
+
+   
+     _________________________________________________________________
+   
+   [Prev:Index Page Customization]
+   [Next:Archive Integrity]
+   [ToC]
+   
+   
+   
+     _________________________________________________________________
+   
+    MHonArc 1.0.0 -- Icons
+
+                                       
+   __________________________________________________________________________
+                                       
+                              ARCHIVE INTEGRITY
+                                       
+   MHonArc applies safeguards to try to insure that a mail archive does
+   not get corrupted due to exceptional circumstances. MHonArc does the
+   following to insure a mail archive does not get corrupted:
+   
+     * MHonArc creates a lock file, ".mhonarc.lck", when
+       creating/updating an archive. The lock file insures that only one
+       MHonArc process is modifying an archive at any given moment. The
+       M2H_LOCKTRIES environment variable allows you to control how long
+       a given MHonArc process will wait if an archive is currently
+       locked. If MHonArc can not lock the archive after the specified
+       number of tries, MHonArc will exit.
+       
+       The lock file becomes very important if you use MHonArc within a
+       .forward file. See the example, Adding a Single Message to
+       Archive, in the section, Adding New Messages to an Archive, on
+       how one might use MHonArc in a .forward file.
+       
+     * MHonArc will ignore the following signals once messages are
+       actually being written to disk: SIGABRT, SIGHUP, SIGINT, SIGQUIT,
+       SIGTERM. Possible archive corruption can still occur if a SIGKILL
+       signal is received since SIGKILLs are uncatchable. A SIGKILL will
+       also prevent MHonArc from deleting the lock file. This will
+       prevent other invocations of MHonArc from updating the archive. If
+       this occurs, you need to manually remove the lock file.
+       
+
+   
+     _________________________________________________________________
+   
+   [Prev:Icons]
+   [Next:Tips]
+   [ToC]
+   
+   
+   
+     _________________________________________________________________
+   
+    MHonArc 1.0.0 -- Archive Integrity
+
+                                       
+   __________________________________________________________________________
+                                       
+                                    TIPS
+                                       
+   This section gives some helpful tips on using MHonArc:
+   
+     * When using the -add option, there is no need to re-specify the
+       resource file (unless you want to override some settings) since
+       MHonArc will store all resources in the database file
+       (.mhonarc.db) from the last invocation and apply those resource to
+       new messages added to the archive.
+       
+     * Unless absolutely necessary, avoid changing the original sorting
+       order when adding new messages to an archive. Changing the order
+       cause MHonArc to modify every existing message in the archive to
+       update the Next/Prev links.
+       
+     * Unless absolutely necessary, avoid changing the title of the index
+       page of an archive when adding new messages. This will cause
+       MHonArc to modify every existing message in the archive to
+       change the Index links to reflect the new name.
+       
+     * Do not respecify the header and footer files if there is no change
+       in them when adding new messages. Specifying them causes MHonArc
+       to reread them again when it is not necessary.
+       
+     * MHonArc can be renamed to "mbox2html." If so, the -mbox option is
+       automatically assumed.
+       
+     * MHonArc can be renamed to "mhf2html." If so, the -mh options is
+       assumed. The renaming is for consistancy since MHonArc, by
+       default, processes MH mail folders.
+       
+     * If you want to share a specific resource file among different HTML
+       mail archives, leave out elements that (could) qualify a specific
+       archive: eg. HEADER, FOOTER, MBOX, MH.
+       
+     * MHonArc can be used to process saved messages from newsgroups if
+       the messages are saved in mailbox, or MH mail folder, format; or
+       you save the messages by e-mailing them to yourself.
+       
+       NOTE: You can use the -msgsep option, or MSGSEP resource element,
+       to process saved newsgroup messages that use a different message
+       separator than mailbox files.
+       
+     * If archiving a mass amount of mail messages, it might be useful to
+       hook into the mail archive a search engine. You can utilize the
+       header, or footer, resources (-header, -footer options or HEADER,
+       FOOTER resource file elements) to automatically hook in a form
+       into the index page to allow readers to interface with the search
+       engine.
+       
+
+   
+     _________________________________________________________________
+   
+   [Prev:Archive Integrity]
+   [Next:Notes]
+   [ToC]
+   
+   
+   
+     _________________________________________________________________
+   
+    MHonArc 1.0.0 -- Tips
+
+                                       
+   __________________________________________________________________________
+                                       
+                                    NOTES
+                                       
+     * Here is the explicit order of decreasing precedence when setting
+       resources/options:
+       
+          + command-line options (highest precedence)
+          + resource file
+          + database file
+          + environment variables (lowest precedence)
+            
+     * Mail thread detection is dependent upon the mail messages
+       containing the message id(s) of referenced messages. Most mailers
+       reply function will automatically include the message id of the
+       message being replied to.
+       
+     * All mail message being converted into HTML are stored in memory
+       before they are written to disk. This can eat up much memory if
+       many mail messages are being converted. If you are processing
+       multiple mailboxes/folders and worried about memory, you can call
+       MHonArc on each one separately using the -add option.
+       
+     * The database file, and the index page, are completely rewritten
+       evertime new messages are added. This may cause slight slow-downs
+       when archives become very large.
+       
+     * In MH mode (the default), mail messages are assumed to have
+       numeric filenames in the mail folder.
+       
+     * When sorting by date, MHonArc tries to use the date listed in the
+       first Received field of the message. If no Received field exists,
+       than the Date field is used.
+       
+     * No distinction is made, in the output, on which messages came from
+       which mail folder/box if multiple mail folders/boxes are
+       processed.
+       
+     * MHonArc requires the use of timelocal.pl and newgetopt.pl. These
+       libraries are part of the normal Perl distribution.
+       
+     * MHonArc can probably be modified to handle other types of mailers
+       (which has been done since the original version only supported MH
+       mail folders). The MSGSEP resource gives flexibility in processing
+       mailbox style files.
+       
+
+   
+     _________________________________________________________________
+   
+   [Prev:Tips]
+   [Next:Diagnostics]
+   [ToC]
+   
+   
+   
+     _________________________________________________________________
+   
+    MHonArc 1.0.0 -- Notes
+
+                                       
+   __________________________________________________________________________
+                                       
+                                 DIAGNOSTICS
+                                       
+   Three types of messages exist in MHonarc: Informative messages,
+   Warnings, and Errors. Informative messages give you the current
+   status of MHonarc's execution. Warnings signify undesired conditions,
+   but are not critical in MHonarc's exection. Errors signify critical
+   conditions that inhibit MHonarc from finishing its task.
+   
+   This section describes the various diagnostics MHonarc may produce.
+   
+
+   
+     _________________________________________________________________
+   
+Informative messages 
+
+   Informative messages may be suppressed via the -quiet command-line
+   option. Only the more important Informative messages are listed here.
+   
+
+  COULD NOT PROCESS MESSAGE WITH GIVEN CONTENT-TYPE: ...
+  
+   MHonarc will output this statement in filtered mail messages for
+   content-types it is unable to process. See Default Filters in MIME for
+   content-types that MHonarc supports by default. See Writing Filters
+   for adding new filters into MHonarc.
+   
+   This is the only Informative message that does not go to standard
+   output, but into the actual filtered mail message.
+   
+   
+   
+  NO NEW MESSAGES
+  
+   No mail messages exist when performing an add operation to an archive.
+   This can occur if an empty MH mail folder, or empty mailbox file, is
+   passed to MHonarc.
+   
+   
+   
+  REQUIRING MIME FILTER LIBRARIES ...
+  
+   Indicates MHonarc is loading external libraries for filtering mail
+   messages. MHonarc will output each library it loads. See MIME for more
+   information of filter libraries.
+   
+   
+   
+  TRYING TO LOCK MAIL ARCHIVE ...
+  
+   The statement means that a lock file is in place for the archive you
+   are trying to update. Normally, an existing lock file implies that
+   another MHonarc process is currently using the archive, and other
+   MHonarc processes will wait awhile to see if the archive will be
+   unlocked.
+   
+   However, there are times when a lock file exists, but no MHonarc
+   process is modifying the archive. This can occur if MHonarc is
+   abnormally terminated. If you know that no other MHonarc process is
+   editting the archive you are try to modify, then manually remove the
+   lock file and rerun MHonarc.
+   
+   See Archive Integrity for more information.
+   
+
+   
+     _________________________________________________________________
+   
+Warnings 
+
+
+  WARNING: COULD NOT FIND DATE FOR MESSAGE
+  
+   MHonarc was unable to find a received/sent date for a mail message.
+   With respect to other mail messages, a message with no received/sent
+   date is first in chronological order.
+   
+   
+   
+  WARNING: DATABASE VERSION (<DBVERSION>) DOES NOT MATCH PROGRAM VERSION ...
+  
+   Indicates that the version of MHonarc updating an archive is different
+   from the version of MHonarc that created the database file for an
+   archive. Problems can arise if the database file changes in format
+   from different version of MHonarc. See the release notes of the
+   MHonarc distribution if changes in the databse format has effects on
+   older archives.
+   
+   
+   
+  WARNING: UNABLE TO CREATE <OUTDIR>/<DBFILE>
+  
+   Indicates MHonarc was unable to create the database file <dbfile> for
+   the mail archive created/modified in <outdir>. This message can occur
+   if <outdir> permissions changed during MHonarc execution, the existing
+   <dbfile> is read-only, or the file system is full.
+   
+   This message can be severe because no future add operations can be
+   performed to the archive.
+   
+   
+   
+  WARNING: UNABLE TO OPEN FOOTER: <FOOTER>
+  
+   MHonarc was unable to open the footer file, <footer>, for inclusion
+   into the index page. Make sure <footer> exists, and is readable by
+   you.
+   
+   
+   
+  WARNING: UNABLE TO OPEN HEADER: <HEADER>
+  
+   MHonarc was unable to open the header file, <header>, for inclusion
+   into the index page. Make sure <header> exists, and is readable by
+   you.
+   
+   
+   
+  WARNING: UNABLE TO OPEN MAIL FOLDER: <FOLDER>
+  
+   MHonarc was unable to open the specified MH mail <folder> for reading.
+   Make sure <folder> exists and is readable, and executable by you.
+   
+   
+   
+  WARNING: UNABLE TO OPEN MAILBOX: <MBOX>
+  
+   MHonarc was unable to open the specified <mbox> for reading. Make sure
+   <mbox> exists and is readable by you.
+   
+   
+   
+  WARNING: UNABLE TO OPEN MESSAGE: <FOLDER>/<MESSAGE>
+  
+   MHonarc was unable to open the specified MH mail message
+   <folder>/<message> for reading. Make sure <folder>/<message> exists
+   and is readable by you.
+   
+   
+   
+  WARNING: UNDEFINED TIME ZONE: "<TIMEZONE>"
+  
+   MHonarc has found an unrecognized timezone acronym, <timezone>, in a
+   mail message. You can tell MHonarc about other timezone acronyms, and
+   their hour offset to UTC, by using the TIMEZONES resource element of
+   the Resource File.
+   
+   The timezone UTC (or GMT) is used for an undefined timezone acronym
+   
+
+   
+     _________________________________________________________________
+   
+Errors 
+
+
+  ERROR: UNABLE TO CREATE <FILE>
+  
+   MHonarc was unable to create <file>. This message can occur if the
+   directory being written to is not writable, a read-only file with the
+   same name exists, or the file system is full.
+   
+   
+   
+  ERROR: UNABLE TO OPEN RESOURCE FILE: <FILE>
+  
+   MHonarc was unable to open the resource file, <file>, for reading.
+   Make sure <file> exists, and is readable by you.
+   
+   
+   
+  ERROR: UNABLE TO OPEN <FILE>
+  
+   MHonarc was unable to open <file> for reading. Make sure <file>
+   exists, and is readable by you.
+   
+   
+   
+  ERROR: UNABLE TO REQUIRE BASE64.PL
+  
+   The base64.pl library is needed for MHonarc to decode Base64 encoded
+   messages. base64.pl is part of the MHonarc distribution. Make sure you
+   properly installed MHonarc via the installation program. See also the
+   PERLINC resource element.
+   
+   
+   
+  ERROR: UNABLE TO REQUIRE NEWGETOPT.PL
+  
+   The newgetopt.pl library is needed for MHonarc to parse the
+   command-line. newgetopt.pl is part of the standard Perl distribution.
+   Make sure Perl has been correctly installed at your site.
+   
+   
+   
+  ERROR: UNABLE TO REQUIRE QPRINT.PL
+  
+   The qprint.pl library is needed for MHonarc to decode Quoted-Printable
+   encoded messages. qprint.pl is part of the MHonarc distribution. Make
+   sure you properly installed MHonarc via the installation program. See
+   also the PERLINC resource element.
+   
+   
+   
+  ERROR: UNABLE TO REQUIRE TIMELOCAL.PL
+  
+   The timelocal.pl library is needed for MHonarc to process dates in
+   messages. timelocal.pl is part of the standard Perl distribution. Make
+   sure Perl has been correctly installed at your site.
+   
+   
+   
+  ERROR: UNABLE TO REQUIRE <FILE>
+  
+   This message signifies MHonarc was unable to require the MIME filter
+   library <file>. Make sure you properly installed MHonarc via the
+   installation program. If <file> is your own custom filter, make sure
+   you properly registered it in the Resource File. See also Specifying
+   Filters and the PERLINC resource element.
+   
+   
+   
+  ERROR: UNRECOGNIZED MODE
+  
+   This indicates an internal error in MHonarc. Make sure no one has
+   modified the MHonarc source code. Contact the author of MHonarc if you
+   get this message.
+   
+
+   
+     _________________________________________________________________
+   
+   [Prev:Notes]
+   [ToC]
+   
+   
+   
+     _________________________________________________________________
+   
+    MHonArc 1.0.0 -- Diagnostics

@@ -1,0 +1,39 @@
+ACKNOWLEDGEMENTS for MHonArc
+
+---------------------------------------------------------------------------
+Special thangs go to:
+
+ A. P. Barrett <barrett@ee.und.ac.za>
+	For developing a base64 library.  The library is used to decode
+	base64 messages by MHonArc.
+
+ Susie Blackstock <seads@convex.com>
+	For helping me with the documentation.
+
+ Timothy Finin <Tim.Finin@cs.umbc.edu>
+	Whose initial feedback on mbox2html (my first mail->HTML
+	program) caused the ball rolling on developing a more complete
+	mail-to-HTML program.
+
+ Ken Harward <harward@convex.com>
+	For helping me tackle Perl problems and for bouncing ideas
+	off.
+
+---------------------------------------------------------------------------
+I'd like to Thank the following people for finding bugs/giving
+comments/whatever that effected the functionality of MHonArc (mail2html):
+
+    Daniel L Smith <dls@autodesk.com>
+    Daniel R. Kegel <dank@alumni.caltech.edu>
+    Jaak Vilo <vilo@muhu.Helsinki.FI>
+    James Everett Ward <jew@mcmuse.mc.maricopa.edu>
+    Robert M Walker <rmwalker@hsv15.pcmail.ingr.com>
+    Tessa Lau <tlau@TC.Cornell.EDU>
+    Walt Hobbs <Walter_Hobbs@rand.org>
+
+Sorry for those I left out unintentionally.
+
+And thanks to Larry Wall for inventing Perl :-)
+
+---------------------------------------------------------------------------
+Earl Hood, ehood@convex.com
