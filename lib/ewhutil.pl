@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: ewhutil.pl,v 2.13 2003/02/19 06:26:18 ehood Exp $
+##	$Id: ewhutil.pl,v 2.14 2003/04/05 23:49:38 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -103,7 +103,7 @@ sub dehtmlize {
     $$str_r =~ s/\&amp;/\&/g;
     $$str_r =~ s/\&quot;/\&/g;
     $$str_r =~ s/\&#[xX]0*40;/@/g;
-    $$str_r =~ s/\&64;/@/g;
+    $$str_r =~ s/\&#64;/@/g;
     $$str_r;
 }
 

@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhtxthtml.pl,v 2.31 2003/02/04 23:31:20 ehood Exp $
+##	$Id: mhtxthtml.pl,v 2.32 2003/04/05 23:52:20 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -35,10 +35,9 @@ package m2h_text_html;
 # Beginning of URL match expression
 my $Url	= '(\w+://|\w+:)';
 
-# Script related attributes
-my $SAttr = q/\b(?:onload|onunload|onclick|ondblclick|/.
-	         q/onmouse(?:down|up|over|move|out)|/.
-	         q/onkey(?:press|down|up)|style)\b/;
+# Script related attributes: Basically any attribute that starts with "on"
+my $SAttr = q/\bon\w+\b/;
+
 # Script/questionable related elements
 my $SElem = q/\b(?:applet|base|embed|form|ilayer|input|layer|link|meta|/.
 	         q/object|option|param|select|textarea)\b/;
@@ -47,7 +46,8 @@ my $SElem = q/\b(?:applet|base|embed|form|ilayer|input|layer|link|meta|/.
 my $AElem = q/\b(?:img|body|iframe|frame|object|script|input)\b/;
 # URL attributes
 my $UAttr = q/\b(?:action|background|cite|classid|codebase|data|datasrc|/.
-	         q/dynsrc|for|href|longdesc|profile|src|url|usemap)\b/;
+	         q/dynsrc|for|href|longdesc|lowsrc|profile|src|url|usemap|/.
+		 q/vrml)\b/;
 
 # Used to reverse the effects of CHARSETCONVERTERS
 my %special_to_char = (
@@ -102,6 +102,15 @@ my %special_to_char = (
 ##
 ##	subdir		Place derived files in a subdirectory
 ##
+
+# DEVELOPER's NOTE:
+#   The script stripping code is probably not complete.  Since a
+#   whitelist model is not being used -- because full HTML parsing
+#   would be required (and possible reliance on non-standard modules) --
+#   Future scripting extensions added to HTML could get by the filtering.
+#   The FAQ mentions the problems with HTML messages and recommends
+#   disabling HTML in archives.
+
 sub filter {
     my($fields, $data, $isdecode, $args) = @_;
     $args = ''  unless defined $args;
@@ -145,10 +154,8 @@ sub filter {
 	     qq/         Message Number: $mhonarc::MHAmsgnum\n/;
     }
 
-    ## Check comment declarations: may screw-up mhonarc processing
-    ## and avoids someone sneaking in SSIs.
-    #$$data =~ s/<!(?:--(?:[^-]|-[^-])*--\s*)+>//go; # can crash perl
-    $$data =~ s/<!--[^-]+[#X%\$\[]*/<!--/g;  # Just mung them (faster)
+    ## Unescape ascii letters to simplify strip code
+    dehtmlize_ascii($data);
 
     ## Get/remove title
     if (!$notitle) {
@@ -217,21 +224,14 @@ sub filter {
 	# for netscape 4.x browsers
 	$$data =~ s/(=\s*["']?\s*)(?:\&\{)+/$1/g;
 
-	# Hopefully complete pattern to neutralize javascript:... URLs.
-	# The pattern is ugly because we have to handle any combination
-	# of regular chars and entity refs.
-	$$data =~ s/\b(?:j|&\#(?:0*(?:74|106)|x0*(?:4a|6a))(?:;|(?![0-9])))
-		      (?:a|&\#(?:0*(?:65|97)|x0*(?:41|61))(?:;|(?![0-9])))
-		      (?:v|&\#(?:0*(?:86|118)|x0*(?:56|76))(?:;|(?![0-9])))
-		      (?:a|&\#(?:0*(?:65|97)|x0*(?:41|61))(?:;|(?![0-9])))
-		      (?:s|&\#(?:0*(?:83|115)|x0*(?:53|73))(?:;|(?![0-9])))
-		      (?:c|&\#(?:0*(?:67|99)|x0*(?:43|63))(?:;|(?![0-9])))
-		      (?:r|&\#(?:0*(?:82|114)|x0*(?:52|72))(?:;|(?![0-9])))
-		      (?:i|&\#(?:0*(?:73|105)|x0*(?:49|69))(?:;|(?![0-9])))
-		      (?:p|&\#(?:0*(?:80|112)|x0*(?:50|70))(?:;|(?![0-9])))
-		      (?:t|&\#(?:0*(?:84|116)|x0*(?:54|74))(?:;|(?![0-9])))
-		   /_javascript_/gix;
+	# Neutralize javascript:... URLs: Unfortunately, browsers
+	# are stupid enough to recognize a javascript URL with whitespace
+	# in it (like tabs and newlines).
+	$$data =~ s/\bj\s*a\s*v\s*a\s*s\s*c\s*r\s*i\s*p\s*t/_javascript_/gi;
 
+	# IE has a very unsecure expression() operator extension to
+	# CSS, so we have to nuke it also.
+	$$data =~ s/\bexpression\b/_expression_/gi;
     }
 
     ## Modify relative urls to absolute using BASE
@@ -341,6 +341,11 @@ sub filter {
 	$$data =~ s/\b$ahref_tmp\b/href/g;
     }
 
+    ## Check comment declarations: may screw-up mhonarc processing
+    ## and avoids someone sneaking in SSIs.
+    #$$data =~ s/<!(?:--(?:[^-]|-[^-])*--\s*)+>//go; # can crash perl
+    $$data =~ s/<!--[^-]+[#X%\$\[]*/<!--/g;  # Just mung them (faster)
+
     ($title.$$data, @files);
 }
 
@@ -429,6 +434,40 @@ sub resolve_cid {
 
     push(@files, $filename); # @files defined in filter!!
     $filename;
+}
+
+##---------------------------------------------------------------------------
+
+sub dehtmlize_ascii {
+  my $str = shift;
+  my $str_r = ref($str) ? $str : \$str;
+
+  $$str_r =~ s{\&\#(\d+);?}{
+      my $n = int($1);
+      if (($n >= 7 && $n <= 13) ||
+          ($n == 32) || ($n == 61) ||
+          ($n >= 48 && $n <= 58) ||
+          ($n >= 64 && $n <= 90) ||
+          ($n >= 97 && $n <= 122)) {
+          pack('C', $n);
+      } else {
+          '&#'.$1.';'
+      }
+  }gex;
+  $$str_r =~ s{\&\#[xX]([0-9abcdefABCDEF]+);?}{
+      my $n = hex($1);
+      if (($n >= 7 && $n <= 13) ||
+          ($n == 32) || ($n == 61) ||
+          ($n >= 48 && $n <= 58) ||
+          ($n >= 64 && $n <= 90) ||
+          ($n >= 97 && $n <= 122)) {
+          pack('C', $n);
+      } else {
+          '&#x'.$1.';'
+      }
+  }gex;
+
+  $$str_r;
 }
 
 ##---------------------------------------------------------------------------

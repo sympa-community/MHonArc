@@ -73,7 +73,7 @@ instead of <a href="../rcvars.html#FROM"><tt>$FROM$</tt></a>.</p></dd>
 instead of <a href="../rcvars.html#FROM"><tt>$FROM$</tt></a>.</p></dd>
 <dt><a href="addressmodifycode.html">ADDRESSMODIFYCODE</a></dt>
 <dd><p>Is defined as
-"<tt>s|([\!\%\w\.\-+=/]+@)([\w\.\-]+)|$1.('x' x length($2))|ge"</tt>
+"<tt class="icode">s|([\!\%\w\.\-+=/]+@)([\w\-]+\.[\w\.\-]+)|$1.('x' x length($2))|ge</tt>"
 (this has the effect of preserving the local-part of the address and
 complete masking out the domain portion).</p></dd>
 <dt><a href="mailtourl.html">MAILTOURL</a></dt>
@@ -146,7 +146,7 @@ modifying each resource.
 <!--/x-rc-nav-->
 <hr>
 <address>
-$Date: 2003/01/02 05:46:01 $ <br>
+$Date: 2003/03/31 17:53:47 $ <br>
 <img align="top" src="../monicon.png" alt="">
 <a href="http://www.mhonarc.org/"
 ><strong>MHonArc</strong></a><br>

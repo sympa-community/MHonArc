@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhexternal.pl,v 2.14 2003/02/04 23:31:19 ehood Exp $
+##	$Id: mhexternal.pl,v 2.15 2003/03/31 17:33:05 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -240,7 +240,7 @@ sub filter {
 		$namelabel = $html_name;
 	    } else {
 		$namelabel = $filename;
-		$namelabel =~ s/^.*$mhonarc::DIRSEP//o;
+		$namelabel =~ s/^.*$mhonarc::DIRSEPREX//o;
 		mhonarc::htmlize(\$namelabel);
 	    }
 	}

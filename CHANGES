@@ -13,6 +13,21 @@
 
 YYYY/MM/DD
 ============================================================================
+2003/04/05	(2.6.3)
+
+* Bug Fixes:
+
+    Bug ID  Summary
+    ------  --------------------------------------------------------------
+    3020    Trailing \ in regex
+    3128    XSS Vulnerabilies
+    2971    spammode option interferes with iso-2022-jp
+    ------  --------------------------------------------------------------
+  <http://savannah.nongnu.org/bugs/index.php?group_id=1968
+   &set=custom&advsrch=0&msort=0&report_id=105&go_report=Go
+   &fix_release=2.6.3&chunksz=50>
+
+============================================================================
 2003/03/11	(2.6.2)
 
 * Bug Fixes:
@@ -2442,4 +2457,4 @@ YYYY/MM/DD
 
 =======================================================================
 Earl Hood, mhonarc@mhonarc.org
-$Id: CHANGES,v 1.109 2003/03/12 01:31:02 ehood Exp $
+$Id: CHANGES,v 1.110 2003/04/06 00:02:42 ehood Exp $
