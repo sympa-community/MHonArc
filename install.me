@@ -1,16 +1,19 @@
-#! /usr/local/bin/perl
+#!/opt/perl/bin/perl
 ##---------------------------------------------------------------------------##
 ##  File:
-##      @(#) install.me 1.8 97/05/15 16:55:42 @(#)
+##	@(#) install.me 1.10 98/11/08 15:54:02
 ##  Author:
-##      Earl Hood       ehood@medusa.acs.uci.edu
-##  Description:
-##      Configurable installation program.
-##	Create an install.cfg file to define variables with the
-##	values appropriate for the software you want to install.
+##      Earl Hood, earlhood@usa.net
+##  Summary:
+##	Installation program for Perl applications.  It is an alternative
+##	to the MakeMaker/Makefile.PL method for "pure" Perl applications.
+##	This program provides an interactive method of installation.
 ##
+##	Files to install are determined by the FILELIST file.  Each
+##	file to install is listed in the file with a prefix telling
+##	the installation program the type of file it is.
 ##---------------------------------------------------------------------------##
-##    Copyright (C) 1995-1997	Earl Hood, ehood@medusa.acs.uci.edu
+##    Copyright (C) 1997,1998	Earl Hood, earlhood@usa.net
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by
@@ -24,237 +27,517 @@
 ##
 ##    You should have received a copy of the GNU General Public License
 ##    along with this program; if not, write to the Free Software
-##    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+##    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+##    02111-1307, USA
 ##---------------------------------------------------------------------------##
+
+package InstallMe;
+
+use strict;
+use vars qw(  
+    $MSDOS $MACOS $UNIX $VMS $WINDOWS
+    $DIRSEP $DIRSEPRX $CURDIR
+    $PROG $PATHSEP
+    $OSType
+    %DirSep %CurDir %PathSep
+);
+use Config;
+use FileHandle;
+use Getopt::Long;
+
+my $MacCLPrompt;
+
 ###############################################################################
-package main;
+##	OS Configuration Code
+###############################################################################
 
-##  Check what system we are executing under
-{
-    local($tmp);
-    if (($tmp = $ENV{'COMSPEC'}) && ($tmp =~ /[a-zA-Z]:\\/) && (-e $tmp)) {
-        $'MSDOS = 1;  $'MACOS = 0;  $'UNIX = 0;
-        $'DIRSEP = '\\';  $'CURDIR = '.';
-    } elsif (defined($MacPerl'Version)) {
-        $'MSDOS = 0;  $'MACOS = 1;  $'UNIX = 0;
-        $'DIRSEP = ':';  $'CURDIR = ':';
+BEGIN {
+    %DirSep = (
+	macos	=> ':',
+	msdos	=> '\\',
+	unix	=> '/',
+	vms	=> '/',	# ??
+	windows	=> '\\',
+    );
+    %CurDir = (
+	macos	=> ':',	# ??
+	msdos	=> '.',
+	unix	=> '.',
+	vms	=> '.',	# ??
+	windows	=> '.',
+    );
+    %PathSep = (
+	macos	=> ';',	# ??
+	msdos	=> ';',
+	unix	=> ':',
+	vms	=> ':',	# ??
+	windows	=> ';',
+    );
+
+    my $dontknow = 0;
+
+    ## Init variables
+    $MACOS	= 0;	$MSDOS	= 0;
+    $UNIX	= 0;	$VMS	= 0;
+    $WINDOWS	= 0;
+    $DIRSEP	= '/';	$CURDIR = '.';
+    $PATHSEP	= ':';
+
+    ## See if ostype can be determined from osname in Config
+    if (defined $^O) {
+	$_ = $^O;
     } else {
-        $'MSDOS = 0;  $'MACOS = 0;  $'UNIX = 1;
-        $'DIRSEP = '/';  $'CURDIR = '.';
+	require Config;
+	$_ = $Config::Config{'osname'};
     }
-    ##  Store name of program
-    ($'DIRSEPrxp = $'DIRSEP) =~ s/(\W)/\\$1/g;
-    ($'PROG = $0) =~ s%.*[$DIRSEPrxp]%%o;
+
+    if (/mac/i) {
+	$MACOS = 1;
+	$OSType = 'macos';
+    } elsif (/vms/i) {
+	$VMS = 1;
+	$OSType = 'vms';
+    } elsif (/msdos/i) {
+	$MSDOS = 1;
+	$OSType = 'msdos';
+    } elsif (/mswin/i or /winnt/i) {
+	$WINDOWS = 1;  $MSDOS = 1;
+	$OSType = 'windows';
+    } elsif (/unix/i or
+	     /aix/i or
+	     /bsd/i or
+	     /dynix/i or
+	     /hpux/i or
+	     /solaris/i or
+	     /sunos/i or
+	     /ultrix/i or
+	     /linux/i) {
+	$UNIX = 1;
+	$OSType = 'unix';
+    } else {
+	$dontknow = 1;
+    }
+
+    ## If we do not know now what the ostype is, make a guess.
+    if ($dontknow) {
+	my($tmp);
+
+	## MSDOG/Windoze
+	if (($tmp = $ENV{'windir'}) and ($tmp =~ /[A-Z]:\\/i) and (-d $tmp)) {
+	    $MSDOS = 1;
+	    $WINDOWS = 1;
+	    $OSType = 'windows';
+
+	} elsif (($tmp = $ENV{'COMSPEC'}) and ($tmp =~ /[a-zA-Z]:\\/) and
+		 (-e $tmp)) {
+	    $MSDOS = 1;
+	    if ($tmp =~ /win/i) {
+		$WINDOWS = 1;
+		$OSType = 'windows';
+	    } else {
+		$OSType = 'msdos';
+	    }
+
+	## MacOS
+	} elsif (defined($MacPerl::Version)) {
+	    $MACOS = 1;
+	    $OSType = 'macos';
+
+	## Unix (fallback case)
+	} else {
+	    $UNIX = 1;
+	    $OSType = 'unix';
+	}
+    }
+
+    ## Set other variables
+    $DIRSEP = $DirSep{$OSType};
+    if ($MSDOS or $WINDOWS) {
+	$DIRSEPRX = "\\\\\\/";
+    } else {
+	($DIRSEPRX = $DIRSEP) =~ s/(\W)/\\$1/g;
+    }
+    $CURDIR = $CurDir{$OSType};
+    $PATHSEP = $PathSep{$OSType};
+
+    ##	Store name of program
+    ($PROG = $0) =~ s%.*[$DIRSEPRX]%%o;
+
+    ##	Flag to prompt for command-line options on a Mac
+    $MacCLPrompt = 1;
 }
 
-eval 'umask 022' if $UNIX;	# Set umask
-
-##---------------------------------------------------------------------------
-##	BEGIN template for install.cfg
+##---------------------------------------------------------------------------##
+##	CLinit() initializes @ARGV.  Currently, it does nothing under
+##	MSDOS and Unix.
 ##
-
-## Flag if Perl 5 install (use "use lib ..." instead if @INC)
-$doPerl5 = 0;
-
-## Set flags
-$dobin = 1;	# Set to 1 if exectuables to install
-$dolib = 1;	# Set to 1 if libraries to install
-$dodoc = 1;	# Set to 1 if documents to install
-$doman = 1;	# Set to 1 if manpages to install
-
-## Set default values
-$bindir  = (!$MSDOS ? '/usr/local/bin' : 'C:\\BIN');
-$libdir  = (!$MSDOS ? '/usr/local/lib' : 'C:\\LIB');
-$docdir  = (!$MSDOS ? '/usr/local/lib' : 'C:\\DOC');
-$mandir  = (!$MSDOS ? '/usr/local/man' : 'C:\\MAN');
-$perlprg = (!$MSDOS ? '/usr/local/bin/perl' : 'C:\\BIN\\PERL.EXE');
-
-## Set files to install.  File can be a directory.  If so, the
-## directory is copied to destination
-
-$relbin = '.';   	# Location of source bin files relative to install.me
-@binfiles = ();
-
-$rellib = 'lib';	# Location of source lib files relative to install.me
-@libfiles = ();
-
-$reldoc = 'doc';	# Location of source doc files relative to install.me
-@docfiles = ();
-
-$relman = 'man';	# Location of source manpages relative to install.me
-@manfiles = ();
-
-## Define intro text
-$introText =<<EndofIntro;
-Installation
-============
-The installation process will ask you a series of questions on where
-the Perl executable is and where to put files.  Just hit <CR> to accept
-the default values listed in ()'s.
-
-EndofIntro
+##	If running under a Mac and the script is a droplet, command-line
+##	options will be prompted for if $MacCLPrompt is set to a
+##	non-zero value.
 ##
-##	END template for install.cfg
-##---------------------------------------------------------------------------
+sub CLinit {
 
-##---------------------------------------------------------------------------
-##      Main routine
-##---------------------------------------------------------------------------
+    ##	Ask for command-line options if script is a Mac droplet
+    ##		Code taken from the MacPerl FAQ
+    ##
+    if ($MacCLPrompt && defined($MacPerl::Version) &&
+	    ($MacPerl::Version =~ /Application$/)) {
+
+	# we're running from the app
+	my( $cmdLine, @args );
+	$cmdLine = &MacPerl::Ask( "Enter command line options:" );
+	require "shellwords.pl";
+	@args = &shellwords( $cmdLine );
+	unshift( @::ARGV, @args );
+    }
+}
+
+##---------------------------------------------------------------------------##
+##	path_join takes an array of path components and returns a string
+##	with components joined together by the directoy separator.
+##
+sub path_join {
+    join($DIRSEP, @_);
+}
+
+##---------------------------------------------------------------------------##
+##	path_split takes a string representing a pathname and splits
+##	it into an array of components.  The pathname is interpreted
+##	with respect to the OS we are running under.
+##
+sub path_split {
+    split(/[$DIRSEPRX]/o, $_[0]);
+}
+
+##---------------------------------------------------------------------------##
+##	is_absolute_path() returns true if a string is an absolute path
+##
+sub is_absolute_path {
+
+    if ($MSDOS or $WINDOWS) {
+	return $_[0] =~ /^(?:[a-z]:)?[\\\/]/i;
+    }
+    if ($MACOS) {		## Not sure about Mac
+	return $_[0] =~ /^:/o;
+    }
+    if ($VMS) {			## Not sure about VMS
+	return $_[0] =~ /^\w+:/i;
+    }
+    $_[0] =~ m|^/|o;    	## Unix
+}
+
+###############################################################################
+##	Initialize Globals
+###############################################################################
+
+my %Files	= ();
+my %DefValues	= ();
+my %OptValues	= ();
+
+###############################################################################
+##	Parse Command-line
+###############################################################################
+
 {
+    CLinit();
+    my $ret =
+    GetOptions(\%OptValues,
+	       qw(
+		   batch
+		   prefix=s
+		   binpath=s
+		   docpath=s
+		   libpath=s
+		   manpath=s
+		   perl=s
+		   filelist=s
+		   nobin
+		   nodoc
+		   nolib
+		   noman
 
-$Batch = 0;
-$CfgFile = "install.cfg";
-if ($ARGV[0] =~ /^batch$/i) {
-    shift(@ARGV);
-    $Batch = 1;
+		   help));
+
+    if (!$ret or $OptValues{"help"}) {
+	usage();
+	exit !$ret;
+    }
+
+    my $cfg_prefix        = $Config{'prefix'};
+    $DefValues{'binpath'} = $Config{'installbin'};
+    $DefValues{'libpath'} = $Config{'installsitelib'};
+    $DefValues{'manpath'} = $Config{'installman1dir'};
+    if (defined($OptValues{'prefix'})) {
+	$DefValues{'binpath'} =~ s/^\Q$cfg_prefix/$OptValues{'prefix'}/o;
+	$DefValues{'libpath'} =~ s/^\Q$cfg_prefix/$OptValues{'prefix'}/o;
+	$DefValues{'manpath'} =~ s/^\Q$cfg_prefix/$OptValues{'prefix'}/o;
+	$DefValues{'docpath'}  = join($DIRSEP, $OptValues{'prefix'}, 'doc');
+    } else {
+	$DefValues{'docpath'}  = join($DIRSEP, $cfg_prefix, 'doc');
+    }
+    $DefValues{'manpath'} =~ s|(${DIRSEPRX}man)${DIRSEPRX}.*|$1|;
+
+    $DefValues{'filelist'} = 'FILELIST';
+    $DefValues{'perl'}     = $Config{'perlpath'}
 }
-if ($ARGV[0] =~ /\S/) {
-    $CfgFile = shift(@ARGV);
-}
 
-require $CfgFile  || die "Unable to require $CfgFile\n";
+###############################################################################
+##	Do It
+###############################################################################
 
-{ package uio;
-    @LastText = ();     ## Cached text
-    $use_handler = 1;   ## Flag to use private CONT signal handler
-}
+{
+    my($dobin, $dolib, $dodoc, $doman);
 
-if ($Batch) {			## Check for batch mode
-    print STDOUT "Batch mode install ...\n";
+    ## Get installation files
+    ## ----------------------
+    read_manifest($OptValues{'filelist'} || $DefValues{'filelist'},
+		  \%Files);
 
-} else {			## Interactive mode
-    print STDOUT $introText;
-    &print_note("Make sure all pathnames are absolute.");
-    &pause();
+    $DefValues{'docpath'} .= $DIRSEP . $Files{'name'}[0]
+	if $Files{'name'}[0];
+    $dobin = defined($Files{'bin'}) && scalar(@{$Files{'bin'}}) &&
+	     !$OptValues{'nobin'};
+    $dolib = defined($Files{'lib'}) && scalar(@{$Files{'lib'}}) &&
+	     !$OptValues{'nolib'};
+    $dodoc = defined($Files{'doc'}) && scalar(@{$Files{'doc'}}) &&
+	     !$OptValues{'nodoc'};
+    $doman = defined($Files{'man'}) && scalar(@{$Files{'man'}}) &&
+	     !$OptValues{'noman'};
+    die "Nothing to install!\n"
+	unless $dobin or $dolib or $dodoc or $doman;
 
-    $dobin = 0  unless scalar(@binfiles);
-    $dolib = 0  unless scalar(@libfiles);
-    $dodoc = 0  unless scalar(@docfiles);
-    $doman = 0  unless scalar(@manfiles);
-    do {
-	## Get installation directories and path to Perl
+    ## Get path stuff
+    ## --------------
+    if ($OptValues{'batch'}) {
+	$OptValues{'perl'} = $DefValues{'perl'}
+	    unless $OptValues{'perl'};
+	$OptValues{'binpath'}  = $DefValues{'binpath'}
+	    unless $OptValues{'binpath'};
+	$OptValues{'libpath'}  = $DefValues{'libpath'}
+	    unless $OptValues{'libpath'};
+	$OptValues{'docpath'}  = $DefValues{'docpath'}
+	    unless $OptValues{'docpath'};
+	$OptValues{'manpath'}  = $DefValues{'manpath'}
+	    unless $OptValues{'manpath'};
+    } else {
 	while (1) {
-	    $tmp = &prompt_user_def("Perl executable", $perlprg, 0, 1);
-	    last if -x $tmp;
-	    print STDERR "$tmp not executable\n";
+	    $OptValues{'perl'} =
+		get_perl_from_user($OptValues{'perl'},
+				   $DefValues{'perl'},
+				   "Pathname of perl executable:");
+	    $OptValues{'binpath'} =
+		get_path_from_user($OptValues{'binpath'},
+				   $DefValues{'binpath'},
+				   "Directory to install executables:")
+				   if $dobin;
+	    $OptValues{'libpath'} =
+		get_path_from_user($OptValues{'libpath'},
+				   $DefValues{'libpath'},
+				   "Directory to install library files:")
+				   if $dolib;
+	    $OptValues{'docpath'} =
+		get_path_from_user($OptValues{'docpath'},
+				   $DefValues{'docpath'},
+				   "Directory to install documentation:")
+				   if $dodoc;
+	    $OptValues{'manpath'} =
+		get_path_from_user($OptValues{'manpath'},
+				   $DefValues{'manpath'},
+				   "Directory to install manpages:")
+				   if $doman;
+
+	    print STDOUT "You have specified the following:\n";
+	    print STDOUT "\tPerl path: $OptValues{'perl'}\n";
+	    print STDOUT "\tBin directory: $OptValues{'binpath'}\n"
+		if $dobin;
+	    print STDOUT "\tLib directory: $OptValues{'libpath'}\n"
+		if $dolib;
+	    print STDOUT "\tDoc directory: $OptValues{'docpath'}\n"
+		if $dodoc;
+	    print STDOUT "\tMan directory: $OptValues{'manpath'}\n"
+		if $doman;
+
+	    last  if prompt_user_yn("Is this correct?", 1);
+
+	    $DefValues{'perl'} = $OptValues{'perl'};
+	    $DefValues{'binpath'}  = $OptValues{'binpath'};
+	    $DefValues{'libpath'}  = $OptValues{'libpath'};
+	    $DefValues{'docpath'}  = $OptValues{'docpath'};
+	    $DefValues{'manpath'}  = $OptValues{'manpath'};
+	    $OptValues{'perl'} = '';
+	    $OptValues{'binpath'}  = '';
+	    $OptValues{'libpath'}  = '';
+	    $OptValues{'docpath'}  = '';
+	    $OptValues{'manpath'}  = '';
 	}
-	$perlprg = $tmp;
-	if ($dobin) {
-	    do {
-		$tmp = &interpolate_path(
-			  &prompt_user_def("Location to install programs",
-					 $bindir, 0, 1));
-	    } while (!&create_dir($tmp));
-	    $bindir = $tmp;
+    }
+
+    ## Install files
+    ## -------------
+    print STDERR "($OptValues{'perl'})\n";
+    my $plprefix  = "#!$OptValues{'perl'}\n";
+       $plprefix .= "use lib qw($OptValues{'libpath'});\n"
+		    if $OptValues{'libpath'};
+    my($file, $destfile);
+    if ($dobin) {
+	print STDOUT qq(Installing programs to "$OptValues{'binpath'}":\n);
+	if (create_dir($OptValues{'binpath'}, 1) <= 0) { die "\n"; }
+	foreach (@{$Files{'bin'}}) {
+	    print STDOUT "    $_ => ";
+	    ($file = $_) =~ s%.*/%%o;
+	    $destfile = join('', $OptValues{'binpath'}, $DIRSEP, $file);
+	    print STDOUT $destfile, "\n";
+	    cp($_, $destfile, $plprefix, $WINDOWS);
+	    eval q{chmod 0755, $destfile;};
 	}
-	if ($dolib) {
-	    do {
-		$tmp = &interpolate_path(
-			  &prompt_user_def("Location to install libraries",
-					   $libdir, 0, 1));
-	    } while (!&create_dir($tmp));
-	    $libdir = $tmp;
+    }
+    if ($dolib) {
+	print STDOUT qq(Installing lib files to "$OptValues{'libpath'}":\n);
+	if (create_dir($OptValues{'libpath'}, 1) <= 0) { die "\n"; }
+	foreach (@{$Files{'lib'}}) {
+	    print STDOUT "    $_ => ";
+	    ($file = $_) =~ s%.*/%%o;
+	    $destfile = join('', $OptValues{'libpath'}, $DIRSEP, $file);
+	    print STDOUT $destfile, "\n";
+	    cp($_, $destfile);
 	}
-	if ($dodoc) {
-	    if (&ask_question("Install documentation", 1)) {
-		do {
-		    $tmp = &interpolate_path(
-			      &prompt_user_def("Location to install docs",
-					       $docdir, 0, 1));
-		} while (!&create_dir($tmp));
-		$docdir = $tmp;
-	    } else {
-		$dodoc = 0;
-	    }
+    }
+    if ($dodoc) {
+	print STDOUT qq(Installing docs to "$OptValues{'docpath'}":\n);
+	if (create_dir($OptValues{'docpath'}, 1) <= 0) { die "\n"; }
+	foreach (@{$Files{'doc'}}) {
+	    print STDOUT "    $_ => ";
+	    ($file = $_) =~ s%.*/%%o;
+	    $destfile = join('', $OptValues{'docpath'}, $DIRSEP, $file);
+	    print STDOUT $destfile, "\n";
+	    cp($_, $destfile);
 	}
-	if ($doman) {
-	    if (&ask_question("Install manpages", 1)) {
-		do {
-		    $tmp = &interpolate_path(
-			      &prompt_user_def("Location to install manpages",
-					       $mandir, 0, 1));
-		} while (!&create_dir($tmp));
-		$mandir = $tmp;
-	    } else {
-		$doman = 0;
-	    }
+    }
+    if ($doman) {
+	my $sect;
+	print STDOUT qq(Installing manpages to "$OptValues{'manpath'}":\n);
+	if (create_dir($OptValues{'manpath'}, 1) <= 0) { die "\n"; }
+	foreach (@{$Files{'man'}}) {
+	    print STDOUT "    $_ => ";
+	    ($file = $_)    =~ s%.*/%%o;
+	    ($sect = $file) =~ s%.*\.%%o;
+	    $destfile = join('', $OptValues{'manpath'},
+			     $DIRSEP, "man", $sect, $DIRSEP, $file);
+	    print STDOUT $destfile, "\n";
+	    cp($_, $destfile);
 	}
-	print STDOUT "\n",
-		     "You've specified the following:\n",
-		     "\tPerl location: $perlprg\n";
-	print STDOUT "\tProgram directory: $bindir\n"  if $dobin;
-	print STDOUT "\tLibrary directory: $libdir\n"  if $dolib;
-	print STDOUT "\tDoc directory: $docdir\n"  if $dodoc;
-	print STDOUT "\tMan directory: $mandir\n"  if $doman;
-    } while (!&ask_question("Is this correct", 1));
+    }
 }
 
-## Install files
-$perlprg = "#!$perlprg\n";
-if ($dolib) {
-    if ($doPerl5) {
-	$perlprg .= "use lib '$libdir';\n";
+###############################################################################
+##	Subroutines
+###############################################################################
+
+##------------------------------------------------------------------------
+##	read_manifest() reads file giving list of all files to
+##	install.
+##
+sub read_manifest {
+    my $file	= shift;
+    my $href	= shift;
+    my($key, $pathname);
+
+    open FILE, $file or die qq(Unable to open "$file"\n);
+    while (<FILE>) {
+	next  if /^#/;
+	next  unless /\S/;
+	chomp;
+	($key, $pathname) = split(/:/, $_, 2);
+	push @{$href->{$key}}, $pathname;
+    }
+    close FILE;
+}
+
+##------------------------------------------------------------------------
+##	perl_exe() returns true if pathname argument is a perl
+##	interpreter.
+##
+sub perl_exe {
+    my $pathname = shift;
+
+    return 0  unless -x $pathname;
+    return 0  unless open PERL, "$pathname -v |";
+    while (<PERL>) {
+	if (/\bperl\b/i) {
+	    close PERL;
+	    return 1;
+	}
+    }
+    close PERL;
+    0;
+}
+
+##------------------------------------------------------------------------
+##	get_perl_from_user() gets the pathname of the perl executable.
+##
+sub get_perl_from_user {
+    my $value	= shift;	# Current value (if set, batch mode)
+    my $default	= shift;	# Default value
+    my $prompt	= shift;	# User prompt
+
+    if (defined($value) && ($value =~ /\S/)) {
+	die qq(ERROR: "$value" is not perl.\n)
+	    unless perl_exe($value);
     } else {
-	$perlprg .= "unshift(\@INC, '$libdir');\n";
+	while (1) {
+	    $value = interpolate_path(prompt_user($prompt, $default));
+	    last  if perl_exe($value);
+	    warn qq(ERROR: "$value" is not perl.\n);
+	}
     }
+    $value;
 }
 
-if ($dobin && @binfiles) {
-    print STDOUT "Installing the following into $bindir\n";
-    foreach $file (@binfiles) {
-	($destfile = $file) =~ s%.*$DIRSEPrxp%%o;
-	&cp("$relbin$DIRSEP$file", "$bindir$DIRSEP$destfile", $perlprg);
-	print STDOUT "\t", $file, "\n";
-	eval 'chmod 0755, "$bindir$DIRSEP$file"';
+##------------------------------------------------------------------------
+##	get_path_from_user() gets a path from the user.  The function
+##	insures the path exists.
+##
+sub get_path_from_user {
+    my $value	= shift;	# Current value (if set, batch mode)
+    my $default	= shift;	# Default value
+    my $prompt	= shift;	# User prompt
+
+    if (defined($value) && ($value =~ /\S/)) {
+	die qq(ERROR: Unable to create "$value".\n)
+	    unless create_dir($value, 1) > 0;
+    } else {
+	my $stat;
+	while (1) {
+	    $value = interpolate_path(prompt_user($prompt, $default));
+	    $stat = create_dir($value);
+	    if ($stat > 0)  { last; }
+	    if ($stat == 0) { next; }
+	}
     }
-}
-if ($dolib && @libfiles) {
-    print STDOUT "Installing the following into $libdir\n";
-    foreach $file (@libfiles) {
-	($destfile = $file) =~ s%.*$DIRSEPrxp%%o;
-	&cp("$rellib$DIRSEP$file", "$libdir$DIRSEP$destfile");
-	print STDOUT "\t", $file, "\n";
-    }
-}
-if ($dodoc && @docfiles) {
-    print STDOUT "Installing the following into $docdir\n";
-    foreach $file (@docfiles) {
-	($destfile = $file) =~ s%.*$DIRSEPrxp%%o;
-	&cp("$reldoc$DIRSEP$file", "$docdir$DIRSEP$destfile");
-	print STDOUT "\t", $file, "\n";
-    }
-}
-if ($doman && @manfiles) {
-    print STDOUT "Installing the following into $mandir\n";
-    local($sect) = (1);
-    foreach $file (@manfiles) {
-	($destfile = $file) =~ s%.*$DIRSEPrxp%%o;
-	($sect) = $destfile =~ m%\.([\d\w]+)$%;
-	&create_dir("$mandir${DIRSEP}man${sect}", 1);
-	&cp("$relman$DIRSEP$file",
-	    "$mandir${DIRSEP}man${sect}${DIRSEP}$destfile");
-	print STDOUT "\t$file -> $mandir${DIRSEP}man${sect}\n";
-    }
+    $value;
 }
 
-exit 0;
-}
-
-##---------------------------------------------------------------------------
-##	Main subroutines
-##---------------------------------------------------------------------------
-
+##------------------------------------------------------------------------
+##	create_dir() creates a directory path
+##
 sub create_dir {
-    local($d) = shift;
-    local($noask) = shift;
-    local(@a) = grep($_ ne '', split(/$'DIRSEPrxp/o, $d));
-    local($path, $dir);
+    my $d	= shift;	# Directory path
+    my $noask	= shift;	# Don't ask to create flag
 
-    if ((! -e $d) && (!$noask)) {
-        return 0  unless &ask_question(qq{$d does not exist.  Create}, 1);
+    if (-e $d) {
+	if (-w $d) { return 1; }
+	warn qq/"$d" is not writable\n/;
+	return -1;
+    }
+
+    my(@a) = grep($_ ne '', split(/[$DIRSEPRX]/o, $d));
+    my($path, $dir, $curpath);
+
+    if (!$noask) {
+        return 0  unless prompt_user_yn(qq{"$d" does not exist.  Create}, 1);
     }
     if ($MSDOS) {
-	if ($d =~ m%^\s*([a-zA-Z]:)?[/\\]%) {
+	if ($d =~ m%^\s*(?:[a-zA-Z]:)?[/\\]%) {
 	    $path = shift @a;
 	} else {
 	    $path = $CURDIR;
@@ -267,490 +550,188 @@ sub create_dir {
 	}
     }
     foreach $dir (@a) {
-	if (! -e "$path$DIRSEP$dir") {
-	    if (!mkdir("$path$DIRSEP$dir", 0777)) {
-		print STDERR "Unable to create $path$DIRSEP$dir: $!\n";
-		return 0;
+	$curpath = "$path$DIRSEP$dir";
+	if (! -e $curpath) {
+	    if (!mkdir($curpath, 0777)) {
+		warn qq/Unable to create "$curpath": $!\n/;
+		return -1;
 	    }
-	} elsif (! -d "$path$DIRSEP$dir") {
-	    print STDERR "$dir is not a directory\n";
-	    return 0;
+	} elsif (! -d $curpath) {
+	    warn qq/"$curpath" is not a directory\n/;
+	    return -1;
 	}
 	$path .= $DIRSEP . $dir;
     }
     if (! -w $d) {
-	print STDERR "$d not writable\n";
-	return 0;
+	warn qq/"$d" not writable\n/;
+	return -1;
     }
     1;
 }
 
-##---------------------------------------------------------------------------
+##------------------------------------------------------------------------
+##	interpolate_path() expands any special characters in a
+##	pathname.
+##
 sub interpolate_path {
-    local($path) = shift;
+    my($path) = shift;
 
-    $path =~ s/^~/$ENV{'HOME'}/;
+    $path =~ s/^~/$ENV{'HOME'}/e;
     $path =~ s/\$(\w+)/$ENV{$1}/ge;
+    $path =~ s/\$\{(\w+)\}/$ENV{$1}/ge;
     $path;
 }
 
-##---------------------------------------------------------------------------
+##------------------------------------------------------------------------
+##	cp() copies a file, or directory.
+##
 sub cp {
-    local($src, $dst, $prepend) = @_;
+    my($src, $dst, $prepend, $mkbat) = @_;
 
     if (-d $src) {
 	if (! -e $dst) {
-	    mkdir($dst,0777) || die "Unable to create $dst: $!\n";
+	    mkdir($dst,0777) or die "Unable to create $dst: $!\n";
 	}
-	opendir(DIR, $src) || die "Unable to open $src: $!\n";
-	@files = grep(!/^(sccs|\.|\..)$/i, readdir(DIR));
+	opendir(DIR, $src) or die "Unable to open $src: $!\n";
+	my @files = grep(!/^(sccs|\.|\..)$/i, readdir(DIR));
 	closedir(DIR);
+	my($file, $srcpn, $dstpn);
 	foreach $file (@files) {
 	    $srcpn = "$src$DIRSEP$file";
 	    $dstpn = "$dst$DIRSEP$file";
 	    if (-d $srcpn) {
-		&cp($srcpn, $dstpn, $prepend);
+		cp($srcpn, $dstpn, $prepend, $mkbat);
 	    } else {
-		&cpfile($srcpn, $dstpn, $prepend);
+		cpfile($srcpn, $dstpn, $prepend, $mkbat);
 	    }
 	}
 
 
     } else {
-	&cpfile($src, $dst, $prepend);
+	cpfile($src, $dst, $prepend, $mkbat);
     }
 }
 
-##---------------------------------------------------------------------------
+##------------------------------------------------------------------------
+##	cpfile() copies a file.  Any text in $prepend will be prepending
+##	to the destination file.
+##
 sub cpfile {
-    local($src, $dst, $prepend) = @_;
+    my($src, $dst, $prepend, $mkbat) = @_;
+    my($bflag);
 
-    open(SRC, $src) || die "Unable to open $src: $!\n";
-    open(DST, "> $dst") || die "Unable to create $dst: $!\n";
-    if (-B $src) { binmode( SRC ); binmode( DST ); }
+    if (-d $dst) {
+	my $tmp;
+	($tmp = $src) =~ s%.*[$DIRSEPRX]%%o;
+	$dst .= $DIRSEP . $tmp;
+    }
+
+    open(SRC, $src) or die "Unable to open $src: $!\n";
+
+    $bflag = (-B $src);
+    $mkbat = 0       if ($dst =~ /\.bat$/i);
+    $dst  .= '.bat'  if (!$bflag && $mkbat);
+
+    open(DST, "> $dst") or die "Unable to create $dst: $!\n";
+    if ($bflag) { binmode(SRC); binmode(DST); }
+
+    if (!$bflag && $mkbat) {
+	print DST <<'EndOfBat';
+@rem = '--*-Perl-*--
+@echo off
+if "%OS%" == "Windows_NT" goto WinNT
+perl -x -S "%0" %1 %2 %3 %4 %5 %6 %7 %8 %9
+goto endofperl
+:WinNT
+perl -x -S "%0" %*
+if NOT "%COMSPEC%" == "%SystemRoot%\system32\cmd.exe" goto endofperl
+if %errorlevel% == 9009 echo You do not have perl in your PATH.
+goto endofperl
+@rem ';
+EndOfBat
+    }
     if ($prepend) {
 	print DST $prepend;
     }
     print DST <SRC>;
+
+    if (!$bflag && $mkbat) {
+	print DST <<'EndOfBat';
+__END__
+:endofperl
+EndOfBat
+    }
+
     close(SRC);
     close(DST);
 }
 
+##------------------------------------------------------------------------
+##      prompt_user() prompts the user for some input.  The first
+##      argument is the prompt string, the second is the default
+##      value is the user specifies nothing.
+##
+sub prompt_user {
+    my $prompt = shift;
+    my $default = shift;
+ 
+    my($answer);
+ 
+    print STDOUT $prompt;
+    print STDOUT qq{ ("$default")}  if defined($default);
+    print STDOUT " ";
+    $answer = <STDIN>;
+    chomp $answer;
+    $answer = $default  if $answer !~ /\S/;
+    $answer;
+}
+ 
+##------------------------------------------------------------------------
+##      prompt_user_yn() prompts the user for a yes or no question.
+##
+sub prompt_user_yn {
+    my $prompt = shift;
+    my $default = shift;
+ 
+    my($answer);
+ 
+    print STDOUT $prompt, " ";
+    print STDOUT $default ? "['y']" : "['n']"; 
+    print STDOUT " ";
+    $answer = <STDIN>;
+    chomp $answer;
+    if ($answer !~ /\S/) {
+        $answer = $default;
+    } elsif ($answer =~ /q/i or $answer =~ /quit/i) {
+	print STDOUT "Installation aborted!\n";
+	exit(0);
+    } elsif ($answer =~ /y/i or $answer =~ /yes/i) {
+        $answer = 1;
+    } else {
+        $answer = 0;
+    }
+    $answer;
+}
 
-###############################################################################
 ##---------------------------------------------------------------------------##
-##  File:
-##	@(#) uio.pl 1.2 97/03/11 12:29:46 @(#)
-##  Author:
-##	Earl Hood	ehood@medusa.acs.uci.edu
-##  Description:
-##	This package contains subroutines for user input routines and
-##	screen output routines.
-##---------------------------------------------------------------------------##
-##  Copyright (C) 1994-1997	Earl Hood, ehood@medusa.acs.uci.edu
 ##
-##  This program is free software; you can redistribute it and/or modify
-##  it under the terms of the GNU General Public License as published by
-##  the Free Software Foundation; either version 2 of the License, or
-##  (at your option) any later version.
-##  
-##  This program is distributed in the hope that it will be useful,
-##  but WITHOUT ANY WARRANTY; without even the implied warranty of
-##  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-##  GNU General Public License for more details.
-##  
-##  You should have received a copy of the GNU General Public License
-##  along with this program; if not, write to the Free Software
-##  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-##---------------------------------------------------------------------------##
-
-if (!$uio'NoDate) {
-    # date.pl is needed for get_later_date()
-    require 'date.pl' || warn "Unable to require date.pl\n";
+sub usage {
+    print STDOUT <<EOF;
+Usage: $PROG [options]
+Options:
+  -batch                : Run in batch mode (do not ask questions)
+  -binpath <path>       : Directory path to install programs/scripts
+  -docpath <path>       : Directory path to install documentation
+  -help                 : This message
+  -libpath <path>       : Directory path to install library files
+  -filelist <file>      : List of files to install (def="FILELIST")
+  -manpath <path>       : Directory path to manpages
+  -nobin                : Do not install programs
+  -nodoc                : Do not install documentation
+  -nolib                : Do not install library files
+  -noman                : Do not install manpages
+  -perl <pathname>      : Pathname of perl interpreter
+  -prefix <path>        : Set prefix for installation directories
+EOF
 }
 
-package uio;
-
-##---------------------------------------------------------------------------##
-##  The following routines are defined in this package.  All routines
-##  work off of STDOUT.
-##	sub main'ask_question		-- ask yes/no question
-##	sub main'do_num_menu		-- autonumber menu items & print
-##	sub main'flush			-- flush filehandle
-##	sub main'get_char_choice	-- get char that is in list
-##	sub main'get_later_date		-- Get date later than some date
-##	sub main'get_lc_string		-- get string converted to lowercase
-##	sub main'get_string		-- get string
-##	sub main'pause			-- pause until <CR> hit
-##	sub main'print_error		-- print error message
-##	sub main'print_info		-- print information message
-##	sub main'print_menu		-- print a menu to screen
-##	sub main'print_note		-- print note message
-##	sub main'print_warning		-- print warning message
-##	sub main'prompt_user		-- prompt user for string
-##	sub main'prompt_user_def	-- prompt_user() with default value
-##
-##  Private routines.
-##	sub handler			-- private SIGCONT handler
-##	sub print_message 		-- print typed message to screen
-##	sub print_txt			-- print text and cache it
-##	sub reset_handler		-- unregister handler()
-##	sub set_handler			-- register handler()
-##
-##  Notes:
-##	For the pause() and prompt_user*() routines, a signal handler
-##	is registered to handle the SIGCONT signal.  This enables the
-##	routines to redisplay the prompt after the program has been
-##	suspended and continued while prompting the user for input.
-##	The handler has to redisplay the text, therefore the mentioned
-##	routines use the print_txt() for caching the prompt text.
-##
-##	When the signal handler is registered, any existing handler for
-##	SIGCONT is stored and is called first before redisplaying the
-##	cached text.  Uio's signal handler can be disabled if the
-##	variable $uio'use_handler is set to zero.  By default, the
-##	value is one.  More inforamtion is below in the various
-##	subroutine descriptions.
-##---------------------------------------------------------------------------##
-
-			    ##------------------##
-			    ## Global variables ##
-			    ##------------------##
-##---------------------------------------------------------------------------
-
-@LastText = ();		## Cached text
-$use_handler = 1;	## Flag to use private CONT signal handler
-$term_io_bug = 0;       ## Flag if bogus reads must be done when
-                        ##      consective suspend/foregrounds are done
-$ext_sigcont;		## External CONT handler
-
-##---------------------------------------------------------------------------
-
-		    ##---------------------------------##
-		    ## Private subroutine declerations ##
-		    ##---------------------------------##
-##---------------------------------------------------------------------------
-##	print_txt() prints @_ to STDOUT.  It also makes a copy of @_ to
-##	an array called @LastText.  Any outside package can access it
-##	using uio'LastText.  This is useful for redisplaying text
-##	after the program has been suspended and continued.
-##
-sub print_txt {
-    print STDOUT @_;  @LastText = @_;
-}
-
-##---------------------------------------------------------------------------
-##	This routine is used by print_{error, info, note, warning}
-##	routines to output an informitive message to STDOUT.
-##
-sub print_message {
-    local($type, $mesg) = ($_[0], join("", @_[1 .. $#_]));
-    local($head) = sprintf("    %9s", "$type  ");
-    local($indent) = " " x 13;
-    local($i, $dashes, @array);
-
-    @array = split(/\n/, $mesg);
-    foreach (@array) { $i = length($_)  if length($_) > $i; }
-    $dashes = " " x 4 . "-" x ($i+10);
-    $mesg = join("\n", @array);
-    $* = 1;
-    $mesg =~ s/\n/\n$indent/g;
-    $mesg = $head . $mesg;
-    print STDOUT "$dashes\n", "$mesg\n", "$dashes\n";
-    $* = 0;
-}
-
-##---------------------------------------------------------------------------
-##	handler() is the private signal handler for the uio package.
-##	It's used to when SIGCONT is caught for redisplay cached text.
-##	The external handler is called if defined.
-##
-sub handler {
-    if ($ext_sigcont ne 'IGNORE' && $ext_sigcont ne 'DEFAULT' &&
-	$ext_sigcont ne "") { &$ext_sigcont(@_); }
-    print STDOUT @LastText;
-    &'flush(STDOUT);
-    push(@Redo, 1)  if $term_io_bug;
-}
-
-##---------------------------------------------------------------------------
-##	set_handler() sets the private CONT signal handler.
-##
-sub set_handler {
-    return unless $use_handler;
-    $ext_sigcont = $SIG{'CONT'};
-    $SIG{'CONT'} = "uio'handler";
-}
-
-##---------------------------------------------------------------------------
-##	reset_handler() restores the external handler
-##
-sub reset_handler {
-    return unless $use_handler;
-    $SIG{'CONT'} = $ext_sigcont;
-}
-
-##---------------------------------------------------------------------------
-
-		    ##--------------------------------##
-		    ## Public subroutine declerations ##
-		    ##--------------------------------##
-##---------------------------------------------------------------------------
-##	print_menu() a tabular list of items in a "menu" type format.  The
-##	list is printed in column major order.
-##	Parameters:
-##	    $title	: The title of the menu if not null.
-##	    $cols	: Number of columns in menu.
-##	    $box	: Boolean flag for drawing a box around menu.
-##	    $sep	: Separator string between columns.
-##	    @menu_items	: Array of menu items.
-##	In box mode the title appears above the box.  Care must be taken
-##	in the number of columns chosen when menu items string lengths get
-##	long.  This routine assumes there is plenty of screen space to
-##	print out the menu.
-##
-sub main'print_menu {
-    local($title, $cols, $box, $sep, @menu_items) = @_;
-    local($i, $j, $indent, $sp, $fmt, $lside, $rside);
-
-    $sp = " ";  $indent = $sp x 8;
-    foreach (@menu_items) { $i = length($_)  if length($_) > $i; }
-    $fmt = "%-${i}s";
-    $dashes = "-" x (($cols-1)*length($sep) + $cols*$i + 2);
-    $lines = ($#menu_items+1)/$cols;
-    $lines = ($lines == int($lines) ? $lines : int($lines)+1);
-    print STDOUT "$indent$title\n"  if $title ne "";	## Print $title
-    print STDOUT "$indent $dashes\n"  if $box;		## Print top of box
-    $lside = ($box ? "| " : "  ");
-    $rside = ($box ? " |\n" : "  \n");
-    for ($i=0; $i < $lines; $i++) {
-	print STDOUT $indent, $lside;
-	for ($j=0; $j < $cols; $j++) {
-	    print STDOUT sprintf($fmt, $menu_items[$i + $j*$lines]);
-	    print STDOUT $sep  if $j < $cols-1;
-	}
-	print STDOUT $rside;
-    }
-    print STDOUT "$indent $dashes\n" if $box;
-}
-##---------------------------------------------------------------------------
-##	do_num_menu() automatically generates a numbered list of items
-##	for selection.  The routine returns the string item that is
-##	selected.  This routine also appends a "Other" option and
-##	if selected, will prompt for a user defined string.
-##
-sub main'do_num_menu {
-    local($title, $prompt, $isother, $otherprompt, $otherdef, $cols,
-	  @array) = @_;
-    local(@menu_items) = @array;
-    local($i, $tmp);
-
-    ## Prepend numbers to items ##
-    for ($i=0; $i <= $#menu_items; $i++) {
-        $menu_items[$i] = $i+1 . " = \"$menu_items[$i]\"";
-    }
-    ## Add other selection if needed ##
-    push(@menu_items, $i+1 . " = Other")  if $isother;
-    ## Print menu ##
-    print STDOUT "\n$title:\n\n";
-    &'print_menu("", $cols, 0, " " x 5, @menu_items);
-    ## Get selection ##
-    while (1) {
-	$tmp = &'prompt_user_def("\n$prompt", "1", 0, 0);
-	last  if ($tmp >= 1 && $tmp <= $#menu_items+1);
-	&'print_error("Invalid selection -- $tmp");
-    }
-    ## Determine selection ##
-    if ($isother && $tmp == $#menu_items+1) {
-        $tmp = &'prompt_user_def("  Other: $otherprompt", $otherdef, 1, 0);
-    }
-    else { $tmp = $array[$tmp-1]; }
-    $tmp;
-}
-##---------------------------------------------------------------------------
-## 	print_*() routines to print a message of type '*' to the screen.
-##
-sub main'print_error { &print_message("ERROR", @_); }
-sub main'print_info { &print_message("Info:", @_); }
-sub main'print_note { &print_message("Note:", @_); }
-sub main'print_warning { &print_message("WARNING", @_); }
-##---------------------------------------------------------------------------
-##	Get string from STDIN and lowercase it.
-##	called "get_lc_string".
-##
-sub main'get_lc_string {
-    local($tmp);
-    $tmp = <STDIN>;
-    if ($term_io_bug) { while (shift(@Redo)) { $tmp = <STDIN>; } }
-    chop $tmp;
-    $tmp =~ tr/A-Z/a-z/;
-    $tmp;
-}
-##---------------------------------------------------------------------------
-##	Get string from STDIN.
-##
-sub main'get_string {
-    local($tmp);
-    $tmp = <STDIN>;
-    if ($term_io_bug) { while (shift(@Redo)) { $tmp = <STDIN>; } }
-    chop $tmp;
-    $tmp;
-}
-##---------------------------------------------------------------------------
-##	Pause output until CR is hit.
-##
-sub main'pause {
-    &set_handler();
-    local($tmp);
-    &print_txt("\nHit <CR> to continue ... ");
-    $tmp = <STDIN>;
-    if ($term_io_bug) { while (shift(@Redo)) { $tmp = <STDIN>; } }
-    &reset_handler();
-}
-##---------------------------------------------------------------------------
-##	Prompt user for a string of input.  This routine appends a "->"
-##	to the prompt string.  All leading and trailing whitespaces are
-##	removed from the input string before returned.
-##
-sub main'prompt_user {
-    &set_handler();
-    local($prompt, $nonnull, $return) = @_;
-    local($tmp);
-    $prompt .= "\n" if $return;
-    $prompt .= " -> ";
-    while (1) {
-	&print_txt($prompt);
-	$tmp = &'get_string();
-	&'print_error("Entry cannot be blank."), next
-	    if $nonnull && $tmp =~ /^\s*$/;
-	$tmp =~ s/^\s*(.*[^\s])\s*$/\1/;  ## strip beginning/trailing spaces
-	last;
-    }
-    &reset_handler();
-    $tmp;
-}
-##---------------------------------------------------------------------------
-##	Like prompt_user() but a default choice is given.
-##
-sub main'prompt_user_def {
-    &set_handler();
-    local($prompt, $default, $nonnull, $return) = @_;
-    local($tmp);
-    $prompt .= " (\"$default\")";
-    $prompt .= "\n" if $return;
-    $prompt .= " -> ";
-    while(1) {
-	&print_txt($prompt);
-	$tmp = &'get_string();
-	$tmp = $default  if $tmp =~ m/^\s*$/;
-	&'print_error("Entry cannot be blank."), next
-	    if $nonnull && $tmp =~ /^\s*$/;
-	$tmp =~ s/^\s*(.*[^\s])\s*$/\1/;
-	last;
-    }
-    &reset_handler();
-    $tmp;
-}
-##---------------------------------------------------------------------------
-##	ask_question() asks a yes/no question.  $default signifies the
-##	default response: 1 = yes, 0 = no.  The default response and
-##	a '?' are appended to the prompt.
-##
-sub main'ask_question {
-    &set_handler();
-    local($prompt, $default) = @_;
-    local($tmp, $ret);
-    if ($default) { $prompt .= " (\"y\")"; }
-    else { $prompt .= " (\"n\")"; };
-    while(1) {
-	&print_txt("$prompt?  ");
-	$tmp = &'get_lc_string();
-	$ret = 1, last  if ($tmp =~ /^\s*$/ && $default);
-	$ret = 0, last  if ($tmp =~ /^\s*$/ && !$default);
-	$ret = 1, last  if ($tmp =~ /^\s*y\s*$/ || $tmp =~ /^\s*yes*\s*$/);
-	$ret = 0, last  if ($tmp =~ /^\s*n\s*$/ || $tmp =~ /^\s*no*\s*$/);
-    }
-    &reset_handler();
-    $ret;
-}
-##---------------------------------------------------------------------------
-##	get_char_choice() gets a single character response.  Valid
-##	character responses are specified by @chars.  A default can
-##	be specified by $default, and it is the choice if CR is hit.
-##	All whitespaces (except \r and \n) and non-specified chars
-##	are ignored.  This function returns with choice when a valid
-##	character is hit.  Character choices are case-insensitive.
-##
-##	The terminal is put into raw mode for get_char_choice() to
-##	perform its task.  Because of this, SIGINT, SIGQUIT, and
-##	SIGTERM are temporarily ignored until a valid character is
-##	hit.  The original signal handlers are restored before the
-##	functions returns.
-##
-sub main'get_char_choice {
-    local($default, @chars) = @_;
-    local($in, $return);
-    local($choices) = join(" ", @chars);
-    $choices =~ tr/A-Z/a-z/;
-    local($sigint, $sigquit, $sigterm, $sigtstp) =
-	($SIG{'INT'}, $SIG{'QUIT'}, $SIG{'TERM'}, $SIG{'TSTP'});
-
-    &'flush(STDOUT);
-    $SIG{'INT'} = 'IGNORE'; $SIG{'QUIT'} = 'IGNORE'; $SIG{'TERM'} = 'IGNORE';
-    $SIG{'TSTP'} = 'IGNORE';
-    system("stty raw -echo");	## Set terminal in raw mode
-    while (1) {
-        $in = getc(STDIN);
-        $return = $default, last if $default ne "" &&
-				    ($in eq "\r" || $in eq "\n");
-	next if $in =~ /\s/;
-        $in =~ tr/A-Z/a-z/;
-	$in =~ s/([\[\]\(\)\.\^\{\}\$\*\?\+\\\|])/\\\1/g;
-        $return = $in, last if $choices =~ /$in/;
-    }
-    system("stty -raw echo");	## Restore terminal
-    print STDOUT "$return\n";	## Output selection
-    $SIG{'INT'} = $sigint;	## Restore signal handler
-    $SIG{'QUIT'} = $sigquit;	## Restore signal handler
-    $SIG{'TERM'} = $sigterm;	## Restore signal handler
-    $SIG{'TSTP'} = $sigtstp;	## Restore signal handler
-    $return;
-}
-##---------------------------------------------------------------------------
-##	flush() flushes the buffer of passed in filehandle.  Copied from
-##	"flush.pl".
-##
-sub main'flush {
-    local($old) = select(shift);
-    $| = 1;
-    print "";
-    $| = 0;
-    select($old);
-}
-##---------------------------------------------------------------------------
-##	get_later_date() retrieves from STDIN a date later than the
-##	julian date $ljdate.  $prompt is the user prompt and $default
-##	is the default response.  This routine uses the julian date
-##	routines defined in "date.pl".  "date.pl" must be required
-##	somewhere in the Perl program for this routine to work.
-##
-sub main'get_later_date {
-    local($prompt, $default, $ljdate) = @_;
-    local($tmp, $i, $m, $d, $y, $wd);
-    while (1) {
-	$tmp = &'prompt_user_def($prompt, $default, 1, 0);
-	if ($tmp !~ m!^(\d{1,2})[-/](\d{1,2})[-/](\d{2}|\d{4})$!) {
-	    &'print_error("Incorrect date specification -- $tmp\n",
-	    	"Valid date formats: 02-28-94, 4/1/94, 12-25-1994.");
-	}
-	else {
-	    $i = &'jday($1, $2, ($3 > 1900 ? $3 : "19".$3));
-	    last  if $i > $ljdate;
-	    ($m, $d, $y, $wd) = &'jdate($ljdate);
-	    &'print_error("Date must be later than $m/$d/$y.");
-	}
-    }
-    $tmp;
-}
-##---------------------------------------------------------------------------
-1;  ## end package

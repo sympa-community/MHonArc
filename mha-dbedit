@@ -1,0 +1,55 @@
+#!/usr/local/bin/perl
+##---------------------------------------------------------------------------##
+##  File:
+##	@(#) mha-dbedit 1.1 98/08/10 23:16:04
+##  Author:
+##      Earl Hood       earlhood@usa.net
+##  Description:
+##      Program to modify database w/o editing archive files.
+##---------------------------------------------------------------------------##
+##    MHonArc -- Internet mail-to-HTML converter
+##    Copyright (C) 1998	Earl Hood, earlhood@usa.net
+##
+##    This program is free software; you can redistribute it and/or modify
+##    it under the terms of the GNU General Public License as published by
+##    the Free Software Foundation; either version 2 of the License, or
+##    (at your option) any later version.
+##
+##    This program is distributed in the hope that it will be useful,
+##    but WITHOUT ANY WARRANTY; without even the implied warranty of
+##    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+##    GNU General Public License for more details.
+##
+##    You should have received a copy of the GNU General Public License
+##    along with this program; if not, write to the Free Software
+##    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+##    02111-1307, USA
+##---------------------------------------------------------------------------##
+
+package mha_dbedit;
+
+##---------------------------------------------------------------------------##
+##				Main routine				     ##
+##---------------------------------------------------------------------------##
+
+MAIN: {
+    unshift(@INC, 'lib');	# Should I leave this line in?
+
+    ## Initialize MHonArc
+    require 'mhamain.pl' || die qq/ERROR: Unable to require "mhamain.pl"\n/;
+    mhonarc::initialize();
+
+    ## Open archive
+    unshift(@ARGV, '-readdb', '-lock');
+    if (!mhonarc::open_archive()) {
+	die "ERROR: Unable to open archive\n"; }
+
+    ## Write database
+    print STDOUT "\nWriting database ...\n"  unless $mhonarc::QUIET;
+    my $status = mhonarc::output_db($mhonarc::DBPathName);
+    mhonarc::close_archive();
+    exit($status ? 0 : 1);
+}
+
+##---------------------------------------------------------------------------##
+1;

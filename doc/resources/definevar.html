@@ -6,7 +6,7 @@
 <body>
 
 <address>
-<a href="../resources.html#definevar">MHonArc Resource List</a></br>
+<a href="../resources.html#definevar">MHonArc Resource List</a>
 </address>
 
 <hr>
@@ -24,7 +24,7 @@
 </dd>
 
 <dt><strong>Element</strong><dt>
-<dd><p>
+<dd><p><br>
 <code>&lt;DEFINEVAR&gt;<br></code>
 <var>variable-name</var><br>
 <var>value ...</var><br>
@@ -33,8 +33,8 @@
 </dd>
 
 <dt><strong>Command-line Option</strong><dt>
-<dd><p>
-<code>-definevars </code><var>variable-specification-list</var>
+<dd><p><br>
+<code>-definevar </code><var>variable-specification-list</var>
 </p>
 </dd>
 
@@ -48,19 +48,35 @@
 DEFINEVAR can be defined on the command-line or in the resource file.
 </p>
 
-<p>On the command-line, the option is called <code>-definevars</code>
-(note the 's').  The following argument after <code>-definevars</code>
+<p>On the command-line, the option is called <code>-definevar</code>
+The following argument after <code>-definevar</code>
 is treated as a variable specification list.  The specification list
 is a string containing name/value pairs with the following format: </p>
 
 <p><var>NAME</var><code>=</code><var>VALUE</var></p>
 
-<p>If <var>VALUE</var> contains whitespace, then it must be surrounded
-by single or double quotes.  Use single quotes if the <var>VALUE</var>
-contained double quotes.  Use double quotes if the <var>VALUE</var>
-contains single quotes.  Multiple name/value pairs are separated
+<p>Multiple name/value pairs are separated
 by whitespace.
+If <var>VALUE</var> contains whitespace, then it must be surrounded
+by quotes to prevent the command shell from treating the string
+as multiple arguments.
+Multiple <code>-definevar</code> options can be specified on the
+command-line.  This can help reduce the ugliness of specify mutliple
+variable definitions with a single option.
 </p>
+
+<table border=0 cellpadding=4>
+<tr valign=top>
+<td><strong>NOTE</strong></td>
+<td><p>If you intend to include resource variables as part of the
+<var>VALUE</var>, you may need to escape the '$' characters (and possible
+other characters) to
+prevent interpolation by the command shell.  See your command
+shell documentation for more information.
+</p>
+</td>
+</tr>
+</table>
 
 <p>In a resource file the &lt;DEFINEVAR&gt; element may occur mutliple times
 to define multiple variables.  The first line of the &lt;DEFINEVAR&gt;
@@ -82,8 +98,7 @@ variable content, then specify the <b><tt>chop</tt></b> attribute.
 <hr>
 <h2>Resource Variables</h2>
 
-<p>Variables that are applicable to where user-defined
-variable is referenced.
+<p>N/A
 </p>
 
 <!-- *************************************************************** -->
@@ -116,7 +131,7 @@ as follows:
 </p>
 
 <pre>
-    % <b>mhonarc -definevars "MAIN-TITLE='mhonarc mailing list'"</b> ...
+    % <b>mhonarc -definevar MAIN-TITLE='mhonarc mailing list'</b> ...
 </pre>
 
 <!-- *************************************************************** -->
@@ -136,10 +151,10 @@ as follows:
 <!-- *************************************************************** -->
 <hr>
 <address>
-98/03/03 18:19:28<br>
+98/09/19 18:27:08<br>
 <img align="top" src="../monicon.gif" alt="">
 <a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"><strong>MHonArc</strong></a><br>
-Copyright &#169; 1997-1998, <a href="http://www.oac.uci.edu/indiv/ehood/">Earl Hood</a>, <a href="mailto:ehood@medusa.acs.uci.edu">ehood@medusa.acs.uci.edu</a><br>
+Copyright &#169; 1997-1998, <a href="http://www.oac.uci.edu/indiv/ehood/">Earl Hood</a>, <a href="mailto:earlhood@usa.net">earlhood@usa.net</a><br>
 </address>
 
 </body>

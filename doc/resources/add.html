@@ -6,7 +6,7 @@
 <body>
 
 <address>
-<a href="../resources.html#add">MHonArc Resource List</a></br>
+<a href="../resources.html#add">MHonArc Resource List</a>
 </address>
 
 <hr>
@@ -29,7 +29,7 @@
 </dd>
 
 <dt><strong>Command-line Option</strong><dt>
-<dd><p>
+<dd><p><br>
 <code>-add </code><var>folder1</var> ...<br>
 <code>-add &lt; </code><var>single-message</var>
 </p>
@@ -48,10 +48,33 @@ is coming from standard in, then the input is treated as a single
 message to add to the archive.
 </p>
 
+<table border=0 cellpadding=4>
+<tr valign=top>
+<td><strong><font color=red>CAUTION</font></strong></td>
+<td><p>If ADD is specified, and no archive currently exists, make
+sure there is no <b><tt>maillist.html</tt></b> file (or the filename
+specified by <a href="idxfname.html">IDXFNAME</a> resource) in
+the destination directory.  This can may cause the main index to
+be incorrect.  If this happens, remove <tt>maillist.html</tt> and
+use <a href="editidx.html">EDITIDX</a> to regenerate archive pages.
+</p>
+</td>
+</tr>
+</table>
+
 <p>When adding, <em>MHonArc</em> will skip any messages that
 already exists in the archive.  This allows one to have <em>MHonArc</em>
 rescan a mail folder only add any new messages found.
 </p>
+
+<table border=0 cellpadding=4>
+<tr valign=top>
+<td><strong>NOTE</strong></td>
+<td><p>MHonArc determines duplicate messages by message-ids.
+</p>
+</td>
+</tr>
+</table>
 
 <!-- *************************************************************** -->
 <hr>
@@ -106,10 +129,10 @@ program:
 <!-- *************************************************************** -->
 <hr>
 <address>
-98/03/03 18:19:25<br>
+98/09/19 18:27:07<br>
 <img align="top" src="../monicon.gif" alt="">
 <a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"><strong>MHonArc</strong></a><br>
-Copyright &#169; 1997-1998, <a href="http://www.oac.uci.edu/indiv/ehood/">Earl Hood</a>, <a href="mailto:ehood@medusa.acs.uci.edu">ehood@medusa.acs.uci.edu</a><br>
+Copyright &#169; 1997-1998, <a href="http://www.oac.uci.edu/indiv/ehood/">Earl Hood</a>, <a href="mailto:earlhood@usa.net">earlhood@usa.net</a><br>
 </address>
 
 </body>

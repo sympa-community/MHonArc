@@ -1,13 +1,13 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	@(#) mhutil.pl 2.1 98/03/02 20:24:31
+##	@(#) mhutil.pl 2.3 98/10/03 16:07:13
 ##  Author:
-##      Earl Hood       ehood@medusa.acs.uci.edu
+##      Earl Hood       earlhood@usa.net
 ##  Description:
 ##      Utility routines for MHonArc
 ##---------------------------------------------------------------------------##
 ##    MHonArc -- Internet mail-to-HTML converter
-##    Copyright (C) 1995-1998	Earl Hood, ehood@medusa.acs.uci.edu
+##    Copyright (C) 1995-1998	Earl Hood, earlhood@usa.net
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by
@@ -48,18 +48,16 @@ sub extract_email_address {
 ##	Get an e-mail name from $str.
 ##
 sub extract_email_name {
-    local($str) = shift;
-    local($ret);
+    my($str) = shift;
+    my($ret);
 
     if ($str =~ s/<(\S+)>//) {		# Check for: name <addr>
 	$ret = $1;
-	if ($str !~ /^\s*$/) {		# strip extra whitespace
-	    ($ret = $str) =~ s/\s+/ /g;
+	if ($str =~ /\S/) {
+	    $ret = $str;
 	} else {			# no name
 	    $ret =~ s/@.*//;
 	}
-	$ret =~ s/^\s*"//;
-	$ret =~ s/"\s*$//;
     } elsif ($str =~ /"([^"]+)"/) {		# Name in ""'s
 	$ret = $1;
     } elsif ($str =~ /\(([^\)]+)\)/) {		# Name in ()'s
@@ -67,6 +65,7 @@ sub extract_email_name {
     } else {					# Just address
 	($ret = $str) =~ s/@.*//;
     }
+    $ret =~ s/^["\s]+//g; $ret =~ s/["\s]+$//g;
     $ret;
 }
 
@@ -128,7 +127,7 @@ sub decrease_index {
 	($IndexNum{$b} <=> $IndexNum{$a});
 }
 sub increase_subject {
-    local($A, $B) = ($Subject{$a}, $Subject{$b});
+    my($A, $B) = ($Subject{$a}, $Subject{$b});
     $A =~ tr/A-Z/a-z/;  $B =~ tr/A-Z/a-z/; 
     1 while $A =~ s/$SubReplyRxp//io;
     1 while $B =~ s/$SubReplyRxp//io;
@@ -136,7 +135,7 @@ sub increase_subject {
     ($A cmp $B) || (&get_time_from_index($a) <=> &get_time_from_index($b));
 }
 sub decrease_subject {
-    local($A, $B) = ($Subject{$a}, $Subject{$b});
+    my($A, $B) = ($Subject{$a}, $Subject{$b});
     $A =~ tr/A-Z/a-z/;  $B =~ tr/A-Z/a-z/; 
     1 while $A =~ s/$SubReplyRxp//io;
     1 while $B =~ s/$SubReplyRxp//io;
@@ -144,41 +143,16 @@ sub decrease_subject {
     ($A cmp $B) || (&get_time_from_index($b) <=> &get_time_from_index($a));
 }
 sub increase_author {
-    local($A, $B) = (&extract_email_name($From{$a}),
+    my($A, $B) = (&extract_email_name($From{$a}),
 		     &extract_email_name($From{$b}));
     $A =~ tr/A-Z/a-z/;  $B =~ tr/A-Z/a-z/;
     ($A cmp $B) || (&get_time_from_index($a) <=> &get_time_from_index($b));
 }
 sub decrease_author {
-    local($A, $B) = (&extract_email_name($From{$a}),
+    my($A, $B) = (&extract_email_name($From{$a}),
 		     &extract_email_name($From{$b}));
     $A =~ tr/A-Z/a-z/;  $B =~ tr/A-Z/a-z/;
     ($A cmp $B) || (&get_time_from_index($b) <=> &get_time_from_index($a));
-}
-
-##---------------------------------------------------------------------------
-##	Routine to determine last message number in use.
-##
-sub get_last_msg_num {
-    opendir(DIR, $mhonarc'OUTDIR) ||
-	die("ERROR: Unable to open $mhonarc'OUTDIR\n");
-    local($max) = -1;
-
-    local($htmlext) = $HtmlExt;
-    local($msgpre) = $MsgPrefix;
-    $htmlext =~ s/\W/\\$1/g;
-    $msgpre =~ s/\W/\\$1/g;
-
-    local($regexp) = '^' . $msgpre . '0*(\d+)\.'. $htmlext;
-    chop $regexp  if ($htmlext =~ /html$/i);
-
-    foreach (readdir(DIR)) {
-	if (/$regexp/io) {
-	    $max = $1  if $1 > $max;
-	}
-    }
-    close(DIR);
-    $max;
 }
 
 ##---------------------------------------------------------------------------
@@ -192,7 +166,7 @@ sub fmt_msgnum {
 ##	Routine to get filename of a message number.
 ##
 sub msgnum_filename {
-    local($fmtstr) = "$MsgPrefix%05d.$HtmlExt";
+    my($fmtstr) = "$MsgPrefix%05d.$HtmlExt";
     $fmtstr .= ".gz"  if $GzipLinks;
     sprintf($fmtstr, $_[0]);
 }
@@ -208,25 +182,46 @@ sub get_filename_from_index {
 ##	Routine to get time component from index
 ##
 sub get_time_from_index {
-    (split(/$X/o, $_[0]))[0];
+    (split(/$X/o, $_[0], 2))[0];
+}
+
+##---------------------------------------------------------------------------
+##	Routine to get annotation of a message
+##
+sub get_note {
+    my $index = shift;
+    my $file = join($DIRSEP, get_note_dir(),
+			     msgid_to_filename($Index2MsgId{$index}));
+    if (!open(NOTEFILE, $file)) { return ""; }
+    my $ret = join("", <NOTEFILE>);
+    close NOTEFILE;
+    $ret;
+}
+
+##---------------------------------------------------------------------------
+##	Routine to determine if a message has an annotation
+##
+sub note_exists {
+    my $index = shift;
+    -e join($DIRSEP, get_note_dir(),
+		     msgid_to_filename($Index2MsgId{$index}));
+}
+
+##---------------------------------------------------------------------------
+##	Routine to get full pathname to annotation directory
+##
+sub get_note_dir {
+    if (!OSis_absolute_path($NoteDir)) {
+	return join($DIRSEP, $OUTDIR, $NoteDir);
+    }
+    $NoteDir;
 }
 
 ##---------------------------------------------------------------------------
 ##	Routine to get lc author name from index
 ##
 sub get_base_author {
-    local($ret) = (&extract_email_name($From{$_[0]}));
-    $ret =~ tr/A-Z/a-z/;
-    $ret;
-}
-
-##---------------------------------------------------------------------------
-##	Routine to get base subject text from index
-##
-sub get_base_subject {
-    local($ret) = ($Subject{$_[0]});
-    1 while $ret =~ s/$SubReplyRxp//io;
-    $ret;
+    lc extract_email_name($From{$_[0]});
 }
 
 ##---------------------------------------------------------------------------
@@ -278,8 +273,8 @@ sub expired_time {
 ##      Get HTML tags for formatting message headers
 ##
 sub get_header_tags {
-    local($f) = shift;
-    local($ftago, $ftagc, $tago, $tagc);
+    my($f) = shift;
+    my($ftago, $ftagc, $tago, $tagc);
  
     ## Get user specified tags (this is one funcky looking code)
     $tag = (defined($HeadHeads{$f}) ?
@@ -299,16 +294,12 @@ sub get_header_tags {
 ##
 sub htmlize_header {
     local(*fields, *l2o) = @_;
-    local($tmp,
-	  $key,
-	  $tago,
-	  $tagc,
-	  $ftago,
-	  $ftagc,
-	  $mesg,
-	  $item,
-	  @array,
-	  %hf);
+    my($key,
+       $tago, $tagc,
+       $ftago, $ftagc,
+       $mesg, $item,
+       @array, %hf);
+    local($tmp);
 
     $mesg = "";
     %hf = %fields;
@@ -318,7 +309,7 @@ sub htmlize_header {
 		next  if $FieldODefs{$key};
 		delete $hf{$key}, next  if &exclude_field($key);
 
-		@array = split(/$readmail'FieldSep/o, $hf{$key});
+		@array = split(/$readmail::FieldSep/o, $hf{$key});
 		foreach $tmp (@array) {
 		    $tmp = &$MHeadCnvFunc($tmp);
 		    &field_add_links($key, *tmp);
@@ -332,7 +323,7 @@ sub htmlize_header {
 	    }
 	} else {
 	    if (!&exclude_field($item) && $hf{$item}) {
-		@array = (split(/$readmail'FieldSep/o, $hf{$item}));
+		@array = (split(/$readmail::FieldSep/o, $hf{$item}));
 		foreach $tmp (@array) {
 		    $tmp = &$MHeadCnvFunc($tmp);
 		    &field_add_links($item, *tmp);
@@ -368,8 +359,12 @@ sub field_add_links {
 ##
 sub newsurl {
     local(*str) = shift;
-    local($h, @groups);
-    $str =~ s/^([^:]*:\s*)//;  $h = $1;
+    my(@groups) = ();
+    my $h = "";
+
+    if ($str =~ s/^([^:]*:\s*)//) {
+	$h = $1;
+    }
     $str =~ s/\s//g;			# Strip whitespace
     @groups = split(/,/, $str);		# Split groups
     foreach (@groups) {			# Make hyperlinks
@@ -394,13 +389,13 @@ sub mailto {
 ##	$sub, $msgid, $from come from read_mail_header() (ugly!!!!)
 ##
 sub mailUrl {
-    local($eaddr) = shift;
+    my($eaddr) = shift;
 
-    local($url) = ($MAILTOURL);
-    local($to) = (&urlize($eaddr));
-    local($froml, $msgidl) = (&urlize($from), &urlize($msgid));
-    local($fromaddrl) = (&urlize(&extract_email_address($from)));
-    local($subjectl);
+    my($url) = ($MAILTOURL);
+    my($to) = (&urlize($eaddr));
+    my($froml, $msgidl) = (&urlize($from), &urlize($msgid));
+    my($fromaddrl) = (&urlize(&extract_email_address($from)));
+    my($subjectl);
 
     # Add "Re:" to subject if not present
     if ($sub !~ /^\s*Re:/) {
@@ -425,9 +420,9 @@ sub mailUrl {
 ##	SGML, but NAMEs are any non-whitespace character.
 ##
 sub parse_vardef_str {
-    local($org) = shift;
-    local(%hash) = ();
-    local($str, $q, $var, $value);
+    my($org) = shift;
+    my(%hash) = ();
+    my($str, $q, $var, $value);
 
     ($str = $org) =~ s/^\s+//;
     while ($str =~ s/^([^=\s]+)\s*=\s*//) {
@@ -457,6 +452,14 @@ sub parse_vardef_str {
 	return ();
     }
     %hash;
+}
+
+##---------------------------------------------------------------------------##
+
+sub msgid_to_filename {
+    my $msgid = shift;
+    $msgid =~ s/([^\w.\-\@])/sprintf("=%02X",unpack("C",$1))/geo;
+    $msgid;
 }
 
 ##---------------------------------------------------------------------------##

@@ -1,8 +1,8 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	@(#) mhtxtenrich.pl 2.1 98/03/02 20:24:36
+##	@(#) mhtxtenrich.pl 2.2 98/08/10 23:50:38
 ##  Author:
-##      Earl Hood       ehood@medusa.acs.uci.edu
+##      Earl Hood       earlhood@usa.net
 ##  Description:
 ##	Library defines a routine for MHonArc to filter text/enriched
 ##	data.
@@ -16,7 +16,7 @@
 ##
 ##---------------------------------------------------------------------------##
 ##    MHonArc -- Internet mail-to-HTML converter
-##    Copyright (C) 1997-1998	Earl Hood, ehood@medusa.acs.uci.edu
+##    Copyright (C) 1997-1998	Earl Hood, earlhood@usa.net
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by
@@ -42,12 +42,16 @@ package m2h_text_enriched;
 sub filter {
     local($header, *fields, *data, $isdecode, $args) = @_;
     local($innofill, $chunk, $ret, $charset);
-    $ret = '';
+    $ret  = "";
+    $args = ""  unless defined($args);
+    $charset = "";
 
     ## Grab charset parameter (if defined)
-    $ctype = $fields{'content-type'};
-    ($charset) = $ctype =~ /charset=(\S+)/;
-    $charset =~ s/['"]//g;  $charset =~ tr/A-Z/a-z/;
+    $ctype = $fields{'content-type'} || "";
+    if ($ctype =~ /charset=(\S+)/) {
+	$charset = lc $1;
+	$charset =~ s/['"]//g;
+    }
 
     ## Convert specials
     $data =~ s|&|\&amp;|gi;

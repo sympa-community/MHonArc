@@ -1,0 +1,102 @@
+#!/usr/local/bin/perl
+##---------------------------------------------------------------------------##
+##  File:
+##	@(#) mha-dbrecover 1.1 98/08/10 23:16:04
+##  Author:
+##      Earl Hood       earlhood@usa.net
+##  Description:
+##      Program to rebuild the MHonArc database file from message files.
+##---------------------------------------------------------------------------##
+##    MHonArc -- Internet mail-to-HTML converter
+##    Copyright (C) 1998	Earl Hood, earlhood@usa.net
+##
+##    This program is free software; you can redistribute it and/or modify
+##    it under the terms of the GNU General Public License as published by
+##    the Free Software Foundation; either version 2 of the License, or
+##    (at your option) any later version.
+##
+##    This program is distributed in the hope that it will be useful,
+##    but WITHOUT ANY WARRANTY; without even the implied warranty of
+##    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+##    GNU General Public License for more details.
+##
+##    You should have received a copy of the GNU General Public License
+##    along with this program; if not, write to the Free Software
+##    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+##    02111-1307, USA
+##---------------------------------------------------------------------------##
+
+package mha_dbrecover;
+
+##---------------------------------------------------------------------------##
+##				Main routine				     ##
+##---------------------------------------------------------------------------##
+
+MAIN: {
+    unshift(@INC, 'lib');	# Should I leave this line in?
+
+    ## Initialize MHonArc
+    require 'mhamain.pl' || die qq/ERROR: Unable to require "mhamain.pl"\n/;
+    mhonarc::initialize();
+
+    ## Load library for reading message files
+    require 'mhmsgfile.pl' ||
+    	die qq/ERROR: Unable to require "mhmsgfile.pl"\n/;
+
+    ## Open archive
+    unshift(@ARGV, '-noarg', '-lock');
+    if (!mhonarc::open_archive()) {
+	die "ERROR: Unable to open archive\n"; }
+
+    ## do it
+    eval {
+	local(*DIR);
+	if (!opendir(DIR, $mhonarc::OUTDIR)) {
+	    die qq/ERROR: Unable to open "$mhonarc::OUTDIR": $!\n"/; }
+
+	print STDOUT "Rebuilding database in $mhonarc::OUTDIR ...\n"
+	    unless $mhonarc::QUIET;
+
+	## Define regular expressing for matching message files
+	my $msgrex = '^'.
+		     "\Q$mhonarc::MsgPrefix".
+		     '(\d+)\.'.
+		     "\Q$mhonarc::HtmlExt".
+		     '$';
+	my @file = grep(/$msgrex/o, readdir(DIR));
+	closedir(DIR);
+	
+	if (!@file) {
+	    die qq/ERROR: No message files found\n/; }
+
+	local($_);
+	my($file);
+
+	## Read files.  Use function in mhmsgfile.pl to extract data
+	foreach (@file) {
+	    print STDOUT "."  unless $mhonarc::QUIET;
+	    ($num) = $_ =~ /$msgrex/o;
+	    $file = join($mhonarc::DIRSEP, $mhonarc::OUTDIR, $_);
+	    mhonarc::load_data_from_msg_file($file, $num);
+	}
+
+	## Define other data structures
+	$mhonarc::NumOfMsgs = scalar(@file);
+	@mhonarc::MListOrder = mhonarc::sort_messages();
+	mhonarc::compute_follow_ups(\@mhonarc::MListOrder);
+	mhonarc::compute_threads();
+
+	print STDOUT "\nWriting database ...\n"
+	    unless $mhonarc::QUIET;
+	mhonarc::output_db($mhonarc::DBPathName);
+    };
+
+    my $ec = 0;
+    if ($@) { warn $@; $ec = 1; }
+
+    mhonarc::close_archive();
+    exit($ec);
+}
+
+##---------------------------------------------------------------------------##
+1;

@@ -6,7 +6,7 @@
 <body>
 
 <address>
-<a href="../resources.html#prevlink">MHonArc Resource List</a></br>
+<a href="../resources.html#prevlink">MHonArc Resource List</a>
 </address>
 
 <hr>
@@ -24,7 +24,7 @@
 </dd>
 
 <dt><strong>Element</strong><dt>
-<dd><p>
+<dd><p><br>
 <code>&lt;PREVLINK&gt;<br></code>
 <var>markup ...</var><br>
 <code>&lt;/PREVLINK&gt;<br></code>
@@ -42,7 +42,7 @@
 <hr>
 <h2>Description</h2>
 
-<p>PREVLINK defines the value for the <code>$PREVLINK$</code>
+<p>PREVLINK defines the value for the <code>$LINK(PREV)$</code>
 resource variable when there is a previous message to the current message
 according to the message list order of the main index.  PREVLINK
 is analagous to
@@ -52,7 +52,7 @@ provide a more descriptive link to the previous message.
 
 <p>See
 <a href="prevlinkia.html">PREVLINKIA</a> for defining the
-value of <code>$PREVLINK$</code> when there is no previous message.
+value of <code>$LINK(PREV)$</code> when there is no previous message.
 </p>
 
 <!-- *************************************************************** -->
@@ -62,7 +62,7 @@ value of <code>$PREVLINK$</code> when there is no previous message.
 <pre>
 <b>&lt;PrevLink&gt;</b>
 &lt;LI>Prev by <var>sort-type</var>:
-&lt;STRONG>&lt;A HREF="<a href="#PREVMSG">$PREVMSG$</a>"><a href="#PREVSUBJECT">$PREVSUBJECT$</a>&lt;/A>&lt;/STRONG>
+&lt;STRONG>&lt;A HREF="<a href="#MSG">$MSG(PREV)$</a>"><a href="#SUBJECT">$SUBJECT(PREV)$</a>&lt;/A>&lt;/STRONG>
 &lt;/LI>
 <b>&lt;/PrevLink&gt;</b>
 </pre>
@@ -81,288 +81,164 @@ sort method in effect.
 <th>Variable</th><th>Value</th>
 </tr>
 <tr valign=top>
-<td align=center><a name="DATE"><strong><code>$DATE$</code></strong></a></td>
+<td align=center><a name="BUTTON" href="../rcvars.html#BUTTON"><strong><code>$BUTTON$</code></strong></a></td>
+<td>Button markup linking to a message.</td>
+</tr>
+<tr valign=top>
+<td align=center><a name="DATE" href="../rcvars.html#DATE"><strong><code>$DATE$</code></strong></a></td>
 <td>The date of the message.</td>
 </tr>
 <tr valign=top>
-<td align=center><a name="DDMMYY"><strong><code>$DDMMYY$</code></strong></a></td>
-<td>Message date in dd/mm/yy format.</td>
+<td align=center><a name="DDMMYYYY" href="../rcvars.html#DDMMYYYY"><strong><code>$DDMMYYYY$</code></strong></a></td>
+<td>Message date in dd/mm/yyyy format.</td>
 </tr>
 <tr valign=top>
-<td align=center><a name="DOCURL"><strong><code>$DOCURL$</code></strong></a></td>
+<td align=center><a name="DOCURL" href="../rcvars.html#DOCURL"><strong><code>$DOCURL$</code></strong></a></td>
 <td>URL to documentation.</td>
 </tr>
 <tr valign=top>
-<td align=center><a name="FIRSTPG"><strong><code>$FIRSTPG$</code></strong></a></td>
+<td align=center><a name="FIRSTPG" href="../rcvars.html#FIRSTPG"><strong><code>$FIRSTPG$</code></strong></a></td>
 <td>Filename of first page of main index.</td>
 </tr>
 <tr valign=top>
-<td align=center><a name="FROM"><strong><code>$FROM$</code></strong></a></td>
-<td>The complete text in the <CODE>From:</CODE> field of the message.</td>
+<td align=center><a name="FROM" href="../rcvars.html#FROM"><strong><code>$FROM$</code></strong></a></td>
+<td>The complete text in the <tt>From:</tt> field of the message.</td>
 </tr>
 <tr valign=top>
-<td align=center><a name="FROMADDR"><strong><code>$FROMADDR$</code></strong></a></td>
-<td>The e-mail address in the <CODE>From:</CODE> field of the message.</td>
+<td align=center><a name="FROMADDR" href="../rcvars.html#FROMADDR"><strong><code>$FROMADDR$</code></strong></a></td>
+<td>The e-mail address in the <tt>From:</tt> field of the message.</td>
 </tr>
 <tr valign=top>
-<td align=center><a name="FROMNAME"><strong><code>$FROMNAME$</code></strong></a></td>
-<td>The human name of the person in the <CODE>From:</CODE> field of the message. If no human name is found, the username specified in the e-mail address is used.</td>
+<td align=center><a name="FROMNAME" href="../rcvars.html#FROMNAME"><strong><code>$FROMNAME$</code></strong></a></td>
+<td>The human name of the person in the <tt>From:</tt> field of the message. If no human name is found, the username specified in the e-mail address is used.</td>
 </tr>
 <tr valign=top>
-<td align=center><a name="GMTDATE"><strong><code>$GMTDATE$</code></strong></a></td>
+<td align=center><a name="GMTDATE" href="../rcvars.html#GMTDATE"><strong><code>$GMTDATE$</code></strong></a></td>
 <td>Current GMT date.</td>
 </tr>
 <tr valign=top>
-<td align=center><a name="ICON"><strong><code>$ICON$</code></strong></a></td>
+<td align=center><a name="ICON" href="../rcvars.html#ICON"><strong><code>$ICON$</code></strong></a></td>
 <td>The context-type sensistive icon.</td>
 </tr>
 <tr valign=top>
-<td align=center><a name="ICONURL"><strong><code>$ICONURL$</code></strong></a></td>
+<td align=center><a name="ICONURL" href="../rcvars.html#ICONURL"><strong><code>$ICONURL$</code></strong></a></td>
 <td>The URL to the context-type sensistive icon.</td>
 </tr>
 <tr valign=top>
-<td align=center><a name="IDXFNAME"><strong><code>$IDXFNAME$</code></strong></a></td>
+<td align=center><a name="IDXFNAME" href="../rcvars.html#IDXFNAME"><strong><code>$IDXFNAME$</code></strong></a></td>
 <td>Filename of main index page.</td>
 </tr>
 <tr valign=top>
-<td align=center><a name="IDXLABEL"><strong><code>$IDXLABEL$</code></strong></a></td>
+<td align=center><a name="IDXLABEL" href="../rcvars.html#IDXLABEL"><strong><code>$IDXLABEL$</code></strong></a></td>
 <td>Label for main index page.</td>
 </tr>
 <tr valign=top>
-<td align=center><a name="IDXPREFIX"><strong><code>$IDXPREFIX$</code></strong></a></td>
+<td align=center><a name="IDXPREFIX" href="../rcvars.html#IDXPREFIX"><strong><code>$IDXPREFIX$</code></strong></a></td>
 <td>Prefix of filenames of main index pages.</td>
 </tr>
 <tr valign=top>
-<td align=center><a name="IDXSIZE"><strong><code>$IDXSIZE$</code></strong></a></td>
+<td align=center><a name="IDXSIZE" href="../rcvars.html#IDXSIZE"><strong><code>$IDXSIZE$</code></strong></a></td>
 <td>Max number of messages that may be listed in index page.</td>
 </tr>
 <tr valign=top>
-<td align=center><a name="IDXTITLE"><strong><code>$IDXTITLE$</code></strong></a></td>
+<td align=center><a name="IDXTITLE" href="../rcvars.html#IDXTITLE"><strong><code>$IDXTITLE$</code></strong></a></td>
 <td>The title of the main index page.</td>
 </tr>
 <tr valign=top>
-<td align=center><a name="LASTPG"><strong><code>$LASTPG$</code></strong></a></td>
+<td align=center><a name="LASTPG" href="../rcvars.html#LASTPG"><strong><code>$LASTPG$</code></strong></a></td>
 <td>Filename of last page in of main index.</td>
 </tr>
 <tr valign=top>
-<td align=center><a name="LOCALDATE"><strong><code>$LOCALDATE$</code></strong></a></td>
+<td align=center><a name="LINK" href="../rcvars.html#LINK"><strong><code>$LINK$</code></strong></a></td>
+<td>Link markup linking to a message.</td>
+</tr>
+<tr valign=top>
+<td align=center><a name="LOCALDATE" href="../rcvars.html#LOCALDATE"><strong><code>$LOCALDATE$</code></strong></a></td>
 <td>Current local date.</td>
 </tr>
 <tr valign=top>
-<td align=center><a name="MMDDYY"><strong><code>$MMDDYY$</code></strong></a></td>
-<td>Message date in mm/dd/yy format.</td>
+<td align=center><a name="MMDDYYYY" href="../rcvars.html#MMDDYYYY"><strong><code>$MMDDYYYY$</code></strong></a></td>
+<td>Message date in mm/dd/yyyy format.</td>
 </tr>
 <tr valign=top>
-<td align=center><a name="MSGGMTDATE"><strong><code>$MSGGMTDATE$</code></strong></a></td>
+<td align=center><a name="MSG" href="../rcvars.html#MSG"><strong><code>$MSG$</code></strong></a></td>
+<td>Filename of message.</td>
+</tr>
+<tr valign=top>
+<td align=center><a name="MSGGMTDATE" href="../rcvars.html#MSGGMTDATE"><strong><code>$MSGGMTDATE$</code></strong></a></td>
 <td>GMT date of current message.</td>
 </tr>
 <tr valign=top>
-<td align=center><a name="MSGID"><strong><code>$MSGID$</code></strong></a></td>
+<td align=center><a name="MSGID" href="../rcvars.html#MSGID"><strong><code>$MSGID$</code></strong></a></td>
 <td>The message-id of the message.</td>
 </tr>
 <tr valign=top>
-<td align=center><a name="MSGLOCALDATE"><strong><code>$MSGLOCALDATE$</code></strong></a></td>
+<td align=center><a name="MSGLOCALDATE" href="../rcvars.html#MSGLOCALDATE"><strong><code>$MSGLOCALDATE$</code></strong></a></td>
 <td>Local date of current message.</td>
 </tr>
 <tr valign=top>
-<td align=center><a name="MSGNUM"><strong><code>$MSGNUM$</code></strong></a></td>
-<td>The message number assigned to the message by <EM>MHonArc</EM> (includes leading zeros).</td>
+<td align=center><a name="MSGNUM" href="../rcvars.html#MSGNUM"><strong><code>$MSGNUM$</code></strong></a></td>
+<td>The message number assigned to the message by MHonArc (includes leading zeros).</td>
 </tr>
 <tr valign=top>
-<td align=center><a name="MSGPREFIX"><strong><code>$MSGPREFIX$</code></strong></a></td>
+<td align=center><a name="MSGPREFIX" href="../rcvars.html#MSGPREFIX"><strong><code>$MSGPREFIX$</code></strong></a></td>
 <td>Filename prefix for message files.</td>
 </tr>
 <tr valign=top>
-<td align=center><a name="NEXTBUTTON"><strong><code>$NEXTBUTTON$</code></strong></a></td>
-<td>Next button markup linking to the next message.</td>
-</tr>
-<tr valign=top>
-<td align=center><a name="NEXTFROM"><strong><code>$NEXTFROM$</code></strong></a></td>
-<td>Content of From field of the next message.</td>
-</tr>
-<tr valign=top>
-<td align=center><a name="NEXTFROMADDR"><strong><code>$NEXTFROMADDR$</code></strong></a></td>
-<td>E-mail address contained in From field of the next message.</td>
-</tr>
-<tr valign=top>
-<td align=center><a name="NEXTFROMNAME"><strong><code>$NEXTFROMNAME$</code></strong></a></td>
-<td>Human name contained in From field of the next message.</td>
-</tr>
-<tr valign=top>
-<td align=center><a name="NEXTLINK"><strong><code>$NEXTLINK$</code></strong></a></td>
-<td>Next link markup linking to the next message.</td>
-</tr>
-<tr valign=top>
-<td align=center><a name="NEXTMSG"><strong><code>$NEXTMSG$</code></strong></a></td>
-<td>Filename of next message.</td>
-</tr>
-<tr valign=top>
-<td align=center><a name="NEXTMSGNUM"><strong><code>$NEXTMSGNUM$</code></strong></a></td>
-<td>Number assigned to next message.</td>
-</tr>
-<tr valign=top>
-<td align=center><a name="NEXTSUBJECT"><strong><code>$NEXTSUBJECT$</code></strong></a></td>
-<td>Subject of next message.</td>
-</tr>
-<tr valign=top>
-<td align=center><a name="NUMFOLUP"><strong><code>$NUMFOLUP$</code></strong></a></td>
+<td align=center><a name="NUMFOLUP" href="../rcvars.html#NUMFOLUP"><strong><code>$NUMFOLUP$</code></strong></a></td>
 <td>Number of explicit follow-ups to the message.</td>
 </tr>
 <tr valign=top>
-<td align=center><a name="NUMOFMSG"><strong><code>$NUMOFMSG$</code></strong></a></td>
+<td align=center><a name="NUMOFMSG" href="../rcvars.html#NUMOFMSG"><strong><code>$NUMOFMSG$</code></strong></a></td>
 <td>Number of messages in the archive.</td>
 </tr>
 <tr valign=top>
-<td align=center><a name="NUMOFPAGES"><strong><code>$NUMOFPAGES$</code></strong></a></td>
+<td align=center><a name="NUMOFPAGES" href="../rcvars.html#NUMOFPAGES"><strong><code>$NUMOFPAGES$</code></strong></a></td>
 <td>Number of index pages.</td>
 </tr>
 <tr valign=top>
-<td align=center><a name="ORDNUM"><strong><code>$ORDNUM$</code></strong></a></td>
+<td align=center><a name="ORDNUM" href="../rcvars.html#ORDNUM"><strong><code>$ORDNUM$</code></strong></a></td>
 <td>The current listing number of the message.</td>
 </tr>
 <tr valign=top>
-<td align=center><a name="OUTDIR"><strong><code>$OUTDIR$</code></strong></a></td>
+<td align=center><a name="OUTDIR" href="../rcvars.html#OUTDIR"><strong><code>$OUTDIR$</code></strong></a></td>
 <td>Pathname of archive.</td>
 </tr>
 <tr valign=top>
-<td align=center><a name="PREVBUTTON"><strong><code>$PREVBUTTON$</code></strong></a></td>
-<td>Previous button markup linking to the previous message.</td>
-</tr>
-<tr valign=top>
-<td align=center><a name="PREVFROM"><strong><code>$PREVFROM$</code></strong></a></td>
-<td>Content of From field of the previous message.</td>
-</tr>
-<tr valign=top>
-<td align=center><a name="PREVFROMADDR"><strong><code>$PREVFROMADDR$</code></strong></a></td>
-<td>E-mail address contained in From field of the previous message.</td>
-</tr>
-<tr valign=top>
-<td align=center><a name="PREVFROMNAME"><strong><code>$PREVFROMNAME$</code></strong></a></td>
-<td>Human name contained in From field of the previous message.</td>
-</tr>
-<tr valign=top>
-<td align=center><a name="PREVLINK"><strong><code>$PREVLINK$</code></strong></a></td>
-<td>Previous link markup linking to the previous message.</td>
-</tr>
-<tr valign=top>
-<td align=center><a name="PREVMSG"><strong><code>$PREVMSG$</code></strong></a></td>
-<td>Filename of previous message.</td>
-</tr>
-<tr valign=top>
-<td align=center><a name="PREVMSGNUM"><strong><code>$PREVMSGNUM$</code></strong></a></td>
-<td>Number assigned to previous message.</td>
-</tr>
-<tr valign=top>
-<td align=center><a name="PREVSUBJECT"><strong><code>$PREVSUBJECT$</code></strong></a></td>
-<td>Subject of previous message.</td>
-</tr>
-<tr valign=top>
-<td align=center><a name="PROG"><strong><code>$PROG$</code></strong></a></td>
+<td align=center><a name="PROG" href="../rcvars.html#PROG"><strong><code>$PROG$</code></strong></a></td>
 <td>Program name</td>
 </tr>
 <tr valign=top>
-<td align=center><a name="SUBJECTNA"><strong><code>$SUBJECTNA$</code></strong></a></td>
+<td align=center><a name="SUBJECTNA" href="../rcvars.html#SUBJECTNA"><strong><code>$SUBJECTNA$</code></strong></a></td>
 <td>The subject text of the message without the anchor element.</td>
 </tr>
 <tr valign=top>
-<td align=center><a name="TFIRSTPG"><strong><code>$TFIRSTPG$</code></strong></a></td>
-<td>Filename of first page of thread index.</td>
-</tr>
-<tr valign=top>
-<td align=center><a name="TIDXFNAME"><strong><code>$TIDXFNAME$</code></strong></a></td>
+<td align=center><a name="TIDXFNAME" href="../rcvars.html#TIDXFNAME"><strong><code>$TIDXFNAME$</code></strong></a></td>
 <td>Filename of thread index page.</td>
 </tr>
 <tr valign=top>
-<td align=center><a name="TIDXLABEL"><strong><code>$TIDXLABEL$</code></strong></a></td>
+<td align=center><a name="TIDXLABEL" href="../rcvars.html#TIDXLABEL"><strong><code>$TIDXLABEL$</code></strong></a></td>
 <td>Label for thread index page.</td>
 </tr>
 <tr valign=top>
-<td align=center><a name="TIDXPREFIX"><strong><code>$TIDXPREFIX$</code></strong></a></td>
+<td align=center><a name="TIDXPREFIX" href="../rcvars.html#TIDXPREFIX"><strong><code>$TIDXPREFIX$</code></strong></a></td>
 <td>Prefix of filenames of thread index pages.</td>
 </tr>
 <tr valign=top>
-<td align=center><a name="TIDXTITLE"><strong><code>$TIDXTITLE$</code></strong></a></td>
+<td align=center><a name="TIDXTITLE" href="../rcvars.html#TIDXTITLE"><strong><code>$TIDXTITLE$</code></strong></a></td>
 <td>Title of thread index.</td>
 </tr>
 <tr valign=top>
-<td align=center><a name="TLASTPG"><strong><code>$TLASTPG$</code></strong></a></td>
-<td>Filename of last page of thread index.</td>
+<td align=center><a name="TSLICE" href="../rcvars.html#TSLICE"><strong><code>$TSLICE$</code></strong></a></td>
+<td>A <em>slice</em> of the thread listing relative to the current message.  Size of slice determined by the TSLICE resource.</td>
 </tr>
 <tr valign=top>
-<td align=center><a name="TNEXTBUTTON"><strong><code>$TNEXTBUTTON$</code></strong></a></td>
-<td>Next button markup linking to the next message according to the thread index list order.</td>
-</tr>
-<tr valign=top>
-<td align=center><a name="TNEXTFROM"><strong><code>$TNEXTFROM$</code></strong></a></td>
-<td>Content of From field of the next message according to the list order of the thread index.</td>
-</tr>
-<tr valign=top>
-<td align=center><a name="TNEXTFROMADDR"><strong><code>$TNEXTFROMADDR$</code></strong></a></td>
-<td>E-mail address contained in From field of the next message according to the list order of the thread index.</td>
-</tr>
-<tr valign=top>
-<td align=center><a name="TNEXTFROMNAME"><strong><code>$TNEXTFROMNAME$</code></strong></a></td>
-<td>Human name contained in From field of the next message according to the list order of the thread index.</td>
-</tr>
-<tr valign=top>
-<td align=center><a name="TNEXTLINK"><strong><code>$TNEXTLINK$</code></strong></a></td>
-<td>Next link markup linking to the next message according to the thread index list order.</td>
-</tr>
-<tr valign=top>
-<td align=center><a name="TNEXTMSG"><strong><code>$TNEXTMSG$</code></strong></a></td>
-<td>Filename of next message according to the list order of the thread index.</td>
-</tr>
-<tr valign=top>
-<td align=center><a name="TNEXTMSGNUM"><strong><code>$TNEXTMSGNUM$</code></strong></a></td>
-<td>Number assigned to next message according to the list order of the thread index.</td>
-</tr>
-<tr valign=top>
-<td align=center><a name="TNEXTSUBJECT"><strong><code>$TNEXTSUBJECT$</code></strong></a></td>
-<td>Subject of next message according to the list order of the thread index.</td>
-</tr>
-<tr valign=top>
-<td align=center><a name="TPREVBUTTON"><strong><code>$TPREVBUTTON$</code></strong></a></td>
-<td>Previous button markup linking to the previous message according to the thread index list order.</td>
-</tr>
-<tr valign=top>
-<td align=center><a name="TPREVFROM"><strong><code>$TPREVFROM$</code></strong></a></td>
-<td>Content of From field of the previous message according to the list order of the thread index.</td>
-</tr>
-<tr valign=top>
-<td align=center><a name="TPREVFROMADDR"><strong><code>$TPREVFROMADDR$</code></strong></a></td>
-<td>E-mail address contained in From field of the previous message according to the list order of the thread index.</td>
-</tr>
-<tr valign=top>
-<td align=center><a name="TPREVFROMNAME"><strong><code>$TPREVFROMNAME$</code></strong></a></td>
-<td>Human name contained in From field of the previous message according to the list order of the thread index.</td>
-</tr>
-<tr valign=top>
-<td align=center><a name="TPREVLINK"><strong><code>$TPREVLINK$</code></strong></a></td>
-<td>Previous link markup linking to the previous message according to the thread index list order.</td>
-</tr>
-<tr valign=top>
-<td align=center><a name="TPREVMSG"><strong><code>$TPREVMSG$</code></strong></a></td>
-<td>Filename of previous message according to the list order of the thread index.</td>
-</tr>
-<tr valign=top>
-<td align=center><a name="TPREVMSGNUM"><strong><code>$TPREVMSGNUM$</code></strong></a></td>
-<td>Number assigned to previous message according to the list order of the thread index.</td>
-</tr>
-<tr valign=top>
-<td align=center><a name="TPREVSUBJECT"><strong><code>$TPREVSUBJECT$</code></strong></a></td>
-<td>Subject of previous message according to the list order of the thread index.</td>
-</tr>
-<tr valign=top>
-<td align=center><a name="TSLICE"><strong><code>$TSLICE$</code></strong></a></td>
-<td>A <em>slice</em> of the thread listing relative to the current message.  Size of slice determined by the <a href="tslice.html">TSLICE</a> resource.</td>
-</tr>
-<tr valign=top>
-<td align=center><a name="VERSION"><strong><code>$VERSION$</code></strong></a></td>
+<td align=center><a name="VERSION" href="../rcvars.html#VERSION"><strong><code>$VERSION$</code></strong></a></td>
 <td>Program version.</td>
 </tr>
 <tr valign=top>
-<td align=center><a name="YYMMDD"><strong><code>$YYMMDD$</code></strong></a></td>
-<td>Message date in yy/mm/dd format.</td>
+<td align=center><a name="YYYYMMDD" href="../rcvars.html#YYYYMMDD"><strong><code>$YYYYMMDD$</code></strong></a></td>
+<td>Message date in yyyy/mm/dd format.</td>
 </tr>
 </tbody>
 </table>
@@ -372,14 +248,14 @@ sort method in effect.
 <h2>Examples</h2>
 
 <p>The following shows an alternative to the default setting by
-add the author of the previous message:
+including the author of the previous message:
 </p>
 
 <pre>
 <b>&lt;PrevLink&gt;</b>
 &lt;LI>Prev by <var>sort-type</var>:
-&lt;STRONG>&lt;A HREF="<a href="#PREVMSG">$PREVMSG$</a>"><a href="#PREVSUBJECT">$PREVSUBJECT$</a>&lt;/A>&lt;/STRONG>,
-&lt;EM><a href="#PREVFROMNAME">$PREVFROMNAME$</a>&lt;/EM>
+&lt;STRONG>&lt;A HREF="<a href="#MSG">$MSG(PREV)$</a>"><a href="#SUBJECT">$PREVSUBJECT(PREV)$</a>&lt;/A>&lt;/STRONG>,
+&lt;EM><a href="#FROMNAME">$FROMNAME(PREV)$</a>&lt;/EM>
 &lt;/LI>
 <b>&lt;/PrevLink&gt;</b>
 </pre>
@@ -407,10 +283,10 @@ add the author of the previous message:
 <!-- *************************************************************** -->
 <hr>
 <address>
-98/03/03 18:19:47<br>
+98/09/19 18:27:14<br>
 <img align="top" src="../monicon.gif" alt="">
 <a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"><strong>MHonArc</strong></a><br>
-Copyright &#169; 1997-1998, <a href="http://www.oac.uci.edu/indiv/ehood/">Earl Hood</a>, <a href="mailto:ehood@medusa.acs.uci.edu">ehood@medusa.acs.uci.edu</a><br>
+Copyright &#169; 1997-1998, <a href="http://www.oac.uci.edu/indiv/ehood/">Earl Hood</a>, <a href="mailto:earlhood@usa.net">earlhood@usa.net</a><br>
 </address>
 
 </body>

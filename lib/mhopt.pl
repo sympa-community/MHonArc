@@ -1,13 +1,13 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##      @(#) mhopt.pl 2.3 98/03/03 15:09:40
+##      @(#) mhopt.pl 2.8 98/11/08 11:55:42
 ##  Author:
-##      Earl Hood       ehood@medusa.acs.uci.edu
+##      Earl Hood       earlhood@usa.net
 ##  Description:
 ##      Routines to set options for MHonArc.
 ##---------------------------------------------------------------------------##
 ##    MHonArc -- Internet mail-to-HTML converter
-##    Copyright (C) 1997-1998	Earl Hood, ehood@medusa.acs.uci.edu
+##    Copyright (C) 1997-1998	Earl Hood, earlhood@usa.net
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by
@@ -27,23 +27,30 @@
 
 package mhonarc;
 
+use Getopt::Long;
+
 ##---------------------------------------------------------------------------
-##	get_cli_opts() is responsible for grabbing command-line options
-##	and also settings the resource file.
+##	get_resources() is responsible for grabbing resource settings from
+##	the command-line and resource file(s).
 ##
-sub get_cli_opts {
-    local($tmp, @array);
+sub get_resources {
+    my($tmp);
+    my(%opt) = ();
+    local($_);
 
     die(qq{Try "$PROG -help" for usage information\n}) unless
-    &NGetOpt(
+    GetOptions(\%opt,
 	"add",		# Add a message to archive
+	"afs",		# Bypass file permission checks
+	"annotate",	# Add a note to message(s)
 	"authsort",	# Sort by author
 	"archive",	# Create an archive (the default)
 	"conlen",	# Honor Content-Length fields
-	"datefields=s",	# Fields that contains the date of a message
+	"datefields=s", # Fields that contains the date of a message
 	"dbfile=s",	# Database/state filename for mhonarc archive
 	"decodeheads",	# Decode all 1522 encoded data in message headers
-	"definevars=s",	# Define custom resource variables
+	"definevar|definevars=s@",
+			# Define custom resource variables
 	"doc",		# Print link to doc at end of index page
 	"docurl=s",	# URL to mhonarc documentation
 	"editidx",	# Change index page layout only
@@ -52,7 +59,7 @@ sub get_cli_opts {
 	"folrefs",	# Print links to explicit follow-ups/references
 	"footer=s",	# File containing user text for bottom of index page
 	"force",	# Perform archive operation even if unable to lock
-	"fromfields=s",	# Fields that contains the "from" of a message
+	"fromfields=s", # Fields that contains the "from" of a message
 	"genidx",	# Generate an index based upon archive contents
 	"gmtdatefmt=s",	# Date specification for GMT date
 	"gzipexe=s",	# Pathname of Gzip executable
@@ -63,7 +70,9 @@ sub get_cli_opts {
 	"idxfname=s",	# Filename of index page
 	"idxprefix=s",	# Filename prefix for multi-page main index
 	"idxsize=i",	# Maximum number of messages shown in indexes
-	"localdatefmt=s", # Date specification for local date
+	"localdatefmt=s",
+			# Date specification for local date
+	"lock",		# Do archive locking (default)
 	"lockdelay=i",	# Time delay in seconds between lock tries
 	"locktries=i",	# Number of tries in locking an archive
 	"mailtourl=s",	# URL to use for e-mail address hyperlinks
@@ -75,6 +84,7 @@ sub get_cli_opts {
 	"modtime",	# Set modification time on files to message date
 	"months=s",	# Month names
 	"monthsabr=s",	# Abbreviated month names
+	"msgpgs",	# Create message pages
 	"msgsep=s",	# Message separator for mailbox files
 	"msgprefix=s",	# Filename prefix for message files
 	"multipg",	# Generate multi-page indexes
@@ -82,35 +92,46 @@ sub get_cli_opts {
 	"noauthsort",	# Do not sort by author
 	"noarchive",	# Do not create an archive
 	"noconlen",	# Ignore Content-Length fields
-	"nodecodeheads",# Do not decode all 1522 encoded data in message headers
+	"nodecodeheads",
+			# Do not decode 1522 encoded data in message headers
 	"nodoc",	# Do not print link to doc at end of index page
 	"nofolrefs",	# Do not print links to explicit follow-ups/references
 	"nogzipfiles",	# Do not Gzip files
 	"nogziplinks",	# Do not add ".gz" extensions to files
+	"nolock",	# Do no archive locking
 	"nomailto",	# Do not add in mailto links for e-mail addresses
 	"nomain",	# Do not create a main index
+	"nomsgpgs",	# Do not create message pages
 	"nomodtime",	# Do no set modification time on files to message date
 	"nomultipg",	# Do not generate multi-page indexes
 	"nonews",	# Do not add links to newsgroups
 	"noreverse",	# List messages in normal order
 	"nosort",	# Do not sort
 	"nosubsort",	# Do not sort by subject
+	"notedir",	# Location of notes
+	"notetext=s@",	# Text data of note
 	"nothread",	# Do not create threaded index
 	"notreverse",	# List oldest thread first
 	"nourl",	# Do not make URL hyperlinks
-	"otherindexes=s", # List of other rcfiles for extra indexes
+	"otherindex|otherindexes=s@",
+			# List of other rcfiles for extra indexes
 	"outdir=s",	# Destination of HTML files
-	"perlinc=s",	# List of paths to search for MIME filters
+	"pagenum=s",	# Page to output if -genidx
+	"perlinc=s@",	# List of paths to search for MIME filters
 	"quiet",	# No status messages while running
-	"rcfile=s",	# Resource file for mhonarc
+	"rcfile=s@",	# Resource file for mhonarc
 	"reverse",	# List messages in reverse order
 	"rmm",		# Remove messages from an archive
 	"savemem",	# Write message data while processing
 	"scan",		# List out archive contents to terminal
 	"single",	# Convert a single message to HTML
 	"sort",		# Sort messages in increasing date order
-	"subjectarticlerxp=s",	# Regex for leading articles in subjects
-	"subjectreplyrxp=s",	# Regex for leading reply string in subjects
+	"subjectarticlerxp=s",
+			# Regex for leading articles in subjects
+	"subjectreplyrxp=s",
+			# Regex for leading reply string in subjects
+	"subjectstripcode=s",
+			# Perl expression for modifying subjects
 	"subsort",	# Sort message by subject
 	"tidxfname=s",	# File name of threaded index page
 	"tidxprefix=s",	# Filename prefix for multi-page thread index
@@ -128,108 +149,139 @@ sub get_cli_opts {
 	"umask=i",	# Set umask of process
 	"url",		# Make URL hyperlinks
 	"weekdays=s",	# Weekday names
-	"weekdaysabr=s",# Abbreviated weekday names
+	"weekdaysabr=s",
+			# Abbreviated weekday names
+
+	## API (only?) options
+	"noarg", 	# Just load code
+	"readdb",	# Just read db
 
 	"v",		# Version information
 	"help"		# A brief usage message
     );
 
     ## Check for help/version options (nothing to do)
-    if (defined($opt_help)) {
-	&usage();
-	return 0;
-    }
-    if (defined($opt_v)) {
-	&version();
-	return 0;
-    }
+    if ($opt{'help'}) 	{ &usage();   return 0; }
+    if ($opt{'v'}) 	{ &version(); return 0; }
+
+    ## Initialize variables
+    require 'mhinit.pl'    || die("ERROR: Unable to require mhinit.pl\n");
+    &mhinit_vars();
 
     ## These options have NO resource file equivalent.
-    ##
-    $ADD     = defined($opt_add);
-    $RMM     = defined($opt_rmm);
-    $SCAN    = defined($opt_scan);
-    $QUIET   = defined($opt_quiet);
-    $EDITIDX = defined($opt_editidx);
-    if (defined($opt_genidx)) {
-	$IDXONLY  = 1;  $QUIET = 1;
+    $NoArg   = $opt{'noarg'};
+    $ReadDB  = $opt{'readdb'};
+
+    $ADD     = $opt{'add'};
+    $RMM     = $opt{'rmm'};
+    $SCAN    = $opt{'scan'};
+    $QUIET   = $opt{'quiet'};
+    $EDITIDX = $opt{'editidx'};
+    $ANNOTATE= $opt{'annotate'};
+    if ($opt{'genidx'}) {
+	$IDXONLY  = 1;  $QUIET = 1;  $ADD = 0;
     } else {
 	$IDXONLY  = 0;
     }
-    if (defined($opt_single) && !$RMM) {
+    if ($opt{'single'} && !$RMM && !$ANNOTATE) {
 	$SINGLE  = 1;  $QUIET = 1;
     } else {
 	$SINGLE = 0;
     }
+    $ReadDB  	= 1  if ($ADD || $EDITIDX || $RMM || $ANNOTATE || $SCAN ||
+			 $IDXONLY);
+    $DoArchive	= 1  if $opt{'archive'};
+    $DoArchive	= 0  if $opt{'noarchive'};
+
+    my $dolock	= !$opt{'nolock'};
 
     ## Check argv
-    &usage() unless ($#ARGV >= 0) || $ADD || $SINGLE ||
-		    $EDITIDX || $SCAN || $IDXONLY;
+    unless (($#ARGV >= 0) || $ADD || $SINGLE || $EDITIDX || $SCAN ||
+    	    $IDXONLY || $ReadDB || !$DoArchive || $NoArg) {
+	usage();
+	return -1;
+    }
 
     ## Require needed libraries
     require 'timelocal.pl' || die("ERROR: Unable to require timelocal.pl\n");
     require 'ewhutil.pl'   || die("ERROR: Unable to require ewhutil.pl\n");
-    require 'mhinit.pl'    || die("ERROR: Unable to require mhinit.pl\n");
     require 'mhtime.pl'    || die("ERROR: Unable to require mhtime.pl\n");
     require 'mhfile.pl'    || die("ERROR: Unable to require mhfile.pl\n");
     require 'mhutil.pl'    || die("ERROR: Unable to require mhutil.pl\n");
+    require 'mhscan.pl'    || die("ERROR: Unable to require mhscan.pl\n")
+	if $SCAN;
+    require 'mhsingle.pl'  || die("ERROR: Unable to require mhsingle.pl\n")
+	if $SINGLE;
+    require 'mhrmm.pl'     || die("ERROR: Unable to require mhrmm.pl\n")
+	if $RMM;
+    require 'mhnote.pl'    || die("ERROR: Unable to require mhnote.pl\n")
+	if $ANNOTATE;
 
     if ($DefRcFile) {
 	&read_fmt_file($DefRcFile);
     } else {
-	$tmp = $ENV{'HOME'} . $DIRSEP . $DefRcName;
-	$tmp = $INC[0] . $DIRSEP . $DefRcName  unless (-e $tmp);
+	$tmp = join($DIRSEP, $ENV{'HOME'}, $DefRcName);
+	$tmp = join($DIRSEP, $INC[0], $DefRcName)  unless (-e $tmp);
 	if (-e $tmp) {
 	    &read_fmt_file($tmp);
 	}
     }
 
     ## Grab a few options
-    $FMTFILE   = $opt_rcfile     if $opt_rcfile;
-    $LOCKTRIES = $opt_locktries  if ($opt_locktries > 0);
-    $LOCKDELAY = $opt_lockdelay  if ($opt_lockdelay > 0);
-    $FORCELOCK = defined($opt_force);
+    @FMTFILE   = @{$opt{'rcfile'}}  if defined($opt{'rcfile'});
+    $LOCKTRIES = $opt{'locktries'}  if defined($opt{'locktries'}) &&
+					($opt{'locktries'} > 0);
+    $LOCKDELAY = $opt{'lockdelay'}  if defined($opt{'lockdelay'}) &&
+					($opt{'lockdelay'} > 0);
+    $FORCELOCK = $opt{'force'};
 
     ## These options must be grabbed before reading the database file
     ## since these options may tells us where the database file is.
-    ##
-    $OUTDIR  = $opt_outdir    if $opt_outdir;
-	if (!$SINGLE &&
-	    (!(-r $OUTDIR) || !(-w $OUTDIR) || !(-x $OUTDIR))) {
-	    die("ERROR: Unable to access $OUTDIR\n");
+    $OUTDIR  = $opt{'outdir'}    if $opt{'outdir'};
+    if (!$NoArg && !($SCAN || $IDXONLY)) {
+	die qq/ERROR: "$OUTDIR" does not exist\n/    unless -e $OUTDIR;
+	if (!$AFS) {
+	    die qq/ERROR: "$OUTDIR" is not readable\n/   unless -r $OUTDIR;
+	    die qq/ERROR: "$OUTDIR" is not writable\n/   unless -w $OUTDIR;
+	    die qq/ERROR: "$OUTDIR" is not executable\n/ unless -x $OUTDIR;
 	}
-    $DBFILE  = $opt_dbfile    if $opt_dbfile;
+    }
+    $DBFILE  = $opt{'dbfile'}    if $opt{'dbfile'};
 
     ## Create lockfile
-    ##
-    $LOCKFILE  = "${OUTDIR}${DIRSEP}${LOCKFILE}";
-    if (!$SINGLE && !&create_lock_file($LOCKFILE, 1, 0, 0)) {
-	print STDOUT "Trying to lock mail archive in $OUTDIR ...\n"
+    &set_handler();
+    $LOCKFILE  = join($DIRSEP, $OUTDIR, $LOCKFILE);
+    if ($dolock && $DoArchive && !$SINGLE &&
+	!&create_lock_file($LOCKFILE, 1, 0, 0)) {
+
+	print STDOUT qq/Trying to lock mail archive in "$OUTDIR" ...\n/
 	    unless $QUIET;
 	if (!&create_lock_file($LOCKFILE,
 			       $LOCKTRIES-1,
 			       $LOCKDELAY,
 			       $FORCELOCK)) {
+	    $! = 75; # EX_TEMPFAIL (for sendmail)
 	    die("ERROR: Unable to create $LOCKFILE after $LOCKTRIES tries\n");
 	}
     }
 
-    ## Race condition exists: if process is terminated before termination
-    ## handlers set, lock file will not get removed.
-    ##
-    &set_handler();
-
     ## Check if we need to access database file
-    ##
-    if ($ADD || $EDITIDX || $RMM || $SCAN || $IDXONLY) {
+    if ($ReadDB) {
 	$DBFILE = ".mail2html.db"
-	    unless (-e "${OUTDIR}${DIRSEP}${DBFILE}") ||
-		   (!-e "${OUTDIR}${DIRSEP}.mail2html.db");
+	    unless (-e join($DIRSEP, $OUTDIR, $DBFILE)) ||
+		   (!-e join($DIRSEP, $OUTDIR, ".mail2html.db"));
 	$DBPathName = join($DIRSEP, $OUTDIR, $DBFILE);
+
 	if (-e $DBPathName) {
 	    print STDOUT "Reading database ...\n"  unless $QUIET;
-	    require $DBPathName ||
+
+	    ## Just perform a require.  Delete %INC entry to force
+	    ## evaluation.
+	    delete $INC{$DBPathName};
+	    require($DBPathName) ||
 		die("ERROR: Database read error of $DBPathName\n");
+
+	    ## Check db version with program version
 	    if ($VERSION ne $DbVERSION) {
 		warn "Warning: Database ($DbVERSION) != ",
 		     "program ($VERSION) version.\n";
@@ -241,156 +293,191 @@ sub get_cli_opts {
 		    unless $QUIET;
 		&update_data_1_to_2();
 	    }
-	}
-	if ($#ARGV < 0) { $ADDSINGLE = 1; }	# See if adding single mesg
-	else { $ADDSINGLE = 0; }
-	$ADD = 'STDIN';
-    }
-    local($OldMULTIIDX) = $MULTIIDX;
 
-    ## Remove lock file if scanning messages
-    ##
-    if ($SCAN) {
+	    ## Set %Follow here just incase it does not get recomputed
+	    %Follow = %FollowOld;
+	}
+	if (!$IDXONLY) {
+	    if ($#ARGV < 0) { $ADDSINGLE = 1; }	# See if adding single mesg
+	    else { $ADDSINGLE = 0; }
+	    $ADD = 'STDIN';
+	}
+    }
+    my($OldMULTIIDX) = $MULTIIDX;
+
+    ## Remove lock file if db not going to be changed
+    if ($SCAN || $IDXONLY) {
 	&remove_lock_file();
     }
 
-    ##	Read resource file (I initially used the term 'format file').
-    ##	Look for resource in outdir if not absolute path or not
-    ##	existing according to current value.
-    ##
-    if ($FMTFILE) {
-	$FMTFILE = join($DIRSEP, $OUTDIR, $FMTFILE)
-	    unless ($FMTFILE =~ m%^/%) || (-e $FMTFILE);
-	&read_fmt_file($FMTFILE);
+    ##	Read resource file(s) (I initially used the term 'format file').
+    ##	Look for resource in outdir unless existing according to
+    ##  current value.
+    foreach (@FMTFILE) {
+	$_ = join($DIRSEP, $OUTDIR, $_) unless -e $_;
+	&read_fmt_file($_);
     }
 
     ## Check if extension for HTML files defined on the command-line
-    $HtmlExt = $opt_htmlext  if defined($opt_htmlext);
+    $HtmlExt = $opt{'htmlext'}  if defined($opt{'htmlext'});
 
     $RFC1522 = 1;	# Always True
 
-    unshift(@OtherIdxs, split(/$PATHSEP/o, $opt_otherindexes))
-						if defined($opt_otherindexes);
-    unshift(@PerlINC, split(/$PATHSEP/o, $opt_perlinc))
-						if defined($opt_perlinc);
+    ## Other indexes resource files
+    if (defined($opt{'otherindex'})) {
+	my @array = ();
+	local($_);
+	foreach (@{$opt{'otherindex'}}) {
+	    push(@array, split(/$PATHSEP/o, $_));
+	}
+	unshift(@OtherIdxs, @array);
+    }
+
+    ## Perl INC paths
+    if (defined($opt{'perlinc'})) {
+	my @array = ();
+	local($_);
+	foreach (@{$opt{'perlinc'}}) {
+	    push(@array, split(/$PATHSEP/o, $_));
+	}
+	unshift(@PerlINC, @array);
+    }
+
     &remove_dups(*OtherIdxs);
     &remove_dups(*PerlINC);
 
-    ## Require MIME filters and other libraries
-    ##
+    ## Require mail parsing library
     unshift(@INC, @PerlINC);
     if (!$SCAN) {
-	## Require readmail library
+	# require readmail library
 	require 'readmail.pl' || die("ERROR: Unable to require readmail.pl\n");
-	$readmail'FormatHeaderFunc = "mhonarc'htmlize_header";
-	$MHeadCnvFunc = "readmail'MAILdecode_1522_str";
+	$readmail::FormatHeaderFunc = \&mhonarc::htmlize_header;
+	$MHeadCnvFunc = \&readmail::MAILdecode_1522_str;
     }
 
     ## Get other command-line options
-    ##
-    $DBFILE	= $opt_dbfile     if $opt_dbfile; # Set again to override db
-	$DBPathName = join($DIRSEP, $OUTDIR, $DBFILE);
-    $DOCURL	= $opt_docurl     if $opt_docurl;
-    $FOOTER	= $opt_footer     if $opt_footer;
-    $FROM	= $opt_msgsep     if $opt_msgsep;
-    $HEADER	= $opt_header     if $opt_header;
-    $IDXPREFIX	= $opt_idxprefix  if $opt_idxprefix;
-    $IDXSIZE	= $opt_idxsize    if defined($opt_idxsize);
-	$IDXSIZE *= -1  if $IDXSIZE < 0;
-    $OUTDIR	= $opt_outdir     if $opt_outdir; # Set again to override db
-    $MAILTOURL	= $opt_mailtourl  if $opt_mailtourl;
-    $MAXSIZE	= $opt_maxsize    if defined($opt_maxsize);
-	$MAXSIZE = 0  if $MAXSIZE < 0;
-    $MHPATTERN	= $opt_mhpattern  if $opt_mhpattern;
-    $TIDXPREFIX	= $opt_tidxprefix if $opt_tidxprefix;
-    $TITLE	= $opt_title      if $opt_title;
-    $TLEVELS	= $opt_tlevels    if $opt_tlevels;
-    $TTITLE	= $opt_ttitle     if $opt_ttitle;
-    $MsgPrefix	= $opt_msgprefix  if defined($opt_msgprefix);
-    $GzipExe	= $opt_gzipexe	  if $opt_gzipexe;
+    $DBFILE	= $opt{'dbfile'}     if $opt{'dbfile'}; # Override db
+    $DBPathName = join($DIRSEP, $OUTDIR, $DBFILE);
 
-    $IDXNAME	= $opt_idxfname || $IDXNAME || $ENV{'M2H_IDXFNAME'} ||
+    $DOCURL	= $opt{'docurl'}     if $opt{'docurl'};
+    $FOOTER	= $opt{'footer'}     if $opt{'footer'};
+    $FROM	= $opt{'msgsep'}     if $opt{'msgsep'};
+    $HEADER	= $opt{'header'}     if $opt{'header'};
+    $IDXPREFIX	= $opt{'idxprefix'}  if $opt{'idxprefix'};
+    $IDXSIZE	= $opt{'idxsize'}    if defined($opt{'idxsize'});
+	$IDXSIZE *= -1  if $IDXSIZE < 0;
+    $OUTDIR	= $opt{'outdir'}     if $opt{'outdir'}; # Override db
+    $MAILTOURL	= $opt{'mailtourl'}  if $opt{'mailtourl'};
+    $MAXSIZE	= $opt{'maxsize'}    if defined($opt{'maxsize'});
+	$MAXSIZE = 0  if $MAXSIZE < 0;
+    $MHPATTERN	= $opt{'mhpattern'}  if $opt{'mhpattern'};
+    $TIDXPREFIX	= $opt{'tidxprefix'} if $opt{'tidxprefix'};
+    $TITLE	= $opt{'title'}      if $opt{'title'};
+    $TLEVELS	= $opt{'tlevels'}    if $opt{'tlevels'};
+    $TTITLE	= $opt{'ttitle'}     if $opt{'ttitle'};
+    $MsgPrefix	= $opt{'msgprefix'}  if defined($opt{'msgprefix'});
+    $GzipExe	= $opt{'gzipexe'}    if $opt{'gzipexe'};
+
+    $IDXNAME	= $opt{'idxfname'} || $IDXNAME || $ENV{'M2H_IDXFNAME'} ||
 		  "maillist.$HtmlExt";
-    $TIDXNAME	= $opt_tidxfname || $TIDXNAME || $ENV{'M2H_TIDXFNAME'} ||
+    $TIDXNAME	= $opt{'tidxfname'} || $TIDXNAME || $ENV{'M2H_TIDXFNAME'} ||
 		  "threads.$HtmlExt";
 
-    $ExpireDate	= $opt_expiredate if $opt_expiredate;
-    $ExpireTime	= $opt_expireage  if $opt_expireage;
+    $ExpireDate	= $opt{'expiredate'} if $opt{'expiredate'};
+    $ExpireTime	= $opt{'expireage'}  if $opt{'expireage'};
 	$ExpireTime *= -1  if $ExpireTime < 0;
 
-    $GMTDateFmt	= $opt_gmtdatefmt  if $opt_gmtdatefmt;
-    $LocalDateFmt = $opt_localdatefmt  if $opt_localdatefmt;
+    $GMTDateFmt	= $opt{'gmtdatefmt'}  	  if $opt{'gmtdatefmt'};
+    $LocalDateFmt = $opt{'localdatefmt'}  if $opt{'localdatefmt'};
 
-    $SubArtRxp   = $opt_subjectarticlerxp  if $subjectarticlerxp;
-    $SubReplyRxp = $opt_subjectreplyrxp    if $subjectreplyrxp;
+    $SubArtRxp   = $opt{'subjectarticlerxp'}  if $opt{'subjectarticlerxp'};
+    $SubReplyRxp = $opt{'subjectreplyrxp'}    if $opt{'subjectreplyrxp'};
+    $SubStripCode = $opt{'subjectstripcode'}  if $opt{'subjectstripcode'};
+
+    $IdxPageNum  = $opt{'pagenum'}   if defined($opt{'pagenum'});
+
+    ## Determine location of message note files
+    $NoteDir = $opt{'notedir'}	if $opt{'notedir'};
+
+    ## See if note text defined on command-line
+    if (defined $opt{'notetext'}) {
+	$NoteText = join(" ", @{$opt{'notetext'}});
+    } else {
+	$NoteText = undef;
+    }
 
     ## Parse any rc variable definition from command-line
-    %CustomRcVars = (%CustomRcVars, &parse_vardef_str($opt_definevars))
-	if ($opt_definevars);
+    if (defined($opt{'definevar'})) {
+	my @array = ();
+	foreach (@{$opt{'definevar'}}) {
+	    push(@array, &parse_vardef_str($_));
+	}
+	%CustomRcVars = (%CustomRcVars, @array);
+    }
 
-    $CONLEN	= 1  if defined($opt_conlen);
-    $CONLEN	= 0  if defined($opt_noconlen);
-    $MAIN	= 1  if defined($opt_main);
-    $MAIN	= 0  if defined($opt_nomain);
-    $MODTIME	= 1  if defined($opt_modtime);
-    $MODTIME	= 0  if defined($opt_nomodtime);
-    $MULTIIDX	= 1  if defined($opt_multipg);
-    $MULTIIDX	= 0  if defined($opt_nomultipg);
-    $NODOC	= 0  if defined($opt_doc);
-    $NODOC	= 1  if defined($opt_nodoc);
-    $NOMAILTO	= 1  if defined($opt_nomailto);
-    $NONEWS	= 0  if defined($opt_news);
-    $NONEWS	= 1  if defined($opt_nonews);
-    $NOURL	= 0  if defined($opt_url);
-    $NOURL	= 1  if defined($opt_nourl);
-    $SLOW	= 1  if defined($opt_savemem);
-    $THREAD	= 1  if defined($opt_thread);
-    $THREAD	= 0  if defined($opt_nothread);
-    $TREVERSE	= 1  if defined($opt_treverse);
-    $TREVERSE	= 0  if defined($opt_notreverse);
-    $DoArchive	= 1  if defined($opt_archive);
-    $DoArchive	= 0  if defined($opt_noarchive);
-    $DoFolRefs	= 1  if defined($opt_folrefs);
-    $DoFolRefs	= 0  if defined($opt_nofolrefs);
-    $GzipFiles	= 1  if defined($opt_gzipfiles);
-    $GzipFiles	= 0  if defined($opt_nogzipfiles);
-    $GzipLinks	= 1  if defined($opt_gziplinks);
-    $GzipLinks	= 0  if defined($opt_nogziplinks);
+    $CONLEN	= 1  if $opt{'conlen'};
+    $CONLEN	= 0  if $opt{'noconlen'};
+    $MAIN	= 1  if $opt{'main'};
+    $MAIN	= 0  if $opt{'nomain'};
+    $MODTIME	= 1  if $opt{'modtime'};
+    $MODTIME	= 0  if $opt{'nomodtime'};
+    $MULTIIDX	= 1  if $opt{'multipg'};
+    $MULTIIDX	= 0  if $opt{'nomultipg'};
+    $NODOC	= 0  if $opt{'doc'};
+    $NODOC	= 1  if $opt{'nodoc'};
+    $NOMAILTO	= 1  if $opt{'nomailto'};
+    $NONEWS	= 0  if $opt{'news'};
+    $NONEWS	= 1  if $opt{'nonews'};
+    $NOURL	= 0  if $opt{'url'};
+    $NOURL	= 1  if $opt{'nourl'};
+    $SLOW	= 1  if $opt{'savemem'};
+    $THREAD	= 1  if $opt{'thread'};
+    $THREAD	= 0  if $opt{'nothread'};
+    $TREVERSE	= 1  if $opt{'treverse'};
+    $TREVERSE	= 0  if $opt{'notreverse'};
+    $DoFolRefs	= 1  if $opt{'folrefs'};
+    $DoFolRefs	= 0  if $opt{'nofolrefs'};
+    $GzipFiles	= 1  if $opt{'gzipfiles'};
+    $GzipFiles	= 0  if $opt{'nogzipfiles'};
+    $GzipLinks	= 1  if $opt{'gziplinks'};
+    $GzipLinks	= 0  if $opt{'nogziplinks'};
+    $NoMsgPgs	= 0  if $opt{'msgpgs'};
+    $NoMsgPgs	= 1  if $opt{'nomsgpgs'};
 
-    $DecodeHeads = 1 if defined($opt_decodeheads);
-    $DecodeHeads = 0 if defined($opt_nodecodeheads);
-	$readmail'DecodeHeader = $DecodeHeads;
+    $DecodeHeads = 1 if $opt{'decodeheads'};
+    $DecodeHeads = 0 if $opt{'nodecodeheads'};
+	$readmail::DecodeHeader = $DecodeHeads;
 
-    @DateFields	 = split(/:/, $opt_datefields)  if $opt_datefields;
+    @DateFields	 = split(/:/, $opt{'datefields'})  if $opt{'datefields'};
     foreach (@DateFields) { s/\s//g; tr/A-Z/a-z/; }
-    @FromFields	 = split(/:/, $opt_fromfields)  if $opt_fromfields;
+    @FromFields	 = split(/:/, $opt{'fromfields'})  if $opt{'fromfields'};
     foreach (@FromFields) { s/\s//g; tr/A-Z/a-z/; }
 
-    ($TSliceNBefore, $TSliceNAfter) = split(/:/, $opt_tslice)  if $opt_tslice;
+    ($TSliceNBefore, $TSliceNAfter) = split(/:/, $opt{'tslice'})
+	if $opt{'tslice'};
 
-    @Months   = split(/:/, $opt_months) 	if defined($opt_months);
-    @months   = split(/:/, $opt_monthsabr)  	if defined($opt_monthsabr);
-    @Weekdays = split(/:/, $opt_weekdays)  	if defined($opt_weekdays);
-    @weekdays = split(/:/, $opt_weekdaysabr)  	if defined($opt_weekdaysabr);
+    @Months   = split(/:/, $opt{'months'}) 	if defined($opt{'months'});
+    @months   = split(/:/, $opt{'monthsabr'})  	if defined($opt{'monthsabr'});
+    @Weekdays = split(/:/, $opt{'weekdays'})  	if defined($opt{'weekdays'});
+    @weekdays = split(/:/, $opt{'weekdaysabr'}) if defined($opt{'weekdaysabr'});
 
-    $MULTIIDX	= 0  if $IDXONLY || !$IDXSIZE;
+    $MULTIIDX	= 0  if !$IDXSIZE;
 
     ##	Set umask
     if ($UNIX) {
-	$UMASK = $opt_umask      if $opt_umask;
-	eval 'umask oct($UMASK)';
+	$UMASK = $opt{'umask'}      if defined($opt{'umask'});
+	eval { umask oct($UMASK); };
     }
 
     ##	Get sort method
-    ##
-    $AUTHSORT = 1  if defined($opt_authsort);
-    $AUTHSORT = 0  if defined($opt_noauthsort);
-    $SUBSORT  = 1  if defined($opt_subsort);
-    $SUBSORT  = 0  if defined($opt_nosubsort);
-    $NOSORT   = 1  if defined($opt_nosort);
-    $NOSORT   = 0  if defined($opt_sort);
-    $REVSORT  = 1  if defined($opt_reverse);
-    $REVSORT  = 0  if defined($opt_noreverse);
+    $AUTHSORT = 1  if $opt{'authsort'};
+    $AUTHSORT = 0  if $opt{'noauthsort'};
+    $SUBSORT  = 1  if $opt{'subsort'};
+    $SUBSORT  = 0  if $opt{'nosubsort'};
+    $NOSORT   = 1  if $opt{'nosort'};
+    $NOSORT   = 0  if $opt{'sort'};
+    $REVSORT  = 1  if $opt{'reverse'};
+    $REVSORT  = 0  if $opt{'noreverse'};
     if ($NOSORT) {
 	$SUBSORT = 0;  $AUTHSORT = 0;
     } elsif ($SUBSORT) {
@@ -398,56 +485,53 @@ sub get_cli_opts {
     }
 
     ## Check for thread listing order
-    $TSUBSORT = 1  if defined($opt_tsubsort);
-    $TSUBSORT = 0  if defined($opt_tnosubsort);
-    $TNOSORT  = 1  if defined($opt_tnosort);
-    $TNOSORT  = 0  if defined($opt_tsort);
-    $TREVERSE = 1  if defined($opt_treverse);
-    $TREVERSE = 0  if defined($opt_notreverse);
+    $TSUBSORT = 1  if $opt{'tsubsort'};
+    $TSUBSORT = 0  if $opt{'tnosubsort'};
+    $TNOSORT  = 1  if $opt{'tnosort'};
+    $TNOSORT  = 0  if $opt{'tsort'};
+    $TREVERSE = 1  if $opt{'treverse'};
+    $TREVERSE = 0  if $opt{'notreverse'};
     if ($TNOSORT) {
 	$TSUBSORT = 0;
     }
 
     ## Check if all messages must be updated (this has been simplified;
     ## any serious change should be done via editidx).
-    ##
-    if ($RMM || $EDITIDX || ($OldMULTIIDX != $MULTIIDX)) {
+    if ($EDITIDX || ($OldMULTIIDX != $MULTIIDX)) {
 	$UPDATE_ALL = 1;
     } else {
 	$UPDATE_ALL = 0;
     }
 
     ## Set date names
-    ##
     &set_date_names(*weekdays, *Weekdays, *months, *Months);
 
     ## Require some more libaries
+    require 'mhidxrc.pl'  || die("ERROR: Unable to require mhidxrc.pl\n");
+    &mhidxrc_set_vars();
 
-    ##	    Set index resources.
-    require 'mhidxrc.pl' || die("ERROR: Unable to require mhidxrc.pl\n");
-
-    ##	    Create dynamic subroutines.
-    require 'mhdysub.pl' || die("ERROR: Unable to require mhdysub.pl\n");
+    require 'mhdysub.pl'  || die("ERROR: Unable to require mhdysub.pl\n");
     &create_routines();
 
-    ##	    Require library for expanding resource variables
     require 'mhrcvars.pl' || die("ERROR: Unable to require mhrcvars.pl\n");
-
-    ##	    Require library containing thread routines
+    require 'mhindex.pl'  || die("ERROR: Unable to require mhindex.pl\n");
     require 'mhthread.pl' || die("ERROR: Unable to require mhthread.pl\n");
-
-    ## 	    Require database write library if needed
-    if (!($SCAN || $IDXONLY)) {
-	require 'mhdb.pl' || die("ERROR: Unable to require mhdb.pl\n");
-    }
+    require 'mhdb.pl'     || die("ERROR: Unable to require mhdb.pl\n")
+	unless $SCAN || $IDXONLY || !$DoArchive;
 
     ## Predefine %Index2TLoc in case of message deletion
     if (@TListOrder) {
 	@Index2TLoc{@TListOrder} = (0 .. $#TListOrder);
     }
 
+    ## Define %Index2MsgId hash
+    foreach (keys %MsgId) {
+	$Index2MsgId{$MsgId{$_}} = $_;
+    }
+
     ## Set $ExpireDateTime from $ExpireDate
     if ($ExpireDate) {
+	my @array = ();
 	if (@array = &parse_date($ExpireDate)) {
 	    $ExpireDateTime = &get_time_from_date(@array[1..$#array]);
 	} else {
@@ -464,7 +548,6 @@ sub get_cli_opts {
 
     ## Delete bogus empty entries in hashes due to bug in earlier
     ## versions to avoid any future problems.
-    ##
     delete($IndexNum{''});
     delete($Subject{''});
     delete($From{''});
@@ -474,7 +557,7 @@ sub get_cli_opts {
     delete($Refs{''});
 
     ## Check if printing process time
-    $TIME = defined($opt_time);
+    $TIME = $opt{'time'};
 
     1;
 }
@@ -494,14 +577,15 @@ sub usage {
     require 'mhusage.pl' ||
 	die("ERROR: Unable to require mhusage.pl.\n",
 	    "Did you install MHonArc properly?\n");
+    &mhusage();
 }
 
 ##---------------------------------------------------------------------------
 ##	create_lock_file() creates a directory to act as a lock.
 ##
 sub create_lock_file {
-    local($file, $tries, $sleep, $force) = @_;
-    local($umask, $ret);
+    my($file, $tries, $sleep, $force) = @_;
+    my($umask, $ret);
     $ret = 0;
     while ($tries > 0) {
 	if (mkdir($file, 0777)) {
@@ -559,15 +643,15 @@ sub update_data_1_to_2 {
     );
     #--------------------------------------
     sub entname_to_char {
-	local($name) = shift;
-	local($ret) = $EntName2Char{$name};
+	my($name) = shift;
+	my($ret) = $EntName2Char{$name};
 	if (!$ret) {
 	    $ret = "&$name;";
 	}
 	$ret;
     }
     #--------------------------------------
-    local($index);
+    my($index);
     foreach $index (keys %From) {
 	$From{$index} =~ s/\&([\w-.]+);/&entname_to_char($1)/ge;
     }

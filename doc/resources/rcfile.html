@@ -6,7 +6,7 @@
 <body>
 
 <address>
-<a href="../resources.html#rcfile">MHonArc Resource List</a></br>
+<a href="../resources.html#rcfile">MHonArc Resource List</a>
 </address>
 
 <hr>
@@ -41,16 +41,16 @@
 <hr>
 <h2>Description</h2>
 
-<p>RCFILE tells <em>MHonArc</em> what the resource file is.
+<p>RCFILE tells MHonArc what the resource file is.
 The resource file allows you to specify most of the resources set by 
 environment variables and command-line options, and it allows you to specify 
-other resources to control <EM>MHonArc</EM>'s behavior.
+other resources to control MHonArc's behavior.
 </p>
 
 <h3>Resource file syntax</h3>
 
 <P>Resources are set in the file by using <EM>elements</EM> similiar
-in style to HTML/SGML markup. However, <EM>MHonArc</EM> uses simpler
+in style to HTML/SGML markup. However, MHonArc uses simpler
 parsing rules for the resource file than standard SGML: </P>
 
 <UL>
@@ -64,7 +64,7 @@ recognized elements for commenting purposes.  </P>
 <dd><p>You should use SGML comment declarations
 (<CODE>&lt;!-- </CODE>...<CODE> --&gt;</CODE>) when commenting a
 resource file. This will eliminate possible conflict with later
-versions of <EM>MHonArc</EM> if more stricter parsing rules are
+versions of MHonArc if more stricter parsing rules are
 adopted.  </P>
 </dd></dl>
 
@@ -83,15 +83,15 @@ Whitespace is allowed
 before the close tag.  </P>
 
 <LI><P>Some elements can take an optional attribute called
-"<CODE>Override</CODE>", if applicable.  This tells <EM>MHonArc</EM>
+"<CODE>Override</CODE>", if applicable.  This tells MHonArc
 that the contents of the element will completely override the default
-behavior of <EM>MHonArc</EM>, and previous instances of the element.
+behavior of MHonArc, and previous instances of the element.
 <STRONG>Example</STRONG>: "<CODE>&lt;EXCS Override&gt;</CODE>". If
 "<CODE>Override</CODE>" is not specified, then the contents of the
 element augment the current setting.  </P>
 
 <LI><P>Some elements can take an optional attribute called
-"<CODE>Chop</CODE>", if applicable.  This tells <EM>MHonArc</EM>
+"<CODE>Chop</CODE>", if applicable.  This tells MHonArc
 to remove the last line-break of the element's content.
 </P>
 
@@ -109,72 +109,11 @@ to remove the last line-break of the element's content.
 part of there content.  Resource variables represent data that
 can only be defined during run-time.  I.e.  Resource variables
 will get expanded to an appropriate value during the execution
-of <em>MHonArc</em>.
+of MHonArc.  For more information on resource variables, see
+the section: <a href="../rcvars.html">Resource Variables</a>.
 </p>
 
-<P>The syntax of <EM>variables</EM> in resources
-is as follows: </P>
-
-<P><CODE>$</CODE><var>VARIABLE</var>[<CODE>:</CODE>[<var>N</var>][<CODE>U</CODE>]]<CODE>$
-</CODE></P>
-
-<P>The items in []'s are optional. Definition of each part: </P>
-
-<DL> <DT><CODE>$</CODE>
-
-<DD><P> The <CODE>$</CODE> character represents the beginning, and
-ending, of the variable.  </P>
-
-<DT><EM>VARIABLE</EM> 
- 
-<DD><P> This is the the actual name of the variable. Variable names are
-case sensitive.
-</P>
-
-<DT><CODE>:</CODE>[<var>N</var>][<CODE>U</CODE>] <em>(optional)</EM>
-
-<DD><P> This defines a maximum length of the replacement string for
-the variable.  The option "<CODE>U</CODE>" denotes that the replacement
-string should be treated as part of a URL string. This can be useful
-when the variable may contain special characters, and the variable
-is used as part of a URL.  </P>
-
-</DL>
-
-<P><STRONG>No</STRONG> whitespace is allowed between the opening
-<CODE>$</CODE> and closing <CODE>$</CODE>. If an unrecognize d variable
-is encountered, it gets replaced with an empty string. If a literal
-"<CODE>$</CODE>" is needed, use "<CODE>$$</CODE>".  </P>
-
-<DL>
-<DT><STRONG>NOTE</STRONG> 
-<DD><P>The
-<a href="mailtourl.html">MAILTOURL</a>
-resource has
-different rules for variable expansion. If a
-variable does not exactly match the set of variables available for
-the MAILTOURL, the variable text will be taken literally
-as part of the element content. Therefore, a single "<CODE>$</CODE>"
-can be used to represent a "<CODE>$</CODE>" character.  </P>
-<P>Also,
-variables in the MAILTOURL should <STRONG>NOT</STRONG>
-have "<CODE>:</CODE><VAR>NU</VAR>" modifier. This will prevent the
-variables from be recognized. <EM>MHonArc</EM> will automatically
-treat the replacement value as a part of a URL string.
-</P>
-</DD></DL>
-
-<P>Here are some examples of legal variable usage:
-</P>
-<UL>
-<LI><CODE>$SUBJECT$</CODE> 
-<LI><CODE>$FROMNAME$</CODE> 
-<LI><CODE>$SUBJECT:50$</CODE> 
-<LI><CODE>$SUBJECTNA:60U$</CODE> 
-<LI><CODE>$FROMADDR:U$</CODE> 
-</UL>
-
-<p>The description of for each resource will contain a list
+<p>The description for each resource will contain a list
 of all applicable variables that may be used in defining the
 resource's value.
 </p>
@@ -359,13 +298,13 @@ video/quicktime:http://foo.org/icons/movie.xbm
 <!-- *************************************************************** -->
 <hr>
 <address>
-98/03/03 18:19:49<br>
+98/09/19 18:27:15<br>
 <img align="top" src="../monicon.gif" alt="">
 <a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"
 ><strong>MHonArc</strong></a><br>
 Copyright &#169; 1997-1998, <a href="http://www.oac.uci.edu/indiv/ehood/"
->Earl Hood</a>, <a href="mailto:ehood@medusa.acs.uci.edu"
-> ehood@medusa.acs.uci.edu</a><br>
+>Earl Hood</a>, <a href="mailto:earlhood@usa.net"
+> earlhood@usa.net</a><br>
 </address>
 
 </body>

@@ -1,15 +1,15 @@
 #!/usr/local/bin/perl
 ##---------------------------------------------------------------------------##
 ##  File:
-##	@(#) mhonarc 2.1 98/03/02 20:17:49
+##	@(#) mhonarc 2.3 98/10/31 14:00:55
 ##  Author:
-##      Earl Hood       ehood@medusa.acs.uci.edu
+##      Earl Hood       earlhood@usa.net
 ##  Description:
 ##      MHonArc is a Perl program to convert mail to HTML.  See
 ##	accompany documentation for full details.
 ##---------------------------------------------------------------------------##
 ##    MHonArc -- Internet mail-to-HTML converter
-##    Copyright (C) 1995-1998	Earl Hood, ehood@medusa.acs.uci.edu
+##    Copyright (C) 1995-1998	Earl Hood, earlhood@usa.net
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by
@@ -35,8 +35,8 @@ MAIN: {
     unshift(@INC, 'lib');	# Should I leave this line in?
 
     require 'mhamain.pl' || die qq/ERROR: Unable to require "mhamain.pl"\n/;
-    &mhonarc::initialize();
-    &mhonarc::process_input() ? exit(0) : exit(-1);
+    mhonarc::initialize();
+    mhonarc::process_input() ? exit(0) : exit($mhonarc::CODE);
 }
 
 ##---------------------------------------------------------------------------##

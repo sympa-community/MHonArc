@@ -1,0 +1,391 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
+<HTML>
+<HEAD>
+<TITLE>MHonArc FAQ: General Information</TITLE></HEAD>
+<BODY>
+
+<!--X-NavButtons-Start-->
+<p align=center>
+[<a href="about.html">Prev</a>][<a href="envs.html">Next</a>][<a href="faq.html">TOC</a>][<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html">Home</a>]
+</p>
+<!--X-NavButtons-End-->
+
+<!-- ===================================================================== -->
+<hr>
+<H2><a name="general">General</a></H2>
+
+<!--X-TOC-Start-->
+<ul>
+<li><a href="#whatis">What is MHonArc?</a></li>
+<li><a href="#mhversion">What's the latest version of MhonArc?</a></li>
+<li><a href="#get">Where can I get MHonArc?</a></li>
+<li><a href="#cost">What restrictions are there on MHonArc usage?</a></li>
+<li><a href="#help">Where can I get help on MHonArc?</a></li>
+<li><a href="#compare">How does MHonArc compare to other email archivers, like Hypermail?</a></li>
+<li><a href="#vscommercial">Why I should use MHonArc over some of the Internet-based mailing list archive services?</a></li>
+<li><a href="#studies">Are their "real-world" examples of MHonArc usage?</a></li>
+<li><a href="#y2k">Is MHonArc Y2K (Year 2000) compliant?</a></li>
+</ul>
+<!--X-TOC-End-->
+
+<!-- ??????????????????????????????????????????????????????????????? -->
+<hr noshade size=1>
+<table border=0>
+<tr valign=top><td><img src="monicon.gif" align="bottom" alt=""></td><td>
+<h3><b><a name="whatis">What is MHonArc?</a></b></h3>
+</td></tr></table>
+
+<P>MHonArc is a <A HREF="http://perl.com/perl/">Perl</A>
+program for converting e-mail messages as specified in RFC 822 and
+<A HREF="http://www.oac.uci.edu/indiv/ehood/MIME/MIME.html">the
+MIME standard</A> to <A
+HREF="http://www.w3.org/pub/WWW/MarkUp/">HTML</A>.
+MHonArc can perform the following tasks: </P>
+ 
+<UL>
+<LI>Convert <a href="http://www.ics.uci.edu/~mh/"><em>MH</em></a>
+mail folders or UUCP/Unix style mailboxes into an HTML mail archive.
+<LI>Add or remove messages to an existing HTML mail archive generated
+by MHonArc.
+<LI>Convert a single message to HTML.
+</UL>
+
+<P>Along with these tasks, MHonArc provides the following:
+</P>
+
+<UL>
+<LI>A main customizable index for mail messages archived.
+<LI>A customizable thread index listing messages by thread.
+<LI>Control over message formatting.
+<LI>The ability to hook in your own custom message filters.
+<LI>And other things to numerous to mention here.
+</UL>
+
+
+<!-- ??????????????????????????????????????????????????????????????? -->
+<hr noshade size=1>
+<table border=0>
+<tr valign=top><td><img src="monicon.gif" align="bottom" alt=""></td><td>
+<h3><b><a name="mhversion">What's the latest version of MhonArc?</a></b></h3>
+</td></tr></table>
+
+<P>2.3.3
+</P>
+
+<!-- ??????????????????????????????????????????????????????????????? -->
+<hr noshade size=1>
+<table border=0>
+<tr valign=top><td><img src="monicon.gif" align="bottom" alt=""></td><td>
+<h3><b><a name="get">Where can I get MHonArc?</a></b></h3>
+</td></tr></table>
+
+<P>The latest information on MHonArc,
+and its availability, may be obtained at <A
+HREF="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"
+>&lt;URL:http://www.oac.uci.edu/indiv/ehood/mhonarc.html&gt;</A>.
+</P>
+
+<p>MHonArc requires Perl to run.  If you do not have Perl, it can
+be obtained from
+<a href="http://www.perl.com/">&lt;URL:http://www.perl.com/&gt;</a>.
+</p>
+
+<!-- ??????????????????????????????????????????????????????????????? -->
+<hr noshade size=1>
+<table border=0>
+<tr valign=top><td><img src="monicon.gif" align="bottom" alt=""></td><td>
+<h3><b><a name="cost">What restrictions are there on MHonArc usage?</a></b></h3>
+</td></tr></table>
+
+<P>MHonArc is free software.  MHonArc is distributed under
+the GNU General Public License (GPL).  A copy of the license is included in
+the distribution.  Please read it for more information, or go
+to <a href="http://www.gnu.org/">&lt;URL:http://www.gnu.org/&gt;</a>.
+Note, that the word <em>"free"</em> means something
+different than <em>"no&nbsp;cost"</em>.  See the GPL and
+<a href="http://www.gnu.org/">&lt;URL:http://www.gnu.org/&gt;</a> for more
+information.
+</p>
+
+<p>Note, donations are welcome.  And will help insure the continued
+development of MHonArc.
+</p>
+
+<p>If you do not feel comfortable with the current licensing
+of MHonArc, GPL, then contact the developer of MHonArc if you
+want to make alternate licensing arrangements.
+</p>
+
+<table border=0 cellpadding=4>
+<tr valign=top><td></td><td><hr noshade></td></tr>
+</tr>
+<tr valign=top>
+<td><strong>NOTE</strong></td>
+<td><p>MHonArc is <strong>NOT</strong>
+in the public domain.  Any mention of MHonArc in the public domain
+is <strong>WRONG</strong>.  Applicable copyrights still apply.
+</p>
+</td>
+</tr>
+<tr valign=top><td></td><td><hr noshade></td></tr>
+</table>
+
+<!-- ??????????????????????????????????????????????????????????????? -->
+<hr noshade size=1>
+<table border=0>
+<tr valign=top><td><img src="monicon.gif" align="bottom" alt=""></td><td>
+<h3><b><a name="help">Where can I get help on MHonArc?</a></b></h3>
+</td></tr></table>
+
+<P>The first place to try is the documentation that comes with
+MHonArc. The documentation is quite extensive, and may
+provide answers to most of your questions.  </P>
+
+<P>Second, you can read this FAQ.
+</P>
+
+<P>Third, a mailing list, <A
+HREF="mailto:mhonarc@ncsa.uiuc.edu"
+>mhonarc@ncsa.uiuc.edu</A>, is available to
+provide a discussion forum on the usage and development of
+MHonArc. Appropriate topics for the list include: usage
+questions, bug reports, behavioral enhancements, documentation bugs,
+and general help.  </P>
+
+<P>To subscribe to the mailing list, send mail to <A
+HREF="mailto:mhonarc-request@ncsa.uiuc.edu"
+>mhonarc-request@ncsa.uiuc.edu</A>
+with the command, </P>
+
+<PRE>
+subscribe
+</PRE>
+
+<P>as the message body.
+</P>
+
+<P>If you send mail
+<A HREF="mailto:mhonarc@ncsa.uiuc.edu" >mhonarc@ncsa.uiuc.edu</A>,
+your message will be
+distributed to all subscribers on the list.  </P>
+
+<table border=0 cellpadding=4>
+<tr valign=top>
+<td><strong>NOTE</strong></td>
+<td><p>The mailing list is restricted to subscribers only.  Any
+non-subscriber message sent to the list is manually filtered.
+Due to the nature
+of manual filtering, non-subscriber messages may have long delays
+before getting distributed to all subscribers.
+</p>
+<p><b>ABSOLUTELY NO SPAM IS TOLERATED</b>.  Any spam is happily
+redirected to /dev/null.
+</p>
+</td>
+</tr>
+</table>
+
+<P>The mailing list is archived by
+Majordomo. You can also use the WWW to access
+the archive (with full text search using
+<a href="http://glimpse.cs.arizona.edu/">Glimpse</a>) at
+<A HREF="http://www.xray.mpe.mpg.de/mailing-lists/"
+>&lt;URL:http://www.xray.mpe.mpg.de/mailing-lists/&gt;</A>.
+An alternative web archive of the mailing list is at
+<A HREF="http://www.mail-archive.com/mhonarc@ncsa.uiuc.edu/"
+>&lt;URL:http://www.mail-archive.com/mhonarc@ncsa.uiuc.edu/&gt;</A>.
+</P>
+
+<!-- ??????????????????????????????????????????????????????????????? -->
+<hr noshade size=1>
+<table border=0>
+<tr valign=top><td><img src="monicon.gif" align="bottom" alt=""></td><td>
+<h3><b><a name="compare">How does MHonArc compare to other email archivers, like Hypermail?</a></b></h3>
+</td></tr></table>
+
+<p><a href="http://www.landfield.com/hypermail/">Hypermail</a>
+is probably the only other major free program (distributed under the
+<a href="http://www.gnu.org/">GPL</a>) for archiving
+e-mail on the Web.  There are other free programs available,
+but Hypermail and MHonArc appear to be the two major programs
+in use.
+</p>
+
+<p>The best comparison that can be made is by yourself, since the
+choosing between which tool to use will depend on your needs.
+The following is a brief list of some of the advantages of MHonArc
+over Hypermail:
+</p>
+
+<table border=0 cellpadding=4>
+<tr valign=top>
+<td><strong>NOTE</strong></td>
+<td><p>If you notice any errors regarding the information related
+to Hypermail, please contact the FAQ maintainer.
+</p>
+</td>
+</tr>
+</table>
+
+<ul>
+<li><p>Support variant mail folders types.  Hypermail supports only
+UUCP-style mailboxes.
+</p>
+</li>
+<li><p>MHonArc provides the ability to extend the type of
+MIME content-types supported.
+</p>
+</li>
+<li><p>Page customization.  MHonArc gives you complete control
+on how pages are formatted.  Hypermail has some page customization
+features, but not at the level of MHonArc's.  With MHonArc, you
+can create archives with frame navigation or incorporate JavaScript
+to provided more sophisticated archives.
+</p>
+</li>
+<li><p>Multi-platform support.  MHonArc basically runs on any system
+that Perl runs.  Hypermail is only known to run on Unix systems,
+however, there may be a WinNT port.
+</p>
+</li>
+<li><p>Single message conversion.  MHonArc can be used to convert
+a message to HTML independent of archive processing.  Hence, MHonArc can
+be used as general MIME decoder.
+</p>
+</li>
+</ul>
+
+<p>The other major difference is that MHonArc is written in
+Perl, and Hypermail is written in C.
+There are pros and cons of both languages.  In sum, Perl allows
+for easier modification, portability, and extensiblility.  C
+provides better execution speed.
+</p>
+
+<p>There are other differences, so consult the documentation of
+both programs to get a more complete list.  Your needs willl
+ultimately decide which program is best for you.
+</p>
+
+<p>For some time, there
+was a lack of development on Hypermail.  However, there is
+currently a maintainer.  Information about Hypermail can
+be obtained from
+<a href="http://www.landfield.com/hypermail/"
+>&lt;URL:http://www.landfield.com/hypermail/&gt;</a>.
+</p>
+
+<!-- ??????????????????????????????????????????????????????????????? -->
+<hr noshade size=1>
+<table border=0>
+<tr valign=top><td><img src="monicon.gif" align="bottom" alt=""></td><td>
+<h3><b><a name="vscommercial">Why I should use MHonArc over some of the Internet-based mailing list archive services?</a></b></h3>
+</td></tr></table>
+
+<p>The exact "why" depends on your needs.  Here are some possible reasons
+why you may want to use MHonArc over Internet-based mailing list
+archive services:
+</p>
+<ul>
+<li>MHonArc is <a href="#cost">free</a> software.  Internet services
+may charge a fee and/or include commercial
+advertisements in your list archives.
+</li>
+<li>With MHonArc, you have complete control on how your archive looks
+and feel, and operates.
+This can be important if you want your archives to follow a specific style,
+and/or you need the option to be able to change how your archives function
+over time.
+</li>
+<li>You have mailing lists that are behind a firewall.  Therefore,
+an Internet based service is not an option.
+</li>
+<li>You just need something for personal use.
+</li>
+</ul>
+
+<p>Note, there is a nice Internet-based mailing list archive service
+that is available at no charge, and it uses MHonArc and the
+<a href="http://www.htdig.org">htDig</a> search engine.  See
+<a href="http://www.mail-archive.com/"
+>&lt;URL:http://www.mail-archive.com/&gt;</a> for more information.
+</p>
+
+<!-- ??????????????????????????????????????????????????????????????? -->
+<hr noshade size=1>
+<table border=0>
+<tr valign=top><td><img src="monicon.gif" align="bottom" alt=""></td><td>
+<h3><b><a name="studies">Are their "real-world" examples of MHonArc usage?</a></b></h3>
+</td></tr></table>
+
+<p>Take your pick:
+</p>
+<ul>
+<li>WWW Mailing List Archives &amp; References:<br>
+<a href="http://www.xray.mpe.mpg.de/mailing-lists/"
+>&lt;URL:http://www.xray.mpe.mpg.de/mailing-lists/&gt;</a>
+<li>The Mail Archive:<br>
+<a href="http://www.mail-archive.com/"
+>&lt;URL:http://www.mail-archive.com/&gt;</a>
+<li>Mallorn Archived Email Lists:<br>
+<a href="http://www.mallorn.com/lists/"
+>&lt;URL:http://www.mallorn.com/lists/&gt;</a>
+<li>Majordomo Users Mailing List Interface:<br>
+<a href="http://www.hpc.uh.edu/majordomo-users"
+>&lt;URL:http://www.hpc.uh.edu/majordomo-users&gt;</a>
+<li>Liblicense-L List Archives:<br>
+<a href="http://www.library.yale.edu/~llicense/ListArchives/"
+>&lt;URL:http://www.library.yale.edu/~llicense/ListArchives/&gt;</a>
+<li>Lyx Mailing List Archives:<br>
+<a href="http://www.via.ecp.fr/lyx/archive/"
+>&lt;URL:http://www.via.ecp.fr/lyx/archive/&gt;</a>
+<li>FVWM Archives:<br>
+<a href="http://www.hpc.uh.edu/fvwm/archive/"
+>&lt;URL:http://www.hpc.uh.edu/fvwm/archive/&gt;</a>
+</ul>
+
+<!-- ??????????????????????????????????????????????????????????????? -->
+<hr noshade size=1>
+<table border=0>
+<tr valign=top><td><img src="monicon.gif" align="bottom" alt=""></td><td>
+<h3><b><a name="y2k">Is MHonArc Y2K (Year 2000) compliant?</a></b></h3>
+</td></tr></table>
+
+<p>There is no known Y2K issues with the current release of MHonArc.
+Message dates are translated to Unix <b>time(2)</b> format which are
+currently valid until 2038.  If MHonArc is still in use by then,
+I would be amazed.
+</p>
+
+<p>There has been no official Y2K certification of MHonArc.  Since
+MHonArc is free software, I see noone paying the money for certification.
+Hence, do not go looking for someone to sue if something breaks.
+</p>
+
+<p>You may want to check
+<a href="http://language.perl.com/news/y2k.html"
+>&lt;URL:http://language.perl.com/news/y2k.html&gt;</a> about Y2K
+from a Perl point-of-view.
+</p>
+
+<!-- ===================================================================== -->
+<hr>
+
+<!--X-NavButtons-Start-->
+<p align=center>
+[<a href="about.html">Prev</a>][<a href="envs.html">Next</a>][<a href="faq.html">TOC</a>][<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html">Home</a>]
+</p>
+<!--X-NavButtons-End-->
+
+<hr>
+<address>
+98/11/08 12:21:28<br>
+<img align="top" src="monicon.gif" alt="">
+<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"
+><strong>MHonArc</strong></a><br>
+Copyright &#169; 1997-1998, <a href="http://www.oac.uci.edu/indiv/ehood/"
+>Earl Hood</a>, <a href="mailto:ehood@medusa.acs.uci.edu"
+>ehood@medusa.acs.uci.edu</a><br>
+</address>
+</body>
+</html>

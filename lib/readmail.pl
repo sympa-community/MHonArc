@@ -1,8 +1,8 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	@(#) readmail.pl 2.1 98/03/02 20:24:33
+##	@(#) readmail.pl 2.3 98/10/24 17:17:37
 ##  Author:
-##      Earl Hood       ehood@medusa.acs.uci.edu
+##      Earl Hood       earlhood@usa.net
 ##  Description:
 ##      Library defining routines to parse MIME e-mail messages.  The
 ##	library is designed so it may be reused for other e-mail
@@ -25,7 +25,7 @@
 ##	    &MAILhead_get_disposition(*fields);
 ##
 ##---------------------------------------------------------------------------##
-##    Copyright (C) 1996-1998	Earl Hood, ehood@medusa.acs.uci.edu
+##    Copyright (C) 1996-1998	Earl Hood, earlhood@usa.net
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by
@@ -97,15 +97,15 @@ $MIMEDecoders{"8bit"}		  = "as-is"
     unless defined($MIMEDecoders{"8bit"});
 $MIMEDecoders{"binary"}		  = "as-is"
     unless defined($MIMEDecoders{"binary"});
-$MIMEDecoders{"base64"}		  = "base64'b64decode"
+$MIMEDecoders{"base64"}		  = "base64::b64decode"
     unless defined($MIMEDecoders{"base64"});
-$MIMEDecoders{"quoted-printable"} = "quoted_printable'qprdecode"
+$MIMEDecoders{"quoted-printable"} = "quoted_printable::qprdecode"
     unless defined($MIMEDecoders{"quoted-printable"});
-$MIMEDecoders{"x-uuencode"}	  = "base64'uudecode"
+$MIMEDecoders{"x-uuencode"}	  = "base64::uudecode"
     unless defined($MIMEDecoders{"x-uuencode"});
-$MIMEDecoders{"x-uue"}     	  = "base64'uudecode"
+$MIMEDecoders{"x-uue"}     	  = "base64::uudecode"
     unless defined($MIMEDecoders{"x-uue"});
-$MIMEDecoders{"uuencode"}  	  = "base64'uudecode"
+$MIMEDecoders{"uuencode"}  	  = "base64::uudecode"
     unless defined($MIMEDecoders{"uuencode"});
 
 $MIMEDecodersSrc{"base64"}	  	= "base64.pl"
@@ -216,28 +216,28 @@ $MIMECharSetConverters{"default"}	= "-ignore-"
 ##  a multipart message.  The content-type of the message is passed
 ##  as an argument.
 
-$CantProcessPartFunc		= "cantProcessPart"
+$CantProcessPartFunc		= \&cantProcessPart
     unless(defined($CantProcessPartFunc));
 
 ##  Function that returns a message when a part is unrecognized in a
 ##  multipart/alternative message.  I.e. No part could be processed.
 ##  No arguments are passed to function.
 
-$UnrecognizedAltPartFunc	= "unrecognizedAltPart"
+$UnrecognizedAltPartFunc	= \&unrecognizedAltPart
     unless(defined($UnrecognizedAltPartFunc));
 
 ##  Function that returns a string to go before any data generated generating
 ##  from processing an embedded message (message/rfc822 or message/news).
 ##  No arguments are passed to function.
 
-$BeginEmbeddedMesgFunc		= "beginEmbeddedMesg"
+$BeginEmbeddedMesgFunc		= \&beginEmbeddedMesg
     unless(defined($BeginEmbeddedMesgFunc));
 
 ##  Function that returns a string to go after any data generated generating
 ##  from processing an embedded message (message/rfc822 or message/news).
 ##  No arguments are passed to function.
 
-$EndEmbeddedMesgFunc		= "endEmbeddedMesg"
+$EndEmbeddedMesgFunc		= \&endEmbeddedMesg
     unless(defined($EndEmbeddedMesgFunc));
 
 ##  Function to return a string that is a result of the functions
@@ -254,7 +254,7 @@ $EndEmbeddedMesgFunc		= "endEmbeddedMesg"
 ##
 ##  Prototype: $return_data = &function(*fields, *lower2orig_fields);
 
-$FormatHeaderFunc		= ""
+$FormatHeaderFunc		= undef
     unless(defined($FormatHeaderFunc));
 
 ###############################################################################
@@ -345,7 +345,7 @@ sub MAILdecode_1522_str {
 	# Do not decode, but convert
 	} elsif (($charcnv =~ /-pass-:(.*)/) &&
 		 (defined(&${1}))) {
-	    $ret .= &${1}($str_before,$lcharset);
+	    $ret .= &${1}($strtxt,$lcharset);
 
 	# Fallback is to ignore
 	} else {
@@ -381,11 +381,13 @@ sub MAILdecode_1522_str {
 sub MAILread_body {
     local($header, $body, $ctypeArg, $encodingArg) = @_;
 
-    local($type, $subtype, $boundary, $ret, $tmp, $content, $ctype, $pos);
     local($part, $parthead, $partcontent, $partencoding);
     local(@parts, %partfields, %partl2o) = ();
-    local(@files) = ();
-    local(@array) = ();
+    local($tmphead, $decoded);
+    my($type, $subtype, $boundary, $ret, $content, $ctype, $pos,
+       $encoding, $decodefunc, $args);
+    my(@files) = ();
+    my(@array) = ();
     $ret = "";
 
     ## Get type/subtype
@@ -407,32 +409,39 @@ sub MAILread_body {
     $filter = &load_filter("$type/*")	unless $filter;
     $filter = &load_filter("*/*")	unless $filter;
 
+    ## Check for filter arguments
+    $args = $MIMEFiltersArgs{$ctype};
+    $args = $MIMEFiltersArgs{"$type/*"} if !defined($args) or $args eq '';
+    $args = $MIMEFiltersArgs{$filter}   if !defined($args) or $args eq '';
+
+    ## Check encoding
+    if (defined($encodingArg)) {
+	$encoding = lc $encodingArg;
+	$encoding =~ s/\s//g;
+	$decodefunc = &load_decoder($encoding);
+    } else {
+	$encoding = undef;
+	$decodefunc = undef;
+    }
+
     ## A filter is defined for given content-type
     if ($filter && defined(&$filter)) {
-	local($tmphead, $encoding, $decodefunc, $decoded, $args);
 	$tmphead	= $header . "\n";
-	$encoding	= $encodingArg;
-	$decodefunc	= "";
-	$decoded	= "";
-	$args   	= "";
-
-	## Check for filter arguments
-	$args = $MIMEFiltersArgs{$ctype};
-	$args = $MIMEFiltersArgs{"$type/*"} if $args eq '';
-	$args = $MIMEFiltersArgs{$filter}   if $args eq '';
 
 	## Parse message header for filter
 	&MAILread_header(*tmphead, *partfields, *partl2o);
 
-	## Check encoding and decode data
-	$encoding =~ s/\s//g;  $encoding =~ tr/A-Z/a-z/;
-	$decodefunc = &load_decoder($encoding);
-	if (defined(&$decodefunc)) {
-	    $decoded = &$decodefunc($body);
-	    @array = &$filter($header, *partfields, *decoded, 1, $args);
+	## decode data
+	if (defined($decodefunc)) {
+	    if (defined(&$decodefunc)) {
+		$decoded = &$decodefunc($body);
+		@array = &$filter($header, *partfields, *decoded, 1, $args);
+	    } else {
+		@array = &$filter($header, *partfields, *body,
+				  $decodefunc =~ /as-is/i, $args);
+	    }
 	} else {
-	    @array = &$filter($header, *partfields, *body,
-			      $decodefunc =~ /as-is/i, $args);
+	    @array = &$filter($header, *partfields, *body, 0, $args);
 	}
 
 	## Setup return variables
@@ -443,6 +452,7 @@ sub MAILread_body {
     } else {
 	## If multipart, recursively process each part
 	if ($type =~ /multipart/i) {
+	    local(%Cid) = ();
 	    local($isalt) = $subtype =~ /alternative/i;
 
 	    ## Get boundary
@@ -478,20 +488,39 @@ sub MAILread_body {
 	    }
 
 	    ## Process parts
-	    foreach $part (@parts) {
-
-		## Read header to get content-type
+	    my(@entity) = ();
+	    my($cid, $href);
+	    while (defined($part = shift(@parts))) {
 		$parthead = &MAILread_header(*part, *partfields, *partl2o);
-		$partcontent = $partfields{'content-type'};
-		$partencoding = $partfields{'content-transfer-encoding'};
+		$cid = $partfields{'content-id'} || $partfields{'message-id'};
+		$cid =~ s/[\s<>]//g;
+		$href = {
+		    'head'	=> $parthead,
+		    'fields'	=> { %partfields },
+		    'l2o'	=> { %partl2o },
+		    'body'	=> $part,
+		    'filtered'	=> 0,
+		};
+		push(@entity, $href);
+		$Cid{$cid} = $href  if defined($cid);
+	    }
+
+	    my($entity);
+	    foreach $entity (@entity) {
+		next  if $entity->{'filtered'};
+
+		$parthead     = $entity->{'head'};
+		$part         = $entity->{'body'};
+		$partcontent  = $entity->{'fields'}{'content-type'};
+		$partencoding =
+			$entity->{'fields'}{'content-transfer-encoding'};
 
 		## If content-type not defined for part, then determine
-		## content-type based upon mulipart subtype.
+		## content-type based upon multipart subtype.
 		if (!$partcontent) {
 		    if ($subtype =~ /digest/) {
 			$partcontent = 'message/rfc822';
-		    }
-		    else {
+		    } else {
 			$partcontent = 'text/plain';
 		    }
 		}
@@ -510,12 +539,14 @@ sub MAILread_body {
 		} else {
 		    if (!$array[0]) {
 			$array[0] = &$CantProcessPartFunc(
-					$partfields{'content-type'});
+					$entity->{'fields'}{'content-type'});
 		    }
 		    $ret .= shift @array;
 		}
 		push(@files, @array);
+		$entity->{'filtered'} = 1;
 	    }
+
 	    if (!$ret && ($subtype =~ /alternative/)) {
 		$ret = &$UnrecognizedAltPartFunc();
 	    }
@@ -541,7 +572,7 @@ sub MAILread_body {
 
 	    push(@files, @array);
 
-	## Else cannot do anything
+	## Else cannot handle type
 	} else {
 	    $ret = '';
 	}
@@ -693,32 +724,29 @@ sub cantProcessPart {
 
     warn "Warning: Could not process part with given Content-Type: ",
 	 "$ctype\n";
-    join('',"<HR NOSHADE SIZE=1>\n",
-	    "Could not process part with Content-Type: <TT>$ctype</TT>.\n",
-	    "<HR NOSHADE SIZE=1>\n");
+    "<BR><TT>&lt;&lt;&lt; $ctype: Unrecognized &gt;&gt;&gt;</TT><BR>\n";
 }
 ##---------------------------------------------------------------------------##
 ##	Default function for unrecognizeable part in multipart/alternative.
 ##
 sub unrecognizedAltPart {
     warn "Warning: No recognizable part in multipart/alternative\n";
-    join('',"<HR NOSHADE SIZE=1>\n",
-	    "No recognizable part in <TT>multipart/alternative</TT>.\n",
-	    "<HR NOSHADE SIZE=1>\n");
+    "<BR><TT>&lt;&lt;&lt; multipart/alternative: ".
+    "No recognizable part &gt;&gt;&gt;</TT><BR>\n";
 }
 ##---------------------------------------------------------------------------##
 ##	Default function for beggining of embedded message
 ##	(ie message/rfc822 or message/news).
 ##
 sub beginEmbeddedMesg {
-    "<BR><EM>---- Begin included message ----</EM><BLOCKQUOTE>\n";
+    qq|<BLOCKQUOTE><BR><HR ALIGN="LEFT" WIDTH="80%">\n|;
 }
 ##---------------------------------------------------------------------------##
 ##	Default function for end of embedded message
 ##	(ie message/rfc822 or message/news).
 ##
 sub endEmbeddedMesg {
-    "</BLOCKQUOTE><EM>---- End included message ----</EM><BR>\n";
+    qq|<HR ALIGN="LEFT" WIDTH="80%"></BLOCKQUOTE><BR>\n|;
 	    
 }
 
@@ -726,17 +754,21 @@ sub endEmbeddedMesg {
 
 sub load_charset {
     require $MIMECharSetConvertersSrc{$_[0]}
-	if $MIMECharSetConvertersSrc{$_[0]};
+	if defined($MIMECharSetConvertersSrc{$_[0]}) &&
+	   $MIMECharSetConvertersSrc{$_[0]};
     $MIMECharSetConverters{$_[0]};
 }
 sub load_decoder {
-    require $MIMEDecodersSrc{$_[0]}
-	if $MIMEDecodersSrc{$_[0]};
-    $MIMEDecoders{$_[0]};
+    my $enc = lc shift; $enc =~ s/\s//;
+    require $MIMEDecodersSrc{$enc}
+	if defined($MIMEDecodersSrc{$enc}) &&
+	   $MIMEDecodersSrc{$enc};
+    $MIMEDecoders{$enc};
 }
 sub load_filter {
     require $MIMEFiltersSrc{$_[0]}
-	if $MIMEFiltersSrc{$_[0]};
+	if defined($MIMEFiltersSrc{$_[0]}) &&
+	   $MIMEFiltersSrc{$_[0]};
     $MIMEFilters{$_[0]};
 }
 

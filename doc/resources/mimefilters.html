@@ -312,6 +312,7 @@ audio/*;		   <a href="#m2h_external">m2h_external::filter</a>;	mhexternal.pl
 chemical/*;		   <a href="#m2h_external">m2h_external::filter</a>;	mhexternal.pl
 model/*;		   <a href="#m2h_external">m2h_external::filter</a>;	mhexternal.pl
 image/*;		   <a href="#m2h_external">m2h_external::filter</a>;	mhexternal.pl
+message/delivery-status;   <a href="#m2h_text_plain">m2h_text_plain::filter</a>;	mhtxtplain.pl
 message/partial;	   <a href="#m2h_text_plain">m2h_text_plain::filter</a>;	mhtxtplain.pl
 text/*;			   <a href="#m2h_text_plain">m2h_text_plain::filter</a>;	mhtxtplain.pl
 text/enriched;		   <a href="#m2h_text_enriched">m2h_text_enriched::filter</a>;	mhtxtenrich.pl
@@ -323,6 +324,7 @@ text/tab-separated-values; <a href="#m2h_text_tsv">m2h_text_tsv::filter</a>;	mht
 text/x-html;		   <a href="#m2h_text_html">m2h_text_html::filter</a>;	mhtxthtml.pl
 text/x-setext;		   <a href="#m2h_text_setext">m2h_text_setext::filter</a>;	mhtxtsetext.pl
 video/*;		   <a href="#m2h_external">m2h_external::filter</a>;	mhexternal.pl
+x-sun-attachment;	   <a href="#m2h_text_plain">m2h_text_plain::filter</a>;	mhtxtplain.pl
 <b>&lt;/MIMEFilters&gt;</b>
 </PRE>
 
@@ -406,6 +408,15 @@ defined by the <a href="icons.html">ICONS</a> resource.
 <td><p>Use (file)name attribute for determining name
 of derived file.  Use this option with caution
 since it can lead to filename conflicts and
+security problems (however, see the <strong><tt>subdir</tt></strong>
+option).
+</p>
+</tr>
+<tr valign=top>
+<td><strong><tt>usenameext</tt></strong></td>
+<td><p>Use (file)name attribute for determining the extension
+of derived file.  Use this option with caution
+since it can lead to
 security problems (however, see the <strong><tt>subdir</tt></strong>
 option).
 </p>
@@ -506,9 +517,17 @@ recognizes:
 <td align=center><tt>v5d</tt></td>
 <td>Vis5D dataset</td></tr>
 <tr valign="top">
+<td align=left><strong>application/vnd.framemaker</strong></td>
+<td align=center><tt>fm</tt></td>
+<td>FrameMaker document</td></tr>
+<tr valign="top">
 <td align=left><strong>application/vnd.hp-hpgl</strong></td>
 <td align=center><tt>hpg</tt></td>
 <td>HPGL file</td></tr>
+<tr valign="top">
+<td align=left><strong>application/vnd.mif</strong></td>
+<td align=center><tt>mif</tt></td>
+<td>Frame MIF document</td></tr>
 <tr valign="top">
 <td align=left><strong>application/vnd.ms-excel</strong></td>
 <td align=center><tt>xls</tt></td>
@@ -527,7 +546,7 @@ recognizes:
 <td>WinHelp document</td></tr>
 <tr valign="top">
 <td align=left><strong>application/wordperfect5.1</strong></td>
-<td align=center><tt>hlp</tt></td>
+<td align=center><tt>wp</tt></td>
 <td>WordPerfect 5.1 document</td></tr>
 <tr valign="top">
 <td align=left><strong>application/x-asap</strong></td>
@@ -766,9 +785,17 @@ recognizes:
 <td align=center><tt>es</tt></td>
 <td>Echospeech audio</td></tr>
 <tr valign="top">
+<td align=left><strong>audio/microsoft-wav</strong></td>
+<td align=center><tt>wav</tt></td>
+<td>Wave audio</td></tr>
+<tr valign="top">
 <td align=left><strong>audio/midi</strong></td>
 <td align=center><tt>midi</tt></td>
 <td>MIDI audio</td></tr>
+<tr valign="top">
+<td align=left><strong>audio/wav</strong></td>
+<td align=center><tt>wav</tt></td>
+<td>Wave audio</td></tr>
 <tr valign="top">
 <td align=left><strong>audio/x-aiff</strong></td>
 <td align=center><tt>aif</tt></td>
@@ -1179,10 +1206,29 @@ convert the characters to the appropriate entity references.
 
 <p>This filter is designed to process text/html or
 text/x-html data.
-The filter modifies the HTML so it can be
-included validly into the message page.  Any head data will be
-stripped out, but the title will be extracted and prepended
-to the body data.
+The filter modifies HTML documents so they can be
+included into the message pages without causing invalid markup
+to occur.  The following modification are done to HTML documents when
+processed by MHonArc:
+</p>
+<ul>
+<li><p>The HEAD element is removed.  Since some elements within the HEAD
+element may be relevant to the rest of the document, the following is
+done when removing the HEAD element:</p>
+    <ul>
+    <li>The title will be extracted and prepended
+    to the body data.
+    <li>Any BASE URL will be propogated to any relative URLs in the
+    document.
+    </ul>
+    <p></p>
+</li>
+<li><p><b><tt>cid:</tt></b> URLs are resolved, if possible.  Therefore,
+if image data related to the HTML document is included with the message,
+the URLs will be modified to the filenames of the images that were
+decoded.</p>
+</li>
+</ul>
 </p>
 
 <hr size=0 noshade width="50%">
@@ -1268,7 +1314,7 @@ of the message.
 <tr valign=top>
 <td><strong><tt>target=</tt></strong><var>name</var></td>
 <td><p>Set the TARGET attribute of an anchor links generated from
-hyperlinking URLs.  Default value is "<tt>_top</tt>".
+hyperlinking URLs.
 </p>
 </tr>
 
@@ -1294,14 +1340,92 @@ tabular data will be converted into an HTML table.
 <hr>
 <h2>Resource Variables</h2>
 
-<p>N/A</p>
+<p>N/A
+</p>
 
 <!-- *************************************************************** -->
 <hr>
 <h2>Examples</h2>
 
-<p>None.
+<p>The following code is an example filter for HTML message data
+(note, this example has a subset of the functionality of the HTML
+filter used by MHonArc):
 </p>
+<pre>
+##---------------------------------------------------------------------------##
+##    Copyright (C) 1995-1998	Earl Hood, earlhood@usa.net
+##---------------------------------------------------------------------------##
+
+package m2h_text_html;
+
+$Url	= '(\w+://|\w+:)';	# Beginning of URL match expression
+
+##---------------------------------------------------------------------------
+##	The filter must modify HTML content parts for merging into the
+##	final filtered HTML messages.  Modification is needed so the
+##	resulting filtered message is valid HTML.
+##
+sub filter {
+    local($header, *fields, *data, $isdecode, $args) = @_;
+    local($base, $title, $tmp);
+    $base 	= '';
+    $title	= '';
+    $tmp	= '';
+
+    ## Get/remove title
+    if ($data =~ s%&lt;title\s*&gt;([^&lt;]*)&lt;/title\s*&gt;%%i) {
+        $title = "&lt;ADDRESS&gt;Title: &lt;STRONG&gt;$1&lt;/STRONG&gt;&lt;/ADDRESS&gt;\n";
+    }
+    ## Get/remove BASE url
+    if ($data =~ s%(&lt;base\s[^&gt;]*&gt;)%%i) {
+        $tmp = $1;
+        if ($tmp =~ m|href\s*=\s*['"]([^'"]+)['"]|i) {
+	    $base = $1;
+	} elsif ($tmp =~ m|href\s*=\s*([^\s&gt;]+)|i) {
+	    $base = $1;
+	}
+    } elsif ((defined($tmp = $fields{'content-base'}) ||
+	      defined($tmp = $fields{'content-location'})) &amp;&amp;
+	     ($tmp =~ m%/%)) {
+	($base = $tmp) =~ s/['"\s]//g;
+    }
+    $base =~ s%(.*/).*%$1%;
+
+    ## Strip out certain elements/tags
+    $data =~ s%&lt;!doctype\s[^&gt;]*&gt;%%i;
+    $data =~ s%&lt;/?html[^&gt;]*&gt;%%ig;
+    $data =~ s%&lt;/?body[^&gt;]*&gt;%%ig;
+    $data =~ s%&lt;head\s*&gt;[\s\S]*&lt;/head\s*&gt;%%i;
+
+    ## Modify relative urls to absolute using BASE
+    if ($base =~ /\S/) {
+        $data =~ s%(href\s*=\s*['"])([^'"]+)(['"])%
+		   &amp;addbase($base,$1,$2,$3)%gei;
+        $data =~ s%(src\s*=\s*['"])([^'"]+)(['"])%
+                   &amp;addbase($base,$1,$2,$3)%gei;
+    }
+
+    ($title . $data);
+}
+##---------------------------------------------------------------------------
+sub addbase {
+    local($b, $pre, $u, $suf) = @_;
+    local($ret);
+    $u =~ s/^\s+//;
+    if ($u =~ m%^$Url%o) {	# Non-relative URL, do nothing
+        $ret = $pre . $u . $suf;
+    } else {			# Relative URL
+	if ($u =~ m%^/%) {		# Check for "/..."
+	    $b =~ s%^(${Url}[^/]*)/.*%$1%o;	# Get hostname:port number
+	}
+        $ret = $pre . $b . $u . $suf;
+    }
+    $ret;
+}
+##---------------------------------------------------------------------------
+
+1;
+</pre>
 
 <!-- *************************************************************** -->
 <hr>
@@ -1323,10 +1447,10 @@ tabular data will be converted into an HTML table.
 <!-- *************************************************************** -->
 <hr>
 <address>
-98/03/03 18:19:41<br>
+98/10/24 16:57:31<br>
 <img align="top" src="../monicon.gif" alt="">
 <a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"><strong>MHonArc</strong></a><br>
-Copyright &#169; 1997-1998 <a href="http://www.oac.uci.edu/indiv/ehood/">Earl Hood</a>, <a href="mailto:ehood@medusa.acs.uci.edu">ehood@medusa.acs.uci.edu</a><br>
+Copyright &#169; 1997-1998 <a href="http://www.oac.uci.edu/indiv/ehood/">Earl Hood</a>, <a href="mailto:earlhood@usa.net">earlhood@usa.net</a><br>
 </address>
 
 </body>

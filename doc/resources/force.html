@@ -6,7 +6,7 @@
 <body>
 
 <address>
-<a href="../resources.html#force">MHonArc Resource List</a></br>
+<a href="../resources.html#force">MHonArc Resource List</a>
 </address>
 
 <hr>
@@ -40,28 +40,48 @@
 <hr>
 <h2>Description</h2>
 
-<p>FORCE causes <em>MHonArc</em> to override the lock on
+<p>FORCE causes MHonArc to override the lock on
 the archive and perform the operations requested.
 </p>
 
-<p>When <em>MHonArc</em> processes an archive, it locks the
-archive so other <em>MHonArc</em> processes do not try
+<p>When MHonArc processes an archive, it locks the
+archive so other MHonArc processes do not try
 to modify the archive at the same time.  However, if
-<em>MHonArc</em> abnormally terminates, the lock may not
-be released, causing all future <em>MHonArc</em> processes
+MHonArc abnormally terminates, the lock may not
+be released, causing all future MHonArc processes
 to fail in performing any archive operations.  If
-you get a message from <em>MHonArc</em> that it cannot
+you get a message from MHonArc that it cannot
 lock an archive, and you know the archive is not in use
-by another <em>MHonArc</em> process, use the FORCE resource.
+by another MHonArc process, use the FORCE resource.
 </p>
+
+<table border=0 cellpadding=4>
+<tr valign=top>
+<td><strong>NOTE</strong></td>
+<td><p>The alternative approach is to manually remove the
+lockfile (see <a href="lockfile.html">LOCKFILE</a>).
+</p>
+</td>
+</tr>
+</table>
 
 <p>The FORCE option should be used with care to avoid
 archive corruption.  FORCE is active only for the current
-<em>MHonArc</em> process.
+MHonArc process.
 </p>
 
-<p><em>MHonArc</em> will still try to perform a normal
-lock before forcing the issue.
+<table border=0 cellpadding=4>
+<tr valign=top>
+<td><strong><font color="red">WARNING</font></strong></td>
+<td><p>Having two, or more, MHonArc processes
+processing the same archive with FORCE enabled can lead to
+archive corruption.
+</p>
+</td>
+</tr>
+</table>
+
+<p>MHonArc will still try to perform a normal lock before forcing the issue.
 </p>
 
 <!-- *************************************************************** -->
@@ -98,19 +118,20 @@ lock before forcing the issue.
 
 <p>
 <a href="lockdelay.html">LOCKDELAY</a>,
+<a href="lockfile.html">LOCKFILE</a>,
 <a href="locktries.html">LOCKTRIES</a>
 </p>
 
 <!-- *************************************************************** -->
 <hr>
 <address>
-98/03/03 18:19:33<br>
+98/09/19 18:27:09<br>
 <img align="top" src="../monicon.gif" alt="">
 <a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"
 ><strong>MHonArc</strong></a><br>
 Copyright &#169; 1997-1998, <a href="http://www.oac.uci.edu/indiv/ehood/"
->Earl Hood</a>, <a href="mailto:ehood@medusa.acs.uci.edu"
->ehood@medusa.acs.uci.edu</a><br>
+>Earl Hood</a>, <a href="mailto:earlhood@usa.net"
+>earlhood@usa.net</a><br>
 </address>
 
 </body>

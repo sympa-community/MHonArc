@@ -1,13 +1,13 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	@(#) mhfile.pl 2.1 98/03/02 20:24:34
+##	@(#) mhfile.pl 2.3 98/08/10 23:44:51
 ##  Author:
-##      Earl Hood       ehood@medusa.acs.uci.edu
+##      Earl Hood       earlhood@usa.net
 ##  Description:
 ##      File routines for MHonArc
 ##---------------------------------------------------------------------------##
 ##    MHonArc -- Internet mail-to-HTML converter
-##    Copyright (C) 1997-1998	Earl Hood, ehood@medusa.acs.uci.edu
+##    Copyright (C) 1997-1998	Earl Hood, earlhood@usa.net
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by
@@ -32,12 +32,18 @@ package mhonarc;
 sub file_open {
     local($file) = shift;
     local($handle) = q/mhonarc'FOPEN/ . ++$_fo_cnt;
-    local($gz) = $file =~ /\.gz$/;
+    local($gz) = $file =~ /\.gz$/i;
 
-    return $handle  if $gz && (open($handle, "$GzipExe -cd $file |"));
+    if ($gz) {
+	return $handle  if open($handle, "$GzipExe -cd $file |");
+	die qq/ERROR: Failed to exec "$GzipExe -cd $file |": $!\n/;
+    }
     return $handle  if open($handle, $file);
-    return $handle  if open($handle, "$GzipExe -cd $file.gz |");
-    die qq{ERROR: Failed to open "$file"\n};
+    if (-e "$file.gz") {
+	return $handle  if open($handle, "$GzipExe -cd $file.gz |");
+	die qq/ERROR: Failed to exec "$GzipExe -cd $file.gz |": $!\n/;
+    }
+    die qq/ERROR: Failed to open "$file": $!\n/;
 }
 
 sub file_create {
@@ -48,10 +54,10 @@ sub file_create {
     if ($gz) {
 	$file .= ".gz"  unless $file =~ /\.gz$/;
 	return $handle  if open($handle, "| $GzipExe > $file");
-	die qq{ERROR: Failed to exec "| $GzipExe > $file"\n};
+	die qq{ERROR: Failed to exec "| $GzipExe > $file": $!\n};
     }
     return $handle  if open($handle, "> $file");
-    die qq{ERROR: Failed to create "$file"\n};
+    die qq{ERROR: Failed to create "$file": $!\n};
 }
 
 sub file_exists {
@@ -60,13 +66,26 @@ sub file_exists {
 
 sub file_copy {
     local($src, $dst) = ($_[0], $_[1]);
-    local($gz) = $src =~ /\.gz$/;
+    local($gz) = $src =~ /\.gz$/i;
 
     if ($gz || (-e "$src.gz")) {
 	$src .= ".gz"  unless $gz;
-	$dst .= ".gz"  unless $dst =~ /\.gz$/;
+	$dst .= ".gz"  unless $dst =~ /\.gz$/i;
     }
     &cp($src, $dst);
+}
+
+sub file_rename {
+    local($src, $dst) = ($_[0], $_[1]);
+    local($gz) = $src =~ /\.gz$/i;
+
+    if ($gz || (-e "$src.gz")) {
+	$src .= ".gz"  unless $gz;
+	$dst .= ".gz"  unless $dst =~ /\.gz$/i;
+    }
+    if (!rename($src, $dst)) {
+	die qq/ERROR: Unable to rename "$src" to "$dst": $!\n/;
+    }
 }
 
 sub file_remove {

@@ -1,8 +1,8 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	@(#)  mhtxthtml.pl 2.1 98/03/02 @(#)
+##	@(#) mhtxthtml.pl 2.6 98/10/25 13:58:15
 ##  Author:
-##      Earl Hood       ehood@medusa.acs.uci.edu
+##      Earl Hood       earlhood@usa.net
 ##  Description:
 ##	Library defines routine to filter text/html body parts
 ##	for MHonArc.
@@ -12,7 +12,7 @@
 ##		</MIMEFILTERS>
 ##---------------------------------------------------------------------------##
 ##    MHonArc -- Internet mail-to-HTML converter
-##    Copyright (C) 1995	Earl Hood, ehood@medusa.acs.uci.edu
+##    Copyright (C) 1995-1998	Earl Hood, earlhood@usa.net
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by
@@ -42,6 +42,7 @@ $Url	= '(\w+://|\w+:)';	# Beginning of URL match expression
 sub filter {
     local($header, *fields, *data, $isdecode, $args) = @_;
     local($base, $title, $tmp);
+    local(@files) = ();	# !!!Used by resolve_cid
     $base 	= '';
     $title	= '';
     $tmp	= '';
@@ -51,42 +52,99 @@ sub filter {
         $title = "<ADDRESS>Title: <STRONG>$1</STRONG></ADDRESS>\n";
     }
     ## Get/remove BASE url
-    if ($data =~ s%(<base\s[^>]*>)%%i) {
-        $tmp = $1;
-        ($base) = $tmp =~ m%href\s*=\s*['"]([^'"]+)['"]%i;
-        $base =~ s%(.*/).*%$1%;
+    BASEURL: {
+	if ($data =~ s|(<base\s[^>]*>)||i) {
+	    $tmp = $1;
+	    if ($tmp =~ m|href\s*=\s*['"]([^'"]+)['"]|i) {
+		$base = $1;
+	    } elsif ($tmp =~ m|href\s*=\s*([^\s>]+)|i) {
+		$base = $1;
+	    }
+	    last BASEURL  if ($base =~ /\S/);
+	} 
+	if ((defined($tmp = $fields{'content-base'}) ||
+	     defined($tmp = $fields{'content-location'})) && ($tmp =~ m%/%)) {
+	    ($base = $tmp) =~ s/['"\s]//g;
+	}
     }
+    $base =~ s|(.*/).*|$1|;
+
     ## Strip out certain elements/tags
-    $data =~ s%<!doctype\s[^>]*>%%i;
-    $data =~ s%</?html[^>]*>%%ig;
-    $data =~ s%</?body[^>]*>%%ig;
-    $data =~ s%<head\s*>[\s\S]*</head\s*>%%i;
+    $data =~ s|<!doctype\s[^>]*>||i;
+    $data =~ s|</?html[^>]*>||ig;
+    $data =~ s|</?body[^>]*>||ig;
+    $data =~ s|<head\s*>[\s\S]*</head\s*>||i;
 
     ## Modify relative urls to absolute using BASE
     if ($base =~ /\S/) {
-        $data =~ s%(href\s*=\s*['"])([^'"]+)(['"])%
-		   &addbase($base,$1,$2,$3)%gei;
-        $data =~ s%(src\s*=\s*['"])([^'"]+)(['"])%
-                   &addbase($base,$1,$2,$3)%gei;
+        $data =~ s/((?:href|src)\s*=\s*['"])([^'"]+)(['"])/
+		   join("", $1, &addbase($base,$2), $3)/geix;
     }
 
-    ($title . $data);
+    ## Check for CID URLs (multipart/related HTML)
+    $data =~ s/((?:href|src)\s*=\s*['"])cid:([^'"]+)(['"])/
+	       join("", $1, &resolve_cid($2), $3)/geix;
+    $data =~ s/((?:href|src)\s*=\s*)cid:([^\s>]+)/
+	       join("", $1, '"', &resolve_cid($2), '"')/geix;
+
+    ($title.$data, @files);
 }
+
 ##---------------------------------------------------------------------------
+
 sub addbase {
-    local($b, $pre, $u, $suf) = @_;
-    local($ret);
+    my($b, $u) = @_;
+    my($ret);
     $u =~ s/^\s+//;
-    if ($u =~ m%^$Url%o) {	# Non-relative URL, do nothing
-        $ret = $pre . $u . $suf;
-    } else {			# Relative URL
-	if ($u =~ m%^/%) {		# Check for "/..."
-	    $b =~ s%^(${Url}[^/]*)/.*%$1%o;	# Get hostname:port number
+    if ($u =~ m%^$Url%o || $u =~ m/^#/) {
+	## Absolute URL or scroll link; do nothing
+        $ret = $u;
+    } else {
+	## Relative URL
+	if ($u =~ /^\./) {
+	    ## "./---" or "../---": Need to remove and adjust base
+	    ## accordingly.
+	    $b =~ s/\/$//;
+	    my @a = split(/\//, $b);
+	    my $cnt = 0;
+	    while ($u =~ s|^(\.{1,2})/||) { ++$cnt  if length($1) == 2; }
+	    splice(@a, -$cnt)  if $cnt > 0;
+	    $b = join('/', @a, "");
+
+	} elsif ($u =~ m%^/%) {
+	    ## "/---": Just use hostname:port of base.
+	    $b =~ s%^(${Url}[^/]*)/.*%$1%o;
 	}
-        $ret = $pre . $b . $u . $suf;
+        $ret = $b . $u;
     }
     $ret;
 }
+
+##---------------------------------------------------------------------------
+
+sub resolve_cid {
+    my $cid = shift;
+    my $href = $readmail::Cid{$cid};
+    if (!defined($href)) { return "cid:$cid"; }
+
+    require 'mhmimetypes.pl';
+    my $filename;
+    my $decodefunc =
+	readmail::load_decoder($href->{'fields'}{'content-transfer-encoding'});
+    if (defined($decodefunc) && defined(&$decodefunc)) {
+	my $data = &$decodefunc($href->{'body'});
+	$filename = mhonarc::write_attachment(
+			    $href->{'fields'}{'content-type'}, \$data);
+    } else {
+	$filename = mhonarc::write_attachment(
+			    $href->{'fields'}{'content-type'},
+			    \$href->{'body'});
+    }
+    $href->{'filtered'} = 1;
+    push(@files, $filename); # @files defined in filter
+    $filename;
+}
+
 ##---------------------------------------------------------------------------
 
 1;

@@ -1,0 +1,113 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
+<html>
+<head>
+<title>MHonArc Resources: SUBJECTSTRIPCODE</title>
+</head>
+<body>
+
+<address>
+<a href="../resources.html#subjectstripcode">MHonArc Resource List</a>
+</address>
+
+<hr>
+<h1>SUBJECTSTRIPCODE</h1>
+
+<!-- *************************************************************** -->
+<h2>Syntax</h2>
+
+<dl>
+
+<dt><strong>Envariable</strong><dt>
+<dd><p>
+<code>M2H_SUBJECTSTRIPCODE=<var>Perl_expressions</var></code>
+</p>
+</dd>
+
+<dt><strong>Element</strong><dt>
+<dd><p><br>
+<code>&lt;SUBJECTSTRIPCODE&gt;</code><br>
+<var>Perl expressions...</var><br>
+<code>&lt;/SUBJECTSTRIPCODE&gt;</code><br>
+</p>
+</dd>
+
+<dt><strong>Command-line Option</strong><dt>
+<dd><p>
+<code>-subjectstripcode <var>Perl_expressions</var></code>
+</p>
+</dd>
+
+</dl>
+
+<!-- *************************************************************** -->
+<h2>Description</h2>
+
+<p>SUBJECTSTRIPCODE may be used to define Perl expressions to
+apply to message subjects when parsed by MHonArc.  The main use
+of the resource is to edit message subjects before stored in
+the archive.
+</p>
+<p>When defining the expressions, the subject text will be in
+the <b><tt>$_</tt></b> variable.  The value of <b><tt>$_</tt></b>
+after all expressions are evaluated is the subject MHonArc will
+use for the message.
+</p>
+
+<!-- *************************************************************** -->
+<h2>Default Setting</h2>
+
+<p>Nil
+</p>
+
+<!-- *************************************************************** -->
+<h2>Resource Variables</h2>
+
+<p>N/A
+</p>
+
+<!-- *************************************************************** -->
+<h2>Examples</h2>
+
+<p>Some mailing lists prefix all message subjects with a list
+identifier so subscribers can easily denote message from the list
+when received.  However, the prefix can clutter MHonArc indexes.
+The SUBJECTSTRIPCODE can be used to strip the prefixes before
+messages are stored in the archive.
+</p>
+<p>If the prefix is something like the following,
+</p>
+<pre>
+[LIST-NAME]:
+</pre>
+<p>the following SUBJECTSTRIPCODE setting can be used:
+</p>
+<pre>
+s/^\[LIST-NAME\]://;
+</pre>
+
+<!-- *************************************************************** -->
+<h2>Version</h2>
+
+<p>2.3.0
+</p>
+
+<!-- *************************************************************** -->
+<h2>See Also</h2>
+
+<p>
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<address>
+98/09/19 18:27:16<br>
+<img align="top" src="../monicon.gif" alt="">
+<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"
+><strong>MHonArc</strong></a><br>
+Copyright &#169; 1998, <a href="http://www.oac.uci.edu/indiv/ehood/"
+>Earl Hood</a>, <a href="mailto:earlhood@usa.net"
+>earlhood@usa.net</a><br>
+</address>
+
+</body>
+</html>

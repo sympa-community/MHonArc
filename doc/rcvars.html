@@ -1,0 +1,839 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
+<html>
+<head>
+<title>MHonArc v2.3 -- Resource Variables</title>
+</head>
+<BODY background="ssbg75.jpg"
+      text="#000000" link="#0000ee" vlink="#551a8b" alink="ff0000">
+
+<!--X-NavButtons-Start-->
+<p align=center>
+<a href="resources.html"><img src="prev.gif" border=0 alt="[Prev]"></a><a href="contacts.html"><img src="next.gif" border=0 alt="[Next]"></a><a href="mhonarc.html"><img src="up.gif" border=0 alt="[TOC]"></a><a href="faq/faq.html"><img src="faq.gif" border=0 alt="[FAQ]"></a><a href="bugs.html"><img src="bug.gif" border=0 alt="[Bugs]"></a><a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"><img src="home.gif" border=0 alt="[Home]"></a>
+</p>
+<!--X-NavButtons-End-->
+<hr>
+<h1><a name="rcvars">Resource Variables</a></h1>
+
+<p><em>Resource variables</em> are used to represent dynamic data
+in MHonArc <a href="resources.html">resources</a>.  Take the following
+<a href="resources/litemplate.html">LITEMPLATE</a> resource setting
+for example:
+    </p>
+
+<PRE>
+&lt;LiTemplate&gt;
+&lt;LI&gt;&lt;STRONG&gt;<b>$SUBJECT$</b>&lt;/STRONG&gt;
+&lt;UL&gt;&lt;LI&gt;&lt;EM&gt;From&lt;/EM&gt;: <b>$FROM$</b>&lt;/LI&gt;&lt;/UL&gt;
+&lt;/LI&gt;
+&lt;/LiTemplate&gt;
+</PRE>
+
+<p>The LITEMPLATE resource defines how each message listing is displayed
+in the main index page.  The <tt>$SUBJECT$</tt> and
+<tt>$FROM$</tt> are resource
+variables.  <tt>$SUBJECT$</tt> will get expanded to the current message's
+subject, hyperlinked to the message page.  <tt>$FROM$</tt> will be replaced with
+the message's author's name and address.
+</p>
+
+<p>Some resource variables take arguments.  Take the following
+<a href="resources/nextlink.html">NEXTLINK</a> resource setting for
+example:
+
+<pre>
+&lt;LI&gt;Next by Date:
+&lt;STRONG&gt;&lt;A HREF="<b>$MSG(NEXT)$</b>"&gt;<b>$SUBJECT(NEXT)$</b>&lt;/A&gt;&lt;/STRONG&gt;
+&lt;/LI&gt;
+</pre>
+
+<p>The resource setting uses two resource variables: <tt>$MSG$</tt> and
+<tt>$SUBJECT$</tt>.
+However, an argument is given to each resource variable
+delimited by <b><tt>(&nbsp;)</tt></b>.
+<tt>$SUBJECT$</tt> will get expanded to the current message's
+subject<SUP><a href="#note1">[*]</a></SUP>.
+With the "<tt>NEXT</tt>" argument,
+we are instructing MHonArc to use the <em>next</em> message's
+subject.  <tt>$MSG(NEXT)$</tt> will get expanded to the next message's
+filename.  Therefore, the above resource value is creating a link to
+the next message in the archive.
+</p>
+
+<table border=0 cellpadding=4>
+<tr valign=top>
+<td><strong><a name="note1">*</a> NOTE</strong></td>
+<td><p>In the two examples given, the replacement value of
+<tt>$SUBJECT$</tt> is different (excluding the variable argument difference).
+For compatibility of older versions of MHonArc, when <tt>$SUBJECT$</tt>
+is used <em>without</em> any arguments, it will be expanded to
+the current message's subject <em>hyperlinked</em> to the current message
+page.  If an argument is given to <tt>$SUBJECT$</tt>, then the variable
+will get expanded only to the subject text of the applicable message.
+<strong>NO</strong> hyperlink is automatically created.
+</p>
+</td>
+</tr>
+</table>
+
+
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="rcvar_syntax">Resource Variable Syntax</a></h2>
+
+<P>The syntax of resource variables in resources
+is as follows:
+</P>
+
+<pre>
+$<i>VARIABLE</i>[[:[<i>N</i>][U][J]][(<i>arglist</i>)]]$
+	  ^----------^^---------^ 
+         ^-----------------------^
+</pre>
+
+<p>The items in <tt>[]</tt>'s are optional.  The "<tt>^---^</tt>" are used to
+highlight the nested optional groupings.
+</p>
+
+<p>Definition of each part: </P>
+
+<dl>
+
+<dt><tt>$</tt></dt>
+<dd><p>The start of a resource variable.  Everything (including
+line breaks) up to the
+next <tt>$</tt> is part of the resource variable.
+</p>
+</dd>
+
+<dt><tt><i>VARIABLE</i></tt></dt>
+<dd><p>The name of the variable.  Variable names are case-sensitive.
+</p>
+</dd>
+
+<dt><tt>:[<i>N</i>][U][J]</tt> <em>(optional)</em></dt>
+<dd><p>The optional grouping starting with a colon are variable
+modifiers.  The definition of each modifier is as follows:
+</p>
+    <dl compact>
+    <dt><i>N</i></dt>
+    <dd>Length specification.  MHonArc will clip the expanded text
+    to <i>N</i> if the text length is greater than <i>N</i>.
+    </dd>
+    <dt><tt>U</tt></dt>
+    <dd>Treat the text as part of a URL string.  MHonArc will escape
+    any characters that are considered special in a URL.
+    </dd>
+    <dt><tt>J</tt></dt>
+    <dd>Treat the text as a JavaScript string.  MHonArc will escape
+    any quote characters so the text can be part of a JavaScript
+    string.
+    </dd>
+    </dl>
+<p></p>
+
+<dt><tt>(<i>arglist</i>)</tt> <em>(optional)</em></dt>
+<dd>An optional argument list delimited by parentheses: <tt>(&nbsp;)</tt>.
+Some resource variables can take arguments which modify how the
+variable is expanded.  If a variable can
+take more than one argument, each argument will be separated by
+a semi-colon.  For example: <tt>$MSGLOCALDATE(NEXT;%H:%M)$</tt>.
+In the example, there are two arguments to the <tt>$MSGLOCALDATE$</tt>
+variable: "<tt>NEXT</tt>" and "<tt>%H:%M</tt>".
+</dd>
+
+<dt><tt>$</tt></dt>
+<dd><p>The end of a resource variable.
+</p>
+</dd>
+</dl>
+
+<p>If an unrecognized variable is encountered, it gets replaced with an
+empty string, and a warning is generated. If a literal "<tt>$</tt>"
+is needed, use "<tt>$$</tt>".
+</p>
+
+<table border=0 cellpadding=4>
+<tr valign=top>
+<td><strong>NOTE</strong></td>
+<td><p>The
+<a href="resources/mailtourl.html">MAILTOURL</a>
+resource has
+different rules for variable expansion. If a
+variable does not exactly match the set of variables available for
+the MAILTOURL, the variable text will be taken literally
+as part of the element content. Therefore, a single "<tt>$</tt>"
+can be used to represent a "<tt>$</tt>" character.  </p>
+<p>Also,
+variables in the MAILTOURL should <STRONG>NOT</STRONG>
+have "<tt>:<i>N</i>UJ</tt>" modifiers. This will prevent the
+variables from being recognized. MHonArc will automatically
+treat the replacement value as a part of a URL string.
+</p>
+</td></tr>
+</table>
+
+
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="rcvar_index">Resource Variable Index</a></h2>
+
+<p>This sections lists all the resource variables supported by MHonArc.
+Since many resource variables can take arguments, the following notations
+are used to represent argument values:
+</p>
+
+<dl>
+
+<dt><a name="mesg_spec"><i><tt>mesg_spec</tt></i></a></dt>
+<dd><p>A message specification determines which message the variable's
+expanded will be based upon. Possible values are:
+</p>
+<table border=0>
+<tr valign=top>
+<th align=right>Value</th><th align=left>- Meaning</th>
+</tr>
+<tr valign=top>
+<td align=right><tt>CUR</tt></td><td>- Current message.</td>
+</tr>
+<tr valign=top>
+<td align=right><tt>FIRST</tt></td><td>- First message listed in main index.</td>
+</tr>
+<tr valign=top>
+<td align=right><tt>LAST</tt></td><td>- Last message listed in main index.</td>
+</tr>
+<tr valign=top>
+<td align=right><tt>NEXT</tt></td><td>- Next message by main sort order.</td>
+</tr>
+<tr valign=top>
+<td align=right><tt>PARENT</tt></td><td>- Parent message by thread.</td>
+</tr>
+<tr valign=top>
+<td align=right><tt>PREV</tt></td><td>- Previous message by main sort order.</td>
+</tr>
+<tr valign=top>
+<td align=right><tt>TFIRST</tt></td><td>- First message listed thread index.</td>
+</tr>
+<tr valign=top>
+<td align=right><tt>TLAST</tt></td><td>- Last message listed thread index.</td>
+</tr>
+<tr valign=top>
+<td align=right><tt>TNEXT</tt></td><td>- Next message by thread.</td>
+</tr>
+<tr valign=top>
+<td align=right><tt>TPREV</tt></td><td>- Previous message by thread.</td>
+</tr>
+</table>
+<p>"<tt>CUR</tt>" is the default if nothing is specified for
+<i><tt>mesg_spec</tt></i>.
+</p>
+</dd>
+
+
+<dt><a name="idx_page_spec"><i><tt>idx_page_spec</tt></i></a></dt>
+<dd><p>An index page specification denoting the index page to use
+when determing the value of the variable.  The possible values are:
+</p>
+<table border=0>
+<tr valign=top>
+<th align=right>Value</th><th align=left>- Meaning</th>
+</tr>
+<tr valign=top>
+<td align=right><tt>FIRST</tt></td><td>- First page of main index.</td>
+</tr>
+<tr valign=top>
+<td align=right><tt>LAST</tt></td><td>- Last page of main index.</td>
+</tr>
+<tr valign=top>
+<td align=right><tt>NEXT</tt></td><td>- Next page of main index.</td>
+</tr>
+<tr valign=top>
+<td align=right><tt>PREV</tt></td><td>- Previous page of main index.</td>
+</tr>
+<tr valign=top>
+<td align=right><tt>TFIRST</tt></td><td>- First page of thread index.</td>
+</tr>
+<tr valign=top>
+<td align=right><tt>TLAST</tt></td><td>- Last page of thread index.</td>
+</tr>
+<tr valign=top>
+<td align=right><tt>TNEXT</tt></td><td>- Next page of thread index.</td>
+</tr>
+<tr valign=top>
+<td align=right><tt>TPREV</tt></td><td>- Previous page of thread index.</td>
+</tr>
+</table>
+<p>If no value is given for <i><tt>idx_page_spec</tt></i>, the resource
+variable's value is undefined.
+</p>
+</dd>
+
+<dt><a name="time_fmt_str"><i><tt>time_fmt_str</tt></i></a></dt>
+<dd><p>A time format string specifies how a date/time will be
+printed for a date/time related variable.  The syntax of the format
+string is the same as the conversion specification as defined in
+the <a href="resources/gmtdatefmt.html">GMTDATEFMT</a> and
+<a href="resources/localdatefmt.html">LOCALDATEFMT</a> resources.
+</p>
+</dd>
+
+</dl>
+
+<h3><a name="variables">Variables</a></h3>
+
+<!--X-Variable-Index-Start-->
+<dl>
+<dt><strong><a name="A_ATTR"><tt>$A_ATTR$</tt></a></strong></dt>
+<dd><table border=0>
+<tr valign=top>
+<td align=right><b>Arguments:</b></td>
+<td>N/A</td>
+</tr>
+<tr valign=top>
+<td align=right><b>Description:</b></td>
+<td>The <tt>NAME</tt> and <tt>HREF</tt> attributes to use in an anchor to link to the archived message. The <tt>NAME</tt> attribute links the messages to the index page.</td>
+</tr>
+</table><br></dd>
+<dt><strong><a name="A_HREF"><tt>$A_HREF$</tt></a></strong></dt>
+<dd><table border=0>
+<tr valign=top>
+<td align=right><b>Arguments:</b></td>
+<td>N/A</td>
+</tr>
+<tr valign=top>
+<td align=right><b>Description:</b></td>
+<td>The <tt>HREF</tt> attribute to use in an anchor to link to the archived message.</td>
+</tr>
+</table><br></dd>
+<dt><strong><a name="A_NAME"><tt>$A_NAME$</tt></a></strong></dt>
+<dd><table border=0>
+<tr valign=top>
+<td align=right><b>Arguments:</b></td>
+<td>N/A</td>
+</tr>
+<tr valign=top>
+<td align=right><b>Description:</b></td>
+<td>The <tt>NAME</tt> attribute to use in an anchor for messages to link to the index page.</td>
+</tr>
+</table><br></dd>
+<dt><strong><a name="BUTTON"><tt>$BUTTON$</tt></a></strong></dt>
+<dd><table border=0>
+<tr valign=top>
+<td align=right><b>Arguments:</b></td>
+<td><tt><i><a href="#mesg_spec">mesg_spec</a></i></tt></td>
+</tr>
+<tr valign=top>
+<td align=right><b>Description:</b></td>
+<td>Button markup linking to a message.</td>
+</tr>
+</table><br></dd>
+<dt><strong><a name="DATE"><tt>$DATE$</tt></a></strong></dt>
+<dd><table border=0>
+<tr valign=top>
+<td align=right><b>Arguments:</b></td>
+<td><tt><i><a href="#mesg_spec">mesg_spec</a></i></tt></td>
+</tr>
+<tr valign=top>
+<td align=right><b>Description:</b></td>
+<td>The date of the message.</td>
+</tr>
+</table><br></dd>
+<dt><strong><a name="DDMMYYYY"><tt>$DDMMYYYY$</tt></a></strong></dt>
+<dd><table border=0>
+<tr valign=top>
+<td align=right><b>Arguments:</b></td>
+<td><tt><i><a href="#mesg_spec">mesg_spec</a></i></tt></td>
+</tr>
+<tr valign=top>
+<td align=right><b>Description:</b></td>
+<td>Message date in dd/mm/yyyy format.</td>
+</tr>
+</table><br></dd>
+<dt><strong><a name="DOCURL"><tt>$DOCURL$</tt></a></strong></dt>
+<dd><table border=0>
+<tr valign=top>
+<td align=right><b>Arguments:</b></td>
+<td>N/A</td>
+</tr>
+<tr valign=top>
+<td align=right><b>Description:</b></td>
+<td>URL to documentation.</td>
+</tr>
+</table><br></dd>
+<dt><strong><a name="FIRSTPG"><tt>$FIRSTPG$</tt></a></strong></dt>
+<dd><table border=0>
+<tr valign=top>
+<td align=right><b>Arguments:</b></td>
+<td>N/A</td>
+</tr>
+<tr valign=top>
+<td align=right><b>Description:</b></td>
+<td>Filename of first page of main index.</td>
+</tr>
+</table><br></dd>
+<dt><strong><a name="FROM"><tt>$FROM$</tt></a></strong></dt>
+<dd><table border=0>
+<tr valign=top>
+<td align=right><b>Arguments:</b></td>
+<td><tt><i><a href="#mesg_spec">mesg_spec</a></i></tt></td>
+</tr>
+<tr valign=top>
+<td align=right><b>Description:</b></td>
+<td>The complete text in the <tt>From:</tt> field of the message.</td>
+</tr>
+</table><br></dd>
+<dt><strong><a name="FROMADDR"><tt>$FROMADDR$</tt></a></strong></dt>
+<dd><table border=0>
+<tr valign=top>
+<td align=right><b>Arguments:</b></td>
+<td><tt><i><a href="#mesg_spec">mesg_spec</a></i></tt></td>
+</tr>
+<tr valign=top>
+<td align=right><b>Description:</b></td>
+<td>The e-mail address in the <tt>From:</tt> field of the message.</td>
+</tr>
+</table><br></dd>
+<dt><strong><a name="FROMNAME"><tt>$FROMNAME$</tt></a></strong></dt>
+<dd><table border=0>
+<tr valign=top>
+<td align=right><b>Arguments:</b></td>
+<td><tt><i><a href="#mesg_spec">mesg_spec</a></i></tt></td>
+</tr>
+<tr valign=top>
+<td align=right><b>Description:</b></td>
+<td>The human name of the person in the <tt>From:</tt> field of the message. If no human name is found, the username specified in the e-mail address is used.</td>
+</tr>
+</table><br></dd>
+<dt><strong><a name="GMTDATE"><tt>$GMTDATE$</tt></a></strong></dt>
+<dd><table border=0>
+<tr valign=top>
+<td align=right><b>Arguments:</b></td>
+<td>N/A</td>
+</tr>
+<tr valign=top>
+<td align=right><b>Description:</b></td>
+<td>Current GMT date.</td>
+</tr>
+</table><br></dd>
+<dt><strong><a name="ICON"><tt>$ICON$</tt></a></strong></dt>
+<dd><table border=0>
+<tr valign=top>
+<td align=right><b>Arguments:</b></td>
+<td><tt><i><a href="#mesg_spec">mesg_spec</a></i></tt></td>
+</tr>
+<tr valign=top>
+<td align=right><b>Description:</b></td>
+<td>The context-type sensistive icon.</td>
+</tr>
+</table><br></dd>
+<dt><strong><a name="ICONURL"><tt>$ICONURL$</tt></a></strong></dt>
+<dd><table border=0>
+<tr valign=top>
+<td align=right><b>Arguments:</b></td>
+<td><tt><i><a href="#mesg_spec">mesg_spec</a></i></tt></td>
+</tr>
+<tr valign=top>
+<td align=right><b>Description:</b></td>
+<td>The URL to the context-type sensistive icon.</td>
+</tr>
+</table><br></dd>
+<dt><strong><a name="IDXFNAME"><tt>$IDXFNAME$</tt></a></strong></dt>
+<dd><table border=0>
+<tr valign=top>
+<td align=right><b>Arguments:</b></td>
+<td>N/A</td>
+</tr>
+<tr valign=top>
+<td align=right><b>Description:</b></td>
+<td>Filename of main index page.</td>
+</tr>
+</table><br></dd>
+<dt><strong><a name="IDXLABEL"><tt>$IDXLABEL$</tt></a></strong></dt>
+<dd><table border=0>
+<tr valign=top>
+<td align=right><b>Arguments:</b></td>
+<td>N/A</td>
+</tr>
+<tr valign=top>
+<td align=right><b>Description:</b></td>
+<td>Label for main index page.</td>
+</tr>
+</table><br></dd>
+<dt><strong><a name="IDXPREFIX"><tt>$IDXPREFIX$</tt></a></strong></dt>
+<dd><table border=0>
+<tr valign=top>
+<td align=right><b>Arguments:</b></td>
+<td>N/A</td>
+</tr>
+<tr valign=top>
+<td align=right><b>Description:</b></td>
+<td>Prefix of filenames of main index pages.</td>
+</tr>
+</table><br></dd>
+<dt><strong><a name="IDXSIZE"><tt>$IDXSIZE$</tt></a></strong></dt>
+<dd><table border=0>
+<tr valign=top>
+<td align=right><b>Arguments:</b></td>
+<td>N/A</td>
+</tr>
+<tr valign=top>
+<td align=right><b>Description:</b></td>
+<td>Max number of messages that may be listed in index page.</td>
+</tr>
+</table><br></dd>
+<dt><strong><a name="IDXTITLE"><tt>$IDXTITLE$</tt></a></strong></dt>
+<dd><table border=0>
+<tr valign=top>
+<td align=right><b>Arguments:</b></td>
+<td>N/A</td>
+</tr>
+<tr valign=top>
+<td align=right><b>Description:</b></td>
+<td>The title of the main index page.</td>
+</tr>
+</table><br></dd>
+<dt><strong><a name="LASTPG"><tt>$LASTPG$</tt></a></strong></dt>
+<dd><table border=0>
+<tr valign=top>
+<td align=right><b>Arguments:</b></td>
+<td>N/A</td>
+</tr>
+<tr valign=top>
+<td align=right><b>Description:</b></td>
+<td>Filename of last page in of main index.</td>
+</tr>
+</table><br></dd>
+<dt><strong><a name="LINK"><tt>$LINK$</tt></a></strong></dt>
+<dd><table border=0>
+<tr valign=top>
+<td align=right><b>Arguments:</b></td>
+<td><tt><i><a href="#mesg_spec">mesg_spec</a></i></tt></td>
+</tr>
+<tr valign=top>
+<td align=right><b>Description:</b></td>
+<td>Link markup linking to a message.</td>
+</tr>
+</table><br></dd>
+<dt><strong><a name="LOCALDATE"><tt>$LOCALDATE$</tt></a></strong></dt>
+<dd><table border=0>
+<tr valign=top>
+<td align=right><b>Arguments:</b></td>
+<td>N/A</td>
+</tr>
+<tr valign=top>
+<td align=right><b>Description:</b></td>
+<td>Current local date.</td>
+</tr>
+</table><br></dd>
+<dt><strong><a name="MMDDYYYY"><tt>$MMDDYYYY$</tt></a></strong></dt>
+<dd><table border=0>
+<tr valign=top>
+<td align=right><b>Arguments:</b></td>
+<td><tt><i><a href="#mesg_spec">mesg_spec</a></i></tt></td>
+</tr>
+<tr valign=top>
+<td align=right><b>Description:</b></td>
+<td>Message date in mm/dd/yyyy format.</td>
+</tr>
+</table><br></dd>
+<dt><strong><a name="MSG"><tt>$MSG$</tt></a></strong></dt>
+<dd><table border=0>
+<tr valign=top>
+<td align=right><b>Arguments:</b></td>
+<td><tt><i><a href="#mesg_spec">mesg_spec</a></i></tt></td>
+</tr>
+<tr valign=top>
+<td align=right><b>Description:</b></td>
+<td>Filename of message.</td>
+</tr>
+</table><br></dd>
+<dt><strong><a name="MSGGMTDATE"><tt>$MSGGMTDATE$</tt></a></strong></dt>
+<dd><table border=0>
+<tr valign=top>
+<td align=right><b>Arguments:</b></td>
+<td><tt><i><a href="#mesg_spec">mesg_spec</a></i></tt><br><tt><i><a href="#mesg_spec">mesg_spec</a></i>;<i><a href="#time_fmt_str">time_fmt_str</a></i></tt></td>
+</tr>
+<tr valign=top>
+<td align=right><b>Description:</b></td>
+<td>GMT date of current message.</td>
+</tr>
+</table><br></dd>
+<dt><strong><a name="MSGID"><tt>$MSGID$</tt></a></strong></dt>
+<dd><table border=0>
+<tr valign=top>
+<td align=right><b>Arguments:</b></td>
+<td><tt><i><a href="#mesg_spec">mesg_spec</a></i></tt></td>
+</tr>
+<tr valign=top>
+<td align=right><b>Description:</b></td>
+<td>The message-id of the message.</td>
+</tr>
+</table><br></dd>
+<dt><strong><a name="MSGLOCALDATE"><tt>$MSGLOCALDATE$</tt></a></strong></dt>
+<dd><table border=0>
+<tr valign=top>
+<td align=right><b>Arguments:</b></td>
+<td><tt><i><a href="#mesg_spec">mesg_spec</a></i></tt><br><tt><i><a href="#mesg_spec">mesg_spec</a></i>;<i><a href="#time_fmt_str">time_fmt_str</a></i></tt></td>
+</tr>
+<tr valign=top>
+<td align=right><b>Description:</b></td>
+<td>Local date of current message.</td>
+</tr>
+</table><br></dd>
+<dt><strong><a name="MSGNUM"><tt>$MSGNUM$</tt></a></strong></dt>
+<dd><table border=0>
+<tr valign=top>
+<td align=right><b>Arguments:</b></td>
+<td><tt><i><a href="#mesg_spec">mesg_spec</a></i></tt></td>
+</tr>
+<tr valign=top>
+<td align=right><b>Description:</b></td>
+<td>The message number assigned to the message by MHonArc (includes leading zeros).</td>
+</tr>
+</table><br></dd>
+<dt><strong><a name="MSGPREFIX"><tt>$MSGPREFIX$</tt></a></strong></dt>
+<dd><table border=0>
+<tr valign=top>
+<td align=right><b>Arguments:</b></td>
+<td>N/A</td>
+</tr>
+<tr valign=top>
+<td align=right><b>Description:</b></td>
+<td>Filename prefix for message files.</td>
+</tr>
+</table><br></dd>
+<dt><strong><a name="NUMFOLUP"><tt>$NUMFOLUP$</tt></a></strong></dt>
+<dd><table border=0>
+<tr valign=top>
+<td align=right><b>Arguments:</b></td>
+<td><tt><i><a href="#mesg_spec">mesg_spec</a></i></tt></td>
+</tr>
+<tr valign=top>
+<td align=right><b>Description:</b></td>
+<td>Number of explicit follow-ups to the message.</td>
+</tr>
+</table><br></dd>
+<dt><strong><a name="NUMOFIDXMSG"><tt>$NUMOFIDXMSG$</tt></a></strong></dt>
+<dd><table border=0>
+<tr valign=top>
+<td align=right><b>Arguments:</b></td>
+<td>N/A</td>
+</tr>
+<tr valign=top>
+<td align=right><b>Description:</b></td>
+<td>Number of message listed.</td>
+</tr>
+</table><br></dd>
+<dt><strong><a name="NUMOFMSG"><tt>$NUMOFMSG$</tt></a></strong></dt>
+<dd><table border=0>
+<tr valign=top>
+<td align=right><b>Arguments:</b></td>
+<td>N/A</td>
+</tr>
+<tr valign=top>
+<td align=right><b>Description:</b></td>
+<td>Number of messages in the archive.</td>
+</tr>
+</table><br></dd>
+<dt><strong><a name="NUMOFPAGES"><tt>$NUMOFPAGES$</tt></a></strong></dt>
+<dd><table border=0>
+<tr valign=top>
+<td align=right><b>Arguments:</b></td>
+<td>N/A</td>
+</tr>
+<tr valign=top>
+<td align=right><b>Description:</b></td>
+<td>Number of index pages.</td>
+</tr>
+</table><br></dd>
+<dt><strong><a name="ORDNUM"><tt>$ORDNUM$</tt></a></strong></dt>
+<dd><table border=0>
+<tr valign=top>
+<td align=right><b>Arguments:</b></td>
+<td><tt><i><a href="#mesg_spec">mesg_spec</a></i></tt></td>
+</tr>
+<tr valign=top>
+<td align=right><b>Description:</b></td>
+<td>The current listing number of the message.</td>
+</tr>
+</table><br></dd>
+<dt><strong><a name="OUTDIR"><tt>$OUTDIR$</tt></a></strong></dt>
+<dd><table border=0>
+<tr valign=top>
+<td align=right><b>Arguments:</b></td>
+<td>N/A</td>
+</tr>
+<tr valign=top>
+<td align=right><b>Description:</b></td>
+<td>Pathname of archive.</td>
+</tr>
+</table><br></dd>
+<dt><strong><a name="PAGENUM"><tt>$PAGENUM$</tt></a></strong></dt>
+<dd><table border=0>
+<tr valign=top>
+<td align=right><b>Arguments:</b></td>
+<td>N/A</td>
+</tr>
+<tr valign=top>
+<td align=right><b>Description:</b></td>
+<td>Current index page number.</td>
+</tr>
+</table><br></dd>
+<dt><strong><a name="PG"><tt>$PG$</tt></a></strong></dt>
+<dd><table border=0>
+<tr valign=top>
+<td align=right><b>Arguments:</b></td>
+<td><tt><i><a href="#page_spec">mesg_spec</a></i></tt></td>
+</tr>
+<tr valign=top>
+<td align=right><b>Description:</b></td>
+<td>Filename of an index page.</td>
+</tr>
+</table><br></dd>
+<dt><strong><a name="PGLINK"><tt>$PGLINK$</tt></a></strong></dt>
+<dd><table border=0>
+<tr valign=top>
+<td align=right><b>Arguments:</b></td>
+<td><tt><i><a href="#page_spec">mesg_spec</a></i></tt></td>
+</tr>
+<tr valign=top>
+<td align=right><b>Description:</b></td>
+<td>Markup linking to a main index page.</td>
+</tr>
+</table><br></dd>
+<dt><strong><a name="PROG"><tt>$PROG$</tt></a></strong></dt>
+<dd><table border=0>
+<tr valign=top>
+<td align=right><b>Arguments:</b></td>
+<td>N/A</td>
+</tr>
+<tr valign=top>
+<td align=right><b>Description:</b></td>
+<td>Program name</td>
+</tr>
+</table><br></dd>
+<dt><strong><a name="SUBJECT"><tt>$SUBJECT$</tt></a></strong></dt>
+<dd><table border=0>
+<tr valign=top>
+<td align=right><b>Arguments:</b></td>
+<td><tt><i><a href="#mesg_spec">mesg_spec</a></i></tt></td>
+</tr>
+<tr valign=top>
+<td align=right><b>Description:</b></td>
+<td>The subject text of the message wrapped in an anchor element that hyperlinks to the message.</td>
+</tr>
+</table><br></dd>
+<dt><strong><a name="SUBJECTNA"><tt>$SUBJECTNA$</tt></a></strong></dt>
+<dd><table border=0>
+<tr valign=top>
+<td align=right><b>Arguments:</b></td>
+<td><tt><i><a href="#mesg_spec">mesg_spec</a></i></tt></td>
+</tr>
+<tr valign=top>
+<td align=right><b>Description:</b></td>
+<td>The subject text of the message without the anchor element.</td>
+</tr>
+</table><br></dd>
+<dt><strong><a name="TIDXFNAME"><tt>$TIDXFNAME$</tt></a></strong></dt>
+<dd><table border=0>
+<tr valign=top>
+<td align=right><b>Arguments:</b></td>
+<td>N/A</td>
+</tr>
+<tr valign=top>
+<td align=right><b>Description:</b></td>
+<td>Filename of thread index page.</td>
+</tr>
+</table><br></dd>
+<dt><strong><a name="TIDXLABEL"><tt>$TIDXLABEL$</tt></a></strong></dt>
+<dd><table border=0>
+<tr valign=top>
+<td align=right><b>Arguments:</b></td>
+<td>N/A</td>
+</tr>
+<tr valign=top>
+<td align=right><b>Description:</b></td>
+<td>Label for thread index page.</td>
+</tr>
+</table><br></dd>
+<dt><strong><a name="TIDXPREFIX"><tt>$TIDXPREFIX$</tt></a></strong></dt>
+<dd><table border=0>
+<tr valign=top>
+<td align=right><b>Arguments:</b></td>
+<td>N/A</td>
+</tr>
+<tr valign=top>
+<td align=right><b>Description:</b></td>
+<td>Prefix of filenames of thread index pages.</td>
+</tr>
+</table><br></dd>
+<dt><strong><a name="TIDXTITLE"><tt>$TIDXTITLE$</tt></a></strong></dt>
+<dd><table border=0>
+<tr valign=top>
+<td align=right><b>Arguments:</b></td>
+<td>N/A</td>
+</tr>
+<tr valign=top>
+<td align=right><b>Description:</b></td>
+<td>Title of thread index.</td>
+</tr>
+</table><br></dd>
+<dt><strong><a name="TSLICE"><tt>$TSLICE$</tt></a></strong></dt>
+<dd><table border=0>
+<tr valign=top>
+<td align=right><b>Arguments:</b></td>
+<td>N/A</td>
+</tr>
+<tr valign=top>
+<td align=right><b>Description:</b></td>
+<td>A <em>slice</em> of the thread listing relative to the current message.  Size of slice determined by the TSLICE resource.</td>
+</tr>
+</table><br></dd>
+<dt><strong><a name="VERSION"><tt>$VERSION$</tt></a></strong></dt>
+<dd><table border=0>
+<tr valign=top>
+<td align=right><b>Arguments:</b></td>
+<td>N/A</td>
+</tr>
+<tr valign=top>
+<td align=right><b>Description:</b></td>
+<td>Program version.</td>
+</tr>
+</table><br></dd>
+<dt><strong><a name="YYYYMMDD"><tt>$YYYYMMDD$</tt></a></strong></dt>
+<dd><table border=0>
+<tr valign=top>
+<td align=right><b>Arguments:</b></td>
+<td>N/A</td>
+</tr>
+<tr valign=top>
+<td align=right><b>Description:</b></td>
+<td>Message date in yyyy/mm/dd format.</td>
+</tr>
+</table><br></dd>
+</dl>
+<!--X-Variable-Index-End-->
+
+<!-- *************************************************************** -->
+<hr>
+<!--X-NavButtons-Start-->
+<p align=center>
+<a href="resources.html"><img src="prev.gif" border=0 alt="[Prev]"></a><a href="contacts.html"><img src="next.gif" border=0 alt="[Next]"></a><a href="mhonarc.html"><img src="up.gif" border=0 alt="[TOC]"></a><a href="faq/faq.html"><img src="faq.gif" border=0 alt="[FAQ]"></a><a href="bugs.html"><img src="bug.gif" border=0 alt="[Bugs]"></a><a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"><img src="home.gif" border=0 alt="[Home]"></a>
+</p>
+<!--X-NavButtons-End-->
+
+<!-- *************************************************************** -->
+<hr>
+<address>
+98/10/24 17:31:05<br>
+<img align="top" src="monicon.gif" alt="">
+<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"
+><strong>MHonArc</strong></a><br>
+Copyright &#169; 1998, <a href="http://www.oac.uci.edu/indiv/ehood/"
+>Earl Hood</a>, <a href="mailto:earlhood@usa.net"
+>earlhood@usa.net</a><br>
+</address>
+
+</body>
+</html>

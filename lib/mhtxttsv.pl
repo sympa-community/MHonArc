@@ -1,8 +1,8 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	@(#) mhtxttsv.pl 2.1 98/03/02 20:25:01
+##	@(#) mhtxttsv.pl 2.2 98/08/10 23:53:24
 ##  Author:
-##      Earl Hood       ehood@medusa.acs.uci.edu
+##      Earl Hood       earlhood@usa.net
 ##  Description:
 ##	Library defines routine to filter text/tab-separated-values body
 ##	parts to HTML
@@ -13,7 +13,7 @@
 ##              </MIMEFILTERS>
 ##---------------------------------------------------------------------------##
 ##    MHonArc -- Internet mail-to-HTML converter
-##    Copyright (C) 1998	Earl Hood, ehood@medusa.acs.uci.edu
+##    Copyright (C) 1998	Earl Hood, earlhood@usa.net
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by

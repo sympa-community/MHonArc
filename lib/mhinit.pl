@@ -1,13 +1,13 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	@(#) mhinit.pl 2.2 98/03/03 14:30:12
+##	@(#) mhinit.pl 2.9 98/10/10 21:31:25
 ##  Author:
-##      Earl Hood       ehood@medusa.acs.uci.edu
+##      Earl Hood       earlhood@usa.net
 ##  Description:
 ##      Initialization stuff for MHonArc.
 ##---------------------------------------------------------------------------##
 ##    MHonArc -- Internet mail-to-HTML converter
-##    Copyright (C) 1995-1998	Earl Hood, ehood@medusa.acs.uci.edu
+##    Copyright (C) 1995-1998	Earl Hood, earlhood@usa.net
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by
@@ -28,6 +28,8 @@
 package mhonarc;
 
 ##---------------------------------------------------------------------------##
+
+sub mhinit_vars {
 
 ##	The %Zone array should be augmented to contain all timezone
 ##	specifications with the positive/negative hour offset from UTC
@@ -116,9 +118,10 @@ $LastMsgNum	= -1;	# Message number of last message
 %AddIndex 	= ();	# Flags for messages that must be written
 
 @MListOrder	= ();	# List of indexes in order printed on main index
+%Index2Mloc	= ();	# Map index to position in main index
 @TListOrder	= ();	# List of indexes in order printed on thread index
 %Index2Tloc	= ();	# Map index to position in thread index
-%Index2Mloc	= ();	# Map index to position in main index
+%ThreadLevel	= ();	# Map index to thread level
 
 %UDerivedFile	= ();	# Key = filename template.  Value = content template
 
@@ -148,6 +151,7 @@ $SLOW		= 0;	# Save memory flag
 $NumOfPages	= 0;	# Number of index pages
 $IdxMinPg	= -1;	# Starting page of index for updating
 $TIdxMinPg	= -1;	# Starting page of thread index for updating
+$IdxPageNum	= 0;	# Page to output if genidx
 $DBPathName	= '';	# Full pathname of database file
 
 ##----------------------------------------------------------------------
@@ -155,29 +159,32 @@ $DBPathName	= '';	# Full pathname of database file
 ##----------------------------------------------------------------------
 ##	Default filters
 ##
-%readmail'MIMEFilters = (
+%readmail::MIMEFilters = (
     # Content-type			Filter
     #-------------------------------------------------------------------
-    "application/x-patch",		"m2h_text_plain'filter",
-    "message/partial",   		"m2h_text_plain'filter",
-    "text/enriched",    		"m2h_text_enriched'filter",
-    "text/html",			"m2h_text_html'filter",
-    "text/plain",			"m2h_text_plain'filter",
-    "text/richtext",    		"m2h_text_enriched'filter",
-    "text/setext",			"m2h_text_setext'filter",
-    "text/tab-separated-values",	"m2h_text_tsv'filter",
-    "text/x-html",			"m2h_text_html'filter",
-    "text/x-setext",    		"m2h_text_setext'filter",
+    "application/x-patch",		"m2h_text_plain::filter",
+    "message/delivery-status",  	"m2h_text_plain::filter",
+    "message/partial",   		"m2h_text_plain::filter",
+    "text/enriched",    		"m2h_text_enriched::filter",
+    "text/html",			"m2h_text_html::filter",
+    "text/plain",			"m2h_text_plain::filter",
+    "text/richtext",    		"m2h_text_enriched::filter",
+    "text/setext",			"m2h_text_setext::filter",
+    "text/tab-separated-values",	"m2h_text_tsv::filter",
+    "text/x-html",			"m2h_text_html::filter",
+    "text/x-setext",    		"m2h_text_setext::filter",
 
-    "application/*",		 	"m2h_external'filter",
-    "audio/*",				"m2h_external'filter",
-    "chemical/*",  			"m2h_external'filter",
-    "image/*",  			"m2h_external'filter",
-    "model/*",  			"m2h_external'filter",
-    "text/*",   			"m2h_text_plain'filter",
-    "video/*",  			"m2h_external'filter",
+    "application/*",		 	"m2h_external::filter",
+    "audio/*",				"m2h_external::filter",
+    "chemical/*",  			"m2h_external::filter",
+    "image/*",  			"m2h_external::filter",
+    "model/*",  			"m2h_external::filter",
+    "text/*",   			"m2h_text_plain::filter",
+    "video/*",  			"m2h_external::filter",
+
+    "x-sun-attachment",			"m2h_text_plain::filter",
 );
-%readmail'MIMEFiltersSrc = (
+%readmail::MIMEFiltersSrc = (
     # Content-type			Filter
     #-------------------------------------------------------------------
     "application/x-patch",		"mhtxtplain.pl",
@@ -198,11 +205,13 @@ $DBPathName	= '';	# Full pathname of database file
     "model/*",  			"mhexternal.pl",
     "text/*",   			"mhtxtplain.pl",
     "video/*",  			"mhexternal.pl",
+
+    "x-sun-attachment",			"mhtxtplain.pl",
 );
 
 ##  Default filter arguments
 ##
-%readmail'MIMEFiltersArgs = (
+%readmail::MIMEFiltersArgs = (
     # Content-type			Arguments
     #-------------------------------------------------------------------
     "image/gif",			"inline",
@@ -213,24 +222,24 @@ $DBPathName	= '';	# Full pathname of database file
 
 ##  Charset filters
 ##
-%readmail'MIMECharSetConverters = (
+%readmail::MIMECharSetConverters = (
     # Character set			Converter Function
     #-------------------------------------------------------------------
-    "plain",     			"mhonarc'htmlize",
-    "us-ascii",   			"mhonarc'htmlize",
-    "iso-8859-1",   			"mhonarc'htmlize",
-    "iso-8859-2",   			"iso_8859'str2sgml",
-    "iso-8859-3",   			"iso_8859'str2sgml",
-    "iso-8859-4",   			"iso_8859'str2sgml",
-    "iso-8859-5",   			"iso_8859'str2sgml",
-    "iso-8859-6",   			"iso_8859'str2sgml",
-    "iso-8859-7",   			"iso_8859'str2sgml",
-    "iso-8859-8",   			"iso_8859'str2sgml",
-    "iso-8859-9",   			"iso_8859'str2sgml",
-    "iso-8859-10",   			"iso_8859'str2sgml",
+    "plain",     			"mhonarc::htmlize",
+    "us-ascii",   			"mhonarc::htmlize",
+    "iso-8859-1",   			"mhonarc::htmlize",
+    "iso-8859-2",   			"iso_8859::str2sgml",
+    "iso-8859-3",   			"iso_8859::str2sgml",
+    "iso-8859-4",   			"iso_8859::str2sgml",
+    "iso-8859-5",   			"iso_8859::str2sgml",
+    "iso-8859-6",   			"iso_8859::str2sgml",
+    "iso-8859-7",   			"iso_8859::str2sgml",
+    "iso-8859-8",   			"iso_8859::str2sgml",
+    "iso-8859-9",   			"iso_8859::str2sgml",
+    "iso-8859-10",   			"iso_8859::str2sgml",
     "default",     			"-ignore-",
 );
-%readmail'MIMECharSetConvertersSrc = (
+%readmail::MIMECharSetConvertersSrc = (
     # Character set			Converter Function
     #-------------------------------------------------------------------
     "plain",     			undef,
@@ -253,7 +262,7 @@ $DBPathName	= '';	# Full pathname of database file
 ##------------------------------------------------------------------------
 
 ##  Variable to hold function for converting message header text.
-$MHeadCnvFunc	= "mhonarc'htmlize";
+$MHeadCnvFunc	= "mhonarc::htmlize";
 
 ##  Regexp for variable detection
 $VarExp = '\$([^\$]*)\$';
@@ -263,17 +272,19 @@ $AddrExp = q%[^()<>@,;:\/\s"'&|]+@[^()<>@,;:\/\s"'&|]+%;
 
 ##	Grab environment variable settings
 ##
+$AFS	   = $ENV{'M2H_AFS'}        || 0;
+$ANNOTATE  = $ENV{'M2H_ANNOTATE'}   || 0;
 $DBFILE    = $ENV{'M2H_DBFILE'}     || 
 	     (($MSDOS || $VMS) ? "mhonarc.db": ".mhonarc.db");
 $DOCURL    = $ENV{'M2H_DOCURL'}     ||
 	     'http://www.oac.uci.edu/indiv/ehood/mhonarc.html';
 $FOOTER    = $ENV{'M2H_FOOTER'}     || "";
 $HEADER    = $ENV{'M2H_HEADER'}     || "";
-$IDXNAME   = "";	# Set in get_cli_opts()
+$IDXNAME   = "";	# Set in get_resources()
 $IDXPREFIX = $ENV{'M2H_IDXPREFIX'}  || "mail";
 $TIDXPREFIX= $ENV{'M2H_TIDXPREFIX'} || "thrd";
 $IDXSIZE   = $ENV{'M2H_IDXSIZE'}    || 0;
-$TIDXNAME  = "";	# Set in get_cli_opts()
+$TIDXNAME  = "";	# Set in get_resources()
 $OUTDIR    = $ENV{'M2H_OUTDIR'}     || $CURDIR;
 $FMTFILE   = $ENV{'M2H_RCFILE'}     || "";
 $TTITLE    = $ENV{'M2H_TTITLE'}     || "Mail Thread Index";
@@ -294,44 +305,49 @@ $DefRcName = $ENV{'M2H_DEFRCNAME'}  ||
 	     (($MSDOS || $VMS) ? "mhonarc.rc": ".mhonarc.rc");
 $GzipExe   = $ENV{'M2H_GZIPEXE'}    || 'gzip';
 
-$GMTDateFmt	= $ENV{'M2H_GMTDATEFMT'}   || '';
-$LocalDateFmt	= $ENV{'M2H_LOCALDATEFMT'} || '';
-$ExpireDate	= $ENV{'M2H_EXPIREDATE'}   || '';
-    $ExpireDateTime = 0;
-$ExpireTime	= $ENV{'M2H_EXPIREAGE'}    || 0;
+$GMTDateFmt	= $ENV{'M2H_GMTDATEFMT'}   	|| '';
+$LocalDateFmt	= $ENV{'M2H_LOCALDATEFMT'} 	|| '';
+$ExpireDate	= $ENV{'M2H_EXPIREDATE'}   	|| '';
+$ExpireDateTime = 0;
+$ExpireTime	= $ENV{'M2H_EXPIREAGE'}    	|| 0;
 
 $MsgGMTDateFmt	= $ENV{'M2H_MSGGMTDATEFMT'}   	|| '';
 $MsgLocalDateFmt= $ENV{'M2H_MSGLOCALDATEFMT'}	|| '';
 
-$CONLEN      = defined($ENV{'M2H_CONLEN'}) ? $ENV{'M2H_CONLEN'} : 0;
-$MAIN        = defined($ENV{'M2H_MAIN'}) ? $ENV{'M2H_MAIN'} : 1;
-$MULTIIDX    = defined($ENV{'M2H_MULTIPG'}) ? $ENV{'M2H_MULTIPG'} : 0;
-$MODTIME     = defined($ENV{'M2H_MODTIME'}) ? $ENV{'M2H_MODTIME'} : 0;
-$NODOC       = defined($ENV{'M2H_DOC'}) ? !$ENV{'M2H_DOC'} : 0;
-$NOMAILTO    = defined($ENV{'M2H_MAILTO'}) ? !$ENV{'M2H_MAILTO'} : 0;
-$NONEWS      = defined($ENV{'M2H_NEWS'}) ? !$ENV{'M2H_NEWS'} : 0;
-$NOSORT      = defined($ENV{'M2H_SORT'}) ? !$ENV{'M2H_SORT'} : 0;
-$NOURL       = defined($ENV{'M2H_URL'}) ? !$ENV{'M2H_SORT'} : 0;
-$REVSORT     = defined($ENV{'M2H_REVSORT'}) ? $ENV{'M2H_REVSORT'} : 0;
-$SUBSORT     = defined($ENV{'M2H_SUBSORT'}) ? $ENV{'M2H_SUBSORT'} : 0;
-$AUTHSORT    = defined($ENV{'M2H_AUTHSORT'}) ? $ENV{'M2H_AUTHSORT'} : 0;
-$THREAD      = defined($ENV{'M2H_THREAD'}) ? $ENV{'M2H_THREAD'} : 1;
-$TNOSORT     = defined($ENV{'M2H_TSORT'}) ? !$ENV{'M2H_TSORT'} : 0;
-$TREVERSE    = defined($ENV{'M2H_TREVERSE'}) ? $ENV{'M2H_TREVERSE'} : 0;
-$TSUBSORT    = defined($ENV{'M2H_TSUBSORT'}) ? $ENV{'M2H_TSUBSORT'} : 0;
-$GzipFiles   = defined($ENV{'M2H_GZIPFILES'}) ? $ENV{'M2H_GZIPFILES'} : 0;
-$GzipLinks   = defined($ENV{'M2H_GZIPLINKS'}) ? $ENV{'M2H_GZIPLINKS'} : 0;
+$NoteDir	= $ENV{'M2H_NOTEDIR'} 		|| 'notes';
+
+$CONLEN      = defined($ENV{'M2H_CONLEN'})    ?  $ENV{'M2H_CONLEN'}    : 0;
+$MAIN        = defined($ENV{'M2H_MAIN'})      ?  $ENV{'M2H_MAIN'}      : 1;
+$MULTIIDX    = defined($ENV{'M2H_MULTIPG'})   ?  $ENV{'M2H_MULTIPG'}   : 0;
+$MODTIME     = defined($ENV{'M2H_MODTIME'})   ?  $ENV{'M2H_MODTIME'}   : 0;
+$NODOC       = defined($ENV{'M2H_DOC'})       ? !$ENV{'M2H_DOC'}       : 0;
+$NOMAILTO    = defined($ENV{'M2H_MAILTO'})    ? !$ENV{'M2H_MAILTO'}    : 0;
+$NoMsgPgs    = defined($ENV{'M2H_MSGPGS'})    ? !$ENV{'M2H_MSGPGS'}    : 0;
+$NONEWS      = defined($ENV{'M2H_NEWS'})      ? !$ENV{'M2H_NEWS'}      : 0;
+$NOSORT      = defined($ENV{'M2H_SORT'})      ? !$ENV{'M2H_SORT'}      : 0;
+$NOURL       = defined($ENV{'M2H_URL'})       ? !$ENV{'M2H_SORT'}      : 0;
+$REVSORT     = defined($ENV{'M2H_REVSORT'})   ?  $ENV{'M2H_REVSORT'}   : 0;
+$SUBSORT     = defined($ENV{'M2H_SUBSORT'})   ?  $ENV{'M2H_SUBSORT'}   : 0;
+$AUTHSORT    = defined($ENV{'M2H_AUTHSORT'})  ?  $ENV{'M2H_AUTHSORT'}  : 0;
+$THREAD      = defined($ENV{'M2H_THREAD'})    ?  $ENV{'M2H_THREAD'}    : 1;
+$TNOSORT     = defined($ENV{'M2H_TSORT'})     ? !$ENV{'M2H_TSORT'}     : 0;
+$TREVERSE    = defined($ENV{'M2H_TREVERSE'})  ?  $ENV{'M2H_TREVERSE'}  : 0;
+$TSUBSORT    = defined($ENV{'M2H_TSUBSORT'})  ?  $ENV{'M2H_TSUBSORT'}  : 0;
+$GzipFiles   = defined($ENV{'M2H_GZIPFILES'}) ?  $ENV{'M2H_GZIPFILES'} : 0;
+$GzipLinks   = defined($ENV{'M2H_GZIPLINKS'}) ?  $ENV{'M2H_GZIPLINKS'} : 0;
+$UseLocalTime= defined($ENV{'M2H_USELOCALTIME'}) ? 
+		       $ENV{'M2H_USELOCALTIME'} : 0;
 
 if ($UNIX) {
-    eval q/
+    eval {
 	$UMASK = defined($ENV{'M2H_UMASK'}) ?
 		    $ENV{'M2H_UMASK'} : sprintf("%o",umask);
-    /;
+    };
 }
 
 $DecodeHeads = defined($ENV{'M2H_DECODEHEADS'}) ? $ENV{'M2H_DECODEHEADS'} : 0;
-$DoArchive   = defined($ENV{'M2H_ARCHIVE'}) ? $ENV{'M2H_ARCHIVE'} : 1;
-$DoFolRefs   = defined($ENV{'M2H_FOLREFS'}) ? $ENV{'M2H_FOLREFS'} : 1;
+$DoArchive   = defined($ENV{'M2H_ARCHIVE'})     ? $ENV{'M2H_ARCHIVE'}     : 1;
+$DoFolRefs   = defined($ENV{'M2H_FOLREFS'})     ? $ENV{'M2H_FOLREFS'}     : 1;
 $UsingLASTPG = defined($ENV{'M2H_USINGLASTPG'}) ? $ENV{'M2H_USINGLASTPG'} : 1;
 
 @OtherIdxs   = defined($ENV{'M2H_OTHERINDEXES'}) ?
@@ -344,117 +360,134 @@ $UsingLASTPG = defined($ENV{'M2H_USINGLASTPG'}) ? $ENV{'M2H_USINGLASTPG'} : 1;
 		    split(/:/, $ENV{'M2H_FROMFIELDS'}) : ();
 
 ($TSliceNBefore, $TSliceNAfter) = defined($ENV{'M2H_TSLICE'}) ?
-		    split(/:/, $ENV{'M2H_TSLICE'}) : (0, 4);
+		    split(/:/, $ENV{'M2H_TSLICE'}) : (0, 0);
 
+##	Regex representing "article" words for stripping out when doing
+##	subject sorting.
 $SubArtRxp   = $ENV{'M2H_SUBJECTARTICLERXP'} ||
 	       q/^(the|a|an)\s+/;
+
+##	Regex representing reply/forward prefixes to subject.
 $SubReplyRxp = $ENV{'M2H_SUBJECTREPLYRXP'} ||
 	       q/^\s*(re|sv|fwd|fw)[\[\]\d]*[:>-]+\s*/;
+
+##	Code for stripping subjects
+$SubStripCode = $ENV{'M2H_SUBJECTSTRIPCODE'} || "";
 
 ##	Arrays for months and weekdays.  If empty, the default settings
 ##	in mhtime.pl are used.
 
-@Months   = $ENV{'M2H_MONTHS'} ? split(/:/, $ENV{'M2H_MONTHS'}) : ();
-@months   = $ENV{'M2H_MONTHSABR'} ? split(/:/, $ENV{'M2H_MONTHSABR'}) : ();
-@Weekdays = $ENV{'M2H_WEEKDAYS'} ? split(/:/, $ENV{'M2H_WEEKDAYS'}) : ();
+@Months   = $ENV{'M2H_MONTHS'}      ? split(/:/, $ENV{'M2H_MONTHS'})      : ();
+@months   = $ENV{'M2H_MONTHSABR'}   ? split(/:/, $ENV{'M2H_MONTHSABR'})   : ();
+@Weekdays = $ENV{'M2H_WEEKDAYS'}    ? split(/:/, $ENV{'M2H_WEEKDAYS'})    : ();
 @weekdays = $ENV{'M2H_WEEKDAYSABR'} ? split(/:/, $ENV{'M2H_WEEKDAYSABR'}) : ();
 
 ##	Many of the following are set during runtime after the
-##	database has been read.  The variables are listed here
-##	as a quick reference.
-##
-$IDXLABEL	= '';		# Label for main index
-$LIBEG  	= '';		# List open template for main index
-$LIEND  	= '';		# List close template for main index
-$LITMPL 	= '';		# List item template
-$AUTHBEG	= '';		# Begin of author group
-$AUTHEND	= '';		# End of author group
-$DAYBEG   	= '';		# Begin of a day group
-$DAYEND   	= '';		# End of a day group
-$SUBJECTBEG	= '';		# Begin of subject group
-$SUBJECTEND	= '';		# End of subject group
+##	database and resources have been read.  The variables are
+##	listed here as a quick reference.
 
-$TIDXLABEL	= '';		# Label for thread index
-$THEAD  	= '';		# Thread index header (and list start)
-$TFOOT  	= '';		# Thread index footer (and list end)
-$TSINGLETXT	= '';		# Single/lone thread entry template
-$TTOPBEG	= '';		# Top of a thread begin template
-$TTOPEND	= '';		# Top of a thread end template
-$TSUBLISTBEG	= '';		# Sub-thread list open
-$TSUBLISTEND	= '';		# Sub-thread list close
-$TLITXT 	= '';		# Thread list item text
-$TLIEND 	= '';		# Thread list item end
-$TLINONE	= '';		# List item for missing message in thread
-$TLINONEEND	= '';		# List item end for missing message in thread
-$TSUBJECTBEG	= '';		# Pre-text for subject-based items
-$TSUBJECTEND	= '';		# Post-text for subject-based items
-$TINDENTBEG	= '';		# Thread indent open
-$TINDENTEND	= '';		# Thread indent close
-$TCONTBEG	= '';		# Thread continue open
-$TCONTEND	= '';		# Thread continue close
+$ADDSINGLE	= 0;	# Flag if adding a single message
+$IDXONLY	= 0;	# Flag if generating index to stdout
+$RMM		= 0;	# Flag if removing messages
+$SCAN		= 0;	# Flag if doing an archive scan
 
-$TSLICEBEG	= '';		# Start of thread slice
-$TSLICEEND	= '';		# End of thread slice
+$IDXLABEL	= '';	# Label for main index
+$LIBEG  	= '';	# List open template for main index
+$LIEND  	= '';	# List close template for main index
+$LITMPL 	= '';	# List item template
+$AUTHBEG	= '';	# Begin of author group
+$AUTHEND	= '';	# End of author group
+$DAYBEG   	= '';	# Begin of a day group
+$DAYEND   	= '';	# End of a day group
+$SUBJECTBEG	= '';	# Begin of subject group
+$SUBJECTEND	= '';	# End of subject group
 
-$MSGFOOT	= '';		# Message footer
-$MSGHEAD	= '';		# Message header
-$TOPLINKS	= '';		# Message links at top of message
-$BOTLINKS	= '';		# Message links at bottom of message
-$SUBJECTHEADER	= '';		# Markup for message main subject line
-$HEADBODYSEP 	= '';		# Markup between mail header and body
-$MSGBODYEND 	= '';		# Markup at end of message data
+$TIDXLABEL	= '';	# Label for thread index
+$THEAD  	= '';	# Thread index header (and list start)
+$TFOOT  	= '';	# Thread index footer (and list end)
+$TSINGLETXT	= '';	# Single/lone thread entry template
+$TTOPBEG	= '';	# Top of a thread begin template
+$TTOPEND	= '';	# Top of a thread end template
+$TSUBLISTBEG	= '';	# Sub-thread list open
+$TSUBLISTEND	= '';	# Sub-thread list close
+$TLITXT 	= '';	# Thread list item text
+$TLIEND 	= '';	# Thread list item end
+$TLINONE	= '';	# List item for missing message in thread
+$TLINONEEND	= '';	# List item end for missing message in thread
+$TSUBJECTBEG	= '';	# Pre-text for subject-based items
+$TSUBJECTEND	= '';	# Post-text for subject-based items
+$TINDENTBEG	= '';	# Thread indent open
+$TINDENTEND	= '';	# Thread indent close
+$TCONTBEG	= '';	# Thread continue open
+$TCONTEND	= '';	# Thread continue close
 
-$FIELDSBEG	= '';		# Beginning markup for mail header
-$FIELDSEND	= '';		# End markup for mail header
-$FLDBEG 	= '';		# Beginning markup for field text
-$FLDEND 	= '';		# End markup for field text
-$LABELBEG	= '';		# Beginning markup for field label
-$LABELEND	= '';		# End markup for field label
+$TSLICEBEG	= '';	# Start of thread slice
+$TSLICEEND	= '';	# End of thread slice
 
-$NEXTBUTTON	= '';   	# Next button template
-$NEXTBUTTONIA	= '';   	# Next inactive button template
-$PREVBUTTON	= '';   	# Previous button template
-$PREVBUTTONIA	= '';   	# Previous inactive button template
-$NEXTLINK	= '';   	# Next link template
-$NEXTLINKIA	= '';   	# Next inactive link template
-$PREVLINK	= '';   	# Previous link template
-$PREVLINKIA	= '';   	# Previous inactive link template
+$MSGFOOT	= '';	# Message footer
+$MSGHEAD	= '';	# Message header
+$TOPLINKS	= '';	# Message links at top of message
+$BOTLINKS	= '';	# Message links at bottom of message
+$SUBJECTHEADER	= '';	# Markup for message main subject line
+$HEADBODYSEP 	= '';	# Markup between mail header and body
+$MSGBODYEND 	= '';	# Markup at end of message data
 
-$TNEXTBUTTON	= '';   	# Thread Next button template
-$TNEXTBUTTONIA	= '';   	# Thread Next inactive button template
-$TPREVBUTTON	= '';   	# Thread Previous button template
-$TPREVBUTTONIA	= '';   	# Thread Previous inactive button template
-$TNEXTLINK	= '';   	# Thread Next link template
-$TNEXTLINKIA	= '';   	# Thread Next inactive link template
-$TPREVLINK	= '';   	# Thread Previous link template
-$TPREVLINKIA	= '';   	# Thread Previous inactive link template
+$FIELDSBEG	= '';	# Beginning markup for mail header
+$FIELDSEND	= '';	# End markup for mail header
+$FLDBEG 	= '';	# Beginning markup for field text
+$FLDEND 	= '';	# End markup for field text
+$LABELBEG	= '';	# Beginning markup for field label
+$LABELEND	= '';	# End markup for field label
 
-$IDXPGBEG	= '';		# Beginning of main index page
-$IDXPGEND	= '';		# Ending of main index page
-$TIDXPGBEG	= '';		# Beginning of thread index page
-$TIDXPGEND	= '';		# Ending of thread index page
+$NEXTBUTTON	= '';  	# Next button template
+$NEXTBUTTONIA	= '';  	# Next inactive button template
+$PREVBUTTON	= '';  	# Previous button template
+$PREVBUTTONIA	= '';  	# Previous inactive button template
+$NEXTLINK	= '';  	# Next link template
+$NEXTLINKIA	= '';  	# Next inactive link template
+$PREVLINK	= '';  	# Previous link template
+$PREVLINKIA	= '';  	# Previous inactive link template
 
-$MSGPGBEG	= '';		# Beginning of message page
-$MSGPGEND	= '';		# Ending of message page
+$TNEXTBUTTON	= '';  	# Thread Next button template
+$TNEXTBUTTONIA	= '';  	# Thread Next inactive button template
+$TPREVBUTTON	= '';  	# Thread Previous button template
+$TPREVBUTTONIA	= '';  	# Thread Previous inactive button template
+$TNEXTLINK	= '';  	# Thread Next link template
+$TNEXTLINKIA	= '';  	# Thread Next inactive link template
+$TPREVLINK	= '';  	# Thread Previous link template
+$TPREVLINKIA	= '';  	# Thread Previous inactive link template
 
-$NEXTPGLINK 	= '';   	# Next page link template
-$NEXTPGLINKIA	= '';   	# Next page inactive link template
-$PREVPGLINK 	= '';   	# Previous page link template
-$PREVPGLINKIA	= '';   	# Previous page inactive link template
+$IDXPGBEG	= '';	# Beginning of main index page
+$IDXPGEND	= '';	# Ending of main index page
+$TIDXPGBEG	= '';	# Beginning of thread index page
+$TIDXPGEND	= '';	# Ending of thread index page
 
-$TNEXTPGLINK	= '';   	# Thread next page link template
-$TNEXTPGLINKIA	= '';   	# Thread next page inactive link template
-$TPREVPGLINK	= '';   	# Thread previous page link template
-$TPREVPGLINKIA	= '';   	# Thread previous page inactive link template
+$MSGPGBEG	= '';	# Beginning of message page
+$MSGPGEND	= '';	# Ending of message page
 
-$FOLUPBEGIN	= '';		# Start of follow-ups for message page
-$FOLUPLITXT	= '';		# Markup for follow-up list entry
-$FOLUPEND	= '';		# End of follow-ups for message page
-$REFSBEGIN	= '';		# Start of refs for message page
-$REFSLITXT	= '';		# Markup for ref list entry
-$REFSEND	= '';		# End of refs for message page
+$NEXTPGLINK 	= '';  	# Next page link template
+$NEXTPGLINKIA	= '';  	# Next page inactive link template
+$PREVPGLINK 	= '';  	# Previous page link template
+$PREVPGLINKIA	= '';  	# Previous page inactive link template
 
-$MSGIDLINK 	= '';		# Markup for linking message-ids
+$TNEXTPGLINK	= '';  	# Thread next page link template
+$TNEXTPGLINKIA	= '';  	# Thread next page inactive link template
+$TPREVPGLINK	= '';  	# Thread previous page link template
+$TPREVPGLINKIA	= '';  	# Thread previous page inactive link template
+
+$FOLUPBEGIN	= '';	# Start of follow-ups for message page
+$FOLUPLITXT	= '';	# Markup for follow-up list entry
+$FOLUPEND	= '';	# End of follow-ups for message page
+$REFSBEGIN	= '';	# Start of refs for message page
+$REFSLITXT	= '';	# Markup for ref list entry
+$REFSEND	= '';	# End of refs for message page
+
+$MSGIDLINK 	= '';	# Markup for linking message-ids
+
+$NOTE		= '';	# Markup template when annotation available
+$NOTEIA		= '';	# Markup template when annotation not available
+$NOTEICON	= '';	# Markup template for note icon if annotation
+$NOTEICONIA	= '';	# Markup template for note icon if no annotation
 
 ##	The following associative array if for defining custom
 ##	resource variables
@@ -463,8 +496,10 @@ $MSGIDLINK 	= '';		# Markup for linking message-ids
 $X = "\034";	# Value separator (should equal $;)
 		# NOTE: Older versions used this variable for
 		#	the multiple field separator in parsed
-		#	message headers.  $readmail'FieldSep should
+		#	message headers.  $readmail::FieldSep should
 		#	now be used (readmail.pl).
+
+}
 
 ##---------------------------------------------------------------------------##
 

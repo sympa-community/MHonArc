@@ -1,0 +1,107 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
+<html>
+<head>
+<title>MHonArc Resources: MSGPGS</title>
+</head>
+<body>
+
+<address>
+<a href="../resources.html#msgpgs">MHonArc Resource List</a></br>
+</address>
+
+<hr>
+<h1>MSGPGS</h1>
+
+<!-- *************************************************************** -->
+<h2>Syntax</h2>
+
+<dl>
+
+<dt><strong>Envariable</strong><dt>
+<dd><p>
+<code>M2H_MSGPGS=</code>[ <code>0</code> | <code>1</code> ]
+</p>
+</dd>
+
+<dt><strong>Element</strong><dt>
+<dd><p><br>
+<code>&lt;MSGPGS&gt;</code><br>
+<code>&lt;NOMSGPGS&gt;</code><br>
+</p>
+</dd>
+
+<dt><strong>Command-line Option</strong><dt>
+<dd><p><br>
+<code>-msgpgs</code>
+<code>-nomsgpgs</code>
+</p>
+</dd>
+
+</dl>
+
+<!-- *************************************************************** -->
+<h2>Description</h2>
+
+<p>MSGPGS resource determines if MHonArc will generate HTML pages
+for messages processed.  If set, pages will be created for each
+processed messages as defined by
+<a href="../layout.html#msgpg">message page layout</a>.
+</p>
+
+<p>If MSGPGS is not set, no message pages will be created.  Having
+no message pages created may be desired if you only want to use
+MHonArc for its index page generation.  Note, relevant resources that link
+to message pages would have to be redefined to use URLs that properly
+retrieve messages from how they are stored on the system.
+</p>
+
+<p>When MSGPGS is off, messge body data is skipped when processing
+input data.  Hence, processing time is much faster since no message
+conversion is performed.  The database file is still created to support
+updates to the index pages generated.
+</p>
+
+<!-- *************************************************************** -->
+<h2>Default Setting</h2>
+
+<p>On.
+</p>
+
+<!-- *************************************************************** -->
+<h2>Resource Variables</h2>
+
+<p>N/A
+</p>
+
+<!-- *************************************************************** -->
+<h2>Examples</h2>
+
+<p>Not yet.
+</p>
+
+<!-- *************************************************************** -->
+<h2>Version</h2>
+
+<p>2.3.0
+</p>
+
+<!-- *************************************************************** -->
+<h2>See Also</h2>
+
+<p>
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<address>
+98/09/30 22:33:43<br>
+<img align="top" src="../monicon.gif" alt="">
+<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"
+><strong>MHonArc</strong></a><br>
+Copyright &#169; 1998, <a href="http://www.oac.uci.edu/indiv/ehood/"
+>Earl Hood</a>, <a href="mailto:earlhood@usa.net"
+>earlhood@usa.net</a><br>
+</address>
+
+</body>
+</html>

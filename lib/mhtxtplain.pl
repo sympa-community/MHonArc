@@ -1,8 +1,8 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	@(#) mhtxtplain.pl 2.1 98/03/02 20:24:30
+##	@(#) mhtxtplain.pl 2.3 98/10/24 17:16:20
 ##  Author:
-##      Earl Hood       ehood@medusa.acs.uci.edu
+##      Earl Hood       earlhood@usa.net
 ##  Description:
 ##	Library defines routine to filter text/plain body parts to HTML
 ##	for MHonArc.
@@ -12,7 +12,7 @@
 ##              </MIMEFILTERS>
 ##---------------------------------------------------------------------------##
 ##    MHonArc -- Internet mail-to-HTML converter
-##    Copyright (C) 1995-1998	Earl Hood, ehood@medusa.acs.uci.edu
+##    Copyright (C) 1995-1998	Earl Hood, earlhood@usa.net
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by
@@ -32,10 +32,10 @@
 
 package m2h_text_plain;
 
-$Url    	= '(http://|https://|ftp://|afs://|wais://|telnet://' .
+$Url    	= '(http://|https://|ftp://|afs://|wais://|telnet://|ldap://' .
 		   '|gopher://|news:|nntp:|mid:|cid:|mailto:|prospero:)';
-$UrlExp 	= $Url . q%[^\s\(\)\|<>"']*[^\.;,"'\|\[\]\(\)\s<>]%;
-$HUrlExp	= $Url . q%[^\s\(\)\|<>"'\&]*[^\.;,"'\|\[\]\(\)\s<>\&]%;
+$UrlExp 	= $Url . q%[^\s\(\)\|<>"']*[^\.?!;,"'\|\[\]\(\)\s<>]%;
+$HUrlExp	= $Url . q%[^\s\(\)\|<>"'\&]*[^\.?!;,"'\|\[\]\(\)\s<>\&]%;
 $QuoteChars	= '[>\|\]+:]';
 $HQuoteChars	= '&gt;|[\|\]+:]';
 
@@ -63,34 +63,43 @@ $HQuoteChars	= '&gt;|[\|\]+:]';
 ##
 sub filter {
     local($header, *fields, *data, $isdecode, $args) = @_;
-    local($charset, $nourl, $doquote, $igncharset, $nonfixed,
-	  $keepspace, $maxwidth, $target, $defset);
-    local(%asis) = ();
+    my($charset, $nourl, $doquote, $igncharset, $nonfixed,
+       $keepspace, $maxwidth, $target, $defset);
+    my(%asis) = ();
     local($_);
 
     ## Parse arguments
-    $nourl	= ($mhonarc'NOURL || ($args =~ /nourl/i));
-    $doquote	= ($args =~ /quote/i);
-    $nonfixed	= ($args =~ /nonfixed/i);
-    $keepspace	= ($args =~ /keepspace/i);
-    if ($args =~ /maxwidth=(\d+)/i) { $maxwidth = $1; }
+    $args	= ""  unless defined($args);
+    $nourl	= ($mhonarc::NOURL || ($args =~ /\bnourl\b/i));
+    $doquote	= ($args =~ /\bquote\b/i);
+    $nonfixed	= ($args =~ /\bnonfixed\b/i);
+    $keepspace	= ($args =~ /\bkeepspace\b/i);
+    if ($args =~ /\bmaxwidth=(\d+)/i) { $maxwidth = $1; }
 	else { $maxwidth = 0; }
-    if ($args =~ /default=(\S+)/i) { $defset = $1; }
+    if ($args =~ /\bdefault=(\S+)/i) { $defset = $1; }
 	else { $defset = 'us-ascii'; }
-    if ($args =~ /target="([^"]+)"/i) { $target = $1; }
-	elsif ($args =~ /target=(\S+)/i) { $target = $1; }
-	else { $target = "_top"; }
-    $defset =~ s/['"]//g;
+    $target = "";
+    if ($args =~ /\btarget="([^"]+)"/i) { $target = $1; }
+	elsif ($args =~ /\btarget=(\S+)/i) { $target = $1; }
     $target =~ s/['"]//g;
+    if ($target) {
+	$target = qq/TARGET="$target"/;
+    }
+    $defset =~ s/['"]//g;
 
     ## Grab charset parameter (if defined)
-    if ($fields{'content-type'} =~ /charset=(\S+)/i) { $charset = $1; }
-	else { $charset = $defset; }
-    $charset =~ s/['";]//g;  $charset =~ tr/A-Z/a-z/;
+    if (defined($fields{'content-type'}) and
+	    $fields{'content-type'} =~ /\bcharset=(\S+)/i) {
+	$charset = lc $1;
+    } else {
+	$charset = lc $defset;
+    }
+    $charset =~ s/['";]//g;
 
     ## Check if certain charsets should be left alone
-    if ($args =~ /asis=(\S+)/i) {
-	local(@a) = split(':', $1);
+    if ($args =~ /\sasis=(\S+)/i) {
+	my(@a) = split(':', $1);
+	local($_);
 	foreach (@a) {
 	    s/["']//g;  tr/A-Z/a-z/;
 	    $asis{$_} = 1;
@@ -98,15 +107,14 @@ sub filter {
     }
 
     ## Check MIMECharSetConverters if charset should be left alone
-    if ($readmail'MIMECharSetConverters{$charset} eq "-decode-") {
+    if (defined($readmail::MIMECharSetConverters{$charset}) and
+	    $readmail::MIMECharSetConverters{$charset} eq "-decode-") {
 	$asis{$charset} = 1;
     }
 
     ## Check if max-width set
     if ($maxwidth) {
-	local($*) = 1;
-	$data =~ s/^(.*)$/&break_line($1, $maxwidth)/ge;
-	$* = 0;
+	$data =~ s/^(.*)$/&break_line($1, $maxwidth)/gem;
     }
 
     ## Convert data according to charset
@@ -118,7 +126,7 @@ sub filter {
 	##	Latin 2-6, Greek, Hebrew, Arabic
 	} elsif ($charset =~ /iso-8859-([2-9]|10)/i) {
 	    require "iso8859.pl";
-	    $data = &iso_8859'str2sgml($data, $charset);
+	    $data = &iso_8859::str2sgml($data, $charset);
 
 	##	ASCII, Latin 1, Other
 	} else {
@@ -130,25 +138,21 @@ sub filter {
 
     ##	Check for quoting
     if ($doquote) {
-	local($*) = 1;
-	$data =~ s@^( ?${HQuoteChars})(.*)$@$1<I>$2</I>@go;
-	$* = 0;
+	$data =~ s@^( ?${HQuoteChars})(.*)$@$1<I>$2</I>@gom;
     }
 
     ## Check if using nonfixed font
     if ($nonfixed) {
 	$data =~ s/(\r?\n)/<br>$1/g;
 	if ($keepspace) {
-	    local($*) = 1;
-	    $data =~ s/^(.*)$/&preserve_space($1)/ge;
-	    $* = 0;
+	    $data =~ s/^(.*)$/&preserve_space($1)/gem;
 	}
     } else {
     	$data = "<PRE>\n" . $data . "</PRE>\n";
     }
 
     ## Convert URLs to hyperlinks
-    $data =~ s@($HUrlExp)@<A TARGET="$target" HREF="$1">$1</A>@gio
+    $data =~ s@($HUrlExp)@<A $target HREF="$1">$1</A>@gio
 	unless $nourl;
 
     ($data);
@@ -168,13 +172,13 @@ sub filter {
 ##
 ##  Author of function:
 ##      NIIBE Yutaka	gniibe@mri.co.jp
-##	(adapted for mhtxtplain.pl by Earl Hood <ehood@medusa.acs.uci.edu>)
+##	(adapted for mhtxtplain.pl by Earl Hood <earlhood@usa.net>)
 ##	(some changes made to remove use of $& and few other optimizations)
 ##
 sub jp2022 {
     local(*body) = shift;
-    local(@lines) = split(/\r?\n/,$body);
-    local($ret, $ascii_text);
+    my(@lines) = split(/\r?\n/,$body);
+    my($ret, $ascii_text);
     local($_);
 
     $ret = "<PRE>\n";
@@ -190,7 +194,7 @@ sub jp2022 {
 		$ascii_text =~ s%>%\&gt;%g;
 		## Convert URLs to hyperlinks
 		$ascii_text =~ s%($HUrlExp)%<A HREF="$1">$1</A>%gio
-		    unless $mhonarc'NOURL;
+		    unless $mhonarc::NOURL;
 
 		$ret .= $ascii_text;
 	    } elsif (s/(\033\.[A-F])//) { # G2 Designate Sequence
@@ -216,7 +220,7 @@ sub jp2022 {
 			$ascii_text =~ s%>%\&gt;%g;
 			## Convert URLs to hyperlinks
 			$ascii_text =~ s%($HUrlExp)%<A HREF="$1">$1</A>%gio
-			    unless $mhonarc'NOURL;
+			    unless $mhonarc::NOURL;
 
 			$ret .= $ascii_text;
 		    } elsif (s/(\033\.[A-F])//) { # G2 Designate Sequence
@@ -268,7 +272,7 @@ sub esc_chars_inplace {
 ##---------------------------------------------------------------------------##
 
 sub preserve_space {
-    local($str) = shift;
+    my($str) = shift;
 
     1 while
     $str =~ s/^([^\t]*)(\t+)/$1 . ' ' x (length($2) * 8 - length($1) % 8)/e;
@@ -279,10 +283,10 @@ sub preserve_space {
 ##---------------------------------------------------------------------------##
 
 sub break_line {
-    local($str) = shift;
-    local($width) = shift;
-    local($q, $new) = ('', '');
-    local($try, $trywidth, $len);
+    my($str) = shift;
+    my($width) = shift;
+    my($q, $new) = ('', '');
+    my($try, $trywidth, $len);
 
     ## Translate tabs to spaces
     1 while

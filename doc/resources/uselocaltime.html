@@ -1,0 +1,111 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
+<html>
+<head>
+<title>MHonArc Resources: USELOCALTIME</title>
+</head>
+<body>
+
+<address>
+<a href="../resources.html#uselocaltime">MHonArc Resource List</a></br>
+</address>
+
+<hr>
+<h1>USELOCALTIME</h1>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Syntax</h2>
+
+<dl>
+
+<dt><strong>Envariable</strong><dt>
+<dd><p>
+<code>M2H_USELOCALTIME=</code> [ <code>0</code> | <code>1</code> ]
+</p>
+</dd>
+
+<dt><strong>Element</strong><dt>
+<dd><p><br>
+<code>&lt;USELOCALTIME&gt;</code><br>
+<code>&lt;NOUSELOCALTIME&gt;</code><br>
+</p>
+</dd>
+
+<dt><strong>Command-line Option</strong><dt>
+<dd><p>N/A
+</p>
+</dd>
+
+</dl>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Description</h2>
+
+<p>When USELOCALTIME is set, MHonArc will use local time for
+determining day groups in main index listing when
+<a href="sort.html">SORT</a> is active.  By default, MHonArc
+uses GMT time.
+</p>
+
+<p>The value of USELOCALTIME should be in sync with the choice
+of date format used in
+<a href="daybegin.html">DAYBEGIN</a> if
+<a href="daybegin.html">DAYBEGIN</a> is defined.  For example, if you use
+<a href="../rcvars.html#MSGLOCALDATE">$MSGLOCALDATE$</a>, then
+USELOCALTIME should be on.  If using
+<a href="../rcvars.html#MSGGMTDATE">$MSGGMTDATE$</a>, then
+USELOCALTIME should be off.
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Default Setting</h2>
+
+<p>Off.
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Resource Variables</h2>
+
+<p>N/A
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Examples</h2>
+
+<p>None.
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>Version</h2>
+
+<p>2.3.0
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2>See Also</h2>
+
+<p>
+<a href="daybegin.html">DAYBEGIN</a>,
+<a href="sort.html">SORT</a>
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<address>
+98/10/10 15:26:50<br>
+<img align="top" src="../monicon.gif" alt="">
+<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"
+><strong>MHonArc</strong></a><br>
+Copyright &#169; 1998, <a href="http://www.oac.uci.edu/indiv/ehood/"
+>Earl Hood</a>, <a href="mailto:earlhood@usa.net"
+>earlhood@usa.net</a><br>
+</address>
+
+</body>
+</html>

@@ -6,7 +6,7 @@
 <body>
 
 <address>
-<a href="../resources.html#archive">MHonArc Resource List</a></br>
+<a href="../resources.html#archive">MHonArc Resource List</a>
 </address>
 
 <hr>
@@ -29,7 +29,7 @@
 </dd>
 
 <dt><strong>Command-line Option(s)</strong><dt>
-<dd><p>
+<dd><p><br>
 <code>-archive </code><br>
 <code>-noarchive </code>
 </p>
@@ -72,7 +72,6 @@ application/*;m2h_external::filter;mhexternal.pl
 audio/*;m2h_external::filter;mhexternal.pl
 image/*;m2h_external::filter;mhexternal.pl
 model/*;m2h_external::filter;mhexternal.pl
-message/*;m2h_external::filter;mhexternal.pl
 text/*;m2h_external::filter;mhexternal.pl
 video/*;m2h_external::filter;mhexternal.pl
 <b>&lt;/MIMEFilters></b>
@@ -81,7 +80,7 @@ m2h_external::filter; usename
 <b>&lt;/MIMEArgs></b>
 </pre>
 <p>For this example, let's assume this resource file is called
-<tt>.mha-attach.rc</tt> and it exists in your home directory.
+<tt>.mha-attach.mrc</tt> and it exists in your home directory.
 </p>
 <table border=0 cellpadding=4>
 <tr valign=top>
@@ -100,7 +99,7 @@ filename with an extenstion based upon sub-type is generated.
 follows:
 </p>
 <pre>
-<b>alias save-attachments 'mhonarc -noarchive -rcfile ~/mha-attach.rc \!*'</b>
+<b>alias save-attachments 'mhonarc -noarchive -rcfile ~/mha-attach.mrc \!*'</b>
 </pre>
 <p>So, if you want to extract all attachments to a mail folder called
 "inbox" with all attachments saved to <tt>~/tmp</tt>, you would enter
@@ -121,7 +120,7 @@ listed above.  The difference is how we invoke MHonArc.  If you have
 the message in a file, you can do the following:
 </p>
 <pre>
-    % <b>mhonarc -rcfile ~/mha-attach.rc -single message.822 > /dev/null</b>
+    % <b>mhonarc -rcfile ~/mha-attach.mrc -single message.822 > /dev/null</b>
 </pre>
 <p>Where <tt>message.822</tt> is the file containing a single message.
 The redirection of standard output to <tt>/dev/null</tt>
@@ -136,11 +135,11 @@ defined in the message:
 </p>
 <pre>
 <b>alias store     'show -noshowproc -noheader \!* | \\</b>
-                <b>mhonarc -rcfile ~/dotfile/.mhonarc.attach.rc -single  \\</b>
+                <b>mhonarc -rcfile ~/dotfile/.mhonarc.attach.mrc -single  \\</b>
                 <b>> /dev/null'</b>
 </pre>
-<p>The resource file <tt>~/dotfile/.mhonarc.attach.rc</tt> is the
-same as <tt>mha-attach.rc</tt> in the previous examples.
+<p>The resource file <tt>~/dotfile/.mhonarc.attach.mrc</tt> is the
+same as <tt>mha-attach.mrc</tt> in the previous examples.
 </p>
 
 <p>If you have a MUA that does not support MIME, or the support is minimal,
@@ -162,13 +161,13 @@ you can use MHonArc as shown to decode and save attachments.
 <!-- *************************************************************** -->
 <hr>
 <address>
-98/03/03 18:51:54<br>
+98/09/27 16:56:01<br>
 <img align="top" src="../monicon.gif" alt="">
 <a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"
 ><strong>MHonArc</strong></a><br>
 Copyright &#169; 1998, <a href="http://www.oac.uci.edu/indiv/ehood/"
->Earl Hood</a>, <a href="mailto:ehood@medusa.acs.uci.edu"
->ehood@medusa.acs.uci.edu</a><br>
+>Earl Hood</a>, <a href="mailto:earlhood@usa.net"
+>earlhood@usa.net</a><br>
 </address>
 
 </body>

@@ -24,65 +24,69 @@
 
 ---------------------------------------------------------------------------
                             README for MHonArc
-                                 v2.2.0
+                                 v2.3.3
 
-             http://www.oac.uci.edu/indiv/ehood/mhonarc.html
+          <URL:http://www.oac.uci.edu/indiv/ehood/mhonarc.html>
 
----------------------------------------------------------------------------
-	*IMPORTANT* *IMPORTANT* *IMPORTANT* *IMPORTANT* *IMPORTANT*
-
-		Please read the RELNOTES file for important
-		 information regarding upgrading to v2.2.0
-			 from previous releases.
+			 Copyright (C) 1995-1998
+		       Earl Hood, earlhood@usa.net
 
 ---------------------------------------------------------------------------
-    MHonArc -- Internet mail-to-HTML converter
-    Copyright (C) 1995-1998   Earl Hood, ehood@medusa.acs.uci.edu
+USING/COPYING
 
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
+    MHonArc is distributed under the GNU General Public License (GPL).
+    The rules for using and copying MHonArc are explained in the file
+    COPYING.  If you cannot agree to the conditions of the GPL but
+    still want to use/copy the program, you must contact the author of
+    MHonarc, earlhood@usa.net, about arranging an alternative license.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public
-    License along with this program; if not, write to the Free
-    Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
-    MA  02111-1307, USA.
 ---------------------------------------------------------------------------
-CONTENTS
+SUMMARY
+
+MHonArc is a Perl program for converting mail messages as specified
+in RFC 822 and the MIME standard to HTML. MHonArc can perform the
+following tasks:
+
+    * Convert MH mail folders or UUCP/Unix style mailboxes into an HTML
+      mail archive.
+    * Add or remove messages to an existing HTML mail archive generated
+      by MHonArc.
+    * Convert a single message to HTML.
+
+Along with these tasks, MHonArc provides the following:
+
+    * A main customizable index for mail messages archived.
+    * A customizable thread index listing messages by thread.
+    * Control over message formatting.
+    * The ability to hook in your own custom message filters.
+
+---------------------------------------------------------------------------
+FILE CONTENTS
 
 ACKNOWLG        Thanks to people
 BUGS            Bug list
 CHANGES         Revision history of MHonArc
 COPYING         GNU General Public License
+FILELIST	File listing used by install.me
 INSTALL         Instructions on how to install MHonArc
 README          The file you are reading
-RELNOTES        Release notes for MHonArc (please read)
-bat/            Batch files for MS-DOS users
+RELNOTES        Release notes for MHonArc (!!!!PLEASE READ!!!!)
 doc/            Documentation for MHonArc
 examples/       Example resource files for MHonArc
 extras/         Extra programs for use with MHonArc (See extras/README)
-faq/            FAQ for MHonArc
-install.cfg     Base installation configuration file
 install.me      Installation program for MHonArc
 lib/            Libraries/MIME filters used by MHonArc
 logo/           Gifs of the MHonArc logo
+mha-dbedit*	Modify database without regenerating pages
+mha-dbrecover*	Rebuild database from HTML message pages
 mhonarc*        The MHonArc program
 
 ---------------------------------------------------------------------------
-	*IMPORTANT* *IMPORTANT* *IMPORTANT* *IMPORTANT* *IMPORTANT*
-
-		Please read the RELNOTES file for important
-		 information regarding upgrading to v2.2.0
-			 from previous releases.
-
----------------------------------------------------------------------------
 INSTALLATION
+
+    Please read RELNOTES before installing MHonArc for any news
+    about compatibility with previous versions and/or important
+    usage information.
 
     Read the file INSTALL for instructions on how to install MHonArc.
 
@@ -91,7 +95,7 @@ DOCUMENTATION
 
     Documentation for MHonArc is located in the doc/ directory.
     The main documentation for MHonArc is in multiple HTML files.
-    Load mhonarc.html in the doc/ directory into your Web browser to
+    Load index.html in the doc/ directory into your Web browser to
     get started.
 
     Filenames of the documentation do NOT follow the 8.3 convention.
@@ -99,12 +103,7 @@ DOCUMENTATION
     to read the documentation locally.
 
     Some tables are used in the documentation.  Therefore, having
-    a table-capable viewer is beneficial.  If your viewer does not
-    recognize tables, the documentation should still be usable.
-
-    Also provided is a version of the MHonArc FAQ in the faq/
-    directory.  The FAQ is also in HTML.  Load faq.html into your
-    Web browser to read the FAQ.
+    a table-capable viewer is beneficial, but not essential.
 
 ---------------------------------------------------------------------------
 MAILING LIST
@@ -114,24 +113,30 @@ MAILING LIST
     the latest news about MHonArc.
 
     To subscribe to the mailing list, send mail to
-    mhonarc-request@rosat.mpe-garching.mpg.de with the single word
-    "subscribe" (without the quotes) as the message body.
+    mhonarc-request@ncsa.uiuc.edu with the single word "subscribe"
+    (without the quotes) as the message body.
 
-    Mail sent to mhonarc@rosat.mpe-garching.mpg.de will be distributed
-    to all subscribers.
+    Mail sent to mhonarc@ncsa.uiuc.edu will be distributed to all
+    subscribers.
+
+    The list is restricted to subscribers only.  Messages sent to the
+    list by non-subscribers are manually screened before distribution;
+    which may incur a significant delay before the message is actually
+    seen be subscribers.  Any spam messages are happily redirected
+    to /dev/null.
 
     The WWW archive of the mailing list is located at
-    (http://www.rosat.mpe-garching.mpg.de/mailing-lists/mhonarc/)
-    and is searchable via a Glimpse search engine.
+    <URL:http://www.xray.mpe.mpg.de/mailing-lists/mhonarc/> and is
+    searchable via a Glimpse search engine.
 
 ---------------------------------------------------------------------------
 BUGS/COMMENTS/SUGGESTIONS?
 
     If you have any bugs/comments/suggestions about MHonArc, you may
     send mail to the MHonArc mailing list,
-    mhonarc@rosat.mpe-garching.mpg.de.
+    <URL:mailto:mhonarc@ncsa.uiuc.edu>.
 
-    NOTE: The author of MHonArc *is* subscribed to the list.
+    NOTE: The author of MHonArc *IS* subscribed to the list.
 
     If it is a bug you are reporting, please include the following in
     your message:
@@ -146,22 +151,20 @@ BUGS/COMMENTS/SUGGESTIONS?
            files, resource files, environment settings, etc).
 
     Before sending e-mail, make sure the documentation, or FAQ, does
-    not already have an answer to your question/problem.
+    not already have an answer to your question/problem.  Also, check
+    the MHonArc home page to see if you have the latest version of
+    MHonArc.
 
 ---------------------------------------------------------------------------
-USING/COPYING
 
-    MHonArc is free to use, but feel free to send the author a donation
+    If you are so inclined, feel free to send the author a donation
     if you feel guilty on using a program that that cost you nothing,
-    but some poor soul sweated over.  The author is more than happy to
-    provide address information to prospective donors inorder to ease
-    their conscience.  Plus, requests from donars are more likely to
-    get more timely responses ;-)
-
-    MHonArc is distributed under the GNU General Public License.
-    The rules for using and copying MHonArc are explained in the
-    file COPYING.
+    but some poor soul sweated over.  The author is more than happy
+    to provide address information to prospective donors inorder to
+    ease their conscience.  Plus, requests from donors are more likely
+    to get more timely responses ;-) and help insure the continued
+    development of the program.
 
 ---------------------------------------------------------------------------
-Copyright (C) 1995-1998,	Earl Hood, ehood@medusa.acs.uci.edu
-@(#) README 98/03/03 19:06:23
+Copyright (C) 1995-1998,		Earl Hood, earlhood@usa.net
+@(#) README 98/11/08 13:06:00

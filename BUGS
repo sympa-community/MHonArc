@@ -1,5 +1,7 @@
-	BUGS 98/03/03 19:09:35
-	Bug History for MHonArc
+Bug History for MHonArc
+=======================
+<URL:http://www.oac.uci.edu/indiv/ehood/mhonarc.html>
+@(#) BUGS 98/11/08 13:05:02
 
 Each bug listing has the following fields:
 
@@ -12,8 +14,139 @@ Each bug listing has the following fields:
     Version Fixed:  The version that the solution exists in, if
 		    applicable.
 
-
 Bug List
+------------------------------------------------------------------------
+Version:	2.3.0-2.3.2
+Problem:   	-otherindex and -perlinc command-line options do not
+		work.  Using them has no affect.
+Solution:	Subtle precedence issue in Perl variable operations;
+		problem fixed.
+Version Fixed:	2.3.3
+------------------------------------------------------------------------
+Version:	2.3.0-2.3.2
+Problem:   	Resource variable expansion not working properly in
+		MAILTOURL resource.
+Solution:	Certain variables in read_mail_header() where put in
+		my() declarations when they should stay as local()'s.
+		Changed back.
+Version Fixed:	2.3.3
+------------------------------------------------------------------------
+Version:	2.3.0-2.3.2
+Problem:   	Next/previous message link resource variables are
+		reversed when REVERSE is on.
+Solution:	REVERSE check was left out in new v2.3 replace_li_var().
+		Check added in.
+Version Fixed:	2.3.3
+------------------------------------------------------------------------
+Version:	2.3.0, 2.3.1
+Problem:   	Some resource variables (eg $SUBJECTNA$) expand to
+		blank values when using -single.
+Solution:	SINGLE mode sets @MListOrder and %Index2MLoc to support
+		the new way in v2.3 replace_li_var() resolves resource
+		variables.
+Version Fixed:	2.3.2
+------------------------------------------------------------------------
+Version:	2.3.1 (maybe earlier versions also)
+Problem:   	MHonArc does not handle message range specification
+		with leading zeros in numbers in -rmm mode.
+Solution:	int() is used within Perl's range operator to force
+		the stripping of leading zeros.
+Version Fixed:	2.3.2
+------------------------------------------------------------------------
+Version:	2.3.0
+Problem:   	Attachments of the same type get written to the same
+		filename.
+Solution:	Another my/local gotcha.  Note, writing attachments
+		has been redone so other filters besided mhexternal.pl
+		can write data to files.
+Version Fixed:	2.3.1
+------------------------------------------------------------------------
+Version:	2.0.0 - 2.2.0
+Problem:   	A bogus TCONTBEGIN may get printed at the beginning
+		of a thread index page.  Most common when TREVERSE
+		specified.
+Solution:	@TListOrder now serves as the basis for list iteration
+		when printing a thread index page instead of the list
+		returned by t_sort_messages().  Note, old method may
+		cause other minor errors in thread index page
+		generation.
+Version Fixed:	2.3.0
+------------------------------------------------------------------------
+Version:	2.2.0, 2.3.0 beta
+Problem:   	Duplicate index list entries are generating for threads
+		indexes generated via OTHERINDEXES with TREVERSE active.
+Solution:	All key data structures are now reset when recomputing
+		threads.
+Version Fixed:	2.3.0
+------------------------------------------------------------------------
+Version:	2.2.0, 2.3.0 beta
+Problem:   	Threads are not listed in reverse order when THREAD
+		and TREVERSE are set for an OTHERINDEXES resource file.
+Solution:	Thread data structures are now reset before each
+		OTHERINDEXES index.  If an OTHERINDEXES resource file
+		specified THREAD, than threads will be recomputed
+		for the given index defined by resource file.
+Version Fixed:	2.3.0
+------------------------------------------------------------------------
+Version:	2.3.0 beta
+Problem:   	Mail addresses in message headers are not getting
+		converted to mailto links.
+Solution:	MHonArc still uses typeglobs for passing data around
+		by "reference" (left-over from Perl 4 days).  One
+		of the variables in the message header formatting
+		routine was changed back to a local() variable to
+		supporting passing it via a typeglob sub-routines.
+Version Fixed:	2.3.0
+------------------------------------------------------------------------
+Version:	2.3.0 beta
+Problem:   	Cannot copy file error occurs during installation when
+		copy documentation to destination location.
+Solution:	Updated install.cfg to reflect file changes to
+		documentation.
+Version Fixed:	2.3.0
+------------------------------------------------------------------------
+Version:	2.3.0 beta
+Problem:   	Author index generated via the OTHERINDEXES resource
+		does not list messages in proper order.  Other main
+		indexes generated via OTHERINDEXES may suffer the
+		same problem.
+Solution:	The write_main_index() did not reset %Index2MLoc
+		properly, affecting resource variable resolution.  If
+		@MListOrder is recomputed, %Index2MLoc will be
+		redefined.
+Version Fixed:	2.3.0
+------------------------------------------------------------------------
+Version:	2.3.0 beta
+Problem:   	PG(PREV) and PG(TPREV) did not resolve to IDXFNAME and
+		TIDXFNAME, respectively.  They resolved to (T)IDXPREFIX
+		with the page number 1.
+Solution:	Simple fix to page number check.
+Version Fixed:	2.3.0
+------------------------------------------------------------------------
+Version:	2.2.0, 2.3.0 beta
+Problem:   	Messages grouped under wrong date in date-based index.
+Solution:       The problem is related to a descrepency of GMT time
+		and local time, and what time format is being used
+		in the DAYBEGIN resource.  The resource USINGLOCALTIME
+		has been added to give the choice betweem GMT or
+		local time for determining day groups.
+Version Fixed:	2.3.0
+------------------------------------------------------------------------
+Version:	2.2.0
+Problem:   	Get "times not implemented at mhamain.pl line 74" error
+		on Win32 systems.
+Solution:	Call to times is put in an eval block.
+Version Fixed:	2.3.0 alpha
+------------------------------------------------------------------------
+Version:	2.2.0
+Problem:   	When a message that gets automatically deleted via
+		MAXSIZE or the message expiration, related message
+		sometimes do not get update -- causing messages to
+		have links to non-existent messages.  Problem manifiest
+		when main sort option is not by date.
+Solution:	Automatic message deletion now properly marks related
+		message by specified main sort option.
+Version Fixed:	2.3.0 alpha
 ------------------------------------------------------------------------
 Version:	2.1.2
 Problem:   	The @TListOrder array is empty in .mhonarc.db when
@@ -28,7 +161,7 @@ Problem:   	Convert ISO-2022-JP messages can generate "Out of
 		Memory" errors.
 Solution:	The cleanup of mhtxtplain.pl's iso-2022-jp code
 		introduced a bug that caused an infinite loop and
-		to gobble memoery until it ran out.  The fix was
+		to gobble memory until it ran out.  The fix was
 		straight-forward.
 Version Fixed:	2.2.0
 ------------------------------------------------------------------------

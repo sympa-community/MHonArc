@@ -6,7 +6,7 @@
 <body>
 
 <address>
-<a href="../resources.html#datefields">MHonArc Resource List</a></br>
+<a href="../resources.html#datefields">MHonArc Resource List</a>
 </address>
 
 <hr>
@@ -18,7 +18,7 @@
 <dl>
 
 <dt><strong>Envariable</strong><dt>
-<dd><p>
+<dd><p><br>
 <code>M2H_DATEFIELDS=</code><var>field1</var><code>:</code><var
 >field2</var><code>:</code><var>...</var><code>:</code><var
 >fieldN</var>
@@ -26,7 +26,7 @@
 </dd>
 
 <dt><strong>Element</strong><dt>
-<dd><p>
+<dd><p><br>
 <code>&lt;DATEFIELDS&gt;</code><br>
 <var>field1</var><code>:</code><var
 >field2</var><code>:</code><var>...</var><code>:</code><var
@@ -72,8 +72,18 @@ received:date
 <!-- *************************************************************** -->
 <h2>Examples</h2>
 
-<p>None.
+<p>By default. MHonArc looks at the <tt>Received</tt> fields of
+a message to determine a message's date.  This tends to be more accurate
+as it tells when the message was actually received.  However, you
+may want to have the date based upon the time the sender composed the
+message.  The <tt>Date</tt> field usually reflects the composition
+date.  Therefore, the following setting can be used:
 </p>
+<pre>
+<b>&lt;DateFields&gt;</b>
+date:received
+<b>&lt;/DateFields&gt;</b>
+</pre>
 
 <!-- *************************************************************** -->
 <h2>Version</h2>
@@ -90,13 +100,13 @@ received:date
 <!-- *************************************************************** -->
 <hr>
 <address>
-98/03/03 18:19:27<br>
+98/09/19 18:27:07<br>
 <img align="top" src="../monicon.gif" alt="">
 <a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"
 ><strong>MHonArc</strong></a><br>
 Copyright &#169; 1998, <a href="http://www.oac.uci.edu/indiv/ehood/"
->Earl Hood</a>, <a href="mailto:ehood@medusa.acs.uci.edu"
->ehood@medusa.acs.uci.edu</a><br>
+>Earl Hood</a>, <a href="mailto:earlhood@usa.net"
+>earlhood@usa.net</a><br>
 </address>
 
 </body>

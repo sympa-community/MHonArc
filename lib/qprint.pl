@@ -1,8 +1,8 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	@(#) qprint.pl 2.1 98/03/02 20:24:32
+##	@(#) qprint.pl 2.2 98/08/10 23:38:44
 ##  Authors:
-##      Earl Hood       ehood@medusa.acs.uci.edu
+##      Earl Hood       earlhood@usa.net
 ##	Alan Barrett	barrett@daisy.ee.und.ac.za
 ##  Description:
 ##	This library defines the routine to decode "quoted-printable"
@@ -12,7 +12,7 @@
 ##		$text = &quoted_printable'qprdecode($data);
 ##
 ##---------------------------------------------------------------------------##
-##    Copyright (C) 1995,1998	Earl Hood, ehood@medusa.acs.uci.edu
+##    Copyright (C) 1995,1998	Earl Hood, earlhood@usa.net
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by

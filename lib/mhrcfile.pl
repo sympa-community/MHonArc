@@ -1,13 +1,13 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	@(#) mhrcfile.pl 2.2 98/03/03 14:30:49
+##	@(#) mhrcfile.pl 2.6 98/10/10 16:29:34
 ##  Author:
-##      Earl Hood       ehood@medusa.acs.uci.edu
+##      Earl Hood       earlhood@usa.net
 ##  Description:
 ##      Routines for parsing resource files
 ##---------------------------------------------------------------------------##
 ##    MHonArc -- Internet mail-to-HTML converter
-##    Copyright (C) 1996-1998	Earl Hood, ehood@medusa.acs.uci.edu
+##    Copyright (C) 1996-1998	Earl Hood, earlhood@usa.net
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by
@@ -32,16 +32,14 @@ package mhonarc;
 ##	(The code for this routine could probably be simplified).
 ##
 sub read_resource_file {
-    local($file) = shift;
-    local($line, $tag, $label, $acro, $hr, $type, $routine, $plfile,
-	  $url, $arg, $tmp, @a);
-    local($elem, $attr, $override, $handle, $pathhead, $chop);
+    my($file) = shift;
+    my($line, $tag, $label, $acro, $hr, $type, $routine, $plfile,
+       $url, $arg, $tmp, @a);
+    my($elem, $attr, $override, $handle, $pathhead, $chop);
     $override = 0;
 
-    if (!($handle = &file_open($file))) {
-	warn "Warning: Unable to open resource file: $file\n";
-	return 0;
-    }
+    $handle = &file_open($file);
+
     if ($file =~ m%(.*[$DIRSEPREX])%o) {
 	$pathhead = $1;
     } else {
@@ -49,10 +47,11 @@ sub read_resource_file {
     }
 
     print STDOUT "Reading resource file: $file ...\n"  unless $QUIET;
-    while ($line = <$handle>) {
+    while (defined($line = <$handle>)) {
 	next unless $line =~ /^\s*<([^>]+)>/;
 	$attr = '';
 	($elem, $attr) = split(' ', $1, 2);
+	$attr = ''  unless defined($attr);
 	$elem =~ tr/A-Z/a-z/;
 	$override = ($attr =~ /override/i);
 	$chop = ($attr =~ /chop/i);
@@ -77,10 +76,10 @@ sub read_resource_file {
 	}
 	if ($elem eq "charsetconverters") {	# Charset filters
 	    if ($override) {
-		%readmail'MIMECharSetConverters = ();
-		%readmail'MIMECharSetConvertersSrc = ();
+		%readmail::MIMECharSetConverters = ();
+		%readmail::MIMECharSetConvertersSrc = ();
 	    }
-	    while ($line = <$handle>) {
+	    while (defined($line = <$handle>)) {
 		last  if $line =~ /^\s*<\/charsetconverters\s*>/i;
 		next  if $line =~ /^\s*$/;
 		$line =~ s/\s//g;
@@ -90,9 +89,9 @@ sub read_resource_file {
 		    ($type,$routine,$plfile) = split(/:/,$line,3);
 		}
 		$type =~ tr/A-Z/a-z/;
-		$readmail'MIMECharSetConverters{$type}    = $routine;
-		$readmail'MIMECharSetConvertersSrc{$type} = $plfile
-		    if $plfile =~ /\S/;
+		$readmail::MIMECharSetConverters{$type}    = $routine;
+		$readmail::MIMECharSetConvertersSrc{$type} = $plfile
+		    if defined($plfile) and $plfile =~ /\S/;
 	    }
 	    last FMTSW;
 	}
@@ -149,7 +148,7 @@ sub read_resource_file {
 	}
 	if ($elem eq "excs") {			# Exclude header fields
 	    %HFieldsExc = ()  if $override;
-	    while ($line = <$handle>) {
+	    while (defined($line = <$handle>)) {
 		last  if $line =~ /^\s*<\/excs\s*>/i;
 		$line =~ s/\s//g;  $line =~ tr/A-Z/a-z/;
 		$HFieldsExc{$line} = 1  if $line;
@@ -169,7 +168,7 @@ sub read_resource_file {
 	    last FMTSW;
 	}
 	if ($elem eq "fieldstyles") {		# Field text style
-	    while ($line = <$handle>) {
+	    while (defined($line = <$handle>)) {
 		last  if $line =~ /^\s*<\/fieldstyles\s*>/i;
 		next  if $line =~ /^\s*$/;
 		$line =~ s/\s//g;  $line =~ tr/A-Z/a-z/;
@@ -180,7 +179,7 @@ sub read_resource_file {
 	}
 	if ($elem eq "fieldorder") {		# Field order
 	    @FieldOrder = ();  %FieldODefs = ();
-	    while ($line = <$handle>) {
+	    while (defined($line = <$handle>)) {
 		last  if $line =~ /^\s*<\/fieldorder\s*>/i;
 		next  if $line =~ /^\s*$/;
 		$line =~ s/\s//g;  $line =~ tr/A-Z/a-z/;
@@ -206,18 +205,18 @@ sub read_resource_file {
 	    $FLDEND = &get_elem_content($handle, $elem, $chop);
 	    last FMTSW;
 	}
-	if ($elem eq "folrefs") {
+	if ($elem eq "folrefs") {		# Print explicit fol/refs
 	    $DoFolRefs = 1; last FMTSW;
 	}
-	if ($elem eq "folupbegin") {
+	if ($elem eq "folupbegin") {		# Begin markup for follow-ups
 	    $FOLUPBEGIN = &get_elem_content($handle, $elem, $chop);
 	    last FMTSW;
 	}
-	if ($elem eq "folupend") {
+	if ($elem eq "folupend") {		# End markup for follow-ups
 	    $FOLUPEND = &get_elem_content($handle, $elem, $chop);
 	    last FMTSW;
 	}
-	if ($elem eq "foluplitxt") {
+	if ($elem eq "foluplitxt") {		# Follow-up link markup
 	    $FOLUPLITXT = &get_elem_content($handle, $elem, $chop);
 	    last FMTSW;
 	}
@@ -228,7 +227,7 @@ sub read_resource_file {
 	    }
 	    last FMTSW;
 	}
-	if ($elem eq "fromfields") {
+	if ($elem eq "fromfields") {		# Fields to get author
 	    @a = &get_list_content($handle, $elem);
 	    if (@a) { @FromFields = @a; }
 	    last FMTSW;
@@ -272,7 +271,7 @@ sub read_resource_file {
 	}
 	if ($elem eq "icons") {			# Icons
 	    %Icons = ()  if $override;
-	    while ($line = <$handle>) {
+	    while (defined($line = <$handle>)) {
 		last  if $line =~ /^\s*<\/icons\s*>/i;
 		next  if $line =~ /^\s*$/;
 		$line =~ s/\s//g;
@@ -315,7 +314,7 @@ sub read_resource_file {
 	    last FMTSW;
 	}
 	if ($elem eq "include") {		# Include other rc files
-	    while ($line = <$handle>) {
+	    while (defined($line = <$handle>)) {
 		last  if $line =~ /^\s*<\/include\s*>/i;
 		next  if $line =~ /^\s*$/;
 		$line =~ s/\s+$//;
@@ -333,7 +332,7 @@ sub read_resource_file {
 	    last FMTSW;
 	}
 	if ($elem eq "labelstyles") {		# Field label style
-	    while ($line = <$handle>) {
+	    while (defined($line = <$handle>)) {
 		last  if $line =~ /^\s*<\/labelstyles\s*>/i;
 		next  if $line =~ /^\s*$/;
 		$line =~ s/\s//g;  $line =~ tr/A-Z/a-z/;
@@ -364,7 +363,7 @@ sub read_resource_file {
 	    $NOMAILTO = 0; last FMTSW;
 	}
 	if ($elem eq "mailtourl") {		# mailto URL
-	    while ($line = <$handle>) {
+	    while (defined($line = <$handle>)) {
 		last  if $line =~ /^\s*<\/mailtourl\s*>/i;
 		next  if $line =~ /^\s*$/;
 		$line =~ s/\s//g;
@@ -372,7 +371,7 @@ sub read_resource_file {
 	    }
 	    last FMTSW;
 	}
-	if ($elem eq "main") {
+	if ($elem eq "main") {			# Print main index
 	    $MAIN = 1; last FMTSW;
 	}
 	if ($elem eq "maxsize") {		# Size of archive
@@ -381,9 +380,12 @@ sub read_resource_file {
 	    }
 	    last FMTSW;
 	}
-	if ($elem eq "msgbodyend") {
+	if ($elem eq "msgbodyend") {		# Markup after message body
 	    $MSGBODYEND = &get_elem_content($handle, $elem, $chop);
 	    last FMTSW;
+	}
+	if ($elem eq "msgpgs") {		# Output message pages
+	    $NoMsgPgs = 0; last FMTSW;
 	}
 	if ($elem eq "msgprefix") {		# Prefix for message files
 	    if ($line = &get_elem_last_line($handle, $elem)) {
@@ -400,10 +402,10 @@ sub read_resource_file {
 	}
 	if ($elem eq "mimefilters") {		# Mime filters
 	    if ($override) {
-		%readmail'MIMEFilters = ();
-		%readmail'MIMEFiltersSrc = ();
+		%readmail::MIMEFilters = ();
+		%readmail::MIMEFiltersSrc = ();
 	    }
-	    while ($line = <$handle>) {
+	    while (defined($line = <$handle>)) {
 		last  if $line =~ /^\s*<\/mimefilters\s*>/i;
 		next  if $line =~ /^\s*$/;
 		$line =~ s/\s//g;
@@ -413,14 +415,14 @@ sub read_resource_file {
 		    ($type,$routine,$plfile) = split(/:/,$line,3);
 		}
 		$type =~ tr/A-Z/a-z/;
-		$readmail'MIMEFilters{$type}    = $routine;
-		$readmail'MIMEFiltersSrc{$type} = $plfile  if $plfile =~ /\S/;
+		$readmail::MIMEFilters{$type}    = $routine;
+		$readmail::MIMEFiltersSrc{$type} = $plfile  if $plfile =~ /\S/;
 	    }
 	    last FMTSW;
 	}
 	if ($elem eq "mimeargs") {		# Mime arguments
-	    %readmail'MIMEFiltersArgs = ()  if $override;
-	    while ($line = <$handle>) {
+	    %readmail::MIMEFiltersArgs = ()  if $override;
+	    while (defined($line = <$handle>)) {
 		last  if     $line =~ /^\s*<\/mimeargs\s*>/i;
 		next  unless $line =~ /\S/;
 		$line =~ s/^\s+//;
@@ -430,7 +432,7 @@ sub read_resource_file {
 		    ($type, $arg) = split(/:/,$line,2);
 		}
 		$type =~ tr/A-Z/a-z/  if $type =~ m%/%;
-		$readmail'MIMEFiltersArgs{$type} = $arg;
+		$readmail::MIMEFiltersArgs{$type} = $arg;
 	    }
 	    last FMTSW;
 	}
@@ -489,7 +491,7 @@ sub read_resource_file {
 	    }
 	    last FMTSW;
 	}
-	if ($elem eq "multipg") {
+	if ($elem eq "multipg") {		# Print multi-page indexes
 	    $MULTIIDX = 1; last FMTSW;
 	}
 	if ($elem eq "nextbutton") {		# Next button link in message
@@ -526,19 +528,19 @@ sub read_resource_file {
 	if ($elem eq "noconlen") {		# Ignore content-length
 	    $CONLEN = 0; last FMTSW;
 	}
-	if ($elem eq "nodecodeheads") {
+	if ($elem eq "nodecodeheads") {		# Don't decode charsets
 	    $DecodeHeads = 0; last FMTSW;
 	}
 	if ($elem eq "nodoc") {			# Do not link to docs
 	    $NODOC = 1; last FMTSW;
 	}
-	if ($elem eq "nofolrefs") {
+	if ($elem eq "nofolrefs") {		# Don't print explicit fol/refs
 	    $DoFolRefs = 0; last FMTSW;
 	}
-	if ($elem eq "nogzipfiles") {
+	if ($elem eq "nogzipfiles") {		# Don't gzip files
 	    $GzipFiles = 0;  last FMTSW;
 	}
-	if ($elem eq "nogziplinks") {
+	if ($elem eq "nogziplinks") {		# Don't add ".gz" to links
 	    $GzipLinks = 0;  last FMTSW;
 	}
 	if ($elem eq "nomailto") {		# Do not convert e-mail addrs
@@ -549,6 +551,9 @@ sub read_resource_file {
 	}
 	if ($elem eq "nomodtime") {		# Do not change mod times
 	    $MODTIME = 0; last FMTSW;
+	}
+	if ($elem eq "nomsgpgs") {		# Do not print message pages
+	    $NoMsgPgs = 1; last FMTSW;
 	}
 	if ($elem eq "nomultipg") {		# Single page index
 	    $MULTIIDX = 0; last FMTSW;
@@ -567,6 +572,28 @@ sub read_resource_file {
 	    $SUBSORT = 0;
 	    last FMTSW;
 	}
+	if ($elem eq "note") {			# Annotation markup
+	    $NOTE = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq "notedir") {		# Notes directory
+	    if ($line = &get_elem_last_line($handle, $elem)) {
+		$NoteDir = $line;
+	    }
+	    last FMTSW;
+	}
+	if ($elem eq "noteia") {		# No Annotation markup
+	    $NOTEIA = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq "noteicon") {		# Note icon
+	    $NOTEICON = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq "noteiconia") {		# Note icon when no annotation
+	    $NOTEICONIA = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
 	if ($elem eq "nothread") {		# No thread index
 	    $THREAD = 0; last FMTSW;
 	}
@@ -576,7 +603,10 @@ sub read_resource_file {
 	if ($elem eq "nourl") {			# Ignore URLs
 	    $NOURL = 1; last FMTSW;
 	}
-	if ($elem eq "nousinglastpg") {
+	if ($elem eq "nouselocaltime") {	# Not using localtime
+	    $UseLocalTime = 0; last FMTSW;
+	}
+	if ($elem eq "nousinglastpg") {		# Not using $LASTPG$
 	    $UsingLASTPG = 0; last FMTSW;
 	}
 	if ($elem eq "otherindexes") {		# Other indexes
@@ -593,7 +623,7 @@ sub read_resource_file {
 	    $PREVBUTTON = &get_elem_content($handle, $elem, $chop);
 	    last FMTSW;
 	}
-	if ($elem eq "prevbuttonia") {
+	if ($elem eq "prevbuttonia") {		# Prev i/a button link
 	    $PREVBUTTONIA = &get_elem_content($handle, $elem, $chop);
 	    last FMTSW;
 	}
@@ -601,7 +631,7 @@ sub read_resource_file {
 	    $PREVLINK = &get_elem_content($handle, $elem, $chop);
 	    last FMTSW;
 	}
-	if ($elem eq "prevlinkia") {
+	if ($elem eq "prevlinkia") {		# Prev i/a link
 	    $PREVLINKIA = &get_elem_content($handle, $elem, $chop);
 	    last FMTSW;
 	}
@@ -613,15 +643,15 @@ sub read_resource_file {
 	    $PREVPGLINKIA = &get_elem_content($handle, $elem, $chop);
 	    last FMTSW;
 	}
-	if ($elem eq "refsbegin") {
+	if ($elem eq "refsbegin") {		# Explicit ref links begin
 	    $REFSBEGIN = &get_elem_content($handle, $elem, $chop);
 	    last FMTSW;
 	}
-	if ($elem eq "refsend") {
+	if ($elem eq "refsend") {		# Explicit ref links end
 	    $REFSEND = &get_elem_content($handle, $elem, $chop);
 	    last FMTSW;
 	}
-	if ($elem eq "refslitxt") {
+	if ($elem eq "refslitxt") {		# Explicit ref link
 	    $REFSLITXT = &get_elem_content($handle, $elem, $chop);
 	    last FMTSW;
 	}
@@ -634,16 +664,20 @@ sub read_resource_file {
 	    $AUTHSORT = 0;  $SUBSORT = 0;
 	    last FMTSW;
 	}
-	if ($elem eq "subjectarticlerxp") {
+	if ($elem eq "subjectarticlerxp") {	# Regex for language articles
 	    if ($line = &get_elem_last_line($handle, $elem)) {
 		$SubArtRxp = $line;
 	    }
 	    last FMTSW;
 	}
-	if ($elem eq "subjectreplyrxp") {
+	if ($elem eq "subjectreplyrxp") {	# Regex for reply text
 	    if ($line = &get_elem_last_line($handle, $elem)) {
 		$SubReplyRxp = $line;
 	    }
+	    last FMTSW;
+	}
+	if ($elem eq "subjectstripcode") {	# Code to strip subjects
+	    $SubStripCode = &get_elem_content($handle, $elem, $chop);
 	    last FMTSW;
 	}
 	if ($elem eq "subsort") {		# Sort messages by subject
@@ -707,7 +741,7 @@ sub read_resource_file {
 	}
 	if ($elem eq "timezones") {		# Time zones
 	    %Zone = ()  if $override;
-	    while ($line = <$handle>) {
+	    while (defined($line = <$handle>)) {
 		last  if $line =~ /^\s*<\/timezones\s*>/i;
 		$line =~ s/\s//g;  $line =~ tr/a-z/A-Z/;
 		($acro,$hr) = split(/:/,$line);
@@ -875,6 +909,9 @@ sub read_resource_file {
 		$UMASK = $line;
 	    }
 	    last FMTSW;
+	}
+	if ($elem eq "uselocaltime") {		# Use localtime for day groups
+	    $UseLocalTime = 1; last FMTSW;
 	}
 	if ($elem eq "usinglastpg") {
 	    $UsingLASTPG = 1; last FMTSW;

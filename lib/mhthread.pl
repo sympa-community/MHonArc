@@ -1,13 +1,13 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##      @(#) mhthread.pl 2.2 98/03/03 14:33:44
+##      @(#) mhthread.pl 2.4 98/10/10 16:29:57
 ##  Author:
-##      Earl Hood       ehood@medusa.acs.uci.edu
+##      Earl Hood       earlhood@usa.net
 ##  Description:
 ##      Thread routines for MHonArc
 ##---------------------------------------------------------------------------##
 ##    MHonArc -- Internet mail-to-HTML converter
-##    Copyright (C) 1995-1998	Earl Hood, ehood@medusa.acs.uci.edu
+##    Copyright (C) 1995-1998	Earl Hood, earlhood@usa.net
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by
@@ -31,30 +31,47 @@ package mhonarc;
 ##	write_thread_index outputs the thread index
 ##
 sub write_thread_index {
+    local($onlypg) = shift;
     local($tmpl, $handle);
     local($index) = ("");
-    local(*a, $PageNum, %Printed);
+    local(*a);
+    local($PageNum, $PageSize, $totalpgs, %Printed);
     local($lastlevel, $tlevel, $iscont, $i, $offstart, $offend);
 
     local($level) = 0;  	## !!!Used in print_thread!!!
     local($last0index) = '';
 
-    for ($PageNum = 1; $PageNum <= $NumOfPages; $PageNum++) {
+    ## Make sure list orders are set
+    if (!scalar(@TListOrder)) {
+	&compute_threads();
+    }
+    if (!scalar(@MListOrder)) {	# need for resource variable expansions
+	@MListOrder = &sort_messages();
+	%Index2MLoc = ();
+	@Index2MLoc{@MListOrder} = (0 .. $#MListOrder);
+    }
+
+    &compute_page_total();
+    @ThreadList = @TListOrder;
+    $PageNum  = $onlypg || 1;
+    $totalpgs = $onlypg || $NumOfPages;
+ 
+    for ( ; $PageNum <= $totalpgs; ++$PageNum) {
+	next  if $PageNum < $TIdxMinPg;
+
 	if ($MULTIIDX) {
 	    $offstart = ($PageNum-1) * $IDXSIZE;
 	    $offend   = $offstart + $IDXSIZE-1;
 	    $offend   = $#TListOrder  if $#TListOrder < $offend;
 	    @a        = @TListOrder[$offstart..$offend];
-	}
-	next  if $PageNum < $TIdxMinPg;
 
-	if ($MULTIIDX) {
 	    if ($PageNum > 1) {
 		$TIDXPATHNAME = join("", $OUTDIR, $DIRSEP,
 				     $TIDXPREFIX, $PageNum, ".", $HtmlExt);
 	    } else {
 		$TIDXPATHNAME = join($DIRSEP, $OUTDIR, $TIDXNAME);
 	    }
+
 	} else {
 	    $TIDXPATHNAME = join($DIRSEP, $OUTDIR, $TIDXNAME);
 	    if ($IDXSIZE && (($i = ($#ThreadList+1) - $IDXSIZE) > 0)) {
@@ -66,7 +83,7 @@ sub write_thread_index {
 	    }
 	    *a = *ThreadList;
 	}
-	    
+	$PageSize = scalar(@a);
 
 	if ($IDXONLY) {
 	    $handle = 'STDOUT';
@@ -184,26 +201,34 @@ sub compute_threads {
     local(@refs);
     local($index, $msgid, $refindex, $depth, $tmp);
 
-    @TListOrder = ();	# reset
-    %Index2TLoc = ();	# reset
+    ##	Reset key data structures
+    @TListOrder  = ();
+    %Index2TLoc  = ();
+    %ThreadLevel = ();
+    %HasRef	 = ();
+    %HasRefDepth = ();
+    %Replies 	 = ();
+    %SReplies 	 = ();
 
     ##	Sort by date first for subject based threads
     @ThreadList = sort increase_index keys %Subject;
 
     ##	Find first occurrances of subjects
     foreach $index (@ThreadList) {
-	$tmp = $Subject{$index};
+	$tmp = lc $Subject{$index};
 	1 while (($tmp =~ s/^$SubReplyRxp//io) ||
 		 ($tmp =~ s/\s*-\s*re(ply|sponse)\s*$//io));
 
 	$stripsub{$index} = $tmp;
 	$FirstSub2Index{$tmp} = $index
-	    unless $FirstSub2Index{$tmp} ||
-		   grep($MsgId{$_}, split(/$X/o, $Refs{$index}));
+	    unless defined($FirstSub2Index{$tmp}) ||
+		   (defined($Refs{$index}) &&
+		    grep($MsgId{$_}, split(/$X/o, $Refs{$index})));
     }
 
     ##	Compute thread data
     TCOMP: foreach $index (@ThreadList) {
+	next  unless defined($Refs{$index});
 
 	# Check for explicit threading
 	if (@refs = split(/$X/o, $Refs{$index})) {
@@ -223,6 +248,7 @@ sub compute_threads {
 		++$depth;
 	    }
 	}
+
     } continue {
 	# Check for subject-based threading
 	if (!$HasRef{$index}) {
@@ -241,7 +267,6 @@ sub compute_threads {
     }
 
     ## Calculate thread listing order
-    ##
     @ThreadList = &t_sort_messages();
     foreach $index (@ThreadList) {
 	unless ($Counted{$index} || $HasRef{$index}) {
@@ -258,11 +283,13 @@ sub compute_threads {
 ##
 sub do_thread {
     local($idx, $level) = ($_[0], $_[1]);
-    local(@repls, @srepls);
+    local(@repls, @srepls) = ();
 
     ## Get replies
-    @repls = sort increase_index split(/$bs/o, $Replies{$idx});
-    @srepls = sort increase_index split(/$bs/o, $SReplies{$idx});
+    @repls  = sort increase_index split(/$bs/o, $Replies{$idx})
+	if defined($Replies{$idx});
+    @srepls = sort increase_index split(/$bs/o, $SReplies{$idx})
+	if defined($SReplies{$idx});
 
     ## Add index to printed order list (IMPORTANT SIDE-EFFECT)
     push(@TListOrder, $idx);
@@ -290,12 +317,14 @@ sub do_thread {
 ##
 sub print_thread {
     local($handle, $idx, $top) = ($_[0], $_[1], $_[2]);
-    local(@repls, @srepls);
+    local(@repls, @srepls) = ();
     local($attop, $haverepls, $hvnirepls, $single, $depth, $i);
 
     ## Get replies
-    @repls  = sort increase_index split(/$bs/o, $Replies{$idx});
-    @srepls = sort increase_index split(/$bs/o, $SReplies{$idx});
+    @repls  = sort increase_index split(/$bs/o, $Replies{$idx})
+	if defined($Replies{$idx});
+    @srepls = sort increase_index split(/$bs/o, $SReplies{$idx})
+	if defined($SReplies{$idx});
     $depth  = $HasRefDepth{$idx};
     $hvnirepls = (@repls || @srepls);
 
@@ -341,20 +370,18 @@ sub print_thread {
     $Printed{$idx} = 1;
 
     ## Print sub-threads
-    if (@repls) {
+    if (scalar(@repls) || scalar(@srepls)) {
 	&print_thread_var($handle, $idx, *TSUBLISTBEG)  if $level <= $TLEVELS;
 	foreach (@repls) {
 	    &print_thread($handle, $_);
 	}
-	&print_thread_var($handle, $idx, *TSUBLISTEND)  if $level <= $TLEVELS;
-    }
-    if (@srepls) {
-	&print_thread_var($handle, $idx, *TSUBLISTBEG)  if $level <= $TLEVELS;
-	&print_thread_var($handle, $idx, *TSUBJECTBEG);
-	foreach (@srepls) {
-	    &print_thread($handle, $_);
+	if (@srepls) {
+	    &print_thread_var($handle, $idx, *TSUBJECTBEG);
+	    foreach (@srepls) {
+		&print_thread($handle, $_);
+	    }
+	    &print_thread_var($handle, $idx, *TSUBJECTEND);
 	}
-	&print_thread_var($handle, $idx, *TSUBJECTEND);
 	&print_thread_var($handle, $idx, *TSUBLISTEND)  if $level <= $TLEVELS;
     }
 

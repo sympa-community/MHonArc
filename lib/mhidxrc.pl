@@ -1,13 +1,13 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	@(#) mhidxrc.pl 2.2 98/03/03 14:29:10
+##	@(#) mhidxrc.pl 2.4 98/08/10 23:26:05
 ##  Author:
-##      Earl Hood       ehood@medusa.acs.uci.edu
+##      Earl Hood       earlhood@usa.net
 ##  Description:
 ##      MHonArc library defining values for various index resources
 ##---------------------------------------------------------------------------##
 ##    MHonArc -- Internet mail-to-HTML converter
-##    Copyright (C) 1996-1998	Earl Hood, ehood@medusa.acs.uci.edu
+##    Copyright (C) 1996-1998	Earl Hood, earlhood@usa.net
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by
@@ -26,6 +26,8 @@
 ##---------------------------------------------------------------------------##
 
 package mhonarc;
+
+sub mhidxrc_set_vars {
 
 ##-----------------##
 ## Index resources ##
@@ -70,7 +72,7 @@ EndOfStr
 	$LIBEG .= "<UL>\n" .
 		  '<LI><A HREF="$TIDXFNAME$">$TIDXLABEL$</A></LI>' .
 		  "\n</UL>\n"  if $THREAD;
-	$LIBEG .= '$PREVPGLINK$$NEXTPGLINK$' . "\n"  if $MULTIIDX;
+	$LIBEG .= '$PGLINK(PREV)$$PGLINK(NEXT)$' . "\n"  if $MULTIIDX;
 	$LIBEG .= "<HR>\n<UL>\n";
 	$IsDefault{'LIBEG'} = 1;
     }
@@ -147,7 +149,7 @@ EndOfStr
 	$THEAD .= "<UL>\n" .
 		  '<LI><A HREF="$IDXFNAME$">$IDXLABEL$</A></LI>' .
 		  "\n</UL>\n"  if $MAIN;
-	$THEAD .= '$TPREVPGLINK$$TNEXTPGLINK$' . "\n"  if $MULTIIDX;
+	$THEAD .= '$PGLINK(TPREV)$$PGLINK(TNEXT)$' . "\n"  if $MULTIIDX;
 	$THEAD .= "<HR>\n<UL>\n";
 	$IsDefault{'THEAD'} = 1;
     }
@@ -207,7 +209,7 @@ EndOfStr
 
     ## Template for the start of subject based section
     unless ($TSUBJECTBEG) {
-	$TSUBJECTBEG  = "&lt;Possible follow-up(s)&gt;<BR>\n";
+	$TSUBJECTBEG  = "<LI>&lt;Possible follow-up(s)&gt;</LI>\n";
 	$IsDefault{'TSUBJECTBEG'} = 1;
     }
     ## Template for the end of subject based section
@@ -330,9 +332,9 @@ $FLDEND  = "</LI>",	$IsDefault{'FLDEND'} = 1    	unless $FLDEND;
 ##-----------------------------------##
 
 ## Next/prev buttons
-$NEXTBUTTON = '[<A HREF="$NEXTMSG$">'.$IdxTypeStr.' Next</A>]',
+$NEXTBUTTON = '[<A HREF="$MSG(NEXT)$">'.$IdxTypeStr.' Next</A>]',
     $IsDefault{'NEXTBUTTON'} = 1	unless $NEXTBUTTON;
-$PREVBUTTON = '[<A HREF="$PREVMSG$">'.$IdxTypeStr.' Prev</A>]',
+$PREVBUTTON = '[<A HREF="$MSG(PREV)$">'.$IdxTypeStr.' Prev</A>]',
     $IsDefault{'PREVBUTTON'} = 1	unless $PREVBUTTON;
 $NEXTBUTTONIA = "[$IdxTypeStr Next]",
     $IsDefault{'NEXTBUTTONIA'} = 1	unless $NEXTBUTTONIA;
@@ -343,7 +345,7 @@ $PREVBUTTONIA = "[$IdxTypeStr Prev]",
 unless ($NEXTLINK) {
     $NEXTLINK =<<EndOfStr;
 <LI>Next by $IdxTypeStr:
-<STRONG><A HREF="\$NEXTMSG\$">\$NEXTSUBJECT\$</A></STRONG>
+<STRONG><A HREF="\$MSG(NEXT)\$">\$SUBJECT(NEXT)\$</A></STRONG>
 </LI>
 EndOfStr
     $IsDefault{'NEXTLINK'} = 1;
@@ -356,7 +358,7 @@ $NEXTLINKIA = '', $IsDefault{'NEXTLINKIA'} = 1	unless $NEXTLINKIA;
 unless ($PREVLINK) {
     $PREVLINK =<<EndOfStr;
 <LI>Prev by $IdxTypeStr:
-<STRONG><A HREF="\$PREVMSG\$">\$PREVSUBJECT\$</A></STRONG>
+<STRONG><A HREF="\$MSG(PREV)\$">\$SUBJECT(PREV)\$</A></STRONG>
 </LI>
 EndOfStr
     $IsDefault{'PREVLINK'} = 1;
@@ -366,9 +368,9 @@ EndOfStr
 $PREVLINKIA = '', $IsDefault{'PREVLINKIA'} = 1  unless $PREVLINKIA;
 
 ## Thread next/previous buttons
-$TNEXTBUTTON = '[<A HREF="$TNEXTMSG$">Thread Next</A>]',
+$TNEXTBUTTON = '[<A HREF="$MSG(TNEXT)$">Thread Next</A>]',
     $IsDefault{'TNEXTBUTTON'} = 1	unless $TNEXTBUTTON;
-$TPREVBUTTON = '[<A HREF="$TPREVMSG$">Thread Prev</A>]',
+$TPREVBUTTON = '[<A HREF="$MSG(TPREV)$">Thread Prev</A>]',
     $IsDefault{'TPREVBUTTON'} = 1	unless $TPREVBUTTON;
 $TNEXTBUTTONIA = '[Thread Next]',
     $IsDefault{'TNEXTBUTTONIA'} = 1	unless $TNEXTBUTTONIA;
@@ -379,7 +381,7 @@ $TPREVBUTTONIA = '[Thread Prev]',
 unless ($TNEXTLINK) {
     $TNEXTLINK =<<'EndOfStr';
 <LI>Next by thread:
-<STRONG><A HREF="$TNEXTMSG$">$TNEXTSUBJECT$</A></STRONG>
+<STRONG><A HREF="$MSG(TNEXT)$">$SUBJECT(TNEXT)$</A></STRONG>
 </LI>
 EndOfStr
     $IsDefault{'TNEXTLINK'} = 1;
@@ -392,7 +394,7 @@ $TNEXTLINKIA = '', $IsDefault{'TNEXTLINKIA'} = 1  unless $TNEXTLINKIA;
 unless ($TPREVLINK) {
     $TPREVLINK =<<'EndOfStr';
 <LI>Prev by thread:
-<STRONG><A HREF="$TPREVMSG$">$TPREVSUBJECT$</A></STRONG>
+<STRONG><A HREF="$MSG(TPREV)$">$SUBJECT(TPREV)$</A></STRONG>
 </LI>
 EndOfStr
     $IsDefault{'TPREVLINK'} = 1;
@@ -404,9 +406,9 @@ $TPREVLINKIA = '', $IsDefault{'TPREVLINKIA'} = 1  unless $TPREVLINKIA;
 ## Top links in message
 if (!$TOPLINKS) {
     $TOPLINKS  = "<HR>\n";
-    $TOPLINKS .= '$PREVBUTTON$$NEXTBUTTON$'
+    $TOPLINKS .= '$BUTTON(PREV)$$BUTTON(NEXT)$'
 	if $MAIN;
-    $TOPLINKS .= '$TPREVBUTTON$$TNEXTBUTTON$'
+    $TOPLINKS .= '$BUTTON(TPREV)$$BUTTON(TNEXT)$'
 	if $THREAD;
     $TOPLINKS .= '[<A HREF="$IDXFNAME$#$MSGNUM$">$IDXLABEL$</A>]'
 	if $MAIN;
@@ -418,8 +420,8 @@ if (!$TOPLINKS) {
 ## Bottom links in message
 if (!$BOTLINKS) {
     $BOTLINKS =  "<UL>\n";
-    $BOTLINKS .= '$PREVLINK$$NEXTLINK$'  if $MAIN;
-    $BOTLINKS .= '$TPREVLINK$$TNEXTLINK$'  if $THREAD;
+    $BOTLINKS .= '$LINK(PREV)$$LINK(NEXT)$'  if $MAIN;
+    $BOTLINKS .= '$LINK(TPREV)$$LINK(TNEXT)$'  if $THREAD;
     if ($MAIN || $THREAD) {
 	$BOTLINKS .= "<LI>Index(es):\n<UL>\n";
 	$BOTLINKS .= '<LI><A HREF="$IDXFNAME$#$MSGNUM$">' .
@@ -478,13 +480,13 @@ EndOfVar
 ## Next/previous main/thread index page links ##
 ##--------------------------------------------##
 
-$NEXTPGLINK  = '[<A HREF="$NEXTPG$">Next Page</A>]',
+$NEXTPGLINK  = '[<A HREF="$PG(NEXT)$">Next Page</A>]',
     $IsDefault{'NEXTPGLINK'} = 1	unless $NEXTPGLINK;
-$PREVPGLINK  = '[<A HREF="$PREVPG$">Prev Page</A>]',
+$PREVPGLINK  = '[<A HREF="$PG(PREV)$">Prev Page</A>]',
     $IsDefault{'PREVPGLINK'} = 1	unless $PREVPGLINK;
-$TNEXTPGLINK = '[<A HREF="$TNEXTPG$">Next Page</A>]',
+$TNEXTPGLINK = '[<A HREF="$PG(TNEXT)$">Next Page</A>]',
     $IsDefault{'TNEXTPGLINK'} = 1	unless $TNEXTPGLINK;
-$TPREVPGLINK = '[<A HREF="$TPREVPG$">Prev Page</A>]',
+$TPREVPGLINK = '[<A HREF="$PG(TPREV)$">Prev Page</A>]',
     $IsDefault{'TPREVPGLINK'} = 1	unless $TPREVPGLINK;
 
 $NEXTPGLINKIA  = '[Next Page]',
@@ -496,11 +498,26 @@ $TNEXTPGLINKIA = '[Next Page]',
 $TPREVPGLINKIA = '[Prev Page]',
     $IsDefault{'TPREVPGLINKIA'} = 1	unless $TPREVPGLINKIA;
 
+##---------------##
+## Miscellaneous ##
+##---------------##
+
 $MSGIDLINK = '<A $A_HREF$>$MSGID$</A>',
      $IsDefault{'MSGIDLINK'} = 1	unless $MSGIDLINK;
 
+$NOTE	    = '$NOTETEXT$',
+     $IsDefault{'NOTE'} = 1		unless $NOTE;
+$NOTEIA	    = '',
+     $IsDefault{'NOTEIA'} = 1		unless $NOTEIA;
+$NOTEICON   = '',
+     $IsDefault{'NOTEICON'} = 1		unless $NOTEICON;
+$NOTEICONIA = '',
+     $IsDefault{'NOTEICONIA'} = 1	unless $NOTEICONIA;
+
 ##	Set unknown icon
 $Icons{'unknown'} = $Icons{'text/plain'}  unless $Icons{'unknown'};
+
+}
 
 ##---------------------------------------------------------------------------##
 1;

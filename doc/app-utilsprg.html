@@ -1,0 +1,90 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
+<HTML>
+<HEAD>
+<TITLE>MHonArc v2.3 -- Appendix: Utility Programs
+</TITLE>
+</HEAD>
+<BODY background="ssbg75.jpg"
+      text="#000000" link="#0000ee" vlink="#551a8b" alink="ff0000">
+
+<!--X-NavButtons-Start-->
+<p align=center>
+<a href="app-diagnos.html"><img src="prev.gif" border=0 alt="[Prev]"></a><a href="app-bugs.html"><img src="next.gif" border=0 alt="[Next]"></a><a href="mhonarc.html"><img src="up.gif" border=0 alt="[TOC]"></a><a href="faq/faq.html"><img src="faq.gif" border=0 alt="[FAQ]"></a><a href="bugs.html"><img src="bug.gif" border=0 alt="[Bugs]"></a><a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"><img src="home.gif" border=0 alt="[Home]"></a>
+</p>
+<!--X-NavButtons-End-->
+<HR>
+
+<H1><a name="appendixA">Appendix: Utility Programs</a></H1>
+
+<P>This appendix describes the adiitional utility programs that
+are included in the MHonArc distribution.  The utility programs
+are installed with <b>mhonarc</b> during the installation process.
+</P>
+
+<hr>
+<H2><a name="mha-dbedit">mha-dbedit</a></H2>
+
+<P><b>mha-dbedit</b> allows modifications to be made to an archive
+database without regenerating any archive pages.
+</P>
+
+<p>Typical usage:
+</p>
+<pre>
+    % <b>mha-dbedit -rcfile <var>res.mrc</var> -outdir <var>/path/to/archive</var></b>
+</pre>
+
+<hr>
+<H2><a name="mha-dbrecover">mha-dbrecover</a></H2>
+
+<P><b>mha-dbrecover</b> recreates an archive database from the individual
+message pages.  This program is useful if an archive database gets
+corrupted, or accidentally deleted.
+</P>
+
+<p>Typical usage:
+</p>
+<pre>
+    % <b>mha-dbrecover -outdir <var>/path/to/archive</var></b>
+</pre>
+
+<p>If the archive used different resource settings from the defaults
+for controling filenames, then you must specify those settings when
+invoking <b>mha-dbrecover</b>.  For example, if you are using
+"<tt>shtml</tt>" for HTMLEXT, then you should invoke <b>mha-dbrecover</b>
+like as follows:
+</p>
+<pre>
+    % <b>mha-dbrecover -htmlext shtml -outdir <var>/path/to/archive</var></b>
+</pre>
+
+<p><b>mha-dbrecover</b> will only recreate non-layout message related data.
+If the archive had resource settings that were different than the
+the defaults, then those resource settings must be specified when
+invoking <b>mha-dbrecover</b>.  For example:
+</p>
+<pre>
+    % <b>mha-dbrecover -rcfile <var>res.mrc</var> -outdir <var>/path/to/archive</var></b>
+</pre>
+
+
+<hr>
+<!--X-NavButtons-Start-->
+<p align=center>
+<a href="app-diagnos.html"><img src="prev.gif" border=0 alt="[Prev]"></a><a href="app-bugs.html"><img src="next.gif" border=0 alt="[Next]"></a><a href="mhonarc.html"><img src="up.gif" border=0 alt="[TOC]"></a><a href="faq/faq.html"><img src="faq.gif" border=0 alt="[FAQ]"></a><a href="bugs.html"><img src="bug.gif" border=0 alt="[Bugs]"></a><a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"><img src="home.gif" border=0 alt="[Home]"></a>
+</p>
+<!--X-NavButtons-End-->
+
+<HR>
+<address>
+98/10/24 17:31:02<br>
+<img align="top" src="monicon.gif" alt="">
+<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"
+><strong>MHonArc</strong></a><br>
+Copyright &#169; 1998, <a href="http://www.oac.uci.edu/indiv/ehood/"
+>Earl Hood</a>, <a href="mailto:earlhood@usa.net"
+>earlhood@usa.net</a><br>
+</address>
+
+</BODY>
+</HTML>

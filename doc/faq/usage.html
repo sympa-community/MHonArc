@@ -1,0 +1,355 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
+<HTML>
+<HEAD>
+<TITLE>MHonArc FAQ: General Usage</TITLE></HEAD>
+<BODY>
+
+<!--X-NavButtons-Start-->
+<p align=center>
+[<a href="envs.html">Prev</a>][<a href="archives.html">Next</a>][<a href="faq.html">TOC</a>][<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html">Home</a>]
+</p>
+<!--X-NavButtons-End-->
+
+<!-- ===================================================================== -->
+<HR>
+<H2><a name="genusage">General Usage</a></H2>
+
+<!--X-TOC-Start-->
+<ul>
+<li><a href="#resources">What are "resources"?</a></li>
+<li><a href="#rfileedit">Is there a resource file editor?</a></li>
+<li><a href="#nilresource">How do you set a resource to nil?</a></li>
+<li><a href="#newgetopt">I get an error that "newgetopt.pl" cannot be required, where is it?</a></li>
+<li><a href="#searching">Does MHonArc provide searching of archives?</a></li>
+<li><a href="#webui">Is there a Web interface for MHonArc?</a></li>
+<li><a href="#orgmsg">Does MHonArc require that the original message be available when updating an archive?</a></li>
+<li><a href="#respecify">Do I have to respecify the resource file each time I update an archive?</a></li>
+<li><a href="#sepfiles">Can I have MHonArc process a bunch of separate message files?</a></li>
+<li><a href="#stdin">Can I tell MHonArc to read a mailbox from standard input?</a></li>
+<li><a href="#parsedate">Why am I getting "Could not parse date for message ..."?</a></li>
+<li><a href="#parsedate">Why doesn't MHonArc extract the date from "From ..." line?</a></li>
+<li><a href="#count">Why is the number of messages reported by MHonArc less than what is reported by my MUA?</a></li>
+</ul>
+<!--X-TOC-End-->
+
+<!-- ??????????????????????????????????????????????????????????????? -->
+<hr noshade size=1>
+<table border=0>
+<tr valign=top><td><img src="monicon.gif" align="bottom" alt=""></td><td>
+<h3><b><a name="resources">What are "resources"?</a></b></h3>
+</td></tr></table>
+
+<p>The behavior of MHonArc is controled by <em>resources</em>.
+Resources are set, or defined, by command-line options, environment
+variables, or a resource file.  For example, the MAXSIZE resource tells
+MHonArc the maximum number of messages in an archive.  To set
+the resource, you can use the <strong><code>-maxsize</code></strong>
+command-line option, the <strong>M2H_MAXSIZE</strong> envariable, or the
+<strong><code>&lt;MAXSIZE&gt;</code></strong> resource file element.
+</p>
+
+<p>See the documentation for more information.
+</p>
+
+<!-- ??????????????????????????????????????????????????????????????? -->
+<hr noshade size=1>
+<table border=0>
+<tr valign=top><td><img src="monicon.gif" align="bottom" alt=""></td><td>
+<h3><b><a name="rfileedit">Is there a resource file editor?</a></b></h3>
+</td></tr></table>
+
+<p>If you are Vim user,
+<a href="http://www.vim.org/">&lt;URL:http://www.vim.org/&gt;</a>,
+a syntax file
+for MHonArc resource files is included in the examples directory
+(<b>mhonarc.vim</b>).  To use it, copy mhonarc.vim to an appropriate location
+and add something like the following to your .vimrc file:
+</p>
+<pre>
+au BufNewFile,BufRead *.mrc     so $HOME/share/vim/syntax/mhonarc.vim
+</pre>
+<p>Of course, change the pathname to mhonarc.vim to where ever you copied
+it to.
+</p>
+<p>Now, any file with ".mrc" extension will put Vim into MHonArc resource
+file highlighting mode.  The mode is best used with color-capable
+terminals.
+</p>
+
+<!-- ??????????????????????????????????????????????????????????????? -->
+<hr noshade size=1>
+<table border=0>
+<tr valign=top><td><img src="monicon.gif" align="bottom" alt=""></td><td>
+<h3><b><a name="nilresource">How do you set a resource to nil?</a></b></h3>
+</td></tr></table>
+
+<p>For page layout resources, do something like the following in
+your resource file:
+</p>
+<pre>
+&lt;BotLinks&gt;
+
+&lt;/BotLinks&gt;
+</pre>
+<p>Notice the blank line.  If you specify no content, MHonArc will
+fallback to the default value of the resource.
+</p>
+
+<!-- ??????????????????????????????????????????????????????????????? -->
+<hr noshade size=1>
+<table border=0>
+<tr valign=top><td><img src="monicon.gif" align="bottom" alt=""></td><td>
+<h3><b><a name="newgetopt">I get an error that "newgetopt.pl" cannot be required, where is it?</a></b></h3>
+</td></tr></table>
+
+<p>newgetopt.pl comes with the standard Perl distribution.  Check with
+your sys admin on where it is located (it should be in the default Perl
+search path).
+</p>
+
+<table border=0 cellpadding=4>
+<tr valign=top>
+<td><strong>NOTE</strong></td>
+<td><p>v2.3 and later use <b>Getopt::Long</b>, which is included
+in the Perl 5 distribution.
+</p>
+</td>
+</tr>
+</table>
+
+
+<!-- ??????????????????????????????????????????????????????????????? -->
+<hr noshade size=1>
+<table border=0>
+<tr valign=top><td><img src="monicon.gif" align="bottom" alt=""></td><td>
+<h3><b><a name="searching">Does MHonArc provide searching of archives?</a></b></h3>
+</td></tr></table>
+
+<p>No, but a searching can be provided by another utility.  See
+the MHonArc home page
+<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"
+>&lt;URL:http://www.oac.uci.edu/indiv/ehood/mhonarc.html&gt;</a> to
+some links to contributed programs for searching MHonArc
+archives.
+Also, any standard search engine can be used.  For example, the
+MHonArc mailing list archive
+<A HREF="http://www.rosat.mpe-garching.mpg.de/mailing-lists/mhonarc/"
+>&lt;URL:http://www.rosat.mpe-garching.mpg.de/mailing-lists/mhonarc/&gt;</a>
+provides a
+<strong>Glimpse</strong>
+<a href="http://glimpse.cs.arizona.edu/"
+>&lt;URL:http://glimpse.cs.arizona.edu/&gt;</a>
+search engine for searching messages.  For more information, see
+the respective documentation of the search engine software of
+interest.
+</p>
+
+<dl>
+<dt><strong>NOTE</strong></dt>
+<dd><p>You may also want to check out
+<strong><a href="http://www.hpc.uh.edu/majordomo/#wilma">Wilma</a></strong>
+at <a href="http://www.hpc.uh.edu/majordomo/#wilma"
+>&lt;URL:http://www.hpc.uh.edu/majordomo/#wilma&gt;</a>.
+Wilma is the Web Interface to List Mail Archives, written by Dave Wolfe
+and Jason Tibbitts with nods to Achim Bohnet and Tom Christiansen.
+WIlma is a relatively simple bit of Perl which links together the
+MHonArc  mail-to-HTML converter and the Glimpse search engine.
+The result is a useful tool for allowing folks to browse your list
+archives over the web. It works very well with the archives generated
+by Majordomo's archive2.pl script.
+</p>
+</dd>
+</dl>
+
+<!-- ??????????????????????????????????????????????????????????????? -->
+<hr noshade size=1>
+<table border=0>
+<tr valign=top><td><img src="monicon.gif" align="bottom" alt=""></td><td>
+<h3><b><a name="webui">Is there a Web interface for MHonArc?</a></b></h3>
+</td></tr></table>
+
+<p>No official ones.  Several users have created home-grown interfaces
+to perform various tasks.  I recommend searching the
+MHonArc mailing list archives.
+</p>
+
+<!-- ??????????????????????????????????????????????????????????????? -->
+<hr noshade size=1>
+<table border=0>
+<tr valign=top><td><img src="monicon.gif" align="bottom" alt=""></td><td>
+<h3><b><a name="orgmsg">Does MHonArc require that the original message be available when updating an archive?</a></b></h3>
+</td></tr></table>
+
+<p>No.  Once a message is archived, the original can be stored
+away.  MHonArc preserves all relevant information in its
+database.  For possible recovering purposes, it is recommended
+to preserve original messages in a storage archive.  This allows
+you to rebuild MHonArc archives in case of data corruption.
+</p>
+
+<!-- ??????????????????????????????????????????????????????????????? -->
+<hr noshade size=1>
+<table border=0>
+<tr valign=top><td><img src="monicon.gif" align="bottom" alt=""></td><td>
+<h3><b><a name="respecify">Do I have to respecify the resource file each time I update an archive?</a></b></h3>
+</td></tr></table>
+
+<P>No. The archive database stores all resource settings. The only
+time you need to respecify the resource file is if changes are required
+in the layout of the archive.  </P>
+
+<DL>
+<DT><STRONG>NOTE</STRONG> 
+
+<DD><P>When utilizing the <strong>OTHERINDEXES</strong> resource,
+the resource filenames listed in the main resource file are stored
+in the database, but the resources for each additional index are
+<STRONG>NOT</STRONG>. Hence, the resource files defining the additional
+indexes must be accesible.
+</P></DL>
+
+<!-- ??????????????????????????????????????????????????????????????? -->
+<hr noshade size=1>
+<table border=0>
+<tr valign=top><td><img src="monicon.gif" align="bottom" alt=""></td><td>
+<h3><b><a name="sepfiles">Can I have MHonArc process a bunch of separate message files?</a></b></h3>
+</td></tr></table>
+
+<p>Yes.  MH mail folder processing is just processing a bunch of
+separate message files in a directory.  MHonArc uses
+the MHPATTERN resource to determine which files to process.  Therefore,
+all you need to do is redefine the MHPATTERN resource and pass
+the directory your message files are in when invoking MHonArc.
+</p>
+
+<p>For example, say I want to process all files in a directory
+called "messages".  I'd do the following:
+</p>
+<pre>
+    % <b>mhonarc -mhpattern "^[^.]" messages</b>
+</pre>
+<p>MHPATTERN can be any Perl regular expression.  The one in
+the example matches any file not beginning with ".".  This
+is to avoid the special files "." and ".." which are directories.
+</p>
+
+<p>The other way to process individual message files is to do
+it one at a time.  For example:
+</p>
+<pre>
+    % <b>mhonarc -add &lt; file1.822</b>
+    % <b>mhonarc -add &lt; file2.822</b>
+    ...
+</pre>
+
+<!-- ??????????????????????????????????????????????????????????????? -->
+<hr noshade size=1>
+<table border=0>
+<tr valign=top><td><img src="monicon.gif" align="bottom" alt=""></td><td>
+<h3><b><a name="stdin">Can I tell MHonArc to read a mailbox from standard input?</a></b></h3>
+</td></tr></table>
+
+<p>Yes, but only in v2.0 or later (v2.0 beta releases do not have
+the capability).  The syntax is something like the following:
+</p>
+<pre>
+    % <b>mhonarc </b><var>[options-here]</var> <b>-- -</b>
+</pre>
+<p>The "--" tells MHonArc to terminate all command-line
+option processing and treat all following arguments as mail
+folders.  The "-" signifies to use standard input as a mailbox
+source.
+</p>
+
+<p>Since MHonArc can read a mailbox from stdin, this
+allows MHonArc to be part of a pipeline where MHonArc
+takes input from some preprocessor that massages some data to
+make it suitable for processing by MHonArc.  For example:
+</p>
+<pre>
+    % <b>mypreproc | mhonarc -- -</b>
+</pre>
+
+<!-- ??????????????????????????????????????????????????????????????? -->
+<hr noshade size=1>
+<table border=0>
+<tr valign=top><td><img src="monicon.gif" align="bottom" alt=""></td><td>
+<h3><b><a name="parsedate">Why am I getting "Could not parse date for message ..."?</a></b></h3>
+</td></tr></table>
+
+<p>This warning is generated when a message does not contain any date
+information, or the date format used in the message is not recognized
+by MHonArc.  The warning may also indicate an improper end of a message
+and start of a new message when processing a mailbox file.  You
+may also want to see:
+<a href="archive.html#split">Why does a 
+message get split into mulitple messages with no headers?</a>.
+</p>
+
+<!-- ??????????????????????????????????????????????????????????????? -->
+<hr noshade size=1>
+<table border=0>
+<tr valign=top><td><img src="monicon.gif" align="bottom" alt=""></td><td>
+<h3><b><a name="parsedate">Why doesn't MHonArc extract the date from "From ..." line?</a></b></h3>
+</td></tr></table>
+
+<p>The "From ..." line (applicable in UUCP-style mailbox files) is
+the message separator and normally includes a date.  The problem
+is that <em>it is the message separator</em>.  The message separator
+is not part of actual message data, and the value of
+the message separator is controled by the MSGSEP resource.  I.e.
+The MSGSEP resource can be set anything, so there is no reliable
+way to extract a date from it.
+</p>
+<p>Do not lose hope.  Provided in the extras directory of the
+MHonArc distribution (v2.1.1 and later) is a Perl program called
+<b>prsfrom.pl</b> by A.R. Burgers,
+<a href="mailto:burgers@ecn.nl">burgers@ecn.nl</a>.  The program
+will supply missing Date: and From: fields to mailboxes based upon
+the message separator line.
+</p>
+
+<!-- ??????????????????????????????????????????????????????????????? -->
+<hr noshade size=1>
+<table border=0>
+<tr valign=top><td><img src="monicon.gif" align="bottom" alt=""></td><td>
+<h3><b><a name="count">Why is the number of messages reported by MHonArc less than what is reported by my MUA?</a></b></h3>
+</td></tr></table>
+
+<p>This usually implies that you have duplicate messages.  MHonArc
+will not archive a message that has already been archived.
+A way to check if message duplication is the culprit, try the following
+on your mailbox:
+</p>
+<pre>
+    grep -i '^message-id:' my.mbox | sort | uniq | wc -l
+</pre>
+and
+<pre>
+    grep -i '^message-id:' my.mbox | sort | wc -l
+</pre>
+
+<p>If numbers printed by both commands differ, you have duplicate messages.
+</p>
+
+<!-- ===================================================================== -->
+<hr>
+
+<!--X-NavButtons-Start-->
+<p align=center>
+[<a href="envs.html">Prev</a>][<a href="archives.html">Next</a>][<a href="faq.html">TOC</a>][<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html">Home</a>]
+</p>
+<!--X-NavButtons-End-->
+
+<hr>
+<address>
+98/10/03 15:44:56<br>
+<img align="top" src="monicon.gif" alt="">
+<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"
+><strong>MHonArc</strong></a><br>
+Copyright &#169; 1997-1998, <a href="http://www.oac.uci.edu/indiv/ehood/"
+>Earl Hood</a>, <a href="mailto:ehood@medusa.acs.uci.edu"
+>ehood@medusa.acs.uci.edu</a><br>
+</address>
+</body>
+</html>

@@ -1,23 +1,276 @@
-CHANGES for MHonArc
+		    Version History for MHonArc
+		    ===========================
+	<URL:http://www.oac.uci.edu/indiv/ehood/mhonarc.html>
 
-    http://www.oac.uci.edu/indiv/ehood/mhonarc.html
-
-Revision history for MHonArc.  Changes listed are brief.  Consult
+Version history for MHonArc.  Changes listed are brief.  Consult
 the documentation for further information/clarification.  It is
 possible that not all changes are documented here.
 
-MM/DD/YY(YY)
+MM/DD/YYYY
 =======================================================================
 #######################################################################
+=======================================================================
+11/08/1998	(2.3.3)
+
+    Bug Fixes
+    ---------
+    Problem:   	-otherindex and -perlinc command-line options do not
+		work.  Using them has no affect.
+    Solution:	Subtle precedence issue in Perl variable operations;
+		problem fixed.
+
+    Problem:   	Resource variable expansion not working properly in
+		MAILTOURL resource.
+    Solution:	Certain variables in read_mail_header() where put in
+		my() declarations when they should stay as local()'s.
+		Changed back.
+
+    Problem:   	Next/previous message link resource variables are
+		reversed when REVERSE is on.
+    Solution:	REVERSE check was left out in new v2.3 replace_li_var().
+		Check added in.
+
+=======================================================================
+11/01/1998	(2.3.2)
+
+    Enhancements/Changes
+    --------------------
+    o	A new (improved) install.me program to do the installation.
+	See INSTALL for more information.
+
+    Bug Fixes
+    ---------
+    Problem:   	Some resource variables (eg $SUBJECTNA$) expand to
+		blank values when using -single.
+    Solution:	SINGLE mode sets @MListOrder and %Index2MLoc to support
+		the new way in v2.3 replace_li_var() resolves resource
+		variables.
+
+    Problem:   	MHonArc does not handle message range specification
+		with leading zeros in numbers in -rmm mode.
+    Solution:	int() is used within Perl's range operator to force
+		the stripping of leading zeros.
+
+=======================================================================
+10/25/1998	(2.3.1)
+
+    Enhancements/Changes
+    --------------------
+    Please read the RELNOTES file for important information regarding
+    upgrading to v2.2.x, or later, from pre-v2.2 releases.
+
+    o	Support for MHTML.  I.e.  An HTML document that references data
+	included as other parts to the mail message, will be converted
+	so the data will be shown where referenced.  Before, all
+	referenced data was shown at the end of the message.
+
+    o	Auto-computing the name for attachments no longer caches
+	data, so performance may decrease when processing MIME
+	messages.  This change is required since multiple filters can
+	now write data to files and not all to the same directory (a
+	common utility function now exists for writing data to a file).
+	Also, it avoids behavioral problems with custom front-ends
+	that operate on multiple archives in a single process.
+
+    o	Changes to readmail.pl inorder to support MHTML.  Changes
+	done should help the handling of other multipart/related
+	data types.
+
+    Bug Fixes
+    ---------
+    Problem:   	Attachments of the same type get written to the same
+		filename.
+    Solution:	Another my/local gotcha.  Note, writing attachments
+		has been redone so other filters besided mhexternal.pl
+		can write data to files.
+
+=======================================================================
+10/10/1998	(2.3.0)
+
+    o	Perl 5 is now required to run MHonArc.  Although the code
+	base is still "Perl 4-style", many changes made use of Perl 5
+	constructs.
+
+    o	New utility programs added to the dustribution:
+
+	    mha-dbedit		- Make resource/db changes w/o touching
+				  pages.
+	    mha-dbrecover	- Rebuild database from HTML message
+				  files.
+
+    o	Many resource variables have been changed to take arguments
+	to control what values the variables will expand to.  Because,
+	of this, many variables are now deprecated.  However, old
+	forms of resource variables are still recognized.
+
+	See the documentation for more information on resource
+	variables (a new section on resource variables has been
+	added to the documentation) and the newer syntax.
+
+    o	New resources:
+
+	    AFS			- Skip archive directory permission check
+	    ANNOTATE		- Annotate message(s).
+	    LOCK		- To lock, or not to lock.
+	    MSGPGS		- Print, or not, message pages.
+	    NOTE		- Annotate markup.
+	    NOTEIA		- Inactive annotate markup.
+	    NOTEDIR		- Directory where annotations are located.
+	    NOTETEXT		- Annotation text.
+	    PAGENUM		- Page to output when using GENIDX with
+				  MULTIPG.
+	    READDB		- Just load the database
+				  (useful for application front-ends).
+	    USELOCALTIME	- Use localtime to determine day groups in
+				  date index listing.
+
+    o	New resource variables:
+
+	    $DDMMYYYY$		- Day/Mon/Year(4 digit)
+	    $MMDDYYYY$		- Mon/Day/Year(4 digit)
+	    $MSG$		- Filename of message page
+	    $SORTTYPE$		- Type of sort in use for main index
+	    $TSORTTYPE$		- Type of sort in use for thread index
+	    $YYYYMMDD$		- Year(4 digit)/Mon/Day
+
+	Note, many other variables have been changed.  See docs for
+	more information.
+
+    o	Added "J" modifier for resource variables.  When specified,
+	escapes quote characters so expanded values can be used
+	within JavaScript strings.
+
+    o	Added "usenameext" option to mhexternal.pl filter.  When
+	specified, mhexternal.pl will use the filename specified in
+	the message for determining the filename extension to use.
+
+    o	The -rcfile option can be specified multiple times.  Resource
+	files specified are read in the order specified.
+
+    o	The -definevars options has been deprecated in favor of
+	-definevar (no ending 's').  -definevar can be specified
+	multiple times on the command-line.  The usaage of it is
+	exactly the same as -definevars.  The -definevars is still
+	supported for backwards compatibility.
+
+    o	The -perlinc option can be specified multiple times.
+
+    o	For the mhtxtplain.pl filter, the TARGET attribute for links is
+	now specified only if the target option is specified.
+
+    o	MHonArc is now smarter when the RMM resource is used.  MHonArc
+	will now only update pages that are required when messages
+	are removed instead of doing a force update on all pages.
+	RMM operations will now perform much faster.
+
+    o	Subject based replies are *no longer* treated as a separate
+	"group" when printing thread index pages.  I.e.  Subject based
+	replies no longer cause a separate TSUBLISTBEG and TSUBLISTEND
+	to be invoked.	Before, it was a problem if the HTML OL
+	element was used.  OL numbering would restart when subject
+	based replies were printed.
+
+    o	GENIDX now supports the use of MULTIPG (w/IDXSIZE).
+
+    o	MHonArc uses rename instead of file copying when editing
+	pages.  Should provide a speed increase when editing archive
+	pages.
+
+    o	Reason when a file cannot be opened or created is printed
+	($! is now included in the error message).
+
+    o	If unable to lock an archive (and -force not specified),
+	MHonArc will now return an exit status of 75 (EX_TEMPFAIL).
+	This is for the benefit of MTAs (like sendmail) where
+	MHonArc is called via an alias.
+
+    o	Some changes to code to make it suitable for MHonArc to be
+	embedded into other Perl programs.  The most significant
+	changes was to make it possible to process more than one
+	archive in a single process instance (note, archives can
+	only be processed in sequence and not in parallel).  Now it
+	easier to write different application front-ends to MHonArc.
+
+    o	Some other code cleanup in the hopes to improve performance.
+
+    Bug Fixes
+    ---------
+    Problem:        Get "times not implemented at mhamain.pl line 74" error
+		    on Win32 systems.
+    Solution:       Call to times is put in an eval block.
+
+    Problem:        When a message that gets automatically deleted via
+		    MAXSIZE or the message expiration, related message
+		    sometimes do not get update -- causing messages to
+		    have links to non-existent messages.  Problem manifiest
+		    when main sort option is not by date.
+    Solution:       Automatic message deletion now properly marks related
+		    message by specified main sort option.
+
+    Problem:        Messages grouped under wrong date in date-based index.
+    Solution:       The problem is related to a descrepency of GMT time
+		    and local time, and what time format is being used
+		    in the DAYBEGIN resource.  The resource USINGLOCALTIME
+		    has been added to give the choice betweem GMT or
+		    local time for determining day groups.
+
+    Problem:        A bogus TCONTBEGIN may get printed at the beginning
+		    of a thread index page.  Most common when TREVERSE
+		    specified.
+    Solution:       @TListOrder now serves as the basis for list iteration
+		    when printing a thread index page instead of the list
+		    returned by t_sort_messages().  Note, old method may
+		    cause other minor errors in thread index page
+		    generation.
+
+    Problem:        Duplicate index list entries are generating for threads
+		    indexes generated via OTHERINDEXES with TREVERSE active.
+    Solution:       All key data structures are now reset when recomputing
+		    threads.
+
+    Problem:        Threads are not listed in reverse order when THREAD
+		    and TREVERSE are set for an OTHERINDEXES resource file.
+    Solution:       Thread data structures are now reset before each
+		    OTHERINDEXES index.  If an OTHERINDEXES resource file
+		    specified THREAD, than threads will be recomputed
+		    for the given index defined by resource file.
+
+    Beta Bug Fixes
+    --------------
+    The following are bug fixes related to the beta release:
+
+    Problem:        PG(PREV) and PG(TPREV) did not resolve to IDXFNAME and
+		    TIDXFNAME, respectively.  They resolved to (T)IDXPREFIX
+		    with the page number 1.
+    Solution:       Simple fix to page number check.
+
+    Problem:        Author index generated via the OTHERINDEXES resource
+		    does not list messages in proper order.  Other main
+		    indexes generated via OTHERINDEXES may suffer the
+		    same problem.
+    Solution:       The write_main_index() did not reset %Index2MLoc
+		    properly, affecting resource variable resolution.  If
+		    @MListOrder is recomputed, %Index2MLoc will be
+		    redefined.
+
+    Problem:        Cannot copy file error occurs during installation when
+		    copy documentation to destination location.
+    Solution:       Updated install.cfg to reflect file changes to 
+		    documentation.
+
+    Problem:        Mail addresses in message headers are not getting 
+		    converted to mailto links.
+    Solution:       MHonArc still uses typeglobs for passing data around
+		    by "reference" (left-over from Perl 4 days).  One
+		    of the variables in the message header formatting
+		    routine was changed back to a local() variable to
+		    supporting passing it via a typeglob sub-routines.
+
 =======================================================================
 03/03/1998	(2.2.0)
 
     Enhancements/Changes
     --------------------
-    *IMPORTANT* *IMPORTANT* *IMPORTANT* *IMPORTANT* *IMPORTANT*
-
-    Please read the RELNOTES file for important information regarding
-    upgrading to v2.2.0 from previous releases.
 
 	o  New resource
 
@@ -61,6 +314,27 @@ MM/DD/YY(YY)
 	o  Although code should still be Perl 4 compatible, Perl
 	   related resource documentation now puts preference to
 	   Perl 5 notations (eg: MIMEFILTERS, CHARSETCONVERTERS).
+
+    Bug Fixes
+    ---------
+    Problem:    The @TListOrder array is empty in .mhonarc.db when
+		MULTIPG is set.  This may cause some messages not
+		getting properly updated when new messages are added.
+    Solution:   Removed use of splice on @TListOrder when MULTIPG.
+		Now, array slices are used so @TListOrder is preserved.
+
+    Problem:    Convert ISO-2022-JP messages can generate "Out of
+		Memory" errors.
+    Solution:   The cleanup of mhtxtplain.pl's iso-2022-jp code
+		introduced a bug that caused an infinite loop and
+		to gobble memoery until it ran out.  The fix was
+		straight-forward.
+
+    Problem:    Quoted text that is broken due to maxwidth setting of
+		the mhtxtplain.pl filter did not have the quote
+		character prepended to broken the text.
+    Solution:   A regex updated to dealing with a leading space before
+		quote character.
 
 =======================================================================
 02/23/1998	(2.1.2)
@@ -1182,5 +1456,5 @@ MM/DD/YY(YY)
 =======================================================================
 #######################################################################
 =======================================================================
-Earl Hood, ehood@medusa.acs.uci.edu
-@(#) CHANGES 98/03/03 19:10:13 @(#)
+Earl Hood, earlhood@usa.net
+@(#) CHANGES 98/11/08 13:06:01

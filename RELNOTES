@@ -1,10 +1,46 @@
 Release Notes for MHonArc
+=========================
+<URL:http://www.oac.uci.edu/indiv/ehood/mhonarc.html>
 
-    http://www.oac.uci.edu/indiv/ehood/mhonarc.html
+Read the CHANGES document for changes that may affect you if you are
+a user of an earlier version of MHonArc.
 
-Also read the CHANGES document for changes that may affect you if
-you are a user of an earlier version of MHonArc.
+===========================================================================
+Version 2.3.3
 
+    See notes below about v2.3.x releases if upgrading from v2.2,
+    or earlier, or from an earlier v2.3 release.
+
+Version 2.3.2
+
+    o	A new (improved) "install.me" exists to install MHonArc.
+	See INSTALL for more information.
+
+Version 2.3.0, 2.3.1
+
+    o	If you have archives created with v2.1.x, or earlier, you
+	must update the archives before using versions v2.3, or
+	later.
+
+	To update your archives, you use the mha-dbedit program
+	using the def-mime.mrc in the examples directory.  For example:
+
+	    mha-dbedit -rcfile examples/def-mime.mrc \
+		       -outdir /path/to/archive
+
+	Make sure that the mhonarc you are using is v2.3, or later.
+	Change the -rcfile and -outdir pathnames to reflect where
+	you are running mhonarc and where your archive is located,
+	respectively.
+
+	Note, if your archives are using custom settings of
+	MIMEFILTERS, MIMEARGS, and/or CHARSETCONVERTERS resources,
+	you will need to create a variant version of def-mime.mrc
+	(included in the examples directory) to include your settings
+	and use the variant version when updating your archives.
+
+===========================================================================
+==	Past Release Notes						 ==
 ===========================================================================
 Version 2.2.0
 
@@ -96,14 +132,12 @@ Version 2.1.0
 	</MIMEFILTERS>
 
 ---------------------------------------------------------------------------
-
 Version 2.0.1
 
 	See the BUGS file for an important bug fix related to
 	empty database entries.
 
 ---------------------------------------------------------------------------
-
 Version 2.0.0
 
 	o  The installation process has changed slightly.  Please
@@ -123,6 +157,6 @@ Version 2.0.0
 		v1.x is used later to process the archive,
 		unpredictable results will occur.
 
-
 ===========================================================================
-98/03/03 19:09:24
+@(#) RELNOTES 98/11/08 13:04:27
+Earl Hood, earlhood@usa.net

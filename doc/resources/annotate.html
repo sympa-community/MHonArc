@@ -1,0 +1,168 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML//EN">
+<html>
+<head>
+<title>MHonArc Resources: ANNOTATE</title>
+</head>
+<body>
+
+<address>
+<a href="../resources.html#annotate">MHonArc Resource List</a>
+</address>
+
+<hr>
+<h1>ANNOTATE</h1>
+
+<!-- *************************************************************** -->
+<h2>Syntax</h2>
+
+<dl>
+
+<dt><strong>Envariable</strong><dt>
+<dd><p>
+<code>M2H_ANNOTATE=</code>[ <code>0</code> | <code>1</code> ]
+</p>
+</dd>
+
+<dt><strong>Element</strong><dt>
+<dd><p>N/A
+</p>
+</dd>
+
+<dt><strong>Command-line Option</strong><dt>
+<dd><p>
+<code>-annotate </code>
+</p>
+</dd>
+
+</dl>
+
+<!-- *************************************************************** -->
+<h2>Description</h2>
+
+<p>ANNOTATE is used to add an annotation to a message, or multiple
+messages.  Annotation
+text is specified by the
+<a href="notetext.html">NOTETEXT</a> resource.  The messages to
+apply the annotation to are specify as arguments to the command-line.
+Messages can be specified by message-id or message number.
+</p>
+
+<p>See <b>Examples</b> below on how to use ANNOTATE.
+See the <a href="note.html">NOTE</a> resource on how to display
+annotations in archive pages.
+</p>
+
+<!-- *************************************************************** -->
+<h2>Default Setting</h2>
+
+<p>Off.
+</p>
+
+<!-- *************************************************************** -->
+<h2>Resource Variables</h2>
+
+<p>N/A
+</p>
+
+<!-- *************************************************************** -->
+<h2>Examples</h2>
+
+<p>The following adds an annotation to message 15 of an archive:
+</p>
+<pre>
+    % <b>mhonarc -annotate -outdir /home/httpd/docs/mail \</b>
+              <b>-notetext "This is an annotation" 15</b>
+</pre>
+
+<p>Multiple <tt>-notetext</tt> can be specified if you want to keep
+the command-line cleaner for larger annotations.  The following adds
+an annotation to the messages with a message-id of
+<tt>&lt;34D622C8.C37760AB@foo.org&gt;</tt> and message number of
+23:
+</p>
+<pre>
+    % <b>mhonarc -annotate -outdir /home/httpd/docs/mail \</b>
+              <b>-notetext "&lt;p&gt;This is the start of an annotation." \</b>
+              <b>-notetext "Here is some more text." \</b>
+              <b>-notetext "Here is some more text (again)." \</b>
+              <b>-notetext "The End.&lt;/p&gt;" \</b>
+              <b>"34D622C8.C37760AB@foo.org" 23</b>
+</pre>
+
+<p>All <tt>-notetext</tt> options text will be concatenated together
+to form the complete text of the annotation.  Also, the text is
+treated as HTML markup, so HTML tagging can be used to provide formatting.
+</p>
+
+<p>Using the <tt>-notetext</tt> is convienent for small annotations,
+but it can be cumbersome for large ones.  An alternative is to
+<em>not</em> specify <tt>-notetext</tt>.  If not present, MHonArc
+will read the text of the annotation from standard input.  For example:
+</p>
+
+<pre>
+    % <b>mhonarc -annotate -outdir /home/httpd/docs/mail 28 72</b>
+    Reading database ...
+    Annotating messages in out ...
+    Please enter note text (terminated with EOF char):
+    <b>&lt;p&gt;Here is some annotation text.  This will be applied to</b>
+    <b>messages 28 and 72.  To tell MHonArc I am done with this text,</b>
+    <b>I will terminate the text with my system's EOF character.</b>
+    <b>^D</b>
+</pre>
+
+<p>The <tt>^D</tt> represents the EOF character and is not part
+of the annotation text.  On Unix systems, this
+is normally Ctrl-D (holding down the Control key and pressing the D key).
+Under Windows, it is normally Ctrl-Z.
+</p>
+
+<p>The standard input method of specify annotation data allows
+annotation text to come for a file the output of another process.
+Here is an example of using the contents of a file as the text:
+</p>
+<pre>
+    % <b>mhonarc -annotate -outdir /home/httpd/docs/mail &lt; somefile.html</b>
+</pre>
+
+<p>Which is equivalent to:</p>
+<pre>
+    % <b>cat somefile.html | mhonarc -annotate -outdir /home/httpd/docs/mail </b>
+</pre>
+
+<p>The first version utilizes the command-line shell's ability to
+redirect a file's contents into a command's standard input.  The second
+version is piping the output of the <b>cat</b> command to MHonArc.
+By the way, <b>cat</b> is a program that concatenates files and prints
+them to standard output (standard on Unix-based systems).
+</p>
+
+<!-- *************************************************************** -->
+<h2>Version</h2>
+
+<p>2.3.0
+</p>
+
+<!-- *************************************************************** -->
+<h2>See Also</h2>
+
+<p>
+<a href="note.html">NOTE</a>,
+<a href="notedir.html">NOTEDIR</a>,
+<a href="notetext.html">NOTETEXT</a>
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<address>
+98/09/19 18:27:07<br>
+<img align="top" src="../monicon.gif" alt="">
+<a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"
+><strong>MHonArc</strong></a><br>
+Copyright &#169; 1998, <a href="http://www.oac.uci.edu/indiv/ehood/"
+>Earl Hood</a>, <a href="mailto:earlhood@usa.net"
+>earlhood@usa.net</a><br>
+</address>
+
+</body>
+</html>

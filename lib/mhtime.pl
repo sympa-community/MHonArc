@@ -1,12 +1,12 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	@(#) mhtime.pl 2.1 98/03/02 20:24:34
+##	@(#) mhtime.pl 2.2 98/08/10 23:43:24
 ##  Author:
-##      Earl Hood       ehood@medusa.acs.uci.edu
+##      Earl Hood       earlhood@usa.net
 ##  Description:
 ##      Time related routines for mhonarc
 ##---------------------------------------------------------------------------##
-##    Copyright (C) 1996-1998	Earl Hood, ehood@medusa.acs.uci.edu
+##    Copyright (C) 1996-1998	Earl Hood, earlhood@usa.net
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by
@@ -83,19 +83,19 @@ sub getdate {
 sub time2str {
     package mhtime;
 
-    local($fmt, $time, $local) = @_ ;
-    local($date) = "" ;
+    my($fmt, $time, $local) = @_;
+    my($date) = "";
 
     ## Get current date/time
-    local($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) =
-	($local ? localtime($time) : gmtime($time));
+    my($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) =
+	    ($local ? localtime($time) : gmtime($time));
+
+    my($yearfull, $hour12);
+    $yearfull = $year + 1900;
+    $hour12   = $hour > 12 ? $hour-12 : $hour;
 
     ## Format output
     if ($fmt =~ /\S/) {
-	local($yearfull, $hour12);
-	$yearfull = $year + 1900;
-	$hour12   = $hour > 12 ? $hour-12 : $hour;
-
 	$fmt =~ s/\%a/$weekdays[$wday]/g;
 	$fmt =~ s/\%A/$Weekdays[$wday]/g;
 	$fmt =~ s/\%b/$months[$mon]/g;
@@ -123,10 +123,10 @@ sub time2str {
 	$fmt =~ s/\%p/pm/g if ($hour >= 12);
 	$fmt =~ s/\%P/AM/g if ($hour < 12);
 	$fmt =~ s/\%P/PM/g if ($hour >= 12);
-	$fmt =~ s/\%S/$sec/eg ;
-	$fmt =~ s/\%w/$wday/g ;
-	$fmt =~ s/\%y/$year/g ; 
-	$fmt =~ s/\%Y/$year+1900/ge ; 
+	$fmt =~ s/\%S/$sec/eg;
+	$fmt =~ s/\%w/$wday/g;
+	$fmt =~ s/\%y/$year/g; 
+	$fmt =~ s/\%Y/$year+1900/ge; 
 
 	$fmt =~ s/\%\%/\%/g ; 
 
@@ -134,9 +134,9 @@ sub time2str {
 
     } else {
 	$date = sprintf("%s %s %02d %02d:%02d:%02d ".
-				($local ? "%s" : "GMT %s"),
+				($local ? "%d" : "GMT %d"),
 			$weekdays[$wday], $months[$mon],
-			$mday, $hour, $min, $sec, $year);
+			$mday, $hour, $min, $sec, $yearfull);
     }
     $date ;
 }
@@ -184,9 +184,9 @@ sub parse_date {
     #	 Don't use $p_hrmin(sec) vars in split due to bug in perl 5.003.
     ($start, $time, $rest) = split(/(\b\d{1,2}:\d\d:\d\d)/o, $date, 2);
     ($start, $time, $rest) = split(/(\b\d{1,2}:\d\d)/o, $date, 2)
-	    if $time eq "";
+	    if !defined($time) or $time eq "";
     return ()
-	unless $time ne "";
+	unless defined($time) and $time ne "";
 
     ($hr, $min, $sec) = split(/:/, $time);
     $sec = 0  unless $sec;          # Sometimes seconds not defined
@@ -229,9 +229,10 @@ sub parse_date {
     }
 
     # Modify month and weekday for lookup
-    $mon =~ tr/A-Z/a-z/;  $wday =~ tr/A-Z/a-z/;
+    $mon  = $Month2Num{lc $mon}  if defined($mon);
+    $wday = $WDay2Num{lc $wday}  if defined($wday);
 
-    ($WDay2Num{$wday}, $mday, $Month2Num{$mon}, $yr, $hr, $min, $sec, $zone);
+    ($wday, $mday, $mon, $yr, $hr, $min, $sec, $zone);
 }
 
 ##---------------------------------------------------------------------------

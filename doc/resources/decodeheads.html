@@ -6,7 +6,7 @@
 <body>
 
 <address>
-<a href="../resources.html#decodeheads">MHonArc Resource List</a></br>
+<a href="../resources.html#decodeheads">MHonArc Resource List</a>
 </address>
 
 <hr>
@@ -25,14 +25,14 @@
 </dd>
 
 <dt><strong>Element(s)</strong><dt>
-<dd><p>
+<dd><p><br>
 <code>&lt;DECODEHEADS&gt;</code><br>
 <code>&lt;NODECODEHEADS&gt;</code>
 </p>
 </dd>
 
 <dt><strong>Command-line Option(s)</strong><dt>
-<dd><p>
+<dd><p><br>
 <code>-decodeheads</code><br>
 <code>-nodecodeheads</code>
 </p>
@@ -49,11 +49,16 @@ HTML output and the (relevant) data stored in the database stays
 in encoded form.  The DECODEHEADS resource can be set to decode
 "decode-only" charsets (as specified by the
 <a href="charsetconverters.html">CHARSETCONVERTERS</a> resource)
-when message headers are read.  Hence, the
-decode-only charsets will be stored in decoded form.  Regular MIME
+when message headers are read.  This will cause
+decode-only charsets to be stored in decoded "raw" form.  Regular MIME
 processing is still done to still-encoded data when generating output.
 </p>
 
+<p>This resource may be useful to decode known character sets
+that are handle by default in the current locale.  This will reduce
+the overhead performed each time MHonArc translates message header
+data for inclusion in generated pages.
+</p>
 
 <!-- *************************************************************** -->
 <hr>
@@ -66,7 +71,8 @@ processing is still done to still-encoded data when generating output.
 <hr>
 <h2>Resource Variables</h2>
 
-<p>N/A</p>
+<p>N/A
+</p>
 
 <!-- *************************************************************** -->
 <hr>
@@ -93,10 +99,10 @@ processing is still done to still-encoded data when generating output.
 <!-- *************************************************************** -->
 <hr>
 <address>
-98/03/03 18:19:28<br>
+98/09/19 18:27:08<br>
 <img align="top" src="../monicon.gif" alt="">
 <a href="http://www.oac.uci.edu/indiv/ehood/mhonarc.html"><strong>MHonArc</strong></a><br>
-Copyright &#169; 1997-1998, <a href="http://www.oac.uci.edu/indiv/ehood/">Earl Hood</a>, <a href="mailto:ehood@medusa.acs.uci.edu">ehood@medusa.acs.uci.edu</a><br>
+Copyright &#169; 1997-1998, <a href="http://www.oac.uci.edu/indiv/ehood/">Earl Hood</a>, <a href="mailto:earlhood@usa.net">earlhood@usa.net</a><br>
 </address>
 
 </body>

@@ -1,12 +1,12 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	@(#) ewhutil.pl 2.1 98/03/02 20:24:24
+##	@(#) ewhutil.pl 2.2 98/08/10 23:19:14
 ##  Author:
-##      Earl Hood       ehood@medusa.acs.uci.edu
+##      Earl Hood       earlhood@usa.net
 ##  Description:
 ##      Generic utility routines
 ##---------------------------------------------------------------------------##
-##    Copyright (C) 1996-1998	Earl Hood, ehood@medusa.acs.uci.edu
+##    Copyright (C) 1996-1998	Earl Hood, earlhood@usa.net
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by
@@ -29,9 +29,9 @@
 ##
 sub remove_dups {
     local(*array) = shift;
-    local(%dup);
-    @array = grep($dup{$_}++ < 1, @array);
-    %dup = ();
+    return ()  unless scalar(@array);
+    my %dup  = ();
+    @array = grep(!$dup{$_}++, @array);
 }
 
 ##---------------------------------------------------------------------------
@@ -43,22 +43,31 @@ sub numerically {
 
 ##---------------------------------------------------------------------------
 ##	"Entify" special characters
-##
+
 sub htmlize {			# Older name
-    local($txt) = $_[0];
+    my($txt) = $_[0];
     $txt =~ s/&/\&amp;/g; $txt =~ s/>/&gt;/g; $txt =~ s/</&lt;/g;
     $txt;
 }
+
 sub entify {			# Newer name
-    local($txt) = $_[0];
+    my($txt) = $_[0];
     $txt =~ s/&/\&amp;/g; $txt =~ s/>/&gt;/g; $txt =~ s/</&lt;/g;
     $txt;
 }
-##	commentize entifies the  '-' character to avoid problems when a
+
+##	commentize entifies certain characters to avoid problems when a
 ##	string will be included in a comment declaration
+
 sub commentize {
-    local($txt) = $_[0];
-    $txt =~ s/-/\&#45;/g;
+    my($txt) = $_[0];
+    $txt =~ s/([\-&])/'&#'.unpack('C',$1).';'/ge;
+    $txt;
+}
+
+sub uncommentize {
+    my($txt) = $_[0];
+    $txt =~ s/&#(\d+);/pack("C",$1)/ge;
     $txt;
 }
 
