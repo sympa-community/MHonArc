@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhutil.pl,v 2.18 2002/08/04 03:47:06 ehood Exp $
+##	$Id: mhutil.pl,v 2.20 2002/10/20 02:53:00 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -344,10 +344,10 @@ sub get_time_from_date {
 	warn "Warning: Bad year (", $yr+1900, ") using current\n";
 	$yr = (localtime(time))[5];
     }
-    $zone =~ tr/a-z/A-Z/;
 
     ## If $zone, grab gmt time, else grab local
     if ($zone) {
+	$zone =~ tr/a-z/A-Z/;
 	$time = &timegm($sec,$min,$hr,$mday,$mon,$yr);
 
 	# try to modify time/date based on timezone
@@ -439,7 +439,8 @@ sub htmlize_header {
 		    $tmp = field_add_links($key, $tmp, $fields);
 		    ($tago, $tagc, $ftago, $ftagc) = get_header_tags($key);
 		    $mesg .= join('', $LABELBEG,
-				  $tago, ucfirst($key), $tagc, $LABELEND,
+				  $tago, htmlize(ucfirst($key)), $tagc,
+				  $LABELEND,
 				  $FLDBEG, $ftago, $tmp, $ftagc, $FLDEND,
 				  "\n");
 		}
@@ -454,7 +455,8 @@ sub htmlize_header {
 		    $tmp = field_add_links($item, $tmp, $fields);
 		    ($tago, $tagc, $ftago, $ftagc) = &get_header_tags($item);
 		    $mesg .= join('', $LABELBEG,
-				  $tago, ucfirst($item), $tagc, $LABELEND,
+				  $tago, htmlize(ucfirst($item)), $tagc,
+				  $LABELEND,
 				  $FLDBEG, $ftago, $tmp, $ftagc, $FLDEND,
 				  "\n");
 		}
@@ -473,7 +475,7 @@ sub mlist_field_add_links {
     my $ret	= "";
     local($_);
     foreach (split(/(<[^>]+>)/, $txt)) {
-	if (/^</) {
+	if (/^<\w+:/) {
 	    chop; substr($_, 0, 1) = "";
 	    $ret .= qq|&lt;<a href="$_">$_</a>&gt;|;
 	} else {

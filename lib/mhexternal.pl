@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhexternal.pl,v 2.10 2001/10/06 14:02:38 ehood Exp $
+##	$Id: mhexternal.pl,v 2.12 2002/10/11 01:57:53 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -157,7 +157,9 @@ sub filter {
 
     ## Check if content is excluded based on filename extension
     if ($excexts && index($excexts, ",$dispext,") >= $[) {
-      return (qq|<p><tt>&lt&lt;attachment: $nameparm&gt;&gt;</tt></p>\n|);
+      return (qq|<p><tt>&lt&lt;attachment: |.
+	      mhonarc::htmlize($nameparm).
+	      qq|&gt;&gt;</tt></p>\n|);
     }
 
     ## Check if file goes in a subdirectory
@@ -214,15 +216,27 @@ sub filter {
 
     ## Create HTML markup
     if ($inline) {
-	$ret  = "<p>".htmlize($fields->{'content-description'}[0])."</p>\n"
+	$ret  = '<p>'.
+		mhonarc::htmlize($fields->{'content-description'}[0]).
+		"</p>\n"
 	    if (defined $fields{'content-description'});
 	$ret .= qq|<p><a href="$urlfile" $target><img src="$urlfile" | .
 		qq|alt="$type"></a></p>\n|;
 
     } else {
-	my $namelabel = $nameparm || $urlfile;
-	my $desc = htmlize($fields->{'content-description'}[0]) ||
-		   $type;
+	my $is_mesg = $ctype =~ /^message\//;
+	my $desc = '<em>Description:</em> ';
+	my $namelabel;
+
+	if ($is_mesg && ($$data =~ /^subject:\s(.+)$/mi)) {
+	    $namelabel = mhonarc::htmlize($1);
+	    $desc .= 'Message attachment';
+	} else {
+	    $desc .= mhonarc::htmlize($fields->{'content-description'}[0]) ||
+		     $type;
+	    $namelabel = mhonarc::htmlize($nameparm || $urlfile);
+	}
+
 	# check if using icon
 	my($icon_mu, $iconurl, $iw, $ih);
 	if ($args =~ /\buseicon\b/i) {
@@ -249,13 +263,13 @@ sub filter {
 
 <p><strong><a href="$urlfile" $target>$icon_mu</a>
 <a href="$urlfile" $target><tt>$namelabel</tt></a></strong><br>
-<em>Description:</em> $desc</p>
+$desc</p>
 EOT
 	    } else {
 	      $ret =<<EOT;
 <p><strong>Attachment:
 <a href="$urlfile" $target><tt>$namelabel</tt></a></strong><br>
-<em>Description:</em> $desc</p>
+$desc</p>
 EOT
 	    }
 	} else {
@@ -264,31 +278,35 @@ EOT
 <table border="1" cellspacing="0" cellpadding="4">
 <tr valign="top"><td><strong><a href="$urlfile" $target>$icon_mu</a>
 <a href="$urlfile" $target><tt>$namelabel</tt></a></strong><br>
-<em>Description:</em> $desc</td></tr></table>
+$desc</td></tr></table>
 EOT
 	    } else {
 	      $ret =<<EOT;
 <table border="1" cellspacing="0" cellpadding="4">
 <tr><td><strong>Attachment:
 <a href="$urlfile" $target><tt>$namelabel</tt></a></strong><br>
-<em>Description:</em> $desc</td></tr></table>
+$desc</td></tr></table>
 EOT
 	    }
 	}
     }
+
+    # Mark part filtered
+    my $cid = $fields->{'content-id'}[0]
+	if (defined($fields->{'content-id'}));
+    if (defined($cid)) {
+	$cid =~ s/[\s<>]//g;
+	$cid = 'cid:'.$cid;
+    } elsif (defined($fields->{'content-location'})) {
+	$cid = $fields->{'content-location'}[0];
+	$cid =~ s/['"\s]//g;
+    }
+    if (defined($cid) && defined($readmail::Cid{$cid})) {
+	$readmail::Cid{$cid}->{'filtered'} = 1;
+	$readmail::Cid{$cid}->{'uri'} = $filename;
+    }
+
     ($ret, $path || $filename);
-}
-
-##---------------------------------------------------------------------------
-
-sub htmlize {
-    my $txt = shift;
-    return ""  unless defined($txt);
-
-    $txt =~ s/&/\&amp;/g;
-    $txt =~ s/>/&gt;/g;
-    $txt =~ s/</&lt;/g;
-    $txt;
 }
 
 ##---------------------------------------------------------------------------

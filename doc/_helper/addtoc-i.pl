@@ -1,6 +1,6 @@
 #!/usr/local/bin/perl
 #
-# $Id: addtoc-i.pl,v 1.2 1999/09/30 16:56:21 ehood Exp $
+# $Id: addtoc-i.pl,v 1.3 2002/09/25 04:03:34 ehood Exp $
 
 my($tocfile, $toctxt);
 my $h3 = 0;
@@ -32,6 +32,8 @@ foreach $tocfile (@ARGV) {
 	s|</?a.*?>||gi;
 	s|</?b>||gi;
 	s|<img[^>]*>||gi;
+	s/^(?:\&nbsp;|\s)+//;
+	s/(?:\&nbsp;|\s)+$//;
 	$toctxt .= qq|<li>|;
 	$toctxt .= qq|<small>|   if $h3;
 	$toctxt .= qq|<a href="#$id">$_</a>|;

@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##      $Id: mhopt.pl,v 2.31 2002/09/04 04:09:30 ehood Exp $
+##      $Id: mhopt.pl,v 2.32 2002/10/20 03:49:22 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -349,10 +349,8 @@ sub get_resources {
 
     ## Check if we need to access database file
     if ($ReadDB) {
-	$DBFILE = ".mail2html.db"
-	    unless (-e join($DIRSEP, $OUTDIR, $DBFILE)) ||
-		   (!-e join($DIRSEP, $OUTDIR, ".mail2html.db"));
-	$DBPathName = join($DIRSEP, $OUTDIR, $DBFILE);
+	$DBPathName = OSis_absolute_path($DBFILE) ?
+	    $DBFILE : join($DIRSEP, $OUTDIR, $DBFILE);
 
 	## Invoke preload callback
 	if (defined($CBDbPreLoad) && defined(&$CBDbPreLoad)) {
@@ -459,7 +457,8 @@ sub get_resources {
 
     ## Get other command-line options
     $DBFILE	= $opt{'dbfile'}     if $opt{'dbfile'}; # Override db
-    $DBPathName = join($DIRSEP, $OUTDIR, $DBFILE);
+    $DBPathName = OSis_absolute_path($DBFILE) ?
+	$DBFILE : join($DIRSEP, $OUTDIR, $DBFILE);
 
     $DOCURL	= $opt{'docurl'}     if $opt{'docurl'};
     $FROM	= $opt{'msgsep'}     if $opt{'msgsep'};

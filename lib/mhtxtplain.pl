@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhtxtplain.pl,v 2.22 2002/07/20 03:07:35 ehood Exp $
+##	$Id: mhtxtplain.pl,v 2.24 2002/10/10 22:27:19 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -207,19 +207,20 @@ sub filter {
 	}
 	my $html_filter = readmail::load_filter('text/html');
 	if (defined($html_filter) && defined(&$html_filter)) {
-	    return (&$html_filter($fields, $data, $isdecode, $args));
+	    return (&$html_filter($fields, $data, $isdecode,
+		      readmail::get_filter_args(
+			'text/html', 'text/*', $html_filter)));
 	} else {
 	    require 'mhtxthtml.pl';
-	    return (m2h_text_html::filter($fields, $data, $isdecode, $args));
+	    return (m2h_text_html::filter($fields, $data, $isdecode,
+		      readmail::get_filter_args(
+			'text/html', 'text/*', 'm2h_text_html::filter')));
 	}
     }
 
     my($charset, $nourl, $doquote, $igncharset, $nonfixed, $textformat,
        $keepspace, $maxwidth, $target, $defset, $xhtml);
-    my(%asis) = (
-	'us-ascii'   => 1,
-	'iso-8859-1' => 1,
-    );
+    my(%asis) = ( );
 
     $nourl	= ($mhonarc::NOURL || ($args =~ /\bnourl\b/i));
     $doquote	= ($args =~ /\bquote\b/i);
@@ -258,15 +259,12 @@ sub filter {
     ## Check if certain charsets should be left alone
     if ($args =~ /\basis=(\S+)/i) {
 	my $t = lc $1;  $t =~ s/['"]//g;
-	%asis = ('us-ascii' => 1);  # XXX: Should us-ascii always be "as-is"?
 	local($_);  foreach (split(':', $t)) { $asis{$_} = 1; }
     }
 
     ## Check MIMECharSetConverters if charset should be left alone
-    my $charcnv = &readmail::load_charset($charset);
-    if (!defined($charcnv)) {
-      $charcnv = &readmail::load_charset('default');
-    }
+    my($charcnv, $real_charset_name) =
+	    readmail::MAILload_charset_converter($charset);
     if (defined($charcnv) && $charcnv eq '-decode-') {
 	$asis{$charset} = 1;
     }
@@ -280,7 +278,7 @@ sub filter {
     if (!$asis{$charset}) {
 	# Registered in CHARSETCONVERTERS
 	if (defined($charcnv) && defined(&$charcnv)) {
-	    $$data = &$charcnv($$data, $charset);
+	    $$data = &$charcnv($$data, $real_charset_name);
 
 	# Other
 	} else {
@@ -301,7 +299,7 @@ sub filter {
 
 	my $currdepth = 0;
 	my $ret='';
-	s!^</?x-flowed>\r?\n>!!mg; # we don't know why Eudora puts these in
+	$$data =~ s!^</?x-flowed>\r?\n>!!mg;
 	while (length($$data)) {
 	    $$data =~ /^((?:&gt;)*)/;
 	    my $qd = $1;

@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: ewhutil.pl,v 2.8 2001/08/25 19:52:48 ehood Exp $
+##	$Id: ewhutil.pl,v 2.9 2002/09/25 03:51:13 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -48,12 +48,14 @@ sub remove_dups {
 ##	"Entify" special characters
 
 sub htmlize {			# Older name
+    return ''  unless scalar(@_) && defined($_[0]);
     my($txt) = $_[0];
     $txt =~ s/(["&<>])/$HTMLSpecials{$1}/g;
     $txt;
 }
 
 sub entify {			# Newer name
+    return ''  unless scalar(@_) && defined($_[0]);
     my($txt) = $_[0];
     $txt =~ s/(["&<>])/$HTMLSpecials{$1}/g;
     $txt;

@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: readmail.pl,v 2.18 2002/06/28 03:28:10 ehood Exp $
+##	$Id: readmail.pl,v 2.21 2002/10/15 22:06:53 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -46,6 +46,8 @@ package readmail;
 ###############################################################################
 ##	Private Globals							     ##
 ###############################################################################
+
+my $Url	          = '(\w+://|\w+:)';
 
 my @_MIMEAltPrefs = ();
 my %_MIMEAltPrefs = ();
@@ -156,9 +158,6 @@ $MIMEDecodersSrc{"uuencode"}  	 	= "base64.pl"
 ##
 ##	$converted_data = &function($data, $charset);
 ##
-##  A function called "-pass-:function" implies that the data should be
-##  passed to the converter "function" but not decoded.
-##
 ##  A function called "-decode-" implies that the data should be
 ##  decoded, but no converter is to be invoked.
 ##
@@ -229,6 +228,17 @@ $MIMECharSetConverters{"default"}	= "-ignore-"
 
 %MIMEExcs			= ()
     unless defined(%MIMEExcs);
+
+## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+##  %MIMECharsetAliases is a mapping of charset names to charset names.
+##  The MAILset_charset_aliases() routine should be used to set the
+##  values of this hash.
+##
+##	Keys => charset name
+##	Values => real charset name
+##
+%MIMECharsetAliases = ()
+    unless defined(%MIMECharsetAliases);
 
 ##---------------------------------------------------------------------------
 ##	Variables holding functions for generating processed output
@@ -308,26 +318,21 @@ $FormatHeaderFunc		= undef
 ##
 sub MAILdecode_1522_str {
     my($str) = shift;
-    my($decoding_flag) = shift;
+    my($decoding_flag) = shift || 0;
     my($charset,
-       $lcharset,
        $encoding,
        $dec,
        $charcnv,
-       $defcharcnv,
+       $real_charset,
        $plaincnv,
+       $plain_real_charset,
        $strtxt,
        $str_before);
     my($ret) = ('');
 
-    $defcharcnv = '-bogus-';
-
-    # Get default converter
-    $defcharcnv = &load_charset('default');
-
     # Get plain converter
-    $plaincnv = &load_charset('plain');
-    $plaincnv = $defcharcnv  unless $plaincnv;
+    ($plaincnv, $plain_real_charset) = MAILload_charset_converter('plain');
+    $plain_real_charset = 'us-ascii'  if $plain_real_charset eq 'plain';
 
     # Decode string
     while ($str =~ /=\?([^?]+)\?(.)\?([^?]*)\?=/) {
@@ -347,21 +352,16 @@ sub MAILdecode_1522_str {
 	if ($decoding_flag) {				# ignore if just decode
 	    $ret .= $str_before;
 	} elsif (defined(&$plaincnv)) {			# decode and convert
-	    $ret .= &$plaincnv($str_before,'');
-	} elsif (($plaincnv =~ /-pass-:(.*)/) &&	# pass
-		 (defined(&${1}))) {
-	    $ret .= &${1}($str_before,'');
+	    $ret .= &$plaincnv($str_before, $plain_real_charset);
 	} else {					# ignore
 	    $ret .= $str_before;
 	}
 
 	# Convert encoded text
-	($lcharset = $charset) =~ tr/A-Z/a-z/;
 	if ($decoding_flag == DECODE_ALL) {
 	    $charcnv = '-decode-';
 	} else {
-	    $charcnv = &load_charset($lcharset);
-	    $charcnv = $defcharcnv  unless $charcnv;
+	    ($charcnv, $real_charset) = MAILload_charset_converter($charset);
 	}
 
 	# Decode only
@@ -376,12 +376,7 @@ sub MAILdecode_1522_str {
 	# Decode and convert
 	} elsif (defined(&$charcnv)) {
 	    $strtxt =~ s/_/ /g;
-	    $ret .= &$charcnv(&$dec($strtxt),$lcharset);
-
-	# Do not decode, but convert
-	} elsif (($charcnv =~ /-pass-:(.*)/) &&
-		 (defined(&${1}))) {
-	    $ret .= &${1}($strtxt,$lcharset);
+	    $ret .= &$charcnv(&$dec($strtxt), $real_charset);
 
 	# Fallback is to ignore
 	} else {
@@ -393,10 +388,7 @@ sub MAILdecode_1522_str {
     if ($decoding_flag) {			# ignore if just decode
 	$ret .= $str;
     } elsif (defined(&$plaincnv)) {		# decode and convert
-	$ret .= &$plaincnv($str,'');
-    } elsif (($plaincnv =~ /-pass-:(.*)/) &&	# pass
-	     (defined(&${1}))) {
-	$ret .= &${1}($str,'');
+	$ret .= &$plaincnv($str, $plain_real_charset);
     } else {					# ignore
 	$ret .= $str;
     }
@@ -445,7 +437,7 @@ sub MAILread_body {
        $inaltArg) = @_; # Flag if in multipart/alternative
 
     my($type, $subtype, $boundary, $content, $ctype, $pos,
-       $encoding, $decodefunc, $args, $part);
+       $encoding, $decodefunc, $args, $part, $uribase);
     my(@parts) = ();
     my(@files) = ();
     my(@array) = ();
@@ -471,6 +463,16 @@ sub MAILread_body {
     if ($MIMEExcs{$ctype} || $MIMEExcs{$type}) {
 	return (&$ExcludedPartFunc($ctype));
     }
+
+    ## Get entity URI base
+    if (defined($fields->{'content-base'}) &&
+	    ($uribase = $fields->{'content-base'}[0])) {
+	$uribase =~ s/['"\s]//g;
+    } elsif (defined($fields->{'content-location'}) &&
+		($uribase = $fields->{'content-location'}[0])) {
+	$uribase =~ s/['"\s]//g;
+    }
+    $uribase =~ s|(.*/).*|$1|  if $uribase;
 
     ## Load content-type filter
     if ( (!defined($filter = &load_filter($ctype)) || !defined(&$filter)) &&
@@ -525,16 +527,17 @@ sub MAILread_body {
 
 	    ## Get boundary
 	    $boundary = "";
-	    if ($content =~ m/boundary\s*=\s*"([^"]*)"/i) {
+	    if ($content =~ m/\bboundary\s*=\s*"([^"]*)"/i) {
 		$boundary = $1;
 	    } else {
-		($boundary) = $content =~ m/boundary\s*=\s*(\S+)/i;
+		($boundary) = $content =~ m/\bboundary\s*=\s*(\S+)/i;
 		$boundary =~ s/;$//;  # chop ';' if grabbed
 	    }
 
 	    ## If boundary defined, split body into parts
 	    if ($boundary =~ /\S/) {
 		my $found = 0;
+		my $have_end = 0;
 		my $start_pos = 0;
 		substr($$body, 0, 0) = "\n";
 		substr($boundary, 0, 0) = "\n--";
@@ -558,18 +561,29 @@ sub MAILread_body {
 		    substr($$body, 0, $pos+$blen) = "";
 
 		    # check if hit end
-		    last  if $$body =~ /\A--/;
+		    if ($$body =~ /\A--/) {
+			$have_end = 1;
+			last;
+		    }
 
 		    # remove EOL at the beginning
 		    $$body =~ s/\A\r?\n//;
 		    $start_pos = 0;
+		}
+		if (!$have_end) {
+		    warn qq/Warning: No end boundary delimiter found in /,
+			 qq/message body\n/;
+		    push(@parts, $$body);
+		    $parts[$#parts] =~ s/^\r//;
+		    $$body = "";
 		}
 		if ($found) {
 		    # discard front-matter
 		    shift(@parts);
 		} else {
 		    # no boundary separators in message!
-		    warn qq/Warning: No boundaries found in message body\n/;
+		    warn qq/Warning: No boundary delimiters found in /,
+			 qq/multipart body\n/;
 		    if ($$body =~ m/\A\n[\w\-]+:\s/) {
 			# remove \n added above if part looks like it has
 			# headers.  we keep if it does not to avoid body
@@ -622,13 +636,23 @@ sub MAILread_body {
 			$cid =~ s/[\s<>]//g;
 			$Cid{"cid:$cid"} = $href  if $cid =~ /\S/;
 		    }
+		    $cid = undef;
 		    if (defined($partfields->{'content-location'}) &&
 			    ($cid = $partfields->{'content-location'}[0])) {
-			$cid =~ s/^\s+//;
-			$cid =~ s/\s+$//;
+			my $partbase = $uribase;
+			$cid =~ s/['"\s]//g;
+			if (defined($partfields->{'content-base'})) {
+			    $partbase = $partfields->{'content-base'}[0];
+			}
+			$cid = apply_base_url($partbase, $cid);
 			if ($cid =~ /\S/ && !$Cid{$cid}) {
 			    $Cid{$cid} = $href;
 			}
+		    }
+		    if ($cid) {
+			$partfields->{'content-location'} = [ $cid ];
+		    } elsif (!defined($partfields->{'content-base'})) {
+			$partfields->{'content-base'} = [ $uribase ];
 		    }
 		}
 	    }
@@ -822,7 +846,7 @@ sub MAILread_file_header {
 ##	specified to be excluded.
 ##
 sub MAILis_excluded {
-    my $content = lc($_[0]) || 'text/plain';
+    my $ctype = lc($_[0]) || 'text/plain';
     if ($MIMEExcs{$ctype}) {
 	return 1;
     }
@@ -975,6 +999,51 @@ sub MAILset_alternative_prefs {
     }
 }
 
+##---------------------------------------------------------------------------##
+##	MAILset_charset_aliases() is used to define name aliases for
+##	charset names.
+##
+##	Example usage:
+##	  MAILset_charset_aliases( {
+##	    'iso-8859-1' =>  [ 'latin1', 'iso_8859_1', '8859-1' ],
+##	    'iso-8859-15' => [ 'latin9', 'iso_8859_15', '8859-15' ],
+##	  }, $override );
+##	  
+sub MAILset_charset_aliases {
+    my $map = shift;
+    my $override = shift;
+
+    %MIMECharsetAliases = ()  if $override;
+    my($charset, $aliases, $alias);
+    while (($charset, $aliases) = each(%$map)) {
+	$charset = lc $charset;
+	foreach $alias (@$aliases) {
+	    $MIMECharsetAliases{lc $alias} = $charset;
+	}
+    }
+}
+
+##---------------------------------------------------------------------------##
+##	MAILload_charset_converter() loads the charset converter function
+##	associated with given charset name.
+##
+##	Example usage:
+##	  ($func, $real_charset) = MAILload_charset_converter($charset);
+##	
+##	$func is the reference to the converter function, which may be
+##	undef.  $real_charset is the real charset name that should be
+##	used when invoking the function.
+##
+sub MAILload_charset_converter {
+    my $charset = lc shift;
+    $charset = $MIMECharsetAliases{$charset}  if $MIMECharsetAliases{$charset};
+    my $func = load_charset($charset);
+    if (!defined($func) || !defined(&$func)) {
+	$func = load_charset('default');
+    }
+    ($func, $charset);
+}
+
 ###############################################################################
 ##	Private Routines
 ###############################################################################
@@ -1069,6 +1138,39 @@ sub extract_ctype {
     }
     $_[0] =~ m|^\s*([\w\-\./]+)|;
     lc($1);
+}
+
+##---------------------------------------------------------------------------##
+
+sub apply_base_url {
+    my($b, $u) = @_;
+    return $u  if !defined($b) || $b !~ /\S/;
+
+    my($ret);
+    $u =~ s/^\s+//;
+    if ($u =~ m%^$Url%o || $u =~ m/^#/) {
+	## Absolute URL or scroll link; do nothing
+        $ret = $u;
+    } else {
+	## Relative URL
+	if ($u =~ /^\./) {
+	    ## "./---" or "../---": Need to remove and adjust base
+	    ## accordingly.
+	    $b =~ s/\/$//;
+	    my @a = split(/\//, $b);
+	    my $cnt = 0;
+	    while ( $cnt <= scalar(@a) &&
+		    $u =~ s|^(\.{1,2})/|| ) { ++$cnt  if length($1) == 2; }
+	    splice(@a, -$cnt)  if $cnt > 0;
+	    $b = join('/', @a, "");
+
+	} elsif ($u =~ m%^/%) {
+	    ## "/---": Just use hostname:port of base.
+	    $b =~ s%^(${Url}[^/]*)/.*%$1%o;
+	}
+        $ret = $b . $u;
+    }
+    $ret;
 }
 
 ##---------------------------------------------------------------------------##

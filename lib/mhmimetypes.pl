@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhmimetypes.pl,v 1.9 2002/05/02 17:20:04 ehood Exp $
+##	$Id: mhmimetypes.pl,v 1.11 2002/09/26 02:52:53 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -42,10 +42,10 @@ $UnknownExt     = 'bin';
     'application/mac-binhex40', 	'hqx:Mac BinHex archive',
     'application/mathematica', 		'ma:Mathematica Notebook document',
     'application/mbedlet',		'mbd:mbedlet file',
-    'application/msword',		'doc:MS-Word document',
     'application/ms-excel',            	'xls:MS-Excel spreadsheet',
     'application/ms-powerpoint',	'ppt:MS-Powerpoint presentation',
     'application/ms-project',		'mpp:MS-Project file',
+    'application/msword',		'doc:MS-Word document',
     'application/octet-stream', 	'bin:Binary data',
     'application/oda', 			'oda:ODA file',
     'application/pdf', 			'pdf:Adobe PDF document',
@@ -69,6 +69,25 @@ $UnknownExt     = 'bin';
     'application/vnd.ms-excel',         'xls:MS-Excel spreadsheet',
     'application/vnd.ms-powerpoint',    'ppt:MS-Powerpoint presentation',
     'application/vnd.ms-project',	'mpp:MS-Project file',
+    'application/vnd.stardivision.calc', 'sdc:StarCalc spreadsheet',
+    'application/vnd.stardivision.chart', 'sds:StarChart document',
+    'application/vnd.stardivision.draw', 'sda:StarDraw document',
+    'application/vnd.stardivision.impress-packed', 'sdp:StarImpress packed file',
+    'application/vnd.stardivision.impress', 'sdd:StarImpress presentation',
+    'application/vnd.stardivision.mail', 'smd:StarMail mail file',
+    'application/vnd.stardivision.math', 'smf:StarMath document',
+    'application/vnd.stardivision.writer-global', 'sgl:StarWriter global document',
+    'application/vnd.stardivision.writer', 'sdw:StarWriter document',
+    'application/vnd.sun.xml.calc',     'sxc:OpenOffice Calc spreadsheet',
+    'application/vnd.sun.xml.calc.template', 'stc:OpenOffice Calc template',
+    'application/vnd.sun.xml.draw',     'sxd:OpenOffice Draw document',
+    'application/vnd.sun.xml.draw.template', 'std:OpenOffice Draw Template',
+    'application/vnd.sun.xml.impress',  'sxi:OpenOffice Impress presentation',
+    'application/vnd.sun.xml.impress.template', 'sti:OpenOffice Impress template',
+    'application/vnd.sun.xml.math',     'sxm:OpenOffice Math documents',
+    'application/vnd.sun.xml.writer.global', 'sxg:OpenOffice Writer global document',
+    'application/vnd.sun.xml.writer',   'sxw:OpenOffice Writer document',
+    'application/vnd.sun.xml.writer.template', 'stw:OpenOffice Write template',
     'application/winhlp',		'hlp:WinHelp document',
     'application/wordperfect5.1',	'wp:WordPerfect 5.1 document',
     'application/x-asap',		'asp:asap file',
@@ -101,30 +120,30 @@ $UnknownExt     = 'bin';
     'application/x-msschedule',		'scd:MS-Schedule file',
     'application/x-msterminal',		'trm:MS-Terminal',
     'application/x-mswrite',		'wri:MS-Write document',
-    'application/x-net-install',	'ins:Net Install file',
     'application/x-netcdf', 		'cdf:Cdf file',
+    'application/x-net-install',	'ins:Net Install file',
     'application/x-ns-proxy-autoconfig','proxy:Netscape Proxy Auto Config',
     'application/x-patch',		'patch:Source code patch',
     'application/x-perl',		'pl:Perl program',
     'application/x-pointplus',		'css:pointplus file',
     'application/x-salsa',		'slc:salsa file',
     'application/x-script',		'script:A script file',
-    'application/x-sh', 		'sh:Bourne shell script',
     'application/x-shar', 		'shar:Unix shell archive',
+    'application/x-sh', 		'sh:Bourne shell script',
     'application/x-sprite',		'spr:sprite file',
     'application/x-stuffit',		'sit:Macintosh archive',
     'application/x-sv4cpio', 		'sv4cpio:SV4Cpio file',
     'application/x-sv4crc', 		'sv4crc:SV4Crc file',
     'application/x-tar', 		'tar:Unix tar archive',
     'application/x-tcl', 		'tcl:Tcl script',
-    'application/x-tex', 		'tex:TeX document',
     'application/x-texinfo', 		'texinfo:TeXInfo document',
+    'application/x-tex', 		'tex:TeX document',
     'application/x-timbuktu',		'tbp:timbuktu file',
     'application/x-tkined',		'tki:tkined file',
-    'application/x-troff', 		'roff:Troff document',
     'application/x-troff-man', 		'man:Unix manual page',
     'application/x-troff-me', 		'me:Troff ME-macros document',
     'application/x-troff-ms', 		'ms:Troff MS-macros document',
+    'application/x-troff', 		'roff:Troff document',
     'application/x-ustar', 		'ustar:UStar file',
     'application/x-wais-source', 	'src:WAIS Source',
     'application/x-zip-compressed',	'zip:Zip compressed data',
@@ -247,6 +266,9 @@ sub get_mime_ext {
     }
     if (defined($ext)) {
 	$ext = (split(/,/, $ext))[0];
+    } elsif ($ctype =~ /^text\//) {
+	$ext = 'txt';
+	$desc = 'Text Data';
     } else {
 	$ext = $UnknownExt;
 	$desc = $ctype;
@@ -267,7 +289,7 @@ sub write_attachment {
     my $inext	= shift;
     my($ctype, $cnt, $pre, $ext, $pathname);
 
-    ($ctype) = $content =~ m%^\s*([\w-\./]+)%;	# Extract content-type
+    ($ctype) = $content =~ m%^\s*([\w\-\./]+)%;	# Extract content-type
 
     local(*OUTFILE);
 
@@ -323,22 +345,16 @@ sub get_cnt {
     if (!opendir(DIR, $dir)) {
 	warn qq/Warning: Unable to open "$dir": $!\n/;
     } else {
-	@files = sort file_numeric grep(/^$pre\d+\.$ext$/i, readdir(DIR));
-	closedir(DIR);
-	if (@files) {
-	    ($cnt) = $files[$#files] =~ /(\d+)/;
+	my($file, $num);
+	foreach $file (grep(/^$pre\d+\.$ext$/i, readdir(DIR))) {
+	    $num = substr($file, length($pre));
+	    $num = substr($num, 0, length($num)-(length($ext)+1));
+	    $cnt = $num  if $num > $cnt;
 	}
+	close(DIR);
     }
     ++$cnt;
     (sprintf("%05d", $cnt), $pre, $ext);
-}
-
-##---------------------------------------------------------------------------
-
-sub file_numeric {
-    ($A) = $a =~ /(\d+)/;
-    ($B) = $b =~ /(\d+)/;
-    $A <=> $B;
 }
 
 ##---------------------------------------------------------------------------

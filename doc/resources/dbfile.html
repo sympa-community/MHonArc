@@ -52,6 +52,13 @@ absolutely necessary, and you are confident about what you are doing.
 </dd>
 </DL>
 
+<p>DBFILE resource can be set to an absolute pathname.  This
+allows the database file to be located in a separate location than
+in the archive directory.  If not an absolute pathname, then the
+value is treated relative to
+<a href="outdir.html">OUTDIR</a>.  If directory path components
+are included in the value, then the directory path must already exist.
+</p>
 
 <!-- *************************************************************** -->
 <hr>
@@ -87,6 +94,7 @@ users).
 <h2>See Also</h2>
 
 <p>
+<a href="outdir.html">OUTDIR</a>
 </p>
 
 <!-- *************************************************************** -->
@@ -97,10 +105,10 @@ users).
 <!--/x-rc-nav-->
 <hr>
 <address>
-$Date: 2002/07/27 05:13:10 $ <br>
+$Date: 2002/10/20 03:49:22 $ <br>
 <img align="top" src="../monicon.png" alt="">
 <a href="http://www.mhonarc.org/"><strong>MHonArc</strong></a><br>
-Copyright &#169; 1997-1998, <a href="http://www.earlhood.com/">Earl Hood</a>, <a href="mailto:mhonarc@mhonarc.org">mhonarc@mhonarc.org</a><br>
+Copyright &#169; 1997,1998,2002 <a href="http://www.earlhood.com/">Earl Hood</a>, <a href="mailto:mhonarc@mhonarc.org">mhonarc@mhonarc.org</a><br>
 </address>
 
 </body>

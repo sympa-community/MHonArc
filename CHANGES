@@ -13,6 +13,61 @@
 
 YYYY/MM/DD
 ============================================================================
+2002/12/21	(2.5.14)
+
+* Security patch release: This release fixes a cross-site scripting
+  (XSS) vulnerability in m2h_text_html::filter (the HTML filter).
+  A specially crafted HTML message can have scripting markup get
+  by the script filtering done by m2h_text_html::filter.
+
+============================================================================
+2002/10/21	(2.5.13)
+
+* Bug Fixes: See
+    <http://savannah.gnu.org/bugs/index.php?group_id=1968
+     &set=custom&advsrch=0&msort=0&report_id=105&go_report=Go
+     &fix_release=2.5.13&chunksz=50>
+
+* DBFILE resource can now be set to an absolute pathname.  This
+  allows the database file to be located in a separate location than
+  in the archive directory.  If not an absolute pathname, then
+  value is treated relative to OUTDIR.
+
+* readmail.pl updated to handle MHTML messages better.  mhtxthtml.pl
+  changed accordingly.
+
+* readmail.pl handling of malformed multipart messages improved.
+  Cases were a the terminating boundary delimiter did not exist would
+  generate a warning message in the converted message body that data
+  could not be converted.  This case should now be handled so that
+  end of entitiy implies a terminating boundary delimiter,
+  (Thanks goto Randy Blaustein for providing real-world test cases).
+
+* Fixed problem where some message attachments were "lost".  This
+  mainly occurs when using mha-decode with the -dcd-digest option,
+  or if you have registered the m2h_external::filter for message/*
+  data types.
+  (Thanks goto Steve Johnson for finding this problem.)
+
+* m2h_external::filter will now include the subject of a message
+  in the attachment link if saving message/* data to a file.
+
+* m2h_external::filter properly escapes the filename parameter
+  when displaying it in the attachment link.  This is done to
+  avoid any possible XSS exploits.  Note, no exploits have been
+  reported by using the filename parameter in messages, so this
+  change is more of a preemptive measure.
+
+* m2h_external::filter will fall back to a "txt" extension for
+  unknown text types instead of a "bin" extension.
+
+* m2h_text_plain::filter: Removed hardcoded 'as-is' for US-ASCII
+  data.  This is so a user could define a converter if having to deal
+  with mislabeled character data.
+  (Thanks goto Mooffie for finally finding a real-world case to not
+  hardcode us-ascii).
+
+============================================================================
 2002/09/03	(2.5.12)
 
 * Strip more tags and attributes that could potentially be used for
@@ -2162,4 +2217,4 @@ YYYY/MM/DD
 
 =======================================================================
 Earl Hood, mhonarc@mhonarc.org
-$Id: CHANGES,v 1.83 2002/09/04 04:09:29 ehood Exp $
+$Id: CHANGES,v 1.84.2.1 2002/12/22 00:43:56 ehood Exp $

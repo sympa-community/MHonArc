@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhtxthtml.pl,v 2.21 2002/09/04 04:09:30 ehood Exp $
+##	$Id: mhtxthtml.pl,v 2.22.2.1 2002/12/22 00:43:56 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -150,41 +150,68 @@ sub filter {
     $base =~ s|(.*/).*|$1|;
 
     ## Strip out certain elements/tags to support proper inclusion
-    $$data =~ s|<!doctype\s[^>]*>||io;
-    $$data =~ s|</?html\b[^>]*>||gio;
-    $$data =~ s|</?x-html\b[^>]*>||gio;
     $$data =~ s|<head\s*>[\s\S]*</head\s*>||io;
+    1 while ($$data =~ s|<!doctype\s[^>]*>||io);
+    1 while ($$data =~ s|</?html\b[^>]*>||gio);
+    1 while ($$data =~ s|</?x-html\b[^>]*>||gio);
+    1 while ($$data =~ s|</?meta\b[^>]*>||gio);
+    1 while ($$data =~ s|</?link\b[^>]*>||gio);
 
     ## Strip out <font> tags if requested
     if ($nofont) {
 	$$data =~ s|<style[^>]*>.*?</style\s*>||gios;
-	$$data =~ s|</?font\b[^>]*>||gio;
+	1 while ($$data =~ s|</?font\b[^>]*>||gio);
+        1 while ($$data =~ s/\b(?:style|class)\s*=\s*"[^"]*"//gio);
+	1 while ($$data =~ s/\b(?:style|class)\s*=\s*'[^']*'//gio);
+	1 while ($$data =~ s/\b(?:style|class)\s*=\s*[^\s>]+//gio);
+	1 while ($$data =~ s|</?style\b[^>]*>||gi);
+
     }
 
     ## Strip out scripting markup if requested
     if ($noscript) {
+	# remove scripting elements and attributes
 	$$data =~ s|<script[^>]*>.*?</script\s*>||gios;
-	$$data =~ s|<style[^>]*>.*?</style\s*>||gios  unless $nofont;
-	$$data =~ s|$SAttr\s*=\s*"[^"]*"||gio; #"
-	$$data =~ s|$SAttr\s*=\s*'[^']*'||gio; #'
-	$$data =~ s|$SAttr\s*=\s*[^\s>]+||gio;
-	$$data =~ s|</?$SElem[^>]*>||gio;
-
-	# just in-case, make sure all script tags are removed
+	unless ($nofont) {  # avoid dup work if style already stripped
+	    $$data =~ s|<style[^>]*>.*?</style\s*>||gios;
+	    1 while ($$data =~ s|</?style\b[^>]*>||gi);
+	}
+	1 while ($$data =~ s|$SAttr\s*=\s*"[^"]*"||gio); #"
+	1 while ($$data =~ s|$SAttr\s*=\s*'[^']*'||gio); #'
+	1 while ($$data =~ s|$SAttr\s*=\s*[^\s>]+||gio);
+	1 while ($$data =~ s|</?$SElem[^>]*>||gio);
 	1 while ($$data =~ s|</?script\b||gi);
+
 	# for netscape 4.x browsers
-	$$data =~ s/(=\s*["']?\s*)\&\{/$1/g;
+	$$data =~ s/(=\s*["']?\s*)(?:\&\{)+/$1/g;
+
+	# Hopefully complete pattern to neutralize javascript:... URLs.
+	# The pattern is ugly because we have to handle any combination
+	# of regular chars and entity refs.
+	$$data =~ s/\b(?:j|&\#(?:0*(?:74|106)|x0*(?:4a|6a))(?:;|(?![0-9])))
+		      (?:a|&\#(?:0*(?:65|97)|x0*(?:41|61))(?:;|(?![0-9])))
+		      (?:v|&\#(?:0*(?:86|118)|x0*(?:56|76))(?:;|(?![0-9])))
+		      (?:a|&\#(?:0*(?:65|97)|x0*(?:41|61))(?:;|(?![0-9])))
+		      (?:s|&\#(?:0*(?:83|115)|x0*(?:53|73))(?:;|(?![0-9])))
+		      (?:c|&\#(?:0*(?:67|99)|x0*(?:43|63))(?:;|(?![0-9])))
+		      (?:r|&\#(?:0*(?:82|114)|x0*(?:52|72))(?:;|(?![0-9])))
+		      (?:i|&\#(?:0*(?:73|105)|x0*(?:49|69))(?:;|(?![0-9])))
+		      (?:p|&\#(?:0*(?:80|112)|x0*(?:50|70))(?:;|(?![0-9])))
+		      (?:t|&\#(?:0*(?:84|116)|x0*(?:54|74))(?:;|(?![0-9])))
+		   /_javascript_/gix;
+
+    }
+
+    ## Modify relative urls to absolute using BASE
+    if ($base =~ /\S/) {
+        $$data =~ s/($UAttr\s*=\s*['"])([^'"]+)(['"])/
+		   join("", $1, &addbase($base,$2), $3)/geoix;
     }
     
-    if ($onlycid) {
-	# quoted attributes
-        $$data =~ s/($AElem[^>]+$UAttr\s*=\s*['"])([^'"]+)(['"])
-		   /&preserve_cid($1, $2, $3)
-		   /geoix;
-	# not-quoted attributes
-        $$data =~ s/($AElem[^>]+$UAttr\s*=\s*)([^'"\s>][^\s>]*)
-		   /&preserve_cid($1, $2, "")
-		   /geoix;
+    ## Check for frames: Do not support, so just show source
+    if ($$data =~ m/<frameset\b/i) {
+	$$data = join('', '<pre>', mhonarc::htmlize($$data), '</pre>');
+	return ($title.$$data, @files);
     }
 
     ## Check for body attributes
@@ -207,12 +234,10 @@ sub filter {
 	    $tpre .= qq|background-color: $attr{'bgcolor'}; |
 		     if $attr{'bgcolor'};
 	    if ($attr{'background'}) {
-		if ($attr{'background'} =~ /^cid:/i) {
-		    $attr{'background'} = &resolve_cid($attr{'background'});
-		} else {
-		    $attr{'background'} = &addbase($base, $attr{'background'});
+		if ($attr{'background'} =
+			&resolve_cid($onlycid, $attr{'background'})) {
+		    $tpre .= qq|background-image: url($attr{'background'}) |;
 		}
-		$tpre .= qq|background-image: url($attr{'background'}) |;
 	    }
 	    $tpre .= qq|color: $attr{'text'}; |
 		     if $attr{'text'};
@@ -231,19 +256,13 @@ sub filter {
 	    $$data = $tpre . $$data . $tsuf;
 	}
     }
-    $$data =~ s|</?body[^>]*>||ig;
-
-    ## Modify relative urls to absolute using BASE
-    if ($base =~ /\S/) {
-        $$data =~ s/($UAttr\s*=\s*['"])([^'"]+)(['"])/
-		   join("", $1, &addbase($base,$2), $3)/geoix;
-    }
+    1 while ($$data =~ s|</?body[^>]*>||ig);
 
     ## Check for CID URLs (multipart/related HTML)
     $$data =~ s/($UAttr\s*=\s*['"])([^'"]+)(['"])/
-	       join("", $1, &resolve_cid($2), $3)/geoix;
+	       join("", $1, &resolve_cid($onlycid, $2), $3)/geoix;
     $$data =~ s/($UAttr\s*=\s*)([^'">][^\s>]+)/
-	       join("", $1, '"', &resolve_cid($2), '"')/geoix;
+	       join("", $1, '"', &resolve_cid($onlycid, $2), '"')/geoix;
 
     ($title.$$data, @files);
 }
@@ -284,9 +303,23 @@ sub addbase {
 ##---------------------------------------------------------------------------
 
 sub resolve_cid {
+    my $onlycid = shift;
     my $cid = shift;
     my $href = $readmail::Cid{$cid};
-    if (!defined($href)) { return ($cid =~ /^cid:/i)? "": $cid; }
+    if (!defined($href)) {
+	my $basename = $cid;
+	$basename =~ s/.*\///;
+	if (!defined($href = $readmail::Cid{$basename})) {
+	    return ""  if $onlycid;
+	    return ($cid =~ /^cid:/i)? "": $cid;
+	}
+	$cid = $basename;
+    }
+
+    if ($href->{'uri'}) {
+	# Part already converted; multiple references to part
+	return $href->{'uri'};
+    }
 
     require 'mhmimetypes.pl';
     my $filename;
@@ -303,22 +336,12 @@ sub resolve_cid {
 			    $href->{'body'});
     }
     $href->{'filtered'} = 1; # mark part filtered for readmail.pl
+    $href->{'uri'}      = $filename;
+
     push(@files, $filename); # @files defined in filter!!
     $filename;
 }
 
-##---------------------------------------------------------------------------
-
-sub preserve_cid {
-    my $pre = shift;
-    my $url = shift;
-    my $post = shift;
-    if ($url =~ /^cid:/i) {
-	$pre . $url . $post;
-    } else {
-	$pre . 'javascript:void(0);' . $post;
-    }
-}
 ##---------------------------------------------------------------------------
 
 1;

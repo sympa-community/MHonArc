@@ -21,7 +21,7 @@ Before reporting a bug, please do the following:
     the mailing list to get confirmation.
 
 The prefered way to report bugs is to use the bug submission form for
-MHonArc located at <http://savannah.gnu.org/bugs/?group_id=1968>. Please
+MHonArc located at <http://savannah.nongnu.org/bugs/?group_id=1968>. Please
 check and search the existing bugs to verify that the bug has not already
 been reported.
 
@@ -34,17 +34,17 @@ option items, leave it with the default value or make a best guess.
 
 Open Bugs
 
-Goto <http://savannah.gnu.org/bugs/?group_id=1968>, select "Open" for the 
-Status choice, and then activate the Go or Browse button to list all open
-bugs.
+Goto <http://savannah.nongnu.org/bugs/?group_id=1968>, select "Open" for
+the Status choice, and then activate the Go or Browse button to list all
+open bugs.
 
 ---------------------------------------------------------------------------
 
 Fixed Bugs
 
-Goto <http://savannah.gnu.org/bugs/?group_id=1968>, select "Closed" for the
-Status choice, and then activate the Go or Browse button to list all closed
-/fixed bugs.
+Goto <http://savannah.nongnu.org/bugs/?group_id=1968>, select "Closed" for
+the Status choice, and then activate the Go or Browse button to list all
+closed/fixed bugs.
 
 ---------------------------------------------------------------------------
 
@@ -52,7 +52,7 @@ Status choice, and then activate the Go or Browse button to list all closed
 
 ---------------------------------------------------------------------------
 
-$Date: 2002/05/14 01:53:35 $
+$Date: 2002/09/25 04:02:17 $
 MHonArc
 Copyright © 1997-2002, Earl Hood, mhonarc@mhonarc.org
 
