@@ -1,0 +1,49 @@
+<HTML>
+<HEAD><TITLE>MHonArc 1.0.0 -- Archive Integrity
+</TITLE>
+</HEAD>
+<BODY>
+<H1><HR><A NAME="36758">Archive Integrity</A>
+</H1>
+
+       <EM>MHonArc</EM> applies safeguards to try to insure that a mail archive does not get 
+       corrupted due to exceptional circumstances. <EM>MHonArc</EM> does the following to insure 
+       a mail archive does not get corrupted:
+<P>
+
+<UL>
+<LI>          <EM>MHonArc</EM> creates a lock file, "<CODE>.mhonarc.lck</CODE>", when creating/updating 
+              an archive. The lock file insures that only one <EM>MHonArc</EM> process is 
+              modifying an archive at any given moment. The <A HREF="mhonarc_env.doc.html#13392"><CODE>M2H_LOCKTRIES</CODE></A> 
+              environment variable allows you to control how long a given <EM>MHonArc</EM> 
+              process will wait if an archive is currently locked. If <EM>MHonArc</EM> can not lock 
+              the archive after the specified number of tries, <EM>MHonArc</EM> will exit.
+<P>              The lock file becomes very important if you use <EM>MHonArc</EM> within a 
+              <CODE>.forward</CODE> file. See the example, <A HREF="mhonarc_adding.doc.html#40657">Adding a Single Message to Archive</A>, in 
+              the section, <A HREF="mhonarc_adding.doc.html#26659">Adding New Messages to an Archive</A>, on how one might use 
+              <EM>MHonArc</EM> in a <CODE>.forward</CODE> file.
+<P>
+
+<LI>          <EM>MHonArc</EM> will ignore the following signals once messages are actually 
+              being written to disk: <CODE>SIGABRT</CODE>, <CODE>SIGHUP</CODE>, <CODE>SIGINT</CODE>, <CODE>SIGQUIT</CODE>, <CODE>SIGTERM</CODE>. 
+              Possible archive corruption can still occur if a <CODE>SIGKILL</CODE> signal is received 
+              since <CODE>SIGKILL</CODE>s are uncatchable. A <CODE>SIGKILL</CODE> will also prevent <EM>MHonArc</EM> 
+              from deleting the lock file. This will prevent other invocations of <EM>MHonArc</EM> 
+              from updating the archive. If this occurs, you need to manually remove the 
+              lock file.
+<P></UL>
+<PRE>       
+</PRE>
+
+<HR>
+       [Prev:<A HREF="mhonarc_icons.doc.html#13220">Icons</A>]<BR>
+       [Next:<A HREF="mhonarc_tips.doc.html#14126">Tips</A>]<BR>
+       [<A HREF="mhonarc.doc.html">ToC</A>]<BR>
+       
+<P>
+
+<HR>
+<ADDRESS>       MHonArc 1.0.0 -- Archive Integrity
+</ADDRESS>
+</BODY>
+</HTML>

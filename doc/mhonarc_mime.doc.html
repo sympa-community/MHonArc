@@ -1,0 +1,507 @@
+<HTML>
+<HEAD><TITLE>MHonArc 1.0.0 -- MIME
+</TITLE>
+</HEAD>
+<BODY>
+<H1><HR><A NAME="23201">MIME</A>
+</H1>
+
+       <EM>MHonArc</EM> has some support for e-mail messages with <EM>Multipurpose Internet Mail 
+       Extensions</EM> (MIME) as defined in <A HREF="http://www.oac.uci.edu/indiv/ehood/MIME/1521/rfc1521ToC.html">RFC 1521</A>. <EM>MHonArc</EM> handles the filtering of the 
+       various content-types used in MIME in a modular fashion. Since new 
+       content-types occasionally are defined for MIME, this modularity allows users to 
+       add new filters to accomodate new content-types. Also, filters can be hooked in to 
+       override <EM>MHonArc's</EM> default filters, or provide <EM>MHonArc</EM> with the ability to process 
+       existing content-types that it cannot handle currently.
+<P>
+
+       
+<P>
+
+<HR>
+<H2><A NAME="20677">Default Filters</A>
+</H2>
+
+       The default filters provided by <EM>MHonArc</EM> supports the following MIME 
+       content-types, which may be overriden by user-defined filters, except where 
+       noted:
+<P>
+
+<UL>
+<LI>          <A HREF="#27736">application/*</A> 
+<LI>          <A HREF="#29967">audio/*</A> 
+<LI>          <A HREF="#21570">image/*</A> 
+<LI>          <A HREF="#20189">message/news</A> (<EM>cannot override</EM>)
+<LI>          <A HREF="#40799">message/partial</A> 
+<LI>          <A HREF="#29996">message/rfc822</A> (<EM>cannot override</EM>) 
+<LI>          <A HREF="#28520">multipart/alternative</A> (<EM>cannot override</EM>)
+<LI>          <A HREF="#21318">mulltipart/digest</A> (<EM>cannot override</EM>)
+<LI>          <A HREF="#15234">multipart/mixed</A> (<EM>cannot override</EM>)
+<LI>          <A HREF="#41356">multipart/parallel</A> (<EM>cannot override</EM>)
+<LI>          <A HREF="#15303">text/html</A> 
+<LI>          <A HREF="#26072">text/plain</A> 
+<LI>          <A HREF="#30815">text/setext</A> 
+<LI>          <A HREF="#34375">video/mpeg</A> 
+<LI>          <A HREF="#19738">video/quicktime</A> 
+</UL>
+       For more information on how to write your filters, or replace existing filters, see 
+       <A HREF="#24464">Writing Filters</A>.
+<P>
+
+       The next sections describes how <EM>MHonArc</EM> processes the content-types listed 
+       above.
+<P>
+
+<PRE>       
+</PRE>
+
+<H3><A NAME="27736">application/*</A>
+</H3>
+
+       <EM>MHonArc</EM> extracts the data into a separate file and puts a hyperlink to the file into 
+       the HTMLized message. If the "<EM>name</EM>" attribute is defined in the <CODE>Content-Type</CODE> 
+       header field, then the separate file will use the attribute as the filename. Otherwise, 
+       <EM>MHonArc</EM> generates a unique filename with an extenstion based upon sub-type.
+<P>
+
+       Here is the current list of <EM>application</EM> sub-types (with their filename extensions) 
+       supported by <EM>MHonArc</EM>:
+<P>
+
+<UL>
+<LI>          octet-stream (bin)
+<LI>          oda (oda)
+<LI>          pdf (pdf)
+<LI>          postscript (ps)
+<LI>          rtf (rtf)
+<LI>          x-bcpio (bcpio)
+<LI>          x-cpio (cpio)
+<LI>          x-csh (csh)
+<LI>          x-dvi (dvi)
+<LI>          x-gtar (gtar)
+<LI>          x-hdf (hdf)
+<LI>          x-latex (latex)
+<LI>          x-mif (mif)
+<LI>          x-netcdf (cdf)
+<LI>          x-sh (sh)
+<LI>          x-shar (shar)
+<LI>          x-sv4cpio (sv4cpio)
+<LI>          x-sv4crc (sv4crc)
+<LI>          x-tar (tar)
+<LI>          x-tcl (tcl)
+<LI>          x-tex (tex)
+<LI>          x-texinfo (texinfo)
+<LI>          x-troff (roff)
+<LI>          x-troff-man (man)
+<LI>          x-troff-me (me)
+<LI>          x-troff-ms (ms)
+<LI>          x-ustar (ustar)
+<LI>          x-wais-source (src)
+<LI>          zip (zip)
+<P></UL>
+<H3><A NAME="29967">audio/*</A>
+</H3>
+
+       <EM>MHonArc</EM> extracts the data into a separate file and puts a hyperlink to the file into 
+       the HTMLized message. If the "<EM>name</EM>" attribute is defined in the <CODE>Content-Type</CODE> 
+       header field, then the separate file will use the attribute as the filename. Otherwise, 
+       <EM>MHonArc</EM> generates a unique filename with an extenstion based upon sub-type.
+<P>
+
+       Here is the current list of <EM>audio</EM> sub-types (with their filename extensions) 
+       supported by <EM>MHonArc</EM>:
+<P>
+
+<UL>
+<LI>          basic (snd)
+<LI>          x-aiff (aif)
+<LI>          x-wav (wav)
+<P></UL>
+<H3><A NAME="21570">image/*</A>
+</H3>
+
+       <EM>MHonArc</EM> will extract the data into a separate file and puts a hyperlink to the file 
+       into the HTMLized message. If the "<EM>name</EM>" attribute is defined in the 
+       <CODE>Content-Type</CODE> header field, then the separate file will use the attribute as the 
+       filename. Otherwise, <EM>MHonArc</EM> will generate a unique filename with an extenstion 
+       based upon sub-type.
+<P>
+
+       Here is the current list of <EM>image</EM> sub-types (with their filename extensions) 
+       supported by <EM>MHonArc</EM>:
+<P>
+
+<UL>
+<LI>          gif (gif)
+<LI>          ief (ief)
+<LI>          jpeg (jpg)
+<LI>          tiff (tif)
+<LI>          x-cmu-raster (ras)
+<LI>          x-pict (pict)
+<LI>          x-portable-anymap (pnm)
+<LI>          x-pnm (pnm)
+<LI>          x-portable-bitmap (pbm)
+<LI>          x-pbm (pbm)
+<LI>          x-portable-graymap (pgm)
+<LI>          x-pgm (pgm)
+<LI>          x-portable-pixmap (ppm)
+<LI>          x-ppm (ppm)
+<LI>          x-rgb (rgb)
+<LI>          x-xbitmap (xbm)
+<LI>          x-xbm (xbm)
+<LI>          x-xpixmap (xpm)
+<LI>          x-xpm (xpm)
+<LI>          x-xwindowdump (xwd)
+<LI>          x-xwd (xwd)
+<P></UL>
+       If the image is a GIF or XBM (X bitmap), the HTML <CODE>IMG</CODE> element will be used to 
+       in-line the image into the HTMLized message.
+<P>
+
+<H3><A NAME="20189">message/news</A>
+</H3>
+
+       <EM>message/news</EM> signifies an included (MIME) USENET news message. The data 
+       associated with a <EM>message/news</EM> part is processed by <EM>MHonArc</EM> in the same manner 
+       as a regular mail message.
+<P>
+
+<H3><A NAME="28819"></A><A NAME="40799">message/partial</A>
+</H3>
+
+       <EM>message/partial</EM> signifies that the content is a single part of a message split into 
+       multiple mail messages. <EM>message/partial</EM> is treated in the same manner as <A HREF="#26072">text/plain</A>.
+<P>
+
+<H3><A NAME="29996">message/rfc822</A>
+</H3>
+
+       <EM>message/rfc822</EM> signifies an included (MIME) mail message. The data associated 
+       with a <EM>message/rfc822</EM> part is processed by <EM>MHonArc</EM> in the same manner as a 
+       regular mail message.
+<P>
+
+<H3><A NAME="28520">multipart/alternative</A>
+</H3>
+
+       <EM>multipart/alternative</EM> signifies multiple content-types with the same (or similiar) 
+       information. <EM>MHonArc</EM> processes only the latest part that has a content-type filter.
+<P>
+
+<H3><A NAME="21318">mulltipart/digest</A>
+</H3>
+
+       mulltipart/digest signifies a series of included mail messages. Each part is 
+       processed in the same manner as <A HREF="#29996">message/rfc822</A> unless an explicit content-type is 
+       specifed for each part.
+<P>
+
+<H3><A NAME="15234">multipart/mixed</A>
+</H3>
+
+       <EM>multipart/mixed</EM> signifies data with multiple content-types. <EM>MHonArc</EM> extracts each 
+       part and calls the appropriate content-type filter for each part, if defined.
+<P>
+
+<H3><A NAME="41356">multipart/parallel</A>
+</H3>
+
+       <EM>multipart/parallel</EM> is processed in the same manner as <A HREF="#15234">multipart/mixed</A>.
+<P>
+
+<H3><A NAME="15303">text/html</A>
+</H3>
+
+       <EM>text/html</EM> signifies that the data is HTML markup. The data as left "as is" with the 
+       exception of some processing to legally include the HTML into the HTMLized mail 
+       message. I.e. <EM>MHonArc</EM> removes the <CODE>HEAD</CODE> an <CODE>BODY</CODE> tags, the <CODE>TITLE</CODE> element will be 
+       replaced with an <CODE>ADDRESS</CODE> element surrounded by <CODE>HR</CODE>'s, and the <CODE>BASE</CODE> element 
+       URL will be propogated to relative URLs.
+<P>
+
+<H3><A NAME="26072">text/plain</A>
+</H3>
+
+       <EM>text/plain</EM> signifies ASCII character data. In the HTMLized message, the data is 
+       wrapped in a <CODE>PRE</CODE> element with special characters (<CODE>&lt; &gt; &amp;</CODE>) converted to entity 
+       references. <EM>MHonArc</EM> will also make any URLs into hyperlinks. The following URL 
+       types are recognized:
+<P>
+
+<UL>
+<LI>          <CODE>http://</CODE>... 
+<LI>          <CODE>ftp://</CODE>... 
+<LI>          <CODE>afs://</CODE>... 
+<LI>          <CODE>wais://</CODE>... 
+<LI>          <CODE>telnet://</CODE>... 
+<LI>          <CODE>gopher://</CODE>... 
+<LI>          <CODE>news:</CODE>... 
+<LI>          <CODE>nntp:</CODE>... 
+<LI>          <CODE>mid:</CODE>... 
+<LI>          <CODE>cid:</CODE>... 
+<LI>          <CODE>mailto:</CODE>... 
+<LI>          <CODE>prospero:</CODE>... 
+<P></UL>
+<H3><A NAME="30815">text/setext</A>
+</H3>
+
+       <EM>text/setext</EM> signifies "<EM>structure enhanced text</EM>". The data is converted into HTML 
+       containing hyperlinks as defined by the <EM>setext</EM> data. For more information on <EM>setext</EM>, 
+       see &lt;URL:<A HREF="http://www.bsdi.com/setext/">http://www.bsdi.com/setext/</A>&gt;.
+<P>
+
+<H3><A NAME="34375">video/*</A>
+</H3>
+
+       <EM>MHonArc</EM> extracts the data into a separate file and puts a hyperlink to the file into 
+       the HTMLized message. If the "<EM>name</EM>" attribute is defined in the <CODE>Content-Type</CODE> 
+       header field, then the separate file will use the attribute as the filename. Otherwise, 
+       <EM>MHonArc</EM> generates a unique filename with an extenstion based upon sub-type.
+<P>
+
+       Here is the current list of <EM>video</EM> sub-types (with their filename extensions) 
+       supported by <EM>MHonArc</EM>:
+<P>
+
+<UL>
+<LI>          mpeg (mpg)
+<LI>          quicktime (mov)
+<LI>          x-msvideo (avi)
+<LI>          x-sgi-movie (movie)
+</UL>
+<PRE>       
+</PRE>
+
+<HR>
+<H2><A NAME="24464">Writing Filters</A>
+</H2>
+
+       If you want to write your own filter for use in <EM>MHonArc</EM>, you need to know the Perl 
+       programming language. The following information assumes you know Perl. To 
+       learn how to hook in your filters into <EM>MHonArc</EM>, see <A HREF="#19421">Specifying Filters</A>.
+<P>
+
+<H3><A NAME="31560">Function Interface of Filter</A>
+</H3>
+
+       <EM>MHonArc</EM> interfaces with MIME filters by calling a routine with a specific set of 
+       arguments and treats the return value as the HTML markup to include in the 
+       message. The prototype of the interface routine is as follows:
+<P>
+
+<PRE>sub filter {
+    local($head, *fields, $data) = @_;
+
+    # Filter code here
+
+    # The last statement should be the HTML return value, unless an
+    # explicit return is done.
+}
+
+</PRE>
+
+<H4>Argument Descriptions
+</H4>
+
+<DL>
+<DT>          <CODE>$head</CODE> 
+
+<DD>              This is the header text of the message (or body part if called in a mulitpart 
+              message).
+</DL>
+<DL>
+<DT>          <CODE>*fields</CODE> 
+
+<DD>              This is a pointer to an associative array that has broken down <CODE>$head</CODE> into 
+              field label/field value components. The keys are the lower-case 
+              representations of the field values. <STRONG>Example</STRONG>: If you would like to retrieve 
+              the value of the Content-Type field, then use the following: 
+              <CODE>$fields{`content-type'}</CODE>.
+              If a field occurs more than once in a header, <EM>MHonArc</EM> separates the field 
+              values in the associative array by a `<CODE>\034</CODE>' character. To make your filter 
+              less likely to break due to changes in <EM>MHonArc</EM>, you may use the <CODE>$'X</CODE> 
+              variable instead of `<CODE>\034</CODE>'.
+<P></DL>
+<DL>
+<DT>          <CODE>$data</CODE> 
+
+<DD>              This is a copy of the message (or body part if called in a mulitpart message) 
+              body. <EM>MHonArc</EM> has decoded the data for you if it was encoded in 
+              Quoted-Printable, or Base64.
+</DL>
+<H4>Return Value
+</H4>
+
+       The return value should be a string representing the HTML markup to insert in the 
+       HTMLized message. An empty string may be returned to tell <EM>MHonArc</EM> that the 
+       routine was unable to filter data. 
+<P>
+
+<PRE>       
+</PRE>
+
+<H3>Filter Writing Tips
+</H3>
+
+       The following recommendations/tips are given to help you write filters:
+<P>
+
+<UL>
+<LI>          Qualify your filter in its own package. This eliminates possible 
+              variable/routine conflicts with <EM>MHonArc</EM>.
+<P><LI>          If the filter creates derived files (like the image filters), you may use the 
+              variable <CODE>$'OUTDIR</CODE> to determine the location of the mail archive.
+<P><LI>          Look at the default filters contained in the distribution of <EM>MHonArc</EM>. You 
+              can use these as templates for writing your own.
+<P><LI>          Make sure your Perl source file ends with a true statement (like "<CODE>1;</CODE>"). 
+              <EM>MHonArc</EM> just performs a <CODE>require</CODE> on the file, and if the file does not 
+              return true, Perl will abort execution.
+<P></UL>
+<PRE>       
+</PRE>
+
+<H3>Using C
+</H3>
+
+       If a MIME filter requires the utilization of a C program, or other non-Perl 
+       executable, a Perl wrapper must be written for the program in-order to interface 
+       with <EM>MHonArc</EM>. The wrapper must follow the rules as specified in <A HREF="#31560">Function 
+       Interface of Filter</A>.
+<P>
+
+<PRE>       
+</PRE>
+
+<HR>
+<H2><A NAME="19421">Specifying Filters</A>
+</H2>
+
+       Adding new filters, or overriding existing ones, are done via the <A HREF="mhonarc_rcfile.doc.html#21846">Resource File</A>.
+<P>
+
+<H3><A NAME="41718">MIMEFILTERS</A>
+</H3>
+
+       The resource element <CODE>MIMEFILTERS</CODE> in the <A HREF="mhonarc_rcfile.doc.html#21846">Resource File</A> is used to hook in user 
+       specifed filters into <EM>MHonArc</EM>. The syntax for each line of the the <CODE>MIMEFILTERS</CODE> 
+       element is as follows:
+<P>
+
+       <EM>&lt;content-type&gt;</EM><CODE>:</CODE><EM>&lt;routine-name&gt;</EM><CODE>:</CODE><EM>&lt;file-of-routine&gt;</EM> 
+<P>
+
+       The definition of each colon-separated value is as follows:
+<P>
+
+<DL>
+<DT>          <EM>&lt;content-type&gt;</EM> 
+
+<DD>              The MIME content-type the filter processes. The mulitpart types and the 
+              message/rfc822 content-types cannot not be overridden.
+</DL>
+<DL>
+<DT>          <EM>&lt;routine-name&gt;</EM> 
+
+<DD>              The actual routine name of the filter. The name should be fully qualified 
+              by the package it is definedi (e.g. "<CODE>mypackage'filter</CODE>").
+</DL>
+<DL>
+<DT>          <EM>&lt;file-of-routine&gt;</EM> 
+
+<DD>              The name of the file that defines <EM>&lt;routine-name&gt;</EM>. If the file is not a full 
+              pathname, <EM>MHonArc</EM> finds the file by looking in the standard include paths 
+              of Perl, and the paths specified by the <A HREF="mhonarc_rcfile.doc.html#33543"><CODE>PERLINC</CODE></A> resource element.
+</DL>
+       Any whitespace is stripped out before processing.
+<P>
+
+<H3>Example
+</H3>
+
+       The following represents the default value of <CODE>MIMEFILTERS</CODE>:
+<P>
+
+<PRE>&lt;MIMEFILTERS&gt;
+application/octet-stream:m2h_external'filter:mhexternal.pl
+application/oda:m2h_external'filter:mhexternal.pl
+application/pdf:m2h_external'filter:mhexternal.pl
+application/postscript:m2h_external'filter:mhexternal.pl
+application/rtf:m2h_external'filter:mhexternal.pl
+application/x-bcpio:m2h_external'filter:mhexternal.pl
+application/x-cpio:m2h_external'filter:mhexternal.pl
+application/x-csh:m2h_external'filter:mhexternal.pl
+application/x-dvi:m2h_external'filter:mhexternal.pl
+application/x-gtar:m2h_external'filter:mhexternal.pl
+application/x-hdf:m2h_external'filter:mhexternal.pl
+application/x-latex:m2h_external'filter:mhexternal.pl
+application/x-mif:m2h_external'filter:mhexternal.pl
+application/x-netcdf:m2h_external'filter:mhexternal.pl
+application/x-sh:m2h_external'filter:mhexternal.pl
+application/x-shar:m2h_external'filter:mhexternal.pl
+application/x-sv4cpio:m2h_external'filter:mhexternal.pl
+application/x-sv4crc:m2h_external'filter:mhexternal.pl
+application/x-tar:m2h_external'filter:mhexternal.pl
+application/x-tcl:m2h_external'filter:mhexternal.pl
+application/x-tex:m2h_external'filter:mhexternal.pl
+application/x-texinfo:m2h_external'filter:mhexternal.pl
+application/x-troff-man:m2h_external'filter:mhexternal.pl
+application/x-troff-me:m2h_external'filter:mhexternal.pl
+application/x-troff-ms:m2h_external'filter:mhexternal.pl
+application/x-troff:m2h_external'filter:mhexternal.pl
+application/x-ustar:m2h_external'filter:mhexternal.pl
+application/x-wais-source:m2h_external'filter:mhexternal.pl
+application/zip:m2h_external'filter:mhexternal.pl
+audio/basic:m2h_external'filter:mhexternal.pl
+audio/x-aiff:m2h_external'filter:mhexternal.pl
+audio/x-wav:m2h_external'filter:mhexternal.pl
+image/gif:m2h_external'filter:mhexternal.pl
+image/ief:m2h_external'filter:mhexternal.pl
+image/jpeg:m2h_external'filter:mhexternal.pl
+image/tiff:m2h_external'filter:mhexternal.pl
+image/x-cmu-raster:m2h_external'filter:mhexternal.pl
+image/x-pbm:m2h_external'filter:mhexternal.pl
+image/x-pgm:m2h_external'filter:mhexternal.pl
+image/x-pict:m2h_external'filter:mhexternal.pl
+image/x-pnm:m2h_external'filter:mhexternal.pl
+image/x-portable-anymap:m2h_external'filter:mhexternal.pl
+image/x-portable-bitmap:m2h_external'filter:mhexternal.pl
+image/x-portable-graymap:m2h_external'filter:mhexternal.pl
+image/x-portable-pixmap:m2h_external'filter:mhexternal.pl
+image/x-ppm:m2h_external'filter:mhexternal.pl
+image/x-rgb:m2h_external'filter:mhexternal.pl
+image/x-xbitmap:m2h_external'filter:mhexternal.pl
+image/x-xbm:m2h_external'filter:mhexternal.pl
+image/x-xpixmap:m2h_external'filter:mhexternal.pl
+image/x-xpm:m2h_external'filter:mhexternal.pl
+image/x-xwd:m2h_external'filter:mhexternal.pl
+image/x-xwindowdump:m2h_external'filter:mhexternal.pl
+message/partial:m2h_text_plain'filter:mhtxtplain.pl
+text/html:m2h_text_html'filter:mhtxthtml.pl
+text/plain:m2h_text_plain'filter:mhtxtplain.pl
+text/richtext:m2h_text_plain'filter:mhtxtplain.pl
+text/setext:m2h_text_setext'filter:mhtxtsetext.pl
+text/tab-separated-values:m2h_text_plain'filter:mhtxtplain.pl
+text/x-html:m2h_text_html'filter:mhtxthtml.pl
+text/x-setext:m2h_text_setext'filter:mhtxtsetext.pl
+video/mpeg:m2h_external'filter:mhexternal.pl
+video/quicktime:m2h_external'filter:mhexternal.pl
+video/x-msvideo:m2h_external'filter:mhexternal.pl
+video/x-sgi-movie:m2h_external'filter:mhexternal.pl
+&lt;/MIMEFILTERS&gt; 
+</PRE>
+
+<PRE>       
+</PRE>
+
+<HR>
+       [Prev:<A HREF="mhonarc_adding.doc.html#26659">Adding New Messages to an Archive</A>]<BR>
+       [Next:<A HREF="mhonarc_indexpg.doc.html#30032">Index Page Customization</A>]<BR>
+       [<A HREF="mhonarc.doc.html">ToC</A>]<BR>
+       
+<P>
+
+<HR>
+<ADDRESS>       MHonArc 1.0.0 -- MIME
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,64 @@
+<HTML>
+<HEAD><TITLE>MHonArc 1.0.0 -- Tips
+</TITLE>
+</HEAD>
+<BODY>
+<H1><HR><A NAME="14126">Tips</A>
+</H1>
+
+       This section gives some helpful tips on using <EM>MHonArc</EM>:
+<P>
+
+<UL>
+<LI>          When using the <A HREF="#15460"><CODE>-add</CODE></A> option, there is no need to re-specify the resource file 
+              (unless you want to override some settings) since <EM>MHonArc</EM> will store all 
+              resources in the database file (<CODE>.mhonarc.db</CODE>) from the last invocation and 
+              apply those resource to new messages added to the archive.
+<P><LI>          Unless absolutely necessary, avoid changing the original sorting order 
+              when adding new messages to an archive. Changing the order cause 
+              <EM>MHonArc</EM> to modify every existing message in the archive to update the 
+              <EM>Next</EM>/<EM>Prev</EM> links.
+<P><LI>          Unless absolutely necessary, avoid changing the title of the index page of 
+              an archive when adding new messages. This will cause <EM>MHonArc</EM> to 
+              modify every existing message in the archive to change the <EM>Index</EM> links to 
+              reflect the new name.
+<P><LI>          Do not respecify the header and footer files if there is no change in them 
+              when adding new messages. Specifying them causes <EM>MHonArc</EM> to reread 
+              them again when it is not necessary.
+<P><LI>          <EM>MHonArc</EM> can be renamed to "<CODE>mbox2html</CODE>." If so, the <A HREF="#42068"><CODE>-mbox</CODE></A> option is 
+              automatically assumed.
+<P><LI>          <EM>MHonArc</EM> can be renamed to "<CODE>mhf2html</CODE>." If so, the <A HREF="#25275"><CODE>-mh</CODE></A> options is 
+              assumed. The renaming is for consistancy since <EM>MHonArc</EM>, by default, 
+              processes MH mail folders.
+<P><LI>          If you want to share a specific resource file among different HTML mail 
+              archives, leave out elements that (could) qualify a specific archive: eg. 
+              <CODE>HEADER</CODE>, <CODE>FOOTER</CODE>, <CODE>MBOX</CODE>, <CODE>MH</CODE>.
+<P><LI>          <EM>MHonArc</EM> can be used to process saved messages from newsgroups if the 
+              messages are saved in mailbox, or MH mail folder, format; or you save the 
+              messages by e-mailing them to yourself.
+<P>              <STRONG>NOTE</STRONG>: <EM>You can use the </EM><A HREF="#33363"><CODE>-msgsep</CODE></A><EM> option, or </EM><A HREF="#23573"><CODE>MSGSEP</CODE></A><EM> resource element, to 
+              process saved newsgroup messages that use a different message separator than 
+              mailbox files</EM>. 
+<P>
+
+<LI>          If archiving a mass amount of mail messages, it might be useful to hook 
+              into the mail archive a search engine. You can utilize the header, or footer, 
+              resources (<A HREF="#39268"><CODE>-header</CODE></A>, <A HREF="#21527"><CODE>-footer</CODE></A> options or <A HREF="#12591"><CODE>HEADER</CODE></A>, <A HREF="#28184"><CODE>FOOTER</CODE></A> resource file 
+              elements) to automatically hook in a form into the index page to allow 
+              readers to interface with the search engine.
+<P></UL>
+<PRE>       
+</PRE>
+
+<HR>
+       [Prev:<A HREF="mhonarc_integrity.doc.html#36758">Archive Integrity</A>]<BR>
+       [Next:<A HREF="mhonarc_notes.doc.html#23367">Notes</A>]<BR>
+       [<A HREF="mhonarc.doc.html">ToC</A>]<BR>
+       
+<P>
+
+<HR>
+<ADDRESS>       MHonArc 1.0.0 -- Tips
+</ADDRESS>
+</BODY>
+</HTML>

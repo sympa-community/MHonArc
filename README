@@ -1,0 +1,132 @@
+##############################################################################
+#                                                                            #
+#   This is the Conservatory archive of the MHonArc mail-to-HTML converter.  #
+#   MHonArc is written and still actively maintained by Earl Hood.  Because  #
+#   his CVS repository is currently not publicly accessible, we've created   #
+#   this Conservatory Git repository.  However, if you have bug reports or   #
+#   other questions, please bring them to https://www.mhonarc.org/.          #
+#                                                                            #
+#   The Conservatory (https://conservatory.github.io/) is a place where      #
+#   free software that has no other public version-controlled home on the    #
+#   Internet is made available in a git repository.  For MHonArc, we used    #
+#   https://www.mhonarc.org/MHonArc/CHANGES as a list of all the historical  #
+#   releases available, and found whatever release packages we could on the  #
+#   Internet.  We have committed each upstream release package as one git    #
+#   revision, starting from an early 1.0.0 zipfile from 1994.  We were not   #
+#   able to find every release, however.  We would happily rebuild the git   #
+#   repository to include more releases as people find them.                 # 
+#                                                                            #
+#   This README is the only file we've changed from upstream, and the only   #
+#   change we made was to add this note.  Below is the original content of   #
+#   the README file.                                                         #
+#                                                                            #
+##############################################################################
+
+README for MHonArc
+
+	An Internet mail-to-HTML converter.
+
+---------------------------------------------------------------------------
+    Copyright (C) 1994  Earl Hood, ehood@convex.com
+
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+---------------------------------------------------------------------------
+---------------------------------------------------------------------------
+CONTENTS of directory:
+
+ACKNOWLEDGEMENTS  Thanks to people
+CHANGES		  Revision history of MHonArc
+COPYING		  GNU General Public License
+README		  The file you are reading
+RELEASE_NOTES	  Release notes for MHonArc (_READ_)
+doc/		  Documentation for MHonArc
+examples/	  Example resource files for MHonArc
+icons/		  A collection of icons to use with MHonArc
+install.me	  Installation program for MHonArc
+lib/		  Libraries/MIME filters used by MHonArc
+logo/		  Gifs of the MHonArc logo
+mail2html	  Symbolic link to mhonarc
+mbox2html	  Symbolic link to mhonarc
+mhf2html	  Symbolic link to mhonarc
+mhonarc*	  The MHonArc Perl program
+
+---------------------------------------------------------------------------
+** PLEASE read the RELEASE_NOTES before running MHonArc.
+---------------------------------------------------------------------------
+---------------------------------------------------------------------------
+INSTALLATION
+
+To install MHonArc, run the following command:
+
+	% perl install.me
+
+The installation process will ask you a series of questions on where
+the Perl executable is and where to put MHonArc files.  Just hit <CR>
+to accept the default values listed in ()'s.
+
+Notes on installation process:
+
+    o The '#!' line in the installed mhonarc program is set to point to
+      the Perl executable specified in the installation process.
+
+    o The installed mhonarc program has code added so it will find its
+      default libraries specified in the installation program.  I.e.
+      The install lib directory is added to mhonarc's search path so it
+      will find its libraries.
+
+    o If you specify paths that do not exist, the install.me program
+      will create the path.
+
+
+** PLEASE read the RELEASE_NOTES before running MHonArc.
+
+---------------------------------------------------------------------------
+DOCUMENTATION
+
+Documentation for MHonArc is located in the doc/ directory.
+
+html:
+    The main documentation for MHonArc is in multiple HTML files.  Load
+    mhonarc.doc.html in the doc/ directory into your Web browser to get
+    started.
+
+ascii:
+    A plain text version of the documentation is in the single file
+    mhonarc.txt.  This file is created by converting the HTML files
+    into ascii.  See the Makefile in doc/ for how the conversion is
+    done.
+
+---------------------------------------------------------------------------
+BUGS/COMMENTS/SUGGESTIONS?
+
+    If you have any bugs/comments/suggestions about MHonArc, feel free
+    to drop me an e-mail message at ehood@convex.com.
+
+    If it is a bug you are reporting, please include the following in
+    your message:
+
+        o  Version of Perl (can be retrievied by "perl -v").
+        o  Version of the program in question.
+        o  The exact command-line used to invoke the program.
+        o  Error/diagnostic message from the program.
+        o  Any other information that might prove useful.
+
+
+    If you have questions on what MHonarc can, or cannot do, please
+    read the documnetation first.  If the docs do not answer your
+    question(s), feel free to e-mail me.
+
+---------------------------------------------------------------------------
+Earl Hood, ehood@convex.com

@@ -1,0 +1,664 @@
+<HTML>
+<HEAD><TITLE>MHonArc 1.0.0 -- Resource File
+</TITLE>
+</HEAD>
+<BODY>
+<H1><HR><A NAME="21846">Resource File</A>
+</H1>
+
+       <EM>MHonArc</EM> supports the ability to read in a resource file to control the behavior of 
+       <EM>MHonArc</EM>. The resource file allows you to specify most of the resources set by 
+       environment variables, and command-line options. The resource file also allows 
+       you to affect <EM>MHonArc</EM> behavior that cannot be specified by environment variables, 
+       or command-line options.
+<P>
+
+       The resource file is specified by the <A HREF="mhonarc_env.doc.html#36085"><CODE>M2H_RCFILE</CODE></A> environment variable or the 
+       <A HREF="mhonarc_clopts.doc.html#31250"><CODE>-rcfile</CODE></A> command-line option. The command-line option overrides the 
+       environment variable if both are defined.
+<P>
+
+       Resources are set in the file by using <EM>elements</EM> similiar in style to HTML/SGML 
+       markup. However, <EM>MHonArc</EM> uses simpler parsing rules for the resource file than 
+       standard SGML:
+<P>
+
+<UL>
+<LI>          Any line that is not a recognized element open tag, <EM>and</EM> the line is not 
+              contained within an element, is ignored.  This implies that regular text can 
+              be put anywhere OUTSIDE of recognized elements for commenting 
+              purposes.
+<P>              <STRONG>NOTE</STRONG>: You should use SGML comment declarations (<CODE>&lt;!-- </CODE>...<CODE> --&gt;</CODE>) when 
+              commenting a resource file. This will eliminate possible conflict with later 
+              versions of <EM>MHonArc</EM> if more stricter parsing rules are adopted.
+<P>
+
+<LI>          The opening tag of an element must occur by itself on a single line. 
+              Whitespace is allowed before the the open tag.
+<P><LI>          No comments are allowed inside elements because the text will be treated 
+              as element content.
+<P><LI>          Each format element must be closed with a <CODE>&lt;/</CODE><VAR>element_name</VAR><CODE>&gt;</CODE> tag on its 
+              own line unless <EM>explicitly</EM> stated otherwise in the <A HREF="#28308">Resource File Elements</A> 
+              section. Whitespace is allowed before the close tag.
+<P><LI>          Some elements can take an optional attribute called "<CODE>Override</CODE>".  This 
+              tells <EM>MHonArc</EM> that the contents of the element will completely override 
+              the default behavior of <EM>MHonArc</EM>, and previous instances of the element.  
+              <STRONG>Example</STRONG>: "<CODE>&lt;EXCS Override&gt;</CODE>". If "<CODE>Override</CODE>" is not specified, then the 
+              contents of the element augment the current behavior.
+<P><LI>          Element names are case-insensitive.
+<P><LI>          Elements can occur in any order in the resource file.
+<P></UL>
+<PRE>       
+</PRE>
+
+<HR>
+<H2><A NAME="28308">Resource File Elements</A>
+</H2>
+
+       The following list of elements contain no textual content so no end tag is required:
+<P>
+
+<DL>
+<DT>          <CODE>MBOX</CODE> 
+
+<DD>              Treat filename arguments as mailbox files.
+</DL>
+<DL>
+<DT>          <CODE>MH</CODE> 
+
+<DD>              Treat filename arguments as MH mail folders.
+</DL>
+<DL>
+<DT>          <CODE>NOMAILTO</CODE> 
+
+<DD>              Do not convert e-mail addresses in mail headers to mailto hyperlinks.
+</DL>
+<DL>
+<DT>          <CODE>NONEWS</CODE> 
+
+<DD>              Do not convert newsgroups in the <CODE>Newsgroups:</CODE> mail header field to 
+              <CODE>news</CODE> hyperlinks.
+</DL>
+<DL>
+<DT>          <CODE>NOREVERSE</CODE> 
+
+<DD>              Do not perform a reverse listing of the mail messages in the index page.
+</DL>
+<DL>
+<DT>          <CODE>NOSORT</CODE> 
+
+<DD>              List messages in the index page in the order they are processed.
+</DL>
+<DL>
+<DT>          <CODE><A NAME="37391">REVERSE</A></CODE> 
+
+<DD>              List messages in reverse chronological order if date sorting is being done, 
+              or list messages in reverse processing order if no date sorting is being 
+              done.
+</DL>
+<DL>
+<DT>          <CODE>SORT</CODE> 
+
+<DD>              List messages in the index page in chronological order.
+</DL>
+<DL>
+<DT>          <CODE>SUBSORT</CODE> 
+
+<DD>              Sort messages by subject. Subject sorting is case-insensitive, and begining 
+              "<CODE>Re:</CODE>", "<CODE>A</CODE>", "<CODE>An</CODE>", and "<CODE>The</CODE>" words are ignored.
+</DL>
+<PRE>       
+</PRE>
+
+       The following list of elements contain textual content, therefore, each element must 
+       be <STRONG>explicitly</STRONG> closed with an element end tag (examples are given in <A HREF="#34544">Example 
+       Resource Settings</A> to help you understand how the elements are used):
+<P>
+
+<DL>
+<DT>          <CODE>DBFILE</CODE> 
+
+<DD>              The name of the <EM>MHonArc</EM> database file. The default is "<CODE>.mhonarc.db</CODE>". 
+              <EM>You should not override the default name unless absolutely necessary, and you are 
+              confident about what you are doing</EM>.
+</DL>
+<DL>
+<DT>          <CODE>DOCURL</CODE> 
+
+<DD>              URL to use for <EM>MHonArc</EM> documentation. The default is 
+              "<CODE>http://www.oac.uci.edu/indiv/ehood/mhonarc.doc.html</CODE>".
+</DL>
+<DL>
+<DT>          <CODE><A NAME="33245">EXCS</A></CODE> 
+
+<DD>              Each line of the <CODE>EXCS</CODE> element specifies a mail header field to exclude in 
+              the converted HTML output. Each line is treated as a Perl regular 
+              expression (<STRONG>NOTE</STRONG>: <EM>the regular expression is already anchored to the begining of 
+              the line</EM>).
+              <EM>MHonArc</EM> has a default list of fields to exclude from mail headers (see 
+              <A HREF="#22545">Example (EXCS)</A>). Therefore, the list given in the resource file will 
+              augment the default list, unless the "<CODE>Override</CODE>" attribute is specified. If 
+              "<CODE>Override</CODE>" is specified, the default list is discarded along with any other 
+              lists specified from previous <CODE>EXCS</CODE> elements; and only header fields 
+              specified in the <CODE>EXCS</CODE> element are excluded (see <A HREF="#25231">Example (EXCS 2)</A>).
+<P></DL>
+<DL>
+<DT>          <CODE>FIELDORDER</CODE> 
+
+<DD>              Each line of the <CODE>FIELDORDER</CODE> element is the exact case-insensitive name of 
+              a message header field. The order the fields are listed is the order they will 
+              appear in the filtered message. The special field value "<CODE>-extra-</CODE>" 
+              represents all fields not explicitly specified in the <CODE>FIELDORDER</CODE> element 
+              and not excluded by the <A HREF="#33245"><CODE>EXCS</CODE></A> element. Extra fields are listed in sorted 
+              order.
+              See <A HREF="#24978">Example (FIELDORDER)</A> for the default value of the <CODE>FIELDORDER</CODE> 
+              used by <EM>MHonArc</EM>.
+<P></DL>
+<DL>
+<DT>          <CODE><A NAME="27614">FIELDSTYLES</A></CODE> 
+
+<DD>              Each line in the <CODE>FIELDSTYLES</CODE> element defines HTML elements to wrap 
+              around the field text in mail headers (e.g. "<CODE>To:</CODE><VAR> field text</VAR>", "<CODE>From:</CODE><VAR> field 
+              text</VAR>"). The format of each line is "<VAR>field_name</VAR><CODE>:</CODE><VAR>html_element</VAR>". This 
+              specifies to wrap <VAR>html_element</VAR> around the text associated with 
+              <VAR>field_name</VAR>. If <VAR>html_element</VAR> is empty, then the field text is not 
+              wrapped in any element.
+              <EM>MHonArc</EM> defines a special <VAR>field_name</VAR> called "<CODE>-default-</CODE>". This is 
+              default HTML element to wrap field text in if no explicit specific element 
+              is defined for the label.
+<P>              <VAR>field_name</VAR> must be the exact name of a header field name, but character 
+              case is ignored.
+<P>              See <A HREF="#39037">Example (FIELDSTYLES)</A> for the default formatting rules used by 
+              <EM>MHonArc</EM>.
+<P>              See also <A HREF="#40166"><CODE>LABELSTYLES</CODE></A>.
+<P></DL>
+<DL>
+<DT>          <CODE><A NAME="28184">FOOTER</A></CODE> 
+
+<DD>              File to include at the end of the index page. See <A HREF="mhonarc_indexpg.doc.html#39385">Include Files</A> in <A HREF="mhonarc_indexpg.doc.html#30032">Index Page 
+              Customization</A> for more information about the footer file.
+</DL>
+<DL>
+<DT>          <CODE><A NAME="12591">HEADER</A></CODE> 
+
+<DD>              File to include at the beginning of the index page. See <A HREF="mhonarc_indexpg.doc.html#39385">Include Files</A> in 
+              <A HREF="mhonarc_indexpg.doc.html#30032">Index Page Customization</A> for more information about the header file.
+</DL>
+<DL>
+<DT>          <CODE>ICONS</CODE> 
+
+<DD>              The <CODE>ICONS</CODE> element is used to specify the icons that represent the different 
+              content-types of messages. See the <A HREF="mhonarc_icons.doc.html#13220">Icons</A> section on usage of this element.
+</DL>
+<DL>
+<DT>          <CODE><A NAME="35029">INDEXBL</A></CODE> 
+
+<DD>              The single line value of the <CODE>INDEXBL</CODE> element represents the label text to 
+              use for the "Index" <EM>button</EM> link at the top of filtered messages. Any HTML 
+              markup is allowed as long as it is legal within the anchor element. See 
+              <A HREF="#22119">Example (INDEXBL)</A> for usage of an icon as the Index link.
+              The default value of <CODE>INDEXBL</CODE> is "<CODE>[Index]</CODE>".
+<P></DL>
+<DL>
+<DT>          <CODE>INDEXFL</CODE> 
+
+<DD>              The single line value of the <CODE>INDEXFL</CODE> element represents the text to use 
+              before the verbose name "Index" link in the <EM>footer</EM> of filtered messages. 
+              Normal text should be used for this element since the text will appear in 
+              an HTML <CODE>LI</CODE> element inside a <CODE>UL</CODE>. Unlike <A HREF="#35029"><CODE>INDEXBL</CODE></A>, the text is not 
+              wrapped in an anchor.
+              The default value of <CODE>INDEXFL</CODE> is "<CODE>Index</CODE>".
+<P></DL>
+<DL>
+<DT>          <CODE><A NAME="35395">IDXFNAME</A></CODE> 
+
+<DD>              The name of the index file. The default is "<CODE>maillist.html</CODE>".
+</DL>
+<DL>
+<DT>          <CODE><A NAME="40166">LABELSTYLES</A></CODE> 
+
+<DD>              Each line in the <CODE>LABELSTYLES</CODE> element defines HTML elements to wrap 
+              around labels in mail headers (e.g. "<CODE>To:</CODE>", "<CODE>From:</CODE>"). The format of each 
+              line is "<VAR>field_name</VAR><CODE>:</CODE><VAR>html_element</VAR>". This specifies to wrap 
+              <VAR>html_element</VAR> around <VAR>field_name</VAR>. If <VAR>html_element</VAR> is empty, then 
+              the label is not wrapped in any element.
+              <EM>MHonArc</EM> defines a special <VAR>field_name</VAR> called "<CODE>-default-</CODE>". This is 
+              default HTML element to wrap a label in if no explicit specific element is 
+              defined for the label.
+<P>              <VAR>field_name</VAR> must be the exact name of a header field name, but character 
+              case is ignored.
+<P>              See <A HREF="#37648">Example (LABELSTYLES)</A> for the default formatting rules used by 
+              <EM>MHonArc</EM>.
+<P>              See also <A HREF="#27614"><CODE>FIELDSTYLES</CODE></A>.
+<P></DL>
+<DL>
+<DT>          <CODE>LISTBEGIN</CODE> 
+
+<DD>              See <A HREF="mhonarc_indexpg.doc.html#33994">LISTBEGIN</A> in <A HREF="mhonarc_indexpg.doc.html#30032">Index Page Customization</A> for usage of this element.
+</DL>
+<DL>
+<DT>          <CODE>LITEMPLATE</CODE> 
+
+<DD>              See <A HREF="mhonarc_indexpg.doc.html#26878">LITEMPLATE</A> in <A HREF="mhonarc_indexpg.doc.html#30032">Index Page Customization</A> for usage of this element.
+</DL>
+<DL>
+<DT>          <CODE>LISTEND</CODE> 
+
+<DD>              See <A HREF="mhonarc_indexpg.doc.html#21268">LISTEND</A> in <A HREF="mhonarc_indexpg.doc.html#30032">Index Page Customization</A> for usage of this element.
+</DL>
+<DL>
+<DT>          <CODE>MAILTOURL</CODE> 
+
+<DD>              URL to use for e-mail address hyperlinks. If the URL contains the string, 
+              "<CODE>$TO$</CODE>", the string will be replaced with e-mail address being hyperlinked.
+              <EM>MHonArc</EM> will use the following URL by default: <CODE>mailto:$TO$
+</CODE><P></DL>
+<DL>
+<DT>          <CODE>MIMEFILTERS</CODE> 
+
+<DD>              See <A HREF="mhonarc_mime.doc.html#41718">MIMEFILTERS</A> in <A HREF="mhonarc_mime.doc.html#19421">Specifying Filters</A> for usage of this element.
+</DL>
+<DL>
+<DT>          <CODE><A NAME="23573">MSGSEP</A></CODE> 
+
+<DD>              Perl regular expression that represents the message separator for mailbox 
+              files. The default expression is "<CODE>^From </CODE>".
+</DL>
+<DL>
+<DT>          <CODE><A NAME="15676">NEXTBL</A></CODE> 
+
+<DD>              The single line value of the <CODE>NEXTBL</CODE> element represents the label text to use 
+              for the "Next" <EM>button</EM> link at the top of filtered messages. Any HTML 
+              markup is allowed as long as it is legal within the anchor element. See 
+              <A HREF="#31010">Example (NEXTBL)</A> for usage of an icon for the Next link.
+              The default value of <CODE>NEXTBL</CODE> is "<CODE>[Next]</CODE>".
+<P></DL>
+<DL>
+<DT>          <CODE>NEXTFL</CODE> 
+
+<DD>              The single line value of the <CODE>NEXTFL</CODE> element represents the text to use 
+              before the verbose subject "Next" link in the <EM>footer</EM> of filtered messages. 
+              Normal text should be used for this element since the text will appear in 
+              an HTML <CODE>LI</CODE> element inside a <CODE>UL</CODE>. Unlike <A HREF="#15676"><CODE>NEXTBL</CODE></A>, the text is not wrapped 
+              in an anchor.
+              The default value of <CODE>NEXTFL</CODE> is "<CODE>Next</CODE>".
+<P></DL>
+<DL>
+<DT>          <CODE><A NAME="33543">PERLINC</A></CODE> 
+
+<DD>              Each line represents a path to search when requiring MIME filters. See 
+              <A HREF="mhonarc_mime.doc.html#19421">Specifying Filters</A> in <A HREF="mhonarc_mime.doc.html#23201">MIME</A> for the use of this element.
+</DL>
+<DL>
+<DT>          <CODE><A NAME="23995">PREVBL</A></CODE> 
+
+<DD>              The single line value of the <CODE>PREVBL</CODE> element represents the label text to use 
+              for the "Prev" <EM>button</EM> link at the top of filtered messages. Any HTML 
+              markup is allowed as long as it is legal within the anchor element. See 
+              <A HREF="#17819">Example (PREVBL)</A> for usage of an icon for the Prev link.
+              The default value of <CODE>PREVBL</CODE> is "<CODE>[Prev]</CODE>".
+<P></DL>
+<DL>
+<DT>          <CODE>PREVFL</CODE> 
+
+<DD>              The single line value of the <CODE>PREVFL</CODE> element represents the text to use 
+              before the verbose subject "Prev" link in the <EM>footer</EM> of filtered messages. 
+              Normal text should be used for this element since the text will appear in 
+              an HTML <CODE>LI</CODE> element inside a <CODE>UL</CODE>. Unlike <A HREF="#23995"><CODE>PREVBL</CODE></A>, the text is not wrapped 
+              in an anchor.
+              The default value of <CODE>PREVFL</CODE> is "<CODE>Prev</CODE>".
+<P></DL>
+<DL>
+<DT>          <CODE><A NAME="13741">TIMEZONES</A></CODE> 
+
+<DD>              Each line of the <CODE>TIMEZONES</CODE> element defines a timezone acronym and its 
+              hour offset from UTC/GMT (<EM>Universal Coordinate Time</EM>). The format of 
+              each line is "<VAR>timezone_acronym</VAR><CODE>:</CODE><VAR>hour_offset</VAR>". Examples of 
+              timezone acronyms are: <CODE>UTC</CODE>, <CODE>PDT</CODE>, <CODE>EST</CODE>. The hour offset is should be 
+              positive for timezones West of UTC, and negative for time zones East of 
+              UTC.
+              <EM>MHonArc</EM> has a default list of timezone acronyms defined with hour 
+              offsets (see <A HREF="#14859">Example (TIMEZONES)</A>). Therefore, the list given in the 
+              resource file will augment the default list, unless the "<CODE>Override</CODE>" 
+              attribute is specified. If "<CODE>Override</CODE>" is specified, the default list, along 
+              with any other lists specified in previous <CODE>TIMEZONES</CODE> elements, are 
+              discarded, and only the timezone acronyms specified in the <CODE>TIMEZONES</CODE> 
+              element will be used.
+<P>              Most of the time, the date used by <EM>MHonArc</EM> uses a hour offset instead of 
+              a timezone acronym. However, mail messages may contain timezone 
+              acronyms in received/sent dates and <EM>MHonArc</EM> must be told what the 
+              hour offset from UTC the timezone acronym represents in order to 
+              properly sort messages by date.
+<P></DL>
+<DL>
+<DT>          <CODE>TITLE</CODE> 
+
+<DD>              Title for the index page. The default is "<EM>Mail Index</EM>".
+</DL>
+<DL>
+<DT>          <CODE>UMASK</CODE> 
+
+<DD>              Sets the umask for the <EM>MHonArc</EM> process. The value is treated as an octal 
+              number.
+</DL>
+<PRE>       
+</PRE>
+
+<HR>
+<H2><A NAME="34544">Example Resource Settings</A>
+</H2>
+
+       This section gives examples of how to use some of the resource file elements.
+<P>
+
+<H3>Example (DOCURL)
+</H3>
+
+<PRE>&lt;!--  DOCURL element specifies the URL to use for pointing to 
+      MHonArc documentation.  All whitespace is stripped out of the
+      line.
+  --&gt;
+&lt;DOCURL&gt;
+http://www.oac.uci.edu/indiv/ehood/mhonarc.doc.html
+&lt;/DOCURL&gt;
+
+</PRE>
+
+<H3><A NAME="22545">Example (EXCS)</A>
+</H3>
+
+<PRE>&lt;!--  Each line in the EXCS element is treated as a Perl
+      (case-insensitive) regular expression for excluding mail header
+      fields from the HTML output.  All whitespace is stripped out of
+      each expression.
+
+      "Override" attribute may be specified to clear the default
+      exclusion fields.
+
+      The following list represents the default exclusions made by
+      MHonArc.
+  --&gt;
+&lt;EXCS&gt;
+content- 
+errors-to 
+forward 
+lines 
+message-id 
+mime- 
+nntp- 
+originator 
+path 
+precedence 
+received 
+replied 
+return-path 
+status 
+via 
+x- 
+&lt;/EXCS&gt;
+
+</PRE>
+
+<H3><A NAME="25231">Example (EXCS 2)</A>
+</H3>
+
+<PRE>&lt;!--  This example overrides the default exclusion fields, and requires
+      that header fields must EXACTLY match what is listed inorder
+      to be excluded (this is done by appending a '$' at the end
+      of each field listed.
+  --&gt;
+&lt;EXCS override&gt;
+apparently-to$
+apparently-from$
+replied$
+received$
+&lt;/EXCS&gt;
+
+</PRE>
+
+<H3><A NAME="24978">Example (FIELDORDER)</A>
+</H3>
+
+<PRE>&lt;!--  This represents the default values used by MHonarc
+  --&gt;
+&lt;FIELDORDER&gt;
+to
+subject
+from
+date
+-extra-
+&lt;/FIELDORDER&gt;
+
+</PRE>
+
+<H3><A NAME="39037">Example (FIELDSTYLES)</A>
+</H3>
+
+<PRE>&lt;!--  Each line in the FIELDSTYLES element specifies the exact
+      (case-insensitive) name of a mail header field label and what HTML
+      element to wrap the field text in.  The label and the element are
+      separated by a colon.  Specifying no HTML element for a field will
+      cause the field text to appear in regular text.
+      
+      The special field "-default-" can be defined to tell what fields
+      are wrapped in if no explicit style is specified for the field.
+
+      The following reflects the default formatting used by MHonArc.
+  --&gt;
+&lt;FIELDSTYLES&gt;
+-default-
+&lt;/FIELDSTYLES&gt;
+
+</PRE>
+
+<H3>Example (FIELDSTYLES 2)
+</H3>
+
+<PRE>&lt;!--  Alternate formatting for field text.
+  --&gt;
+&lt;FIELDSTYLES&gt;
+-default-
+subject:strong
+from:strong
+to:strong
+keywords:em
+&lt;/FIELDSTYLES&gt;
+
+</PRE>
+
+<H3>Example (FOOTER)
+</H3>
+
+<PRE>&lt;!--  FOOTER element specifies the file to include at the bottom of the
+      index page.
+  --&gt;
+&lt;FOOTER&gt;
+/mnt/ehood/public_html/mail/indexfooter.html
+&lt;/FOOTER&gt;
+
+</PRE>
+
+<H3>Example (HEADER)
+</H3>
+
+<PRE>&lt;!--  HEADER element specifies the file to include at the beginning of
+      the index page.
+  --&gt;
+&lt;HEADER&gt;
+/mnt/ehood/public_html/mail/indexheader.html
+&lt;/HEADER&gt;
+
+</PRE>
+
+<H3>Example (IDXFNAME)
+</H3>
+
+<PRE>&lt;!--  IDXFNAME element specifies the filename to give the message
+      index file.
+  --&gt;
+&lt;IDXFNAME&gt;
+maillist.html
+&lt;/IDXFNAME&gt;
+
+</PRE>
+
+<H3><A NAME="22119">Example (INDEXBL)</A>
+</H3>
+
+<PRE>&lt;!--  This shows how you can use an icon for the Index link in messages
+  --&gt;
+&lt;INDEXBL&gt;
+&lt;img src="up.gif" alt="[Index]"&gt;
+&lt;/INDEXBL&gt;
+
+</PRE>
+
+<H3><A NAME="37648">Example (LABELSTYLES)</A>
+</H3>
+
+<PRE>&lt;!--  Each line in the LABELSTYLES element specifies the exact
+      (case-insensitive) name of a mail header field label and what HTML
+      element to wrap it in.  The label and the element are separated by
+      a colon.  Specifying no HTML element for a label will cause the
+      label to appear in regular text.
+
+      The special label "-default-" can be defined to tell what labels
+      are wrapped in if no explicit style is specified 
+
+      The following reflects the default formatting used by MHonArc.
+  --&gt;
+&lt;LABELSTYLES&gt;
+-default-:em
+&lt;/LABELSTYLES&gt;
+
+</PRE>
+
+<H3>Example (LABELSTYLES 2)
+</H3>
+
+<PRE>&lt;!--  Remove the default &lt;EM&gt; tag used on field labels, and apply our
+      format to specific labels
+  --&gt;
+&lt;LABELSTYLES&gt;
+-default-
+subject:strong
+from:strong
+to:strong
+&lt;/LABELSTYLES&gt;
+
+</PRE>
+
+<H3>Example(MAILTOURL)
+</H3>
+
+<PRE>&lt;!--  MAILTOURL element specifies the URL to use for e-mail address
+      hyperlinks.  The URL can contain the string `$TO$' embedded in it.
+      This will get expanded to the e-mail address the link is for.
+
+      All whitespace is stripped out of the line.
+  --&gt;
+&lt;MAILTOURL&gt;
+mailto:$TO$
+&lt;/MAILTOURL&gt;
+
+</PRE>
+
+<H3><A NAME="31010">Example (NEXTBL)</A>
+</H3>
+
+<PRE>&lt;!--  This shows how you can use an icon for the Next link in messages
+  --&gt;
+&lt;NEXTBL&gt;
+&lt;img src="next.gif" alt="[Next]"&gt;
+&lt;/NEXTBL&gt;
+
+</PRE>
+
+<H3><A NAME="17819">Example (PREVBL)</A>
+</H3>
+
+<PRE>&lt;!--  This shows how you can use an icon for the Prev link in messages
+  --&gt;
+&lt;PREVBL&gt;
+&lt;img src="up.gif" alt="[Prev]"&gt;
+&lt;/PREVBL&gt;
+
+</PRE>
+
+<H3><A NAME="28020"></A><A NAME="14859">Example (TIMEZONES)</A>
+</H3>
+
+<PRE>&lt;!--  Time zone acronym definitions.  The TIMEZONES element can be uesd
+      to define time zone acronyms and their hour offset from UTC/GMT.
+      The acronym and the hour offset are separated by a colon.
+      Time zones West of UTC/GMT should have postive hour offsets.
+      Time zones East of UTC/GMT should have negative hour offsets.
+      "Override" attribute may be specified to clear the default
+      time zone acronym definitions.
+
+      The timzones below define what MHonArc recognize by default.
+      All timezones are US based.
+  --&gt;
+&lt;TIMEZONES&gt;
+UTC:0
+GMT:0
+AST:4
+ADT:3
+EST:5
+EDT:4
+CST:6
+CDT:5
+MST:7
+MDT:6
+PST:8
+PDT:7
+&lt;/TIMEZONES&gt;
+
+</PRE>
+
+<H3>Example (TITLE)
+</H3>
+
+<PRE>&lt;!--  TITLE element specifies the message index page title.
+  --&gt;
+&lt;TITLE&gt;
+HTML Mail Archive
+&lt;/TITLE&gt;
+
+</PRE>
+
+<PRE>       
+</PRE>
+
+<HR>
+<H2><A NAME="xtocid1712912">Notes on Resource File
+</A></H2>
+
+<UL>
+<LI>          Elements can be duplicated.  For example, multiple <CODE>EXCS</CODE> elements can be 
+              specified to define mail header fields to exclud from filtered messages. 
+              Each <CODE>EXCS</CODE> element augments the previous element instances (unless the 
+              <CODE>Override</CODE> attribute is set). If an element only accepts a single line of 
+              content, then the last element, or line, defined takes precedence.
+<P><LI>          If elements have conflicting resource settings (eg. <CODE>NOSORT</CODE> and <CODE>SORT</CODE>), the 
+              last element defined takes precedence.
+<P><LI>          Resource file settings override environment variables.
+<P><LI>          Command-line options override any settings in the resource file.
+<P><LI>          If you want to do an exact match of a field in the <CODE>EXCS</CODE> element, append a 
+              '<CODE>$</CODE>' after the field name.
+<P></UL>
+<PRE>       
+</PRE>
+
+<HR>
+       [Prev:<A HREF="mhonarc_clopts.doc.html#29312">Command-Line Options</A>]<BR>
+       [Next:<A HREF="mhonarc_adding.doc.html#26659">Adding New Messages to an Archive</A>]<BR>
+       [<A HREF="mhonarc.doc.html">ToC</A>]<BR>
+       
+<P>
+
+<HR>
+<ADDRESS>       MHonArc 1.0.0 -- Resource File
+</ADDRESS>
+</BODY>
+</HTML>

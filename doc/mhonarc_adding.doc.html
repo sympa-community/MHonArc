@@ -1,0 +1,196 @@
+<HTML>
+<HEAD><TITLE>MHonArc 1.0.0 -- Adding New 
+Messages
+</TITLE>
+</HEAD>
+<BODY>
+<H1><HR><A NAME="26659">Adding New Messages to an Archive</A>
+</H1>
+
+       <EM>MHonArc</EM> supports the ability to add new messages to an existing archive via the 
+       <A HREF="mhonarc_clopts.doc.html#15460"><CODE>-add</CODE></A> option.  If no mailbox/folder arguments are given, <EM>MHonArc</EM> assumes that a 
+       <STRONG>SINGLE </STRONG>message is being added to the archive via <EM>standard input</EM>.  Otherwise, 
+       <EM>MHonArc</EM> adds the messages contained in the mailboxes/folders specified.
+<P>
+
+       When adding new messages to the archive, <EM>MHonArc</EM> performs the following 
+       steps:
+<P>
+
+<UL>
+<LI>          Creates a lock file. This insures only one <EM>MHonArc</EM> process is updating the 
+              archive at any given moment. See <A HREF="mhonarc_integrity.doc.html#36758">Archive Integrity</A> for more information.
+<P><LI>          Reads the database file.  The name, and location, of the database file can be 
+              explicitly specified via the <A HREF="mhonarc_env.doc.html#19406"><CODE>M2H_DBFILE</CODE></A> and <A HREF="mhonarc_env.doc.html#30949"><CODE>M2H_OUTDIR</CODE></A> environment 
+              variables or the command-line options <A HREF="mhonarc_clopts.doc.html#13171"><CODE>-dbfile</CODE></A> and <A HREF="mhonarc_clopts.doc.html#40416"><CODE>-outdir</CODE></A>. 
+              Otherwise, the current working directory is used.
+<P>              <STRONG>NOTE</STRONG>: <EM>The database file must be in the same location as the archive since the 
+              </EM><CODE>M2H_OUTDIR</CODE><EM> variable and </EM><CODE>-outdir</CODE><EM> option also specify the location of the 
+              archive</EM>.
+<P>
+
+              The database file contains data to update any mail threads and the 
+              resource settings when <EM>MHonArc</EM> was last invoked. This allows new 
+              messages to contain the same formatting/resource specifications as 
+              existing messages in the archive without having to re-specify the resources 
+              each time new messages are added. Resources defined in the database file 
+              override the environment variables.
+<P>
+
+              <STRONG>NOTE</STRONG>: <EM>If no database file is found, MHonArc will creates a new archive</EM>.
+<P>
+
+<LI>          Read the <EM>MHonArc</EM> resource file, <EM>if specified</EM>. The resource file will override 
+              any settings contained in the database file.
+<P><LI>          Read the settings specified on the command-line. Command-line options 
+              override any settings in the database and/or resource file.
+<P><LI>          Processes the new messages and writes them out to HTML.
+<P><LI>          Rewrites the index page to reflect the update.
+<P><LI>          Writes a new database file containing the new state of the archive and all 
+              (new) resource settings.
+<P></UL>
+       See <A HREF="#13403">Notes on Adding New Messages</A> for more information on adding new 
+       messages to an archive.
+<P>
+
+<PRE>       
+</PRE>
+
+<HR>
+<H2><A NAME="xtocid804114">Examples
+</A></H2>
+
+<H3><A NAME="40657">Adding a Single Message to Archive</A>
+</H3>
+
+       <EM>MHonArc</EM> can be used to add new messages as they are received by using the 
+       "<CODE>.forward</CODE>" file in your home directory. Here is how I would set up my 
+       <CODE>.forward</CODE> file to invoke <EM>MHonArc</EM> on incoming mail:
+<P>
+
+<PRE>\ehood, "|/mnt/ehood/bin/webnewmail #ehood"
+
+</PRE>
+
+<DL>
+<DT>          <STRONG>NOTE</STRONG> on <CODE>.forward</CODE> entry:
+
+<DD>              The "<CODE>\ehood</CODE>" tells <CODE>sendmail</CODE> to still deposit the incoming message to my 
+              mail spool file. The "#<CODE>ehood</CODE>" Bourne shell comment is needed to insure 
+              the command is unique from another user. Otherwise, <CODE>sendmail</CODE> will not 
+              invoke the program for you or the other user.
+</DL>
+       "<CODE>webnewmail</CODE>" is a Perl program that calls <EM>MHonArc</EM> with the appropriate 
+       arguments. A wrapper program is used instead of calling <EM>MHonArc</EM> directly to 
+       keep the <CODE>.forward</CODE> file simple. Here is the code to the <CODE>webnewmail</CODE> program:
+<P>
+
+<PRE>#!/usr/local/bin/perl
+
+$cmd = "/mnt/ehood/bin/mhonarc -add -quiet " .
+         "-outdir /mnt/ehood/public_html/newmail";
+open(M2H, "|$cmd");
+print M2H &lt;STDIN&gt;;
+close(M2H);
+
+</PRE>
+
+       The <CODE>webnewmail</CODE> can be modified to check the mail header before calling 
+       <EM>MHonArc</EM> to perform selective archiving of messages. For example, <CODE>webnewmail</CODE> 
+       can check the <CODE>To:</CODE> field and only archive messages that come from a specific 
+       mailing list.
+<P>
+
+<PRE>       
+</PRE>
+
+<H3>Cron Example
+</H3>
+
+       This example uses <CODE>cron</CODE>(1) to update some mail archives from MH mail folders.
+<P>
+
+       The following entry is in my crontab file:
+<P>
+
+<PRE>0 0 * * * webmail
+
+</PRE>
+
+       <CODE>webmail</CODE> is a script executed every night that calls <EM>MHonArc</EM> to perform the 
+       update:
+<P>
+
+<PRE>#! /bin/csh -f
+
+umask 022
+setenv M2H_RCFILE $HOME/.mhonarc.rc
+## WWW messages
+mhonarc -add \
+          -outdir $HOME/public_html/doc/wwwmail \
+          $HOME/mail/www
+folder +www &gt;&amp; /dev/null
+refile first-last +www.ar &gt;&amp; /dev/null    # Archive original messages
+
+## Tools messages
+mhonarc -add \
+          -outdir $HOME/public_html/doc/toolsmail \
+          $HOME/mail/tools $HOME/mail/dtd
+folder +tools &gt;&amp; /dev/null
+refile first-last +tools.ar &gt;&amp; /dev/null  # Archive original messages
+folder +dtd &gt;&amp; /dev/null
+refile first-last +dtd.ar &gt;&amp; /dev/null    # Archive original messages
+
+folder +inbox &gt;&amp; /dev/null                # Set current folder to inbox
+
+
+</PRE>
+
+       To avoid mail everynight from <CODE>cron</CODE> due to output from <EM>MHonArc</EM>, the <CODE>-quiet</CODE> 
+       option can be used for each call to <EM>MHonArc</EM>, or use the following line in your 
+       crontab file:
+<P>
+
+<PRE>0 0 * * * webmail &gt; /dev/null
+</PRE>
+
+       Standard error is not redirected to <CODE>/dev/null</CODE> so mail is still received if errors 
+       occured during <EM>MHonArc</EM> execution.
+<P>
+
+<PRE>       
+</PRE>
+
+<HR>
+<H2><A NAME="13403">Notes on Adding New Messages</A>
+</H2>
+
+<UL>
+<LI>          As stated earlier, the database file must be in the same location as the index 
+              page and HTML mail messages.
+<P><LI>          Sorting options can be changed when adding new messages to an archive. 
+              I.e. You can change from "chronological sorting" to "reverse chronological 
+              sorting" and vice-versa by specifying the appropriate command-line 
+              option, or changing the resource file.
+<P><LI>          The index page can be reformatted during an add operation. See <A HREF="mhonarc_indexpg.doc.html#30032">Index 
+              Page Customization</A> for more information on controlling list formatting.
+<P><LI>          Changes in mail header formatting rules (via the <A HREF="mhonarc_rcfile.doc.html#21846">Resource File</A>) will not 
+              affect existing messages in an archive. If formatting changes are required 
+              for existing messages, you must regenerate the archive from the source 
+              mail messages.
+<P></UL>
+<PRE>       
+</PRE>
+
+<HR>
+       [Prev:<A HREF="mhonarc_rcfile.doc.html#21846">Resource File</A>]<BR>
+       [Next:<A HREF="mhonarc_mime.doc.html#23201">MIME</A>]<BR>
+       [<A HREF="mhonarc.doc.html">ToC</A>]<BR>
+       
+<P>
+
+<HR>
+<ADDRESS>       MHonArc 1.0.0 -- Adding New Messages
+</ADDRESS>
+</BODY>
+</HTML>

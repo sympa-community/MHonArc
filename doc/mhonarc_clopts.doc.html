@@ -1,0 +1,218 @@
+<HTML>
+<HEAD><TITLE>MHonArc 1.0.0 -- Command-Line 
+Options
+</TITLE>
+</HEAD>
+<BODY>
+<H1><HR><A NAME="29312">Command-Line Options</A>
+</H1>
+
+       Invoke <EM>MHonArc</EM> from your Unix shell with the following syntax:
+<P>
+
+       <CODE>% mhonarc </CODE>[<EM>options</EM>]<CODE> </CODE><EM>mhfolder</EM>... <BR>
+       <CODE>% mhonarc -mbox </CODE>[<EM>options</EM>]<CODE> </CODE><EM>mailbox</EM> ...<BR>
+       <CODE>% mhonarc -add </CODE>[<EM>options</EM>]<CODE> &lt; </CODE><EM>message</EM> <BR>
+       <CODE>% mhonarc -add </CODE>[<EM>options</EM>]<CODE> &lt; </CODE><EM>mhfolder</EM><VAR> ...<BR>
+       </VAR><CODE>% mhonarc -add -mbox </CODE>[<EM>options</EM>]<CODE> &lt; </CODE><EM>mailbox<BR>
+       </EM><CODE>% mhonarc -single </CODE>[<EM>options</EM>]<CODE> &lt; </CODE><EM>message</EM><CODE> &gt; </CODE><EM>message.html<BR>
+       </EM><CODE>% mhonarc -single </CODE>[<EM>options</EM>]<CODE> </CODE><EM>message</EM><CODE> &gt; </CODE><EM>message.html<BR>
+       </EM>
+<P>
+
+       <EM>MHonArc</EM> has many command-line options. If you do not want to specify a ton of 
+       command-line options each time you use <EM>MHonArc</EM>, see <A HREF="mhonarc_rcfile.doc.html#21846">Resource File</A>.
+<P>
+
+       The following options are available:
+<P>
+
+<DL>
+<DT>          <CODE><A NAME="15460">-add</A></CODE> 
+
+<DD>              Add new messages to an existing archive. See <A HREF="mhonarc_adding.doc.html#26659">Adding New Messages to 
+              an Archive</A> for more information.
+</DL>
+<DL>
+<DT>          <CODE><A NAME="13171">-dbfile</A></CODE> <EM>name</EM> 
+
+<DD>              Use <EM>name</EM> for the name of <EM>MHonArc</EM> database file. The default is 
+              "<CODE>.mhonarc.db</CODE>". <EM>You should not override the default name unless absolutely 
+              necessary, and you are confident about what you are doing</EM>.
+</DL>
+<DL>
+<DT>          <CODE><A NAME="19549">-docurl</A></CODE> <EM>url</EM> 
+
+<DD>              Use <EM>url</EM> as the URL to <EM>MHonArc</EM> documentation. The default is 
+              "<CODE>http://www.oac.uci.edu/indiv/ehood/mhonarc.doc.html</CODE>".
+</DL>
+<DL>
+<DT>          <CODE>-editidx</CODE> 
+
+<DD>              This option tells <EM>MHonArc</EM> to rewite only the index file. This option is 
+              useful if you need to reformat the index page without adding new 
+              messages. See <A HREF="mhonarc_indexpg.doc.html#30032">Index Page Customization</A> on how to format the index page.
+              <CODE>-editidx</CODE> takes precedence over <A HREF="#15460"><CODE>-add</CODE></A> and <A HREF="#15562"><CODE>-single</CODE></A>.
+<P></DL>
+<DL>
+<DT>          <CODE><A NAME="21527">-footer</A></CODE> <EM>filename</EM> 
+
+<DD>              Insert contents of <VAR>filename</VAR> at the bottom of the index page. See <A HREF="mhonarc_indexpg.doc.html#39385">Include Files</A> 
+              in <A HREF="mhonarc_indexpg.doc.html#30032">Index Page Customization</A> for more information about the footer file.
+</DL>
+<DL>
+<DT>          <CODE><A NAME="39268">-header</A></CODE> <EM>filename</EM> 
+
+<DD>              Insert contents of <EM>filename</EM> at the beginning of the index page. See <A HREF="mhonarc_indexpg.doc.html#39385">Include 
+              Files</A> in <A HREF="mhonarc_indexpg.doc.html#30032">Index Page Customization</A> for more information about the header 
+              file.
+</DL>
+<DL>
+<DT>          <CODE>-help</CODE> 
+
+<DD>              Print out a help message about <EM>MHonArc</EM>.
+</DL>
+<DL>
+<DT>          <CODE><A NAME="29572">-idxfname</A></CODE> <EM>name</EM> 
+
+<DD>              Sets the name of the index file to <EM>name</EM>. The default is "<CODE>maillist.html</CODE>".
+</DL>
+<DL>
+<DT>          <CODE><A NAME="36089">-mailtourl</A></CODE> <EM>url</EM> 
+
+<DD>              Use <EM>url</EM> for e-mail address hyperlinks in mail message headers. If the <VAR>url</VAR> 
+              contains the string, "<CODE>$TO$</CODE>", the string will be replaced with the e-mail 
+              address being hyperlinked at runtime.
+              The default URL is "<CODE>mailto:$TO$</CODE>"<CODE>
+</CODE><P>              The <CODE>-mailtourl</CODE> option has no effect if the <A HREF="#19963"><CODE>-nomailto</CODE></A> option is 
+              specified.
+<P></DL>
+<DL>
+<DT>          <CODE><A NAME="42068">-mbox</A></CODE> 
+
+<DD>              Treat file arguments as <CODE>mail</CODE>(1) mailboxes instead of MH mail folders. 
+              This option overrides the <A HREF="#25275"><CODE>-mh</CODE></A> option.
+</DL>
+<DL>
+<DT>          <CODE><A NAME="33363">-msgsep</A></CODE> <EM>expression</EM> 
+
+<DD>              Use the <EM>expression</EM> as the Perl regular expression that signifies the message 
+              separator in mailbox files. The default expression is (without the quotes): 
+              "<CODE>^From </CODE>" (there is a space character after the <CODE>From</CODE>).
+</DL>
+<DL>
+<DT>          <CODE><A NAME="25275">-mh</A></CODE> 
+
+<DD>              Treat file arguments as <CODE>mh</CODE>(1) mail folders. This option is the default unless 
+              the program name is <CODE>mbox2html</CODE>.
+</DL>
+<DL>
+<DT>          <CODE><A NAME="19963">-nomailto</A></CODE> 
+
+<DD>              Do not convert e-mail addresses in mail headers to <CODE>mailto</CODE> hyperlinks.
+</DL>
+<DL>
+<DT>          <CODE><A NAME="14277">-nonews</A></CODE> 
+
+<DD>              Do not convert newsgroups in the <CODE>Newsgroups:</CODE> mail header field to 
+              <CODE>news</CODE> hyperlinks.
+</DL>
+<DL>
+<DT>          <CODE><A NAME="14224">-noreverse</A></CODE> 
+
+<DD>              Do not perform a reverse listing of the mail messages in the index page.
+</DL>
+<DL>
+<DT>          <CODE><A NAME="31379">-nosort</A></CODE> 
+
+<DD>              Do not sort messages by date. Messages will be in the order they appear in 
+              the mailboxes/folders. By default, <EM>MHonArc</EM> sorts messages by date 
+              sent/received.
+              <CODE>-nosort</CODE> takes precedence over the <A HREF="#24783"><CODE>-sort</CODE></A> option.
+<P></DL>
+<DL>
+<DT>          <CODE><A NAME="40416">-outdir</A></CODE> <EM>path</EM> 
+
+<DD>              Set destination/location of the HTML mail archive to <EM>path</EM>. By default, the 
+              current working directory is used.
+</DL>
+<DL>
+<DT>          <CODE><A NAME="11196">-quiet</A></CODE> 
+
+<DD>              Suppress processing messages when <EM>MHonArc</EM> is running.
+</DL>
+<DL>
+<DT>          <CODE><A NAME="31250">-rcfile</A></CODE> <EM>file</EM> 
+
+<DD>              Use <EM>file</EM> as the resource file for <EM>MHonArc</EM>. See <A HREF="mhonarc_rcfile.doc.html#21846">Resource File</A> for more 
+              information. There is no default resource file.
+</DL>
+<DL>
+<DT>          <CODE><A NAME="34170">-reverse</A></CODE> 
+
+<DD>              List messages in reverse order of the sorting option specified. For example, 
+              if date sorting is specified, <CODE>-reverse</CODE> will cause messages to be listed in 
+              <EM>reverse</EM> chronological order.
+</DL>
+<DL>
+<DT>          <CODE><A NAME="15562">-single</A></CODE> 
+
+<DD>              Convert a single mail message to HTML. The message can be specified by 
+              a filename on the command-line, or read from standard input if no file is 
+              given. The filtered message is sent to standard output.
+              The <CODE>-single</CODE> option is useful tp convert individual messages to HTML 
+              not related to a specific mail archive. Any option related to how message 
+              formatting can be used with the <CODE>-single</CODE> option.
+<P>              The <CODE>-single</CODE> takes precedence over the <A HREF="#15460"><CODE>-add</CODE></A> option.
+<P></DL>
+<DL>
+<DT>          <CODE><A NAME="24783">-sort</A></CODE> 
+
+<DD>              Perform chronological date sorting. This is the default.
+</DL>
+<DL>
+<DT>          <CODE><A NAME="15691">-subsort</A></CODE> 
+
+<DD>              Sort messages by subject. Subject sorting is case-insensitive, and begining 
+              "<CODE>Re:</CODE>", "<CODE>A</CODE>", "<CODE>An</CODE>", and "<CODE>The</CODE>" words are ignored.
+</DL>
+<DL>
+<DT>          <CODE><A NAME="11204">-title</A></CODE> <EM>string</EM> 
+
+<DD>              Set the title of the index page to <EM>string</EM>. The default is "<EM>Mail Index</EM>".
+</DL>
+<DL>
+<DT>          <CODE>-umask</CODE> <EM>umask</EM> 
+
+<DD>              Set the umask of the <EM>MHonArc</EM> process to <EM>umask</EM>. The value is treated as an 
+              octal number.
+</DL>
+<PRE>       
+</PRE>
+
+<DL>
+<DT>          <STRONG>NOTE</STRONG>: 
+
+<DD>              The <CODE>-no</CODE>* options always take precedence over their counterparts. For 
+              example, if <CODE>-noreverse</CODE> and <CODE>-reverse</CODE> are both specified on the 
+              command-line, the <CODE>-noreverse</CODE> will be applied.
+</DL>
+       Any arguments that are not part of the command-line options are treated as mail 
+       folders, or mailboxes, containing e-mail messages.
+<P>
+
+<PRE>       
+</PRE>
+
+<HR>
+       [Prev:<A HREF="mhonarc_env.doc.html#41863">Environment Variables</A>]<BR>
+       [Next:<A HREF="mhonarc_rcfile.doc.html#21846">Resource File</A>]<BR>
+       [<A HREF="mhonarc.doc.html">ToC</A>]<BR>
+       
+<P>
+
+<HR>
+<ADDRESS>       MHonArc 1.0.0 -- Command-Line Options
+</ADDRESS>
+</BODY>
+</HTML>

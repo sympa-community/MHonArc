@@ -1,0 +1,316 @@
+<HTML>
+<HEAD><TITLE>MHonArc 1.0.0 -- Diagnostics
+</TITLE>
+</HEAD>
+<BODY>
+<H1><HR><A NAME="30719">Diagnostics</A>
+</H1>
+
+       Three types of messages exist in <EM>MHonarc</EM>: <EM>Informative</EM> messages, <EM>Warnings</EM>, and 
+       <EM>Errors</EM>. <EM>Informative</EM> messages give you the current status of <EM>MHonarc</EM>'s execution. 
+       <EM>Warnings</EM> signify undesired conditions, but are <EM>not</EM> critical in <EM>MHonarc</EM>'s exection. 
+       <EM>Errors</EM> signify critical conditions that inhibit <EM>MHonarc</EM> from finishing its task.
+<P>
+
+       This section describes the various diagnostics <EM>MHonarc</EM> may produce.
+<P>
+
+<PRE>       
+</PRE>
+
+<HR>
+<H2><A NAME="xtocid1586933">Informative messages
+</A></H2>
+
+       Informative messages may be suppressed via the <A HREF="mhonarc_clopts.doc.html#11196"><CODE>-quiet</CODE></A> command-line option. 
+       Only the more important Informative messages are listed here.
+<P>
+
+<PRE>       
+</PRE>
+
+<H3>Could not process message with given Content-Type: ...
+</H3>
+
+       <EM>MHonarc</EM> will output this statement <EM>in</EM> filtered mail messages for content-types it is 
+       unable to process. See <A HREF="mhonarc_mime.doc.html#20677">Default Filters</A> in <A HREF="mhonarc_mime.doc.html#23201">MIME</A> for content-types that <EM>MHonarc</EM> 
+       supports by default. See <A HREF="mhonarc_mime.doc.html#24464">Writing Filters</A> for adding new filters into <EM>MHonarc</EM>.
+<P>
+
+       This is the only Informative message that does not go to standard output, but into 
+       the actual filtered mail message.
+<P>
+
+       
+<P>
+
+<H3>No new messages
+</H3>
+
+       No mail messages exist when performing an add operation to an archive. This can 
+       occur if an empty MH mail folder, or empty mailbox file, is passed to <EM>MHonarc</EM>.
+<P>
+
+       
+<P>
+
+<H3>Requiring MIME filter libraries ...
+</H3>
+
+       Indicates <EM>MHonarc</EM> is loading external libraries for filtering mail messages. 
+       <EM>MHonarc</EM> will output each library it loads. See <A HREF="mhonarc_mime.doc.html#23201">MIME</A> for more information of filter 
+       libraries.
+<P>
+
+       
+<P>
+
+<H3>Trying to lock mail archive ...
+</H3>
+
+       The statement means that a lock file is in place for the archive you are trying to 
+       update. Normally, an existing lock file implies that another <EM>MHonarc</EM> process is 
+       currently using the archive, and other <EM>MHonarc</EM> processes will wait awhile to see if 
+       the archive will be unlocked.
+<P>
+
+       However, there are times when a lock file exists, but no <EM>MHonarc</EM> process is 
+       modifying the archive. This can occur if <EM>MHonarc</EM> is abnormally terminated. If you 
+       know that no other <EM>MHonarc</EM> process is editting the archive you are try to modify, 
+       then manually remove the lock file and rerun <EM>MHonarc</EM>.
+<P>
+
+       See <A HREF="mhonarc_integrity.doc.html#36758">Archive Integrity</A> for more information.
+<P>
+
+<PRE>       
+</PRE>
+
+<HR>
+<H2><A NAME="xtocid1586934">Warnings
+</A></H2>
+
+<PRE>       
+</PRE>
+
+<H3>Warning: Could not find date for message
+</H3>
+
+       <EM>MHonarc</EM> was unable to find a received/sent date for a mail message. With respect 
+       to other mail messages, a message with no received/sent date is first in 
+       chronological order.
+<P>
+
+       
+<P>
+
+<H3>Warning: Database version (&lt;dbversion&gt;) does not match program version ...
+</H3>
+
+       Indicates that the version of <EM>MHonarc</EM> updating an archive is different from the 
+       version of <EM>MHonarc</EM> that created the database file for an archive. Problems can arise 
+       if the database file changes in format from different version of <EM>MHonarc</EM>. See the 
+       release notes of the <EM>MHonarc</EM> distribution if changes in the databse format has 
+       effects on older archives.
+<P>
+
+       
+<P>
+
+<H3>Warning: Unable to create &lt;outdir&gt;/&lt;dbfile&gt;
+</H3>
+
+       Indicates <EM>MHonarc</EM> was unable to create the database file <EM>&lt;dbfile&gt;</EM> for the mail 
+       archive created/modified in <EM>&lt;outdir&gt;</EM>. This message can occur if <EM>&lt;outdir&gt;</EM> 
+       permissions changed during <EM>MHonarc</EM> execution, the existing <EM>&lt;dbfile&gt;</EM> is read-only, 
+       or the file system is full.
+<P>
+
+       This message can be severe because no future add operations can be performed to 
+       the archive.
+<P>
+
+       
+<P>
+
+<H3>Warning: Unable to open footer: &lt;footer&gt;
+</H3>
+
+       <EM>MHonarc</EM> was unable to open the footer file, <EM>&lt;footer&gt;</EM>, for inclusion into the index 
+       page. Make sure <EM>&lt;footer&gt;</EM> exists, and is readable by you.
+<P>
+
+       
+<P>
+
+<H3>Warning: Unable to open header: &lt;header&gt;
+</H3>
+
+       <EM>MHonarc</EM> was unable to open the header file, <EM>&lt;header&gt;</EM>, for inclusion into the index 
+       page. Make sure <EM>&lt;header&gt;</EM> exists, and is readable by you.
+<P>
+
+       
+<P>
+
+<H3>Warning: Unable to open mail folder: &lt;folder&gt;
+</H3>
+
+       <EM>MHonarc</EM> was unable to open the specified MH mail <EM>&lt;folder&gt;</EM> for reading. Make 
+       sure <EM>&lt;folder&gt;</EM> exists and is readable, and executable by you.
+<P>
+
+       
+<P>
+
+<H3>Warning: Unable to open mailbox: &lt;mbox&gt;
+</H3>
+
+       <EM>MHonarc</EM> was unable to open the specified <EM>&lt;mbox&gt;</EM> for reading. Make sure <EM>&lt;mbox&gt;</EM> 
+       exists and is readable by you.
+<P>
+
+       
+<P>
+
+<H3>Warning: Unable to open message: &lt;folder&gt;/&lt;message&gt;
+</H3>
+
+       <EM>MHonarc</EM> was unable to open the specified MH mail message <EM>&lt;folder&gt;/&lt;message&gt;</EM> 
+       for reading. Make sure <EM>&lt;folder&gt;/&lt;message&gt;</EM> exists and is readable by you.
+<P>
+
+       
+<P>
+
+<H3>Warning: Undefined time zone: "&lt;timezone&gt;"
+</H3>
+
+       <EM>MHonarc</EM> has found an unrecognized timezone acronym, <EM>&lt;timezone&gt;</EM>, in a mail 
+       message. You can tell <EM>MHonarc</EM> about other timezone acronyms, and their hour 
+       offset to UTC, by using the <A HREF="mhonarc_rcfile.doc.html#13741"><CODE>TIMEZONES</CODE></A> resource element of the <A HREF="mhonarc_rcfile.doc.html#21846">Resource File</A>.
+<P>
+
+       The timezone UTC (or GMT) is used for an undefined timezone acronym
+<P>
+
+<PRE>       
+</PRE>
+
+<HR>
+<H2><A NAME="xtocid1586935">Errors
+</A></H2>
+
+<PRE>       
+</PRE>
+
+<H3>ERROR: Unable to create &lt;file&gt;
+</H3>
+
+       <EM>MHonarc</EM> was unable to create <EM>&lt;file&gt;</EM>. This message can occur if the directory being 
+       written to is not writable, a read-only file with the same name exists, or the file 
+       system is full.
+<P>
+
+       
+<P>
+
+<H3>ERROR: Unable to open resource file: &lt;file&gt;
+</H3>
+
+       <EM>MHonarc</EM> was unable to open the resource file, <EM>&lt;file&gt;</EM>, for reading. Make sure <EM>&lt;file&gt;</EM> 
+       exists, and is readable by you.
+<P>
+
+       
+<P>
+
+<H3>ERROR: Unable to open &lt;file&gt;
+</H3>
+
+       <EM>MHonarc</EM> was unable to open <EM>&lt;file&gt;</EM> for reading. Make sure <EM>&lt;file&gt;</EM> exists, and is 
+       readable by you.
+<P>
+
+       
+<P>
+
+<H3>ERROR: Unable to require base64.pl
+</H3>
+
+       The <CODE>base64.pl</CODE> library is needed for <EM>MHonarc</EM> to decode Base64 encoded 
+       messages. <CODE>base64.pl</CODE> is part of the <EM>MHonarc</EM> distribution. Make sure you 
+       properly installed <EM>MHonarc</EM> via the installation program. See also the <A HREF="mhonarc_rcfile.doc.html#33543"><CODE>PERLINC</CODE></A> 
+       resource element.
+<P>
+
+       
+<P>
+
+<H3>ERROR: Unable to require newgetopt.pl
+</H3>
+
+       The <CODE>newgetopt.pl</CODE> library is needed for <EM>MHonarc</EM> to parse the command-line. 
+       <CODE>newgetopt.pl</CODE> is part of the standard Perl distribution. Make sure Perl has been 
+       correctly installed at your site.
+<P>
+
+       
+<P>
+
+<H3>ERROR: Unable to require qprint.pl
+</H3>
+
+       The <CODE>qprint.pl</CODE> library is needed for <EM>MHonarc</EM> to decode Quoted-Printable 
+       encoded messages. <CODE>qprint.pl</CODE> is part of the <EM>MHonarc</EM> distribution. Make sure you 
+       properly installed <EM>MHonarc</EM> via the installation program. See also the <A HREF="mhonarc_rcfile.doc.html#33543"><CODE>PERLINC</CODE></A> 
+       resource element.
+<P>
+
+       
+<P>
+
+<H3>ERROR: Unable to require timelocal.pl
+</H3>
+
+       The <CODE>timelocal.pl</CODE> library is needed for <EM>MHonarc</EM> to process dates in messages. 
+       <CODE>timelocal.pl</CODE> is part of the standard Perl distribution. Make sure Perl has been 
+       correctly installed at your site.
+<P>
+
+       
+<P>
+
+<H3>ERROR: Unable to require &lt;file&gt;
+</H3>
+
+       This message signifies <EM>MHonarc</EM> was unable to require the MIME filter library 
+       <EM>&lt;file&gt;</EM>. Make sure you properly installed <EM>MHonarc</EM> via the installation program. If 
+       <EM>&lt;file&gt;</EM> is your own custom filter, make sure you properly registered it in the 
+       <A HREF="mhonarc_rcfile.doc.html#21846">Resource File</A>. See also <A HREF="mhonarc_mime.doc.html#19421">Specifying Filters</A> and the <A HREF="mhonarc_rcfile.doc.html#33543"><CODE>PERLINC</CODE></A> resource element.
+<P>
+
+       
+<P>
+
+<H3>ERROR: Unrecognized mode
+</H3>
+
+       This indicates an internal error in <EM>MHonarc</EM>. Make sure no one has modified the 
+       <EM>MHonarc</EM> source code. Contact the author of <EM>MHonarc</EM> if you get this message.
+<P>
+
+<PRE>       
+</PRE>
+
+<HR>
+       [Prev:<A HREF="mhonarc_notes.doc.html#23367">Notes</A>]<BR>
+       [<A HREF="mhonarc.doc.html">ToC</A>]<BR>
+       
+<P>
+
+<HR>
+<ADDRESS>       MHonArc 1.0.0 -- Diagnostics
+</ADDRESS>
+</BODY>
+</HTML>
