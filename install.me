@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: install.me,v 1.18 2002/05/14 19:40:46 ehood Exp $
+##	$Id: install.me,v 1.19 2003/07/20 00:00:51 ehood Exp $
 ##  Author:
 ##      Earl Hood, earl@earlhood.com
 ##  Summary:
@@ -229,6 +229,8 @@ my %Files	= ();
 my %DefValues	= ();
 my %OptValues	= ();
 
+my $Root	= '';
+
 ###############################################################################
 ##	Parse Command-line
 ###############################################################################
@@ -239,6 +241,7 @@ my %OptValues	= ();
     GetOptions(\%OptValues,
 	       qw(
 		   afs
+		   root=s
 		   batch
 		   binpath=s
 		   docpath=s
@@ -259,6 +262,8 @@ my %OptValues	= ();
 	usage();
 	exit !$ret;
     }
+
+    $Root		  = $OptValues{'root'}  if defined $OptValues{'root'};
 
     my $cfg_prefix        = interpolate_path($Config{'prefix'});
     $DefValues{'binpath'} = interpolate_path($Config{'installbin'});
@@ -422,63 +427,71 @@ my %OptValues	= ();
 
     ## Install files
     ## -------------
-    print STDERR "($OptValues{'perl'})\n";
     my $plprefix  = "#!$OptValues{'perl'}\n";
        $plprefix .= "use lib qw($OptValues{'libpath'});\n"
 		    if $OptValues{'libpath'};
     my($file, $destfile);
     if ($dobin) {
 	print STDOUT qq(Installing programs to "$OptValues{'binpath'}":\n);
-	if (create_dir($OptValues{'binpath'}, 1) <= 0) { die "\n"; }
+	if (create_dir(apply_root($Root, $OptValues{'binpath'}), 1) <= 0) {
+	    die "\n";
+	}
 	foreach (@{$Files{'bin'}}) {
 	    print STDOUT "    $_ => ";
 	    ($file = $_) =~ s%.*/%%o;
 	    $destfile = join('', $OptValues{'binpath'}, $DIRSEP, $file);
+	    my $fulldestfile = apply_root($Root, $destfile);
 	    print STDOUT $destfile, "\n";
-	    cp($_, $destfile, $plprefix, $WINDOWS);
-	    eval q{chmod 0755, $destfile;};
+	    cp($_, $fulldestfile, $plprefix, $WINDOWS);
+	    eval q{chmod 0755, $fulldestfile;};
 	    if ($WINDOWS && $file !~ /\.pl$/i) {
-		$destfile .= ".pl";
-		cp($_, $destfile, $plprefix);
-		eval q{chmod 0755, $destfile;};
+		$fulldestfile .= ".pl";
+		cp($_, $fulldestfile, $plprefix);
+		eval q{chmod 0755, $fulldestfile;};
 	    }
 	}
     }
     if ($dolib) {
 	print STDOUT qq(Installing lib files to "$OptValues{'libpath'}":\n);
-	if (create_dir($OptValues{'libpath'}, 1) <= 0) { die "\n"; }
+	if (create_dir(apply_root($Root, $OptValues{'libpath'}), 1) <= 0) {
+	    die "\n";
+	}
 	foreach (@{$Files{'lib'}}) {
 	    print STDOUT "    $_ => ";
 	    ($file = $_) =~ s%.*/%%o;
 	    $destfile = join('', $OptValues{'libpath'}, $DIRSEP, $file);
 	    print STDOUT $destfile, "\n";
-	    cp($_, $destfile);
+	    cp($_, apply_root($Root, $destfile));
 	}
     }
     if ($dodoc) {
 	print STDOUT qq(Installing docs to "$OptValues{'docpath'}":\n);
-	if (create_dir($OptValues{'docpath'}, 1) <= 0) { die "\n"; }
+	if (create_dir(apply_root($Root, $OptValues{'docpath'}), 1) <= 0) {
+	    die "\n";
+	}
 	foreach (@{$Files{'doc'}}) {
 	    print STDOUT "    $_ => ";
 	    ($file = $_) =~ s%.*/%%o;
 	    $destfile = join('', $OptValues{'docpath'}, $DIRSEP, $file);
 	    print STDOUT $destfile, "\n";
-	    cp($_, $destfile);
+	    cp($_, apply_root($Root, $destfile));
 	}
     }
     if ($doman) {
 	my($sect, $msubdir);
 	print STDOUT qq(Installing manpages to "$OptValues{'manpath'}":\n);
-	if (create_dir($OptValues{'manpath'}, 1) <= 0) { die "\n"; }
+	if (create_dir(apply_root($Root, $OptValues{'manpath'}), 1) <= 0) {
+	    die "\n";
+	}
 	foreach (@{$Files{'man'}}) {
 	    print STDOUT "    $_ => ";
 	    ($file = $_)    =~ s%.*/%%o;
 	    ($sect = $file) =~ s%.*\.%%o;
 	    $msubdir  = join($DIRSEP, $OptValues{'manpath'}, "man$sect");
-	    if (create_dir($msubdir, 1) <= 0) { die "\n"; }
+	    if (create_dir(apply_root($Root, $msubdir), 1) <= 0) { die "\n"; }
 	    $destfile = join($DIRSEP, $msubdir, $file);
 	    print STDOUT $destfile, "\n";
-	    cp($_, $destfile);
+	    cp($_, apply_root($Root, $destfile));
 	}
     }
 }
@@ -548,6 +561,18 @@ sub get_perl_from_user {
 }
 
 ##------------------------------------------------------------------------
+##	apply_root() applies install base root path to given path.
+##
+sub apply_root {
+  my $base = shift;
+  my $path = shift;
+  if ($base) {
+    return $base . $path;
+  }
+  $path;
+}
+
+##------------------------------------------------------------------------
 ##	get_path_from_user() gets a path from the user.  The function
 ##	insures the path exists.
 ##
@@ -558,12 +583,12 @@ sub get_path_from_user {
 
     if (defined($value) && ($value =~ /\S/)) {
 	die qq(ERROR: Unable to create "$value".\n)
-	    unless create_dir($value, 1) > 0;
+	    unless create_dir(apply_root($Root, $value), 1) > 0;
     } else {
 	my $stat;
 	while (1) {
 	    $value = interpolate_path(prompt_user($prompt, $default));
-	    $stat = create_dir($value);
+	    $stat = create_dir(apply_root($Root, $value));
 	    if ($stat > 0)  { last; }
 	    if ($stat == 0) { next; }
 	}

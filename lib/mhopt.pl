@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##      $Id: mhopt.pl,v 2.52 2003/02/22 04:40:11 ehood Exp $
+##      $Id: mhopt.pl,v 2.53 2003/07/04 01:13:34 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -1151,7 +1151,7 @@ sub mhinit_readmail_vars {
 	    'koi8-r'         => [ 'cp878' ],
 	    'gost-19768-87'  => [ 'ecma-cyrillic',
 				  'ecma-113', 'ecma-113:1988' ],
-	    'big5-eten '     => [ 'big5', 'csbig5',
+	    'big5-eten'      => [ 'big5', 'csbig5',
 				  'tcs-big5', 'tcsbig5' ],
 	    'big5-hkscs'     => [ 'big5hkscs', 'big5hk',
 				  'hkscs-big5', 'hk-big5' ],

@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhtxthtml.pl,v 2.32 2003/04/05 23:52:20 ehood Exp $
+##	$Id: mhtxthtml.pl,v 2.33 2003/07/15 20:12:16 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -137,6 +137,7 @@ sub filter {
     my $onlycid  = $args !~ /\ballownoncidurls\b/i;
     my $subdir   = $args =~ /\bsubdir\b/i;
     my $norelate = $args =~ /\bdisablerelated\b/i;
+    my $allowcom = $args =~ /\ballowcomments\b/i;
     my $atdir    = $subdir ? $mhonarc::MsgPrefix.$mhonarc::MHAmsgnum : "";
     my $tmp;
 
@@ -343,8 +344,10 @@ sub filter {
 
     ## Check comment declarations: may screw-up mhonarc processing
     ## and avoids someone sneaking in SSIs.
-    #$$data =~ s/<!(?:--(?:[^-]|-[^-])*--\s*)+>//go; # can crash perl
-    $$data =~ s/<!--[^-]+[#X%\$\[]*/<!--/g;  # Just mung them (faster)
+    if (!$allowcom) {
+      #$$data =~ s/<!(?:--(?:[^-]|-[^-])*--\s*)+>//go; # can crash perl
+      $$data =~ s/<!--[^-]+[#X%\$\[]*/<!--/g;  # Just mung them (faster)
+    }
 
     ($title.$$data, @files);
 }

@@ -13,8 +13,10 @@ NOTE: Make sure to read the release notes before installing MHonArc,
       MHonArc distribution.                                                
 
   * For the Impatient
+  * Vendor Supplied Packages
   * System Requirements
   * Downloading MHonArc
+  * RPM Installation
   * Extracting the MHonArc Distribution
   * Installing with install.me
       + install.me Notes
@@ -31,18 +33,65 @@ NOTE: Make sure to read the release notes before installing MHonArc,
 
 For the Impatient
 
-If you cannot wait to get going, try the following:
+If you cannot wait to get going, try one of the following:
 
-+-------------------------------------------------------------------------+
-|prompt> wget 'http://www.mhonarc.org/release/MHonArc/MHonArcX.X.X'       |
-|prompt> gzip -dc MHonArcX.X.X | tar xvf -                                |
-|prompt> cd MHonArcX.X.X                                                  |
-|prompt> perl install.me                                                  |
-+-------------------------------------------------------------------------+
+  * Plaform independent install:
+    +---------------------------------------------------------------------------+
+    |prompt> wget 'http://www.mhonarc.org/release/MHonArc/MHonArc-X.X.X.tar.gz' |
+    |prompt> gzip -dc MHonArc-X.X.X.tar.gz | tar xvf -                          |
+    |prompt> cd MHonArc-X.X.X                                                   |
+    |prompt> perl install.me                                                    |
+    +---------------------------------------------------------------------------+
+   
+  * RPM install:
+    +---------------------------------------------------------------------------------+
+    |prompt> wget 'http://www.mhonarc.org/release/MHonArc/MHonArc-X.X.X-n.noarch.rpm' |
+    |prompt> rpm -Uvh MHonArc-X.X.X-1.noarch.rpm                                      |
+    +---------------------------------------------------------------------------------+
 
-where X.X.X represents the version number.
+Where X.X.X represents the version number, and X.X.X-n represents the
+version and release number of the RPM. Generally, the release number is
+equal to '1'.
 
 If there were problems doing the above, then keep reading.
+
+---------------------------------------------------------------------------
+
+Vendor Supplied Packages
+
+Some software system vendors provide MHonArc, usually as an optional
+package. The following links provide vendor-supplied versions of MHonArc:
+
+Debian GNU/Linux
+    <http://packages.debian.org/mhonarc>
+Linux (multiple vendors/distros)
+    <http://www.rpmfind.net/linux/rpm2html/search.php?query=MHonArc>
+
+NOTE: Choosing to go with a vendor-supplied package depends on your needs. 
+      Here are some things to consider:                                    
+                                                                           
+        * Some vendors may have their own QA process along with their own  
+          support services while others may provide MHonArc as a           
+          contributed package with no additional support.                  
+                                                                           
+        * Vendor/distro versions of MHonArc tend not to reflect the latest 
+          release since there is a latency between a new release made      
+          available from mhonarc.org to when vendors are able to download  
+          and create their own packages. This difference can be important  
+          depending on what MHonArc features or fixes you need.            
+                                                                           
+      In general, if your vendor provides their own QA and support services
+      for the software they provide, it is usually best to use the vendor's
+      version of MHonArc. However, if the vendor does not provide          
+      additional support, and/or you need the latest features and fixes,   
+      you may want go with what is provided from mhonarc.org.              
+                                                                           
+      If you require professional support and consulting, see Contacts for 
+      contact information.                                                 
+
+This document does not cover any installation details for vendor supplied
+packages. See your vendor's supplied documentation for installation
+instructions.
 
 ---------------------------------------------------------------------------
 
@@ -79,41 +128,86 @@ The following is required to run MHonArc:
 Downloading MHonArc
 
 The homepage for MHonArc is <http://www.mhonarc.org/>. The homepage list
-various sites that you can download MHonArc. If you are familiar with 
-Comprehensive Perl Archive Network (CPAN), MHonArc can be downloaded from 
-<http://www.perl.com/CPAN/authors/id/EHOOD/>.
+various sites that you can download MHonArc.
 
 MHonArc is distributed in the following formats:
 
-  * tar-bz2: MHonArcX.X.X.tar.bz2
-  * tar-gzip: MHonArcX.X.X.tar.gz
-  * zip: MHonArcX.X.X.zip
+  * RPM: MHonArc-X.X.X-n.noarch.rpm
+  * tar-bz2: MHonArc-X.X.X.tar.bz2
+  * tar-gzip: MHonArc-X.X.X.tar.gz
+  * zip: MHonArc-X.X.X.zip
 
-where X.X.X represents the version number.
+Where X.X.X represents the version number, and X.X.X-n represents the
+version and release number of the RPM. Generally, the release number is
+equal to '1'. Choose the format that best suits your environment.
 
-Alternate distribution formats for MHonArc may be available, like Linux
-RPM. Alternate distribution formats are not covered in this document.
+NOTE: Alternate distribution formats for MHonArc may be available from     
+      third-parties. Alternate distribution formats are not covered in this
+      document.                                                            
+
+If you downloaded the RPM distribution, goto RPM Installation. If you
+downloaded one of the other formats, goto Extracting the MHonArc
+Distribution.
+
+---------------------------------------------------------------------------
+
+RPM Installation
+
+RPM is a widely used software package manager for various Linux-based
+systems and sometimes used for other Unix-based environments. If the
+software on your system is managed by RPM, you may prefer to install
+MHonArc via RPM:
+
++-------------------------------------------------------------------------+
+|prompt> rpm -Uvh MHonArc-X.X.X-n.noarch.rpm                              |
++-------------------------------------------------------------------------+
+
+NOTE: RPM-based installation requires that the perl executable is located  
+      at /usr/bin/perl.                                                    
+
+MHonArc files will be installed in the following locations:
+
+/usr/bin:                      Program files: mhonarc, mha-dbedit, ...
+/usr/lib/MHonArc:              Library files.                         
+/usr/share/doc/MHonArc-X.X.X:  Documentation, examples, and extras.   
+/usr/share/man/man1:           Manpages.                              
+
+It is highly likely that you will need to have root priviledges to install
+via RPM. If you do not have root access, or you want to install in a
+non-standard location, you will need to install MHonArc from the non-RPM
+bundles.
+
+Once the install is completed, you can skip to Post Installation
+Configuration.
+
+NOTE: RPM distributions have been directly available starting with MHonArc 
+      v2.6.5. However, alternate RPM packages are available for current and
+      older versions via third parties and some Linux distros. Goto <http:/
+      /www.rpmfind.net/linux/rpm2html/search.php?query=MHonArc> to get a   
+      list of third-party RPM bundles.                                     
 
 ---------------------------------------------------------------------------
 
 Extracting the MHonArc Distribution
 
-After downloading MHonArc, it is best to move the file to a temporary
-location for extraction. To extract the distribution under Unix-like
-systems, use one of the following commands based upon the distribution
-format you downloaded:
+NOTE: If doing an RPM-based install, goto RPM Installation above.          
+
+After downloading the MHonArc distribution, it is best to move the file to
+a temporary location for extraction. To extract the distribution under
+Unix-like systems, use one of the following commands based upon the
+distribution format you downloaded:
 
 tar-bz2
     +---------------------------------------------------------------------+
-    |prompt> bzip2 -dc MHonArcX.X.X.tar.bz2 | tar xvf -                   |
+    |prompt> bzip2 -dc MHonArc-X.X.X.tar.bz2 | tar xvf -                  |
     +---------------------------------------------------------------------+
 tar-gzip
     +---------------------------------------------------------------------+
-    |prompt> gzip -dc MHonArcX.X.X.tar.gz | tar xvf -                     |
+    |prompt> gzip -dc MHonArc-X.X.X.tar.gz | tar xvf -                    |
     +---------------------------------------------------------------------+
 zip
     +---------------------------------------------------------------------+
-    |prompt> unzip MHonArcX.X.X.zip                                       |
+    |prompt> unzip MHonArc-X.X.X.zip                                      |
     +---------------------------------------------------------------------+
 
 For Win32 systems, you can use a program like WinZip to extract the
@@ -125,18 +219,18 @@ NOTE: If your are using Cygwin and the cygwin build of Perl, then the
       environment. MHonArc treats the cygwin environment as a Unix-type    
       environment.                                                         
 
-After extraction, the subdirectory MHonArcX.X.X will have been created
+After extraction, the subdirectory MHonArc-X.X.X will have been created
 containing all the files comprising MHonArc.
 
 NOTE: Please read the release notes before continuing for any news about   
       compatibility with previous versions and/or important usage          
       information.                                                         
 
-Now, change your current directory to MHonArcX.X.X for the next step. On a
+Now, change your current directory to MHonArc-X.X.X for the next step. On a
 Unix-type system, the following command will do it:
 
 +-------------------------------------------------------------------------+
-|prompt> cd MHonArcX.X.X                                                  |
+|prompt> cd MHonArc-X.X.X                                                 |
 +-------------------------------------------------------------------------+
 ---------------------------------------------------------------------------
 
@@ -386,7 +480,7 @@ highlighting mode. The mode is best used with color-capable terminals.
 
 ---------------------------------------------------------------------------
 
-$Date: 2002/12/10 04:08:02 $
+$Date: 2003/07/20 03:27:49 $
 MHonArc
-Copyright © 1997-2002, Earl Hood, mhonarc@mhonarc.org
+Copyright © 1997-2003, Earl Hood, mhonarc@mhonarc.org
 
