@@ -1,13 +1,13 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhamain.pl,v 2.73 2004/05/07 23:12:38 ehood Exp $
+##	$Id: mhamain.pl,v 2.74 2004/05/17 05:17:51 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
 ##	Main library for MHonArc.
 ##---------------------------------------------------------------------------##
 ##    MHonArc -- Internet mail-to-HTML converter
-##    Copyright (C) 1995-2003	Earl Hood, mhonarc@mhonarc.org
+##    Copyright (C) 1995-2004	Earl Hood, mhonarc@mhonarc.org
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by
@@ -29,10 +29,10 @@ package mhonarc;
 
 require 5;
 
-$VERSION = '2.6.9';
+$VERSION = '2.6.10';
 $VINFO =<<EndOfInfo;
   MHonArc v$VERSION (Perl $] $^O)
-  Copyright (C) 1995-2003  Earl Hood, mhonarc\@mhonarc.org
+  Copyright (C) 1995-2004  Earl Hood, mhonarc\@mhonarc.org
   MHonArc comes with ABSOLUTELY NO WARRANTY and MHonArc may be copied only
   under the terms of the GNU General Public License, which may be found in
   the MHonArc distribution.

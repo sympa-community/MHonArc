@@ -1,5 +1,5 @@
 #!/usr/bin/perl
-# $Id: base64.pl,v 2.3 2003/09/28 07:20:43 ehood Exp $
+# $Id: base64.pl,v 2.4 2004/05/17 04:18:13 ehood Exp $
 #
 # Library based on Perl 4 code from:
 #       base64.pl -- A perl package to handle MIME-style BASE64 encoding
@@ -52,9 +52,9 @@ my $uuencode_pad = '`';
 # Some uuencodes use " " and some use "`", so we handle both.
 # We also need to protect backslashes and other special characters.
 my $tr_uuencode =  " ".$uuencode_alphabet;
-my $tr_uuencode =~ s/(\W)/\\$1/g;
+   $tr_uuencode =~ s/(\W)/\\$1/g;
 my $tr_base64   =  "A".$base64_alphabet;
-my $tr_base64   =~ s/(\W)/\\$1/g;
+   $tr_base64   =~ s/(\W)/\\$1/g;
 
 sub b64touu
 {

@@ -22,6 +22,7 @@
 <li><a href="#msgbody">Can I make changes to message formatting on existing archived messages?</a></li>
 <li><a href="#msgcomms">What are those "&lt;!--X-... -->"?</a></li>
 <li><a href="#commslegal">Are those "&lt;!--X-... -->" legal comments?</a></li>
+<li><a href="#removingmsgfooters">Can I have footers removed from messages when archived?</a></li>
 </ul>
 <!--X-TOC-End-->
 
@@ -226,6 +227,60 @@ MESS WITH THEM</strong>.
 <p>Yes.
 </p>
 
+<!-- ??????????????????????????????????????????????????????????????? -->
+<hr noshade size=1>
+<table border=0>
+<tr valign=top><td><img src="monicon.png" align="bottom" alt=""></td><td>
+<h3><b><a name="removingmsgfooters">Can I have footers removed from messages when archived?</a></b></h3>
+</td></tr></table>
+
+<p>The following questions are in the same class as the following:
+</p>
+<p><b>Can I remove signatures in archived messages?</b><br>
+   <b>Can I remove list footers in archived messages?</b><br>
+   <b>Can I remove mail ads from archived messages?</b>
+</p>
+
+<p>Yes, but you will need to register a custom filter via the
+<a href="../resources/mimefilters.html">MIMEFILTERS</a> resource.
+</p>
+<p>The following custom filter will remove signatures from messages:
+</p>
+<pre class="code">
+package my_text_plain;
+
+sub filter {
+  my($fields, $data, $is_decoded, $filter_args) = @_;
+
+  # strip signature
+  $$data =~ s/\r\n/\n/g;
+  $$data =~ s/^-- \n[\s\S]*//m;
+
+  # call mhonarc's default filter to do everything else
+  require mhtxtplain.pl;
+  return m2h_text_plain::filter($fields, $data, $is_decoded, $filter_args);
+}
+</pre>
+<p>With this implementation, your customization will inherit any new
+capabilities (and bug fixes) of the default plain text filter without
+have to update your filter each time you upgrade mhonarc.
+</p>
+
+<p>Let's assume the filter above is contained in the file
+<tt>my_txtplain.pl</tt>.  To register the filter into MHonArc
+we use the <a href="../resources/mimefilters.html">MIMEFILTERS</a> resource:
+</p>
+<pre class="code">
+&lt;MIMEFilters&gt;
+application/x-patch;     my_text_plain::filter;       my_txtplain.pl
+message/delivery-status; my_text_plain::filter;       my_txtplain.pl
+message/partial;         my_text_plain::filter;       my_txtplain.pl
+text/*;                  my_text_plain::filter;       my_txtplain.pl
+text/plain;              my_text_plain::filter;       my_txtplain.pl
+x-sun-attachment;        my_text_plain::filter;       my_txtplain.pl
+&lt;/MIMEFilters&gt;
+</pre>
+
 <!-- ===================================================================== -->
 <hr>
 
@@ -236,11 +291,11 @@ MESS WITH THEM</strong>.
 
 <HR>
 <address>
-$Date: 2003/10/06 22:04:15 $ <br>
+$Date: 2004/05/17 05:05:17 $ <br>
 <img align="top" src="monicon.png" alt="">
 <a href="http://www.mhonarc.org/"
 ><strong>MHonArc</strong></a><br>
-Copyright &#169; 1997-1999, <a href="http://www.earlhood.com/"
+Copyright &#169; 1997-2004, <a href="http://www.earlhood.com/"
 >Earl Hood</a>, <a href="mailto:mhonarc&#37;40mhonarc.org"
 >mhonarc<!--
 -->&#64;<!--
