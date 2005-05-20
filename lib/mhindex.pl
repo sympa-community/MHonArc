@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhindex.pl,v 1.11 2002/11/20 23:53:12 ehood Exp $
+##	$Id: mhindex.pl,v 1.12 2004/12/15 20:33:39 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -40,7 +40,7 @@ sub write_main_index {
 
     &compute_page_total();
     $PageNum    = $onlypg || 1;
-    $totalpgs   = $onlypg || $NumOfPages;
+    $totalpgs   = $onlypg || $NumOfPrintedPages;
     if (!scalar(@MListOrder)) {
 	@MListOrder = &sort_messages();
 	%Index2MLoc = ();

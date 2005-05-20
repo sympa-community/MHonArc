@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhmimetypes.pl,v 1.19 2003/09/29 05:03:57 ehood Exp $
+##	$Id: mhmimetypes.pl,v 1.20 2004/05/22 16:48:39 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -363,7 +363,7 @@ sub write_attachment {
 ##
 sub urlize_file_path {
     my $path = shift;
-    $path =~ s/$DIRSEP/\//go;
+    $path =~ s/$DIRSEPREX/\//go;
     $path =~ s/([^\w.\-\/])/sprintf("%%%X",unpack("C",$1))/ge;
     $path;
 }

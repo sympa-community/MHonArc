@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhinit.pl,v 2.51 2003/10/17 22:01:38 ehood Exp $
+##	$Id: mhinit.pl,v 2.52 2004/12/15 20:33:39 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -270,6 +270,7 @@ $bs 		= "\b";	# Used as a separator
 $MLCP		= 0;	# Main index contains included files flag
 $SLOW		= 0;	# Save memory flag
 $NumOfPages	= 0;	# Number of index pages
+$NumOfPrintedPages = 0;	# Number of printed index pages
 $IdxMinPg	= -1;	# Starting page of index for updating
 $TIdxMinPg	= -1;	# Starting page of thread index for updating
 $IdxPageNum	= 0;	# Page to output if genidx
@@ -346,6 +347,7 @@ $LockMethod	= set_lock_mode($LockMethod);
 
 $CONLEN      = defined($ENV{'M2H_CONLEN'})    ?  $ENV{'M2H_CONLEN'}	: 0;
 $MAIN        = defined($ENV{'M2H_MAIN'})      ?  $ENV{'M2H_MAIN'}	: 1;
+$MAXPGS      = defined($ENV{'M2H_MAXPGS'})    ?  $ENV{'M2H_MAXPGS'}	: 0;
 $MULTIIDX    = defined($ENV{'M2H_MULTIPG'})   ?  $ENV{'M2H_MULTIPG'}	: 0;
 $MODTIME     = defined($ENV{'M2H_MODTIME'})   ?  $ENV{'M2H_MODTIME'}	: 0;
 $NODOC       = defined($ENV{'M2H_DOC'})       ? !$ENV{'M2H_DOC'}	: 0;

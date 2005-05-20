@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##      $Id: mhusage.pl,v 2.25 2003/10/02 03:30:58 ehood Exp $
+##      $Id: mhusage.pl,v 2.26 2004/12/15 20:33:40 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -118,6 +118,7 @@ Options:
   -mailtourl <url>         : URL to use for e-mail address hyperlinks
                              (def: "mailto:\$TO\$")
   -main                    : Create a main index
+  -maxpgs <#>              : Maximum number of index pages
   -maxsize <#>             : Maximum number of messages allowed in archive
   -mhpattern <exp>         : Perl expression for message files in a directory
                              (def: "^\\d+\$")

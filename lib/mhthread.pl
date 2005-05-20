@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##      $Id: mhthread.pl,v 2.11 2002/11/20 23:53:12 ehood Exp $
+##      $Id: mhthread.pl,v 2.12 2004/12/15 20:33:40 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -55,7 +55,7 @@ sub write_thread_index {
     &compute_page_total();
     @ThreadList = @TListOrder;
     $PageNum  = $onlypg || 1;
-    $totalpgs = $onlypg || $NumOfPages;
+    $totalpgs = $onlypg || $NumOfPrintedPages;
  
     for ( ; $PageNum <= $totalpgs; ++$PageNum) {
 	next  if $PageNum < $TIdxMinPg;

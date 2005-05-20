@@ -199,8 +199,7 @@ be used to add messages as they are received.
 As an archive increases in size, performing updates as
 a message is received takes more processing time.  Therefore, for
 large archives, you may need to do updates through a periodic
-batch process (like via <b>cron</b>(8)) to avoid time-out problems
-from MHonArc.
+batch process (like via <b>cron</b>(8)) to avoid time-out problems.
 </p>
 </td>
 </tr>
@@ -305,7 +304,7 @@ For better scalability and resource usage, the author
 recommends calling MHonArc from a facility like <b><tt>cron</tt></b>,
 which is provided on Unix-based operating systems.
 For those unfamiliar cron, it is a daemon that allows the execution
-of commands on scheduled basis.
+of commands on a scheduled basis.
 </p>
 </td>
 </tr>
@@ -764,12 +763,10 @@ and examples.
 <h3><b><a name="tombox">Can I convert an archive back to mailbox format?</a></b></h3>
 </td></tr></table>
 
-<p><a href="mailto:anthonyw&#37;40albany.net">Anthony W</a> provides a
+<p><a href="mailto:anthonyw&#37;40albany.net">Anthony W</a> developed a
 Perl program called <tt>mhn2mbox</tt> for converting archives back
-into mailbox format.  To obtain more information and to download
-the program, goto
-<a href="http://www.albany.net/~anthonyw/mhonarc/"
->&lt;http://www.albany.net/~anthonyw/mhonarc/&gt;</a>.
+into mailbox format.  A copy of the script is included in the contrib
+directory of the MHonArc distribution.
 </p>
 
 <!-- ===================================================================== -->
@@ -782,7 +779,7 @@ the program, goto
 
 <hr>
 <address>
-$Date: 2003/10/06 22:04:15 $ <br>
+$Date: 2005/05/15 02:29:37 $ <br>
 <img align="top" src="monicon.png" alt="">
 <a href="http://www.mhonarc.org/"
 ><strong>MHonArc</strong></a><br>

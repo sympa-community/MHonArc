@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhtxthtml.pl,v 2.36 2003/10/17 22:08:45 ehood Exp $
+##	$Id: mhtxthtml.pl,v 2.37 2005/05/02 00:04:39 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -226,6 +226,8 @@ sub filter {
 	# are stupid enough to recognize a javascript URL with whitespace
 	# in it (like tabs and newlines).
 	$$data =~ s/\bj\s*a\s*v\s*a\s*s\s*c\s*r\s*i\s*p\s*t/_javascript_/gi;
+	$$data =~ s/\bv\s*b\s*s\s*c\s*r\s*i\s*p\s*t/_vbscript_/gi;
+	$$data =~ s/\be\s*c\s*m\s*a\s*c\s*r\s*i\s*p\s*t/_ecmascript_/gi;
 
 	# IE has a very unsecure expression() operator extension to
 	# CSS, so we have to nuke it also.
@@ -345,6 +347,10 @@ sub filter {
       #$$data =~ s/<!(?:--(?:[^-]|-[^-])*--\s*)+>//go; # can crash perl
       $$data =~ s/<!--[^-]+[#X%\$\[]*/<!--/g;  # Just mung them (faster)
     }
+
+    ## Prevent comment spam
+    ## <http://www.google.com/googleblog/2005/01/preventing-comment-spam.html>
+    $$data =~ s/(<a\b)/$1 rel="nofollow"/gi;
 
     ($title.$$data, @files);
 }

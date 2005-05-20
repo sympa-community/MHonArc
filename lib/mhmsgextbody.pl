@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhmsgextbody.pl,v 1.4 2003/01/18 02:58:12 ehood Exp $
+##	$Id: mhmsgextbody.pl,v 1.5 2005/04/27 18:23:57 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -12,7 +12,7 @@
 ##          </MIMEFILTERS>
 ##---------------------------------------------------------------------------##
 ##    MHonArc -- Internet mail-to-HTML converter
-##    Copyright (C) 1999-2001	Earl Hood, mhonarc@mhonarc.org
+##    Copyright (C) 1999-2001,2005	Earl Hood, mhonarc@mhonarc.org
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by
@@ -97,7 +97,7 @@ sub filter {
 			   mhonarc::urlize_path($name);
 	    $ret	 = '<dl><dt>';
 	    $ret	.= qq|<em>$cdesc</em><br>\n| if $cdesc;
-	    $ret	.= qq|<a href="$url">&lt;$url&gt;</a></dt><dd>\n|;
+	    $ret	.= qq|<a rel="nofollow" href="$url">&lt;$url&gt;</a></dt><dd>\n|;
 	    $ret	.= qq|Content-type: <tt>$dctype</tt><br>\n|
 			    if $dctype;
 	    $ret	.= qq|MD5: <tt>$dmd5</tt><br>\n|
@@ -121,7 +121,7 @@ sub filter {
 	    my $url	 = 'file://' . mhonarc::urlize_path($name);
 	    $ret	 = '<dl><dt>';
 	    $ret	.= qq|<em>$cdesc</em><br>\n|  if $cdesc;
-	    $ret	.= qq|<a href="$url">&lt;$url&gt;</a></dt><dd>\n|;
+	    $ret	.= qq|<a rel="nofollow" href="$url">&lt;$url&gt;</a></dt><dd>\n|;
 	    $ret	.= qq|Content-type: <tt>$dctype</tt><br>\n|
 			    if $dctype;
 	    $ret	.= qq|MD5: <tt>$dmd5</tt><br>\n|
@@ -148,7 +148,7 @@ sub filter {
 	       $url =~ s/javascript/_javascript_/ig;
 	    $ret	 = '<dl><dt>';
 	    $ret	.= qq|<em>$cdesc</em><br>\n|  if $cdesc;
-	    $ret	.= qq|<a href="$url">&lt;$url&gt;</a></dt><dd>\n|;
+	    $ret	.= qq|<a rel="nofollow" href="$url">&lt;$url&gt;</a></dt><dd>\n|;
 	    $ret	.= qq|Content-type: <tt>$dctype</tt><br>\n|
 			    if $dctype;
 	    $ret	.= qq|MD5: <tt>$dmd5</tt><br>\n|

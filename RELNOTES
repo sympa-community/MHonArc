@@ -69,11 +69,7 @@ iso-2022-jp was done to make MHonArc as locale neutral as possible in its
 default configuration.
 
 For more information about using MHonArc in a Japanese locale, see
-(documents in Japanese):
-<http://www.shiratori.riec.tohoku.ac.jp/~p-katoh/Hack/Docs/mhonarc-jp/
-index.html>
-<http://www.shiratori.riec.tohoku.ac.jp/~p-katoh/Hack/Docs/mhonarc-jp/
-mhonarc-jp-2_4.html>
+(documents in Japanese): <http://www.mhonarc.jp/>
 
 UPGRADING FROM v2.4.x OR EARLIER: DEFRCNAME Change
 
@@ -221,11 +217,7 @@ General Notes
 Japanese and MHonArc
 
 Information on using MHonArc in a Japanese locale is available at the
-following locations (documents in Japanese):
-<http://www.shiratori.riec.tohoku.ac.jp/~p-katoh/Hack/Docs/mhonarc-jp/
-index.html>
-<http://www.shiratori.riec.tohoku.ac.jp/~p-katoh/Hack/Docs/mhonarc-jp/
-mhonarc-jp-2_4.html>
+following location (documents in Japanese): <http://www.mhonarc.jp/>.
 
 Auto-loaded URL attributes stripped in HTML messages
 
@@ -234,8 +226,8 @@ auto-loaded URL attributes for some HTML elements -- IMG, BODY, IFRAME,
 FRAME, OBJECT, SCRIPT, INPUT -- except for cid: URLs. This behavior can be
 disabled if the 'allownoncidurls' filter argument is specified.
 
-The new behavior prevents malicious URLs used to verify mail addresses for
-spam purposes, secretly set cookies, or gather some statistical data
+The new behavior prevents malicious URLs being used to verify mail
+addresses, secretly setting cookies, or gather some statistical data
 without the explicit consent of the reader.
 
 iso8859.pl deprecated
@@ -268,7 +260,7 @@ The value of the TSLICE resource is used to determine the number of
 messages to update, before and after by thread, of each new message added.
 To insure that messages within a thread slice are updated when a new
 message is added, make sure the before and after ranges specified for 
-TSLICE is equal to maximum before and the maximum after range arguments
+TSLICE is equal to the maximum-before and the maximum-after range arguments
 specifed in the uses of the $TSLICE$ resource variable. For example, if you
 have $TSLICE(0;4)$ and $TSLICE(3;3)$ in message layout resources, you
 should set TSLICE to 3:4.
@@ -327,7 +319,7 @@ your settings and use the variant version when updating your archives.
 
 ---------------------------------------------------------------------------
 
-$Date: 2004/03/05 22:03:16 $
+$Date: 2005/05/13 00:00:35 $
 MHonArc
-Copyright © 1997-2002, Earl Hood, mhonarc@mhonarc.org
+Copyright © 1997-2005, Earl Hood, mhonarc@mhonarc.org
 

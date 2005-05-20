@@ -77,7 +77,9 @@ is filterable and comes after <tt>text/plain</tt>.
 </p>
 
 <p>There are many who would like to have nothing to do with HTML in
-email, like for security reasons.  With MIMEALTPREFS, you can tell
+email (for
+<a href="../faq/security.html#htmldata">security reasons</a>).
+With MIMEALTPREFS, you can tell
 MHonArc to use the <tt>text/plain</tt> entity (if it exists) over
 the <tt>text/html</tt> part with the following setting:
 </p>
@@ -92,7 +94,7 @@ text/html
 prefered.
 </p>
 
-<p>Note, MIMEALTPREFS augments the normal processing of
+<p>MIMEALTPREFS augments the normal processing of
 <tt>multipart/alternative</tt> entities.  For example, say the following
 message entity structure exists,
 </p>
@@ -110,8 +112,8 @@ text/html
 <b>&lt;/MIMEAltPrefs&gt;</b>
 </pre>
 
-<p>So which entity will MHonArc actually use?  In this case,
-the <tt>text/enriched</tt> part will be used.  The reason is that
+<p>Which entity will MHonArc actually use?  In this case,
+the <tt>text/enriched</tt> part will be used.  The reason is
 the <tt>text/html</tt> will be excluded since a
 <tt>text/plain</tt> alternative entity exists.  However, MHonArc still
 tries to use the last filterable alternative part, which is
@@ -133,10 +135,11 @@ text/html
 <tt>text/enriched</tt> and <tt>text/html</tt>.
 </p>
 
-<table border=0 cellpadding=4>
-<tr valign=top>
-<td><strong>NOTE</strong></td>
-<td><p>Each time <tt>&lt;MIMEALTPREFS&gt;</tt> occurs in a resource file,
+<table class="note" width="100%">
+<tr valign="baseline">
+<td><strong>NOTE:</strong></td>
+<td width="100%"><p>
+Each time <tt>&lt;MIMEALTPREFS&gt;</tt> occurs in a resource file,
 the last encountered setting will override any previous values.  Therefore,
 specifying the <tt>override</tt> attribute is redundant.
 </p>
@@ -188,10 +191,10 @@ specifying the <tt>override</tt> attribute is redundant.
 <!--/x-rc-nav-->
 <hr>
 <address>
-$Date: 2003/10/06 22:04:18 $<br>
+$Date: 2005/05/13 18:50:38 $<br>
 <img align="top" src="../monicon.png" alt="">
 <a href="http://www.mhonarc.org/"><strong>MHonArc</strong></a><br>
-Copyright &#169; 2002, <a href="http://www.earlhood.com/"
+Copyright &#169; 2002,2005 <a href="http://www.earlhood.com/"
 >Earl Hood</a>, <a href="mailto:mhonarc&#37;40mhonarc.org"
 >mhonarc<!--
 -->&#64;<!--

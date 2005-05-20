@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhdb.pl,v 2.36 2003/10/07 02:29:17 ehood Exp $
+##	$Id: mhdb.pl,v 2.37 2004/12/15 20:33:39 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -69,9 +69,11 @@ print_var($db,'Subject',     \%Subject);
 print_var($db,'ExtraHFields',\@ExtraHFields);
 print_var($db,'ExtraHFields',\%ExtraHFields);
 print_var($db,'TListOrder',  \@TListOrder);
+print_var($db,'MAXPGS',      \$MAXPGS);
 print_var($db,'MULTIIDX',    \$MULTIIDX);
 print_var($db,'NumOfMsgs',   \$NumOfMsgs);
 print_var($db,'NumOfPages',  \$NumOfPages);
+print_var($db,'NumOfPrintedPages',\$NumOfPrintedPages);
 print_var($db,'SaveRsrcs',   \$SaveRsrcs);
 
 if ($SaveRsrcs) {

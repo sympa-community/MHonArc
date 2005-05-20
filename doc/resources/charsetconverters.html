@@ -60,7 +60,7 @@
 <h2><a name="description">Description</a></h2>
 
 <p>The CHARSETCONVERTERS resource specifies Perl routines to call
-for filtering characters of a character set to HTML legal characters.
+for filtering characters of a character set to legal HTML characters.
 The filtering occurs for message header data encoded
 according to the MIME standard.
 The following example shows a header with encoded data:
@@ -171,8 +171,8 @@ $converted_data = &amp;function($data, $charset);
 <p>The data passed in will already be decoded from quoted-printable
 or base64 (as specified by the MIME syntax).  Therefore, the
 called routine will be passed the raw byte data.  It is important
-that the routine convert the data into a format suitable to be
-included in HTML markup.
+that the routine convert the data into a format suitable for
+inclusion within HTML markup.
 </p>
 
 <!-- *************************************************************** -->
@@ -386,9 +386,8 @@ iso_2022_jp::clip; iso2022jp.pl
     handling <tt>iso-2022-jp</tt> data.
     </p>
     <p>For more information about using MHonArc in a Japanese locale,
-    see (documents in Japanese):<br>
-    <a href="http://www.shiratori.riec.tohoku.ac.jp/~p-katoh/Hack/Docs/mhonarc-jp/index.html">&lt;http://www.shiratori.riec.tohoku.ac.jp/~p-katoh/Hack/Docs/mhonarc-jp/index.html&gt;</a><br>
-    <a href="http://www.shiratori.riec.tohoku.ac.jp/~p-katoh/Hack/Docs/mhonarc-jp/mhonarc-jp-2_4.html">&lt;http://www.shiratori.riec.tohoku.ac.jp/~p-katoh/Hack/Docs/mhonarc-jp/mhonarc-jp-2_4.html&gt;</a>
+    see (documents in Japanese):
+    <a href="http://www.mhonarc.jp/">&lt;http://www.mhonarc.jp/&gt;</a>
     </p>
     </dd>
 </dl>
@@ -536,7 +535,7 @@ file example.
 <!--/x-rc-nav-->
 <hr>
 <address>
-$Date: 2003/10/06 22:04:16 $ <br>
+$Date: 2005/05/13 18:50:38 $ <br>
 <img align="top" src="../monicon.png" alt="">
 <a href="http://www.mhonarc.org/"><strong>MHonArc</strong></a><br>
 Copyright &#169; 1997-2001, <a href="http://www.earlhood.com/">Earl Hood</a>, <a href="mailto:mhonarc&#37;40mhonarc.org">mhonarc<!--

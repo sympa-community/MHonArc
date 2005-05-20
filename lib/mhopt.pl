@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##      $Id: mhopt.pl,v 2.56 2003/10/02 03:30:58 ehood Exp $
+##      $Id: mhopt.pl,v 2.58 2005/05/10 19:05:23 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -96,6 +96,7 @@ sub get_resources {
 	'locktries=i',	# Number of tries in locking an archive
 	'mailtourl=s',	# URL to use for e-mail address hyperlinks
 	'main',		# Create a main index
+	'maxpgs=i',	# Maximum number of index pages
 	'maxsize=i',	# Maximum number of messages allowed in archive
 	'mbox',		# Use mailbox format		(ignored now)
 	'mh',		# Use MH mail folders format	(ignored now)
@@ -509,6 +510,8 @@ sub get_resources {
     $OUTDIR	= $opt{'outdir'}     if $opt{'outdir'}; # Override db
     $MAILTOURL	= $opt{'mailtourl'}  if $opt{'mailtourl'};
     $NewsUrl	= $opt{'newsurl'}    if $opt{'newsurl'};
+    $MAXPGS	= $opt{'maxpgs'}     if defined($opt{'maxpgs'});
+	$MAXPGS = 0  if $MAXPGS < 0;
     $MAXSIZE	= $opt{'maxsize'}    if defined($opt{'maxsize'});
 	$MAXSIZE = 0  if $MAXSIZE < 0;
     $MHPATTERN	= $opt{'mhpattern'}  if $opt{'mhpattern'};
@@ -713,7 +716,13 @@ sub get_resources {
 	$readmail::TextPreFilter = sub {
 	    my $fields = shift;
 	    my $data_r = shift;
-	    $$data_r =~ s/($AddrExp)/rewrite_raw_address($1)/geo;
+	    # do not rewrite cid: URLs.
+	    #$$data_r =~ s{($AddrExp)}{rewrite_raw_address($1)}geox;
+	    $$data_r =~ s{
+		((?:cid:)?)($AddrExp)
+	    }{
+		($1 eq "") ? rewrite_raw_address($2) : $1.$2;
+	    }gieox;
 	}
     }
 

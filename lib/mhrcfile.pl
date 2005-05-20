@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhrcfile.pl,v 2.41 2004/03/15 20:28:23 ehood Exp $
+##	$Id: mhrcfile.pl,v 2.43 2005/04/27 18:14:03 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -503,6 +503,12 @@ sub parse_resource_file {
 	}
 	if ($elem eq 'main') {			# Print main index
 	    $MAIN = 1; last FMTSW;
+	}
+	if ($elem eq 'maxpgs') {		# Max number of index pages
+	    if (($tmp = &get_elem_int($handle, $elem, 1)) ne '') {
+		$MAXPGS = $tmp;
+	    }
+	    last FMTSW;
 	}
 	if ($elem eq 'maxsize') {		# Size of archive
 	    if (($tmp = &get_elem_int($handle, $elem, 1)) ne '') {
@@ -1196,7 +1202,8 @@ sub parse_resource_file {
           $TSLICESINGLETXTCUR = &get_elem_content($handle, $elem, $chop);
           last FMTSW;
         }
-        if ($elem eq 'tslicetopbegincur') {
+        if ($elem eq 'tslicetopbegincur' ||
+	    $elem eq 'tslicetopbegcur') {
           $TSLICETOPBEGCUR = &get_elem_content($handle, $elem, $chop);
           last FMTSW;
         }

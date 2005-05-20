@@ -38,7 +38,7 @@
 <code>&lt;MIMEEXCS&gt;</code><br>
 <var>content-type</var><br>
 <var>content-type</var><br>
-...
+...<br>
 <code>&lt;/MIMEEXCS&gt;</code><br>
 </p>
 </dd>
@@ -60,10 +60,11 @@ registered via the <a href="mimefilters.html">MIMEFILTERS</a> resource.
 If a message body part is excluded, the converted message will have
 a note that the part was excluded.
 </p>
-<table border=0 cellpadding=4>
-<tr valign=top>
-<td><strong>NOTE</strong></td>
-<td><p>Base types can also be listed to exclude all content-types
+<table class="note" width="100%">
+<tr valign="baseline">
+<td><strong>NOTE:</strong></td>
+<td width="100%"><p>Base types can also be listed in order exclude all
+content-types
 with a give base.  For example, <tt>image/jpg</tt> will only exclude
 JPEG images, but <tt>image</tt> will exclude all images.
 </p>
@@ -100,8 +101,8 @@ image
 <b>&lt;/MIMEExcs&gt;</b>
 </pre>
 
-<p>The following is a very restrictive setting to minimize archive
-exploits and large data files:
+<p>The following is a very restrictive setting to minimize security
+risks and large data files:
 </p>
 <pre class="code">
 <b>&lt;MIMEExcs&gt;</b>
@@ -137,7 +138,7 @@ text/html
 <!--/x-rc-nav-->
 <hr>
 <address>
-$Date: 2003/10/06 22:04:18 $ <br>
+$Date: 2005/05/13 18:50:39 $ <br>
 <img align="top" src="../monicon.png" alt="">
 <a href="http://www.mhonarc.org/"
 ><strong>MHonArc</strong></a><br>

@@ -47,7 +47,10 @@ it refers to the index listing messages by author, date, or
 subject.  Therefore, all resources. and resource variables, that
 refer to the main index apply to either an author, date, or
 subject index.  The type of main index is controled by
-the <a href="../resources/sort.html">SORT</a>, <a href="../resources/subsort.html">SUBSORT</a>, AUTHSORT resources.
+the <a href="../resources/sort.html">SORT</a>,
+<a href="../resources/subsort.html">SUBSORT</a>, and
+<a href="../resources/authsort.html">AUTHSORT</a>,
+resources.
 </p>
 
 <p>By default, MHonArc creates a date index
@@ -63,10 +66,11 @@ Author index support is available only in v2.0 and later.
 </td></tr></table>
 
 <P>Yes. In version 1.2 (or later), a resource was added called
-<a href="../resources/otherindexes.html">OTHERINDEXES</a>. With this resource, you are able to
-define an arbitrary number of indexes you desire. The additional
-indexes may be in any format you desire and that is supported
-by MHonArc. Refer to the documentation for the usage of
+<a href="../resources/otherindexes.html">OTHERINDEXES</a>.
+<a href="../resources/otherindexes.html">OTHERINDEXES</a> allows
+you to define an arbitrary number of indexes you desire. The additional
+indexes may be in any format you desire.
+Refer to the documentation for the usage of
 <a href="../resources/otherindexes.html">OTHERINDEXES</a> (also see
 "<a href="#otherindexes">How does the OTHERINDEXES resource work?</a>").
 </P>
@@ -189,7 +193,7 @@ author
 <p>Again, notice how I am being explicit.  MHonArc does not reset
 resources when reading the otherindexes resource files. with one
 <em>exception</em>: <a href="../resources/thread.html">THREAD</a> is shut-off.  To avoid overriding the default
-index files, I must explicitly redefine <a href="../resources/idxfname.html">IDXFNAME</a> (amd <a href="../resources/idxprefix.html">IDXPREFIX</a>
+index files, I must explicitly redefine <a href="../resources/idxfname.html">IDXFNAME</a> (and <a href="../resources/idxprefix.html">IDXPREFIX</a>
 if <a href="../resources/multipg.html">MULTIPG</a> is active).  If I want different layouts for my
 other indexes, I must explicitly define those, or they will
 use what was ever set in top.mrc (or the applicable default resource setting(s)
@@ -199,11 +203,10 @@ when no explicit setting provided).
 <tr valign="baseline">
 <td><strong>NOTE:</strong></td>
 <td width="100%"><p>
-    Otherindexes resource file only defines a <strong>single</strong>
-    index type: main
-    or thread.  If you specify the <a href="../resources/thread.html">THREAD</a>, a thread index will be
-    created and all <a href="../resources/main.html">MAIN</a> related resources are ignored.  I.e.  <a href="../resources/thread.html">THREAD</a>
-    overrides <a href="../resources/main.html">MAIN</a>.
+Otherindexes resource file only defines a <strong>single</strong>
+index type: main or thread.  If you specify the
+<a href="../resources/thread.html">THREAD</a>, a thread index will be
+created and all <a href="../resources/main.html">MAIN</a> related resources are ignored.
 </p>
 </td>
 </tr>
@@ -227,8 +230,8 @@ default indexes, so the resource files are needed each time
 for other indexes.
 </p>
 
-<p>What I left out in this example is the redefinition
-of the navigational based resources.  Since I am adding
+<p>What is left out of this example is the redefinition
+of navigational based resources.  Since I am adding
 more indexes, I would have to redefine resources like
 <a href="../resources/toplinks.html">TOPLINKS</a>,
 <a href="../resources/botlinks.html">BOTLINKS</a>,
@@ -272,7 +275,7 @@ it was dirty, but it should work.
 
 <HR>
 <address>
-$Date: 2003/10/06 22:04:15 $ <br>
+$Date: 2005/05/15 02:29:37 $ <br>
 <img align="top" src="monicon.png" alt="">
 <a href="http://www.mhonarc.org/"
 ><strong>MHonArc</strong></a><br>

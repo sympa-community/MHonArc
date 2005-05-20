@@ -62,12 +62,12 @@ message headers.
 
 <p>The MIMEDECODERS resource can only be defined via the
 resource file.  Each line of the element specifies a encoding,
-the Perl routine for filtering the character set, and the Perl source
+the Perl decoding routine, and the Perl source
 file containing the routine.
 </p>
 
 <p>Example:</p>
-<pre>
+<pre class="code">
 <b>&lt;MIMEDecoders&gt;</b>
 base64;           base64::b64decode;            base64.pl
 <b>&lt;/MIMEDecoders&gt;</b>
@@ -104,7 +104,7 @@ values.  They are as follows:
 <hr>
 <h2><a name="default">Default Setting</a></h2>
 
-<pre>
+<pre class="code">
 <b>&lt;MIMEDecoders&gt;</b>
 7bit;             as-is;
 8bit;             as-is;
@@ -132,7 +132,7 @@ uuencode;         base64::uudecode;             base64.pl
 MIME::Base64 module (available from CPAN):
 </p>
 
-<pre>
+<pre class="code">
 <b>&lt;MIMEDecoders&gt;</b>
 base64; MIME::Base64::decode_base64; MIME/Base64.pm
 <b>&lt;/MIMEDecoders&gt;</b>
@@ -163,7 +163,7 @@ base64; MIME::Base64::decode_base64; MIME/Base64.pm
 <!--/x-rc-nav-->
 <hr>
 <address>
-$Date: 2003/10/06 22:04:18 $ <br>
+$Date: 2005/05/13 18:50:38 $ <br>
 <img align="top" src="../monicon.png" alt="">
 <a href="http://www.mhonarc.org/"
 ><strong>MHonArc</strong></a><br>

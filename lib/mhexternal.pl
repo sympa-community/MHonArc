@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhexternal.pl,v 2.18 2003/09/29 05:03:57 ehood Exp $
+##	$Id: mhexternal.pl,v 2.19 2004/12/03 20:33:18 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -113,7 +113,6 @@ sub filter {
     my $name	   = '';
     my $ctype	   = '';
     my $type	   = '';
-    my $ext	   = '';
     my $inline	   =  0;
     my $inext	   = '';
     my $intype	   = '';
@@ -174,7 +173,7 @@ sub filter {
 
     ## Check if utilizing extension from mail header defined filename
     if ($dispext && $usenameext) {
-	$inext = $1;
+	$inext = $dispext;
     }
 
     ## Check if inlining (images only)
@@ -205,7 +204,7 @@ sub filter {
 	mhonarc::write_attachment($ctype, $data, {
 	  '-dirpath'  => $path,
 	  '-filename' => $name,
-	  '-ext'      => $ext,
+	  '-ext'      => $inext,
 	});
     &debug("File-written: $filename")  if $debug;
 

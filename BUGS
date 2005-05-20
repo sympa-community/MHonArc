@@ -21,29 +21,29 @@ Before reporting a bug, please do the following:
     the mailing list to get confirmation.
 
 The prefered way to report bugs is to use the bug submission form for
-MHonArc located at <http://savannah.nongnu.org/bugs/?group_id=1968>. Please
+MHonArc located at <http://savannah.nongnu.org/bugs/?group=mhonarc>. Please
 check and search the existing bugs to verify that the bug has not already
 been reported.
 
-If the potential bug you have discovered has not been reported, select the 
-Submit Bug link to get the bug submission form. Hopefully, the form fields
-are self-explanatory, but if you are not sure what to select in some of the
+If the bug you discovered has not been reported, select the Submit Bug link
+to get the bug submission form. Hopefully, the form fields are
+self-explanatory, but if you are not sure what to select in some of the
 option items, leave it with the default value or make a best guess.
 
 ---------------------------------------------------------------------------
 
 Open Bugs
 
-Goto <http://savannah.nongnu.org/bugs/?group_id=1968>, select "Open" for
-the Status choice, and then activate the Go or Browse button to list all
-open bugs.
+Goto <http://savannah.nongnu.org/bugs/?group=mhonarc>, select "Open" for
+the Open/Closed choice, and then activate the Apply button to list all open
+bugs.
 
 ---------------------------------------------------------------------------
 
 Fixed Bugs
 
-Goto <http://savannah.nongnu.org/bugs/?group_id=1968>, select "Closed" for
-the Status choice, and then activate the Go or Browse button to list all
+Goto <http://savannah.nongnu.org/bugs/?group=mhonarc>, select "Closed" for
+the Open/Closed choice, and then activate the Apply button to list all
 closed/fixed bugs.
 
 ---------------------------------------------------------------------------
@@ -52,7 +52,7 @@ closed/fixed bugs.
 
 ---------------------------------------------------------------------------
 
-$Date: 2003/10/06 22:04:14 $
+$Date: 2005/05/13 19:07:56 $
 MHonArc
 Copyright © 1997-2002, Earl Hood, mhonarc@mhonarc.org
 

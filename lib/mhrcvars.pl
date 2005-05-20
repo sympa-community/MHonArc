@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhrcvars.pl,v 2.26 2003/10/01 04:30:42 ehood Exp $
+##	$Id: mhrcvars.pl,v 2.27 2004/12/15 20:33:40 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -431,7 +431,10 @@ sub replace_li_var {
 	    last REPLACESW;
 	}
     	if ($var eq 'IDXFNAME') {	## Filename of index page
-	    if ($MULTIIDX && ($n = int($Index2MLoc{$index}/$IDXSIZE)+1) > 1) {
+	    if ($MULTIIDX &&
+		(($n = int($Index2MLoc{$index}/$IDXSIZE)+1) > 1) &&
+		(($MAXPGS <= 0) || ($n <= $MAXPGS)))
+	    {
 		$tmp = sprintf("%s%d.$HtmlExt",
 			       $IDXPREFIX, $index ne '' ? $n : 1);
 	    } else {
@@ -472,7 +475,10 @@ sub replace_li_var {
 	    last REPLACESW;
 	}
     	if ($var eq 'TIDXFNAME') {
-	    if ($MULTIIDX && ($n = int($Index2TLoc{$index}/$IDXSIZE)+1) > 1) {
+	    if ($MULTIIDX &&
+		(($n = int($Index2TLoc{$index}/$IDXSIZE)+1) > 1) &&
+		(($MAXPGS <= 0) || ($n <= $MAXPGS)))
+	    {
 		$tmp = sprintf("%s%d.$HtmlExt",
 			       $TIDXPREFIX, $index ne '' ? $n : 1);
 	    } else {
@@ -504,14 +510,14 @@ sub replace_li_var {
 	    $expand = 1;
 	    SW: {
 		if ($arg eq 'NEXT') {
-		    $tmp = $PageNum < $NumOfPages ?
+		    $tmp = $PageNum < $NumOfPrintedPages ?
 		    			$NEXTPGLINK : $NEXTPGLINKIA;
 		    last SW; }
 		if ($arg eq 'PREV') {
 		    $tmp = $PageNum > 1 ? $PREVPGLINK : $PREVPGLINKIA;
 		    last SW; }
 		if ($arg eq 'TNEXT') {
-		    $tmp = $PageNum < $NumOfPages ?
+		    $tmp = $PageNum < $NumOfPrintedPages ?
 		    			$TNEXTPGLINK : $TNEXTPGLINKIA;
 		    last SW; }
 		if ($arg eq 'TPREV') {
@@ -547,9 +553,10 @@ sub replace_li_var {
 	    }
 	    if ($after ne "") {
 		$after  = $num + abs($after);
-		$after  = $NumOfPages  unless $after < $NumOfPages;
+		$after  = $NumOfPrintedPages
+			  unless $after < $NumOfPrintedPages;
 	    } else {
-		$after  = $NumOfPages;
+		$after  = $NumOfPrintedPages;
 	    }
 	    $tmp = "";
 	    for ($i=$before; $i < $num; ++$i) {
@@ -575,7 +582,8 @@ sub replace_li_var {
 	    last REPLACESW;
 	}
 	if ($var eq 'NUMOFPAGES') {
-	    $tmp = $NumOfPages;
+	    #$tmp = $NumOfPages;
+	    $tmp = $NumOfPrintedPages;
 	    last REPLACESW;
 	}
 
@@ -587,13 +595,13 @@ sub replace_li_var {
 		if ($arg eq 'NEXT')    { $num = $PageNum+1; last SW; }
 		if ($arg eq 'PREV')    { $num = $PageNum-1; last SW; }
 		if ($arg eq 'FIRST')   { $num = 0; last SW; }
-		if ($arg eq 'LAST')    { $num = $NumOfPages; last SW; }
+		if ($arg eq 'LAST')    { $num = $NumOfPrintedPages; last SW; }
 		if ($arg =~ /^-?\d+$/) { $num = $PageNum+$arg; last SW; }
 	    }
 	    if ($num < 2) {
 		$tmp = $t ? $TIDXNAME : $IDXNAME;
 	    } else {
-		$num = $NumOfPages  if $num > $NumOfPages;
+		$num = $NumOfPrintedPages  if $num > $NumOfPrintedPages;
 		$tmp = sprintf("%s%d.$HtmlExt", $prefix, $num);
 	    }
 	    $tmp .= ".gz"  if $GzipLinks;

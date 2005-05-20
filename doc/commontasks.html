@@ -42,13 +42,14 @@ To get a complete picture of the capabilities of MHonArc, see the
 <p>If you tested MHonArc out on some of your mail,
 you may have noticed that the titles of the main (date)
 and thread index pages are not very descriptive: "Mail Index"
-and "Mail Thread Index".  It would be much nicer if the the
-titles reflect what type of mail is in the archive.
-</p>
-<p>MHonArc allows you to change the titles via the
+and "Mail Thread Index", respectively.
+MHonArc allows you to change the titles via the
 <a href="resources/title.html"><tt>-title</tt></a> and
-<a href="resources/ttitle.html"><tt>-ttitle</tt></a> options.
-The <a href="resources/title.html"><tt>-title</tt></a> option sets
+<a href="resources/ttitle.html"><tt>-ttitle</tt></a> options so the
+index page titles provide a better reflection of the type of mail
+archived.
+</p>
+<p>The <a href="resources/title.html"><tt>-title</tt></a> option sets
 main index title, and the
 <a href="resources/ttitle.html"><tt>-ttitle</tt></a> option sets
 the thread index title.  Example:
@@ -100,7 +101,7 @@ listing order on index pages:
 </table>
 
 <p>For example, to get a reverse chronological listing,
-do something like the following:
+do the following:
 </p>
 <table border=1 width="100%"><tr><td><pre class="shell">
 prompt&gt; <b>mhonarc <a class="shell" href="resources/sort.html">-sort</a> <a class="shell" href="resources/reverse.html">-reverse</a></b> ...
@@ -117,14 +118,13 @@ automatic and manual.
 <h3><a name="autormm">Automatic Removal</a></h3>
 
 <p>MHonArc supports the ability to automatically remove archive messages
-that are older than a specified time period, are older than
-a specified date/time, or the number of messages have reached the maximum
-number specified.
+older than a specified time period, older than
+a specified date/time, or by exceeding a specified maximum number.
 </p>
 
 </p>For example, if you want an archive to only
-contain messages that are less than a month, you can do something
-like the following:
+contain messages that are less than a month old, do
+the following:
 </p>
 <table border=1 width="100%"><tr><td><pre class="shell">
 prompt&gt; <b>mhonarc <a class="shell" href="resources/expireage.html">-expireage</a> 2635200 <a class="shell" href="resources/add.html">-add</a> <a class="shell" href="resources/outdir.html">-outdir</a> /path/to/archive mailbox</b>
@@ -133,16 +133,17 @@ prompt&gt; <b>mhonarc <a class="shell" href="resources/expireage.html">-expireag
 option
 to tell MHonArc to remove messages older than 2635200 seconds (30.5 days) when
 adding new messages.
-I know, having to use seconds to specify the expiration age seems cumbersome.
-A table is provided in the <a href="resources/expireage.html">EXPIREAGE</a>
+Having to use seconds to specify the expiration age may be cumbersome,
+therefore, a table is provided in the
+<a href="resources/expireage.html">EXPIREAGE</a>
 reference page listing common time periods and their equivalence in seconds.
 </p>
 
 <p>A less used option that will cause automatic deletion is the
 <a href="resources/expiredate.html"><tt>-expiredate</tt></a> option.
 This allows
-you to specify an exact date/time where any messages older than the
-given date/time, will be automatically removed.  For example:
+you to specify an exact date/time where any messages older 
+will be automatically removed.  For example:
 </p>
 <table border=1 width="100%"><tr><td><pre class="shell">
 prompt&gt; <b>mhonarc <a class="shell" href="resources/expiredate.html">-expiredate</a> "1 Jan 1999 00:00:00" <a class="shell" href="resources/add.html">-add</a> <a class="shell" href="resources/outdir.html">-outdir</a> /path/to/archive mailbox</b>
@@ -153,7 +154,7 @@ any messages with a date earlier than January 1, 1999.  See the
 more information and for the correct expiration date syntax.
 </p>
 
-<p>An archive can also have a maximum number of messages limit.
+<p>An archive can also have a maximum number limit.
 When the maximum number is reached, the oldest messages are automatically
 removed.  The following is an example of setting the maximum size
 of an archive:
@@ -164,11 +165,9 @@ prompt&gt; <b>mhonarc <a class="shell" href="resources/maxsize.html">-maxsize</a
 
 <h3><a name="manualrmm">Manual Removal</a></h3>
 
-<p>Sometimes it becomes necessary to remove specific messages from archive.
-For example, their may be some spam messages and you do not want them
-cluttering your archive (and providing free advertising).  Or, there
-may be archived messages that you believe are not appropriate for
-the archive's intended audience.
+<p>Sometimes it becomes necessary to remove specific messages from archive:
+Their may be some spam messages cluttering up your archive, or there
+may be messages not appropriate for the archive's intended audience.
 </p>
 <p>To remove specific messages, use the
 <a href="resources/rmm.html"><tt>-rmm</tt></a> option.  For example:
@@ -178,14 +177,13 @@ prompt&gt; <b>mhonarc <a class="shell" href="resources/rmm.html">-rmm</a> 24 28 
 </pre></td></tr></table>
 <p>will delete messages 24, 28, 39, and 48.
 </p>
-<p>You are now asking, "How do I know what a message's number is?".  One
-way is to look at the number in the message's filename.  I.e.  Each
-converted message is writting to a filename containing the number of
+<p>The number assigned to a message is part of the message's filename.
+Each converted message is writting to a filename containing the number of
 message.  For example, <tt>msg00024.html</tt>,
 <tt>msg00028.html</tt>, <tt>msg00039.html</tt>, and <tt>msg00048.html</tt>
 denote messages 24, 28, 39, and 48.
 </p>
-<p>Checking filenames can be awkward, so one alternative is to use
+<p>Checking filenames can be awkward, an alternative is to use
 the <a href="resources/scan.html"><tt>-scan</tt></a> option.  For example:
 </p>
 <table border=1 width="100%"><tr><td><pre class="shell">
@@ -233,31 +231,23 @@ more information and examples.
 <h2><a name="layout">Customizing Page Layout</a></h2>
 
 <p>One of the most powerful features of MHonArc is the ability to
-customize the layout of pages generated by MHonArc.  Here, we give
+customize the layout of pages.  In this section, we give
 a quick introduction on how customization can be done.  For more
-information, see the <cite><a href="layout.html">Page Layout</a></cite>
-section.
+information, see <cite><a href="layout.html">Page Layout</a></cite>.
 </p>
 
-<p>In this introduction, the task we will be performing is to
-add a footer at the bottom of each page in the archive to
-contain the following markup:
+<p>In this introduction, we want to
+add a footer at the bottom of each page containing
+the following markup:
 </p>
 <pre class="code">
 &lt;hr&gt;
 Please visit &lt;a href="http://www.mhonarc.org"&gt;www.mhonarc.org&lt;/a&gt;.
 </pre>
 
-<p>To modify page layout, we will need to create a
-<a href="resources/rcfile.html">resource file</a> and give it a
-filename "<tt>myresource.mrc</tt>".  The name we give the file is
-completely arbitrary.  There is nothing special about the name
-"<tt>myresource.mrc</tt>".
-</p>
-
-<p>Within <tt>myresource.mrc</tt>,
-we add the following to tell MHonArc to include our footer at the
-bottom of each page:
+<p>Create a new file called 
+"<tt>myresource.mrc</tt>" and edit <tt>myresource.mrc</tt> to include
+the following:
 </p>
 <pre class="code">
 &lt;!-- Define a custom resource variable representing our link. --&gt;
@@ -293,8 +283,14 @@ $MY-FOOTER-LINK$
 <b>&lt;/MsgPgEnd&gt;</b>
 </pre>
 
-<p>Now, when we invoke <tt>mhonarc</tt>, we tell it about our resource
-file so our footer will show up:
+<p>The file you created is formally called a
+<a href="resources/rcfile.html">resource file</a>.  A resource file
+is a plain text file containing resource settings affecting the
+behavior of MHonArc.  In this case, the resource defined above tells
+MHonArc to include our custom footer on all pages.
+</p>
+<p>To inform MHonArc about your resource file, you must
+specify it when invoking <tt>mhonarc</tt>:
 </p>
 <table border=1 width="100%"><tr><td><pre class="shell">
 prompt&gt; <b>mhonarc <a class="shell" href="resources/rcfile.html">-rcfile</a> myresource.mrc</b> ...
@@ -311,10 +307,10 @@ prompt&gt; <b>mhonarc <a class="shell" href="resources/rcfile.html">-rcfile</a> 
 <!-- *************************************************************** -->
 <hr>
 <address>
-$Date: 2003/10/06 22:04:14 $ <br>
+$Date: 2005/05/13 00:00:35 $ <br>
 <img align="top" src="monicon.png" alt="">
 <a href="http://www.mhonarc.org/"><strong>MHonArc</strong></a><br>
-Copyright &#169; 1997-1999, <a href="http://www.mhonarc.org/~ehood/"
+Copyright &#169; 1997-2005 <a href="http://www.mhonarc.org/~ehood/"
 >Earl Hood</a>, <a href="mailto:mhonarc&#37;40mhonarc.org"
 >mhonarc<!--
 -->&#64;<!--

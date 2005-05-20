@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhtxtplain.pl,v 2.43 2003/10/17 22:08:45 ehood Exp $
+##	$Id: mhtxtplain.pl,v 2.45 2005/05/07 04:30:21 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -336,8 +336,16 @@ sub filter {
     # v5.8.0).  Hence, code changed to use m//g and substr(), which
     # appears to avoid perl crashing (ehood, Dec 2002).
     #
-    # Initial code for format=flowed contributed by Ken Hirsch (May 2002).
-    # text/plain; format=flowed defined in RFC2646
+    # To fix bug #12512, flowed code changed to process each quote
+    # chunk line-by-line instead of as one entity.  The reason is
+    # that RFC-2646 does not define a "paragraph" by two consective
+    # CRLF sequences but by flowed vs non-flowed, which can occur
+    # with no blank lines in between (ehood, May 2005).
+    #
+    # Initial code for format=flowed contributed by Ken Hirsch (May 2002),
+    # but it has drastically changes since then.
+    #
+    # text/plain; format=flowed defined in RFC-2646
 
     if ($quote_style == Q_FLOWED) {
 	my($chunk, $qd, $offset);
@@ -378,74 +386,88 @@ sub filter {
 	    }
 	    $chunk =~ s/^-- $/--/mg; # special case for '-- '
 
-	    my @paras = split(/(\n\n)/, $chunk);
-	    my $para;
-	    $chunk = '';
-	    foreach $para (@paras) {
-		if ($para =~ /\A\n+\Z/) {
-		    $chunk .= "<br>\n" x length($para);
-		    next;
-		}
-		$para =~ s/^\n/<br>/;
-		my $nls = ($para =~ tr/\n/\n/);
-		if (($para =~ / \n/) || ($para =~ / \Z/) ||
-			(($nls == 1) && ($para =~ /\S/)
-			 && ($para =~ /\n\Z/))) {
-		    # flowed format
-		    $para =~ s/^(|.*[^ ])(\n)(?!\Z)/
-			       ($keepspace ? &preserve_space($1) : $1) .
-			       '<br>'.$2/mgex;
-		    if ($nonfixed) {
-			$chunk .= $para;
-		    } else {
-			$chunk .= '<tt>'.$para.'</tt>';
+	    # Parse chunk line at a time to determine how it is rendered.
+	    my $new_chunk = "";
+	    my $line      = "";
+	    my $inflow    = 0;
+	    my $infixed   = 0;
+	    FLOWED_LINE: while ($chunk ne "") {
+		# Grab next line: Pattern should always match.
+		$chunk =~ s/(\A.*(?:\n|\Z))//;
+		$line = $1;
+		if ($line =~ /[ ]\n\Z/) {
+		    # Have a flowed line
+		    $inflow = 1;
+		    if ($infixed) {
+			$new_chunk .= $endfixq;
+			$infixed = 0;
 		    }
+		    if ($nonfixed) {
+			$new_chunk .= $line;
+		    } else {
+			$new_chunk .= '<tt>' . $line . '</tt>';
+		    }
+		    next FLOWED_LINE;
+		}
+		if ($inflow) {
+		    # Last line of flowed text may not have SP CRLF
+		    if ($nonfixed) {
+			$new_chunk .= $line . "<br>";
+		    } else {
+			$new_chunk .= '<tt>' . $line . '</tt>';
+		    }
+		    $inflow = 0;
+		    next FLOWED_LINE;
+		}
+		# Fixed line
+		if (!$infixed) {
+		    # Begin fixed rendering if at start
+		    $new_chunk .= $startfixq . "\n";
+		    $infixed = 1;
+		    $inflow = 0;
+		}
+		if ($maxwidth > 0) {
+		    # Fixed lines should be clipped to specified max.
+		    $line =~ s/\n\Z//;
+		    $line = break_line(
+			      $line, $maxwidth+
+				  (length($line)-html_length($line))) . "\n";
+		}
+		if ($nonfixed) {
+		    # Proportional font desired
+		    $line =~ s/(\n)/<br>$1/g;
+		    if ($keepspace) {
+			$line =~ s/^(.*)$/&preserve_space($1)/gem;
+		    }
+		}
+		$new_chunk .= $line;
 
-		} else {
-		    # fixed format
-		    $para =~ s/^(.*)$
-			      /&break_line($1,
-				  $maxwidth+(length($1)-&html_length($1)))
-			      /gemx
-			if $maxwidth > 0;
-		    if ($nonfixed) {
-			$para =~ s/(\n)/<br>$1/g;
-			if ($keepspace) {
-			    $para =~ s/^(.*)$/&preserve_space($1)/gem;
-			}
-			$chunk .= $para;
-		    } elsif (($nls < 1) && ($para !~ /\S/)) {
-			#$chunk .= '<br>';
-			$chunk .= $startfixq . '<br>' . $endfixq;
-		    } else {
-			$chunk .= $startfixq . $para . $endfixq;
-		    }
-		}
+	    } # End: FLOWED_LINE: while()
+
+	    # Make sure to close tags
+	    if ($infixed) {
+		$new_chunk .= $endfixq;
 	    }
 
+	    # Add quote markup
 	    my $newdepth = length($qd)/length('&gt;');
 	    if ($currdepth < $newdepth) {
-		$chunk = $startq x ($newdepth - $currdepth) . $chunk;
+		$new_chunk = $startq x ($newdepth - $currdepth) . $new_chunk;
 	    } elsif ($currdepth > $newdepth) {
-		$chunk = $endq   x ($currdepth - $newdepth) . $chunk;
+		$new_chunk = $endq   x ($currdepth - $newdepth) . $new_chunk;
 	    }
 	    $currdepth = $newdepth;
-	    $ret .= $chunk;
+	    $ret .= $new_chunk;
 	}
 	if ($currdepth > 0) {
 	    $ret .= $endq x $currdepth;
 	}
 
-	## Post-processing cleanup
-	$ret =~ s/<\/pre>\s*<br>\s*((?:<br>\s*)+)/<\/pre>$1/g;
-
 	$$data = $ret;
 
     } elsif ($quote_style == Q_FANCY) {
-	# Fancy code very similiar to flowed code, but simplier.
-	# Some stuff is "duplicated", but this is written to use
-	# ${HQuoteChars}, which would allow for alternate
-	# quote characters beyond '>'.
+	# Fancy quoting supports alternative quote characters besides
+	# '>' as defined by ${HQuoteChars}.
 	my($chunk, $qd, $qd_re, $offset);
 	my $currdepth = 0;
 	my $ret='';
@@ -529,7 +551,7 @@ sub filter {
     }
 
     ## Convert URLs to hyperlinks
-    $$data =~ s@($HUrlExp)@<a $target href="$1">$1</a>@gio
+    $$data =~ s@($HUrlExp)@<a $target rel="nofollow" href="$1">$1</a>@gio
 	unless $nourl;
 
     $$data = ' '  if $$data eq '';

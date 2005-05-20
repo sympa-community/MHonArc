@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 
 package MHAStart;
-# $Id: mhastart.pl,v 1.33 2004/04/27 13:54:53 Gunnar Hjalmarsson Exp $
+# $Id: mhastart.pl,v 1.34 2004/05/17 16:41:55 Gunnar Hjalmarsson Exp $
 
 =head1 NAME
 
@@ -54,8 +54,10 @@ BEGIN	{
     sub mhaexit {
         print @_ if @_;
         if ($ENV{MOD_PERL}) {
-            eval "use Apache";
-            Apache::exit() unless $@;
+            if ($] < 5.006) {
+                require Apache;
+                Apache::exit();
+            }
         }
         exit;
     }
@@ -161,7 +163,7 @@ the archive, and loads the updated main index page.
 
 A demo installation of C<mhastart.pl> is available at
 http://www.gunnar.cc/cgi-bin/mhonarc/mhastart.pl (password: C<demo>). Feel
-free to send a test message to mhatest@gunnar.cc and add it to the archive.
+free to send a test message to C<demoarc at gunnar.cc> and add it to the archive.
 
 =head1 EXAMPLES
 

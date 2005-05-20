@@ -64,8 +64,8 @@
 <h2><a name="description">Description</a></h2>
 
 <p>TEXTENCODE allows you to specify a destination character encoding
-for all message text data.  For each message read to be
-archived, text data, including message header fields and text body parts,
+for all message text data.  For each message read, textual data,
+ -- including message header fields and text body parts --
 is translated from the charset(s) used in the message
 to the charset specified by the TEXTENCODE resource.
 </p>
@@ -88,7 +88,7 @@ function.  List of available encoding functions is provided
 <td><strong>NOTE:</strong></td>
 <td width="100%"><p>The terms <em>character set (charset)</em> and
 <em>character encoding</em> are used interchangeably within MHonArc
-documentation.  The reasoning is that <em>charset</em> is used within
+documentation.  The reasoning is <em>charset</em> is used within
 the MIME RFCs, but it blurs the concepts of <em>character encoding</em>
 and <em>coded characer set</em> and probably a few other things.
 For the purposes of this document, such details are not really
@@ -118,7 +118,7 @@ and
 <a href="charsetconverters.html">CHARSETCONVERTERS</a> and
 <a href="charsetaliases.html">CHARSETALIASES</a> for character sets
 MHonArc is aware of.  The official list of registered character
-sets for use on the Interenet is available from
+sets for use on the Internet is available from
 <a href="http://www.iana.org/assignments/character-sets">IANA</a>.
 </P>
 
@@ -333,7 +333,7 @@ MHonArc::UTF8::clip; MHonArc/UTF8.pm
 	module documentation for details.
 	</p>
     <li><p><em>fallback</em>: If none of the above are present, then
-	the fallback implementation is used.  Fallback code is written
+	the fallback implementation is used.  Fallback code is written in
 	pure Perl, so it may not be as efficient as the modules
 	listed above.  However, many popular character encodings are
 	supported.
@@ -438,9 +438,8 @@ iso_2022_jp::clip; iso2022jp.pl
 &lt;/TextClipFunc&gt;
     </pre>
     <p>For more information about using MHonArc in a Japanese locale,
-    see (documents in Japanese):<br>
-    <a href="http://www.shiratori.riec.tohoku.ac.jp/~p-katoh/Hack/Docs/mhonarc-jp/index.html">&lt;http://www.shiratori.riec.tohoku.ac.jp/~p-katoh/Hack/Docs/mhonarc-jp/index.html&gt;</a><br>
-    <a href="http://www.shiratori.riec.tohoku.ac.jp/~p-katoh/Hack/Docs/mhonarc-jp/mhonarc-jp-2_4.html">&lt;http://www.shiratori.riec.tohoku.ac.jp/~p-katoh/Hack/Docs/mhonarc-jp/mhonarc-jp-2_4.html&gt;</a>
+    see (documents in Japanese):
+    <a href="http://www.mhonarc.jp/">&lt;http://www.mhonarc.jp/&gt;</a>.
     </p>
     </td>
     </tr>
@@ -553,7 +552,7 @@ iso_2022_jp::clip; iso2022jp.pl
 <!--/x-rc-nav-->
 <hr>
 <address>
-$Date: 2004/03/15 21:07:18 $<br>
+$Date: 2005/05/13 18:50:39 $<br>
 <img align="top" src="../monicon.png" alt="">
 <a href="http://www.mhonarc.org/"><strong>MHonArc</strong></a><br>
 Copyright &#169; 2002, <a href="http://www.earlhood.com/"

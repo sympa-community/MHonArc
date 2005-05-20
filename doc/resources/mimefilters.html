@@ -120,7 +120,7 @@ information assumes you know Perl.
 
 <table class="note" width="100%">
 <tr valign=top>
-<td><strong>NOTE</strong></td>
+<td><strong>NOTE:</strong></td>
 <td width="100%"><p>As of v2.5 of MHonArc, the API for filters is different from
 v2.4.x, and earlier.  The following describes the v2.5 API for
 filters.
@@ -223,7 +223,7 @@ delete those files if the message gets removed from the archive.
 
 <table class="note" width="100%">
 <tr valign=top>
-<td><strong>NOTE</strong></td>
+<td><strong>NOTE:</strong></td>
 <td width="100%"><p>If you want MHonArc to treat the data as filtered, but not
 have anything displayed on the page, just return a string with
 a single space character.
@@ -234,7 +234,7 @@ a single space character.
 <p> </p>
 <table class="note" width="100%">
 <tr valign=top>
-<td><strong>NOTE</strong></td>
+<td><strong>NOTE:</strong></td>
 <td width="100%"><p>If the filter creates a subdirectory with files, the filter
 only needs to return the subdirectory in the return list.  If
 the message gets removed, MHonArc will delete the entire
@@ -379,7 +379,7 @@ my $is_filtered = $readmail::Cid{$content_id}-&gt;{'filtered'}
 </pre>
 <p>Boolean if part has already been filtered.  This field should
 be set to a true value by filters that explicitly filters other entity parts.
-This tells MHonArc itself to not invoke a filter for the data.
+This tells MHonArc to not invoke a filter for the entity.
 </p>
 </dd>
 </tr>
@@ -422,7 +422,7 @@ location of the mail archive.
 </P>
 <table class="note" width="100%">
 <tr valign=top>
-<td><strong>NOTE</strong></td>
+<td><strong>NOTE:</strong></td>
 <td width="100%"><p><strong>Do not include</strong> 
 <strong><CODE>$mhonarc::OUTDIR</CODE></strong> as part as the
 filename that is returned to MHonArc.  If the filter
@@ -467,7 +467,7 @@ MHonArc distribution:
 
 <table class="note" width="100%">
 <tr valign=top>
-<td><strong>NOTE</strong></td>
+<td><strong>NOTE:</strong></td>
 <td width="100%"><p>The filters use a <a href="mimeargs.html">MIMEARGS</a>
 argument style similiar to HTML attribute values.  For example:
 </p>
@@ -621,7 +621,7 @@ of derived file.
 </p>
 <table class="caution" width="100%">
 <tr valign=top>
-<td><strong style="color: red;">CAUTION</strong></td>
+<td><strong style="color: red;">CAUTION:</strong></td>
 <td width="100%"><p>
 Use this option with caution
 since it can lead to filename conflicts and
@@ -637,7 +637,7 @@ of derived file.
 </p>
 <table class="caution" width="100%">
 <tr valign=top>
-<td><strong style="color: red;">CAUTION</strong></td>
+<td><strong style="color: red;">CAUTION:</strong></td>
 <td width="100%"><p>
 Use this option with caution since it can lead to
 security problems.
@@ -1615,35 +1615,38 @@ translation of text/enriched commands to HTML tags:
 
 <table class="caution" width="100%">
 <tr valign=top>
-<td><strong style="color: red;">CAUTION</strong></td>
-<td width="100%"><p>If you are worried about security, it is recommended that you disable
+<td><strong style="color: red;">CAUTION:</strong></td>
+<td width="100%"><p>For
+<a href="../faq/security.html#htmldata">security reasons</a>,
+it is highly recommended to disable
 support of HTML messages in your mail archives.  There is no
-guarantee that this filter is robust enough to eliminate all possible
-exploits that can occur with HTML data.  See the
-<a href="mimealtprefs.html">MIMEALTPREFS</a> and
-<a href="mimeexcs.html">MIMEEXCS</a> resource and the
-<a href="#m2h_null">m2h_null::filter</a> on ways to exclude
-HTML data.
+guarantee this filter is robust enough to eliminate all possible
+exploits that can occur with HTML data.
+See the following <a href="../faq/faq.html">FAQ</a> questions for more
+information:
 </p>
+<ul>
+<li><a href="../faq/security.html#htmldata">Why are HTML messages a security risk?</a></li>
+<li><a href="../faq/security.html#htmlexchow">So how can I exclude HTML mail?</a></li>
+</ul>
+<p> </p>
 </td>
 </tr>
 </table>
 
 <p>This filter is designed to process <tt>text/html</tt>, or
 <tt>text/x-html</tt>, data.
-The filter modifies HTML documents so they can be
-included into the message pages without causing invalid markup
-to occur.  The following modification are done to HTML documents when
+The following modifications are done to HTML documents when
 processed by MHonArc:
 </p>
 <ul>
-<li><p>The HEAD element is removed.  Since some elements within the HEAD
+<li><p>The HEAD element is removed.  Since some content within the HEAD
 element may be relevant to the rest of the document, the following is
-done when removing the HEAD element:</p>
+done when the HEAD element is removed:</p>
     <ul>
     <li>The title will be extracted and prepended
     to the body data.</li>
-    <li>Any BASE URL will be propogated to any relative URLs in the
+    <li>Any BASE URL will be propogated to relative URLs in the
     document.</li>
     </ul>
     <p></p>
@@ -1685,8 +1688,9 @@ be used to override this behavior (see below).
 </p></li>
 <li><p><b><tt>cid:</tt></b> URLs are resolved, if possible.  Therefore,
 if image data related to the HTML document is included with the message,
-the URLs will be modified to the filenames of the images that were
-decoded.</p>
+the URLs in the HTML will be modified to reference the decoded image
+data.
+</p>
 </li>
 </ul>
 
@@ -1698,18 +1702,18 @@ following
 <table cellspacing=1 border=0 cellpadding=4>
 <tr valign=top>
 <td><strong><tt>allowcomments</tt></strong></td>
-<td><p>Preserve any comment declarations.  Comment declarations
-are sometimes used to contain executable commands, like for
-server-side includes.  Normally, comment declarations are munged
+<td><p>Preserve any comment declarations.
+By default, comment declarations are munged
 to protect against potential exploits, but this option will
 disable that behavior.
 </p>
 <table class="caution" width="100%">
 <tr valign=top>
-<td><strong style="color: red;">CAUTION</strong></td>
+<td><strong style="color: red;">CAUTION:</strong></td>
 <td width="100%"><p>
 Using this option can open up security vulnerabilies, including the
-potential accessing of server resources.
+accessing of server resources.  If you have server-side includes
+enabled for your site, you SHOULD NOT use this option.
 </p>
 </td></tr></table>
 </td>
@@ -1717,19 +1721,20 @@ potential accessing of server resources.
 <tr valign=top>
 <td><strong><tt>allownoncidurls</tt></strong></td>
 <td><p>Preserve URL-based attributes that are not cid: URLs.
-Normally, any URL-based attribute -- <tt>href</tt>, <tt>src</tt>,
+By default, any URL-based attribute -- <tt>href</tt>, <tt>src</tt>,
 <tt>background</tt>, <tt>classid</tt>, <tt>data</tt>, <tt>longdesc</tt>
--- will be stripped if it is not a cid: URL.
-This is to prevent
-malicious URLs that verify mail addresses for spam purposes, secretly
-set cookies, or gather some statistical data automatically with the
-use of elements that cause browsers to automatically fetch data:
+-- will be stripped if it is not a cid URL.
+This prevents
+malicious URLs from verifying mail addresses, secretly
+setting cookies, or gathering statistical data with the
+use of elements that cause browsers to automatically fetch data without
+user interaction:
 <tt>IMG</tt>, <tt>BODY</tt>, <tt>IFRAME</tt>, <tt>FRAME</tt>,
 <tt>OBJECT</tt>, <tt>SCRIPT</tt>, <tt>INPUT</tt>.
 </p>
 <table class="note" width="100%">
 <tr valign=top>
-<td><strong>NOTE</strong></td>
+<td><strong>NOTE:</strong></td>
 <td width="100%"><p><tt>Href</tt> attributes for anchor, <tt>&lt;A&gt;</tt>,
 elements are preserved, even if <tt>allownoncidurls</tt> is
 not specified.  This is so regular hyperlinks will function.  Javascript
@@ -1746,10 +1751,10 @@ This includes elements and attributes related to scripting.
 </p>
 <table class="caution" width="100%">
 <tr valign=top>
-<td><strong style="color: red;">CAUTION</strong></td>
+<td><strong style="color: red;">CAUTION:</strong></td>
 <td width="100%"><p>
 Use of this option can open up your archives to cross-site scripting (XSS)
-attacks.  It is highly recommended to not use this option, especially
+attacks.  It is highly recommended to NOT use this option, especially
 for publicly accessible archives.
 </p>
 </td></tr></table>
@@ -1766,7 +1771,7 @@ with a link to it from the message page.
 </p>
 <table class="caution" width="100%">
 <tr valign=top>
-<td><strong style="color: red;">CAUTION</strong></td>
+<td><strong style="color: red;">CAUTION:</strong></td>
 <td width="100%"><p>
 If <tt>attachcheck</tt> is specified, the HTML
 data is saved "as-is".  For example, no stripping of scripting-based
@@ -1780,8 +1785,8 @@ from all senders can be trusted.
 </tr>
 <tr valign=top>
 <td><strong><tt>disablerelated</tt></strong></td>
-<td><p>Disable processing of related parts processing.  I.e. Things
-like cid URLs will not be resolved.
+<td><p>Disable processing of related parts processing:
+cid URLs will not be resolved.
 </p></td>
 </tr>
 <tr valign=top>
@@ -1792,9 +1797,7 @@ like cid URLs will not be resolved.
 <tr valign=top>
 <td><strong><tt>notitle</tt></strong></td>
 <td><p>Do not print extracted title at the beginning of converted
-output.  Since this filter strips out HEAD markup so the document
-can be included into the message page, this filter will extract
-the title and print the title of the document before the document
+output.  By default, the title is printed before the document
 body.  The <tt>notitle</tt> argument disables this behavior.
 </p></td>
 <tr valign=top>
@@ -1851,7 +1854,7 @@ Only HTML special characters will be converted into entities.
 </p>
 <table class="note" width="100%">
 <tr valign=top>
-<td><strong>NOTE</strong></td>
+<td><strong>NOTE:</strong></td>
 <td width="100%"><p>The <tt>asis</tt> option is deprecated.
 It is recommended to use the
 <a href="charsetconverters.html">CHARSETCONVERTERS</a> resource to
@@ -1876,7 +1879,7 @@ formatting.
 </p>
 <table class="note" width="100%">
 <tr valign=top>
-<td><strong>NOTE</strong></td>
+<td><strong>NOTE:</strong></td>
 <td width="100%"><p>
 The effects of <tt>fancyquote</tt> and
 <tt>quote</tt> will still occur if either option is specified.
@@ -1895,7 +1898,7 @@ for flowed text data, but without the flowed text wrapping sematics.
 </p>
 <table class="note" width="100%">
 <tr valign=top>
-<td><strong>NOTE</strong></td>
+<td><strong>NOTE:</strong></td>
 <td width="100%"><p>
 If message text is denoted as flowed text by
 message headers, the text will always be rendered with flowed sematics
@@ -1937,9 +1940,9 @@ wrapped.
 </p>
 <table class="note" width="100%">
 <tr valign=top>
-<td><strong>NOTE</strong></td>
+<td><strong>NOTE:</strong></td>
 <td width="100%"><p>A line that contains no whitespace and is longer
-than <tt>maxwidth</tt>, will <strong>NOT</strong> be wrapped.
+than <tt>maxwidth</tt>, will not be wrapped.
 </p>
 </td></tr></table>
 </tr>
@@ -1961,8 +1964,7 @@ of the message.
 <td><strong><tt>quote</tt></strong></td>
 <td><p>Italicize quoted message text.  Any quoted lines in the message
 will be wrapped in the HTML <tt>I</tt> element.
-</p>
-<p>Compare this with the <tt>fancyquote</tt> option.
+Compare this option with the <tt>fancyquote</tt> option.
 </p>
 </tr>
 <tr valign=top>
@@ -1973,9 +1975,9 @@ for flowed text data or if <tt>fancyquote</tt> is specified.  The
 for the <tt>BLOCKQUOTE</tt> elements, and this option suppresses the
 generation of inline styles.
 </p>
-<p>This option is useful for where a master stylesheet controls the
+<p>This option is useful if a master stylesheet controls the
 appearance of archives.  By using this option, the master stylesheet
-has complete control on how quoted text in messages should be rendered.
+can be used to control the rendering of quoted text.
 </p>
 </tr>
 <tr valign=top>
@@ -1993,11 +1995,11 @@ hyperlinking URLs.
 <tr valign=top>
 <td><strong><tt>usename</tt></strong></td>
 <td><p>When decoding uuencoded data, use the full filename specified
-when write the data to disk instead of just the filename extension.
+in the message instead of the filename extension.
 </p>
 <table class="caution" width="100%">
 <tr valign=top>
-<td><strong style="color: red;">CAUTION</strong></td>
+<td><strong style="color: red;">CAUTION:</strong></td>
 <td width="100%"><p>
 Use this option with caution
 since it can lead to filename conflicts and
@@ -2010,20 +2012,28 @@ using the <tt>subdir</tt> option with it.
 <tr valign=top>
 <td><strong><tt>uudecode</tt></strong></td>
 <td><p>Decode any embedded uuencoded data.  Including uuencoded data
-within messages was a way to trasmit binary data
+within messages was a way to transmit binary data
 via email before MIME was developed.  The inclusion of uuencoded
 data is deprecated within email, but is still common in the
-USENET (binary) newsgroups.  Note, specifying <b><tt>uudecode</tt></b>
+USENET (binary) newsgroups.
+</p>
+<p>Uuencoded data is treated as <tt>application/octet-stream</tt>
+for data exclusion purposes: <a href="mimeexcs.html">MIMEEXCS</a>.
+If <tt>application/octet-stream</tt> data is listed
+in MIMEEXCS, uuencoded data will be excluded.
+</p>
+<table class="note" width="100%">
+<tr valign="baseline">
+<td><strong>NOTE:</strong></td>
+<td width="100%"><p>Specifying <b><tt>uudecode</tt></b>
 adds extra
 overhead in the processing of text messages, including messages without
 any uuencoded data.
 </p>
-<p>Uuencoded data is treated as <tt>application/octet-stream</tt>
-data for purposes of checking if the data should be excluded when
-checked against the <a href="mimeexcs.html">MIMEEXCS</a> resource.
-Therefore, if <tt>application/octet-stream</tt> data is listed
-in MIMEEXCS, uuencoded data will be excluded.
-</p></td>
+</td>
+</tr>
+</table>
+</td>
 </tr>
 
 </table>
@@ -2061,7 +2071,7 @@ content-type is shown.
 
 <table class="note" width="100%">
 <tr valign=top>
-<td><strong>NOTE</strong></td>
+<td><strong>NOTE:</strong></td>
 <td width="100%"><p>The sematics of using the
 <a href="mimeexcs.html">MIMEEXCS</a> resource vs this filter are different.
 When using this filter, MHonArc considers the data
@@ -2069,10 +2079,6 @@ successfully converted.  But with <a href="mimeexcs.html">MIMEEXCS</a>,
 MHonArc does not consider the data converted.  This is relevant when
 MHonArc determines which alternative part to use for an
 <tt>multipart/alternative</tt> entity.
-</p>
-<p>The <tt>m2h_null::filter</tt> existed before
-<a href="mimeexcs.html">MIMEEXCS</a> was added to MHonArc, hence it mainly
-exists for compatibility reasons.
 </p>
 </td>
 </tr>
@@ -2084,7 +2090,7 @@ exists for compatibility reasons.
 
 <table class="note" width="100%">
 <tr valign=top>
-<td><strong>NOTE</strong></td>
+<td><strong>NOTE:</strong></td>
 <td width="100%"><p>It is important to have an explicit entry for
 <b><tt>application/octet-stream</tt></b> for handling unknown
 media-types.
@@ -2171,6 +2177,7 @@ sub filter {
 
 <p>
 <a href="charsetconverters.html">CHARSETCONVERTERS</a>,
+<a href="mimealtprefs.html">MIMEALTPREFS</a>,
 <a href="mimeargs.html">MIMEARGS</a>,
 <a href="mimedecoders.html">MIMEDECODERS</a>,
 <a href="mimeexcs.html">MIMEEXCS</a>,
@@ -2185,10 +2192,10 @@ sub filter {
 <!--/x-rc-nav-->
 <hr>
 <address>
-$Date: 2004/03/05 22:03:16 $ <br>
+$Date: 2005/05/13 18:50:39 $ <br>
 <img align="top" src="../monicon.png" alt="">
 <a href="http://www.mhonarc.org"><strong>MHonArc</strong></a><br>
-Copyright &#169; 1997-2003 <a href="http://www.mhonarc.org/~ehood/">Earl Hood</a>, <a href="mailto:mhonarc&#37;40mhonarc.org">mhonarc<!--
+Copyright &#169; 1997-2005 <a href="http://www.mhonarc.org/~ehood/">Earl Hood</a>, <a href="mailto:mhonarc&#37;40mhonarc.org">mhonarc<!--
 -->&#64;<!--
 -->mhonarc.org</a><br>
 </address>

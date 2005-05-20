@@ -56,10 +56,10 @@
 <hr>
 <h2><a name="description">Description</a></h2>
 
-<p>RCFILE tells MHonArc what the resource file is.
-The resource file allows you to specify most of the resources set by 
-environment variables and command-line options, and it allows you to specify 
-other resources to control MHonArc's behavior.
+<p>RCFILE tells MHonArc what resource files to load.
+A resource file allows you to specify most of the resources set by 
+environment variables and command-line options along with other
+resources to control MHonArc's behavior.
 </p>
 
 <p>The <tt>-rcfile</tt> command-line option can be specified multiple
@@ -76,8 +76,8 @@ specified on the command-line.
 <h3>Resource file syntax</h3>
 
 <P>Resources are set in the file by using <EM>elements</EM> similiar
-in style to HTML/SGML markup. However, MHonArc uses simpler
-parsing rules for the resource file than standard SGML: </P>
+in style to HTML/XML markup. However, MHonArc uses simpler
+parsing rules for the resource file than standard XML: </P>
 
 <UL>
 
@@ -89,7 +89,7 @@ recognized elements for commenting purposes.  </P>
 <table class="note" width="100%">
 <tr valign=top>
 <td><strong>NOTE:</strong></td>
-<td width="100%"><p>You should use SGML comment declarations
+<td width="100%"><p>You should use XML comment declarations
 (<CODE>&lt;!-- </CODE>...<CODE> --&gt;</CODE>) when commenting a
 resource file. This will eliminate possible conflicts
 if more stricter parsing rules are adopted.
@@ -99,7 +99,7 @@ if more stricter parsing rules are adopted.
 </table>
 <br>
 
-<LI><P>The opening tag of an element must occur by itself on a
+<LI><P>The open tag of an element must occur by itself on a
 single line.</P>
 <p><b>Correct</b>:
 </p>
@@ -151,15 +151,15 @@ its own line.</p>
 </li>
 
 <LI><P>Some elements can take an optional attribute called
-"<CODE>Override</CODE>", if applicable.  This tells MHonArc
+"<CODE>Override</CODE>".  This tells MHonArc
 that the contents of the element will completely override the default
-behavior of MHonArc, and previous instances of the element, for
-example: "<tt class="icode">&lt;EXCS Override&gt;</tt>". If
+behavior of MHonArc and previous instances of the element. Example:
+"<tt class="icode">&lt;EXCS Override&gt;</tt>". If
 "<tt class="icode">Override</tt>" is not specified, then the contents of the
 element augment the current setting.  </P>
 
 <LI><P>Some elements can take an optional attribute called
-"<CODE>Chop</CODE>", if applicable.  This tells MHonArc
+"<CODE>Chop</CODE>".  This tells MHonArc
 to remove the last line-break of the element's content.
 </P>
 
@@ -169,7 +169,7 @@ to remove the last line-break of the element's content.
 <LI><P>Elements can occur in any order in the resource file.
 </P>
 
-<LI><P>Elements can<b>NOT</b> be nested.  Many resources define
+<LI><P>Elements <b>CANNOT</b> be nested.  Many resources define
 the values of <a href="../rcvars.html">resource variables</a>, which
 may be used within resource elements:
 </P>
@@ -209,22 +209,17 @@ Example List Threads
 
 <p>Many resources are allowed to have <em>resource variables</em> as
 part of there content.  Resource variables represent data that
-can only be defined during run-time.  I.e.  Resource variables
-will get expanded to an appropriate value during the execution
+defined during run-time: resource variables
+will get expanded to the appropriate value during the execution
 of MHonArc.  For more information on resource variables, see
-the section: <a href="../rcvars.html">Resource Variables</a>.
-</p>
-
-<p>The description for each resource will contain a list
-of all applicable variables that may be used in defining the
-resource's value.
+<cite><a href="../rcvars.html">Resource Variables</a></cite>.
 </p>
 
 <h3><a name="locale">Localized resource file variations</a></h3>
 
 <p>MHonArc supports the ability to define locale specific variations
 of a resource file based upon the <a href="lang.html">LANG</a> resource
-setting.  For example, take the following command-line invocation:
+setting.  For example:
 </p>
 <table border="1" width="100%"><tr><td><pre class="shell">
 prompt&gt; <b>mhonarc <a class="shell" href="lang.html">-lang</a> en_US -rcfile settings.mrc</b> ...
@@ -256,15 +251,13 @@ resource files loaded via multiple
 files loaded via the
 <a href="include.html">INCLUDE</a> and
 <a href="otherindexes.html">OTHERINDEXES</a>
-resource.
+resources.
 </p>
 </td>
 </tr>
 </table>
-<p>Therefore, if you manage multiple archives comprising multiple languages,
-you can define generic settings in a shared resource file and then define
-language-specific overrides and/or variations.  Continuing with the
-previous example, the following invocation can be used for a French Canadian
+<p>Continuing with the
+previous example, the following specifies a French-Canadian
 archive:
 </p>
 <table border="1" width="100%"><tr><td><pre class="shell">
@@ -291,10 +284,14 @@ file <tt><var>file.mrc</var></tt> and the generic locale setting
 <li><tt><var>file.mrc</var>.<var>language</var>_<var>country</var>.<var>codeset</var></tt></li>
 </ol>
 
-<p>By leveraging the use of custom <a href="definevar.html">resource
+<p>If you manage multiple archives comprising multiple languages,
+you can define generic settings in a shared resource file and define
+language-specific overrides and/or variations in locale-specific
+resource files.  For example,
+by leveraging the use of custom <a href="definevar.html">resource
 variables</a>, you can parameterize textual labels so the locale-specific
 resource files only need to define variable values instead of redefining
-layout.  For example, take the following default value of the
+layout.  For example, the following is the default value of the
 <a href="nextbutton.html">NEXTBUTTON</a> resource:
 </p>
 <pre class="code">
@@ -303,9 +300,9 @@ layout.  For example, take the following default value of the
 <b>&lt;/NextButton&gt;</b>
 </pre>
 
-<p>To facilitate the the localization of your archives, the resource
-should be changed so the button label becomes a custom resource variable
-references:
+<p>To facilitate the the localization of your archives, change
+the resource so the button label becomes a custom resource variable
+reference:
 </p>
 <pre class="code">
 <b>&lt;NextButton chop&gt;</b>
@@ -313,9 +310,9 @@ references:
 <b>&lt;/NextButton&gt;</b>
 </pre>
 
-<p>You will notice that "<tt class="icode">Date Next</tt>" has been
-changed to "<tt class="icode">$BUTTON-DATE-NEXT-LABEL$</tt>".  Therefore,
-in the locale specific resource file, all that needs to be done is to
+<p>Notice that "<tt class="icode">Date Next</tt>" has been
+changed to "<tt class="icode">$BUTTON-DATE-NEXT-LABEL$</tt>".
+In the locale specific resource file, all you need to do is
 define <tt>$BUTTON-DATE-NEXT-LABEL$</tt>.  Continuing with the
 <tt>settings.mrc</tt> example, the following would be defined in
 <tt>settings.mrc.en</tt> to set the English version of the label:
@@ -345,9 +342,6 @@ Date Next
 <!-- *************************************************************** -->
 <hr>
 <h2><a name="examples">Examples</a></h2>
-
-<p>The following shows you what a resource file looks like:
-</p>
 
 <PRE class="code">
 &lt;!-- MHonArc resource file
@@ -528,7 +522,7 @@ video/*;[20x22]/icons/movie.gif
 <!--/x-rc-nav-->
 <hr>
 <address>
-$Date: 2003/10/06 22:04:20 $ <br>
+$Date: 2005/05/13 00:00:36 $ <br>
 <img align="top" src="../monicon.png" alt="">
 <a href="http://www.mhonarc.org/"
 ><strong>MHonArc</strong></a><br>

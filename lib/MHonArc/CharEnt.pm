@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: CharEnt.pm,v 1.14 2003/03/05 22:17:15 ehood Exp $
+##	$Id: CharEnt.pm,v 1.15 2004/12/03 20:36:35 ehood Exp $
 ##  Author:
 ##      Earl Hood       earl@earlhood.com
 ##  Description:
@@ -156,7 +156,7 @@ sub _utf8_to_sgml {
 	$$data_r =~ s{
 	    $utf8_re
 	}{
-	    (($char = unpack('U',$1)) <= 0x7F)
+	    (($char = unpack('U0U*',$1)) <= 0x7F)
 	      ? $HTMLSpecials{$1} || $1
 	      : sprintf('&#x%X;',$char);
 	}gxeso;
@@ -249,7 +249,7 @@ difficult, but this may be a non-issue with most users.
 
 =head1 VERSION
 
-$Id: CharEnt.pm,v 1.14 2003/03/05 22:17:15 ehood Exp $
+$Id: CharEnt.pm,v 1.15 2004/12/03 20:36:35 ehood Exp $
 
 =head1 AUTHOR
 

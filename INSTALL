@@ -118,18 +118,14 @@ The following is required to run MHonArc:
     will provided improved or enhanced functionality):
    
       + Digest::MD5: Used for creating IDs for messages without
-        message-ids. Normally, messages define a unique message-id,
-        however, there are some use cases where message-ids are not
-        present. Therefore, this module helps MHonArc detect already
-        archived messages for messages without message-ids. If Digest::MD5
-        is not available, MHonArc will be unable to detect for duplicate
-        messages that do not contain message-ids.
+        message-ids. MHonArc uses message-IDs to detect for
+        already-archived or duplicate messages. Digest::MD5 gives MHonArc
+        this capability for messages without message-IDs.
        
       + File::Temp: MHonArc uses temporary files when writing files to disk
         (for security and data integrity reasons). If File::Temp is not
         available, MHonArc will use its own internal implementation, which
-        is not as secure as File::Temp, but it should be adequate for most
-        uses.
+        is not as secure as File::Temp, but adequate for most uses.
        
       + MIME::Base64: Used for base64 decoding (base64 is the standard way
         to encoding binary data in mail). MIME::Base64 is normally provided
@@ -174,9 +170,8 @@ Distribution.
 RPM Installation
 
 RPM is a widely used software package manager for various Linux-based
-systems and sometimes used for other Unix-based environments. If the
-software on your system is managed by RPM, you may prefer to install
-MHonArc via RPM:
+systems and other Unix-based environments. If the software on your system
+is managed by RPM, you may prefer to install MHonArc via RPM:
 
 +-------------------------------------------------------------------------+
 |prompt> rpm -Uvh MHonArc-X.X.X-n.noarch.rpm                              |
@@ -214,10 +209,9 @@ Extracting the MHonArc Distribution
 
 NOTE: If doing an RPM-based install, goto RPM Installation above.          
 
-After downloading the MHonArc distribution, it is best to move the file to
-a temporary location for extraction. To extract the distribution under
-Unix-like systems, use one of the following commands based upon the
-distribution format you downloaded:
+After downloading the MHonArc distribution, move the file to a temporary
+location for extraction. For extraction under Unix-like systems, use one of
+the following commands based upon the distribution format you downloaded:
 
 tar-bz2
     +---------------------------------------------------------------------+
@@ -233,8 +227,8 @@ zip
     +---------------------------------------------------------------------+
 
 For Win32 systems, you can use a program like WinZip to extract the
-tar-gzip or zip formats. If using Cygwin, you can use the Unix-based
-extraction methods.
+tar-gzip or zip formats. If using Cygwin, use the Unix-based extraction
+methods.
 
 NOTE: If your are using Cygwin and the cygwin build of Perl, then the      
       installation and usage of MHonArc is the same as a Unix-based        
@@ -248,7 +242,7 @@ NOTE: Please read the release notes before continuing for any news about
       information.                                                         
 
 Now, change your current directory to MHonArc-X.X.X for the next step. On a
-Unix-type system, the following command will do it:
+Unix-type system, use the following command:
 
 +-------------------------------------------------------------------------+
 |prompt> cd MHonArc-X.X.X                                                 |
@@ -273,8 +267,8 @@ perl executable is and where to put MHonArc files. Just hit <Enter> to
 accept the default values listed in ()'s.
 
 NOTE: The default values are determined by the configuration of perl on    
-      your system. If you choose the defaults, you may need to possess root
-      /admin privileges.                                                   
+      your system. If you choose the defaults, you may need root/admin     
+      privileges to successfully install MHonArc.                          
 
 install.me can take several options on the command-line to affect what is
 done during installation. The following is the list of options available:
@@ -501,7 +495,7 @@ highlighting mode. The mode is best used with color-capable terminals.
 
 ---------------------------------------------------------------------------
 
-$Date: 2004/05/07 22:18:07 $
+$Date: 2005/05/13 00:00:35 $
 MHonArc
-Copyright © 1997-2003, Earl Hood, mhonarc@mhonarc.org
+Copyright © 1997-2003,2005 Earl Hood, mhonarc@mhonarc.org
 

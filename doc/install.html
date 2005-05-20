@@ -189,19 +189,16 @@ for installation instructions.
     </p>
     <ul>
     <li><p><b>Digest::MD5</b>:  Used for creating IDs for messages without
-    message-ids.  Normally, messages define a unique message-id, however,
-    there are some use cases where message-ids are not present.  Therefore,
-    this module helps MHonArc detect already
-    archived messages for messages without message-ids.  If
-    <tt>Digest::MD5</tt> is not available, MHonArc will be unable to
-    detect for duplicate messages that do not contain message-ids.
+    message-ids.  MHonArc uses message-IDs to detect for already-archived
+    or duplicate messages.  <tt>Digest::MD5</tt> gives MHonArc this
+    capability for messages without message-IDs.
     </p>
     </li>
     <li><p><b>File::Temp</b>:  MHonArc uses temporary files when writing
     files to disk (for security and data integrity reasons).
     If <tt>File::Temp</tt> is not available, MHonArc will use its own
     internal implementation, which is not as secure as <tt>File::Temp</tt>,
-    but it should be adequate for most uses.
+    but adequate for most uses.
     </p>
     </li>
     <li><p><b>MIME::Base64</b>:  Used for base64 decoding (base64 is
@@ -285,8 +282,8 @@ If you downloaded one of the other formats, goto
 <h2><a name="rpminstall">RPM Installation</a></h2>
 
 <p><a href="http://www.rpm.org/">RPM</a> is a widely used software
-package manager for various Linux-based systems and sometimes used
-for other Unix-based environments.  If the software on your system is
+package manager for various Linux-based systems and other
+Unix-based environments.  If the software on your system is
 managed by RPM, you may prefer to install MHonArc via RPM:
 </p>
 
@@ -376,9 +373,9 @@ get a list of third-party RPM bundles.
 </tr>
 </table>
 
-<p>After downloading the MHonArc distribution, it is best to move
-the file to a temporary location for extraction.  To extract the
-distribution under Unix-like systems, use one of the following commands
+<p>After downloading the MHonArc distribution, move
+the file to a temporary location for extraction.  For extraction
+under Unix-like systems, use one of the following commands
 based upon the distribution format you downloaded:
 </p>
 
@@ -398,7 +395,7 @@ prompt&gt; <b>unzip MHonArc-<var>X.X.X</var>.zip</b></pre></td></tr></table>
 
 <p>For Win32 systems, you can use a program like <em>WinZip</em> to
 extract the tar-gzip or zip formats.  If using
-<a href="http://www.cygwin.com/">Cygwin</a>, you can use
+<a href="http://www.cygwin.com/">Cygwin</a>, use
 the Unix-based extraction methods.
 </p>
 <table class="note" width="100%">
@@ -428,7 +425,7 @@ with previous versions and/or important usage information.
 </table>
 <p>Now, change your current directory to <tt>MHonArc-<var>X.X.X</var></tt>
 for the <a href="#installingfiles">next step</a>.  On a Unix-type
-system, the following command will do it:
+system, use the following command:
 </p>
 <table border=1 width="100%"><tr><td><pre class="shell">
 prompt&gt; <b>cd MHonArc-<var>X.X.X</var></b>
@@ -465,7 +462,8 @@ the perl executable is and where to put MHonArc files.  Just hit
 <td><strong>NOTE:</strong></td>
 <td width="100%"><p>The default
 values are determined by the configuration of perl on your system.
-If you choose the defaults, you may need to possess root/admin privileges.
+If you choose the defaults, you may need root/admin privileges to successfully
+install MHonArc.
 </p>
 </td>
 </tr>
@@ -791,10 +789,10 @@ color-capable terminals.
 <!-- *************************************************************** -->
 <hr>
 <address>
-$Date: 2004/05/07 22:18:07 $ <br>
+$Date: 2005/05/13 00:00:35 $ <br>
 <img align="top" src="monicon.png" alt="">
 <a href="http://www.mhonarc.org/"><strong>MHonArc</strong></a><br>
-Copyright &#169; 1997-2003, <a href="http://www.mhonarc.org/~ehood/"
+Copyright &#169; 1997-2003,2005 <a href="http://www.mhonarc.org/~ehood/"
 >Earl Hood</a>, <a href="mailto:mhonarc&#37;40mhonarc.org"
 >mhonarc<!--
 -->&#64;<!--

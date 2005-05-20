@@ -1,13 +1,13 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhamain.pl,v 2.74 2004/05/17 05:17:51 ehood Exp $
+##	$Id: mhamain.pl,v 2.78 2005/05/20 16:08:21 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
 ##	Main library for MHonArc.
 ##---------------------------------------------------------------------------##
 ##    MHonArc -- Internet mail-to-HTML converter
-##    Copyright (C) 1995-2004	Earl Hood, mhonarc@mhonarc.org
+##    Copyright (C) 1995-2005	Earl Hood, mhonarc@mhonarc.org
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by
@@ -29,10 +29,10 @@ package mhonarc;
 
 require 5;
 
-$VERSION = '2.6.10';
+$VERSION = '2.6.11';
 $VINFO =<<EndOfInfo;
   MHonArc v$VERSION (Perl $] $^O)
-  Copyright (C) 1995-2004  Earl Hood, mhonarc\@mhonarc.org
+  Copyright (C) 1995-2005  Earl Hood, mhonarc\@mhonarc.org
   MHonArc comes with ABSOLUTELY NO WARRANTY and MHonArc may be copied only
   under the terms of the GNU General Public License, which may be found in
   the MHonArc distribution.
@@ -265,6 +265,7 @@ sub doit {
 	    $MULTIIDX   = 0;
 	    $IdxPageNum = 1;
 	    $NumOfPages = 1;
+	    $NumOfPrintedPages = 1;
 	}
 	if ($THREAD) {
 	    compute_threads();
@@ -678,9 +679,17 @@ sub compute_page_total {
 	$NumOfPages   = int($NumOfMsgs/$IDXSIZE);
 	++$NumOfPages      if ($NumOfMsgs/$IDXSIZE) > $NumOfPages;
 	$NumOfPages   = 1  if $NumOfPages == 0;
+
+	$NumOfPrintedPages = $NumOfPages;
+	if (($MAXPGS > 0) && ($MAXPGS < $NumOfPages)) {
+	    $NumOfPrintedPages = $MAXPGS;
+	}
+
     } else {
 	$NumOfPages = 1;
+	$NumOfPrintedPages = 1;
     }
+
 }
 
 ##---------------------------------------------------------------------------
@@ -831,9 +840,13 @@ sub read_mail_header {
     ##-------------##
     ## Get Subject ##
     ##-------------##
-    if (defined($fields->{'subject'}) && ($fields->{'subject'}[0] =~ /\S/)) {
+    if (defined($fields->{'subject'})) {
 	($sub = $fields->{'subject'}[0]) =~ s/\s+$//;
-	$sub = subject_strip($sub)  if $SubStripCode;
+	if ($SubStripCode) {
+	    $fields->{'x-mha-org-subject'} = $sub;
+	    $sub = subject_strip($sub);
+	}
+	$fields->{'subject'} = [ $sub ];    # Make sure only one subject
     } else {
 	$sub = '';
     }

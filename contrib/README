@@ -21,6 +21,18 @@ mhastart.pl	Contributer: Gunnar Hjalmarsson, mailbox(AT)gunnar.cc
 		<http://www.gunnar.cc/mhonarc/mhastart.pl.txt>
 
 ---------------------------------------------------------------------------
+mhn2mbox.pl	Contributer: Anthony W, anthonyw(AT)albany.net
+
+		A utility for converting MHonArc html archives into
+		pseudo mbox format.
+
+		See script source code for configuration information.
+
+		NOTE: Original location of this script is no longer
+		valid.  A version has been included here for the
+		benefit of MHonArc users.
+
+---------------------------------------------------------------------------
 prsfrom.pl	Contributer: A.R. Burgers, burgers(AT)ecn.nl
 
 		Supply missing Date: and From: fields to mailboxes.

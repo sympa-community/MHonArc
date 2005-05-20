@@ -9,9 +9,28 @@
     Some change notes are brief; consult the documentation for further
     information/clarification.  It is possible that some changes to
     MHonArc are not documented here, but every effort is made to list
-    all changes that will be visible to users of MHonArc.
+    all visible changes.
 
 YYYY/MM/DD
+============================================================================
+2005/05/20	(2.6.11)
+
+* Bug Fixes:
+
+    Bug ID  Summary
+    ------  ------------------------------------------------------------
+     9050   Regex abort error in mhmimetypes.pl under Win32
+    11187   incorrectly parsing UTF-8 encoded messages
+    11207   usenameext option to m2h_external::filter has no effect
+    11760   spammode false positives on some HTML mail
+    11762   rel=nofollow attribute support in message body hyperlinks
+    11977   TSLICETOPBEGCUR ignored
+    12512   Consecutive spaces not displayed in some cases
+    12802   SubjectStripCode not working on message file
+    12930   Cross site scripting bug in m2h_text_html::filter
+    ------  ------------------------------------------------------------
+    <https://savannah.nongnu.org/bugs/?group=mhonarc>
+
 ============================================================================
 2004/05/17	(2.6.10)
 
@@ -2624,4 +2643,4 @@ YYYY/MM/DD
 
 =======================================================================
 Earl Hood, mhonarc@mhonarc.org
-$Id: CHANGES,v 1.125 2004/05/17 05:17:51 ehood Exp $
+$Id: CHANGES,v 1.126 2005/05/20 16:08:20 ehood Exp $

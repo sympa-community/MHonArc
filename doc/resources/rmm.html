@@ -55,8 +55,8 @@
 <p>The RMM resource is activated by the <tt>-rmm</tt> command-line
 option.  When active, all non-option related arguments are treated
 as messages to delete from the archive.  Messages can be specified
-by message numbers, message number ranges, or message-ids.  Either
-methods can be used together.  See <b>Examples</b> below.
+by a combination of message numbers, message number ranges, or message-ids.
+See <a href="#examples"><b>Examples</b></a> below.
 </p>
 
 <!-- *************************************************************** -->
@@ -90,8 +90,8 @@ Writing tmp/threads.html ...
 45 messages
 </pre></td></tr></table>
 
-<p>If we want to delete message 15 and message 20 through 35, the
-following can be used:
+<p>To delete message 15 and message 20 through 35, use the
+following:
 </p>
 <table border=1 width="100%"><tr><td><pre class="shell">
 prompt&gt; <b>mhonarc -rmm 15 20-35</b>
@@ -103,7 +103,7 @@ to delete and not the message number:
 <table border=1 width="100%"><tr><td><pre class="shell">
 prompt&gt; <b>mhonarc -rmm 199802171800.KAA27647<!--
 -->&#64;<!--
--->medusa.acs.uci.edu</b>
+-->example.com</b>
 </pre></td></tr></table>
 <p>You can surround message-ids with <tt>&lt;&gt;</tt>'s, but you
 then may need to quote the arguments to prevent the shell interpreting
@@ -116,7 +116,7 @@ ways of specifying messages:
 <table border=1 width="100%"><tr><td><pre class="shell">
 prompt&gt; <b>mhonarc -rmm 23-34 199802171800.KAA27647<!--
 -->&#64;<!--
--->medusa.acs.uci.edu 52</b>
+-->example.com 52</b>
 </pre></td></tr></table>
 
 <!-- *************************************************************** -->
@@ -143,7 +143,7 @@ prompt&gt; <b>mhonarc -rmm 23-34 199802171800.KAA27647<!--
 <!--/x-rc-nav-->
 <hr>
 <address>
-$Date: 2003/10/06 22:04:20 $ <br>
+$Date: 2005/05/13 00:00:36 $ <br>
 <img align="top" src="../monicon.png" alt="">
 <a href="http://www.mhonarc.org/"><strong>MHonArc</strong></a><br>
 Copyright &#169; 1997-1998, <a href="http://www.earlhood.com/">Earl Hood</a>, <a href="mailto:mhonarc&#37;40mhonarc.org">mhonarc<!--
