@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##      $Id: mhopt.pl,v 2.58 2005/05/10 19:05:23 ehood Exp $
+##      $Id: mhopt.pl,v 2.61 2005/06/06 15:55:02 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -447,13 +447,13 @@ sub get_resources {
     eval {
 	require POSIX;
 	if ($Lang) {
-	    POSIX::setlocal(&POSIX::LC_ALL, $Lang);
+	    POSIX::setlocale(&POSIX::LC_ALL, $Lang);
 	} else {
-	    POSIX::setlocal(&POSIX::LC_ALL, '');
+	    POSIX::setlocale(&POSIX::LC_ALL, '');
 	}
     };
     if ($@ && $Lang) {
-	qq/Warning: Setting locale appears to be not supported:\n$@\n/;
+	warn qq/Warning: Setting locale appears to not be supported: $@\n/;
     }
 
     ##	Re-check readmail settings
@@ -1213,6 +1213,12 @@ sub mhinit_readmail_vars {
     ##    Nothing is excluded by default.
     unless (%readmail::MIMEExcs) {
 	$IsDefault{'MIMEEXCS'} = 1;
+    }
+
+    ##  Content-Types to only include:
+    ##    Blank by default: include everything
+    unless (%readmail::MIMEIncs) {
+	$IsDefault{'MIMEIncs'} = 1;
     }
 
     ##  Content-type multipart/alternative preferences

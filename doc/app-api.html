@@ -318,8 +318,8 @@ $do_save = &amp;$mhonarc::CBDbPreSave($pathname, $tmp_pathname);
 
 <p><b>Synopsis:</b></p>
 <pre class="code">
-&amp;$mhonarc::CBMessageBodyRead(
-		$fields_hash_ref, $html_text_ref, $files_array_ref);
+$boolean = &amp;$mhonarc::CBMessageBodyRead(
+		           $fields_hash_ref, $html_text_ref, $files_array_ref);
 </pre>
 
 <p><b>Arguments:</b></p>
@@ -327,7 +327,7 @@ $do_save = &amp;$mhonarc::CBDbPreSave($pathname, $tmp_pathname);
 <dt><tt>$fields_hash_ref</tt></dt>
 <dd><p>reference to hash containing parsed message header.  the
     structure of this hash is the same as described for
-    the <a href="#cbmessageheadread"><tt>$mhonarc::cbmessageheadread</tt></a>
+    the <a href="#CBMessageHeadRead"><tt>$mhonarc::CBMessageHeadRead</tt></a>
     callback.
     </p>
 
@@ -371,7 +371,12 @@ $do_save = &amp;$mhonarc::CBDbPreSave($pathname, $tmp_pathname);
 </dl>
 
 <p><b>Return Value:</b></p>
-    <p>N/A</p>
+    <p>The return value is used by MHonArc to determine if the
+    message should be excluded from any further processing.
+    If the return value evaluates to true, then MHonArc will
+    continue processing of the message.  If the return value
+    evaluates to false, the message will be excluded.
+    </p>
 
 <p><b>Notes:</b></p>
 <ul>
@@ -517,7 +522,8 @@ The message body has not been converted.
 
 <p><b>Synopsis:</b></p>
 <pre class="code">
-&amp;$mhonarc::CBRawMessageBodyRead($fields_hash_ref, $body_data_ref);
+$boolean = &amp;$mhonarc::CBRawMessageBodyRead(
+			  $fields_hash_ref, $body_data_ref);
 </pre>
 
 <p><b>Arguments:</b></p>
@@ -538,7 +544,12 @@ The message body has not been converted.
 </dl>
 
 <p><b>Return Value:</b></p>
-    <p>N/A</p>
+    <p>The return value is used by MHonArc to determine if the
+    message should be excluded from any further processing.
+    If the return value evaluates to true, then MHonArc will
+    continue processing of the message.  If the return value
+    evaluates to false, the message will be excluded.
+    </p>
 
 </div>
 
@@ -914,7 +925,7 @@ require 'readmail.pl';
 
 <hr>
 <address>
-$Date: 2005/05/13 18:50:38 $ <br>
+$Date: 2005/06/02 02:12:29 $ <br>
 <img align="top" src="monicon.png" alt="">
 <a href="http://www.mhonarc.org/"
 ><strong>MHonArc</strong></a><br>

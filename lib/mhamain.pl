@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhamain.pl,v 2.78 2005/05/20 16:08:21 ehood Exp $
+##	$Id: mhamain.pl,v 2.82 2005/06/09 01:12:59 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -29,7 +29,7 @@ package mhonarc;
 
 require 5;
 
-$VERSION = '2.6.11';
+$VERSION = '2.6.12';
 $VINFO =<<EndOfInfo;
   MHonArc v$VERSION (Perl $] $^O)
   Copyright (C) 1995-2005  Earl Hood, mhonarc\@mhonarc.org
@@ -296,8 +296,10 @@ sub doit {
 	($index, $fields) = read_mail_header($handle);
 
 	if ($index) {
-	    $AddIndex{$index} = 1;
-	    read_mail_body($handle, $index, $fields, $NoMsgPgs);
+	    if (defined(read_mail_body(
+		    $handle, $index, $fields, $NoMsgPgs))) {
+		$AddIndex{$index} = 1;
+	    }
 	}
 
     ## Adding/converting mail{boxes,folders}
@@ -336,17 +338,21 @@ sub doit {
 
 		    #  Process message if valid
 		    if ($index) {
-			if ($ADD && !$SLOW) { $AddIndex{$index} = 1; }
-			read_mail_body($fh, $index, $fields, $NoMsgPgs);
+			if (defined(read_mail_body(
+				$fh, $index, $fields, $NoMsgPgs))) {
+			    if ($ADD && !$SLOW) { $AddIndex{$index} = 1; }
 
-			#  Check if conserving memory
-			if ($SLOW && $DoArchive) {
-			    output_mail($index, 1, 1);
-			    $Update{$IndexNum{$index}} = 1;
-			}
-			if ($SLOW || !$DoArchive) {
-			    delete $MsgHead{$index};
-			    delete $Message{$index};
+			    #  Check if conserving memory
+			    if ($SLOW && $DoArchive) {
+				output_mail($index, 1, 1);
+				$Update{$IndexNum{$index}} = 1;
+			    }
+			    if ($SLOW || !$DoArchive) {
+				delete $MsgHead{$index};
+				delete $Message{$index};
+			    }
+			} else {
+			    $index = undef;
 			}
 		    }
 		    close($fh);
@@ -375,19 +381,24 @@ sub doit {
 		    ($index, $fields) = read_mail_header($fh);
 
 		    if ($index) {
-			if ($ADD && !$SLOW) { $AddIndex{$index} = 1; }
-			read_mail_body($fh, $index, $fields, $NoMsgPgs);
+			if (defined(read_mail_body(
+				$fh, $index, $fields, $NoMsgPgs))) {
+			    if ($ADD && !$SLOW) { $AddIndex{$index} = 1; }
 
-			if ($SLOW && $DoArchive) {
-			    output_mail($index, 1, 1);
-			    $Update{$IndexNum{$index}} = 1;
-			}
-			if ($SLOW || !$DoArchive) {
-			    delete $MsgHead{$index};
-			    delete $Message{$index};
+			    if ($SLOW && $DoArchive) {
+				output_mail($index, 1, 1);
+				$Update{$IndexNum{$index}} = 1;
+			    }
+			    if ($SLOW || !$DoArchive) {
+				delete $MsgHead{$index};
+				delete $Message{$index};
+			    }
+			} else {
+			    $index = undef;
 			}
 
 		    } else {
+			# skip passed message body
 			read_mail_body($fh, $index, $fields, 1);
 		    }
 		}
@@ -989,7 +1000,11 @@ sub read_mail_body {
 
     ## Invoke callback if defined
     if (defined($CBRawMessageBodyRead) && defined(&$CBRawMessageBodyRead)) {
-	&$CBRawMessageBodyRead($fields, \$data);
+	if (!&$CBRawMessageBodyRead($fields, \$data)) {
+	    # reverse effect of read_mail_header()
+	    delmsg_from_hashes($index);
+	    return undef;
+	}
     }
 
     ## Define "globals" for use by filters
@@ -1006,7 +1021,11 @@ sub read_mail_body {
 
     ## Invoke callback if defined
     if (defined($CBMessageBodyRead) && defined(&$CBMessageBodyRead)) {
-	&$CBMessageBodyRead($fields, \$ret, \@files);
+	if (!&$CBMessageBodyRead($fields, \$ret, \@files)) {
+	    # reverse effect of read_mail_header()
+	    delmsg_from_hashes($index);
+	    return undef;
+	}
 	$Message{$index} = $ret;
     } else {
 	$Message{$index} = $ret;
@@ -1017,7 +1036,7 @@ sub read_mail_body {
 	     qq/Warning: Empty body data generated:\n/,
 	     qq/         Message-Id: $MHAmsgid\n/,
 	     qq/         Message Number: $MHAmsgnum\n/,
-	     qq/         Content-Type/,
+	     qq/         Content-Type: /,
 			 ($fields->{'content-type'}[0] || 'text/plain'),
 			 qq/\n/;
 	$ret = '';
@@ -1363,15 +1382,44 @@ sub output_mail {
 #############################################################################
 
 ##---------------------------------------------------------------------------
-##	delmsg delets a message from the archive.
+##	delmsg deletes a message from the archive.
 ##
 sub delmsg {
     my $key = shift;
-    my($pathname);
+    my($filename, $derived) = delmsg_from_hashes($key);
+    return 0  unless defined($filename);
+
+    if (!$KeepOnRmm) {
+	file_remove($filename);
+	if (defined($derived)) {
+	    my $pathname;
+	    foreach $filename (@{$derived}) {
+		$pathname = (OSis_absolute_path($filename)) ?
+				$filename : join($DIRSEP, $OUTDIR, $filename);
+		if (-d $pathname) {
+		    dir_remove($pathname);
+		} else {
+		    file_remove($pathname);
+		}
+	    }
+	}
+    }
+    1;
+}
+
+##---------------------------------------------------------------------------
+##	delmsg_from_hashes deletes all message info from db hashes.
+##	Return value is a list of two items: pathname to message
+##	file and array ref to any derived files.
+##
+sub delmsg_from_hashes {
+    my $key = shift;
 
     #&defineIndex2MsgId();
-    my $msgnum = $IndexNum{$key};  return 0  if ($msgnum eq '');
+    my $msgnum = $IndexNum{$key};
+    return (undef, undef)  if ($msgnum eq '');
     my $filename = join($DIRSEP, $OUTDIR, &msgnum_filename($msgnum));
+
     delete $ContentType{$key};
     delete $Date{$key};
     delete $From{$key};
@@ -1379,19 +1427,12 @@ sub delmsg {
     delete $Refs{$key};
     delete $Subject{$key};
     delete $MsgId{$Index2MsgId{$key}};
-    file_remove($filename)  unless $KeepOnRmm;
-    foreach $filename (@{$Derived{$key}}) {
-	$pathname = (OSis_absolute_path($filename)) ?
-			$filename : join($DIRSEP, $OUTDIR, $filename);
-	if (-d $pathname) {
-	    dir_remove($pathname)  unless $KeepOnRmm;
-	} else {
-	    file_remove($pathname)  unless $KeepOnRmm;
-	}
-    }
+
+    my $derived = $Derived{$key};
     delete $Derived{$key};
+
     $NumOfMsgs--;
-    1;
+    ($filename, $derived);
 }
 
 ##---------------------------------------------------------------------------

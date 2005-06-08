@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhtxtplain.pl,v 2.45 2005/05/07 04:30:21 ehood Exp $
+##	$Id: mhtxtplain.pl,v 2.46 2005/05/27 06:28:33 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -12,7 +12,7 @@
 ##              </MIMEFILTERS>
 ##---------------------------------------------------------------------------##
 ##    MHonArc -- Internet mail-to-HTML converter
-##    Copyright (C) 1995-2002	Earl Hood, mhonarc@mhonarc.org
+##    Copyright (C) 1995-2005	Earl Hood, mhonarc@mhonarc.org
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by
@@ -90,7 +90,16 @@ $EndFixedQuote    = '</pre>';
 ##
 ##	keepspace	Preserve whitespace if nonfixed
 ##
-##	nourl		Do hyperlink URLs
+##	link="scheme1,scheme2,..."
+##			A comma separate list of URL schemes to hyperlink.
+##			Only URL with the given schemes will be linked.
+##
+##	nolink="scheme1,scheme2,..."
+##			A comma separate list of URL schemes to not
+##			hyperlink.  URLs with the given scheme will not
+##			converted into hyperlinks.
+##
+##	nourl		Do not hyperlink URLs.
 ##
 ##	nonfixed	Use normal typeface
 ##
@@ -551,8 +560,39 @@ sub filter {
     }
 
     ## Convert URLs to hyperlinks
-    $$data =~ s@($HUrlExp)@<a $target rel="nofollow" href="$1">$1</a>@gio
-	unless $nourl;
+    if (!$nourl) {
+	my $nolink = undef;
+	my $link   = undef;
+	if ($args =~ /\bnolink\s*=(\S+)/) {
+	    $nolink = lc(','.$1.',');
+	    $nolink =~ s/['"]//g;
+	}
+	if ($args =~ /\blink\s*=(\S+)/) {
+	    $link = lc(','.$1.',');
+	    $link =~ s/['"]//g;
+	}
+	$$data =~ s{
+	    ($HUrlExp)
+	}{
+	    if (!defined($nolink) && !defined($link)) {
+		join('', '<a ', $target, ' rel="nofollow" href="',
+			 $1, '">', $1, '</a>');
+	    } else {
+		my $url_match = $1;
+		my $scheme;
+		$url_match =~ /^([^:]+)/;
+		$scheme = ',' . lc($1) . ',';
+		if ((defined($nolink) && (index($nolink, $scheme) >= $[)) ||
+		    (defined($link)   && (index($link, $scheme)   <  $[)))
+		{
+		    $url_match;
+		} else {
+		    join('', '<a ', $target, ' rel="nofollow" href="',
+			     $url_match, '">', $url_match, '</a>');
+		}
+	    }
+	}gxeso;
+    }
 
     $$data = ' '  if $$data eq '';
     ($$data);

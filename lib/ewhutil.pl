@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: ewhutil.pl,v 2.14 2003/04/05 23:49:38 ehood Exp $
+##	$Id: ewhutil.pl,v 2.15 2005/06/02 02:12:30 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -100,10 +100,10 @@ sub dehtmlize {
     my $str_r = ref($str) ? $str : \$str;
     $$str_r =~ s/\&lt;/</g;
     $$str_r =~ s/\&gt;/>/g;
-    $$str_r =~ s/\&amp;/\&/g;
-    $$str_r =~ s/\&quot;/\&/g;
     $$str_r =~ s/\&#[xX]0*40;/@/g;
     $$str_r =~ s/\&#64;/@/g;
+    $$str_r =~ s/\&quot;/"/g;
+    $$str_r =~ s/\&amp;/\&/g;
     $$str_r;
 }
 

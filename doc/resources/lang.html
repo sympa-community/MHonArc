@@ -65,9 +65,16 @@ MHonArc operations:
     applied when sorting messages by subject or author.
     </p>
 
-<li><p>Resource file loading:  If a locale is specified, locale 
-    defined variations will be checked for.  See
+<li><p>Resource file loading:  Locale-specific resource files
+    will be checked for.  See
     <a href="rcfile.html#locale">RCFILE</a> for more information.
+    </p>
+
+<li><p>POSIX date/time formating:  If
+    <a href="posixstrftime.html">POSIXSTRFTIME</a> is enabled,
+    locale-specific formatting will be applied.
+    See your system's <b><tt>strftime()</tt></b> manual page
+    for more information.
     </p>
 
 </ul>
@@ -78,14 +85,27 @@ MHonArc operations:
 </pre>
 <p>Where <tt><var>codeset</var></tt></tt> and
 <tt><var>country</var></tt> are optional.  The <tt><var>language</var></tt>
-and <tt><var>country</var></tt> are usually from the standards
-ISO 3166 and ISO 639, the two-letter abbreviations for the
-countries and the languages of the world, respectively.  The
-<tt><var>codeset</var></tt></tt> represents a specific character
-encoding, like ISO8859-1.  You will need to consult your local system
-documentation for what locales, and their formats, are supported
-on your system.
+and <tt><var>country</var></tt> are short codes
+defined by the standards
+<a href="http://www.wikipedia.org/wiki/ISO_639">ISO 639</a>
+(language) and
+<a href="http://www.wikipedia.org/wiki/Country_code">ISO 3166</a>
+(country),
+The <tt><var>codeset</var></tt></tt> represents a specific character
+encoding, like ISO8859-1.  You will need to consult your system
+documentation for what locales, and their formats, are supported.
 </p>
+<table class="note" width="100%">
+<tr valign="baseline">
+<td><strong>NOTE:</strong></td>
+<td width="100%"><p>On Unix-based system, the command
+<b><tt>locale</tt></b> may be available to get list of all supported
+locales for you system.
+</p>
+</td>
+</tr>
+</table>
+<p> </p>
 
 <!-- *************************************************************** -->
 <hr>
@@ -106,8 +126,31 @@ variables.
 <hr>
 <h2><a name="examples">Examples</a></h2>
 
-<p>None.
+<p>LANG gives you the ability to create locale-specific
+archives on a single system.  For example, let's say the you
+manage several English-based archives and the default locale for
+your system is <tt>en_US</tt>.  However, you would now like to
+host a Japanese-based archive on the same system.
 </p>
+<p>For the Japanese archive, you may want to set LANG as follows:
+</p>
+<pre class="code">
+<b>&lt;Lang&gt;</b>
+ja_JP
+<b>&lt;/Lang&gt;</b>
+</pre>
+<p>If you plan on using a specific codeset
+(see
+<a href="textencode.html">TEXTENCODE</a> and
+<a href="charsetconverters.html">CHARSETCONVERTERS</a>)
+you should specify the codeset.  For example, if the archives will
+be in UTF-8, you should use:
+</p>
+<pre class="code">
+<b>&lt;Lang&gt;</b>
+ja_JP.utf8
+<b>&lt;/Lang&gt;</b>
+</pre>
 
 <!-- *************************************************************** -->
 <hr>
@@ -121,11 +164,12 @@ variables.
 <h2><a name="seealso">See Also</a></h2>
 
 <p>
-<a href="rcfile.html">RCFILE</a>,
+<a href="charsetconverters.html">CHARSETCONVERTERS</a>,
+<a href="rcfile.html#locale">RCFILE</a>,
 <a href="textencode.html">TEXTENCODE</a>
 </p>
 <p>
-<a href="http://www.perldoc.com/perl5.8.0/pod/perllocale.html">perllocale</a>
+<a href="http://perldoc.perl.org/perllocale.html">perllocale</a>
 manual page.
 </p>
 
@@ -137,10 +181,10 @@ manual page.
 <!--/x-rc-nav-->
 <hr>
 <address>
-$Date: 2003/10/06 22:04:17 $<br>
+$Date: 2005/06/07 19:15:44 $<br>
 <img align="top" src="../monicon.png" alt="">
 <a href="http://www.mhonarc.org/"><strong>MHonArc</strong></a><br>
-Copyright &#169; 2003, <a href="http://www.earlhood.com/"
+Copyright &#169; 2003,2005 <a href="http://www.earlhood.com/"
 >Earl Hood</a>, <a href="mailto:mhonarc&#37;40mhonarc.org"
 >mhonarc<!--
 -->&#64;<!--

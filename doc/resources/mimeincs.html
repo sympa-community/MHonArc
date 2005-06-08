@@ -1,0 +1,236 @@
+<html>
+<head>
+<title>MHonArc Resources: MIMEINCS</title>
+<link rel="stylesheet" type="text/css" href="../docstyles.css">
+</head>
+<body>
+
+<!--x-rc-nav-->
+<table border=0><tr valign="top">
+<td align="left" width="50%">[Prev:&nbsp;<a href="mimefilters.html">MIMEFILTERS</a>]</td><td><nobr>[<a href="../resources.html#mimeincs">Resources</a>][<a href="../mhonarc.html">TOC</a>]</nobr></td><td align="right" width="50%">[Next:&nbsp;<a href="modifybodyaddresses.html">MODIFYBODYADDRESSES</a>]</td></tr></table>
+<!--/x-rc-nav-->
+
+<hr>
+<h1>MIMEINCS</h1>
+<!--X-TOC-Start-->
+<ul>
+<li><a href="#syntax">Syntax</a>
+<li><a href="#description">Description</a>
+<li><a href="#default">Default Setting</a>
+<li><a href="#rcvars">Resource Variables</a>
+<li><a href="#examples">Examples</a>
+<ul>
+<li><small><a href="#incmsg">Supporting Message-based Attachments</a></small>
+</ul>
+<li><a href="#version">Version</a>
+<li><a href="#seealso">See Also</a>
+</ul>
+<!--X-TOC-End-->
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="syntax">Syntax</a></h2>
+
+<dl>
+
+<dt><strong>Envariable</strong></dt>
+<dd><p>
+N/A
+</p>
+</dd>
+
+<dt><strong>Element</strong></dt>
+<dd><p>
+<code>&lt;MIMEINCS&gt;</code><br>
+<var>content-type</var><br>
+<var>content-type</var><br>
+...<br>
+<code>&lt;/MIMEINCS&gt;</code><br>
+</p>
+</dd>
+
+<dt><strong>Command-line Option</strong></dt>
+<dd><p>
+N/A
+</p>
+</dd>
+
+</dl>
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="description">Description</a></h2>
+
+<p>MIMEINCS defines the list of content-types (aka media-types) to allow.
+If the MIMEINCS resource is not empty, only media-types listed will
+be allowed.  All other media-types will be excluded.
+</p>
+<p>For example, if MIMEINCS is set to the following:
+</p>
+<pre class="code">
+<b>&lt;MIMEIncs&gt;</b>
+text/plain
+text/html
+<b>&lt;/MIMEIncs&gt;</b>
+</pre>
+<p>Then only text/plain and text/html media-types are allowed.  All
+other media-types will be excluded.
+</p>
+
+<table class="note" width="100%">
+<tr valign="baseline">
+<td><strong>NOTE:</strong></td>
+<td width="100%"><p>If a media-type is listed in the
+<a href="mimeexcs.html">MIMEEXCS</a>, it is always excluded, regardless
+of the value of MIMEINCS.
+</p>
+</td>
+</tr>
+</table>
+
+<p>If all you want to do is exclude a specified set of media-types, then
+use the 
+<a href="mimeexcs.html">MIMEEXCS</a> resource instead.
+</p>
+
+<p>Base types can also be listed to allow all media-types
+with a give base.  For example, <tt>image/jpg</tt> will only allow
+JPEG images, but <tt>image</tt> will allow all images.
+</p>
+
+<table class="note" width="100%">
+<tr valign="baseline">
+<td><strong>NOTE:</strong></td>
+<td width="100%"><p>Use care when setting MIMEINCS since you may
+unintentionally exclude media-types that you do not want to exclude.
+See <a href="#incmsg">Examples</a> below.
+</p>
+</td>
+</tr>
+</table>
+
+<p>
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="default">Default Setting</a></h2>
+
+<p>Nil.
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="rcvars">Resource Variables</a></h2>
+
+<p>N/A
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="examples">Examples</a></h2>
+
+<p>MIMEINCS provides strict control over the allowed media-types
+in your archives, allowing for better security.  For example:
+</p>
+<pre class="code">
+<b>&lt;MIMEIncs&gt;</b>
+text/plain
+<b>&lt;/MIMEIncs&gt;</b>
+</pre>
+<p>Will only allow text/plain data.  All other types will be
+excluded.  For some, this may be ideal, but for many, it may
+be too restrictive: disallowing other text media types
+that do not pose security risks.  Therefore, the following
+may be prefered:
+</p>
+<pre class="code">
+<b>&lt;MIMEIncs&gt;</b>
+text
+<b>&lt;/MIMEIncs&gt;</b>
+</pre>
+<p>All text media-types are allowed.  However, HTML (text/html) does
+pose <a href="../faq/security.html#htmldata">security problems</a>.
+Therefore, you may want to allow all text media-types, excluding HTML:
+</p>
+<pre class="code">
+<b>&lt;MIMEIncs&gt;</b>
+text
+<b>&lt;/MIMEIncs&gt;</b>
+
+<b>&lt;<a href="mimeexcs.html">MIMEExcs</a>&gt;</b>
+text/html
+<b>&lt;/MIMEExcs&gt;</b>
+</pre>
+
+<h3><a name="incmsg">Supporting Message-based Attachments</a></h3>
+
+<p>The media-type <tt>message/rfc822</tt> is commonly used when
+one message includes another.  For example, popular MUAs provide
+a "forward-as-attachment" feature when reading an email message.
+When used, MUAs will specify the <tt>message/rfc822</tt> media-type
+for attachment.
+</p>
+
+<p><a name="incmsg"></a>
+The following is a more liberal MIMEINCS setting that allows
+media-types commonly used in email, allows
+forward-as-attachment cases, and keeps security risks to a minimum:
+</p>
+<pre class="code">
+<b>&lt;MIMEIncs&gt;</b>
+text
+image
+message
+<b>&lt;/MIMEIncs&gt;</b>
+</pre>
+<table class="note" width="100%">
+<tr valign="baseline">
+<td><strong>NOTE:</strong></td>
+<td width="100%"><p>Attached messages will still be restricted to
+the media-types listed in MIMEINCS.  For example, if a forwarded
+message includes a video attachment, the video attachment will
+be excluded.
+</p>
+</td>
+</tr>
+</table>
+
+<p> </p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="version">Version</a></h2>
+
+<p>2.6.12
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<h2><a name="seealso">See Also</a></h2>
+
+<p>
+<a href="mimealtprefs.html">MIMEALTPREFS</a>,
+<a href="mimeexcs.html">MIMEEXCS</a>,
+<a href="mimefilters.html">MIMEFILTERS</a>
+</p>
+
+<!-- *************************************************************** -->
+<hr>
+<!--x-rc-nav-->
+<table border=0><tr valign="top">
+<td align="left" width="50%">[Prev:&nbsp;<a href="mimefilters.html">MIMEFILTERS</a>]</td><td><nobr>[<a href="../resources.html#mimeincs">Resources</a>][<a href="../mhonarc.html">TOC</a>]</nobr></td><td align="right" width="50%">[Next:&nbsp;<a href="modifybodyaddresses.html">MODIFYBODYADDRESSES</a>]</td></tr></table>
+<!--/x-rc-nav-->
+<hr>
+<address>
+$Date: 2005/06/02 05:50:26 $<br>
+<img align="top" src="../monicon.png" alt="">
+<a href="http://www.mhonarc.org/"><strong>MHonArc</strong></a><br>
+Copyright &#169; 2005, <a href="http://www.earlhood.com/"
+>Earl Hood</a>, <a href="mailto:mhonarc&#37;40mhonarc.org">mhonarc<!--
+>-->&#64;<!--
+>-->mhonarc.org</a>
+</address>
+
+</body>
+</html>

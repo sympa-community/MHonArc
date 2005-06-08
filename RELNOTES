@@ -13,6 +13,8 @@ NOTE: Read the CHANGES document included in the distribution for a more
       complete summary of changes to MHonArc.                              
 
   * Compatibility Notes
+      + UPGRADING FROM v2.6.11 OR EARLIER: Handling of return value for
+        $mhonarc::CB{Raw}MessageBodyRead Changed
       + UPGRADING FROM v2.5.x OR EARLIER: Default iso-2022-jp Converter
         Changed
       + UPGRADING FROM v2.4.x OR EARLIER: DEFRCNAME Change
@@ -42,6 +44,29 @@ Compatibility Notes
 
 This sections provides notes dealing with compatibility issues if upgrading
 from a previous release of MHonArc:
+
+UPGRADING FROM v2.6.11 OR EARLIER: Handling of return value for $mhonarc::
+CB{Raw}MessageBodyRead Changed
+
+NOTE: If you do not utilize MHonArc's callback API, you can ignore this    
+      compatibility item. However, if you use the mha-preview example      
+      script, continuing reading.                                          
+
+In v2.6.12, the return value for the $mhonarc::CBMessageBodyRead and 
+$mhonarc::CBRawMessageBodyRead is now checked to see if the message should
+be excluded from further processing. In previous versions, the return value
+was N/A. Therefore, if you use either of these callbacks, and the return
+value of your routines evaluates to false for a given message, the message
+will be excluded from the archive.
+
+If you never want to exclude messages with either of these callbacks, have
+your routines already return 1.
+
+NOTE: The example mha-preview script provided in the MHonArc distribution  
+      has been updated to reflect the change in return value handling. Even
+      though it is statistically unlikely messages will be quietly excluded
+      with older versions of the script; it is recommended to replace your 
+      copy with the latest version.                                        
 
 UPGRADING FROM v2.5.x OR EARLIER: Default iso-2022-jp Converter Changed
 
@@ -319,7 +344,7 @@ your settings and use the variant version when updating your archives.
 
 ---------------------------------------------------------------------------
 
-$Date: 2005/05/13 00:00:35 $
+$Date: 2005/06/09 01:12:12 $
 MHonArc
 Copyright © 1997-2005, Earl Hood, mhonarc@mhonarc.org
 

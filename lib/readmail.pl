@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: readmail.pl,v 2.35 2004/03/10 22:01:33 ehood Exp $
+##	$Id: readmail.pl,v 2.36 2005/06/02 05:50:27 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc AT mhonarc DOT org
 ##  Description:
@@ -198,12 +198,23 @@ $DecodeHeader	= 0;
 ##
 ##	Keys => content-type, or base-type
 ##	Values => <should evaluate to a true expression>
-##
-##  For purposes of efficiency, content-types, or base-types, should
-##  be specified in lowercase.  All key lookups are done in lowercase.
 
 %MIMEExcs			= ()
     unless defined(%MIMEExcs);
+
+## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+##  %MIMEIncs is the associative array listing which data types
+##  should be auto-included during parsing:
+##
+##	Keys => content-type, or base-type
+##	Values => <should evaluate to a true expression>
+##
+##  If there are any keys defined in %MIMEIncs, then any content-type
+##  not in the hash is automatically excluded.  I.e.  %MIMEIncs can
+##  be used to only allow a well-defined set of content-types.
+
+%MIMEIncs			= ()
+    unless defined(%MIMEIncs);
 
 ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ##  %MIMECharsetAliases is a mapping of charset names to charset names.
@@ -929,14 +940,28 @@ sub MAILread_file_header {
 ##
 sub MAILis_excluded {
     my $ctype = lc($_[0]) || 'text/plain';
-    if ($MIMEExcs{$ctype}) {
-	return 1;
-    }
-    if ($ctype =~ s/\/x-/\//) {
-	return 1  if $MIMEExcs{$ctype};
-    }
+    my $btype = undef;
+
+    $ctype =~ s/\/x-/\//;
     if ($ctype =~ m|([^/]+)/|) {
-	return $MIMEExcs{$1};
+	$btype = $1;
+    }
+
+    MIMEINCS: {
+	# Treat multipart special: It is always included unless present
+	# in MIMEExcs.
+	last  MIMEINCS  if ($ctype =~ /^multipart\b/);
+
+	if (%MIMEIncs) {
+	    if ($MIMEIncs{$ctype} || (defined($btype) && $MIMEIncs{$btype})) {
+		last MIMEINCS;
+	    } else {
+		return 1;
+	    }
+	}
+    }
+    if ($MIMEExcs{$ctype} || (defined($btype) && $MIMEExcs{$btype})) {
+	return 1;
     }
     0;
 }

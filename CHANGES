@@ -13,6 +13,38 @@
 
 YYYY/MM/DD
 ============================================================================
+2005/06/08	(2.6.12)
+
+* Bug Fixes:
+
+    Bug ID  Summary
+    ------  ------------------------------------------------------------
+    11761   spammode causes broken mailto: links in message body
+    13316   No warning generated when RCFILE set to non-existent file
+    13317   POSIX::setlocale() not invoked with LANG resource setting
+    ------  ------------------------------------------------------------
+    <https://savannah.nongnu.org/bugs/?group=mhonarc>
+
+* New resources:
+
+    MIMEINCS		Content-types to allow.
+
+* Beefed up filtering of UTF-8 messages:  "Malformed UTF-8
+  ..." warnings are now suppressed with such sequences being converted
+  to U+FFFD (&#xFFFD;), which should normally cause an HTML viewer
+  to render a question-mark-like glyph.
+
+  Earlier version passed malformed utf-8 sequences through.
+  No bug/security problems have been reported against this, but it
+  was a bad practice that has now been corrected.
+
+* The return value for $mhonarc::CBMessageBodyRead and
+  $mhonarc::CBRawMessageBodyRead is no longer N/A.  If the return
+  value evaluates to false, the current message will be excluded from
+  the archive and further processing.  A true value must be returned
+  if the message is to not be excluded.
+
+============================================================================
 2005/05/20	(2.6.11)
 
 * Bug Fixes:
@@ -2643,4 +2675,4 @@ YYYY/MM/DD
 
 =======================================================================
 Earl Hood, mhonarc@mhonarc.org
-$Id: CHANGES,v 1.126 2005/05/20 16:08:20 ehood Exp $
+$Id: CHANGES,v 1.132 2005/06/09 01:12:11 ehood Exp $

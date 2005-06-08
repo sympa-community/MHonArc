@@ -6,7 +6,7 @@
 <body>
 <!--x-rc-nav-->
 <table border=0><tr valign="top">
-<td align="left" width="50%">[Prev:&nbsp;<a href="mimeexcs.html">MIMEEXCS</a>]</td><td><nobr>[<a href="../resources.html#mimefilters">Resources</a>][<a href="../mhonarc.html">TOC</a>]</nobr></td><td align="right" width="50%">[Next:&nbsp;<a href="modifybodyaddresses.html">MODIFYBODYADDRESSES</a>]</td></tr></table>
+<td align="left" width="50%">[Prev:&nbsp;<a href="mimeexcs.html">MIMEEXCS</a>]</td><td><nobr>[<a href="../resources.html#mimefilters">Resources</a>][<a href="../mhonarc.html">TOC</a>]</nobr></td><td align="right" width="50%">[Next:&nbsp;<a href="mimeincs.html">MIMEINCS</a>]</td></tr></table>
 <!--/x-rc-nav-->
 <hr>
 <h1>MIMEFILTERS</h1>
@@ -1817,9 +1817,9 @@ filter is also used to process text messages of an unknown
 subtype.
 </p>
 
-<p>The default behavior of the filter is wrap the data in
-the HTML <tt>PRE</tt> element and escape special characters.  It will
-also convert text that looks like a URL into a hyperlink.
+<p>The default behavior of the filter is to wrap the data in
+the HTML <tt>PRE</tt> element and escape special characters.  It
+also converts text that looks like a URL into a hyperlink.
 Character data will be translated as specified by the
 <a href="charsetconverters.html">CHARSETCONVERTERS</a> resources.
 </p>
@@ -1828,7 +1828,7 @@ Character data will be translated as specified by the
 defined by <a href="http://www.ietf.org/rfc/rfc2646.txt">RFC 2646</a>.
 Quoted text will be wrapped in HTML <tt>BLOCKQUOTE</tt> tags with
 inline CSS styles to highlight quoted text with a vertical bar in the
-left margin as follows:
+left margin:
 </p>
 <blockquote style="border-left: #0000FF solid 0.1em; margin-left: 0.0em; padding-left: 1.0em">This is some quoted text.
 This is some quoted text.
@@ -1933,6 +1933,16 @@ equivalent number of <strong>&amp;nbsp;</strong> entity references.
 </p>
 </tr>
 <tr valign=top>
+<td><strong><a name="tpa_link"><tt>link=</tt></strong><var>scheme1</var><tt>,</tt>...</a></td>
+<td><p>A comma separated list of URL schemes denoting which URLs
+to convert into hyperlinks.  By default, all URLs will be converted
+into hyperlinks.  This option allows you to restrict the set of
+URLs converted.
+</p>
+<p>Compare this argument with <a href="#tpa_nolink"><tt>nolink</tt></a>.
+</p>
+</tr>
+<tr valign=top>
 <td><strong><tt>maxwidth=</tt></strong><var>#</var></td>
 <td><p>Force the maximum width of lines to be <var>#</var> characters
 in length.  Any lines longer than <var>#</var> characters will be
@@ -1947,6 +1957,16 @@ than <tt>maxwidth</tt>, will not be wrapped.
 </td></tr></table>
 </tr>
 <tr valign=top>
+<td><strong><a name="tpa_nolink"><tt>nolink=</tt></strong><var>scheme1</var><tt>,</tt>...</a></td>
+<td><p>A comma separated list of URL schemes denoting which URLs
+to <strong>not</strong> convert into hyperlinks.  By default, all
+URLs will be converted into hyperlinks.
+This option allows you to specify URLs that should never be converted.
+</p>
+<p>Compare this argument with <a href="#tpa_link"><tt>link</tt></a>.
+</p>
+</tr>
+<tr valign=top>
 <td><strong><tt>nonfixed</tt></strong></td>
 <td><p>Do not wrap message text in the HTML <tt>PRE</tt> element.  This will
 cause text to be rendered in the default font (which is normally
@@ -1957,7 +1977,8 @@ of the message.
 </tr>
 <tr valign=top>
 <td><strong><tt>nourl</tt></strong></td>
-<td><p>Do not hyperlink URLs.
+<td><p>Do not hyperlink URLs.  This option overrides
+<tt>link</tt> and <tt>nolink</tt>.
 </p>
 </tr>
 <tr valign=top>
@@ -2188,11 +2209,11 @@ sub filter {
 <hr>
 <!--x-rc-nav-->
 <table border=0><tr valign="top">
-<td align="left" width="50%">[Prev:&nbsp;<a href="mimeexcs.html">MIMEEXCS</a>]</td><td><nobr>[<a href="../resources.html#mimefilters">Resources</a>][<a href="../mhonarc.html">TOC</a>]</nobr></td><td align="right" width="50%">[Next:&nbsp;<a href="modifybodyaddresses.html">MODIFYBODYADDRESSES</a>]</td></tr></table>
+<td align="left" width="50%">[Prev:&nbsp;<a href="mimeexcs.html">MIMEEXCS</a>]</td><td><nobr>[<a href="../resources.html#mimefilters">Resources</a>][<a href="../mhonarc.html">TOC</a>]</nobr></td><td align="right" width="50%">[Next:&nbsp;<a href="mimeincs.html">MIMEINCS</a>]</td></tr></table>
 <!--/x-rc-nav-->
 <hr>
 <address>
-$Date: 2005/05/13 18:50:39 $ <br>
+$Date: 2005/06/02 05:50:25 $ <br>
 <img align="top" src="../monicon.png" alt="">
 <a href="http://www.mhonarc.org"><strong>MHonArc</strong></a><br>
 Copyright &#169; 1997-2005 <a href="http://www.mhonarc.org/~ehood/">Earl Hood</a>, <a href="mailto:mhonarc&#37;40mhonarc.org">mhonarc<!--

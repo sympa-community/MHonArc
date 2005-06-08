@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhutil.pl,v 2.30 2003/10/24 19:24:35 ehood Exp $
+##	$Id: mhutil.pl,v 2.31 2005/06/02 02:12:30 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -37,6 +37,14 @@ use MHonArc::RFC822;
     'list-post'  	=> 1,
     'list-subscribe'  	=> 1,
     'list-unsubscribe' 	=> 1,
+);
+
+## Do not apply ADDRESSMODIFYCODE headerfiels
+%HFieldsAsIsList = (
+    %HFieldsList,
+    'content-id',
+    'content-type',
+    'message-id',
 );
 
 ## Header fields that contain addresses
@@ -496,7 +504,7 @@ sub mlist_field_add_links {
     my $txt	= shift;
     my $ret	= "";
     local($_);
-    foreach (split(/(<[^>]+>)/, $txt)) {
+    foreach (split(/(<[^<>]+>)/, $txt)) {
 	if (/^<\w+:/) {
 	    chop; substr($_, 0, 1) = "";
 	    $ret .= qq|&lt;<a href="$_">$_</a>&gt;|;

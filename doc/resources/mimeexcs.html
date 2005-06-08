@@ -57,20 +57,34 @@
 <p>MIMEEXCS defines the list of content-types to exclude from processing.
 The exclusion occurs before the data is processed to any filters
 registered via the <a href="mimefilters.html">MIMEFILTERS</a> resource.
-If a message body part is excluded, the converted message will have
-a note that the part was excluded.
 </p>
-<table class="note" width="100%">
-<tr valign="baseline">
-<td><strong>NOTE:</strong></td>
-<td width="100%"><p>Base types can also be listed in order exclude all
+<p>For example, if MIMEEXCS is set to the following:
+</p>
+<pre class="code">
+<b>&lt;MIMEExcs&gt;</b>
+image/jpg
+image/gif
+<b>&lt;/MIMEExcs&gt;</b>
+</pre>
+<p>Then JPEG and GIF images will be excluded.
+</p>
+
+<p>Base types can be listed in order exclude all
 content-types
-with a give base.  For example, <tt>image/jpg</tt> will only exclude
-JPEG images, but <tt>image</tt> will exclude all images.
+with a give base.  For example,
 </p>
-</td>
-</tr>
-</table>
+<pre class="code">
+<b>&lt;MIMEExcs&gt;</b>
+image
+<b>&lt;/MIMEExcs&gt;</b>
+</pre>
+<p>will exclude all images.
+</p>
+
+<p>If all you want to do is include a specified set of media-types, then
+use the 
+<a href="mimeincs.html">MIMEINCS</a> resource instead.
+</p>
 
 <!-- *************************************************************** -->
 <hr>
@@ -114,6 +128,10 @@ text/html
 <b>&lt;/MIMEExcs&gt;</b>
 </pre>
 
+<p>For tighter control of allowable media-types, see the
+<a href="mimeincs.html">MIMEINCS</a> resource.
+</p>
+
 <!-- *************************************************************** -->
 <hr>
 <h2><a name="version">Version</a></h2>
@@ -127,7 +145,8 @@ text/html
 
 <p>
 <a href="mimealtprefs.html">MIMEALTPREFS</a>,
-<a href="mimefilters.html">MIMEFILTERS</a>
+<a href="mimefilters.html">MIMEFILTERS</a>,
+<a href="mimeincs.html">MIMEINCS</a>
 </p>
 
 <!-- *************************************************************** -->
@@ -138,7 +157,7 @@ text/html
 <!--/x-rc-nav-->
 <hr>
 <address>
-$Date: 2005/05/13 18:50:39 $ <br>
+$Date: 2005/06/07 19:15:44 $ <br>
 <img align="top" src="../monicon.png" alt="">
 <a href="http://www.mhonarc.org/"
 ><strong>MHonArc</strong></a><br>

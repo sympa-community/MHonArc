@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhdb.pl,v 2.37 2004/12/15 20:33:39 ehood Exp $
+##	$Id: mhdb.pl,v 2.38 2005/06/02 05:50:27 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -129,6 +129,11 @@ if (%readmail::MIMEExcs) {
     print_var($db,'readmail::MIMEExcs',
 		    \%readmail::MIMEExcs)
 		    unless $IsDefault{'MIMEEXCS'};
+}
+if (%readmail::MIMEIncs) {
+    print_var($db,'readmail::MIMEIncs',
+		    \%readmail::MIMEIncs)
+		    unless $IsDefault{'MIMEINCS'};
 }
 unless ($IsDefault{'MIMEALTPREFS'}) {
     print_var($db,'MIMEAltPrefs',

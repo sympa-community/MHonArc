@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: CharEnt.pm,v 1.15 2004/12/03 20:36:35 ehood Exp $
+##	$Id: CharEnt.pm,v 1.16 2005/05/22 21:14:33 ehood Exp $
 ##  Author:
 ##      Earl Hood       earl@earlhood.com
 ##  Description:
@@ -146,19 +146,54 @@ my $utf8_re = q/([\x00-\x7F]|
 		  \xFC      [\x84-\xBF][\x80-\xBF]{4}|
 		  \xFD      [\x80-\xBF]{5}|
 		 .)/;
+# A lax regex for UTF-8 data.  Used for utf-8-aware perl since perl
+# will validate sequences
+my $utf8_re_lax =
+	      q/([\x00-\x7F]|
+		 [\xC0-\xDF][\x00-\xFF]|
+		 [\xE0-\xEF][\x00-\xFF]{2}|
+		 [\xF0-\xF7][\x00-\xFF]{3}|
+		 [\xF8-\xFB][\x00-\xFF]{4}|
+		 [\xFC-\xFD][\x00-\xFF]{5}|
+		 .)/;
 
 sub _utf8_to_sgml {
     my $data_r = shift;
 
     if ($] >= 5.006) {
 	# UTF-8-aware perl
-	my($char);
+	# Have to enable warnings to get stricter utf-8 checks for Perl 5.8
+	use warnings;
+	my($char, $ord, $malformed);
+
+	# Define local warn handle to suppress malformed utf-8 warning
+	# messages and to flag when such occurrences happen.
+	my $cur_sig_warn = $SIG{__WARN__};
+	local $SIG{__WARN__} = sub {
+	    $malformed = 1;
+	    #warn @_;
+	    # invoke current warn handler, if defined
+	    &$cur_sig_warn  if defined($cur_sig_warn) && ref($cur_sig_warn);
+	};
 	$$data_r =~ s{
-	    $utf8_re
+	    $utf8_re_lax
 	}{
-	    (($char = unpack('U0U*',$1)) <= 0x7F)
-	      ? $HTMLSpecials{$1} || $1
-	      : sprintf('&#x%X;',$char);
+	    $char = unpack('U0U*',$1);
+	    if ($malformed ||
+		  (($char & 0xFFFE) == 0xFFFE) ||
+		  (($char & 0xFFFF) == 0xFFFF) ||
+		  ($char >= 0xFDD0 && $char <= 0xFDEF) ||
+		  ($char >= 0xD800 && $char <= 0xDFFF)
+	       ) {
+		# Some of the if() checks may be handled by perl directly,
+		# but such checks can be disabled when perl is built.
+		$malformed = 0;
+		'&#xFFFD;';
+	    } else {
+		($char <= 0x7F)
+			? $HTMLSpecials{$1} || sprintf('%c',$char)
+			: sprintf('&#x%X;',$char);
+	    }
 	}gxeso;
 
     } else {
@@ -168,15 +203,32 @@ sub _utf8_to_sgml {
 	    $utf8_re
 	}{
 	    if (($n = length($1)) == 1) {
-		$HTMLSpecials{$1} || $1;
+		my $ord = ord($1);
+		if ($ord > 0x7F) {
+		    # Malformed sequence
+		    '&#xFFFD;';
+		} else {
+		    # 7-bit ASCII
+		    $HTMLSpecials{$1} || $1;
+		}
 	    } else {
+		# Multi-byte sequence
 		$char = (unpack('C',substr($1,0,1)) &
 			 $utf8_lb_mask[$n-1]) << ($n-1)*6;
 		for ($i=1; $i < $n; ++$i) {
 		    $char |= ((unpack('C',substr($1,$i,1)) & 0x3F) <<
 			     (($n-$i-1)*6));
 		}
-		sprintf('&#x%X;',$char);
+		if ($char <= 0x7F    ||	# should only be single byte sequence
+		    (($char & 0xFFFE) == 0xFFFE) ||	    # not a char
+		    (($char & 0xFFFF) == 0xFFFF) ||	    # not a char
+		    ($char >= 0xFDD0 && $char <= 0xFDEF) || # not a char
+		    ($char >= 0xD800 && $char <= 0xDFFF)    # surrogates
+		   ) {
+		    '&#xFFFD;';
+		} else {
+		    sprintf('&#x%X;',$char);
+		}
 	    }
        }gxseo;
     }
@@ -249,7 +301,7 @@ difficult, but this may be a non-issue with most users.
 
 =head1 VERSION
 
-$Id: CharEnt.pm,v 1.15 2004/12/03 20:36:35 ehood Exp $
+$Id: CharEnt.pm,v 1.16 2005/05/22 21:14:33 ehood Exp $
 
 =head1 AUTHOR
 

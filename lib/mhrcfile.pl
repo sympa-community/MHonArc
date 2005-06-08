@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhrcfile.pl,v 2.43 2005/04/27 18:14:03 ehood Exp $
+##	$Id: mhrcfile.pl,v 2.45 2005/06/06 15:47:00 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -43,11 +43,11 @@ sub read_resource_file {
 	    parse_resource_file($file);
 	    ++$found;
 	} elsif (-e _) {
-	    qq/Warning: "$file" is not readable\n/;
+	    warn qq/Warning: "$file" is not readable\n/;
 	}
     }
     if (!$found && !$nowarn) {
-	qq/Warning: Unable to read resource file "$filename"\n/;
+	warn qq/Warning: Unable to read resource file "$filename"\n/;
     }
     $found;
 }
@@ -608,6 +608,16 @@ sub parse_resource_file {
 		last  if $line =~ /^\s*<\/mimeexcs\s*>/i;
 		$line =~ s/\s//g;  $line =~ tr/A-Z/a-z/;
 		$readmail::MIMEExcs{$line} = 1  if $line;
+	    }
+	    last FMTSW;
+	}
+	if ($elem eq 'mimeincs') {		# Mime includes
+	    $IsDefault{'MIMEINCS'} = 0;
+	    %readmail::MIMEIncs = ()  if $override;
+	    while (defined($line = <$handle>)) {
+		last  if $line =~ /^\s*<\/mimeincs\s*>/i;
+		$line =~ s/\s//g;  $line =~ tr/A-Z/a-z/;
+		$readmail::MIMEIncs{$line} = 1  if $line;
 	    }
 	    last FMTSW;
 	}

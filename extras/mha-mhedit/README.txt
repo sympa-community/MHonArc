@@ -12,3 +12,6 @@ like images, and for quoted-printable text.
 
 Read mha-mhedit.html or run 'mha-mhedit -man' for full usage
 information.
+
+-----------------------------------------------------------------------
+$Date: 2005/05/21 21:38:59 $

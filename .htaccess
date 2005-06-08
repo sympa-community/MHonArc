@@ -1,0 +1,11 @@
+# $Id: .htaccess,v 1.1 2005/05/21 21:38:58 ehood Exp $
+# .htaccess file for browsing source via Apache HTTP server.
+# Main purpose of this file is to undo any configurations at the
+# server level that will cause files to be interpreted as
+# (CGI) programs.  Of course, this file is pointless if .htaccess
+# is disabled at the server config level.
+#
+RemoveType .pl
+RemoveHandler .pl
+RemoveType .cgi
+RemoveHandler .cgi

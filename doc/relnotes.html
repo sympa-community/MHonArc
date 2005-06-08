@@ -37,7 +37,8 @@ for a more complete summary of changes to MHonArc.
 <ul>
 <li><a href="#important">Compatibility Notes</a>
 <ul>
-<li><small><a href="#v2.4.x-defrcname">UPGRADING FROM v2.5.x OR EARLIER: Default iso-2022-jp Converter Changed</a></small>
+<li><small><a href="#v2.6.11-cbbodyread">UPGRADING FROM v2.6.11 OR EARLIER: Handling of return value for $mhonarc::CB{Raw}MessageBodyRead Changed</a></small>
+<li><small><a href="#v2.5.x-iso-2022-jp">UPGRADING FROM v2.5.x OR EARLIER: Default iso-2022-jp Converter Changed</a></small>
 <li><small><a href="#v2.4.x-defrcname">UPGRADING FROM v2.4.x OR EARLIER: DEFRCNAME Change</a></small>
 <li><small><a href="#v2.4.x-header-footer">UPGRADING FROM v2.4.x OR EARLIER: HEADER and FOOTER Removed</a></small>
 <li><small><a href="#v2.4.x-mimefilters">UPGRADING FROM v2.4.x OR EARLIER: MIMEFILTERS API Change</a></small>
@@ -76,7 +77,46 @@ for a more complete summary of changes to MHonArc.
 if upgrading from a previous release of MHonArc:
 </p>
 
-<h3><a name="v2.4.x-defrcname">UPGRADING FROM v2.5.x OR EARLIER: Default iso-2022-jp Converter Changed</a></h3>
+<h3><a name="v2.6.11-cbbodyread">UPGRADING FROM v2.6.11 OR EARLIER: Handling of return value for $mhonarc::CB{Raw}MessageBodyRead Changed</a></h3>
+
+    <table class="note" width="100%">
+    <tr valign="baseline">
+    <td><strong>NOTE:</strong></td>
+    <td width="100%"><p>If you do not utilize MHonArc's
+    <a href="app-api.html">callback API</a>, you can ignore this compatibility
+    item.  <b>However</b>, if you use the <tt>mha-preview</tt> example script,
+    continuing reading.
+    </p>
+    </td>
+    </tr>
+    </table>
+    <p>In v2.6.12, the return value for the
+    <a href="app-api.html#CBMessageBodyRead">$mhonarc::CBMessageBodyRead</a>
+    and
+    <a href="app-api.html#CBRawMessageBodyRead">$mhonarc::CBRawMessageBodyRead</a>
+    is now checked to see if the message should be excluded from further
+    processing.  In previous versions, the return value was N/A.  Therefore,
+    if you use either of these callbacks, and the return value of your
+    routines evaluates to false for a given message, the message will
+    be excluded from the archive.
+    </p>
+    <p>If you never want to exclude messages with either of these callbacks,
+    have your routines already return <tt>1</tt>.
+    </p>
+    <table class="note" width="100%">
+    <tr valign="baseline">
+    <td><strong>NOTE:</strong></td>
+    <td width="100%"><p>The example <tt>mha-preview</tt> script provided
+    in the MHonArc distribution has been updated to reflect the change
+    in return value handling.  Even though it is statistically unlikely
+    messages will be quietly excluded with older versions of the script;
+    it is recommended to replace your copy with the latest version.
+    </p>
+    </td>
+    </tr>
+    </table>
+
+<h3><a name="v2.5.x-iso-2022-jp">UPGRADING FROM v2.5.x OR EARLIER: Default iso-2022-jp Converter Changed</a></h3>
 
     <p>In v2.6, the <strong>default</strong>
     <a href="resources/charsetconverters.html">charset
@@ -457,7 +497,7 @@ mha-dbedit -rcfile examples/<a class="shell" href="rcfileexs/def-mime.mrc.html">
 <!-- *************************************************************** -->
 <hr>
 <address>
-$Date: 2005/05/13 00:00:35 $ <br>
+$Date: 2005/06/09 01:12:12 $ <br>
 <img align="top" src="monicon.png" alt="">
 <a href="http://www.mhonarc.org/"><strong>MHonArc</strong></a><br>
 Copyright &#169; 1997-2005, <a href="http://www.mhonarc.org/~ehood/"
