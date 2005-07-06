@@ -13,6 +13,27 @@
 
 YYYY/MM/DD
 ============================================================================
+2005/07/06	(2.6.13)
+
+* Bug Fixes:
+
+    Bug ID  Summary
+    ------  ------------------------------------------------------------
+    12314   linebreak not utf-8 aware
+    ------  ------------------------------------------------------------
+    <https://savannah.nongnu.org/bugs/?group=mhonarc>
+
+* mha-preview example script changes:
+
+  - If preview data not available for message, the empty string
+    is used.  Before, undef was returned to mhonarc, causing
+    warning messages and $X-MSG-PREVIEW$ to show up on index pages.
+
+  - Beefed up preview text extraction to skip past quoted text.
+
+  Someday, mha-preview functionality will be intrinisic to mhonarc.
+
+============================================================================
 2005/06/08	(2.6.12)
 
 * Bug Fixes:
@@ -2675,4 +2696,4 @@ YYYY/MM/DD
 
 =======================================================================
 Earl Hood, mhonarc@mhonarc.org
-$Id: CHANGES,v 1.132 2005/06/09 01:12:11 ehood Exp $
+$Id: CHANGES,v 1.133 2005/07/06 04:33:17 ehood Exp $

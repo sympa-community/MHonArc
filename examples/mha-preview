@@ -1,7 +1,7 @@
 #!/usr/local/bin/perl
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mha-preview,v 1.3 2005/06/02 02:12:30 ehood Exp $
+##	$Id: mha-preview,v 1.4 2005/07/05 02:06:21 ehood Exp $
 ##  Author:
 ##      Earl Hood       earl@earlhood.com
 ##  Description:
@@ -10,7 +10,7 @@
 ##
 ##	Invoke program with -man option to see manpage.
 ##---------------------------------------------------------------------------##
-##    Copyright (C) 2002	Earl Hood, earl@earlhood.com
+##    Copyright (C) 2002,2005	Earl Hood, earl@earlhood.com
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the same terms as MHonArc itself.
 ##---------------------------------------------------------------------------##
@@ -93,7 +93,7 @@ sub rc_var_expand {
     # Use MHonArc function to support a mesg_spec argument
     my ($lref, $key, $pos, $opt) =
 	mhonarc::compute_msg_pos($mha_index, $var_name, $arg_str);
-    return ($X_MessagePreview{$key}, 0, 1);
+    return ($X_MessagePreview{$key}||"", 0, 1);
   }
 
   # If we do not recognize $var_name, make sure to tell
@@ -116,33 +116,50 @@ sub db_save {
 sub extract_preview {
   # Extracting the preview text of the message body is not as
   # trivial as you may expect.  We have to deal with HTML tags
-  # and entity references, but want to avoid the overhead of doing
-  # using a full-blown HTML parser.
+  # and entity references, but want to avoid the overhead of
+  # using a full-blown HTML parser.  We also want to skip any
+  # quoted text, otherwise preview text of replies would mainly
+  # contain quoted text, making preview less useful.
 
-  my $html     = shift;	# reference to HTML message body
+  my $html_ref = shift;	# reference to HTML message body
   my $prev_len = shift;	# length of preview to extract
 
+  # Make copy since we will be pre-process data to make extraction easier
+  my $html = $$html_ref;
+
+  # Normalize EOLs to make other patterns simplier
+  $html =~ s/\r\n/\n/g;
+  # Strip out quoting using <blockquote> (for flowed and/or fancy-quoting)
+  $html =~ s/<blockquote[^>]*>.*?<\/blockquote\s*>//gis;
+  # Strip tags
+  $html =~ s/<[^>]*>//g;
+  # Quoting using > and other common styles
+  $html =~ s/^(?:&gt;|[\|:\+]).*$//gm;
+  # Outhouse method of quoting
+  $html =~ s/^-----Original Message-----.*\Z//;
+  # Remove signatures
+  $html =~ s/\n-- \n.*\z//s;
+  # Preamble side comments
+  $html =~ s/\A(?:\s*\[[^\]]*\])+//;
+  # Common quote preambles
+  $html =~ s/\A\s*In\s+article.*?(?:wrote|writes|said|says):[^\S\n]*\n//si;
+  $html =~ s/\A.*(?:wrote|writes|said|says):[^\S\n]*\n//si;
+  # Minimize whitespace
+  $html =~ s/\s+/ /g;
+
   my $text = "";
-  my $html_len = length($$html);
+  my $html_len = length($html);
   my($pos, $sublen, $erlen, $real_len);
   
   for ( $pos=0, $sublen=$prev_len; $pos < $html_len; ) {
-    $text .= substr($$html, $pos, $sublen);
+    $text .= substr($html, $pos, $sublen);
     $pos += $sublen;
-
-    # strip tags
-    $text =~ s/\A[^<]*>//; # clipped tag
-    $text =~ s/<[^>]*>//g;
-    $text =~ s/<[^>]*\Z//; # clipped tag
 
     # check for clipped entity reference
     while (($pos < $html_len) && ($text =~ s/\&[^;]*\Z//)) {
-      $text .= substr($$html, $pos, 1);
+      $text .= substr($html, $pos, 1);
       ++$pos;
     }
-
-    # minimize whitespace
-    $text =~ s/\s+/ /g;
 
     # compute entity reference lengths to determine "real" character
     # count and not raw character count.

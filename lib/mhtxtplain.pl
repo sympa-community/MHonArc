@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhtxtplain.pl,v 2.46 2005/05/27 06:28:33 ehood Exp $
+##	$Id: mhtxtplain.pl,v 2.47 2005/06/20 04:25:18 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -317,7 +317,7 @@ sub filter {
 
     ## Check if max-width set
     if (($maxwidth > 0) && ($quote_style != Q_FLOWED)) {
-	$$data =~ s/^(.*)$/&break_line($1, $maxwidth)/gem;
+	break_lines($data, $charset, $maxwidth);
     }
 
     ## Convert data according to charset
@@ -437,10 +437,7 @@ sub filter {
 		}
 		if ($maxwidth > 0) {
 		    # Fixed lines should be clipped to specified max.
-		    $line =~ s/\n\Z//;
-		    $line = break_line(
-			      $line, $maxwidth+
-				  (length($line)-html_length($line))) . "\n";
+		    $line = break_lines($line, $charset, $maxwidth, 1);
 		}
 		if ($nonfixed) {
 		    # Proportional font desired
@@ -632,7 +629,42 @@ sub preserve_space {
 
 ##---------------------------------------------------------------------------##
 
-sub break_line {
+sub break_lines {
+    my $data_in  = shift;
+    my $charset  = shift;
+    my $maxwidth = shift;
+    my $is_html	 = shift; # hack for flowed processing
+    return unless $maxwidth > 0;
+
+    my $data = ref($data_in) ? $data_in : \$data_in;
+    my $do_encode = 0;
+    eval {
+	require Encode;
+	# Only translate to Perl's utf-8 if not an 8-bit charset.
+	# No harm if done for 8-bit, but try to avoid unnecesary
+	# overhead.  Translation done so line breaking is done
+	# on characters, not octets.
+	if ($charset !~ /us-ascii/i &&
+		$charset !~ /8859/i &&
+		!Encode::is_utf8($$data)) {
+	    $$data = Encode::decode($charset, $$data);
+	    $do_encode = 1;
+	}
+    };
+    $$data =~ s{
+	^(.*)$
+    }{
+	_break_line($1, ($is_html ? $maxwidth+(length($1)-html_length($1))
+				  : $maxwidth))
+    }gemx;
+    if ($do_encode) {
+	# Translate back to current encoding.
+	$$data = Encode::encode($charset, $$data);
+    }
+    $$data;
+}
+
+sub _break_line {
     my($str) = shift;
     my($width) = shift;
     my($q, $new) = ('', '');

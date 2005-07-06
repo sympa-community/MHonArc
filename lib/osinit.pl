@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: osinit.pl,v 2.7 2002/11/20 23:53:12 ehood Exp $
+##	$Id: osinit.pl,v 2.8 2005/06/21 22:10:53 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -80,7 +80,7 @@ sub OSinit {
     } elsif (defined($MacPerl::Version)) {
         $MSDOS = 0;  $MACOS = 1;  $UNIX = 0;  $VMS = 0;
 	$DIRSEP = ':';  $CURDIR = ':';
-	$PATHSEP = ';';
+	$PATHSEP = "\n";
 	fileparse_set_fstype('MacOS');
 
     } else {
