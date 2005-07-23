@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhonarc,v 2.10 2003/07/20 03:24:38 ehood Exp $
+##	$Id: mhonarc,v 2.11 2005/07/11 00:13:00 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -77,7 +77,11 @@ B<Time::Local>
 
 =head1 COREQUISITES
 
+B<Encode>,
 B<Digest::MD5>,
+B<File::Temp>,
+B<MIME::Base64>,
+B<POSIX>
 
 =head1 OSNAMES
 

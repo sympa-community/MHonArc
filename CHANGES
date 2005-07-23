@@ -13,6 +13,26 @@
 
 YYYY/MM/DD
 ============================================================================
+2005/07/23	(2.6.14)
+
+* Bug Fixes:
+
+    Bug ID  Summary
+    ------  ------------------------------------------------------------
+     2641   Additional Callbacks
+     3225   CHARSETCONVERTERS not reset across multi-archive process
+    11759   email address exposed in subject line
+    ------  ------------------------------------------------------------
+    <https://savannah.nongnu.org/bugs/?group=mhonarc>
+
+* New resources:
+
+    PRINTXCOMMENTS	Print <!--X-...--> comments in generated pages.
+
+* Added "Performance Tips" document: Provides configuration tips
+  to improve the execution performance of mhonarc.
+
+============================================================================
 2005/07/06	(2.6.13)
 
 * Bug Fixes:
@@ -2696,4 +2716,4 @@ YYYY/MM/DD
 
 =======================================================================
 Earl Hood, mhonarc@mhonarc.org
-$Id: CHANGES,v 1.133 2005/07/06 04:33:17 ehood Exp $
+$Id: CHANGES,v 1.139 2005/07/23 06:36:26 ehood Exp $

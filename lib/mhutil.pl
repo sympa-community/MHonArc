@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhutil.pl,v 2.31 2005/06/02 02:12:30 ehood Exp $
+##	$Id: mhutil.pl,v 2.32 2005/07/08 05:27:53 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -42,9 +42,10 @@ use MHonArc::RFC822;
 ## Do not apply ADDRESSMODIFYCODE headerfiels
 %HFieldsAsIsList = (
     %HFieldsList,
-    'content-id',
-    'content-type',
-    'message-id',
+    'content-disposition' => 1,
+    'content-id'          => 1,
+    'content-type'        => 1,
+    'message-id'          => 1,
 );
 
 ## Header fields that contain addresses
@@ -466,7 +467,8 @@ sub htmlize_header {
 		foreach $tmp (@array) {
 		    $tmp = $HFieldsList{$key} ? mlist_field_add_links($tmp) :
 						&$MHeadCnvFunc($tmp);
-		    $tmp = field_add_links($key, $tmp, $fields);
+		    $tmp = field_add_links($key, $tmp, $fields)
+			unless $HFieldsAsIsList{$key};
 		    ($tago, $tagc, $ftago, $ftagc) = get_header_tags($key);
 		    $mesg .= join('', $LABELBEG,
 				  $tago, htmlize(ucfirst($key)), $tagc,
@@ -482,7 +484,8 @@ sub htmlize_header {
 		foreach $tmp (@array) {
 		    $tmp = $HFieldsList{$item} ? mlist_field_add_links($tmp) :
 						 &$MHeadCnvFunc($tmp);
-		    $tmp = field_add_links($item, $tmp, $fields);
+		    $tmp = field_add_links($item, $tmp, $fields)
+			unless $HFieldsAsIsList{$key};
 		    ($tago, $tagc, $ftago, $ftagc) = &get_header_tags($item);
 		    $mesg .= join('', $LABELBEG,
 				  $tago, htmlize(ucfirst($item)), $tagc,
@@ -524,23 +527,20 @@ sub field_add_links {
     my $fields	 = shift;
 
     LBLSW: {
-	if ($HFieldsAddr{$label}) {
-	    if (!$NOMAILTO) {
-		$fld_text =~ s{($HAddrExp)}
-			      {&mailUrl($1, $fields->{'x-mha-message-id'},
-					    $fields->{'x-mha-subject'},
-					    $fields->{'x-mha-from'});
-			      }gexo;
-	    } else {
-		$fld_text =~ s{($HAddrExp)}
-			      {&htmlize(&rewrite_address($1))
-			      }gexo;
-	    }
-	    last LBLSW;
-	}
 	if (!$NONEWS && ($label eq 'newsgroup' || $label eq 'newsgroups')) {
 	    $fld_text = newsurl($fld_text, $fields->{'x-mha-message-id'});
 	    last LBLSW;
+	}
+	if (!$NOMAILTO) {
+	    $fld_text =~ s{($HAddrExp)}
+			  {&mailUrl($1, $fields->{'x-mha-message-id'},
+					$fields->{'x-mha-subject'},
+					$fields->{'x-mha-from'});
+			  }gexo;
+	} else {
+	    $fld_text =~ s{($HAddrExp)}
+			  {&htmlize(&rewrite_address($1))
+			  }gexo;
 	}
 	last LBLSW;
     }
@@ -604,8 +604,7 @@ sub mailUrl {
     $url =~ s/\$FROMADDRNAME\$/$faddrnamel/g;
     $url =~ s/\$FROMADDRDOMAIN\$/$faddrdomainl/g;
     $url =~ s/\$MSGID\$/$msgidl/g;
-    $url =~ s/\$SUBJECT\$/$subjectl/g;
-    $url =~ s/\$SUBJECTNA\$/$subjectl/g;
+    $url =~ s/\$SUBJECT(?:NA)?\$/$subjectl/g;
     $url =~ s/\$TO\$/$to/g;
     $url =~ s/\$TOADDRNAME\$/$toname/g;
     $url =~ s/\$TOADDRDOMAIN\$/$todomain/g;

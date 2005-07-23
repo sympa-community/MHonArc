@@ -87,7 +87,7 @@ will get expanded only to the subject text of the applicable message.
 </td>
 </tr>
 </table>
-
+<p> </p>
 
 
 <!-- *************************************************************** -->
@@ -99,7 +99,7 @@ is as follows:
 </P>
 
 <pre class="code">
-$<i>VARIABLE</i>[[:[<i>N</i>][U][J]][(<i>arglist</i>)]]$
+$<i>VARIABLE</i>[[:[<i>N</i>][J][M][U]][(<i>arglist</i>)]]$
 	  ^----------^^---------^ 
          ^-----------------------^
 </pre>
@@ -124,7 +124,7 @@ next <tt class="icode">$</tt> is part of the resource variable.
 </p>
 </dd>
 
-<dt><tt class="icode">:[<i>N</i>][U][J]</tt> <em>(optional)</em></dt>
+<dt><tt class="icode">:[<i>N</i>][J][U][M]</tt> <em>(optional)</em></dt>
 <dd><p>The optional grouping starting with a colon are variable
 modifiers.  The definition of each modifier is as follows:
 </p>
@@ -148,17 +148,27 @@ modifiers.  The definition of each modifier is as follows:
     </td>
 </tr>
 <tr valign="top">
-    <td><tt class="icode">U</tt></td>
-    <td><p>Treat the text as part of a URL string.  MHonArc will escape
-    any characters that are considered special in a URL.
-    </p>
-    </td>
-</tr>
-<tr valign="top">
     <td><tt class="icode">J</tt></td>
     <td><p>Treat the text as a JavaScript string.  MHonArc will escape
     any quote characters so the text can be part of a JavaScript
     string.
+    </p>
+    </td>
+</tr>
+<tr valign="top">
+    <td><tt class="icode">M</tt></td>
+    <td><p>Enable mailto linking on expanded string.  This modifier
+    is only applicable for the following resource variables:
+    <a href="#MSGHFIELD"><tt>$MSGHFIELD$</tt></a>,
+    <a href="#SUBJECT"><tt>$SUBJECT$</tt></a>,
+    <a href="#SUBJECTNA"><tt>$SUBJECTNA$</tt></a>.
+    </p>
+    </td>
+</tr>
+<tr valign="top">
+    <td><tt class="icode">U</tt></td>
+    <td><p>Treat the text as part of a URL string.  MHonArc will escape
+    any characters that are considered special in a URL.
     </p>
     </td>
 </tr>
@@ -203,7 +213,7 @@ different rules for variable expansion:
     can be used to represent a "<tt>$</tt>" character.  </p>
     </li>
 <li><p>Variables should <STRONG>NOT</STRONG>
-    have "<tt class="icode">:<i>N</i>UJ</tt>" modifiers. This will prevent the
+    have "<tt class="icode">:<i>N</i>JMU</tt>" modifiers. This will prevent the
     variables from being recognized. MHonArc automatically
     treats the replacement value as a part of a URL string, so the
     "<tt class="icode">:U</tt>" modifier is not needed.
@@ -797,11 +807,11 @@ resource is used.
 <td align=right><b>Description:</b></td>
 <td>Message header field value as stored by the
 <a href="resources/fieldstore.html">FIELDSTORE</a> resource.
-<i>field-name</i> denotes the name of the field value.  If
-<i>field-name</i> is an address field, then the resources
+<i>field-name</i> denotes the name of the field value.  The
+following resources are applied to the expanded string:
 <a href="resources/addressmodifycode.html">ADDRESSMODIFYCODE</a>,
-<a href="resources/mailto.html">MAILTO</a>,
-<a href="resources/mailtourl.html">MAILTOURL</a>, and
+<a href="resources/mailtourl.html">MAILTOURL</a> (if the
+"<tt class="icode">:M</tt>" modifier is specified), and
 <a href="resources/spammode.html">SPAMMODE</a>
 apply.
 </td>
@@ -1325,7 +1335,7 @@ resources.
 <!-- *************************************************************** -->
 <hr>
 <address>
-$Date: 2003/10/06 22:04:14 $ <br>
+$Date: 2005/07/08 05:27:52 $ <br>
 <img align="top" src="monicon.png" alt="">
 <a href="http://www.mhonarc.org"
 ><strong>MHonArc</strong></a><br>

@@ -1,0 +1,619 @@
+<html>
+<head>
+<title>MHonArc: Performance Tips</title></head>
+<link rel="stylesheet" type="text/css" href="../docstyles.css">
+<body>
+
+<h1>MHonArc: Performance Tips</h1>
+
+<!--X-TOC-Start-->
+<ul>
+<li><a href="#intro">Introduction</a>
+<li><a href="#dos">DOs</a>
+<ul>
+<li><small><a href="#periods">Break up a large archive into a set of smaller ones</a></small>
+<li><small><a href="#pagelayout">Minimize page layout settings</a></small>
+<li><small><a href="#fasttempfiles">Use FASTTEMPFILES</a></small>
+<li><small><a href="#fieldorder">Use FIELDORDER</a></small>
+<li><small><a href="#maxsize">Use MAXSIZE</a></small>
+<li><small><a href="#mimeincs">Use MIMEINCS and/or MIMEEXCS</a></small>
+<li><small><a href="#quiet">Use QUIET</a></small>
+<li><small><a href="#tslice">Set TSLICE to smallest range possible</a></small>
+</ul>
+<li><a href="#donts">DON'Ts</a>
+<ul>
+<li><small><a href="#realtime">Don't do real-time archive updates</a></small>
+<li><small><a href="#mesg_spec">Don't use message specifications in resource variables</a></small>
+<li><small><a href="#definederived">Don't use DEFINEDERIVED</a></small>
+<li><small><a href="#fieldstore">Don't use FIELDSTORE</a></small>
+<li><small><a href="#folrefs">Don't use FOLREFS</a></small>
+<li><small><a href="#mailto">Don't use MAILTO</a></small>
+<li><small><a href="#mimefilters">Don't use certain MIMEFILTERS filters options</a></small>
+<li><small><a href="#modifybodyaddresses">Don't use MODIFYBODYADDRESSES</a></small>
+<li><small><a href="#modtime">Don't use MODTIME</a></small>
+<li><small><a href="#multipg">Don't use MULTIPG</a></small>
+<li><small><a href="#otherindexes">Don't use OTHERINDEXES</a></small>
+<li><small><a href="#quiet">Don't use SAVERESOURCES if you specify resource settings every time</a></small>
+<li><small><a href="#subjectthreads">Don't use SUBJECTTHREADS</a></small>
+<li><small><a href="#var_tslice">Don't use $TSLICE$</a></small>
+<li><small><a href="#usinglastpg">Don't use USINGLASTPG</a></small>
+</ul>
+<li><a href="#charsets">Character Encodings</a>
+<ul>
+<li><small><a href="#avoidchars">Avoid conversion if you do not need it</a></small>
+<li><small><a href="#latestperl">Use the latest version of Perl</a></small>
+<li><small><a href="#textencode">Use TEXTENCODE</a></small>
+</ul>
+</ul>
+<!--X-TOC-End-->
+
+<!-- ===================================================================== -->
+<hr>
+<h2><a name="intro">Introduction</a></h2>
+
+<p>This documents is a guide on how to improve the performance
+of <a href="http://www.mhonarc.org/">MHonArc</a>.
+</p>
+
+<p>The first two sections of this document cover the
+<a href="#dos">DOs</a>
+and
+<a href="#donts">DONT's</a>.
+The
+DOs
+provides things you can do to improve the performance of mhonarc.
+The
+DON'Ts
+provides things you should avoiding doing that decrease the performance
+of mhonarc.
+There is no requirement that you must follow all, if any of, the DOs and
+DON'Ts.  Depending on your needs and goals, sometimes accepting a
+loss in performance is required to achieve a particular goal.
+</p>
+
+
+
+<!-- ===================================================================== -->
+<hr>
+<h2><a name="dos">DOs</a></h2>
+
+<!-- .................................................................... -->
+<h3><a name="periods">Break up a large archive into a set of smaller ones</a></h3>
+
+<p>MHonArc performance degrades as an archive gets larger.  Therefore,
+a common performance improvement practice is use a sequence of MHonArc archives
+to comprise the complete archive of a mailing list.  The smaller
+archives are generally organized by time period, like by month.
+</p>
+<p>An example of this practice is provided by
+<a href="http://www.mhonarc.org/mharc/"><b>mharc</b></a>, where
+archives are organized by monthly, or yearly, time periods to
+avoid performance problems.
+</p>
+
+<!-- .................................................................... -->
+<h3><a name="pagelayout">Minimize page layout settings</a></h3>
+
+<p>The more resource variables you use in page layout settings,
+the more processing time is required to render layout.  Avoid
+unnecessary uses of resource variables.
+</p>
+
+<!-- .................................................................... -->
+<h3><a name="fasttempfiles">Use FASTTEMPFILES</a></h3>
+
+<p>Use
+<a href="../resources/fasttempfiles.html">FASTTEMPFILES</a>.
+Make sure take notice of the security implications before
+enabling this resource.
+</p>
+
+<!-- .................................................................... -->
+<h3><a name="fieldorder">Use FIELDORDER</a></h3>
+
+<p>Use the
+<a href="../resources/fieldorder.html">FIELDORDER</a> resource to
+define which header fields you want to show in message pages.  Avoid
+using the special field value "<tt>-extra-</tt>".  Only essential
+header fields should be specified.
+</p>
+
+<!-- .................................................................... -->
+<h3><a name="maxsize">Use MAXSIZE</a></h3>
+
+<p>Use
+<a href="../resources/maxsize.html">MAXSIZE</a>
+to set a limit on the size of your archive.  As mentioned earlier,
+MHonArc performance degrades as an archive gets larger.
+</p>
+
+<p>If you need to keep older message around, then see:
+<a href="#periods"><cite>Break up a large archive into a set of smaller
+ones</cite></a>.
+Also see the
+<a href="../resources/keeponrmm.html">KEEPONRMM</a> resource.
+</p>
+
+<!-- .................................................................... -->
+<h3><a name="mimeincs">Use MIMEINCS and/or MIMEEXCS</a></h3>
+
+<p>
+<a href="../resources/mimeincs.html">MIMEINCS</a> and
+<a href="../resources/mimeexcs.html">MIMEEXCS</a> allows you
+to explicitly define which media-types you will allow in your
+archive.  Excluding media-types helps reduce message processing overhead,
+and it can improve the security of your archive.
+</p>
+
+<!-- .................................................................... -->
+<h3><a name="quiet">Use QUIET</a></h3>
+
+<p><a href="../resources/quiet.html">QUIET</a> disables informational
+diagnostics when processing.  Error and warning diagnostics will
+still get printed.
+</p>
+
+<!-- .................................................................... -->
+<h3><a name="tslice">Set TSLICE to smallest range possible</a></h3>
+
+<p>If you do not use <a href="#var_tslice"><tt>$TSLICE$</tt></a>, set the
+<a href="../resources/tslice.html">TSLICE</a>
+resource to "<tt class="icode">0:0:0</tt>" to avoid unnecessary
+page edits when messages are added to an archive.
+</p>
+<p>If you do choose to use <tt>$TSLICE$</tt>, set
+<a href="../resources/tslice.html">TSLICE</a> to the smallest
+range you plan on using to minimize the amount of processing
+overhead.
+</p>
+
+<p><b>See Also</b>:
+<a href="#var_tslice">Don't use $TSLICE$</a>.
+</p>
+
+
+
+<!-- ===================================================================== -->
+<hr>
+<h2><a name="donts">DON'Ts</a></h2>
+
+<!-- .................................................................... -->
+<h3><a name="realtime">Don't do real-time archive updates</a></h3>
+
+<p>It is tempting to update an archive right when a message arrives,
+but if mail traffic volume is high, this can cause a bottleneck
+and a queuing up of multiple mhonarc process waiting to lock
+the archive.  Even if general traffic is not high, a burst of
+incoming mail can cause problems.
+</p>
+<p>It is recommended to update an archive on a well-defined periodic
+basis.  It avoids lock queuing problems and minimizes the overhead
+of invoking the perl interpreter for each incoming message.
+Facilities like <b><tt>cron</tt></b> (standard on Unix-like systems) can
+be used to invoke mhonarc on a periodic basis.
+</p>
+<p>Cron-like invocation also make archive administration easier since
+it is easier to disable archive updates when administration tasks
+are required.  Raw, incoming messages can still be queued up until
+administrative tasks are complete in order to avoid message bounces.
+</p>
+
+<!-- .................................................................... -->
+<h3><a name="mesg_spec">Don't use message specifications in resource variables</a></h3>
+
+<p>Many message content-related resource variables
+(e.g. <tt>$SUBJECT$</tt>, <tt>$FROM$</tt>, <tt>$DATE$</tt>, etc), can
+take a <a href="../rcvars.html#mesg_spec">message specification</a>
+argument.  If a specification is provided that references a message
+that is not the current message, MHonArc must resolve the specification
+to reference the proper message information to expand the variable.
+</p>
+<p>Some message specifications are more costly than others, they
+include:
+<tt>TEND</tt>,
+<tt>TNEXTTOP</tt>,
+<tt>TPARENT</tt>,
+<tt>TPREVTOP</tt>,
+<tt>TTOP</tt>.
+</p>
+
+<!-- .................................................................... -->
+<h3><a name="definederived">Don't use DEFINEDERIVED</a></h3>
+
+<p><a href="../resources/definederived.html">DEFINEDERIVED</a>
+allows you to define extra files to generate for each message.
+The MHonArc documentation shows how this resource can be used
+to provide frame-based navigation.  Although frame-based navigation
+seems "cool", avoid it.  It normally does not provide any effective
+improvement in archive navigation and it can be prohibitive in
+some cases: non-frame-aware browsers and people with disabilities.
+</p>
+
+<!-- .................................................................... -->
+<h3><a name="fieldstore">Don't use FIELDSTORE</a></h3>
+
+<p>Only use
+<a href="../resources/fieldstore.html">FIELDSTORE</a>
+if you have a real need for it.
+</p>
+<p>By default, this resource is nil.
+</p>
+
+<!-- .................................................................... -->
+<h3><a name="folrefs">Don't use FOLREFS</a></h3>
+
+<p>Disable
+<a href="../resources/folrefs.html">FOLREFS</a>
+unless you find it useful.  The normal next and previous
+thread links may be sufficient.
+</p>
+<p>Also, FOLREFS is not subject-aware like the thread links are.
+Therefore, FOLREFS can provide reader confusion when no follow-ups
+are listed but the thread index shows follow-ups (due to same
+message subject).
+</p>
+<table class="note" width="100%">
+<tr valign="baseline">
+<td><strong>NOTE:</strong></td>
+<td width="100%"><p>If you do decide to use
+<a href="#var_tslice"><tt>$TSLICE$</tt></a> in message pages, then
+you should definitely disable FOLREFS since it would be
+redundant, and probably inconsistent.
+</p>
+</td>
+</tr>
+</table>
+
+<!-- .................................................................... -->
+<h3><a name="mailto">Don't use MAILTO</a></h3>
+
+<p>Disabling
+<a href="../resources/mailto.html">MAILTO</a> may provide little,
+to negligible,
+performance gain, but if you do not care about email address linking,
+then no need to keep this resource enabled.
+</p>
+
+<!-- .................................................................... -->
+<h3><a name="mimefilters">Don't use certain MIMEFILTERS filters options</a></h3>
+
+<p>
+<a href="../resource/mimefilters.html">MIMEFILTERS</a> is used to
+register filters for media-types.  Many of the filters provided with
+MHonArc support a myriad of options to customize their behavior.
+However, some of these options increase processing overhead.  The
+following highlights filter options to avoid, or consider, from a performance
+perspective:
+</p>
+<p><b>Filter options to avoid:</b>  The following options will
+degrade performance:</p>
+<ul>
+<li><a href="../resources/mimefilters.html#m2h_text_plain"
+    ><tt>m2h_text_plain::filter</tt></a>: <tt>fancyquote</tt>,
+    <tt>htmlcheck</tt>,
+    <tt>keepspace</tt>,
+    <tt>maxwidth</tt>,
+    <tt>quote</tt>,
+    <tt>uudecode</tt>.
+</ul>
+
+<p><b>Filter options to consider:</b>  The following options will
+improve performance:</p>
+<ul>
+<li><a href="../resources/mimefilters.html#m2h_text_html"
+    ><tt>m2h_text_html::filter</tt></a>: <tt>disablerelated</tt>.
+<li><a href="../resources/mimefilters.html#m2h_text_plain"
+    ><tt>m2h_text_plain::filter</tt></a>: <tt>disableflowed</tt>,
+    <tt>nourl</tt>.
+</ul>
+
+<!-- .................................................................... -->
+<h3><a name="modifybodyaddresses">Don't use MODIFYBODYADDRESSES</a></h3>
+
+<p>Disabling
+<a href="../resources/modifybodyaddresses.html">MODIFYBODYADDRESSES</a>
+may not be an option if you are protecting your archive from
+address harvesters.
+</p>
+
+<!-- .................................................................... -->
+<h3><a name="modtime">Don't use MODTIME</a></h3>
+
+<p><a href="../resources/modtime.html">MODTIME</a>,
+when enabled, causes each message file modification time to be equal
+to the date of the message.  By default, this resource is disabled.
+</p>
+<table class="note" width="100%">
+<tr valign="baseline">
+<td><strong>NOTE:</strong></td>
+<td width="100%"><p>If you use a search indexer on your archive,
+enabling MODTIME may actually improve overall performance.  Some search
+indexers key off of a file's modification time to determine if the file
+needs to be re-indexed.  With MODTIME enabled, if a message file
+is edited by MHonArc (due to new messages being added or EDITIDX),
+the file will not be unnecessarily re-indexed.
+</p>
+<p>Also, some search indexers may key of the file modification time
+for purposes of date ordering in search results.  If this
+type of functionality is desired, you will need to enable MODTIME.
+</p>
+</td>
+</tr>
+</table>
+
+<!-- .................................................................... -->
+<h3><a name="multipg">Don't use MULTIPG</a></h3>
+
+<p><a href="../resources/multipg.html">MULTIPG</a> causes
+MHonArc indexes to be printed across multiple pages, requiring
+more processing work versus a single page.
+If following the advice provided in, 
+"<a href="#periods"><cite>Break up a large archive into a set of smaller
+ones</cite></a>," using MULTIPG is generally not necessary.
+</p>
+
+<!-- .................................................................... -->
+<h3><a name="otherindexes">Don't use OTHERINDEXES</a></h3>
+
+<p><a href="../resources/otherindexes.html">OTHERINDEXES</a>
+provides the ability to generate alternate indexes.  Unless
+the users of your archive have a real need for alternate
+indexes from the main and thread already provided, avoid using
+this resource.
+</p>
+<p>For example, many believe an author index is useful, along
+with the date and thread indexes.  However, this may be a subjective
+perception versus knowing the real reading habits of archive readers.
+If there are definite needs for alternate navigational services,
+sometimes a search engine (if you are already using one) can
+indirectly provide these services.
+</p>
+
+<!-- .................................................................... -->
+<h3><a name="quiet">Don't use SAVERESOURCES if you specify resource settings every time</a></h3>
+
+<p>It is common practice to specify resource settings (especially
+RCFILE) each time mhonarc is invoked.  This is generally done to
+make administration easier since alternate invocations are not
+required when an archive is first created versus when it is updated.
+</p>
+<p>If you specify resource settings every time,
+disable <a href="../resources/saversource.html">SAVERESOURCES</a>
+to avoid the unnecessary saving of resource settings to the
+<a href="../resources/dbfile.html">database</a>.
+</p>
+
+<!-- .................................................................... -->
+<h3><a name="subjectthreads">Don't use SUBJECTTHREADS</a></h3>
+
+<p>When <a href="../resources/subjectthreads.html">SUBJECTTHREADS</a>
+is enabled (the default), MHonArc will examine message subjects when
+computing threads.  It is still common for some mail composition
+software to not include a message-id reference when a user replies
+to a message.
+</p>
+<p>Subject-based detection adds extra processing overhead during
+thread computation.  If you know messages in your archive define
+<tt>References</tt> and/or <tt>In-Reply-To</tt> header fields
+for message replies, then disable SUBJECTTHREADS.
+</p>
+
+<!-- .................................................................... -->
+<h3><a name="var_tslice">Don't use $TSLICE$</a></h3>
+
+<p>The <a href="../rcvars.html#TSLICE"><tt>$TSLICE$</tt></a> resource
+variable generates a slice of the thread relative to the
+current message.  <tt>$TSLICE$</tt> is not part of MHonArc's
+default resource values, but many users like to include it within
+message pages as an additional (useful) navigational aid.
+</p>
+<p>The following is an example of what a thread slice may look like:
+</p>
+<blockquote>
+<ul>
+  <li><b><a href="javascript:void(0)">Stripping signature / tagline / adline</a></b>, <i>East Coast Coder</i>
+  <ul>
+    <li><b><a href="javascript:void(0)">Re: Stripping signature / tagline / adline</a></b>, <i>Earl Hood</i>
+    <ul>
+      <li><span class="sliceCur"><strong>Re: Stripping signature / tagline / adline</strong>,
+      <em>Jym Dyer</em>&nbsp;<b></span>&lt;=</b>
+      <ul>
+	<li><b><a href="javascript:void(0)">Re: Stripping signature / tagline / adline</a></b>, <i>East Coast Coder</i>
+	<li><b><a href="javascript:void(0)">Re: Stripping signature / tagline / adline</a></b>, <i>Jym Dyer</i>
+	</li>
+	</li>
+      </ul>
+      </li>
+    </ul>
+    </li>
+  </ul>
+  </li>
+</ul>
+</blockquote>
+
+<p>The "next" and "previous" thread links are already provided
+within message pages, which may be sufficient for your needs.
+</p>
+
+<p><b>See Also</b>:
+<a href="#tslice">Set TSLICE to smallest range possible</a>.
+</p>
+
+<!-- .................................................................... -->
+<h3><a name="usinglastpg">Don't use USINGLASTPG</a></h3>
+
+<p>If you have disabled <a href="#multipg">MULTIPG</a>,
+then you do not need to worry about <a
+href="../resources/usinglastpg.html">USINGLASTPG</a>.  If you choose
+to use MULTIPG, then disable USINGLASTPG if you can.  </p>
+
+<p>If you need to have a links to the last page of an index listing,
+alternatives to using <a href="../rcvars.html#PG"><tt>$PG(LAST)$</tt></a>
+can be implemented.  For example, under Unix, a
+post-processing task can create/update a fixed-named symbolic link to the last
+index page, with archive pages referencing the symbolic link instead
+of using <tt>$PG(LAST)$</tt>.  </p>
+
+<!-- ===================================================================== -->
+<hr>
+<h2><a name="charsets">Character Encodings</a></h2>
+
+<p>MHonArc provides robust support for dealing with a variety
+of character encodings.
+For an overview of how textual data is processed by MHonArc,
+see the
+<a href="../resources/textencode.html#vscharsetconverters">TEXTENCODE</a>
+resource.
+</p>
+
+<table class="note" width="100%">
+<tr valign="baseline">
+<td><strong>NOTE:</strong></td>
+<td width="100%"><p>With respect to email, the term
+<em>character sets</em> (or <em>charsets</em> for short) is
+used when discussing character encodings. 
+Both terms will be used interchangeably since
+the technical differences between the two terms is not relevant
+for this document.
+</p>
+</td>
+</tr>
+</table>
+<p>Some charsets may incur a greater cost to performance.
+If your archive comprises of only English
+messages &mdash; US-ASCII charset &mdash; then there are
+no performance issues.  But if your archive has non-English
+messages, especially Asian-based encodings, there
+can be noticeable performance hits.
+</p>
+<p>The following are suggestions you may follow to
+minimize the performance impacts of charset processing:
+</p>
+
+<!-- .................................................................... -->
+<h3><a name="avoidchars">Avoid conversion if you do not need it</a></h3>
+
+<p>If your archive will only contain messages in a single encoding,
+then avoid unnecessary conversion processing.  The following
+resource settings define the absolute minimum in text processing and
+causes archive messages to be rendered in the default locale of
+the web browser:
+</p>
+<pre class="code">
+&lt;!-- DECODEHEADS can be used to improve resource variable
+     expansion.  See <a href="../resources/decodeheads.html">DECODEHEADS</a> resource for more information.  --&gt;
+<b><a href="../resources/decodeheads.html">&lt;DecodeHeads&gt;</a></b>
+
+&lt;!-- Only convert HTML specials --&gt;
+<b><a href="../resources/charsetconverters.html">&lt;CharsetConverters override&gt;</a></b>
+plain;          mhonarc::htmlize;
+default;        -decode-
+<b>&lt;/CharsetConverters&gt;</b>
+</pre>
+<p>If your locale is a non-English, non-Latin-1 one,
+you may need to specify the locale explicitly in archive pages;
+the default locale of web browsers may not 
+match the locale of the archive.  For example, if your
+locale is Polish (ISO-8859-2), then something like the following
+resource settings can be used:
+</p>
+<pre class="code">
+&lt;!-- 
+     The following resource settings are just the default settings
+     for each resource but with the appropriate &lt;meta http-equiv&gt;
+     tag added.
+  --&gt;
+<b><a href="../resources/idxpgbegin.html">&lt;DefineVar chop&gt;</a></b>
+HTTP-EQUIV
+<span class="highlight">&lt;meta http-equiv="Content-Type" content="text/html; charset=iso-8859-2"&gt;</span>
+<b>&lt;/DefineVar&gt;</b>
+
+<b><a href="../resources/idxpgbegin.html">&lt;IdxPgBegin&gt;</a></b>
+&lt;html&gt;
+&lt;head&gt;
+&lt;title&gt;<b><a href="../rcvars.html#IDXTITLE">$IDXTITLE$</a></b>&lt;/title&gt;
+<span class="highlight">$HTTP-EQUIV$</span>
+&lt;/head&gt;
+&lt;body&gt;
+&lt;h1&gt;<b><a href="../rcvars.html#IDXTITLE">$IDXTITLE$</a></b>&lt;/h1&gt;
+<b>&lt;/IdxPgBegin&gt;</b>
+
+<b><a href="../resources/tidxpgbegin.html">&lt;TIdxPgBegin&gt;</a></b>
+&lt;html&gt;
+&lt;head&gt;
+&lt;title&gt;<b><a href="../rcvars.html#TIDXTITLE">$TIDXTITLE$</a></b>&lt;/title&gt;
+<span class="highlight">$HTTP-EQUIV$</span>
+&lt;/head&gt;
+&lt;body&gt;
+&lt;h1&gt;<b><a href="../rcvars.html#TIDXTITLE">$TIDXTITLE$</a></b>&lt;/h1&gt;
+<b>&lt;/TIdxPgBegin&gt;</b>
+
+
+<b><a href="../resources/msgpgbegin.html">&lt;MsgPgBegin&gt;</a></b>
+&lt;html&gt;
+&lt;head&gt;
+&lt;title&gt;<b><a href="../rcvars.html#SUBJECTNA">$SUBJECTNA$</a></b>&lt;/title&gt;
+&lt;link rev="made" href="mailto:<b><a href="../rcvars.html#FROMADDR">$FROMADDR$</a></b>"&gt;
+<span class="highlight">$HTTP-EQUIV$</span>
+&lt;/head&gt;
+&lt;body&gt;
+<b>&lt;/MsgPgBegin&gt;</b>
+</pre>
+
+<!-- .................................................................... -->
+<h3><a name="latestperl">Use the latest version of Perl</a></h3>
+
+<p>Perl 5.8, and later, provides built-in support for character
+encodings, with UTF-8 supported internally and the <tt>Encode</tt>
+module providing character encoding conversion facilities.  MHonArc
+will leverage such features if available and applicable to
+improve performance.
+</p>
+<p>If using older versions of Perl, MHonArc still provides robust
+character encoding support, but performance is not as good.
+</p>
+
+<!-- .................................................................... -->
+<h3><a name="textencode">Use TEXTENCODE</a></h3>
+
+<p>If you archive will contain date in multiple encodings, consider
+using the
+<a href="../resources/textencode.html">TEXTENCODE</a> resource.
+The <a href="../resources/textencode.html">TEXTENCODE</a> resource
+allows you to convert all message data into a single encoding,
+simplifying subsequent processing done by MHonArc.  The most
+common usage of <a href="../resources/textencode.html">TEXTENCODE</a>
+is to normalize all message data to UTF-8 (Unicode).
+See the
+<tt><a href="../rcfileexs/utf-8-encode.mrc.html">utf-8-encode.mrc</a></tt>
+example resource file on how to encode all text to UTF-8.
+</p>
+<table class="caution" width="100%">
+<tr valign="baseline">
+<td><strong style="color: red;">CAUTION:</strong></td>
+<td width="100%"><p>Although most modern web browsers support
+UTF-8, not all search engines do.  If you use a search engine, or
+plan to use one, verify that UTF-8 is supported.
+</p>
+</td>
+</tr>
+</table>
+
+<p>
+</p>
+
+<!-- ===================================================================== -->
+<hr>
+<address>
+$Date: 2005/07/23 06:08:02 $ <br>
+<img align="top" src="../monicon.png" alt="">
+<a href="http://www.mhonarc.org/"
+><strong>MHonArc</strong></a><br>
+Copyright &#169; 2005, <a href="http://www.earlhood.com/"
+>Earl Hood</a>, <a href="mailto:mhonarc&#37;40mhonarc.org"
+>mhonarc<!--
+-->&#64;<!--
+-->mhonarc.org</a><br>
+</address>
+</body>
+</html>

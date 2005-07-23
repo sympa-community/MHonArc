@@ -60,7 +60,7 @@ value of your routines evaluates to false for a given message, the message
 will be excluded from the archive.
 
 If you never want to exclude messages with either of these callbacks, have
-your routines already return 1.
+your routines always return 1.
 
 NOTE: The example mha-preview script provided in the MHonArc distribution  
       has been updated to reflect the change in return value handling. Even
@@ -344,7 +344,7 @@ your settings and use the variant version when updating your archives.
 
 ---------------------------------------------------------------------------
 
-$Date: 2005/06/09 01:12:12 $
+$Date: 2005/07/11 00:13:53 $
 MHonArc
 Copyright © 1997-2005, Earl Hood, mhonarc@mhonarc.org
 

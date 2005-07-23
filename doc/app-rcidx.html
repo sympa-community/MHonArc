@@ -99,6 +99,7 @@ and command-line options.
 <tr valign="top"><td align="right"><b><a href="resources/outdir.html"><tt>M2H_OUTDIR</tt></a></b></td><td></td><td>Location of archive.</td></tr>
 <tr valign="top"><td align="right"><b><a href="resources/perlinc.html"><tt>M2H_PERLINC</tt></a></b></td><td></td><td>Additional Perl include paths.</td></tr>
 <tr valign="top"><td align="right"><b><a href="resources/posixstrftime.html"><tt>M2H_POSIXSTRFTIME</tt></a></b></td><td></td><td>Use POSIX's strftime() for converted time format strings.</td></tr>
+<tr valign="top"><td align="right"><b><a href="resources/printxcomments.html"><tt>M2H_PRINTXCOMMENTS</tt></a></b></td><td></td><td>Print &lt;!--X-...--&gt; comments in generated pages.</td></tr>
 <tr valign="top"><td align="right"><b><a href="resources/rcfile.html"><tt>M2H_RCFILE</tt></a></b></td><td></td><td>Resource file to read before processing input.</td></tr>
 <tr valign="top"><td align="right"><b><a href="resources/reverse.html"><tt>M2H_REVERSE</tt></a></b></td><td></td><td>Reverse the listing order in the main index.</td></tr>
 <tr valign="top"><td align="right"><b><a href="resources/saveresources.html"><tt>M2H_SAVERESOURCES</tt></a></b></td><td></td><td>Save resource values in database.</td></tr>
@@ -208,7 +209,7 @@ and command-line options.
 <tr valign="top"><td align="right"><b><a href="resources/main.html"><tt>&lt;MAIN&gt;</tt><br><tt>&lt;NOMAIN&gt;</tt></a></b></td><td></td><td>Create main index.</td></tr>
 <tr valign="top"><td align="right"><b><a href="resources/maxsize.html"><tt>&lt;MAXSIZE&gt;</tt></a></b></td><td></td><td>Maximum number of messages in an archive.</td></tr>
 <tr valign="top"><td align="right"><b><a href="resources/mhpattern.html"><tt>&lt;MHPATTERN&gt;</tt></a></b></td><td></td><td>Regex for matching message files in an MH folder (directory).</td></tr>
-<tr valign="top"><td align="right"><b><a href="resources/mimealtprefs.html"><tt>&lt;MIMEALTPREFS&gt;</tt></a></b></td><td></td><td>Content-type preferences for <tt>multipart/alternative</tt> data.</td></tr>
+<tr valign="top"><td align="right"><b><a href="resources/mimealtprefs.html"><tt>&lt;MIMEALTPREFS&gt;</tt></a></b></td><td></td><td>Content-type preferences for multipart/alternative data.</td></tr>
 <tr valign="top"><td align="right"><b><a href="resources/mimeargs.html"><tt>&lt;MIMEARGS&gt;</tt></a></b></td><td></td><td>Arguments to MIME filters.</td></tr>
 <tr valign="top"><td align="right"><b><a href="resources/mimedecoders.html"><tt>&lt;MIMEDECODERS&gt;</tt></a></b></td><td></td><td>Content-Transfer-Encoding decoding functions.</td></tr>
 <tr valign="top"><td align="right"><b><a href="resources/mimeexcs.html"><tt>&lt;MIMEEXCS&gt;</tt></a></b></td><td></td><td>Content-types to exclude.</td></tr>
@@ -253,6 +254,7 @@ and command-line options.
 <tr valign="top"><td align="right"><b><a href="resources/prevlinkia.html"><tt>&lt;PREVLINKIA&gt;</tt></a></b></td><td></td><td>Inactive link markup for previous message by main index.</td></tr>
 <tr valign="top"><td align="right"><b><a href="resources/prevpglink.html"><tt>&lt;PREVPGLINK&gt;</tt></a></b></td><td></td><td>Link markup for previous page of main index.</td></tr>
 <tr valign="top"><td align="right"><b><a href="resources/prevpglinkia.html"><tt>&lt;PREVPGLINKIA&gt;</tt></a></b></td><td></td><td>Inactive link markup for previous page of main index.</td></tr>
+<tr valign="top"><td align="right"><b><a href="resources/printxcomments.html"><tt>&lt;PRINTXCOMMENTS&gt;</tt><br><tt>&lt;NOPRINTXCOMMENTS&gt;</tt></a></b></td><td></td><td>Print &lt;!--X-...--&gt; comments in generated pages.</td></tr>
 <tr valign="top"><td align="right"><b><a href="resources/refsbegin.html"><tt>&lt;REFSBEGIN&gt;</tt></a></b></td><td></td><td>Beginning markup for explicit reference links in message pages.</td></tr>
 <tr valign="top"><td align="right"><b><a href="resources/refsend.html"><tt>&lt;REFSEND&gt;</tt></a></b></td><td></td><td>Ending markup for explicit reference links in message pages.</td></tr>
 <tr valign="top"><td align="right"><b><a href="resources/refslitxt.html"><tt>&lt;REFSLITXT&gt;</tt></a></b></td><td></td><td>Markup representing a reference entry in explicit reference links.</td></tr>
@@ -450,6 +452,7 @@ and command-line options.
 <tr valign="top"><td align="right"><b><a href="resources/outdir.html"><tt>-outdir</tt></a></b></td><td></td><td>Location of archive.</td></tr>
 <tr valign="top"><td align="right"><b><a href="resources/perlinc.html"><tt>-perlinc</tt></a></b></td><td></td><td>Additional Perl include paths.</td></tr>
 <tr valign="top"><td align="right"><b><a href="resources/posixstrftime.html"><tt>-posixstrftime</tt></a></b></td><td></td><td>Use POSIX's strftime() for converted time format strings.</td></tr>
+<tr valign="top"><td align="right"><b><a href="resources/printxcomments.html"><tt>-printxcomments</tt><br><tt>-noprintxcomments</tt></a></b></td><td></td><td>Print &lt;!--X-...--&gt; comments in generated pages.</td></tr>
 <tr valign="top"><td align="right"><b><a href="resources/quiet.html"><tt>-quiet</tt></a></b></td><td></td><td>Do not output status.</td></tr>
 <tr valign="top"><td align="right"><b><a href="resources/rcfile.html"><tt>-rcfile</tt></a></b></td><td></td><td>Resource file to read before processing input.</td></tr>
 <tr valign="top"><td align="right"><b><a href="resources/reconvert.html"><tt>-reconvert</tt><br><tt>-noreconvert</tt></a></b></td><td></td><td>Reconvert existing messages.</td></tr>
@@ -498,7 +501,7 @@ and command-line options.
 <!-- *************************************************************** -->
 <hr>
 <address>
-$Date: 2005/06/02 05:50:24 $ <br>
+$Date: 2005/07/08 06:34:00 $ <br>
 <img align="top" src="monicon.png" alt="">
 <a href="http://www.mhonarc.org"><strong>MHonArc</strong></a><br>
 Copyright &#169; 1999, <a href="http://www.mhonarc.org/~ehood/"

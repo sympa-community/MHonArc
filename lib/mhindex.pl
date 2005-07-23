@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhindex.pl,v 1.12 2004/12/15 20:33:39 ehood Exp $
+##	$Id: mhindex.pl,v 1.13 2005/07/08 06:34:03 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -235,7 +235,7 @@ sub output_doclink {
 	print $handle
 		"<address>\n",
 		"Mail converted by ",
-		qq|<a href="$DOCURL">MHonArc</a> $VERSION\n|,
+		qq|<a href="$DOCURL">MHonArc</a>\n|,
 		"</address>\n";
     }
 }

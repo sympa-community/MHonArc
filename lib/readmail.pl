@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: readmail.pl,v 2.36 2005/06/02 05:50:27 ehood Exp $
+##	$Id: readmail.pl,v 2.37 2005/07/20 19:10:48 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc AT mhonarc DOT org
 ##  Description:
@@ -60,13 +60,17 @@ my %_MIMEAltPrefs = ();
 ##	Constants
 ##
 
-## String for matching the start of a URL
+## String for matching the start of a URL: It seems unnecessary to
+#  try to recognize all valid schemes, so we use a simplier regex.
+#  Keep the old one around just in case we need to resurrect it.
+#$UrlRxStr	  =
+#    '(?:(?:https?|ftp|afs|wais|telnet|ldap|gopher|z39\.50[rs]|vemmi|imap|'.
+#          'nfs|acap|rtspu?|tip|pop|sip|(?:soap|xmlrpc)\.beeps?|go|ipp|'.
+#          'tftp)://|'.
+#       'news:(?://)?|'.
+#       '(?:nntp|mid|cid|mailto|prospero|data|service|tel|fax|modem|h\.323):)';
 $UrlRxStr	  =
-    '(?:(?:https?|ftp|afs|wais|telnet|ldap|gopher|z39\.50[rs]|vemmi|imap|'.
-	  'nfs|acap|rtspu?|tip|pop|sip|(?:soap|xmlrpc)\.beeps?|go|ipp|'.
-	  'tftp)://|'.
-       'news:(?://)?|'.
-       '(?:nntp|mid|cid|mailto|prospero|data|service|tel|fax|modem|h\.323):)';
+    '(?:(?:https?|ftp|ldap|gopher)://|news:(?://)?|(?:nntp|mailto):)';
 
 ##  Constants for use as second argument to MAILdecode_1522_str().
 sub JUST_DECODE() { 1; }

@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##      $Id: mhusage.pl,v 2.26 2004/12/15 20:33:40 ehood Exp $
+##      $Id: mhusage.pl,v 2.27 2005/07/08 06:34:04 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -156,6 +156,7 @@ Options:
   -nonews                  : Do not add links to newsgroups
   -noposixstrftime         : Do not use POSIX::strftime() to process time
                              format (the default)
+  -noprintxcomments        : Do not print <!--X-...--> comments
   -noreconvert             : Do not reconvert existing messages (the default)
   -noreverse               : List messages in normal order (the default)
   -nosaveresources         : Do not save resource values in DB
@@ -176,6 +177,7 @@ Options:
   -pagenum <page>          : Output specified page if -genidx and -multipg
   -perlinc <list>          : List of paths to search for MIME filters
   -posixstrftime           : Use POSIX::strftime() to process time formats
+  -printxcomments          : Print <!--X-...--> comments (the default)
   -quiet                   : Suppress status messages during execution
   -rcfile <file>           : Resource file for MHonArc
   -reconvert               : Reconvert existing messages

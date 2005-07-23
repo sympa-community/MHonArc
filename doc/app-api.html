@@ -39,6 +39,8 @@ of MHonArc within other Perl programs.
 <li><small><a href="#CBDbPreLoad">$mhonarc::CBDbPreLoad</a></small>
 <li><small><a href="#CBDbPreSave">$mhonarc::CBDbPreSave</a></small>
 <li><small><a href="#CBDbSave">$mhonarc::CBDbSave</a></small>
+<li><small><a href="#CBMailFolderRead">$mhonarc::CBMailFolderRead</a></small>
+<li><small><a href="#CBMessageConverted">$mhonarc::CBMessageConverted</a></small>
 <li><small><a href="#CBMessageBodyRead">$mhonarc::CBMessageBodyRead</a></small>
 <li><small><a href="#CBMessageHeadRead">$mhonarc::CBMessageHeadRead</a></small>
 <li><small><a href="#CBRawMessageBodyRead">$mhonarc::CBRawMessageBodyRead</a></small>
@@ -310,10 +312,136 @@ $do_save = &amp;$mhonarc::CBDbPreSave($pathname, $tmp_pathname);
 </div>
 
 <!-- .................................................................. -->
+<h3 class="cb_head"><a name="CBMailFolderRead">$mhonarc::CBMailFolderRead</a></h3>
+
+<div class="cb_body">
+<p>The callback function after a mail folder has been processed.
+</p>
+
+<p><b>Synopsis:</b></p>
+<pre class="code">
+&amp;$mhonarc::CBMailFolderRead($filename);
+</pre>
+
+<p><b>Arguments:</b></p>
+<dl>
+<dt><tt>$filename</tt></dt>
+<dd><p>Filename of mail folder.  If <tt>$filename</tt> equals
+    "<tt>-</tt>", then the folder represents standard input.
+    </p>
+    <p>To determine if the mail folder is a mailbox file or a
+    directory, the following can be done:
+    </p>
+<pre class="code">
+    if (-d $filename) {
+	# MH-style directory
+    } else {
+	# UUCP-style mailbox file
+    }
+</pre>
+    </dd>
+</dl>
+
+<p><b>Return Value:</b></p>
+    <p>N/A.
+    </p>
+
+<p><b>Notes:</b></p>
+<ul>
+<li><p>This callback is not invoked for cases when a single message
+    is added to archive from standard input.  To capture this
+    event, use 
+    <a href="#CBMessageConverted"><tt>$mhonarc::CBMessageConverted</tt></a>.
+    </p>
+</ul>
+
+</div>
+
+<!-- .................................................................. -->
+<h3 class="cb_head"><a name="CBMessageConverted">$mhonarc::CBMessageConverted</a></h3>
+
+<div class="cb_body">
+<p>The callback function after a mail message has been converted.
+</p>
+
+<p><b>Synopsis:</b></p>
+<pre class="code">
+&amp;$mhonarc::CBMessageConverted(
+		   $fields_hash_ref, $mesg_info_hash_ref);
+</pre>
+
+<p><b>Arguments:</b></p>
+<dl>
+<dt><tt>$fields_hash_ref</tt></dt>
+<dd><p>Reference to hash containing parsed message header.  the
+    structure of this hash is the same as described for
+    the <a href="#CBMessageHeadRead"><tt>$mhonarc::CBMessageHeadRead</tt></a>
+    callback.
+    </p>
+
+<dt><tt>$mesg_info_hash_ref</tt></dt>
+<dd><p>Reference to hash contain meta-information about the message
+    converted.  The following lists the keys that exist in the hash
+    and what their values represent:
+    </p>
+    <dl>
+    <dt><tt>folder</tt></dt>
+    <dd><p>The filename of the mail folder the message was read from.
+	If the filename is "<tt>-</tt>", then the folder was read from
+	standard input.
+	For cases when only a single mail message
+	is added to an archive from standard input, <tt>folder</tt> 
+	will be undefined.
+	</p>
+	</dd>
+    <dt><tt>file</tt></dt>
+    <dd><p>The source filename of the message just converted.
+	This key is <b>only</b> defined for MH-style mail folders
+	(i.e. the mail folder is a directory).  For mailbox-type
+	folders, this key is set to <tt>undef</tt>.
+	For cases when only a single mail message
+	is added to an archive from standard input, <tt>file</tt> 
+	will equal "<tt>-</tt>".
+	</p>
+	</dd>
+    </dl>
+    <p>The following table summarizes what the values of
+    the <tt>$mesg_info_hash_ref</tt> hash will be based upon the type
+    of input:
+    </p>
+
+    <table border="1">
+    <tr valign="baseline">
+      <td><i>MH-style folder</i></td>
+      <td><tt>$mesg_info_hash_ref-&gt;{'folder'} = </tt><i>directory-name</i><br>
+	  <tt>$mesg_info_hash_ref-&gt;{'file'} = </tt><i>filename</i></td>
+    </tr>
+    <tr valign="baseline">
+      <td><i>Mailbox-style folder</i></td>
+      <td><tt>$mesg_info_hash_ref-&gt;{'folder'} = </tt><i>filename</i><br>
+	  <tt>$mesg_info_hash_ref-&gt;{'file'} = undef</tt></td>
+    </tr>
+    <tr valign="baseline">
+      <td><i>Single Message</i></td>
+      <td><tt>$mesg_info_hash_ref-&gt;{'folder'} = undef</tt><br>
+	  <tt>$mesg_info_hash_ref-&gt;{'file'} = "-"</tt></td>
+    </tr>
+      
+    </table>
+
+</dl>
+
+<p><b>Return Value:</b></p>
+    <p>N/A.
+    </p>
+
+</div>
+
+<!-- .................................................................. -->
 <h3 class="cb_head"><a name="CBMessageBodyRead">$mhonarc::CBMessageBodyRead</a></h3>
 
 <div class="cb_body">
-<p>The callback function after a mail message body has been read a converted.
+<p>The callback function after a mail message body has been converted.
 </p>
 
 <p><b>Synopsis:</b></p>
@@ -925,7 +1053,7 @@ require 'readmail.pl';
 
 <hr>
 <address>
-$Date: 2005/06/02 02:12:29 $ <br>
+$Date: 2005/07/08 02:04:05 $ <br>
 <img align="top" src="monicon.png" alt="">
 <a href="http://www.mhonarc.org/"
 ><strong>MHonArc</strong></a><br>

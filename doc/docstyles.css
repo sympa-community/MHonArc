@@ -1,4 +1,4 @@
-/* $Id: docstyles.css,v 1.4 2003/10/06 22:04:14 ehood Exp $
+/* $Id: docstyles.css,v 1.5 2005/07/11 00:14:26 ehood Exp $
  */
 
 body {
@@ -102,3 +102,6 @@ blockquote.mail {
   padding: 0.25em;
 }
 
+.highlight {
+  background: #FFFF00;
+}

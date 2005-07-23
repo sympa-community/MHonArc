@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhinit.pl,v 2.52 2004/12/15 20:33:39 ehood Exp $
+##	$Id: mhinit.pl,v 2.54 2005/07/08 06:34:03 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -63,6 +63,16 @@ $CBMessageHeadRead = undef
 ##	&invoke($fields_hash_ref, $raw_data_ref);
 $CBRawMessageBodyRead = undef
     unless defined($CBRawMessageBodyRead);
+
+## After a message has been converted
+##	&$invoke($fields, +{ folder => $filename, file => $filename });
+$CBMessageConverted = undef
+    unless defined($CBMessageConverted);
+
+## After a mail folder has been read
+##	&invoke($filename);
+$CBMailFolderRead = undef
+    unless defined($CBMailFolderRead);
 
 ## When a resource variable is being expanded:
 ##	($result, $recurse, $canclip) = &invoke($index, $varname, $arg);
@@ -378,6 +388,8 @@ $AddrModifyBodies  = defined($ENV{'M2H_MODIFYBODYADDRESSES'}) ?
 			     $ENV{'M2H_MODIFYBODYADDRESSES'} : undef;
 $IconURLPrefix  = defined($ENV{'M2H_ICONURLPREFIX'}) ?
 			  $ENV{'M2H_ICONURLPREFIX'} : '';
+$PrintXComments = defined($ENV{'M2H_PRINTXCOMMENTS'}) ?
+			  $ENV{'M2H_PRINTXCOMMENTS'} : 1;
 
 if ($UNIX) {
     eval {

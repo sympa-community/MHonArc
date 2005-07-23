@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhrcvars.pl,v 2.27 2004/12/15 20:33:40 ehood Exp $
+##	$Id: mhrcvars.pl,v 2.28 2005/07/08 05:27:52 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -89,6 +89,7 @@ sub replace_li_var {
     my($lref, $key, $pos);
     my($arg, $opt) = ("", "");
     my $isaddr = 0;
+    my $mailto = 0;
 
     ##	Get variable argument string
     if ($val =~ s/\(([^()]*)\)//) {
@@ -103,9 +104,11 @@ sub replace_li_var {
     ($var, $arg) = @{$old2new{$var}}  if defined($old2new{$var});
 
     ##	Check if variable in a URL string
-    $isurl = 1  if ($len =~ s/u//ig);	
+    $isurl = 1  if ($len =~ s/U//g);	
     ##	Check if variable in a JavaScript string
-    $jstr  = 1  if ($len =~ s/j//ig);	
+    $jstr  = 1  if ($len =~ s/J//g);	
+    ##	Check if variable in a JavaScript string
+    $mailto = 1 if ($len =~ s/M//g);	
 
     ##	Do variable replacement
     REPLACESW: {
@@ -144,6 +147,8 @@ sub replace_li_var {
 	    $tmp = defined($key) ? &$esub($From{$key}) : "(nil)";
 	    if ($cnd3 && $SpamMode) {
 		$tmp =~ s/($AddrExp)/rewrite_raw_address($1)/geo;
+	    } else {
+		$isaddr = 1;
 	    }
 	    last REPLACESW;
 	}
@@ -213,7 +218,7 @@ sub replace_li_var {
 		}
 		$tmp = '';
 	    }
-	    if ($HFieldsAddr{$opt}) {
+	    if (!$HFieldsAsIsList{$opt}) {
 		$isaddr = 1;
 	    }
 	    last REPLACESW;
@@ -281,7 +286,7 @@ sub replace_li_var {
 	    last REPLACESW;
 	}
     	if ($var eq 'SUBJECT') {	## Message subject
-	    $canclip = 1; $raw = 1; $isurl = 0;
+	    $canclip = 1; $raw = 1; $isurl = 0; $isaddr = 1;
 	    ($lref, $key, $pos) = compute_msg_pos($index, $var, $arg);
 	    if (defined($key)) {
 		$tmp = $Subject{$key};
@@ -292,7 +297,7 @@ sub replace_li_var {
 	    last REPLACESW;
 	}
     	if ($var eq 'SUBJECTNA') {	## Message subject (not linked)
-	    $canclip = 1; $raw = 1;
+	    $canclip = 1; $raw = 1; $isaddr = 1;
 	    ($lref, $key, $pos) = compute_msg_pos($index, $var, $arg);
 	    if (defined($key)) {
 		$tmp = $Subject{$key};
@@ -676,7 +681,8 @@ sub replace_li_var {
 	}
 
 	warn qq/Warning: Unrecognized variable: "$val"\n/;
-	return "\$$val\$";
+	#return "\$$val\$";
+	return "";
     }
 
     ##	Check if string needs to be expanded again
@@ -692,13 +698,14 @@ sub replace_li_var {
 	if ($raw) {
 	    $ret = &$MHeadCnvFunc($tmp);
 	    if ($isaddr) {
-		if ($NOMAILTO) {
+		if (!$mailto) {
 		    $ret =~ s/($HAddrExp)/htmlize(rewrite_address($1))/geo;
 		} else {
 		    $ret =~ s/($HAddrExp)
 			     /mailUrl($1, $Index2MsgId{$key},
 					  $Subject{$key},
 					  $From{$key})/gexo;
+		    $canclip = 0;
 		}
 	    }
 	} else {
@@ -725,7 +732,7 @@ sub replace_li_var {
 	   qq|" href="| .
 	   &msgnum_filename($IndexNum{$index}) .
 	   qq|">$ret</a>|
-	if $var eq 'SUBJECT' && $arg eq "";
+	if $var eq 'SUBJECT' && $arg eq "" && !$mailto;
 
     $ret;
 }

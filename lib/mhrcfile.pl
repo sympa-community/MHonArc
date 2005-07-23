@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhrcfile.pl,v 2.45 2005/06/06 15:47:00 ehood Exp $
+##	$Id: mhrcfile.pl,v 2.46 2005/07/08 06:34:04 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -885,6 +885,14 @@ sub parse_resource_file {
 	}
 	if ($elem eq 'prevpglinkia') {
 	    $PREVPGLINKIA = &get_elem_content($handle, $elem, $chop);
+	    last FMTSW;
+	}
+	if ($elem eq 'printxcomments') {	# Print info X- comments
+	    $PrintXComments = 1;
+	    last FMTSW;
+	}
+	if ($elem eq 'noprintxcomments') {	# Don't print info X- comments
+	    $PrintXComments = 0;
 	    last FMTSW;
 	}
 	if ($elem eq 'refsbegin' ||

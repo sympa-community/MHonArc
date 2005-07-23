@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhamain.pl,v 2.84 2005/07/06 04:33:19 ehood Exp $
+##	$Id: mhamain.pl,v 2.89 2005/07/23 06:36:27 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -29,7 +29,7 @@ package mhonarc;
 
 require 5;
 
-$VERSION = '2.6.13';
+$VERSION = '2.6.14';
 $VINFO =<<EndOfInfo;
   MHonArc v$VERSION (Perl $] $^O)
   Copyright (C) 1995-2005  Earl Hood, mhonarc\@mhonarc.org
@@ -299,6 +299,14 @@ sub doit {
 	    if (defined(read_mail_body(
 		    $handle, $index, $fields, $NoMsgPgs))) {
 		$AddIndex{$index} = 1;
+		## Invoke callback if defined
+		if (defined($CBMessageConverted) &&
+			defined(&$CBMessageConverted)) {
+		    &$CBMessageConverted($fields, +{
+			folder => undef,
+			file   => '-',
+		    });
+		}
 	    }
 	}
 
@@ -324,7 +332,8 @@ sub doit {
 
 		local($_);
 		MHFILE: foreach (@files) {
-		    $mesgfile = "${mbox}${DIRSEP}${_}";
+		    print STDERR "$_\n";
+		    $mesgfile = join($DIRSEP, $mbox, $_);
 		    eval {
 			$fh = file_open($mesgfile);
 		    };
@@ -351,6 +360,15 @@ sub doit {
 				delete $MsgHead{$index};
 				delete $Message{$index};
 			    }
+			    ## Invoke callback if defined
+			    if (defined($CBMessageConverted) &&
+				    defined(&$CBMessageConverted)) {
+				&$CBMessageConverted($fields, +{
+				    folder => $mbox,
+				    file   => $mesgfile,
+				});
+			    }
+
 			} else {
 			    $index = undef;
 			}
@@ -393,6 +411,14 @@ sub doit {
 				delete $MsgHead{$index};
 				delete $Message{$index};
 			    }
+			    ## Invoke callback if defined
+			    if (defined($CBMessageConverted) &&
+				    defined(&$CBMessageConverted)) {
+				&$CBMessageConverted($fields, +{
+				    folder => $mbox,
+				    file   => undef,
+				});
+			    }
 			} else {
 			    $index = undef;
 			}
@@ -405,6 +431,13 @@ sub doit {
 		close($fh);
 
 	    } # END: else UUCP mailbox
+
+	    ## Invoke callback if defined
+	    if (defined($CBMailFolderRead) &&
+		    defined(&$CBMailFolderRead)) {
+		&$CBMailFolderRead($mbox);
+	    }
+
 	} # END: foreach $mbox
     } # END: Else converting mailboxes
     print "\n"  unless $QUIET;
@@ -1116,25 +1149,31 @@ sub output_mail {
 
 	# Output comments -- more informative, but can be used for
 	#		     error recovering.
-	print $msghandle 
-	    "<!-- ", commentize("MHonArc v$VERSION"), " -->\n",
-	    "<!--X-Subject: ",      commentize($Subject{$index}), " -->\n",
-	    "<!--X-From-R13: ",	    commentize(mrot13($From{$index})), " -->\n",
-	    "<!--X-Date: ", 	    commentize($Date{$index}), " -->\n",
-	    "<!--X-Message-Id: ",   commentize($Index2MsgId{$index}), " -->\n",
-	    "<!--X-Content-Type: ", commentize($ContentType{$index}), " -->\n";
-		  #ContentType
+	print $msghandle "<!-- ", commentize("MHonArc v$VERSION"), " -->\n";
+	if ($PrintXComments) {
+	    print $msghandle 
+		"<!--X-Subject: ",
+		    commentize($Subject{$index}), " -->\n",
+		"<!--X-From-R13: ",
+		    commentize(mrot13($From{$index})), " -->\n",
+		"<!--X-Date: ",
+		    commentize($Date{$index}), " -->\n",
+		"<!--X-Message-Id: ",
+		    commentize($Index2MsgId{$index}), " -->\n",
+		"<!--X-Content-Type: ",
+		    commentize($ContentType{$index}), " -->\n";
 
-	if (defined($Refs{$index})) {
-	    foreach (@{$Refs{$index}}) {
-		print $msghandle
-		    "<!--X-Reference: ", commentize($_), " -->\n";
-			  #Reference-Id
+	    if (defined($Refs{$index})) {
+		foreach (@{$Refs{$index}}) {
+		    print $msghandle
+			"<!--X-Reference: ", commentize($_), " -->\n";
+			      #Reference-Id
+		}
 	    }
-	}
-	if (defined($Derived{$index})) {
-	    foreach (@{$Derived{$index}}) {
-		print $msghandle "<!--X-Derived: ", commentize($_), " -->\n";
+	    if (defined($Derived{$index})) {
+		foreach (@{$Derived{$index}}) {
+		    print $msghandle "<!--X-Derived: ", commentize($_), " -->\n";
+		}
 	    }
 	}
 	print $msghandle "<!--X-Head-End-->\n";

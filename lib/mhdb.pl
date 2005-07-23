@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhdb.pl,v 2.38 2005/06/02 05:50:27 ehood Exp $
+##	$Id: mhdb.pl,v 2.39 2005/07/08 06:34:03 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -74,6 +74,7 @@ print_var($db,'MULTIIDX',    \$MULTIIDX);
 print_var($db,'NumOfMsgs',   \$NumOfMsgs);
 print_var($db,'NumOfPages',  \$NumOfPages);
 print_var($db,'NumOfPrintedPages',\$NumOfPrintedPages);
+print_var($db,'PrintXComments',\$PrintXComments);
 print_var($db,'SaveRsrcs',   \$SaveRsrcs);
 
 if ($SaveRsrcs) {
