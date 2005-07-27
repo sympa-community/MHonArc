@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhamain.pl,v 2.89 2005/07/23 06:36:27 ehood Exp $
+##	$Id: mhamain.pl,v 2.91 2005/07/27 03:26:07 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -29,7 +29,7 @@ package mhonarc;
 
 require 5;
 
-$VERSION = '2.6.14';
+$VERSION = '2.6.15';
 $VINFO =<<EndOfInfo;
   MHonArc v$VERSION (Perl $] $^O)
   Copyright (C) 1995-2005  Earl Hood, mhonarc\@mhonarc.org
@@ -332,7 +332,6 @@ sub doit {
 
 		local($_);
 		MHFILE: foreach (@files) {
-		    print STDERR "$_\n";
 		    $mesgfile = join($DIRSEP, $mbox, $_);
 		    eval {
 			$fh = file_open($mesgfile);

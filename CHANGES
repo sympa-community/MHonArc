@@ -13,6 +13,17 @@
 
 YYYY/MM/DD
 ============================================================================
+2005/07/27	(2.6.15)
+
+* Removed debugging statement introduced during v2.6.14 development
+  which caused the filename of each message to be printed to stderr
+  when processing MH-style folders.
+
+* Fixed META.yml for CPAN: YAML is picky about tab characters, and
+  there was a couple of tab characters causing CPAN's YAML parser to
+  abort with an error.
+
+============================================================================
 2005/07/23	(2.6.14)
 
 * Bug Fixes:
@@ -2716,4 +2727,4 @@ YYYY/MM/DD
 
 =======================================================================
 Earl Hood, mhonarc@mhonarc.org
-$Id: CHANGES,v 1.139 2005/07/23 06:36:26 ehood Exp $
+$Id: CHANGES,v 1.141 2005/07/27 03:26:06 ehood Exp $
