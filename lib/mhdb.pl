@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhdb.pl,v 2.39 2005/07/08 06:34:03 ehood Exp $
+##	$Id: mhdb.pl,v 2.40 2005/12/20 21:28:15 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -26,6 +26,9 @@
 ##---------------------------------------------------------------------------##
 
 use File::Basename;
+
+my $_true  = "1";
+my $_false = "0";
 
 ##---------------------------------------------------------------------------
 ##	output_db() spits out the state of mhonarc to a file.  This
@@ -89,21 +92,24 @@ print_var($db,'Icons',       \%Icons);
 print_var($db,'UDerivedFile',\%UDerivedFile);
 print_var($db,'ZoneUD',      \%ZoneUD);
 
-unless ($IsDefault{'CHARSETALIASES'}) {
+unless ($IsDefault{'CHARSETALIASES'} && !$SaveMIMECharsetAliases) {
+    print_var($db,'SaveMIMECharsetAliases', \$_true);
     print_var($db,'readmail::MIMECharsetAliases',
 		    \%readmail::MIMECharsetAliases);
 }
-unless ($IsDefault{'CHARSETCONVERTERS'}) {
+unless ($IsDefault{'CHARSETCONVERTERS'} && !$SaveMIMECharSetConverters) {
+    print_var($db,'SaveMIMECharSetConverters', \$_true);
     print_var($db,'readmail::MIMECharSetConverters',
 		    \%readmail::MIMECharSetConverters);
     print_var($db,'readmail::MIMECharSetConvertersSrc',
 		    \%readmail::MIMECharSetConvertersSrc);
 }
-unless ($readmail::TextDefCharset eq 'us-ascii') {
+unless ($readmail::TextDefCharset ne 'us-ascii') {
     print_var($db,'readmail::TextDefCharset',
 		  \$readmail::TextDefCharset);
 }
-unless ($IsDefault{'TEXTENCODE'}) {
+unless ($IsDefault{'TEXTENCODE'} && !$SaveTextEncode) {
+    print_var($db,'SaveTextEncode', \$_true);
     print_var($db,'readmail::TextEncode',
 		    \$readmail::TextEncode);
     print_var($db,'readmail::TextEncoderFunc',
@@ -111,21 +117,25 @@ unless ($IsDefault{'TEXTENCODE'}) {
     print_var($db,'readmail::TextEncodeSrc',
 		    \$readmail::TextEncode);
 }
-unless ($IsDefault{'MIMEDECODERS'}) {
+unless ($IsDefault{'MIMEDECODERS'} && !$SaveMIMEDecoders) {
+    print_var($db,'SaveMIMEDecoders', \$_true);
     print_var($db,'readmail::MIMEDecoders',
 		    \%readmail::MIMEDecoders);
     print_var($db,'readmail::MIMEDecodersSrc',
 		    \%readmail::MIMEDecodersSrc);
 }
-unless ($IsDefault{'MIMEFILTERS'}) {
+unless ($IsDefault{'MIMEFILTERS'} && !$SaveMIMEFilters) {
+    print_var($db,'SaveMIMEFilters', \$_true);
     print_var($db,'readmail::MIMEFilters',
 		    \%readmail::MIMEFilters);
     print_var($db,'readmail::MIMEFiltersSrc',
 		    \%readmail::MIMEFiltersSrc);
 }
-print_var($db,'readmail::MIMEFiltersArgs',
-		\%readmail::MIMEFiltersArgs)
-		unless $IsDefault{'MIMEARGS'};
+unless ($IsDefault{'MIMEARGS'} && !$SaveMIMEFiltersArgs) {
+    print_var($db,'SaveMIMEFiltersArgs', \$_true);
+    print_var($db,'readmail::MIMEFiltersArgs',
+		    \%readmail::MIMEFiltersArgs);
+}
 if (%readmail::MIMEExcs) {
     print_var($db,'readmail::MIMEExcs',
 		    \%readmail::MIMEExcs)
@@ -136,7 +146,8 @@ if (%readmail::MIMEIncs) {
 		    \%readmail::MIMEIncs)
 		    unless $IsDefault{'MIMEINCS'};
 }
-unless ($IsDefault{'MIMEALTPREFS'}) {
+unless ($IsDefault{'MIMEALTPREFS'} && !$SaveMIMEAltPrefs) {
+    print_var($db,'SaveMIMEAltPrefs', \$_true);
     print_var($db,'MIMEAltPrefs',
 		    \@MIMEAltPrefs);
 }

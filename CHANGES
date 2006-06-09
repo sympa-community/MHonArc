@@ -13,6 +13,21 @@
 
 YYYY/MM/DD
 ============================================================================
+2006/06/09	(2.6.16)
+
+* Bug Fixes:
+
+    Bug ID  Summary
+    ------  ------------------------------------------------------------
+    14704   HTML mail does not get its charset converted (patch
+	    included)
+    14713   qprint.pl should be able to handle a soft line break at
+	    the end of the string
+    14813   MIMEFILTERS settings not retained in database
+    16368   in urlize change %X to %02X
+    ------  ------------------------------------------------------------
+
+============================================================================
 2005/07/27	(2.6.15)
 
 * Removed debugging statement introduced during v2.6.14 development
@@ -2727,4 +2742,4 @@ YYYY/MM/DD
 
 =======================================================================
 Earl Hood, mhonarc@mhonarc.org
-$Id: CHANGES,v 1.141 2005/07/27 03:26:06 ehood Exp $
+$Id: CHANGES,v 1.142 2006/06/10 02:42:58 ehood Exp $

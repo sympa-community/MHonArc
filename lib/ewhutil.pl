@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: ewhutil.pl,v 2.15 2005/06/02 02:12:30 ehood Exp $
+##	$Id: ewhutil.pl,v 2.16 2006/04/20 04:03:29 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -113,14 +113,14 @@ sub dehtmlize {
 sub urlize {
     my($url) = shift || "";
     my $url_r = ref($url) ? $url : \$url;
-    $$url_r =~ s/([^\w\.\-:])/sprintf("%%%X",unpack("C",$1))/ge;
+    $$url_r =~ s/([^\w\.\-:])/sprintf("%%%02X",unpack("C",$1))/ge;
     $$url_r;
 }
 
 sub urlize_path {
     my($url) = shift || "";
     my $url_r = ref($url) ? $url : \$url;
-    $$url_r =~ s/([^\w\.\-:\/])/sprintf("%%%X",unpack("C",$1))/ge;
+    $$url_r =~ s/([^\w\.\-:\/])/sprintf("%%%02X",unpack("C",$1))/ge;
     $$url_r;
 }
 

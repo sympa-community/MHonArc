@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: readmail.pl,v 2.37 2005/07/20 19:10:48 ehood Exp $
+##	$Id: readmail.pl,v 2.38 2005/12/20 20:54:50 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc AT mhonarc DOT org
 ##  Description:
@@ -1372,7 +1372,7 @@ sub extract_charset {
     # If HTML, check <meta http-equiv=content-type> tag since it
     # can be different than what is specified in the entity header.
     if (($subtype eq 'html' || $subtype eq 'x-html') &&
-	($body =~ m/(<meta\s+http-equiv\s*=\s*['"]?
+	($$body =~ m/(<meta\s+http-equiv\s*=\s*['"]?
 		     content-type\b[^>]*>)/xi)) {
 	my $meta = $1;
 	if ($meta =~ m/\bcharset\s*=\s*['"]?([\w\.\-]+)/i) {

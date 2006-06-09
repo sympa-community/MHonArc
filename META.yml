@@ -1,7 +1,7 @@
 --- #YAML:1.0
 name:              MHonArc
 abstract:          Create HTML archives of mail/news messages
-version:           2.6.15
+version:           2.6.16
 authored_by:
   - Earl Hood <mhonarc@mhonarc.org>
 license:           gpl
@@ -22,7 +22,4 @@ keywords:
     - MIME
     - Mail
     - HTML
-meta-spec:
-    version: 1.1
-    url: <http://search.cpan.org/dist/CPAN-META-Specification-1.1/>;
 generated-by: Earl Hood version 2.00
