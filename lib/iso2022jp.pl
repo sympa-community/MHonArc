@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: iso2022jp.pl,v 1.9 2002/12/04 20:00:39 ehood Exp $
+##	$Id: iso2022jp.pl,v 1.10 2009/05/03 20:38:32 ehood Exp $
 ##  Author(s):
 ##      Earl Hood       mhonarc@mhonarc.org
 ##      NIIBE Yutaka	gniibe@mri.co.jp
@@ -65,13 +65,14 @@ sub jp2022_to_html {
     my $cnt = scalar(@lines);
     my $i = 0;
     foreach (@lines) {
+	my $line = "";
 	# a trick to process preceding ASCII text
 	$_ = "\033(B" . $_ unless /^\033/;
 
 	# Process Each Segment
 	while(1) {
 	    if (s/^(\033\([BJ])//) { # Single Byte Segment
-		$ret .= $1;
+		$line .= $1;
 		while(1) {
 		    if (s/^([^\033]+)//) {	# ASCII plain text
 			$ascii_text = $1;
@@ -84,37 +85,39 @@ sub jp2022_to_html {
 			$ascii_text =~ s%($HUrlExp)%<a href="$1">$1</a>%gio
 			    unless $nourl;
 
-			$ret .= $ascii_text;
+			$line .= $ascii_text;
 		    } elsif (s/(\033\.[A-F])//) { # G2 Designate Sequence
-			$ret .= $1;
+			$line .= $1;
 		    } elsif (s/(\033N[ -])//) { # Single Shift Sequence
-			$ret .= $1;
+			$line .= $1;
 		    } else {
 			last;
 		    }
 		}
 	    } elsif (s/^(\033\$[\@AB]|\033\$\([CD])//) { # Double Byte Segment
-		$ret .= $1;
+		$line .= $1;
 		while (1) {
 		    if (s/^([!-~][!-~]+)//) { # Double Char plain text
-			$ret .= $1;
+			$line .= $1;
 		    } elsif (s/(\033\.[A-F])//) { # G2 Designate Sequence
-			$ret .= $1;
+			$line .= $1;
 		    } elsif (s/(\033N[ -])//) { # Single Shift Sequence
-			$ret .= $1;
+			$line .= $1;
 		    } else {
 			last;
 		    }
 		}
 	    } else {
 		# Something wrong in text
-		$ret .= $_;
+		$line .= $_;
 		last;
 	    }
 	}
 
 	# remove a `trick'
-	$ret =~ s/^\033\(B//;
+	$line =~ s/^\033\(B//;
+
+	$ret .= $line;
 
 	# add back eol
 	$ret .= "\n"  unless (++$i >= $cnt);

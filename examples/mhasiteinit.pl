@@ -1,7 +1,6 @@
-#!/usr/local/bin/perl
 ##---------------------------------------------------------------------------##
 ##  File:
-##      $Id: mhasiteinit.pl,v 1.4 2005/06/02 02:12:30 ehood Exp $
+##      $Id: mhasiteinit.pl,v 1.6 2011/01/03 06:42:39 ehood Exp $
 ##  Description:
 ##      Site-specific initialization code for MHonArc.  If used, it
 ##	should be place in the MHonArc library directory as specified
@@ -32,7 +31,7 @@ package mhonarc_site_init;
 ##---------------------------------------------------------------------------
 ##  The following are callback functions that you can register
 ##  for all instances of mhonarc.  See the Application Programming
-##  Interface appendix of the documentation for a complate list
+##  Interface appendix of the documentation for a complete list
 ##  of available callbacks and how they are invoked.
 
 #require 'head_routine.pl';	# make sure source of routine is loaded

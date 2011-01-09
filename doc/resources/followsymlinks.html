@@ -1,15 +1,17 @@
 <html>
 <head>
-<title>MHonArc Resources: FOLREFS</title>
+<title>MHonArc Resources: FOLLOWSYMLINKS</title>
 <link rel="stylesheet" type="text/css" href="../docstyles.css">
 </head>
 <body>
+
 <!--x-rc-nav-->
 <table border=0><tr valign="top">
-<td align="left" width="50%">[Prev:&nbsp;<a href="followsymlinks.html">FOLLOWSYMLINKS</a>]</td><td><nobr>[<a href="../resources.html#folrefs">Resources</a>][<a href="../mhonarc.html">TOC</a>]</nobr></td><td align="right" width="50%">[Next:&nbsp;<a href="folupbegin.html">FOLUPBEGIN</a>]</td></tr></table>
+<td align="left" width="50%">[Prev:&nbsp;<a href="fldend.html">FLDEND</a>]</td><td><nobr>[<a href="../resources.html#followsymlinks">Resources</a>][<a href="../mhonarc.html">TOC</a>]</nobr></td><td align="right" width="50%">[Next:&nbsp;<a href="folrefs.html">FOLREFS</a>]</td></tr></table>
 <!--/x-rc-nav-->
+
 <hr>
-<h1>FOLREFS</h1>
+<h1>FOLLOWSYMLINKS</h1>
 <!--X-TOC-Start-->
 <ul>
 <li><a href="#syntax">Syntax</a>
@@ -30,21 +32,21 @@
 
 <dt><strong>Envariable</strong></dt>
 <dd><p>
-<code>M2H_FOLREFS=</code>[ <code>0</code> | <code>1</code> ]
+<code>M2H_FOLLOWSYMLINKS=</code>[ <code>0</code> | <code>1</code> ]
 </p>
 </dd>
 
-<dt><strong>Element(s)</strong><dt>
+<dt><strong>Element</strong></dt>
 <dd><p>
-<code>&lt;FOLREFS&gt;</code><br>
-<code>&lt;NOFOLREFS&gt;</code><br>
+<code>&lt;FOLLOWSYMLINKS&gt;</code><br>
+<code>&lt;NOFOLLOWSYMLINKS&gt;</code><br>
 </p>
 </dd>
 
-<dt><strong>Command-line Option(s)</strong><dt>
+<dt><strong>Command-line Option</strong></dt>
 <dd><p>
-<code>-folrefs</code><br>
-<code>-nofolrefs</code><br>
+<code>-followsymlinks</code><br>
+<code>-nofollowsymlinks</code>
 </p>
 </dd>
 
@@ -54,16 +56,24 @@
 <hr>
 <h2><a name="description">Description</a></h2>
 
-<p>If the FOLREFS resource is On, then MhonArc will
-list direct follow-ups and references for a message after the message
-body.
+<p>When FOLLOWSYMLINKS is enabled, MHonArc will allow/follow
+symbolic links when creating directories and files.
 </p>
+<table class="caution" width="100%">
+<tr valign=top>
+<td><strong style="color: red;">CAUTION:</strong></td>
+<td width="100%"><p>When enabling this option, verify
+archive directory ownership and permissions.  If permissions
+are lenient, enabling FOLLOWSYMLINKS may expose your archive
+to local symlink attacks.
+</p>
+</td></tr></table>
 
 <!-- *************************************************************** -->
 <hr>
 <h2><a name="default">Default Setting</a></h2>
 
-<p>On
+<p>Off
 </p>
 
 <!-- *************************************************************** -->
@@ -84,7 +94,7 @@ body.
 <hr>
 <h2><a name="version">Version</a></h2>
 
-<p>2.0
+<p>2.6.17
 </p>
 
 <!-- *************************************************************** -->
@@ -92,31 +102,25 @@ body.
 <h2><a name="seealso">See Also</a></h2>
 
 <p>
-<a href="folupbegin.html">FOLUPBEGIN</a>,
-<a href="folupend.html">FOLUPEND</a>,
-<a href="foluplitxt.html">FOLUPLITXT</a>,
-<a href="refsbegin.html">REFSBEGIN</a>,
-<a href="refsend.html">REFSEND</a>,
-<a href="refslitxt.html">REFSLITXT</a>
-</p>
-<p>
-<a href="../layout.html"><strong>Page Layout</strong></a>
+<a href="fileperms.html">FILEPERMS</a>,
+<a href="umask.html">UMASK</a>
 </p>
 
 <!-- *************************************************************** -->
 <hr>
 <!--x-rc-nav-->
 <table border=0><tr valign="top">
-<td align="left" width="50%">[Prev:&nbsp;<a href="followsymlinks.html">FOLLOWSYMLINKS</a>]</td><td><nobr>[<a href="../resources.html#folrefs">Resources</a>][<a href="../mhonarc.html">TOC</a>]</nobr></td><td align="right" width="50%">[Next:&nbsp;<a href="folupbegin.html">FOLUPBEGIN</a>]</td></tr></table>
+<td align="left" width="50%">[Prev:&nbsp;<a href="fldend.html">FLDEND</a>]</td><td><nobr>[<a href="../resources.html#followsymlinks">Resources</a>][<a href="../mhonarc.html">TOC</a>]</nobr></td><td align="right" width="50%">[Next:&nbsp;<a href="folrefs.html">FOLREFS</a>]</td></tr></table>
 <!--/x-rc-nav-->
 <hr>
 <address>
-$Date: 2010/12/31 20:33:59 $ <br>
+$Date: 2011/01/01 22:44:03 $<br>
 <img align="top" src="../monicon.png" alt="">
 <a href="http://www.mhonarc.org/"><strong>MHonArc</strong></a><br>
-Copyright &#169; 1997-1998, <a href="http://www.earlhood.com/">Earl Hood</a>, <a href="mailto:mhonarc&#37;40mhonarc.org">mhonarc<!--
--->&#64;<!--
--->mhonarc.org</a><br>
+Copyright &#169; 2005, <a href="http://www.earlhood.com/"
+>Earl Hood</a>, <a href="mailto:mhonarc&#37;40mhonarc.org">mhonarc<!--
+>-->&#64;<!--
+>-->mhonarc.org</a>
 </address>
 
 </body>

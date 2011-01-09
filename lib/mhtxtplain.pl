@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhtxtplain.pl,v 2.47 2005/06/20 04:25:18 ehood Exp $
+##	$Id: mhtxtplain.pl,v 2.48 2010/12/31 20:34:00 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -331,6 +331,8 @@ sub filter {
 	    warn qq/\n/,
 		 qq/Warning: Unrecognized character set: $charset\n/,
 		 qq/         Message-Id: <$mhonarc::MHAmsgid>\n/,
+                 qq/         Message Subject: /, $fields->{'x-mha-subject'},
+                             qq/\n/,
 		 qq/         Message Number: $mhonarc::MHAmsgnum\n/;
 	    mhonarc::htmlize($data);
 	}

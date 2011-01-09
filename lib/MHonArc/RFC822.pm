@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##      $Id: RFC822.pm,v 1.2 2003/03/07 08:03:41 ehood Exp $
+##      $Id: RFC822.pm,v 1.4 2011/01/02 08:42:32 ehood Exp $
 ##  Author:
 ##      Earl Hood	earl@earlhood.com
 ##	Module adapted to Perl 5 from Perl 4 library:
@@ -155,14 +155,23 @@ sub tokenise {
 	} elsif ($firstchar eq '(') {
 	    # a comment.
 	    do {
-		s/^([^()]*([()]|$))//;
+		s/^(([^()]*)([()]|$))//;
 		$comment .= $1;
-		$comment_depth++ if $2 eq '(';
-		$comment_depth-- if $2 eq ')';
-		do {
+                if ($3 eq '') {
 		    # XXX error recovery for unterminated comment
-		    $comment_depth = 0;
-		} if $2 eq '';
+                    warn "Unterminated comment: $comment\n";
+                    $comment_depth = 0;
+                } elsif (substr($2,-1,1) eq '\\') {
+                    # quoted comment delim, ignore
+                } elsif ($3 eq '(') {
+                    ++$comment_depth;
+                } elsif ($3 eq ')') {
+                    --$comment_depth;
+                } else {
+		    # Should not get here
+                    warn "Internal error: expecting (' or ')' but got: $3\n";
+                    $comment_depth = 0;
+                }
 	    } until ($comment_depth == 0);
 	    push (@outtoks, $comment);
 	} elsif ($firstchar ne '\\' && $firstchar =~ /[$specials]/o) {
@@ -195,8 +204,8 @@ sub tokenise {
 
 sub untokenise {
     my ($token, $prevtok);
-    my ($result);
     my ($prev, $this);
+    my $result = '';
 
     foreach $token (@_) {
 	# Do we need a space?

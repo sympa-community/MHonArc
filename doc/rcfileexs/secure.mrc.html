@@ -1,0 +1,55 @@
+<html>
+<body>
+<pre>
+&lt;!-- ================================================================== --&gt;
+&lt;!--  File:
+	$Id: secure.mrc,v 1.2 2011/01/09 05:23:25 ehood Exp $
+      Author:
+	Earl Hood &lt;earl @ earlhood . com&gt;
+
+      Description:
+	MHonArc, &lt;http://www.mhonarc.org/&gt;, resource file for
+        providing a more secure archive.
+  --&gt;
+&lt;!-- ================================================================== --&gt;
+
+&lt;!--  For public archive sites, it is HIGHLY RECOMMENDED to neutralize
+      HTML.  HTML messages can be used for XSS attacks.  Although
+      mhonarc attempts to neutralize HTML, there is no guarantee that
+      it is perfect.
+
+      SIMPLE RULE: If the archive receives messages from untrusted
+      sources, HTML data SHOULD be neutralized.
+  --&gt;
+
+&lt;!-- Many HTML message have an alternative text/plain part,
+     therefore, for such messages, lets give preference to
+     text/plain part.
+  --&gt;
+<b><a href="../resources/mimealtprefs.html">&lt;MIMEAltPrefs&gt;</a></b>
+text/plain
+text/html
+<b>&lt;/MIMEAltPrefs&gt;</b>
+
+&lt;!-- If there is no text/plain part, we treat text/html as plain
+     text.  This way, something will show up, but it may not be
+     that pretty depending on how the raw HTML data is formatted.
+  --&gt;
+<b><a href="../resources/mimefilters.html">&lt;MIMEFilters&gt;</a></b>
+text/html;   m2h_text_plain::filter; mhtxtplain.pl
+text/x-html; m2h_text_plain::filter; mhtxtplain.pl
+<b>&lt;/MIMEFilters&gt;</b>
+
+&lt;!-- We use media-type method to define arguments since we do not
+     want to interfere with how text/plain may be processed.
+     We disable flowed detection since raw HTML may cause undesired
+     results.
+  --&gt;
+<b><a href="../resources/mimeargs.html">&lt;MIMEArgs&gt;</a></b>
+text/html;   disableflowed
+text/x-html; disableflowed
+<b>&lt;/MIMEArgs&gt;</b>
+
+</pre>
+</body>
+</html>

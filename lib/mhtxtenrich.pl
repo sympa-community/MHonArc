@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhtxtenrich.pl,v 2.10 2003/08/07 20:35:32 ehood Exp $
+##	$Id: mhtxtenrich.pl,v 2.11 2010/12/31 20:34:00 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -95,6 +95,7 @@ sub filter {
 	warn qq/\n/,
 	     qq/Warning: Unrecognized character set: $charset\n/,
 	     qq/         Message-Id: <$mhonarc::MHAmsgid>\n/,
+             qq/         Message Subject: /, $fields->{'x-mha-subject'}, qq/\n/,
 	     qq/         Message Number: $mhonarc::MHAmsgnum\n/
 		unless ($charcnv eq '-decode-');
     }

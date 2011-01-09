@@ -58,6 +58,7 @@ and command-line options.
 <tr valign="top"><td align="right"><b><a href="resources/expiredate.html"><tt>M2H_EXPIREDATE</tt></a></b></td><td></td><td>Expiration of date of message.</td></tr>
 <tr valign="top"><td align="right"><b><a href="resources/fasttempfiles.html"><tt>M2H_FASTTEMPFILES</tt></a></b></td><td></td><td>Use non-random temporary filenames.</td></tr>
 <tr valign="top"><td align="right"><b><a href="resources/fileperms.html"><tt>M2H_FILEPERMS</tt></a></b></td><td></td><td>File permissions for archive files.</td></tr>
+<tr valign="top"><td align="right"><b><a href="resources/followsymlinks.html"><tt>M2H_FOLLOWSYMLINKS</tt></a></b></td><td></td><td>Allow/follow symlinks.</td></tr>
 <tr valign="top"><td align="right"><b><a href="resources/folrefs.html"><tt>M2H_FOLREFS</tt></a></b></td><td></td><td>Print links links to explicit follow-ups and references.</td></tr>
 <tr valign="top"><td align="right"><b><a href="resources/fromfields.html"><tt>M2H_FROMFIELDS</tt></a></b></td><td></td><td>List of fields to extract author of a message.</td></tr>
 <tr valign="top"><td align="right"><b><a href="resources/gmtdatefmt.html"><tt>M2H_GMTDATEFMT</tt></a></b></td><td></td><td>Conversion specification for GMT dates.</td></tr>
@@ -173,6 +174,7 @@ and command-line options.
 <tr valign="top"><td align="right"><b><a href="resources/firstpglink.html"><tt>&lt;FIRSTPGLINK&gt;</tt></a></b></td><td></td><td>Link markup for first page of main index.</td></tr>
 <tr valign="top"><td align="right"><b><a href="resources/fldbeg.html"><tt>&lt;FLDBEG&gt;</tt></a></b></td><td></td><td>Markup before field text.</td></tr>
 <tr valign="top"><td align="right"><b><a href="resources/fldend.html"><tt>&lt;FLDEND&gt;</tt></a></b></td><td></td><td>Markup after field text.</td></tr>
+<tr valign="top"><td align="right"><b><a href="resources/followsymlinks.html"><tt>&lt;FOLLOWSYMLINKS&gt;</tt><br><tt>&lt;NOFOLLOWSYMLINKS&gt;</tt></a></b></td><td></td><td>Allow/follow symlinks.</td></tr>
 <tr valign="top"><td align="right"><b><a href="resources/folrefs.html"><tt>&lt;FOLREFS&gt;</tt><br><tt>&lt;NOFOLREFS&gt;</tt></a></b></td><td></td><td>Print links links to explicit follow-ups and references.</td></tr>
 <tr valign="top"><td align="right"><b><a href="resources/folupbegin.html"><tt>&lt;FOLUPBEGIN&gt;</tt></a></b></td><td></td><td>Beginning markup of follow-up links in message pages.</td></tr>
 <tr valign="top"><td align="right"><b><a href="resources/folupend.html"><tt>&lt;FOLUPEND&gt;</tt></a></b></td><td></td><td>Ending markup of follow-up links in message pages.</td></tr>
@@ -406,6 +408,7 @@ and command-line options.
 <tr valign="top"><td align="right"><b><a href="resources/expiredate.html"><tt>-expiredate</tt></a></b></td><td></td><td>Expiration of date of message.</td></tr>
 <tr valign="top"><td align="right"><b><a href="resources/fasttempfiles.html"><tt>-fasttempfiles</tt><br><tt>-nofasttempfiles</tt></a></b></td><td></td><td>Use non-random temporary filenames.</td></tr>
 <tr valign="top"><td align="right"><b><a href="resources/fileperms.html"><tt>-fileperms</tt></a></b></td><td></td><td>File permissions for archive files.</td></tr>
+<tr valign="top"><td align="right"><b><a href="resources/followsymlinks.html"><tt>-followsymlinks</tt><br><tt>-nofollowsymlinks</tt></a></b></td><td></td><td>Allow/follow symlinks.</td></tr>
 <tr valign="top"><td align="right"><b><a href="resources/folrefs.html"><tt>-folrefs</tt><br><tt>-nofolrefs</tt></a></b></td><td></td><td>Print links links to explicit follow-ups and references.</td></tr>
 <tr valign="top"><td align="right"><b><a href="resources/force.html"><tt>-force</tt></a></b></td><td></td><td>Force archive operation even if lock cannot be obtained.</td></tr>
 <tr valign="top"><td align="right"><b><a href="resources/fromfields.html"><tt>-fromfields</tt></a></b></td><td></td><td>List of fields to extract author of a message.</td></tr>
@@ -501,7 +504,7 @@ and command-line options.
 <!-- *************************************************************** -->
 <hr>
 <address>
-$Date: 2005/07/08 06:34:00 $ <br>
+$Date: 2010/12/31 20:56:38 $ <br>
 <img align="top" src="monicon.png" alt="">
 <a href="http://www.mhonarc.org"><strong>MHonArc</strong></a><br>
 Copyright &#169; 1999, <a href="http://www.mhonarc.org/~ehood/"

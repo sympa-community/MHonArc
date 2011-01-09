@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: CharEnt.pm,v 1.16 2005/05/22 21:14:33 ehood Exp $
+##	$Id: CharEnt.pm,v 1.17 2010/12/31 18:23:02 ehood Exp $
 ##  Author:
 ##      Earl Hood       earl@earlhood.com
 ##  Description:
@@ -178,7 +178,8 @@ sub _utf8_to_sgml {
 	$$data_r =~ s{
 	    $utf8_re_lax
 	}{
-	    $char = unpack('U0U*',$1);
+            # Bug #26577: Perl 5.10 changed unpack behavior
+	    $char = ($] >= 5.010)? unpack('C0U*',$1): unpack('U0U*',$1);
 	    if ($malformed ||
 		  (($char & 0xFFFE) == 0xFFFE) ||
 		  (($char & 0xFFFF) == 0xFFFF) ||
@@ -301,7 +302,7 @@ difficult, but this may be a non-issue with most users.
 
 =head1 VERSION
 
-$Id: CharEnt.pm,v 1.16 2005/05/22 21:14:33 ehood Exp $
+$Id: CharEnt.pm,v 1.17 2010/12/31 18:23:02 ehood Exp $
 
 =head1 AUTHOR
 

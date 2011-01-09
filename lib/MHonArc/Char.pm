@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: Char.pm,v 1.3 2002/12/26 21:57:04 ehood Exp $
+##	$Id: Char.pm,v 1.4 2010/12/31 20:34:00 ehood Exp $
 ##  Author:
 ##      Earl Hood       earl@earlhood.com
 ##  Description:
@@ -84,19 +84,26 @@ sub map_conv {
     }
 
     # Single byte charset
-    my($map, $char);
-    $$data_r =~ s{
-	([\x00-\xFF])
-    }{
-	foreach $map (@maps) {
-	    $char = $map->{$1};
-	    last  if defined($char);
-	}
-	unless (defined($char)) {
-	    $char = (ord($1) <= 0x7F) ? $1 : '?';
-	}
-	$char;
-    }gxe;
+    # Bug #14747: Performance and memory improvement for single byte
+    #             charsets.  A regex is dynamically built, specific
+    #             to the map(s) provided, so replacement is done
+    #             directly by regex engine.
+    #             Patch provided by Andrew Shirrayev.
+    my($map,$char,$code,%summap,$summap);
+    for ($code=0x00; $code<=0xFF; $code++) {
+        foreach $map (@maps) {
+            $char = $map->{chr($code)};
+            last  if defined($char);
+        }
+        unless (defined($char)) {
+            next if($code <= 0x7F);
+            $char = '?';
+        }
+        $summap{chr($code)} = $char;
+        $summap .= chr($code);
+    }
+    # DO NOT use /o here since we need to recompile each time.
+    $$data_r =~ s/([$summap])/$summap{$1}/ge;
     $$data_r;
 }
 
@@ -194,7 +201,7 @@ MHonArc::Char provides character related utilities.
 
 =head1 VERSION
 
-$Id: Char.pm,v 1.3 2002/12/26 21:57:04 ehood Exp $
+$Id: Char.pm,v 1.4 2010/12/31 20:34:00 ehood Exp $
 
 =head1 AUTHOR
 

@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##      $Id: mhopt.pl,v 2.63 2005/07/08 06:34:03 ehood Exp $
+##      $Id: mhopt.pl,v 2.67 2011/01/09 05:13:14 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -58,6 +58,7 @@ sub get_resources {
 	'datefields=s', # Fields that contains the date of a message
 	'dbfile=s',	# Database/state filename for mhonarc archive
 	'dbfileperms=i',# Octal permission to set DBFILE
+        'debug',        # Turn on debugging
 	'decodeheads',	# Decode all 1522 encoded data in message headers
 	'definevar|definevars=s@',
 			# Define custom resource variables
@@ -67,6 +68,8 @@ sub get_resources {
 	'expiredate=s',	# Message cut-off date
 	'expireage=i',	# Time in seconds from current if message expires
 	'fasttempfiles',# Do not use random filenames for temporary files
+	'followsymlinks',
+                        # Follow/allow symlinks when create files
 	'fileperms=i',	# Octal permission to create files
 	'folrefs',	# Print links to explicit follow-ups/references
 	'footer=s',	# File containing user text for bottom of index page
@@ -124,6 +127,8 @@ sub get_resources {
 	'nodoc',	# Do not print link to doc at end of index page
 	'nofasttempfiles',
 			# Use random filenames for temporary files
+	'nofollowsymlinks',
+			# Do not follow symlinks when creating files
 	'nofolrefs',	# Do not print links to explicit follow-ups/references
 	'nogzipfiles',	# Do not Gzip files
 	'nogziplinks',	# Do not add '.gz' extensions to files
@@ -222,6 +227,9 @@ sub get_resources {
     ## Check for help/version options (nothing to do)
     if ($opt{'help'}) 	{ &usage();   return 0; }
     if ($opt{'v'}) 	{ &version(); return 0; }
+    if ($opt{'debug'}) {
+        $DEBUG = 1;
+    }
 
     ## Check std{in,out,err} options
     DUP: {
@@ -418,6 +426,26 @@ sub get_resources {
 
 	    ## Set %Follow here just incase it does not get recomputed
 	    %Follow = %FollowOld;
+	    
+	    ## Check if %Time is defined
+	    if (!%Time) {
+		my($k,$v);
+		while (($k,$v) = each %IndexNum) {
+		    $Time{$k} = (split(/$X/o, $k, 2))[0];
+		}
+	    }
+	    if ($DoFromAddr && !%FromAddr) {
+		my($k,$v);
+		while (($k,$v) = each %From) {
+		    $FromAddr{$k} = extract_email_address($v);
+		}
+	    }
+	    if ($DoFromName && !%FromName) {
+		my($k,$v);
+		while (($k,$v) = each %From) {
+		    $FromName{$k} = extract_email_name($v);
+		}
+	    }
 	}
 	if (!$IDXONLY) {
 	    if ($#ARGV < 0) { $ADDSINGLE = 1; }	# See if adding single mesg
@@ -612,6 +640,8 @@ sub get_resources {
     $CheckNoArchive = 0  if $opt{'nochecknoarchive'};
     $FastTempFiles  = 1  if $opt{'fasttempfiles'};
     $FastTempFiles  = 0  if $opt{'nofasttempfiles'};
+    $FollowSymlinks = 1  if $opt{'followsymlinks'};
+    $FollowSymlinks = 0  if $opt{'nofollowsymlinks'};
     $POSIXstrftime  = 1  if $opt{'posixstrftime'};
     $POSIXstrftime  = 0  if $opt{'noposixstrftime'};
 
@@ -684,6 +714,10 @@ sub get_resources {
     } else {
 	$UPDATE_ALL = 0;
     }
+
+    ## Clean up list-based resources
+    @ExtraHFields = remove_dups(\@ExtraHFields);
+    @FieldOrder   = remove_dups(\@FieldOrder);
 
     ## Set date names
     &set_date_names(\@weekdays, \@Weekdays, \@months, \@Months);
@@ -861,6 +895,8 @@ sub update_data_2_4_to_later {
 ##	Initialize readmail.pl variables
 ##
 sub mhinit_readmail_vars {
+    $readmail::DEBUG = $DEBUG;
+
     ##	Default decoders
     %readmail::MIMEDecoders = (
 	'7bit'             => 'as-is',

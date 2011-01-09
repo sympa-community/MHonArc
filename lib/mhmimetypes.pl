@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhmimetypes.pl,v 1.20 2004/05/22 16:48:39 ehood Exp $
+##	$Id: mhmimetypes.pl,v 1.22 2011/01/02 11:20:23 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -151,6 +151,7 @@ $UnknownExt     = 'bin';
     'application/x-ustar', 		'ustar:UStar file',
     'application/x-wais-source', 	'src:WAIS Source',
     'application/x-zip-compressed',	'zip:Zip compressed data',
+    'application/xml',			'xml:XML document',
     'application/zip', 			'zip:Zip archive',
 
     'audio/basic', 			'snd:Basic audio',
@@ -246,6 +247,7 @@ $UnknownExt     = 'bin';
     'text/tab-separated-values',	'tsv:Tab separated values',
     'text/x-speech',			'talk:Speech document',
     'text/x-vcard',			'vcf:Vcard',
+    'text/xml',  			'xml:XML document',
 
     'video/isivideo',			'fvi:isi video',
     'video/mpeg',			'mpg,mpeg,mpe:MPEG movie',
@@ -301,6 +303,9 @@ sub write_attachment {
     my $rel_outdir = 0;
     if (!$pathname) {
 	$pathname = $OUTDIR;
+	$rel_outdir = 1;
+    } elsif (!OSis_absolute_path($pathname)) {
+        $pathname = $OUTDIR . $DIRSEP . $pathname;
 	$rel_outdir = 1;
     }
 

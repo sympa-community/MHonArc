@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mha-dbrecover,v 1.8 2003/07/20 03:24:38 ehood Exp $
+##	$Id: mha-dbrecover,v 1.9 2009/05/03 20:11:27 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -119,6 +119,7 @@ MAIN: {
 	## Define other data structures that need to be recovered.
 	$mhonarc::NumOfMsgs = scalar(@file);
 	@mhonarc::MListOrder = mhonarc::sort_messages();
+        $mhonarc::LastMsgNum = mhonarc::get_last_msg_num();
 	mhonarc::compute_follow_ups(\@mhonarc::MListOrder);
 	mhonarc::compute_threads();
 

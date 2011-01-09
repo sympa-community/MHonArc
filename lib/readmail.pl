@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: readmail.pl,v 2.38 2005/12/20 20:54:50 ehood Exp $
+##	$Id: readmail.pl,v 2.42 2011/01/09 05:13:14 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc AT mhonarc DOT org
 ##  Description:
@@ -43,6 +43,8 @@
 ##---------------------------------------------------------------------------##
 
 package readmail;
+
+$DEBUG = 0;
 
 ###############################################################################
 ##	Private Globals							     ##
@@ -244,10 +246,10 @@ $TextEncode = undef
     unless defined($TextEncode);
 ##  Text encoding function.
 $TextEncoderFunc = undef
-    unless defined($TextEncodingFunc);
+    unless defined($TextEncoderFunc);
 ##  Text encoding function source file.
 $TextEncoderSrc = undef
-    unless defined($TextEncodingSrc);
+    unless defined($TextEncoderSrc);
 
 ##  Prefilter function
 $TextPreFilter  = undef
@@ -399,6 +401,7 @@ sub MAILdecode_1522_str {
 			    ? $MIMECharsetAliases{$charset} : $charset;
 	    $strtxt =~ s/_/ /g;
 	    $strtxt =  &$dec($strtxt);
+            $strtxt =~ s/[\r\n]/ /g;
 	    &$encfunc(\$strtxt, $real_charset, $TextEncode);
 	    $ret   .= $strtxt;
 
@@ -413,7 +416,9 @@ sub MAILdecode_1522_str {
 	    # Decode only
 	    if ($charcnv eq '-decode-') {
 		$strtxt =~ s/_/ /g;
-		$ret .= &$dec($strtxt);
+		$strtxt =  &$dec($strtxt);
+                $strtxt =~ s/[\r\n]/ /g;
+		$ret .= $strtxt;
 
 	    # Ignore if just decoding
 	    } elsif ($dec_flag) {
@@ -422,7 +427,9 @@ sub MAILdecode_1522_str {
 	    # Decode and convert
 	    } elsif (defined(&$charcnv)) {
 		$strtxt =~ s/_/ /g;
-		$ret .= &$charcnv(&$dec($strtxt), $real_charset);
+		$strtxt =  &$dec($strtxt);
+                $strtxt =~ s/[\r\n]/ /g;
+		$ret .= &$charcnv($strtxt, $real_charset);
 
 	    # Fallback is to ignore
 	    } else {
@@ -450,7 +457,7 @@ sub MAILdecode_1522_str {
 ##	MAILread_body() parses a MIME message body.
 ##	Usage:
 ##	  ($data, @files) =
-##	      MAILread_body($fields_hash_ref, $body_date_ref);
+##	      MAILread_body($fields_hash_ref, $body_data_ref);
 ##
 ##	Parameters:
 ##	  $fields_hash_ref
@@ -563,16 +570,26 @@ sub MAILread_body {
 	$fields->{'x-mha-charset'} = $charset;
 	my $textfunc = load_textencoder();
 	if (defined($textfunc)) {
+            if ($DEBUG) {
+              print STDERR "MAILread_body: have textfunc: $textfunc\n";
+            }
 	    $fields->{'x-mha-charset'} = $TextEncode
 		if defined(&$textfunc($body, $charset, $TextEncode));
 	}
 	if (defined($TextPreFilter) && defined(&$TextPreFilter)) {
+            if ($DEBUG) {
+              print STDERR 'MAILread_body: have TextPreFilter: ',
+                           $TextPreFilter, "\n";
+            }
 	    &$TextPreFilter($fields, $body);
 	}
     } else {
 	# define x-mha-charset in case text filter associated with
 	# a non-text type
 	$fields->{'x-mha-charset'} = $TextDefCharset;
+    }
+    if ($DEBUG) {
+      print STDERR 'MAILread_body: charset: ',$fields->{'x-mha-charset'},"\n";
     }
 
     ## A filter is defined for given content-type
@@ -842,8 +859,6 @@ sub MAILread_header {
     my $header = '';
     my($value, $tmp, $pos);
 
-    my $encfunc = load_textencoder();
-
     ## Read a line at a time.
     for ($pos=0; $pos >= 0; ) {
 	$pos = index($$mesg, "\n");
@@ -858,13 +873,6 @@ sub MAILread_header {
 	} else {
 	    $tmp = $$mesg;
 	    $header .= $tmp;
-	}
-
-	## Decode text if requested
-	if (defined($encfunc)) {
-	    $tmp = &MAILdecode_1522_str($tmp,TEXT_ENCODE);
-	} elsif ($DecodeHeader) {
-	    $tmp = &MAILdecode_1522_str($tmp,JUST_DECODE);
 	}
 
 	## Check for continuation of a field
@@ -883,6 +891,7 @@ sub MAILread_header {
 	    }
 	}
     }
+    decode_1522_fields($fields);
     ($fields, $header);
 }
 
@@ -897,8 +906,6 @@ sub MAILread_file_header {
     my $handle = shift;
     my $encode = shift;
 
-    my $encfunc = load_textencoder();
-
     my $label  = '';
     my $header = '';
     my $fields = { };
@@ -911,13 +918,6 @@ sub MAILread_file_header {
 
 	## Delete eol characters
 	$tmp =~ s/[\r\n]//g;
-
-	## Decode text if requested
-	if (defined($encfunc)) {
-	    $tmp = &MAILdecode_1522_str($tmp,TEXT_ENCODE);
-	} elsif ($DecodeHeader) {
-	    $tmp = &MAILdecode_1522_str($tmp,JUST_DECODE);
-	}
 
 	## Check for continuation of a field
 	if ($tmp =~ /^\s/) {
@@ -935,6 +935,7 @@ sub MAILread_file_header {
 	    }
 	}
     }
+    decode_1522_fields($fields);
     ($fields, $header);
 }
 
@@ -1404,6 +1405,25 @@ sub gen_full_part_number {
 	return $fields->{'x-mha-part-number'} || '1';
     }
     join('.', @number);
+}
+
+##---------------------------------------------------------------------------##
+
+sub decode_1522_fields {
+  my $fields  = shift;
+  my $encfunc = load_textencoder();
+  my $mode    = defined($encfunc)
+                  ? TEXT_ENCODE : ($DecodeHeader ? JUST_DECODE : -1);
+  if ($mode == -1) {
+    return $fields;
+  }
+  my ($label, $value, $v);
+  while (($label, $value) = each %$fields) {
+    foreach $v (@$value) {
+      $v = &MAILdecode_1522_str($v, $mode);
+    }
+  }
+  $fields;
 }
 
 ##---------------------------------------------------------------------------##

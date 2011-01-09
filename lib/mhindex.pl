@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhindex.pl,v 1.13 2005/07/08 06:34:03 ehood Exp $
+##	$Id: mhindex.pl,v 1.14 2009/05/03 20:11:27 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -146,7 +146,7 @@ sub write_main_index {
 	    my($prevdate) = '';
 	    my($time);
 	    foreach $index (@a) {
-		$time = &get_time_from_index($index);
+		$time = $Time{$index};
 		$tmp = join("", $UseLocalTime ? (localtime($time))[3,4,5] :
 						(gmtime($time))[3,4,5]);
 		if ($tmp ne $prevdate) {

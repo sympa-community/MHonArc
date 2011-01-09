@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhtxthtml.pl,v 2.37 2005/05/02 00:04:39 ehood Exp $
+##	$Id: mhtxthtml.pl,v 2.42 2011/01/09 16:12:14 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -12,7 +12,7 @@
 ##	    </MIMEFILTERS>
 ##---------------------------------------------------------------------------##
 ##    MHonArc -- Internet mail-to-HTML converter
-##    Copyright (C) 1995-2000	Earl Hood, mhonarc@mhonarc.org
+##    Copyright (C) 1995-2010	Earl Hood, mhonarc@mhonarc.org
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by
@@ -36,7 +36,7 @@ package m2h_text_html;
 my $SAttr = q/\bon\w+\b/;
 
 # Script/questionable related elements
-my $SElem = q/\b(?:applet|base|embed|form|ilayer|input|layer|link|meta|/.
+my $SElem = q/\b(?:applet|embed|form|ilayer|input|layer|link|meta|/.
 	         q/object|option|param|select|textarea)\b/;
 
 # Elements with auto-loaded URL attributes
@@ -58,6 +58,11 @@ my %special_to_char = (
 ##	The filter must modify HTML content parts for merging into the
 ##	final filtered HTML messages.  Modification is needed so the
 ##	resulting filtered message is valid HTML.
+##
+##      CAUTION: Some of these options can open up a site to attacks.
+##               The MIMEFILTERS reference page provide additional
+##               information on the risks associated with enabling
+##               a given option.
 ##
 ##	Arguments:
 ##
@@ -90,6 +95,8 @@ my %special_to_char = (
 ##			and Content-Disposition specifies the data as
 ##			an attachment, the data is saved to a file
 ##			with a link to it from the message page.
+##                      NOTE: This option can expose your site to
+##                      XSS attacks.
 ##
 ##	disablerelated	Disable MHTML processing.
 ##
@@ -100,7 +107,7 @@ my %special_to_char = (
 ##	subdir		Place derived files in a subdirectory
 ##
 
-# DEVELOPER's NOTE:
+# CAUTION:
 #   The script stripping code is probably not complete.  Since a
 #   whitelist model is not being used -- because full HTML parsing
 #   would be required (and possible reliance on non-standard modules) --
@@ -111,6 +118,16 @@ my %special_to_char = (
 sub filter {
     my($fields, $data, $isdecode, $args) = @_;
     $args = ''  unless defined $args;
+
+    # Bug-32013 (CVE-2010-4524): Invalid tags cause immediate rejection.
+    # Bug-32014 (CVE-2010-1677): Prevents DoS if massively nested.
+    my $allowcom = $args =~ /\ballowcomments\b/i;
+    strip_comments($fields, $data)  unless $allowcom;
+    if ($$data =~ /<[^>]*</) {
+      # XXX: This will reject HTML that includes a '<' char in a
+      #      comment declaration if allowcomments is enabled.
+      return bad_html_reject($fields, "Nested start tags");
+    }
 
     ## Check if content-disposition should be checked
     if ($args =~ /\battachcheck\b/i) {
@@ -134,9 +151,8 @@ sub filter {
     my $onlycid  = $args !~ /\ballownoncidurls\b/i;
     my $subdir   = $args =~ /\bsubdir\b/i;
     my $norelate = $args =~ /\bdisablerelated\b/i;
-    my $allowcom = $args =~ /\ballowcomments\b/i;
     my $atdir    = $subdir ? $mhonarc::MsgPrefix.$mhonarc::MHAmsgnum : "";
-    my $tmp;
+    my $tmp, $i;
 
     my $charset = $fields->{'x-mha-charset'};
     my($charcnv, $real_charset_name) =
@@ -146,14 +162,46 @@ sub filter {
 	# translate HTML specials back
 	$$data =~ s/&([lg]t|amp|quot);/$special_to_char{$1}/g;
     } elsif ($charcnv ne '-decode-') {
-	warn qq/\n/,
-	     qq/Warning: Unrecognized character set: $charset\n/,
-	     qq/         Message-Id: <$mhonarc::MHAmsgid>\n/,
-	     qq/         Message Number: $mhonarc::MHAmsgnum\n/;
+        do_warn($fields, "Unrecognized character set: $charset");
     }
 
     ## Unescape ascii letters to simplify strip code
     dehtmlize_ascii($data);
+
+    ## Strip out scripting markup: Do this early on so scripting
+    ## data does not infect subsequent filtering operations
+    if ($noscript) {
+      # remove scripting elements and attributes
+      $$data =~ s|<script[^>]*>.*?</script\s*>||gios;
+
+      $$data =~ s|<style[^>]*>.*?</style\s*>||gios;
+      for ($i=0; $$data =~ s|</?style\b[^>]*>||gio; ++$i) {
+        return bad_html_reject("Nested <style> tags")  if $i > 0; }
+
+      # Just neutralize scripting attributes.  Since we do not
+      # do true tag-based parsing, this ensures that valid content
+      # is not removed (but it will still get modified)
+      $$data =~ s/($SAttr)(\s*=)/_${1}_${2}/gi;
+
+      for ($i=0; $$data =~ s|</?$SElem[^>]*>||gio; ++$i) {
+        return bad_html_reject("Nested scriptable/form tags")  if $i > 0; }
+      for ($i=0; $$data =~ s|</?script\b||gio; ++$i) {
+        return bad_html_reject("Nested <script> tags")  if $i > 0; }
+
+      # for netscape 4.x browsers
+      $$data =~ s/(=\s*["']?\s*)(?:\&\{)+/$1/g;
+
+      # Neutralize javascript:... URLs: Unfortunately, browsers
+      # are stupid enough to recognize a javascript URL with whitespace
+      # in it (like tabs and newlines).
+      $$data =~ s/\bj\s*a\s*v\s*a\s*s\s*c\s*r\s*i\s*p\s*t/_javascript_/gi;
+      $$data =~ s/\bv\s*b\s*s\s*c\s*r\s*i\s*p\s*t/_vbscript_/gi;
+      $$data =~ s/\be\s*c\s*m\s*a\s*c\s*r\s*i\s*p\s*t/_ecmascript_/gi;
+
+      # IE has a very unsecure expression() operator extension to
+      # CSS, so we have to nuke it also.
+      $$data =~ s/\bexpression\b/_expression_/gi;
+    }
 
     ## Get/remove title
     if (!$notitle) {
@@ -183,55 +231,48 @@ sub filter {
 	    ($base = $tmp) =~ s/['"\s]//g;
 	}
     }
-    $base =~ s|(.*/).*|$1|;
+    for ($i=0; $$data =~ s|</?base[^>]*>||gio; ++$i) {
+      return bad_html_reject("Nested base tags")  if $i > 0; }
+    if ($base =~ /['"<>]/) {
+      do_warn($fields,
+        "Ignoring BASE href due to questionable characters: $base");
+      $base = '';
+    } else {
+      $base =~ s|(.*/).*|$1|;
+    }
 
     ## Strip out certain elements/tags to support proper inclusion:
     ## some browsers are forgiving about dublicating header tags, but
     ## we try to do things right.  It also help minimize XSS exploits.
     $$data =~ s|<head\s*>[\s\S]*</head\s*>||io;
-    1 while ($$data =~ s|<!doctype\s[^>]*>||gio);
-    1 while ($$data =~ s|</?html\b[^>]*>||gio);
-    1 while ($$data =~ s|</?x-html\b[^>]*>||gio);
-    1 while ($$data =~ s|</?meta\b[^>]*>||gio);
-    1 while ($$data =~ s|</?link\b[^>]*>||gio);
+    for ($i=0; $$data =~ s|<!doctype\s[^>]*>||gio; ++$i) {
+      return bad_html_reject("Nested doctypes")  if $i > 0; }
+    for ($i=0; $$data =~ s|</?html\b[^>]*>||gio; ++$i) {
+      return bad_html_reject("Nested <html> tags")  if $i > 0; }
+    for ($i=0; $$data =~ s|</?x-html\b[^>]*>||gio; ++$i) {
+      return bad_html_reject("Nested <x-html> tags")  if $i > 0; }
+    for ($i=0; $$data =~ s|</?meta\b[^>]*>||gio; ++$i) {
+      return bad_html_reject("Nested <meta> tags")  if $i > 0; }
+    for ($i=0; $$data =~ s|</?link\b[^>]*>||gio; ++$i) {
+      return bad_html_reject("Nested <link> tags")  if $i > 0; }
 
     ## Strip out style information if requested.
     if ($nofont) {
-	$$data =~ s|<style[^>]*>.*?</style\s*>||gios;
-	1 while ($$data =~ s|</?font\b[^>]*>||gio);
-	1 while ($$data =~ s/\b(?:style|class)\s*=\s*"[^"]*"//gio);
-	1 while ($$data =~ s/\b(?:style|class)\s*=\s*'[^']*'//gio);
-	1 while ($$data =~ s/\b(?:style|class)\s*=\s*[^\s>]+//gio);
-	1 while ($$data =~ s|</?style\b[^>]*>||gi);
-    }
+      if (!$noscript) {
+        # Only do this if we did not do it above.
+        $$data =~ s|<style[^>]*>.*?</style\s*>||gios;
+      }
 
-    ## Strip out scripting markup
-    if ($noscript) {
-	# remove scripting elements and attributes
-	$$data =~ s|<script[^>]*>.*?</script\s*>||gios;
-	unless ($nofont) {  # avoid dup work if style already stripped
-	    $$data =~ s|<style[^>]*>.*?</style\s*>||gios;
-	    1 while ($$data =~ s|</?style\b[^>]*>||gi);
-	}
-	1 while ($$data =~ s|$SAttr\s*=\s*"[^"]*"||gio); #"
-	1 while ($$data =~ s|$SAttr\s*=\s*'[^']*'||gio); #'
-	1 while ($$data =~ s|$SAttr\s*=\s*[^\s>]+||gio);
-	1 while ($$data =~ s|</?$SElem[^>]*>||gio);
-	1 while ($$data =~ s|</?script\b||gi);
-
-	# for netscape 4.x browsers
-	$$data =~ s/(=\s*["']?\s*)(?:\&\{)+/$1/g;
-
-	# Neutralize javascript:... URLs: Unfortunately, browsers
-	# are stupid enough to recognize a javascript URL with whitespace
-	# in it (like tabs and newlines).
-	$$data =~ s/\bj\s*a\s*v\s*a\s*s\s*c\s*r\s*i\s*p\s*t/_javascript_/gi;
-	$$data =~ s/\bv\s*b\s*s\s*c\s*r\s*i\s*p\s*t/_vbscript_/gi;
-	$$data =~ s/\be\s*c\s*m\s*a\s*c\s*r\s*i\s*p\s*t/_ecmascript_/gi;
-
-	# IE has a very unsecure expression() operator extension to
-	# CSS, so we have to nuke it also.
-	$$data =~ s/\bexpression\b/_expression_/gi;
+      for ($i=0; $$data =~ s|</?font\b[^>]*>||gio; ++$i) {
+        return bad_html_reject("Nested <font> tags")  if $i > 0; }
+      for ($i=0; $$data =~ s/\b(?:style|class)\s*=\s*"[^"]*"//gio; ++$i) {
+        return bad_html_reject("Nested style|class attributes")  if $i > 0; }
+      for ($i=0; $$data =~ s/\b(?:style|class)\s*=\s*'[^']*'//gio; ++$i) {
+        return bad_html_reject("Nested style|class attributes")  if $i > 0; }
+      for ($i=0; $$data =~ s/\b(?:style|class)\s*=\s*[^\s>]+//gio; ++$i) {
+        return bad_html_reject("Nested style|class attributes")  if $i > 0; }
+      for ($i=0; $$data =~ s|</?style\b[^>]*>||gio; ++$i) {
+        return bad_html_reject("Nested <style> tags")  if $i > 0; }
     }
 
     ## Modify relative urls to absolute using BASE
@@ -288,7 +329,8 @@ sub filter {
 	    $$data = $tpre . $$data . $tsuf;
 	}
     }
-    1 while ($$data =~ s|</?body\b[^>]*>||ig);
+    for ($i=0; $$data =~ s|</?body\b[^>]*>||igo; ++$i) {
+      return bad_html_reject("Nested <body> tags")  if $i > 0; }
 
     my $ahref_tmp;
     if ($onlycid) {
@@ -341,12 +383,13 @@ sub filter {
 	$$data =~ s/\b$ahref_tmp\b/href/g;
     }
 
+    ## NOTE: Comment strip moved to top.
     ## Check comment declarations: may screw-up mhonarc processing
     ## and avoids someone sneaking in SSIs.
-    if (!$allowcom) {
-      #$$data =~ s/<!(?:--(?:[^-]|-[^-])*--\s*)+>//go; # can crash perl
-      $$data =~ s/<!--[^-]+[#X%\$\[]*/<!--/g;  # Just mung them (faster)
-    }
+#   if (!$allowcom) {
+#     #$$data =~ s/<!(?:--(?:[^-]|-[^-])*--\s*)+>//go; # can crash perl
+#     $$data =~ s/<!--[^-]+[#X%\$\[]*/<!--/g;  # Just mung them (faster)
+#   }
 
     ## Prevent comment spam
     ## <http://www.google.com/googleblog/2005/01/preventing-comment-spam.html>
@@ -444,6 +487,62 @@ sub dehtmlize_ascii {
   }gex;
 
   $$str_r;
+}
+
+##---------------------------------------------------------------------------
+
+sub strip_comments {
+  my $fields = shift;    # for diagnostics
+  my $data = shift;      # ref to text to strip
+
+  # We avoid using regex since it can lead to performance problems.
+  # We also do not do full SGML-style comment declarations since it
+  # increases parsing complexity.  Here, we just remove any
+  # "<!-- ... -->" strings.  Although whitespace is allowed between
+  # final "--" and ">", we do not support it.
+  
+  my $n = index($$data, '<!--', 0);
+  if ($n < 0) {
+    # Nothing to do.  Good.
+    return $data;
+  }
+
+  my $ret = '';
+  while ($n >= 0) {
+    $ret .= substr($$data, 0, $n);
+    substr($$data, 0, $n) = '';
+    $n = index($$data, '-->', 0);
+    if ($n < 0) {
+      # No end to comment declaration: Warn and strip rest of data.
+      do_warn($fields, 'HTML comment declaration not terminated.');
+      $$data = '';
+      last;
+    }
+    substr($$data, 0, $n+3) = '';
+    $n = index($$data, '<!--', 0);
+  }
+  $ret .= $$data;
+  $$data = $ret;
+  $data;
+}
+
+##---------------------------------------------------------------------------
+#
+sub do_warn {
+  my $fields = shift;
+  my $mesg   = shift;
+  warn qq/\n/,
+       qq/Warning: $mesg\n/,
+       qq/         Message-Id: <$mhonarc::MHAmsgid>\n/,
+       qq/         Message Subject: /, $fields->{'x-mha-subject'}, qq/\n/,
+       qq/         Message Number: $mhonarc::MHAmsgnum\n/;
+}
+
+sub bad_html_reject {
+  my $fields = shift;
+  my $detail = shift;
+  do_warn($fields, "Rejecting Invalid HTML: $detail");
+  undef;
 }
 
 ##---------------------------------------------------------------------------

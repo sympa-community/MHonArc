@@ -1,13 +1,13 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhamain.pl,v 2.93 2006/06/10 02:42:58 ehood Exp $
+##	$Id: mhamain.pl,v 2.100 2011/01/09 16:18:35 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
 ##	Main library for MHonArc.
 ##---------------------------------------------------------------------------##
 ##    MHonArc -- Internet mail-to-HTML converter
-##    Copyright (C) 1995-2005	Earl Hood, mhonarc@mhonarc.org
+##    Copyright (C) 1995-2010	Earl Hood, mhonarc@mhonarc.org
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by
@@ -29,10 +29,10 @@ package mhonarc;
 
 require 5;
 
-$VERSION = '2.6.16';
+$VERSION = '2.6.18';
 $VINFO =<<EndOfInfo;
   MHonArc v$VERSION (Perl $] $^O)
-  Copyright (C) 1995-2005  Earl Hood, mhonarc\@mhonarc.org
+  Copyright (C) 1995-2010  Earl Hood, mhonarc\@mhonarc.org
   MHonArc comes with ABSOLUTELY NO WARRANTY and MHonArc may be copied only
   under the terms of the GNU General Public License, which may be found in
   the MHonArc distribution.
@@ -59,6 +59,7 @@ BEGIN {
 }
 ###############################################################################
 
+$DEBUG          = 0;
 $CODE		= 0;
 $ERROR  	= "";
 @OrgARGV	= ();
@@ -486,12 +487,12 @@ sub write_pages {
 	foreach $index (sort_messages(0,0,0,0)) {
 	    last  unless
 		    ($MAXSIZE && ($NumOfMsgs > $MAXSIZE)) ||
-		    (&expired_time(&get_time_from_index($index)));
+		    (&expired_time($Time{$index}));
 
 	    &delmsg($index);
 
 	    # Mark messages that need to be updated
-	    if (!$NoMsgPgs) {
+	    if (!$NoMsgPgs && !$KeepOnRmm) {
 		$mloc = $Index2MLoc{$index};  $tloc = $Index2TLoc{$index};
 		$Update{$IndexNum{$MListOrder[$mloc-1]}} = 1
 		    if $mloc-1 >= 0;
@@ -868,7 +869,8 @@ sub read_mail_header {
     }
     if (!$index) {
 	warn qq/\nWarning: Could not parse date for message\n/,
-	       qq/         Message-Id: <$msgid>\n/;
+	       qq/         Message-Id: <$msgid>\n/,
+	       qq/         Date: $date\n/;
 	# Use current time
 	$index = time;
 	# Set date string to local date if not defined
@@ -936,6 +938,7 @@ sub read_mail_header {
     }
 
     ## Insure uniqueness of index
+    my $t = $index;
     $index .= $X . sprintf('%d',(defined($msgnum)?$msgnum:($LastMsgNum+1)));
 
     ## Set mhonarc fields.  Note how values are NOT arrays.
@@ -950,7 +953,10 @@ sub read_mail_header {
 	return undef  unless &$CBMessageHeadRead($fields, $header);
     }
 
+    $Time{$index} = $t;
     $From{$index} = $from;
+    $FromName{$index} = extract_email_name($from)  if $DoFromName;
+    $FromAddr{$index} = extract_email_address($from)  if $DoFromAddr;
     $Date{$index} = $date;
     $Subject{$index} = $sub;
     $MsgHead{$index} = htmlize_header($fields);
@@ -1027,11 +1033,17 @@ sub read_mail_body {
 	local $/ = undef;
 	$data = <$handle>;
     }
+    if ($DEBUG) {
+      print STDERR "read_mail_body(): Body data loaded into memory\n";
+    }
 
     return ''  if $skip;
 
     ## Invoke callback if defined
     if (defined($CBRawMessageBodyRead) && defined(&$CBRawMessageBodyRead)) {
+        if ($DEBUG) {
+          print STDERR "read_mail_body(): Calling CBRawMessageBodyRead\n";
+        }
 	if (!&$CBRawMessageBodyRead($fields, \$data)) {
 	    # reverse effect of read_mail_header()
 	    delmsg_from_hashes($index);
@@ -1047,7 +1059,13 @@ sub read_mail_body {
     $MHAmsgid  = $Index2MsgId{$index};
 
     ## Filter data
+    if ($DEBUG) {
+      print STDERR "read_mail_body(): Calling readmail::MAILread_body\n";
+    }
     ($ret, @files) = &readmail::MAILread_body($fields, \$data);
+    if ($DEBUG) {
+      print STDERR "read_mail_body(): readmail::MAILread_body DONE\n";
+    }
     $ret = ''     unless defined $ret;
     @files = ( )  unless @files;
 
@@ -1067,6 +1085,7 @@ sub read_mail_body {
 	warn qq/\n/,
 	     qq/Warning: Empty body data generated:\n/,
 	     qq/         Message-Id: $MHAmsgid\n/,
+             qq/         Message Subject: /, $fields->{'x-mha-subject'}, qq/\n/,
 	     qq/         Message Number: $MHAmsgnum\n/,
 	     qq/         Content-Type: /,
 			 ($fields->{'content-type'}[0] || 'text/plain'),
@@ -1395,7 +1414,7 @@ sub output_mail {
     ## Set modification times -- Use eval incase OS does not support utime.
     if ($MODTIME && !$SINGLE) {
 	eval {
-	    $tmp = get_time_from_index($index);
+	    $tmp = $Time{$index};
 	    if (defined($Derived{$index})) {
 	      @array2 = @{$Derived{$index}};
 	      grep($_ = $OUTDIR . $DIRSEP . $_, @array2);
@@ -1464,6 +1483,7 @@ sub delmsg_from_hashes {
     delete $IndexNum{$key};
     delete $Refs{$key};
     delete $Subject{$key};
+    delete $ExtraHFields{$key};
     delete $MsgId{$Index2MsgId{$key}};
 
     my $derived = $Derived{$key};

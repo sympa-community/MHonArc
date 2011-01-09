@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhrcvars.pl,v 2.28 2005/07/08 05:27:52 ehood Exp $
+##	$Id: mhrcvars.pl,v 2.29 2009/05/03 20:11:27 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -135,23 +135,47 @@ sub replace_li_var {
 			"";
 	    last REPLACESW;
 	}
-	my($cnd1, $cnd2, $cnd3) = (0,0,0);
-    	if (($cnd1 = ($var eq 'FROM')) ||	## Message "From:"
-	    ($cnd2 = ($var eq 'FROMADDR')) ||	## Message from mail address
-	    ($cnd3 = ($var eq 'FROMNAME'))) {	## Message from name
-	    my $esub = $cnd1 ? sub { $_[0]; } :
-		       $cnd2 ? \&extract_email_address :
-			       \&extract_email_name;
+	if ($var eq 'FROM') {		## Message "From:"
 	    $canclip = 1; $raw = 1;
 	    ($lref, $key, $pos) = compute_msg_pos($index, $var, $arg);
-	    $tmp = defined($key) ? &$esub($From{$key}) : "(nil)";
-	    if ($cnd3 && $SpamMode) {
+	    $tmp = defined($key) ? $From{$key} : '(nil)';
+	    $isaddr = 1;
+	    last REPLACESW;
+	}
+	if ($var eq 'FROMADDR') {	## Message from mail address
+	    $canclip = 1; $raw = 1;
+	    ($lref, $key, $pos) = compute_msg_pos($index, $var, $arg);
+	    if (!defined($key)) {
+		$tmp = '(nil)';
+		last REPLACESW;
+	    }
+	    my $caddr = $FromAddr{$key};
+	    $tmp = defined($caddr)
+		    ? $caddr
+		    : extract_email_address($From{$key});
+	    $isaddr = 1;
+	    last REPLACESW;
+	}
+	if ($var eq 'FROMNAME') {	## Message from mail name
+	    $canclip = 1; $raw = 1;
+	    ($lref, $key, $pos) = compute_msg_pos($index, $var, $arg);
+	    if (!defined($key)) {
+		$tmp = '(nil)';
+		last REPLACESW;
+	    }
+	    my $cname = $FromName{$key};
+	    $tmp = defined($cname)
+		    ? $cname
+		    : extract_email_name($From{$key});
+	    if ($SpamMode) {
 		$tmp =~ s/($AddrExp)/rewrite_raw_address($1)/geo;
 	    } else {
 		$isaddr = 1;
 	    }
 	    last REPLACESW;
 	}
+
+	my($cnd1, $cnd2) = (0,0);
     	if ( ($cnd1 = ($var eq 'FROMADDRNAME')) ||
 	     ($cnd2 = ($var eq 'FROMADDRDOMAIN')) ) {
 	    ($lref, $key, $pos) = compute_msg_pos($index, $var, $arg);
@@ -159,7 +183,13 @@ sub replace_li_var {
 		$tmp = "";
 		last REPLACESW;
 	    }
-	    my @a = split(/@/, extract_email_address($From{$key}), 2);
+	    my $caddr = $FromAddr{$key};
+	    my @a;
+	    if (defined($caddr)) {
+	      @a = split(/@/, $caddr, 2);
+	    } else {
+	      @a = split(/@/, extract_email_address($From{$key}), 2);
+	    }
 	    if ($cnd1) {
 		$tmp = $a[0];
 		last REPLACESW;
@@ -226,7 +256,7 @@ sub replace_li_var {
     	if ($var eq 'MSGGMTDATE') {	## Message GMT date
 	    ($lref, $key, $pos, $opt) = compute_msg_pos($index, $var, $arg);
 	    $tmp = &time2str($opt || $MsgGMTDateFmt,
-			     &get_time_from_index($key), 0);
+			     $Time{$key}, 0);
 	    last REPLACESW;
 	}
     	if ($var eq 'MSGID') {		## Message-ID
@@ -237,7 +267,7 @@ sub replace_li_var {
     	if ($var eq 'MSGLOCALDATE') {	## Message local date
 	    ($lref, $key, $pos, $opt) = compute_msg_pos($index, $var, $arg);
 	    $tmp = &time2str($opt || $MsgLocalDateFmt,
-			     &get_time_from_index($key), 1);
+			     $Time{$key}, 1);
 	    last REPLACESW;
 	}
     	if ($var eq 'MSGNUM') {		## Message number

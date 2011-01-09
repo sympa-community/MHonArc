@@ -8,13 +8,15 @@ track of all the names.  However, I'd like to give special thanks to
 the following:
 
       [If you know of someone left out that deserves mentioning,
-       please send a message to mhonarc@mhonarc.org.]
+       please send a message to mhonarc(AT)mhonarc.org.]
 ---------------------------------------------------------------------------
 
  A. P. Barrett <barrett AT ee DOT und DOT ac DOT za>
 	For developing a base64 library in pure Perl.  The library has
 	been adapted (with optimizations) to decode base64 messages
 	by MHonArc.
+        NOTE: Later releases leverage MIME::Base64 module if available
+        for best performance due to its native implementation.
 
  A.R. Burgers <burgers AT ecn DOT nl>
 	For contributing the prsfrom.pl program (included in the
@@ -42,7 +44,7 @@ the following:
 
  Roman Czyborra <czyborra AT cs DOT tu-berlin DOT de>
 	For his help with the MosaicMail script (which has been
-	removed later releases since Mosaic is dead software).
+	removed in later releases since Mosaic is dead software).
 
  Brian Foster <Brian.Foster AT ireland DOT sun DOT com>
 	For his useful, detailed, bug reports.
@@ -62,7 +64,7 @@ the following:
 	For helping me tackle Perl problems and for bouncing ideas
 	off during the early days.
 
- Phyllis Imperatrice <mymom AT home>
+ Phyllis Imperatrice
 	For the initial sketch of the MHonArc logo.
 
  Eddie Kohler <kohler AT aciri DOT org>
@@ -99,9 +101,9 @@ the following:
 
  NIIBE Yutaka <gniibe AT mri DOT co DOT jp>
 	For the initial contribution of a text/plain filter,
-	iso2022jp.pl to process ISO-2022 encoded mail messages
-	(ie. Japanese character set).
+	iso2022jp.pl to process ISO-2022 (Japanese) encoded
+        mail messages.
 
 ---------------------------------------------------------------------------
-$Date: 2003/05/21 17:09:13 $ 
-Earl Hood, mhonarc@mhonarc.org
+$Date: 2009/05/03 20:11:27 $ 
+Earl Hood, mhonarc(AT)mhonarc.org

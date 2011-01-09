@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhrcfile.pl,v 2.46 2005/07/08 06:34:04 ehood Exp $
+##	$Id: mhrcfile.pl,v 2.48 2010/12/31 21:37:00 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -217,7 +217,7 @@ sub parse_resource_file {
 	    last FMTSW;
 	}
 	if ($elem eq 'definevar') {		# Custom resource variable
-	    @CustomRcVars = ()  if $override;
+	    %CustomRcVars = ()  if $override;
 	    $line = <$handle>;
 	    last FMTSW if $line =~ /^\s*<\/definevar\s*>/i;
 	    $line =~ s/\s//g;
@@ -257,6 +257,9 @@ sub parse_resource_file {
 	}
 	if ($elem eq 'fasttempfiles') {		# Non-random temp files
 	    $FastTempFiles = 1; last FMTSW;
+	}
+	if ($elem eq 'followsymlinks') {	# Allow/follow symlinks
+	    $FollowSymlinks = 1; last FMTSW;
 	}
 	if ($elem eq 'fieldstore') {		# Fields to store
 	    @ExtraHFields = ()  if $override;
@@ -737,6 +740,9 @@ sub parse_resource_file {
 	}
 	if ($elem eq 'nofasttempfiles') {	# Random temp files
 	    $FastTempFiles = 0; last FMTSW;
+	}
+	if ($elem eq 'nofollowsymlinks') {	# Do not allow/follow symlinks
+	    $FollowSymlinks = 0; last FMTSW;
 	}
 	if ($elem eq 'nofolrefs') {		# Don't print explicit fol/refs
 	    $DoFolRefs = 0; last FMTSW;

@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##      $Id: mhusage.pl,v 2.27 2005/07/08 06:34:04 ehood Exp $
+##      $Id: mhusage.pl,v 2.28 2011/01/02 07:28:55 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -35,6 +35,8 @@ sub mhusage {
 	if ($UNIX &&
 		(-t STDOUT) &&
 		(($ENV{'PAGER'} && open(PAGER, "| $ENV{'PAGER'}")) ||
+                 (-e '/etc/alternatives/pager' &&
+                  open(PAGER, '| /etc/alternatives/pager')) ||
 		 (open(PAGER, '| more')))) {
 	    $usefh = \*PAGER;
 	    $close = 1;
@@ -85,8 +87,10 @@ Options:
   -editidx                 : Edit/change index page(s) and messages, only
   -expiredate <date>       : Message cut-off date
   -expireage <secs>        : Time from current when messages expire
+  -fasttempfiles           : Use non-random temporary filenames
   -fileperms <octal>       : File permissions for archive files
                              (def: "0666" -- UMASK is still applied)
+  -followsymlinks          : Allow/follow symlinks
   -folrefs                 : Print links to follow-ups/references
   -force                   : Perform archive operations even if unable to lock
   -fromfields <list>       : Fields to detemine whom the message is from
@@ -117,7 +121,7 @@ Options:
                              (def: "10")
   -mailtourl <url>         : URL to use for e-mail address hyperlinks
                              (def: "mailto:\$TO\$")
-  -main                    : Create a main index
+  -main                    : Create a main index (the default)
   -maxpgs <#>              : Maximum number of index pages
   -maxsize <#>             : Maximum number of messages allowed in archive
   -mhpattern <exp>         : Perl expression for message files in a directory
@@ -142,6 +146,8 @@ Options:
   -noconlen                : Ignore Content-Length fields (the default)
   -nodecodeheads           : Leave message headers "as is" when read
   -nodoc                   : Do not print link to doc at end of index page
+  -nofasttempfiles         : Use random temporary filenames (the default)
+  -nofollowsymlinks        : Do not allow/follow symlinks (the default)
   -nofolrefs               : Do not print links to follow-ups/references
   -nogzipfiles             : Do not Gzip files (the default)
   -nogziplinks             : Do not add ".gz" to filenames in links
@@ -150,6 +156,8 @@ Options:
   -nolock                  : Do not lock archive
   -nomailto                : Do not add in mailto links for e-mail addresses
   -nomain                  : Do not create a main index
+  -nomodifybodyaddresses   : ADDRESSMODIFYCODE does not apply to text entities
+                             (the default)
   -nomodtime               : Do not set mod time on files to message date
   -nomsgpgs                : Do not create message pages
   -nomultipg               : Do not generate multi-page indexes
@@ -161,7 +169,7 @@ Options:
   -noreverse               : List messages in normal order (the default)
   -nosaveresources         : Do not save resource values in DB
   -nosort                  : Do not sort messages
-  -nospammode              : Do not obfuscate addresses
+  -nospammode              : Do not obfuscate addresses (the default)
   -nosubjectthreads        : Do not check subjects for threads
   -nosubjecttxt <text>     : Text to use if message has no subject
   -nosubsort               : Do not sort messages by subject

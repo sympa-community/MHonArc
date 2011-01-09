@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhutil.pl,v 2.32 2005/07/08 05:27:53 ehood Exp $
+##	$Id: mhutil.pl,v 2.34 2011/01/02 08:42:32 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -39,13 +39,15 @@ use MHonArc::RFC822;
     'list-unsubscribe' 	=> 1,
 );
 
-## Do not apply ADDRESSMODIFYCODE headerfiels
+## Do not apply ADDRESSMODIFYCODE headerfields
 %HFieldsAsIsList = (
     %HFieldsList,
     'content-disposition' => 1,
     'content-id'          => 1,
     'content-type'        => 1,
     'message-id'          => 1,
+    'references'          => 1,
+    'in-reply-to'         => 1,
 );
 
 ## Header fields that contain addresses
@@ -177,10 +179,12 @@ sub extract_email_name {
 	next  if $skip;
 	if ($tok =~ /^"/) {   # Quoted string
 	    $tok =~ s/^"//;  $tok =~ s/"$//;
+            $tok =~ s/\\(.)/$1/g;
 	    return $tok;
 	}
 	if ($tok =~ /^\(/) {  # Comment
 	    $tok =~ s/^\(//; $tok =~ s/\)$//;
+            $tok =~ s/\\(.)/$1/g;
 	    return $tok;
 	}
 	if ($tok =~ /^<$/) {  # Address spec, skip
@@ -240,11 +244,11 @@ sub sort_messages {
 	}
 	if ($revsort) {
 	    return sort { ($sub{$a} cmp $sub{$b}) ||
-			  (get_time_from_index($b) <=> get_time_from_index($a))
+			  ($Time{$b} <=> $Time{$a})
 			} keys %Subject;
 	} else {
 	    return sort { ($sub{$a} cmp $sub{$b}) ||
-			  (get_time_from_index($a) <=> get_time_from_index($b))
+			  ($Time{$a} <=> $Time{$b})
 			} keys %Subject;
 	}
 	
@@ -256,28 +260,33 @@ sub sort_messages {
 	    my $hs = scalar(%From);  $hs =~ s|^[^/]+/||;
 	    keys(%from) = $hs;
 	};
-	while (($idx, $from) = each(%From)) {
-	    $from = lc extract_email_name($from);
-	    $from{$idx} = $from;
+	if ($DoFromName && %FromName) {
+	    while (($idx, $from) = each(%FromName)) {
+		$from{$idx} = lc $from;
+	    }
+	} else {
+	    while (($idx, $from) = each(%From)) {
+		$from{$idx} = lc extract_email_name($from);
+	    }
 	}
 	if ($revsort) {
 	    return sort { ($from{$a} cmp $from{$b}) ||
-			  (get_time_from_index($b) <=> get_time_from_index($a))
+			  ($Time{$b} <=> $Time{$a})
 			} keys %Subject;
 	} else {
 	    return sort { ($from{$a} cmp $from{$b}) ||
-			  (get_time_from_index($a) <=> get_time_from_index($b))
+			  ($Time{$a} <=> $Time{$a})
 			} keys %Subject;
 	}
 
     } else {
 	## Date order
 	if ($revsort) {
-	    return sort { (get_time_from_index($b) <=> get_time_from_index($a))
+	    return sort { ($Time{$b} <=> $Time{$a})
 			  || ($IndexNum{$b} <=> $IndexNum{$a})
 			} keys %Subject;
 	} else {
-	    return sort { (get_time_from_index($a) <=> get_time_from_index($b))
+	    return sort { ($Time{$a} <=> $Time{$b})
 			  || ($IndexNum{$a} <=> $IndexNum{$b})
 			} keys %Subject;
 	}
@@ -320,7 +329,7 @@ sub get_filename_from_index {
 ##	Routine to get time component from index
 ##
 sub get_time_from_index {
-    (split(/$X/o, $_[0], 2))[0];
+    $Time{$_[0]} || (split(/$X/o, $_[0], 2))[0];
 }
 
 ##---------------------------------------------------------------------------
@@ -359,6 +368,9 @@ sub get_note_dir {
 ##	Routine to get lc author name from index
 ##
 sub get_base_author {
+    if ($DoFromName && %FromName) {
+      return lc $FromName{$_[0]};
+    }
     lc extract_email_name($From{$_[0]});
 }
 
@@ -485,7 +497,7 @@ sub htmlize_header {
 		    $tmp = $HFieldsList{$item} ? mlist_field_add_links($tmp) :
 						 &$MHeadCnvFunc($tmp);
 		    $tmp = field_add_links($item, $tmp, $fields)
-			unless $HFieldsAsIsList{$key};
+			unless $HFieldsAsIsList{$item};
 		    ($tago, $tagc, $ftago, $ftagc) = &get_header_tags($item);
 		    $mesg .= join('', $LABELBEG,
 				  $tago, htmlize(ucfirst($item)), $tagc,

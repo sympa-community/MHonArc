@@ -13,6 +13,82 @@
 
 YYYY/MM/DD
 ============================================================================
+2011/01/09	(2.6.18)
+
+* Update to HTML filter to improve filtering of event-based
+  attributes.
+
+============================================================================
+2011/01/09	(2.6.17)
+
+* Security Fixes:
+
+    Bug ID  Summary
+    ------  ------------------------------------------------------------
+    32013   CVE-2010-4524: Improper escaping of certain HTML
+            sequences (XSS) 
+    32014   CVE-2010-1677: DoS when processing html messages with deep
+            tag nesting
+    32080   Specially crafted <base href> can lead to XSS exploit
+    ------  ------------------------------------------------------------
+
+* Bug Fixes:
+
+    Bug ID  Summary
+    ------  ------------------------------------------------------------
+    13853   Creation of archive with attachments writes over symlinks
+    14747   major (10X) memory savings possible in some situations
+    15433   relative attachmentdir is relative to current working dir,
+            not outdir 
+    17660   Threaded index resource ordering doesn't allow well formed
+            XML output
+    17860   incorrect nested HTML Tags for references
+    17904   FieldOrder affects AddressModifyCode
+    18113   Inconsistant thread slices w/ poor man's windowing
+    18908   X-Subject data get split in separate lines
+    20074   extra space in subject
+    20142   strip backslash in rfc822 From: field
+    23198   Incorrect Setting Installation Directory
+    24247   iso2022jp.pl: unneeded ESC ( B remains in message body
+    25225   dir_create() fails to make temporary directories (PATCH)
+    25486   Resource FieldStore causes .mhonarc.db to grow over bounds
+    26577   Changed semantic for unpack breaks UTF-8
+    32032   TextEncode related resource information not saved correctly
+            in db file
+    ------  ------------------------------------------------------------
+
+* Added FOLLOWSYMLINKS resource (Bug #13853).
+
+* When KEEPONRMM is enabled, messages that are removed from
+  the archive do not cause linked messages to be updated.  This allows
+  for pages that use $TSLICE$ to maintain thread links for messages
+  that "fall off" of the maintained list of archived messages.
+
+* Added pre-extraction of From name and From address.  This
+  provides a performance improvement for archives that make use of
+  the $FROMADDR$ and $FROMADDRNAME$ resource variables along with
+  author sorting.
+
+* Added mapping of message index keys to time stamp.  This should
+  provide some performance gain since parsing out of time stamp from
+  index is no longer required.
+
+* Cache last message number in db to avoid directory scan of archive
+  each time an add operation is performed.  This provides a performance
+  improvement for large archives and on file systems where directory
+  reading with many files may not be optimal.  Thanks go to Christopher
+  Lindsey for patch.
+
+* Added References and In-Reply-To to as-is fields list to avoid
+  automatic modification of message IDs if address-rewriting is
+  in effect.
+
+* Simplified regular expression for detecting addresses.
+  New expression performs significantly better than the previous
+  expression, but still matches the vast majority of addresses
+  used today.
+
+============================================================================
 2006/06/09	(2.6.16)
 
 * Bug Fixes:
@@ -2742,4 +2818,4 @@ YYYY/MM/DD
 
 =======================================================================
 Earl Hood, mhonarc@mhonarc.org
-$Id: CHANGES,v 1.142 2006/06/10 02:42:58 ehood Exp $
+$Id: CHANGES,v 1.157 2011/01/09 16:12:12 ehood Exp $

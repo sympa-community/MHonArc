@@ -1,5 +1,5 @@
 #!/usr/bin/perl
-# $Id: Makefile.PL,v 1.14 2003/01/04 04:44:21 ehood Exp $
+# $Id: Makefile.PL,v 1.15 2011/01/01 00:56:12 ehood Exp $
 # Pseudo Makefile.PL:  Since MHonArc's history goes back to Perl 4 days,
 # it has its own installation process.  This file generates a simple
 # Makefile to (paritally) satisfy the standard Perl 5 way to install
@@ -22,7 +22,7 @@ foreach (@ARGV) {
 my $opt_prefix  = defined($vars{'PREFIX'}) ?
 			"-prefix $vars{'PREFIX'}" : "";
 my $opt_binpath = defined($vars{'INSTALLSCRIPT'}) ?
-			"-prefix $vars{'INSTALLSCRIPT'}" : "";
+			"-binpath $vars{'INSTALLSCRIPT'}" : "";
 my $opt_libpath = defined($vars{'LIB'}) ?
 			"-libpath $vars{'LIB'}" :
 		  defined($vars{'INSTALLSITELIB'}) ?
@@ -30,7 +30,7 @@ my $opt_libpath = defined($vars{'LIB'}) ?
 		  defined($vars{'INSTALLPRIVLIB'}) ?
 			"-libpath $vars{'INSTALLPRIVLIB'}" : "";
 my $opt_manpath = defined($vars{'INSTALLMAN1DIR'}) ?
-			"-prefix $vars{'INSTALLMAN1DIR'}" : "";
+			"-manpath $vars{'INSTALLMAN1DIR'}" : "";
    $opt_manpath =~ s/man1$//;
 
 my $instme_args = "$opt_prefix $opt_binpath $opt_libpath $opt_manpath";

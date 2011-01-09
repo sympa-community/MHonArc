@@ -1,5 +1,4 @@
-#!/usr/bin/perl
-# $Id: base64.pl,v 2.4 2004/05/17 04:18:13 ehood Exp $
+# $Id: base64.pl,v 2.5 2011/01/02 06:50:26 ehood Exp $
 #
 # Library based on Perl 4 code from:
 #       base64.pl -- A perl package to handle MIME-style BASE64 encoding

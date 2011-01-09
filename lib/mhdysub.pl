@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhdysub.pl,v 2.11 2004/03/09 07:14:01 ehood Exp $
+##	$Id: mhdysub.pl,v 2.12 2009/05/03 20:11:27 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -91,11 +91,20 @@ EndOfRoutine
 
     ##-----------------------------------------------------------------------
     ##	Routine to determine last message number in use.
+    ##  If $LastMsgNum set, we return it after a sanity check
+    ##  is done.  If check fails, scan directory to determine last number.
     ##
     $sub =<<'EndOfRoutine';
     sub get_last_msg_num {
 	opendir(DIR, $OUTDIR) || die("ERROR: Unable to open $OUTDIR\n");
 	my($max) = -1;
+        if ($LastMsgNum >= 0) {
+           return $LastMsgNum if (
+                 -s $OUTDIR . $DIRSEP . msgnum_filename($LastMsgNum)) &&
+                 ((! -f $OUTDIR . $DIRSEP . msgnum_filename($LastMsgNum + 1))
+           );
+        }
+
 	my $msgrex = '^'.
 		     "\Q$MsgPrefix".
 		     '(\d+)\.'.
@@ -107,6 +116,7 @@ EndOfRoutine
 	    if (/$msgrex/io) { $max = int($1)  if $1 > $max; }
 	}
 	closedir(DIR);
+        $LastMsgNum = $max;
 	$max;
     }
 EndOfRoutine

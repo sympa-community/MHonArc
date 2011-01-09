@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhinit.pl,v 2.54 2005/07/08 06:34:03 ehood Exp $
+##	$Id: mhinit.pl,v 2.57 2011/01/09 07:52:25 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -237,6 +237,7 @@ $LastMsgNum	= -1;	# Message number of last message
 %MsgHead  	= ();	# Message indexes to heads
 %MsgHtml  	= ();	# Flag if message is html
 %Subject  	= ();	# Message indexes to subjects
+%Time   	= ();	# Message indexes to message unix date/time
 %From   	= ();	# Message indexes to froms
 %Date   	= ();	# Message indexes to dates
 %MsgId  	= ();	# Message ids to indexes
@@ -249,6 +250,11 @@ $LastMsgNum	= -1;	# Message number of last message
 %ContentType	= ();	# Index key to base content-type of message
 %Icons    	= ();	# Index key to icon URL for content-type
 %AddIndex 	= ();	# Flags for messages that must be written
+
+$DoFromName	= 1;
+$DoFromAddr	= 1;
+%FromName   	= ();	# Message indexes to from human name
+%FromAddr       = ();	# Message indexes to from address
 
 @MListOrder	= ();	# List of indexes in order printed on main index
 %Index2Mloc	= ();	# Map index to position in main index
@@ -293,9 +299,15 @@ $MHeadCnvFunc	= "mhonarc::htmlize";
 $VarExp    = $ENV{'M2H_VARREGEX'};
 $VarExp    = '\$([^\$]*)\$'  if !defined($VarExp) || $VarExp !~ /\S/;
 
-##  Regexp for address/msg-id detection (looks like cussing in cartoons)
-$AddrExp  = '[^()<>@,;:\/\s"\'&|]+@[^()<>@,;:\/\s"\'&|]+';
-$HAddrExp = '[^()<>@,;:\/\s"\'&|]+(?:@|&\#[xX]0*40;|&64;)[^()<>@,;:\/\s"\'&|]+';
+##  Regexp for address/msg-id detection: In the past we had
+##  patterns that are more insync with RFC (2)822, but much
+##  of the world today uses simplier syntax.  Also, the more
+##  general versions have serious performance problems on
+##  large strings.
+#$AddrExp  = '\b[^()<>@,;:\/\s"\'&|]+@[^()<>@,;:\/\s"\'&|]+\b';
+#$HAddrExp = '\b[^()<>@,;:\/\s"\'&|]+(?:@|&\#[xX]0*40;|&64;)[^()<>@,;:\/\s"\'&|]+\b';
+$AddrExp   = '\b[A-Za-z\d\-\.+%_]+@[A-Za-z\d.\-]+\.[A-Za-z]{2,4}\b';
+$HAddrExp  = $AddrExp;
 
 ##  Text clipping function and source file: Set in mhopt.pl.
 $TextClipFunc	= undef;
@@ -401,6 +413,8 @@ $FilePerms      = $ENV{'M2H_FILEPERMS'} || '0666';
 $FilePermsOct   = 0666;
 $DbFilePerms    = $ENV{'M2H_DBFILEPERMS'} || '0660';
 $DbFilePermsOct = 0660;
+$FollowSymlinks = defined($ENV{'M2H_FOLLOWSYMLINKS'}) ?
+			  $ENV{'M2H_FOLLOWSYMLINKS'} : 0;
 
 $CheckNoArchive = defined($ENV{'M2H_CHECKNOARCHIVE'}) ?
 			  $ENV{'M2H_CHECKNOARCHIVE'} : 0;

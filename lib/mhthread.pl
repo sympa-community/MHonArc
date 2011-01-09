@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##      $Id: mhthread.pl,v 2.12 2004/12/15 20:33:40 ehood Exp $
+##      $Id: mhthread.pl,v 2.13 2011/01/02 10:14:13 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -409,9 +409,9 @@ sub print_thread {
     ## Check for missing messages
     if ($DoMissingMsgs && !($attop || $single)) {
 	for ($i=$depth; $i > 0; --$i) {
-	    &print_thread_var($handle, $idx, \$TLINONEEND);
 	    &print_thread_var($handle, $idx, \$TSUBLISTEND)
 		if $level <= $TLEVELS;
+	    &print_thread_var($handle, $idx, \$TLINONEEND);
 	    --$level;
 	}
     }
@@ -636,9 +636,9 @@ sub make_thread {
     ## Check for missing messages
     if ($DoMissingMsgs && !($attop || $single)) {
 	for ($i = $depth; $i > 0; $i--) {
-	    $ret .= &expand_thread_var($idx, \$TSLICELINONEEND);
 	    $ret .= &expand_thread_var($idx, \$TSLICESUBLISTEND)
 		if $level <= $TSLICELEVELS;
+	    $ret .= &expand_thread_var($idx, \$TSLICELINONEEND);
 	    $level--;
 	}
     }

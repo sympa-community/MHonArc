@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhfile.pl,v 2.11 2003/09/29 05:03:11 ehood Exp $
+##	$Id: mhfile.pl,v 2.13 2010/12/31 21:20:41 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -237,6 +237,11 @@ sub dir_create {
 
     ## Check if $path is a symlink
     if (-l $path) {
+        if ($FollowSymlinks) {
+            # Symlinks allowed, so we check if symlink is to a directory
+            die qq/ERROR: "$path" is not a directory: $!\n/  if !(-d $path);
+            return;
+        }
 	# symlink, try to delete
 	warn qq/Warning: "$path" is a symlink, will try to replace...\n/;
 	if (!unlink($path)) {
@@ -270,7 +275,9 @@ sub dir_create {
 		    die qq/ERROR: "$path" exists, but it did not before, /,
 			qq/and it is not a directory!\n/;
 		}
-	    }
+	    } else {
+                last;
+            }
 	}
 	if ($i >= TEMP_MAX_TRIES) {
 	    die qq/ERROR: Unable to rename "$tmpdir" to "$path": $errstr\n/;
@@ -280,7 +287,6 @@ sub dir_create {
 	if (!mkdir($path, $perms)) {
 	    die qq/ERROR: Unable to create "$path": $!\n/;
 	}
-	return;
     }
     chmod(($perms &~ umask), $path);
 }

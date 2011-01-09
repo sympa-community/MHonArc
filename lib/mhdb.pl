@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhdb.pl,v 2.40 2005/12/20 21:28:15 ehood Exp $
+##	$Id: mhdb.pl,v 2.43 2011/01/03 06:42:39 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -65,13 +65,19 @@ print_var($db,'Date',        \%Date);
 print_var($db,'Derived',     \%Derived);
 print_var($db,'FollowOld',   \%Follow);
 print_var($db,'From',        \%From);
+print_var($db,'DoFromName',  \$DoFromName);
+print_var($db,'FromName',    \%FromName)  if $DoFromName;
+print_var($db,'DoFromAddr',  \$DoFromAddr);
+print_var($db,'FromAddr',    \%FromAddr)  if $DoFromAddr;
 print_var($db,'IndexNum',    \%IndexNum);
 print_var($db,'MsgId',       \%MsgId);
 print_var($db,'Refs',        \%Refs);
 print_var($db,'Subject',     \%Subject);
+print_var($db,'Time',        \%Time);
 print_var($db,'ExtraHFields',\@ExtraHFields);
 print_var($db,'ExtraHFields',\%ExtraHFields);
 print_var($db,'TListOrder',  \@TListOrder);
+print_var($db,'LastMsgNum',  \$LastMsgNum);
 print_var($db,'MAXPGS',      \$MAXPGS);
 print_var($db,'MULTIIDX',    \$MULTIIDX);
 print_var($db,'NumOfMsgs',   \$NumOfMsgs);
@@ -104,7 +110,7 @@ unless ($IsDefault{'CHARSETCONVERTERS'} && !$SaveMIMECharSetConverters) {
     print_var($db,'readmail::MIMECharSetConvertersSrc',
 		    \%readmail::MIMECharSetConvertersSrc);
 }
-unless ($readmail::TextDefCharset ne 'us-ascii') {
+unless ($readmail::TextDefCharset eq 'us-ascii') {
     print_var($db,'readmail::TextDefCharset',
 		  \$readmail::TextDefCharset);
 }
@@ -113,9 +119,9 @@ unless ($IsDefault{'TEXTENCODE'} && !$SaveTextEncode) {
     print_var($db,'readmail::TextEncode',
 		    \$readmail::TextEncode);
     print_var($db,'readmail::TextEncoderFunc',
-		    \$readmail::TextEncode);
-    print_var($db,'readmail::TextEncodeSrc',
-		    \$readmail::TextEncode);
+		    \$readmail::TextEncoderFunc);
+    print_var($db,'readmail::TextEncoderSrc',
+		    \$readmail::TextEncoderSrc);
 }
 unless ($IsDefault{'MIMEDECODERS'} && !$SaveMIMEDecoders) {
     print_var($db,'SaveMIMEDecoders', \$_true);
@@ -178,6 +184,7 @@ print_var($db,'DoFolRefs',      \$DoFolRefs);
 print_var($db,'ExpireDate',     \$ExpireDate);
 print_var($db,'ExpireTime',     \$ExpireTime);
 print_var($db,'FastTempFiles',  \$FastTempFiles);
+print_var($db,'FollowSymlinks', \$FollowSymlinks);
 print_var($db,'FROM',           \$FROM);
 print_var($db,'GMTDateFmt',     \$GMTDateFmt);
 print_var($db,'GzipExe',        \$GzipExe);

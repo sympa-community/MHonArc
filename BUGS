@@ -1,23 +1,23 @@
 [Prev]                    [TOC][FAQ][Bugs][Home]                     [Next]
 
----------------------------------------------------------------------------
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 Appendix: Bugs
 
-  * Reporting Bugs
-  * Open Bugs
-  * Fixed Bugs
+  • Reporting Bugs
+  • Open Bugs
+  • Fixed Bugs
 
----------------------------------------------------------------------------
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 Reporting Bugs
 
 Before reporting a bug, please do the following:
 
-  * Make sure it is not a usage problem: check the documentation and FAQ.
-  * Check that you are running the latest version of MHonArc. If not, it is
+  • Make sure it is not a usage problem: check the documentation and FAQ.
+  • Check that you are running the latest version of MHonArc. If not, it is
     likely the problem has been fixed in a newer version.
-  * If you are not sure if the problem is a bug or not, send a message to
+  • If you are not sure if the problem is a bug or not, send a message to
     the mailing list to get confirmation.
 
 The prefered way to report bugs is to use the bug submission form for
@@ -30,7 +30,7 @@ to get the bug submission form. Hopefully, the form fields are
 self-explanatory, but if you are not sure what to select in some of the
 option items, leave it with the default value or make a best guess.
 
----------------------------------------------------------------------------
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 Open Bugs
 
@@ -38,7 +38,7 @@ Goto <http://savannah.nongnu.org/bugs/?group=mhonarc>, select "Open" for
 the Open/Closed choice, and then activate the Apply button to list all open
 bugs.
 
----------------------------------------------------------------------------
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 Fixed Bugs
 
@@ -46,13 +46,13 @@ Goto <http://savannah.nongnu.org/bugs/?group=mhonarc>, select "Closed" for
 the Open/Closed choice, and then activate the Apply button to list all
 closed/fixed bugs.
 
----------------------------------------------------------------------------
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 [Prev]                    [TOC][FAQ][Bugs][Home]                     [Next]
 
----------------------------------------------------------------------------
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 $Date: 2005/05/13 19:07:56 $
 MHonArc
-Copyright � 1997-2002, Earl Hood, mhonarc@mhonarc.org
+Copyright © 1997-2002, Earl Hood, mhonarc@mhonarc.org
 

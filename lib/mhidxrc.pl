@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhidxrc.pl,v 2.17 2004/03/15 21:07:18 ehood Exp $
+##	$Id: mhidxrc.pl,v 2.18 2011/01/09 07:52:25 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -749,7 +749,7 @@ $Icons{'unknown'} = $Icons{'text/plain'}  unless $Icons{'unknown'};
 ##
 if ($AddressModify eq "") {
     $AddressModify =
-	q{s|([\!\%\w\.\-+=/]+@)([\w\-]+\.[\w\.\-]+)|$1.('x' x length($2))|ge}
+	q{s|@(.+)$|'@'.('x' x length($1))|ge}
 	if $SpamMode;
     $IsDefault{'AddressModify'} = 1;
 }
