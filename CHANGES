@@ -13,6 +13,25 @@
 
 YYYY/MM/DD
 ============================================================================
+2014/04/21	(2.6.19)
+
+* Security Fixes:
+
+    Bug ID  Summary
+    ------  ------------------------------------------------------------
+    35388   commentized subjects allow PHP code injection
+    ------  ------------------------------------------------------------
+
+* Bug Fixes:
+
+    Bug ID  Summary
+    ------  ------------------------------------------------------------
+    32987   Lots of deprecation warnings with Perl 5.12
+    42155   MHonArc crashed with message/external-body and RFC 2231
+            encoded parameters
+    ------  ------------------------------------------------------------
+
+============================================================================
 2011/01/09	(2.6.18)
 
 * Update to HTML filter to improve filtering of event-based
@@ -2818,4 +2837,4 @@ YYYY/MM/DD
 
 =======================================================================
 Earl Hood, mhonarc@mhonarc.org
-$Id: CHANGES,v 1.157 2011/01/09 16:12:12 ehood Exp $
+$Id: CHANGES,v 1.161 2014/04/22 02:33:09 ehood Exp $

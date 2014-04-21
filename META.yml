@@ -1,7 +1,7 @@
 --- #YAML:1.0
 name:              MHonArc
 abstract:          Create HTML archives of mail/news messages
-version:           2.6.18
+version:           2.6.19
 authored_by:
   - Earl Hood <mhonarc@mhonarc.org>
 license:           gpl

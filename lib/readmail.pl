@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: readmail.pl,v 2.42 2011/01/09 05:13:14 ehood Exp $
+##	$Id: readmail.pl,v 2.45 2014/04/22 02:33:10 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc AT mhonarc DOT org
 ##  Description:
@@ -43,6 +43,8 @@
 ##---------------------------------------------------------------------------##
 
 package readmail;
+
+no warnings qw(deprecated);
 
 $DEBUG = 0;
 
@@ -117,9 +119,9 @@ $DecodeHeader	= 0;
 ##  set to true.
 
 %MIMEDecoders			= ()
-    unless defined(%MIMEDecoders);
+    unless %MIMEDecoders;
 %MIMEDecodersSrc		= ()
-    unless defined(%MIMEDecodersSrc);
+    unless %MIMEDecodersSrc;
 
 ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ##  %MIMECharSetConverters is the associative array for storing functions
@@ -153,9 +155,9 @@ $DecodeHeader	= 0;
 ##  string.
 
 %MIMECharSetConverters			= ()
-    unless defined(%MIMECharSetConverters);
+    unless %MIMECharSetConverters;
 %MIMECharSetConvertersSrc		= ()
-    unless defined(%MIMECharSetConvertersSrc);
+    unless %MIMECharSetConvertersSrc;
 
 ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ##  %MIMEFilters is the associative array for storing functions that
@@ -180,9 +182,9 @@ $DecodeHeader	= 0;
 ##  that all functions are defined before invoking MAILread_body.
 
 %MIMEFilters	= ()
-    unless defined(%MIMEFilters);
+    unless %MIMEFilters;
 %MIMEFiltersSrc	= ()
-    unless defined(%MIMEFiltersSrc);
+    unless %MIMEFiltersSrc;
 
 ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ##  %MIMEFiltersArgs is the associative array for storing any optional
@@ -196,7 +198,7 @@ $DecodeHeader	= 0;
 ##  listed for a function if both are applicable.
 
 %MIMEFiltersArgs	= ()
-    unless defined(%MIMEFiltersArgs);
+    unless %MIMEFiltersArgs;
 
 ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ##  %MIMEExcs is the associative array listing which data types
@@ -206,7 +208,7 @@ $DecodeHeader	= 0;
 ##	Values => <should evaluate to a true expression>
 
 %MIMEExcs			= ()
-    unless defined(%MIMEExcs);
+    unless %MIMEExcs;
 
 ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ##  %MIMEIncs is the associative array listing which data types
@@ -220,7 +222,7 @@ $DecodeHeader	= 0;
 ##  be used to only allow a well-defined set of content-types.
 
 %MIMEIncs			= ()
-    unless defined(%MIMEIncs);
+    unless %MIMEIncs;
 
 ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ##  %MIMECharsetAliases is a mapping of charset names to charset names.
@@ -231,7 +233,7 @@ $DecodeHeader	= 0;
 ##	Values => real charset name
 ##
 %MIMECharsetAliases = ()
-    unless defined(%MIMECharsetAliases);
+    unless %MIMECharsetAliases;
 
 ##---------------------------------------------------------------------------
 ##	Text entity-related variables
@@ -1051,7 +1053,7 @@ sub MAILparse_parameter_str {
 
     my $parm	= { };
     my @toks    = MHonArc::RFC822::uncomment($str);
-    my($tok, $name, $value, $charset, $lang, $part);
+    my($tok, $name, $value, $charset, $lang, $isPart);
 
     $parm->{'x-main'} = shift @toks  if $hasmain;
 
@@ -1069,23 +1071,26 @@ sub MAILparse_parameter_str {
         }
         ## Check if parameter is only part
         if ($name =~ s/\*(\d+)$//) {
-            $part = $1 - 1;     # we start at 0 internally
+            $isPart = 1;
         } else {
-            $part = 0;
+            $isPart = 0;
         }
         ## Set values for parameter
         $name = lc $name;
-        $parm->{$name} = {
-            'charset'	=> $charset,
-            'lang'   	=> $lang,
-        };
+        $parm->{$name} = {}  unless defined($parm->{$name});
+        $parm->{$name}{'charset'} = $charset;
+        $parm->{$name}{'lang'} = $lang;
         ## Check if value is next token
         if ($value eq "") {
             ## If value next token, than it must be quoted
             $value = shift @toks;
             $value =~ s/^"//;  $value =~ s/"$//;  $value =~ s/\\//g;
         }
-        $parm->{$name}{'vlist'}[$part] = $value;
+        if ($isPart && defined($parm->{$name}{'vlist'})) {
+          push(@{$parm->{$name}{'vlist'}}, $value);
+        } else {
+          $parm->{$name}{'vlist'} = [ $value ];
+        }
     }
 
     ## Now we loop thru each parameter and define the final values from

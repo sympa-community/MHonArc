@@ -1,12 +1,12 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: ewhutil.pl,v 2.16 2006/04/20 04:03:29 ehood Exp $
+##	$Id: ewhutil.pl,v 2.17 2012/01/29 18:32:36 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
 ##      Generic utility routines
 ##---------------------------------------------------------------------------##
-##    Copyright (C) 1996-2001	Earl Hood, mhonarc@mhonarc.org
+##    Copyright (C) 1996-2001,2012	Earl Hood, mhonarc@mhonarc.org
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by
@@ -70,7 +70,7 @@ sub entify {			# Alternate name
 
 sub commentize {
     my($txt) = $_[0];
-    $txt =~ s/([\-&])/'&#'.unpack('C',$1).';'/ge;
+    $txt =~ s/([\-&<])/'&#'.unpack('C',$1).';'/ge;
     $txt;
 }
 

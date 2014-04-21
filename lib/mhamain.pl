@@ -1,13 +1,13 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: mhamain.pl,v 2.100 2011/01/09 16:18:35 ehood Exp $
+##	$Id: mhamain.pl,v 2.102 2014/04/22 02:33:10 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
 ##	Main library for MHonArc.
 ##---------------------------------------------------------------------------##
 ##    MHonArc -- Internet mail-to-HTML converter
-##    Copyright (C) 1995-2010	Earl Hood, mhonarc@mhonarc.org
+##    Copyright (C) 1995-2012	Earl Hood, mhonarc@mhonarc.org
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by
@@ -29,10 +29,10 @@ package mhonarc;
 
 require 5;
 
-$VERSION = '2.6.18';
+$VERSION = '2.6.19';
 $VINFO =<<EndOfInfo;
   MHonArc v$VERSION (Perl $] $^O)
-  Copyright (C) 1995-2010  Earl Hood, mhonarc\@mhonarc.org
+  Copyright (C) 1995-2014  Earl Hood, mhonarc\@mhonarc.org
   MHonArc comes with ABSOLUTELY NO WARRANTY and MHonArc may be copied only
   under the terms of the GNU General Public License, which may be found in
   the MHonArc distribution.
@@ -1561,6 +1561,7 @@ sub signal_catch {
 ##	Create Index2MsgId if not defined
 ##
 sub defineIndex2MsgId {
+    no warnings qw(deprecated);
     if (!defined(%Index2MsgId)) {
 	foreach (keys %MsgId) {
 	    $Index2MsgId{$MsgId{$_}} = $_;

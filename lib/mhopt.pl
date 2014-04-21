@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##      $Id: mhopt.pl,v 2.67 2011/01/09 05:13:14 ehood Exp $
+##      $Id: mhopt.pl,v 2.68 2012/01/29 19:45:55 ehood Exp $
 ##  Author:
 ##      Earl Hood       mhonarc@mhonarc.org
 ##  Description:
@@ -863,6 +863,7 @@ sub update_data_1_to_2 {
 ##	Update 2.1, or earlier, data.
 ##
 sub update_data_2_1_to_later {
+    no warnings qw(deprecated);
     # we can preserve filter arguments
     if (defined(%main::MIMEFiltersArgs)) {
 	warn qq/         preserving MIMEARGS...\n/;
