@@ -34,9 +34,11 @@ package MHonArc::RFC822;
 
 use strict;
 use Exporter ();
+use MHonArc;
 use vars qw( @ISA @EXPORT @EXPORT_OK $VERSION );
+
 @ISA = qw ( Exporter );
-$VERSION = "0.01";
+$VERSION = $MHonArc::VERSION;
 
 @EXPORT = ();
 @EXPORT_OK = qw(

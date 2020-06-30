@@ -26,10 +26,11 @@
 ##---------------------------------------------------------------------------##
 
 package mhonarc;
+use MHonArc;
 
 require 5;
 
-$VERSION = '2.6.19';
+$VERSION = $MHonArc::VERSION;
 $VINFO =<<EndOfInfo;
   MHonArc v$VERSION (Perl $] $^O)
   Copyright (C) 1995-2014  Earl Hood, mhonarc\@mhonarc.org

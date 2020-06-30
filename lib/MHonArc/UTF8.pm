@@ -30,6 +30,8 @@ use strict;
 use MHonArc::CharMaps;
 
 BEGIN {
+    use MHonArc;
+    our $VERSION = $MHonArc::VERSION;
     eval {
 	require MHonArc::UTF8::Encode;
     };
