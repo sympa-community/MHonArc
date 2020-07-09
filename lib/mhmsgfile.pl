@@ -42,18 +42,18 @@ require 'mhtime.pl';
 ##	values are arrays of field values.
 ##
 sub parse_data_from_msg {
-    my $fh = shift;	# An open filehandle
+    my $fh    = shift;    # An open filehandle
     my %field = ();
-    my($field, $value);
-    local($_);
+    my ($field, $value);
+    local ($_);
 
     while (<$fh>) {
-	last  if /^<!--X-Head-End/;	# All done
-	next  unless s/^<!--X-//;	# Skip non-field lines
-	chomp;				# Drop EOL
-	s/ -->$//;			# Remove comc
-	($field, $value) = split(/: /, $_, 2);
-	push(@{$field{lc $field}}, uncommentize($value));
+        last if /^<!--X-Head-End/;    # All done
+        next unless s/^<!--X-//;      # Skip non-field lines
+        chomp;                        # Drop EOL
+        s/ -->$//;                    # Remove comc
+        ($field, $value) = split(/: /, $_, 2);
+        push(@{$field{lc $field}}, uncommentize($value));
     }
     \%field;
 }
@@ -63,65 +63,65 @@ sub parse_data_from_msg {
 ##	a MHonArc message file directly into db hashes.
 ##
 sub load_data_from_msg_file {
-    my $filename = shift;	# Name of file to read
-    my $msgnum	 = shift;	# Message number for file
-    local(*MSGFILE);
+    my $filename = shift;             # Name of file to read
+    my $msgnum   = shift;             # Message number for file
+    local (*MSGFILE);
 
     if (!open(MSGFILE, $filename)) {
-	warn qq/Warning: Unable to open "$filename": $!\n/;
-	return 0;
+        warn qq/Warning: Unable to open "$filename": $!\n/;
+        return 0;
     }
 
     my $href = parse_data_from_msg(\*MSGFILE);
     close(MSGFILE);
 
     if (!defined($href->{'subject'})) {
-	warn qq/Warning: Unable to find Subject for "$filename"\n/;
-	return 0;
+        warn qq/Warning: Unable to find Subject for "$filename"\n/;
+        return 0;
     }
 
     my $index = "";
-    my $date = $href->{'date'}[0];
+    my $date  = $href->{'date'}[0];
 
     ## Determine date of message
     if (($date =~ /\S/) && (@array = parse_date($date))) {
-	$index = get_time_from_date(@array[1..$#array]);
+        $index = get_time_from_date(@array[1 .. $#array]);
     } else {
-	$index = time;
-	$date  = &time2str("", $index, 1)  unless $date =~ /\S/;
+        $index = time;
+        $date = &time2str("", $index, 1) unless $date =~ /\S/;
     }
     $index .= $X . int($msgnum);
 
     ## Assign data to hashes
-    $Date{$index} = $date;
+    $Date{$index}    = $date;
     $Subject{$index} = $href->{'subject'}[0];
     if (defined($href->{'from-r13'})) {
-	$From{$index} = &mrot13($href->{'from-r13'}[0]);
+        $From{$index} = &mrot13($href->{'from-r13'}[0]);
     } elsif (defined($href->{'from'})) {
-	$From{$index} = $href->{'from'}[0];
+        $From{$index} = $href->{'from'}[0];
     } else {
-	$From{$index} = 'Anonymous';
+        $From{$index} = 'Anonymous';
     }
     if (defined($href->{'message-id'})) {
-	$Index2MsgId{$index} = $href->{'message-id'}[0];
-	$MsgId{$href->{'message-id'}[0]} = $index;
-	$NewMsgId{$href->{'message-id'}[0]} = $index;
+        $Index2MsgId{$index}                = $href->{'message-id'}[0];
+        $MsgId{$href->{'message-id'}[0]}    = $index;
+        $NewMsgId{$href->{'message-id'}[0]} = $index;
     }
 
     if (defined($href->{'content-type'})) {
-	$ContentType{$index} = $href->{'content-type'}[0];
-    } elsif (defined($href->{'contenttype'})) {		# older versions
-	$ContentType{$index} = $href->{'contenttype'}[0];
+        $ContentType{$index} = $href->{'content-type'}[0];
+    } elsif (defined($href->{'contenttype'})) {    # older versions
+        $ContentType{$index} = $href->{'contenttype'}[0];
     }
 
     if (defined($href->{'reference'})) {
-	$Refs{$index} = $href->{'reference'};
-    } elsif (defined($href->{'reference-id'})) {	# older versions
-	$Refs{$index} = $href->{'reference-id'};
+        $Refs{$index} = $href->{'reference'};
+    } elsif (defined($href->{'reference-id'})) {    # older versions
+        $Refs{$index} = $href->{'reference-id'};
     }
 
     if (defined($href->{'derived'})) {
-	$Derived{$index} = $href->{'derived'};
+        $Derived{$index} = $href->{'derived'};
     }
 
     $IndexNum{$index} = int($msgnum);

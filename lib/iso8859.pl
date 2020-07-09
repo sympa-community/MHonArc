@@ -29,7 +29,7 @@ package iso_8859;
 use MHonArc::CharEnt;
 
 BEGIN {
-  *str2sgml = \&MHonArc::CharEnt::str2sgml;
+    *str2sgml = \&MHonArc::CharEnt::str2sgml;
 }
 
 ##---------------------------------------------------------------------------##

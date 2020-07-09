@@ -28,11 +28,11 @@ package mhonarc;
 
 my $HTMLSpecials = '"&<>';
 my %HTMLSpecials = (
-  '"'	=> '&quot;',
-  '&'	=> '&amp;',
-  '<'	=> '&lt;',
-  '>'	=> '&gt;',
-  # '@'	=> '&#x40;',  # XXX: Screws up ISO-2022-JP conversion
+    '"' => '&quot;',
+    '&' => '&amp;',
+    '<' => '&lt;',
+    '>' => '&gt;',
+    # '@'	=> '&#x40;',  # XXX: Screws up ISO-2022-JP conversion
 );
 
 ##---------------------------------------------------------------------------
@@ -41,7 +41,7 @@ my %HTMLSpecials = (
 ##
 sub remove_dups {
     my $a = shift;
-    return ()  unless scalar(@$a);
+    return () unless scalar(@$a);
     my %dup = ();
     grep(!$dup{$_}++, @$a);
 }
@@ -49,17 +49,17 @@ sub remove_dups {
 ##---------------------------------------------------------------------------
 ##	"Entify" special characters
 
-sub htmlize {			# Older name
-    return ''  unless scalar(@_) && defined($_[0]);
-    my $txt   = shift;
+sub htmlize {    # Older name
+    return '' unless scalar(@_) && defined($_[0]);
+    my $txt = shift;
     my $txt_r = ref($txt) ? $txt : \$txt;
     $$txt_r =~ s/([$HTMLSpecials])/$HTMLSpecials{$1}/go;
     $$txt_r;
 }
 
-sub entify {			# Alternate name
-    return ''  unless scalar(@_) && defined($_[0]);
-    my $txt   = shift;
+sub entify {     # Alternate name
+    return '' unless scalar(@_) && defined($_[0]);
+    my $txt = shift;
     my $txt_r = ref($txt) ? $txt : \$txt;
     $$txt_r =~ s/([$HTMLSpecials])/$HTMLSpecials{$1}/go;
     $$txt_r;
@@ -69,13 +69,13 @@ sub entify {			# Alternate name
 ##	string will be included in a comment declaration
 
 sub commentize {
-    my($txt) = $_[0];
+    my ($txt) = $_[0];
     $txt =~ s/([\-&<])/'&#'.unpack('C',$1).';'/ge;
     $txt;
 }
 
 sub uncommentize {
-    my($txt) = $_[0];
+    my ($txt) = $_[0];
     $txt =~ s/&#(\d+);/pack("C",$1)/ge;
     $txt;
 }
@@ -84,8 +84,8 @@ sub uncommentize {
 ##	Copy a file.
 ##
 sub cp {
-    my($src, $dst) = @_;
-    open(SRC, $src) || die("ERROR: Unable to open $src\n");
+    my ($src, $dst) = @_;
+    open(SRC, $src)     || die("ERROR: Unable to open $src\n");
     open(DST, "> $dst") || die("ERROR: Unable to create $dst\n");
     print DST <SRC>;
     close(SRC);
@@ -96,7 +96,7 @@ sub cp {
 ##	Translate html string back to regular string
 ##
 sub dehtmlize {
-    my $str   = shift;
+    my $str = shift;
     my $str_r = ref($str) ? $str : \$str;
     $$str_r =~ s/\&lt;/</g;
     $$str_r =~ s/\&gt;/>/g;
@@ -111,14 +111,14 @@ sub dehtmlize {
 ##	Escape special characters in string for URL use.
 ##
 sub urlize {
-    my($url) = shift || "";
+    my ($url) = shift || "";
     my $url_r = ref($url) ? $url : \$url;
     $$url_r =~ s/([^\w\.\-:])/sprintf("%%%02X",unpack("C",$1))/ge;
     $$url_r;
 }
 
 sub urlize_path {
-    my($url) = shift || "";
+    my ($url) = shift || "";
     my $url_r = ref($url) ? $url : \$url;
     $$url_r =~ s/([^\w\.\-:\/])/sprintf("%%%02X",unpack("C",$1))/ge;
     $$url_r;
@@ -129,7 +129,7 @@ sub urlize_path {
 ##	the '@' character so addresses can be munged a little better.
 ##
 sub mrot13 {
-    my $str	= shift;
+    my $str = shift;
     $str =~ tr/@A-Z[a-z/N-Z[@A-Mn-za-m/;
     $str;
 }

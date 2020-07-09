@@ -34,63 +34,61 @@ use Exporter ();
 use MHonArc;
 
 $VERSION = $MHonArc::VERSION;
-@ISA = qw( Exporter );
-@EXPORT = qw( $HTMLSpecials %HTMLSpecials );
+@ISA     = qw( Exporter );
+@EXPORT  = qw( $HTMLSpecials %HTMLSpecials );
 
 # The following two variables need to be in sync.  The hash version should
 # have contain mappings for each character in the scalar version.
 $HTMLSpecials = "\x22\x26\x3C\x3E";
 %HTMLSpecials = (
-    "\x22" =>	'&quot;',   	# ISOnum : Quotation mark
-    "\x26" =>	'&amp;',  	# ISOnum : Ampersand
-    "\x3C" =>	'&lt;',   	# ISOnum : Less-than sign
-    "\x3E" =>	'&gt;',   	# ISOnum : Greater-than sign
+    "\x22" => '&quot;',    # ISOnum : Quotation mark
+    "\x26" => '&amp;',     # ISOnum : Ampersand
+    "\x3C" => '&lt;',      # ISOnum : Less-than sign
+    "\x3E" => '&gt;',      # ISOnum : Greater-than sign
 );
 
 sub new {
-    my $self    = { };
-    my $mod     = shift;        # Name of module
-    my $tbl     = shift;        # Table of charsets to map files
-    my $class   = ref($mod) || $mod;
+    my $self  = {};
+    my $mod   = shift;               # Name of module
+    my $tbl   = shift;               # Table of charsets to map files
+    my $class = ref($mod) || $mod;
 
-    $self->{'_maps'} = { };	# Loaded maps
-    $self->{'_tbl'} = $tbl;	# charsets -> map files table
+    $self->{'_maps'} = {};           # Loaded maps
+    $self->{'_tbl'}  = $tbl;         # charsets -> map files table
     bless $self, $class;
     $self;
 }
 
 sub set_map {
-  my $self	= shift;
-  my $charset	= shift;
-  my $map	= shift;
-  my $old_map	= $self->{'_maps'}{$charset} || undef;
-  $self->{'_maps'}{$charset} = $map;
-  $old_map;
+    my $self    = shift;
+    my $charset = shift;
+    my $map     = shift;
+    my $old_map = $self->{'_maps'}{$charset} || undef;
+    $self->{'_maps'}{$charset} = $map;
+    $old_map;
 }
 
 sub get_map {
-  my $self	= shift;
-  my $charset	= shift;
+    my $self    = shift;
+    my $charset = shift;
 
-  my $map = $self->{'_maps'}{$charset};
-  return $map  if defined($map);
+    my $map = $self->{'_maps'}{$charset};
+    return $map if defined($map);
 
-  my $file = $self->{'_tbl'}{$charset};
-  if (!defined($file)) {
-      carp 'Warning: Unknown charset: ', $charset, "\n";
-      $map = $self->{'_maps'}{$charset} = { };
+    my $file = $self->{'_tbl'}{$charset};
+    if (!defined($file)) {
+        carp 'Warning: Unknown charset: ', $charset, "\n";
+        $map = $self->{'_maps'}{$charset} = {};
 
-  } else {
-      delete $INC{$file};
-      eval {
-	  $map = $self->{'_maps'}{$charset} = require $file;
-      };
-      if ($@) {
-	  carp 'Warning: ', $@, "\n";
-	  $map = $self->{'_maps'}{$charset} = { };
-      }
-  }
-  $map;
+    } else {
+        delete $INC{$file};
+        eval { $map = $self->{'_maps'}{$charset} = require $file; };
+        if ($@) {
+            carp 'Warning: ', $@, "\n";
+            $map = $self->{'_maps'}{$charset} = {};
+        }
+    }
+    $map;
 }
 
 ##---------------------------------------------------------------------------##
