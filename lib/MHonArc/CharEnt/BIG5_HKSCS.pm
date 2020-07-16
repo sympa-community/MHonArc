@@ -1,4 +1,7 @@
 package MHonArc::CharEnt::BIG5_HKSCS;
+use strict;
+use warnings;
+
 +{
 'ˆ@','&#xF303;',
 'ˆA','&#xF304;',

@@ -27,6 +27,9 @@
 
 package mhonarc;
 
+use strict;
+use warnings;
+
 ##---------------------------------------------------------------------------##
 ##  Callbacks
 ##	We only declare once so custom front-ends do not have to

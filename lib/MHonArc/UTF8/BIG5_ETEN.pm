@@ -1,4 +1,7 @@
 package MHonArc::UTF8::BIG5_ETEN;
+use strict;
+use warnings;
+
 +{
 ' ','Â ',
 '¡±','Â§',

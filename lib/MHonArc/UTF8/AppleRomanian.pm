@@ -1,4 +1,7 @@
 package MHonArc::UTF8::AppleRomanian;
+use strict;
+use warnings;
+
 +{
 '¯','SÌ¦',
 'Þ','TÌ¦',

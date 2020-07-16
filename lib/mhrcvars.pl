@@ -27,6 +27,9 @@
 
 package mhonarc;
 
+use strict;
+use warnings;
+
 ## Mapping of old resource variables to current versions.
 my %old2new = (
     'FIRSTPG'       => ['PG',       'FIRST'],

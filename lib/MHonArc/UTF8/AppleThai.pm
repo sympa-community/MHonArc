@@ -1,4 +1,7 @@
 package MHonArc::UTF8::AppleThai;
+use strict;
+use warnings;
+
 +{
 ' ','Â ',
 'û','Â©',

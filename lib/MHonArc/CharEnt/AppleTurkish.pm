@@ -1,4 +1,7 @@
 package MHonArc::CharEnt::AppleTurkish;
+use strict;
+use warnings;
+
 +{
 'Ê','&#xA0;',
 'Á','&#xA1;',

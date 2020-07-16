@@ -44,7 +44,10 @@
 
 package readmail;
 
-$DEBUG = 0;
+use strict;
+use warnings;
+
+my $DEBUG = 0;
 
 ###############################################################################
 ##	Private Globals							     ##

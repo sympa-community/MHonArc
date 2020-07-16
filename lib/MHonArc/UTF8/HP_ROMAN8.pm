@@ -1,4 +1,7 @@
 package MHonArc::UTF8::HP_ROMAN8;
+use strict;
+use warnings;
+
 +{
 ' ','Â ',
 '¡','Ã€',

@@ -1,4 +1,7 @@
 package MHonArc::UTF8::AppleCroatian;
+use strict;
+use warnings;
+
 +{
 'ส','ย ',
 'ม','ยก',

@@ -27,6 +27,8 @@
 
 package mhonarc;
 
+use strict;
+use warnings;
 use Getopt::Long;
 use Time::Local;
 

@@ -1,4 +1,7 @@
 package MHonArc::CharEnt::HP_ROMAN8;
+use strict;
+use warnings;
+
 +{
 ' ','&#xA0;',
 '¡','&#xC0;',

@@ -1,4 +1,7 @@
 package MHonArc::UTF8::CP936;
+use strict;
+use warnings;
+
 +{
 '€','â‚¬',
 '¡è','Â¤',

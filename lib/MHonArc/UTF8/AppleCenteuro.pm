@@ -1,4 +1,7 @@
 package MHonArc::UTF8::AppleCenteuro;
+use strict;
+use warnings;
+
 +{
 'Ê','Â ',
 '£','Â£',

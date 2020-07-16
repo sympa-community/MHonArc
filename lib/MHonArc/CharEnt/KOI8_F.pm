@@ -1,4 +1,7 @@
 package MHonArc::CharEnt::KOI8_F;
+use strict;
+use warnings;
+
 +{
 'Ä','&#x2500;',
 'Å','&#x2502;',

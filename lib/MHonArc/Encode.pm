@@ -27,6 +27,7 @@
 package MHonArc::Encode;
 
 use strict;
+use warnings;
 
 BEGIN {
     use MHonArc;

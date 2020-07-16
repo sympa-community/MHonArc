@@ -1,4 +1,7 @@
 package MHonArc::UTF8::EUC_JP;
+use strict;
+use warnings;
+
 +{
 'Ž¡','ï½¡',
 'Ž¢','ï½¢',

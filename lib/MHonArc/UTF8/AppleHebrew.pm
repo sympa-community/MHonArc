@@ -1,4 +1,7 @@
 package MHonArc::UTF8::AppleHebrew;
+use strict;
+use warnings;
+
 +{
 'Ä','√Ñ',
 'Å','Ô¨ü',

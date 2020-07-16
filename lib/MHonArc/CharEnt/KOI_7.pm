@@ -1,4 +1,7 @@
 package MHonArc::CharEnt::KOI_7;
+use strict;
+use warnings;
+
 +{
 '$','&#xA4;',
 '`','&#x42E;',

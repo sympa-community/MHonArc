@@ -27,6 +27,8 @@
 
 package mhonarc;
 
+use strict;
+use warnings;
 use Symbol;
 use Fcntl;
 use File::Basename;

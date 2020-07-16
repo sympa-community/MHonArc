@@ -1,4 +1,7 @@
 package MHonArc::UTF8::CP866;
+use strict;
+use warnings;
+
 +{
 'ÿ','Â ',
 'ý','Â¤',

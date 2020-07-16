@@ -1,4 +1,7 @@
 package MHonArc::CharEnt::AppleThai;
+use strict;
+use warnings;
+
 +{
 ' ','&#xA0;',
 'û','&#xA9;',

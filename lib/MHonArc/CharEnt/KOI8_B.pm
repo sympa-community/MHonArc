@@ -1,4 +1,7 @@
 package MHonArc::CharEnt::KOI8_B;
+use strict;
+use warnings;
+
 +{
 '£','&#x451;',
 '³','&#x401;',

@@ -32,6 +32,9 @@
 
 package m2h_text_plain;
 
+use strict;
+use warnings;
+
 require 'readmail.pl';
 
 sub Q_FIXED()  { 0; }

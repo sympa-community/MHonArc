@@ -27,6 +27,9 @@
 
 package mhonarc;
 
+use strict;
+use warnings;
+
 ##---------------------------------------------------------------------------
 ##	Function for removing messages.
 ##

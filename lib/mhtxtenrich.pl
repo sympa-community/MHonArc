@@ -36,6 +36,9 @@
 
 package m2h_text_enriched;
 
+use strict;
+use warnings;
+
 my %enriched_tags = (
     'bigger'      => 1,
     'bold'        => 1,

@@ -1,4 +1,7 @@
 package MHonArc::UTF8::GB2312;
+use strict;
+use warnings;
+
 +{
 '¡¡','ã€€',
 '¡¢','ã€',

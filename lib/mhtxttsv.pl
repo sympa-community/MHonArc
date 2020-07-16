@@ -33,6 +33,9 @@
 
 package m2h_text_tsv;
 
+use strict;
+use warnings;
+
 ##---------------------------------------------------------------------------##
 ##	Text/tab-separated-values filter for mhonarc.
 ##

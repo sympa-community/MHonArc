@@ -1,4 +1,7 @@
 package MHonArc::UTF8::KOI_7;
+use strict;
+use warnings;
+
 +{
 '$','¤',
 '`','Ю',

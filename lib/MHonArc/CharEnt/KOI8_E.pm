@@ -1,4 +1,7 @@
 package MHonArc::CharEnt::KOI8_E;
+use strict;
+use warnings;
+
 +{
 ' ','&#xA0;',
 '¡','&#x452;',

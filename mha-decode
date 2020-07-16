@@ -28,6 +28,8 @@
 
 package mha_decode;
 
+use strict;
+use warnings;
 use Getopt::Long;
 
 ##---------------------------------------------------------------------------##

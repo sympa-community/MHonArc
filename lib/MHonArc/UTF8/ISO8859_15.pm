@@ -1,4 +1,7 @@
 package MHonArc::UTF8::ISO8859_15;
+use strict;
+use warnings;
+
 +{
 ' ','Â ',
 '¡','Â¡',

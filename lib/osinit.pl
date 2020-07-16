@@ -26,10 +26,12 @@
 ##    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
 ##    02111-1307, USA
 ##---------------------------------------------------------------------------##
-
-use File::Basename;
-
+#
 package mhonarc;
+
+use strict;
+use warnings;
+use File::Basename;
 
 ##---------------------------------------------------------------------------##
 ##	OSinit() checks what operating system we are running on set

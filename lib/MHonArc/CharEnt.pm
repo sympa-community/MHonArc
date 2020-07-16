@@ -27,6 +27,7 @@
 package MHonArc::CharEnt;
 
 use strict;
+use warnings;
 use MHonArc::CharMaps;
 use MHonArc::Char;
 use MHonArc;

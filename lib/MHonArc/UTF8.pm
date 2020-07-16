@@ -27,6 +27,7 @@
 package MHonArc::UTF8;
 
 use strict;
+use warnings;
 use MHonArc::CharMaps;
 
 BEGIN {

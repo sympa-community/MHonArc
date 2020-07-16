@@ -32,6 +32,9 @@
 
 package m2h_msg_extbody;
 
+use strict;
+use warnings;
+
 ##---------------------------------------------------------------------------##
 ##	message/external-body filter for MHonArc.
 ##	The following filter arguments are recognized ($args):

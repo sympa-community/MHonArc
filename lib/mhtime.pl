@@ -26,6 +26,9 @@
 
 package mhonarc;
 
+use strict;
+use warnings;
+
 ##---------------------------------------------------------------------------##
 ##      Date variables for date routines
 ##

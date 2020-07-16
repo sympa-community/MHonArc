@@ -27,6 +27,9 @@
 
 package mhonarc;
 
+use strict;
+use warnings;
+
 ##---------------------------------------------------------------------------
 ##	write_thread_index outputs the thread index
 ##

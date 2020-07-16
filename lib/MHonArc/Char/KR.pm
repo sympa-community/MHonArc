@@ -24,6 +24,9 @@
 
 package MHonArc::Char::KR;
 
+use strict;
+use warnings;
+
 sub kr_2022_to_euc {
     # implementation of this function plagerized from Encode::KR::2022_KR.
     my $data_r = shift;

@@ -1,4 +1,7 @@
 package MHonArc::UTF8::KOI8_B;
+use strict;
+use warnings;
+
 +{
 '£','—ë',
 '≥','–Å',

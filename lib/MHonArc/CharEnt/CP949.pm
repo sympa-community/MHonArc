@@ -1,4 +1,7 @@
 package MHonArc::CharEnt::CP949;
+use strict;
+use warnings;
+
 +{
 'во','&#xA1;',
 'в┤','&#xA4;',

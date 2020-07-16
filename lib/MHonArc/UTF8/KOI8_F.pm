@@ -1,4 +1,7 @@
 package MHonArc::UTF8::KOI8_F;
+use strict;
+use warnings;
+
 +{
 '€','â”€',
 '','â”‚',

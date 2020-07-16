@@ -1,4 +1,7 @@
 package MHonArc::UTF8::AppleArabic;
+use strict;
+use warnings;
+
 +{
 '€','Ã„',
 '','Â ',

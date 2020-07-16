@@ -1,4 +1,7 @@
 package MHonArc::CharEnt::KOI_0;
+use strict;
+use warnings;
+
 +{
 '$','&#xA4;',
 '@','&#x44E;',

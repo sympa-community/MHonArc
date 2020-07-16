@@ -29,6 +29,8 @@ package mhonarc;
 use MHonArc;
 
 require 5;
+use strict;
+use warnings;
 
 $VERSION = $MHonArc::VERSION;
 $VINFO   = <<EndOfInfo;

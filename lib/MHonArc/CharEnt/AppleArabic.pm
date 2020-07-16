@@ -1,4 +1,7 @@
 package MHonArc::CharEnt::AppleArabic;
+use strict;
+use warnings;
+
 +{
 'Ä','&#xC4;',
 'Å','&#xA0;',

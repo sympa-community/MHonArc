@@ -26,6 +26,9 @@
 
 package mhonarc;
 
+use strict;
+use warnings;
+
 my $HTMLSpecials = '"&<>';
 my %HTMLSpecials = (
     '"' => '&quot;',

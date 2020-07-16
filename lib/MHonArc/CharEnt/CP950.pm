@@ -1,4 +1,7 @@
 package MHonArc::CharEnt::CP950;
+use strict;
+use warnings;
+
 +{
 '¡±','&#xA7;',
 '¡Â','&#xAF;',

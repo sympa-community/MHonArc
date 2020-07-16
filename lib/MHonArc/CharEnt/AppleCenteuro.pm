@@ -1,4 +1,7 @@
 package MHonArc::CharEnt::AppleCenteuro;
+use strict;
+use warnings;
+
 +{
 'Ê','&#xA0;',
 '£','&#xA3;',

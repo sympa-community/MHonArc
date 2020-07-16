@@ -1,4 +1,7 @@
 package MHonArc::UTF8::CP1254;
+use strict;
+use warnings;
+
 +{
 ' ','Â ',
 '¡','Â¡',

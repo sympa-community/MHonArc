@@ -1,4 +1,7 @@
 package MHonArc::UTF8::CP932;
+use strict;
+use warnings;
+
 +{
 '˜','Â§',
 'N','Â¨',

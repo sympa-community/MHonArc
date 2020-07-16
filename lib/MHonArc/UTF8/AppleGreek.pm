@@ -1,4 +1,7 @@
 package MHonArc::UTF8::AppleGreek;
+use strict;
+use warnings;
+
 +{
 'Ê','Â ',
 '’','Â£',

@@ -26,6 +26,8 @@
 
 package iso_8859;
 
+use strict;
+use warnings;
 use MHonArc::CharEnt;
 
 BEGIN {

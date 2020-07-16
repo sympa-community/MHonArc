@@ -1,4 +1,7 @@
 package MHonArc::CharEnt::EUC_JP;
+use strict;
+use warnings;
+
 +{
 'Ž¡','&#xFF61;',
 'Ž¢','&#xFF62;',

@@ -1,4 +1,7 @@
 package MHonArc::CharEnt::BIG5_ETEN;
+use strict;
+use warnings;
+
 +{
 ' ','&#xA0;',
 '¡±','&#xA7;',

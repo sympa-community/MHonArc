@@ -1,4 +1,7 @@
 package MHonArc::CharEnt::CP936;
+use strict;
+use warnings;
+
 +{
 '€','&#x20AC;',
 '¡è','&#xA4;',

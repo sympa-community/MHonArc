@@ -1,4 +1,7 @@
 package MHonArc::UTF8::BIG5_HKSCS;
+use strict;
+use warnings;
+
 +{
 'ˆ@','ïŒƒ',
 'ˆA','ïŒ„',

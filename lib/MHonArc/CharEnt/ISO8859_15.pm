@@ -1,4 +1,7 @@
 package MHonArc::CharEnt::ISO8859_15;
+use strict;
+use warnings;
+
 +{
 ' ','&#xA0;',
 '¡','&#xA1;',

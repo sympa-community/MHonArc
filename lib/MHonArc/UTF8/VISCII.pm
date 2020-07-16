@@ -1,4 +1,7 @@
 package MHonArc::UTF8::VISCII;
+use strict;
+use warnings;
+
 +{
 '','Ẳ',
 '','Ẵ',

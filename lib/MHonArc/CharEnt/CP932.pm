@@ -1,4 +1,7 @@
 package MHonArc::CharEnt::CP932;
+use strict;
+use warnings;
+
 +{
 'Åò','&#xA7;',
 'ÅN','&#xA8;',

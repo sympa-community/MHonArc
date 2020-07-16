@@ -1,4 +1,7 @@
 package MHonArc::UTF8::KOI8_E;
+use strict;
+use warnings;
+
 +{
 ' ','Â ',
 '¡','Ñ’',

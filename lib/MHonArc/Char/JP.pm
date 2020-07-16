@@ -24,6 +24,9 @@
 
 package MHonArc::Char::JP;
 
+use strict;
+use warnings;
+
 sub jp_2022_to_euc {
     # implementation of this function plagerized from Encode::JP::JIS7.
     my $data_in = shift;

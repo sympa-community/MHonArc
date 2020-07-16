@@ -1,4 +1,7 @@
 package MHonArc::UTF8::AppleTurkish;
+use strict;
+use warnings;
+
 +{
 'ส','ย ',
 'ม','ยก',

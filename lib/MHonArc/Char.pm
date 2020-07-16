@@ -26,6 +26,9 @@
 
 package MHonArc::Char;
 
+use strict;
+use warnings;
+
 use MHonArc;
 
 $VERSION = $MHonArc::VERSION;

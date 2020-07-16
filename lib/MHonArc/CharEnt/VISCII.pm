@@ -1,4 +1,7 @@
 package MHonArc::CharEnt::VISCII;
+use strict;
+use warnings;
+
 +{
 '','&#x1EB2;',
 '','&#x1EB4;',

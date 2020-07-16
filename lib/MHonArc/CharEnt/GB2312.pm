@@ -1,4 +1,7 @@
 package MHonArc::CharEnt::GB2312;
+use strict;
+use warnings;
+
 +{
 '¡¡','&#x3000;',
 '¡¢','&#x3001;',

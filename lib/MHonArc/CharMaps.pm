@@ -27,6 +27,7 @@
 package MHonArc::CharMaps;
 
 use strict;
+use warnings;
 use vars qw( $VERSION @ISA @EXPORT %HTMLSpecials $HTMLSpecials );
 
 use Carp;

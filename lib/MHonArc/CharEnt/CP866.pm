@@ -1,4 +1,7 @@
 package MHonArc::CharEnt::CP866;
+use strict;
+use warnings;
+
 +{
 'ÿ','&#xA0;',
 'ý','&#xA4;',

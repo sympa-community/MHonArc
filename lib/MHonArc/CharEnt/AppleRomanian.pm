@@ -1,4 +1,7 @@
 package MHonArc::CharEnt::AppleRomanian;
+use strict;
+use warnings;
+
 +{
 '¯','&#x53;&#x326;',
 'Þ','&#x54;&#x326;',

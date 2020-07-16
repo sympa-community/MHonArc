@@ -1,4 +1,7 @@
 package MHonArc::CharEnt::AppleIceland;
+use strict;
+use warnings;
+
 +{
 'Ê','&#xA0;',
 'Á','&#xA1;',

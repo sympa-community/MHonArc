@@ -1,4 +1,7 @@
 package MHonArc::CharEnt::KOI8_R;
+use strict;
+use warnings;
+
 +{
 'š','&#xA0;',
 '¿','&#xA9;',

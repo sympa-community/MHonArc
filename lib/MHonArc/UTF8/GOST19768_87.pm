@@ -1,4 +1,7 @@
 package MHonArc::UTF8::GOST19768_87;
+use strict;
+use warnings;
+
 +{
 '$','¤',
 '�',' ',

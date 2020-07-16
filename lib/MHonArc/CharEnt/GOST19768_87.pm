@@ -1,4 +1,7 @@
 package MHonArc::CharEnt::GOST19768_87;
+use strict;
+use warnings;
+
 +{
 '$','&#xA4;',
 ' ','&#xA0;',
