@@ -32,8 +32,6 @@
 ##---------------------------------------------------------------------------##
 
 MAIN: {
-    unshift(@INC, 'lib');    # Should I leave this line in?
-
     require 'mhamain.pl' || die qq/ERROR: Unable to require "mhamain.pl"\n/;
     mhonarc::initialize();
     mhonarc::process_input() ? exit(0) : exit($mhonarc::CODE);

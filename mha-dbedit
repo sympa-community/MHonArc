@@ -33,8 +33,6 @@ package mha_dbedit;
 ##---------------------------------------------------------------------------##
 
 MAIN: {
-    unshift(@INC, 'lib');    # Should I leave this line in?
-
     ## Initialize MHonArc
     require 'mhamain.pl' || die qq/ERROR: Unable to require "mhamain.pl"\n/;
     mhonarc::initialize();

@@ -1593,7 +1593,6 @@ sub signal_catch {
 ##	Create Index2MsgId if not defined
 ##
 sub defineIndex2MsgId {
-    no warnings qw(deprecated);
     unless (%Index2MsgId) {
         foreach (keys %MsgId) {
             $Index2MsgId{$MsgId{$_}} = $_;

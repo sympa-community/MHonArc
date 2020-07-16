@@ -35,8 +35,6 @@ use Getopt::Long;
 ##---------------------------------------------------------------------------##
 
 MAIN: {
-    unshift(@INC, 'lib');    # Should I leave this line in?
-
     ## Grab options from @ARGV unique to this program
     my %opts = ();
     Getopt::Long::Configure('pass_through');
