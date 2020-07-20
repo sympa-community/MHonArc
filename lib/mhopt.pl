@@ -865,7 +865,7 @@ sub update_data_1_to_2 {
 sub update_data_2_1_to_later {
     no warnings qw(deprecated);
     # we can preserve filter arguments
-    if (defined(%main::MIMEFiltersArgs)) {
+    if (%main::MIMEFiltersArgs) {
 	warn qq/         preserving MIMEARGS...\n/;
 	%readmail::MIMEFiltersArgs = %main::MIMEFiltersArgs;
 	$IsDefault{'MIMEARGS'} = 0;
