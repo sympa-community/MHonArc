@@ -29,6 +29,7 @@ WriteMakefile(
             },
             bugtracker => {
                 web  => 'https://github.com/sympa-community/mhonarc/issues'
+            }
         },
         prereqs => {
             runtime => {
