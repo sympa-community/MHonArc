@@ -30,7 +30,7 @@ use strict;
 
 BEGIN {
     use Exporter ();
-    our $VERSION = '2.6.19';
+    our $VERSION = '2.6.20';
     our @ISA     = qw(Exporter);
     #Give a hoot don't pollute, do not export more than needed by default
     our @EXPORT      = qw($VERSION);

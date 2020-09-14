@@ -13,6 +13,15 @@
 
 YYYY/MM/DD
 
+============================================================================
+2020/09/14	(2.6.20)
+
+* MHonarc is now under the responsabilité of the Sympa community
+  Repository is https://github.com/sympa-community/MHonArc
+  Issues are tracked on https://github.com/sympa-community/MHonArc/issues
+* Some continuous integration (CI) has been added to the project to add a
+  minimum of tests
+
 * Bug Fixes:
 
     Bug ID  Summary
