@@ -24,80 +24,81 @@
 ##    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
 ##    02111-1307, USA
 ##---------------------------------------------------------------------------##
- 
+
 package mhonarc;
 
 ##---------------------------------------------------------------------------
 ##	Function for removing messages.
 ##
 sub rmm {
-    my(@numbers) = ();
-    my($key, %Num2Index, $num, $i, $pg);
-    local($_);
+    my (@numbers) = ();
+    my ($key, %Num2Index, $num, $i, $pg);
+    local ($_);
 
     ## Create list of messages to remove
     foreach (@_) {
-	# range
-	if (/^(\d+)-(\d+)$/) {
-	    push(@numbers, int($1) .. int($2));
-	    next;
-	}
-	# single number
-	if (/^\d+$/) {
-	    push(@numbers, int($_));
-	    next;
-	}
-	# probably message-id
-	push(@numbers, $_);
+        # range
+        if (/^(\d+)-(\d+)$/) {
+            push(@numbers, int($1) .. int($2));
+            next;
+        }
+        # single number
+        if (/^\d+$/) {
+            push(@numbers, int($_));
+            next;
+        }
+        # probably message-id
+        push(@numbers, $_);
     }
 
     if ($#numbers < 0) {
-	warn("Warning: No messages specified\n");
-	return 0;
+        warn("Warning: No messages specified\n");
+        return 0;
     }
 
     ## Make hash to perform deletions
     foreach $key (keys %IndexNum) {
-	$Num2Index{$IndexNum{$key}} = $key;
+        $Num2Index{$IndexNum{$key}} = $key;
     }
 
     ## Set @MListOrder to flag next/prev messages to be updated.
     ## @TListOrder is already set since it is saved in db.
     @MListOrder = &sort_messages();
-    $i=0; foreach $key (@MListOrder) {
-	$Index2MLoc{$key} = $i++;
+    $i          = 0;
+    foreach $key (@MListOrder) {
+        $Index2MLoc{$key} = $i++;
     }
 
     ## Remove messages
     foreach $num (@numbers) {
-	if (($key = $Num2Index{$num}) || ($key = $MsgId{$num})) {
-	    &delmsg($key);
+        if (($key = $Num2Index{$num}) || ($key = $MsgId{$num})) {
+            &delmsg($key);
 
-	    # Need to flag messages that link to deleted message so
-	    # they will be updated.
-	    foreach (@{$FollowOld{$index}}) {
-		$Update{$IndexNum{$_}} = 1;
-	    }
-	    $Update{$IndexNum{$TListOrder[$Index2TLoc{$key}-1]}} = 1;
-	    $Update{$IndexNum{$TListOrder[$Index2TLoc{$key}+1]}} = 1;
-	    $Update{$IndexNum{$MListOrder[$Index2MLoc{$key}-1]}} = 1;
-	    $Update{$IndexNum{$MListOrder[$Index2MLoc{$key}+1]}} = 1;
+            # Need to flag messages that link to deleted message so
+            # they will be updated.
+            foreach (@{$FollowOld{$index}}) {
+                $Update{$IndexNum{$_}} = 1;
+            }
+            $Update{$IndexNum{$TListOrder[$Index2TLoc{$key} - 1]}} = 1;
+            $Update{$IndexNum{$TListOrder[$Index2TLoc{$key} + 1]}} = 1;
+            $Update{$IndexNum{$MListOrder[$Index2MLoc{$key} - 1]}} = 1;
+            $Update{$IndexNum{$MListOrder[$Index2MLoc{$key} + 1]}} = 1;
 
-	    # Mark where index page updates start
-	    if ($MULTIIDX) {
-		$pg = int($Index2MLoc{$key}/$IDXSIZE)+1;
-		$IdxMinPg = $pg
-		    if ($pg < $IdxMinPg || $IdxMinPg < 0);
-		$pg = int($Index2TLoc{$key}/$IDXSIZE)+1;
-		$TIdxMinPg = $pg
-		    if ($pg < $TIdxMinPg || $TIdxMinPg < 0);
-	    }
+            # Mark where index page updates start
+            if ($MULTIIDX) {
+                $pg       = int($Index2MLoc{$key} / $IDXSIZE) + 1;
+                $IdxMinPg = $pg
+                    if ($pg < $IdxMinPg || $IdxMinPg < 0);
+                $pg        = int($Index2TLoc{$key} / $IDXSIZE) + 1;
+                $TIdxMinPg = $pg
+                    if ($pg < $TIdxMinPg || $TIdxMinPg < 0);
+            }
 
-	    next;
-	}
+            next;
+        }
 
-	# message not in archive
-	warn qq/Warning: Message "$num" not in archive\n/;
+        # message not in archive
+        warn qq/Warning: Message "$num" not in archive\n/;
     }
 
     ## Clear loc data; it will get recomputed

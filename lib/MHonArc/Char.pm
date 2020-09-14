@@ -26,6 +26,10 @@
 
 package MHonArc::Char;
 
+use MHonArc;
+
+$VERSION = $MHonArc::VERSION;
+
 ###############################################################################
 ##	Routines
 ###############################################################################
@@ -35,23 +39,23 @@ package MHonArc::Char;
 ##	defined by a given mapping table.
 ##
 sub map_conv {
-    my $data_r	   = shift;	    # Reference to text
-    my $charset    = shift;	    # encoding (should be in lowercase
-    my $char_maps  = shift;	    # MHonArc::CharMaps instance
-    my @maps	   = shift || ( );  # Additional maps to use
+    my $data_r    = shift;          # Reference to text
+    my $charset   = shift;          # encoding (should be in lowercase
+    my $char_maps = shift;          # MHonArc::CharMaps instance
+    my @maps      = shift || ();    # Additional maps to use
 
     # Pre-processing checks
     if ($charset eq 'iso-2022-jp') {
-	# iso-2022-jp, convert to euc-jp first
-	require MHonArc::Char::JP;
-	MHonArc::Char::JP::jp_2022_to_euc($data_r);
-	$charset = 'euc-jp';
+        # iso-2022-jp, convert to euc-jp first
+        require MHonArc::Char::JP;
+        MHonArc::Char::JP::jp_2022_to_euc($data_r);
+        $charset = 'euc-jp';
 
     } elsif ($charset eq 'iso-2022-kr') {
-	# if iso-2022-kr, convert to euc-kr first
-	require MHonArc::Char::KR;
-	MHonArc::Char::KR::kr_2022_to_euc($data_r);
-	$charset = 'cp949';
+        # if iso-2022-kr, convert to euc-kr first
+        require MHonArc::Char::KR;
+        MHonArc::Char::KR::kr_2022_to_euc($data_r);
+        $charset = 'cp949';
     }
 
     # Get mapping
@@ -59,28 +63,28 @@ sub map_conv {
 
     # Convert text
     if ($charset eq 'euc-jp') {
-	# Japanese
-	_euc_jp_conv($data_r, \@maps);
-	return $$data_r;
+        # Japanese
+        _euc_jp_conv($data_r, \@maps);
+        return $$data_r;
     }
     if ($charset eq 'cp932') {
-	# Japanese ShiftJIS
-	_shiftjis_conv($data_r, \@maps);
-	return $$data_r;
+        # Japanese ShiftJIS
+        _shiftjis_conv($data_r, \@maps);
+        return $$data_r;
     }
     if ($charset eq 'cp949') {
-	# Korean
-	_euc_kr_conv($data_r, \@maps);
-	return $$data_r;
+        # Korean
+        _euc_kr_conv($data_r, \@maps);
+        return $$data_r;
     }
-    if ($charset eq 'cp950' ||
-	    $charset eq 'cp936' ||
-	    $charset eq 'gb2312' ||
-	    $charset eq 'big5-eten' ||
-	    $charset eq 'big5-hkscs') {
-	# Chinese
-	_chinese_conv($data_r, \@maps);
-	return $$data_r;
+    if (   $charset eq 'cp950'
+        || $charset eq 'cp936'
+        || $charset eq 'gb2312'
+        || $charset eq 'big5-eten'
+        || $charset eq 'big5-hkscs') {
+        # Chinese
+        _chinese_conv($data_r, \@maps);
+        return $$data_r;
     }
 
     # Single byte charset
@@ -89,14 +93,14 @@ sub map_conv {
     #             to the map(s) provided, so replacement is done
     #             directly by regex engine.
     #             Patch provided by Andrew Shirrayev.
-    my($map,$char,$code,%summap,$summap);
-    for ($code=0x00; $code<=0xFF; $code++) {
+    my ($map, $char, $code, %summap, $summap);
+    for ($code = 0x00; $code <= 0xFF; $code++) {
         foreach $map (@maps) {
             $char = $map->{chr($code)};
-            last  if defined($char);
+            last if defined($char);
         }
         unless (defined($char)) {
-            next if($code <= 0x7F);
+            next if ($code <= 0x7F);
             $char = '?';
         }
         $summap{chr($code)} = $char;
@@ -108,9 +112,9 @@ sub map_conv {
 }
 
 sub _euc_jp_conv {
-    my $data_r  = shift;
-    my $maps	= shift;
-    my($map, $char);
+    my $data_r = shift;
+    my $maps   = shift;
+    my ($map, $char);
 
     $$data_r =~ s{
 	([\x00-\x7E]|
@@ -128,9 +132,9 @@ sub _euc_jp_conv {
 }
 
 sub _shiftjis_conv {
-    my $data_r  = shift;
-    my $maps	= shift;
-    my($map, $char);
+    my $data_r = shift;
+    my $maps   = shift;
+    my ($map, $char);
 
     $$data_r =~ s{
 	([\x00-\x7E]|
@@ -147,9 +151,9 @@ sub _shiftjis_conv {
 }
 
 sub _euc_kr_conv {
-    my $data_r  = shift;
-    my $maps	= shift;
-    my($map, $char);
+    my $data_r = shift;
+    my $maps   = shift;
+    my ($map, $char);
 
     $$data_r =~ s{
 	([\x00-\x80]|
@@ -165,9 +169,9 @@ sub _euc_kr_conv {
 }
 
 sub _chinese_conv {
-    my $data_r	= shift;
-    my $maps	= shift;
-    my($map, $char);
+    my $data_r = shift;
+    my $maps   = shift;
+    my ($map, $char);
 
     $$data_r =~ s{
 	([\x00-\x80]|
@@ -181,7 +185,6 @@ sub _chinese_conv {
 	$char;
     }gxe;
 }
-
 
 ##---------------------------------------------------------------------------##
 1;

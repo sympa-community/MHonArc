@@ -29,16 +29,17 @@ package MHonArc::Encode;
 use strict;
 
 BEGIN {
+    use MHonArc;
+    our $VERSION = $MHonArc::VERSION;
+
     # If the Encode module is available, we use it, otherwise, we
     # try to use Unicode::MapUTF8.
-    eval {
-	require Encode;
-    };
+    eval { require Encode; };
     if (!$@) {
-	*from_to  = \&_encode_from_to;
+        *from_to = \&_encode_from_to;
     } else {
-	require Unicode::MapUTF8;
-	*from_to  = \&_unimap_from_to;
+        require Unicode::MapUTF8;
+        *from_to = \&_unimap_from_to;
     }
 }
 
@@ -49,27 +50,26 @@ sub _encode_from_to {
     my $from_enc = lc shift;
     my $to_enc   = lc shift;
 
-    return ''  if $$text_r eq '';
+    return '' if $$text_r eq '';
 
     # Strip utf8 string flag if set
     if (Encode::is_utf8($$text_r)) {
-	$$text_r = Encode::encode('utf8', $$text_r);
+        $$text_r = Encode::encode('utf8', $$text_r);
     }
     my $is_error = 0;
     eval {
-	if (!defined(Encode::from_to($$text_r, $from_enc, $to_enc))) {
-	    warn qq/Warning: MHonArc::Encode: Unable to convert /,
-			  qq/"$from_enc" to "$to_enc"\n/;
-	    $is_error = 1;
-	}
+        if (!defined(Encode::from_to($$text_r, $from_enc, $to_enc))) {
+            warn qq/Warning: MHonArc::Encode: Unable to convert /,
+                qq/"$from_enc" to "$to_enc"\n/;
+            $is_error = 1;
+        }
     };
     if ($@) {
-	warn qq/Warning: $@\n/;
-	$is_error = 1;
+        warn qq/Warning: $@\n/;
+        $is_error = 1;
     }
     $is_error ? undef : $to_enc;
 }
-
 
 sub _unimap_from_to {
     my $text_r   = shift;
@@ -77,17 +77,17 @@ sub _unimap_from_to {
     my $to_enc   = lc shift;
 
     if (!Unicode::MapUTF8::utf8_supported_charset($from_enc)) {
-	warn qq/Warning: MHonArc::Encode "$from_enc" not supported\n/;
-	return undef;
+        warn qq/Warning: MHonArc::Encode "$from_enc" not supported\n/;
+        return undef;
     }
     if (!Unicode::MapUTF8::utf8_supported_charset($to_enc)) {
-	warn qq/Warning: MHonArc::Encode "$to_enc" not supported\n/;
-	return undef;
+        warn qq/Warning: MHonArc::Encode "$to_enc" not supported\n/;
+        return undef;
     }
     $$text_r = Unicode::MapUTF8::to_utf8(
-		      {-string => $$text_r, -charset => $from_enc});
+        {-string => $$text_r, -charset => $from_enc});
     $$text_r = Unicode::MapUTF8::from_utf8(
-		      {-string => $$text_r, -charset => $to_enc});
+        {-string => $$text_r, -charset => $to_enc});
     $to_enc;
 }
 

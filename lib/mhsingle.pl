@@ -32,36 +32,36 @@ package mhonarc;
 ##	HTML.
 ##
 sub single {
-    my($handle, $filename);
+    my ($handle, $filename);
 
     ## Prevent any verbose output
     $QUIET = 1;
 
     ## See where input is coming from
     if ($ARGV[0]) {
-	($handle = file_open($ARGV[0])) ||
-	    die("ERROR: Unable to open $ARGV[0]\n");
-	$filename = $ARGV[0];
+        ($handle = file_open($ARGV[0]))
+            || die("ERROR: Unable to open $ARGV[0]\n");
+        $filename = $ARGV[0];
     } else {
-	$handle = $MhaStdin;
+        $handle = $MhaStdin;
     }
 
     ## Read header
-    my($index, $fields) = read_mail_header($handle);
+    my ($index, $fields) = read_mail_header($handle);
     ## Read rest of message
     $Message{$index} = read_mail_body($handle, $index, $fields);
 
     ## Set index list structures for replace_li_var()
-    @MListOrder = sort_messages();
-    %Index2MLoc = ();
+    @MListOrder              = sort_messages();
+    %Index2MLoc              = ();
     @Index2MLoc{@MListOrder} = (0 .. $#MListOrder);
 
     ## Output mail
     if ($DoArchive) {
-	output_mail($index, 1, 0);
+        output_mail($index, 1, 0);
     }
 
-    close($handle)  unless -t $handle;
+    close($handle) unless -t $handle;
 }
 
 ##---------------------------------------------------------------------------

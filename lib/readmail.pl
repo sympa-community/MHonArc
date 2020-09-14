@@ -73,8 +73,7 @@ my %_MIMEAltPrefs = ();
 #          'tftp)://|'.
 #       'news:(?://)?|'.
 #       '(?:nntp|mid|cid|mailto|prospero|data|service|tel|fax|modem|h\.323):)';
-$UrlRxStr	  =
-    '(?:(?:https?|ftp|ldap|gopher)://|news:(?://)?|(?:nntp|mailto):)';
+$UrlRxStr = '(?:(?:https?|ftp|ldap|gopher)://|news:(?://)?|(?:nntp|mailto):)';
 
 ##  Constants for use as second argument to MAILdecode_1522_str().
 sub JUST_DECODE() { 1; }
@@ -95,7 +94,7 @@ sub TEXT_ENCODE() { 3; }
 ##  The only 1522 data that will be decoded is data encoded with charsets
 ##  set to "-decode-" in the %MIMECharSetConverters hash.
 
-$DecodeHeader	= 0;
+$DecodeHeader = 0;
 
 ##---------------------------------------------------------------------------##
 ##	Variables for holding information related to the functions used
@@ -118,9 +117,9 @@ $DecodeHeader	= 0;
 ##  decoding to the registered filter, but the decoded flag will be
 ##  set to true.
 
-%MIMEDecoders			= ()
+%MIMEDecoders = ()
     unless %MIMEDecoders;
-%MIMEDecodersSrc		= ()
+%MIMEDecodersSrc = ()
     unless %MIMEDecodersSrc;
 
 ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -154,9 +153,9 @@ $DecodeHeader	= 0;
 ##  the encoding will stay unprocessed and passed back in the return
 ##  string.
 
-%MIMECharSetConverters			= ()
+%MIMECharSetConverters = ()
     unless %MIMECharSetConverters;
-%MIMECharSetConvertersSrc		= ()
+%MIMECharSetConvertersSrc = ()
     unless %MIMECharSetConvertersSrc;
 
 ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -181,9 +180,9 @@ $DecodeHeader	= 0;
 ##  tries to invoke it, MAILread_body will silently ignore.  Make sure
 ##  that all functions are defined before invoking MAILread_body.
 
-%MIMEFilters	= ()
+%MIMEFilters = ()
     unless %MIMEFilters;
-%MIMEFiltersSrc	= ()
+%MIMEFiltersSrc = ()
     unless %MIMEFiltersSrc;
 
 ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -197,7 +196,7 @@ $DecodeHeader	= 0;
 ##  Arguments listed for a content-type will be used over arguments
 ##  listed for a function if both are applicable.
 
-%MIMEFiltersArgs	= ()
+%MIMEFiltersArgs = ()
     unless %MIMEFiltersArgs;
 
 ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -207,7 +206,7 @@ $DecodeHeader	= 0;
 ##	Keys => content-type, or base-type
 ##	Values => <should evaluate to a true expression>
 
-%MIMEExcs			= ()
+%MIMEExcs = ()
     unless %MIMEExcs;
 
 ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -221,7 +220,7 @@ $DecodeHeader	= 0;
 ##  not in the hash is automatically excluded.  I.e.  %MIMEIncs can
 ##  be used to only allow a well-defined set of content-types.
 
-%MIMEIncs			= ()
+%MIMEIncs = ()
     unless %MIMEIncs;
 
 ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -254,7 +253,7 @@ $TextEncoderSrc = undef
     unless defined($TextEncoderSrc);
 
 ##  Prefilter function
-$TextPreFilter  = undef
+$TextPreFilter = undef
     unless defined($TextPreFilter);
 
 ##---------------------------------------------------------------------------
@@ -270,34 +269,34 @@ $TextPreFilter  = undef
 ##  a multipart message.  The content-type of the message is passed
 ##  as an argument.
 
-$CantProcessPartFunc		= \&cantProcessPart
-    unless(defined($CantProcessPartFunc));
+$CantProcessPartFunc = \&cantProcessPart
+    unless (defined($CantProcessPartFunc));
 
 ##  Function that returns a message when a part is excluded via %MIMEExcs.
 
-$ExcludedPartFunc	= \&excludedPart
-    unless(defined($ExcludedPartFunc));
+$ExcludedPartFunc = \&excludedPart
+    unless (defined($ExcludedPartFunc));
 
 ##  Function that returns a message when a part is unrecognized in a
 ##  multipart/alternative message.  I.e. No part could be processed.
 ##  No arguments are passed to function.
 
-$UnrecognizedAltPartFunc	= \&unrecognizedAltPart
-    unless(defined($UnrecognizedAltPartFunc));
+$UnrecognizedAltPartFunc = \&unrecognizedAltPart
+    unless (defined($UnrecognizedAltPartFunc));
 
 ##  Function that returns a string to go before any data generated generating
 ##  from processing an embedded message (message/rfc822 or message/news).
 ##  No arguments are passed to function.
 
-$BeginEmbeddedMesgFunc		= \&beginEmbeddedMesg
-    unless(defined($BeginEmbeddedMesgFunc));
+$BeginEmbeddedMesgFunc = \&beginEmbeddedMesg
+    unless (defined($BeginEmbeddedMesgFunc));
 
 ##  Function that returns a string to go after any data generated generating
 ##  from processing an embedded message (message/rfc822 or message/news).
 ##  No arguments are passed to function.
 
-$EndEmbeddedMesgFunc		= \&endEmbeddedMesg
-    unless(defined($EndEmbeddedMesgFunc));
+$EndEmbeddedMesgFunc = \&endEmbeddedMesg
+    unless (defined($EndEmbeddedMesgFunc));
 
 ##  Function to return a string that is a result of the functions
 ##  processing of a message header.  The function is called for
@@ -313,8 +312,8 @@ $EndEmbeddedMesgFunc		= \&endEmbeddedMesg
 ##
 ##  Prototype: $return_data = &function(*fields, *lower2orig_fields);
 
-$FormatHeaderFunc		= undef
-    unless(defined($FormatHeaderFunc));
+$FormatHeaderFunc = undef
+    unless (defined($FormatHeaderFunc));
 
 ###############################################################################
 ##	Public Routines							     ##
@@ -340,116 +339,112 @@ sub MAILdecode_1522_str {
     my $str      = shift;
     my $dec_flag = shift || 0;
     my $ret      = ('');
-    my($charset,
-       $encoding,
-       $pos,
-       $dec,
-       $charcnv,
-       $real_charset,
-       $plaincnv,
-       $plain_real_charset,
-       $strtxt,
-       $str_before);
+    my ($charset, $encoding,     $pos,      $dec,
+        $charcnv, $real_charset, $plaincnv, $plain_real_charset,
+        $strtxt,  $str_before
+    );
 
     # Get text encoder
-    my $encfunc  = undef;
+    my $encfunc = undef;
     if ($dec_flag == TEXT_ENCODE) {
-	$encfunc = load_textencoder();
-	if (!defined($encfunc)) {
-	    $encfunc = undef  unless defined($encfunc);
-	    $dec_flag = 0;
-	}
+        $encfunc = load_textencoder();
+        if (!defined($encfunc)) {
+            $encfunc = undef unless defined($encfunc);
+            $dec_flag = 0;
+        }
     }
 
     # Get plain converter
     ($plaincnv, $plain_real_charset) = MAILload_charset_converter('plain');
-    $plain_real_charset = 'us-ascii'  if $plain_real_charset eq 'plain';
+    $plain_real_charset = 'us-ascii' if $plain_real_charset eq 'plain';
 
     # Decode string
     my $firsttime = 1;
     while ($str =~ /(=\?([^?]+)\?(.)\?([^?]*)\?=)/g) {
-	# Grab components
-	$pos = pos($str);
-	($charset, $encoding, $strtxt) = (lc($2), lc($3), $4);
-	$str_before = substr($str, 0, $pos-length($1));
-	substr($str, 0, $pos) = '';
-	pos($str) = 0;
+        # Grab components
+        $pos = pos($str);
+        ($charset, $encoding, $strtxt) = (lc($2), lc($3), $4);
+        $str_before = substr($str, 0, $pos - length($1));
+        substr($str, 0, $pos) = '';
+        pos($str) = 0;
 
-	# Check encoding method and grab proper decoder
-	if ($encoding eq 'b') {
-	    $dec = &load_decoder('base64');
-	} else {
-	    $dec = &load_decoder('quoted-printable');
-	}
+        # Check encoding method and grab proper decoder
+        if ($encoding eq 'b') {
+            $dec = &load_decoder('base64');
+        } else {
+            $dec = &load_decoder('quoted-printable');
+        }
 
-	# Convert before (unencoded) text
-	if ($firsttime || $str_before =~ /\S/) {
-	    if (defined($encfunc)) {			# encoding
-		&$encfunc(\$str_before, $plain_real_charset, $TextEncode);
-		$ret .= $str_before;
-	    } elsif ($dec_flag) {			# ignore if just decode
-		$ret .= $str_before;
-	    } elsif (defined(&$plaincnv)) {		# decode and convert
-		$ret .= &$plaincnv($str_before, $plain_real_charset);
-	    } else {					# ignore
-		$ret .= $str_before;
-	    }
-	}
-	$firsttime = 0;
+        # Convert before (unencoded) text
+        if ($firsttime || $str_before =~ /\S/) {
+            if (defined($encfunc)) {    # encoding
+                &$encfunc(\$str_before, $plain_real_charset, $TextEncode);
+                $ret .= $str_before;
+            } elsif ($dec_flag) {       # ignore if just decode
+                $ret .= $str_before;
+            } elsif (defined(&$plaincnv)) {    # decode and convert
+                $ret .= &$plaincnv($str_before, $plain_real_charset);
+            } else {                           # ignore
+                $ret .= $str_before;
+            }
+        }
+        $firsttime = 0;
 
-	# Encoding text
-	if (defined($encfunc)) {
-	    $real_charset = $MIMECharsetAliases{$charset}
-			    ? $MIMECharsetAliases{$charset} : $charset;
-	    $strtxt =~ s/_/ /g;
-	    $strtxt =  &$dec($strtxt);
+        # Encoding text
+        if (defined($encfunc)) {
+            $real_charset =
+                  $MIMECharsetAliases{$charset}
+                ? $MIMECharsetAliases{$charset}
+                : $charset;
+            $strtxt =~ s/_/ /g;
+            $strtxt = &$dec($strtxt);
             $strtxt =~ s/[\r\n]/ /g;
-	    &$encfunc(\$strtxt, $real_charset, $TextEncode);
-	    $ret   .= $strtxt;
+            &$encfunc(\$strtxt, $real_charset, $TextEncode);
+            $ret .= $strtxt;
 
-	# Regular conversion
-	} else {
-	    if ($dec_flag == DECODE_ALL) {
-		$charcnv = '-decode-';
-	    } else {
-		($charcnv, $real_charset) =
-		    MAILload_charset_converter($charset);
-	    }
-	    # Decode only
-	    if ($charcnv eq '-decode-') {
-		$strtxt =~ s/_/ /g;
-		$strtxt =  &$dec($strtxt);
+            # Regular conversion
+        } else {
+            if ($dec_flag == DECODE_ALL) {
+                $charcnv = '-decode-';
+            } else {
+                ($charcnv, $real_charset) =
+                    MAILload_charset_converter($charset);
+            }
+            # Decode only
+            if ($charcnv eq '-decode-') {
+                $strtxt =~ s/_/ /g;
+                $strtxt = &$dec($strtxt);
                 $strtxt =~ s/[\r\n]/ /g;
-		$ret .= $strtxt;
+                $ret .= $strtxt;
 
-	    # Ignore if just decoding
-	    } elsif ($dec_flag) {
-		$ret .= "=?$charset?$encoding?$strtxt?=";
+                # Ignore if just decoding
+            } elsif ($dec_flag) {
+                $ret .= "=?$charset?$encoding?$strtxt?=";
 
-	    # Decode and convert
-	    } elsif (defined(&$charcnv)) {
-		$strtxt =~ s/_/ /g;
-		$strtxt =  &$dec($strtxt);
+                # Decode and convert
+            } elsif (defined(&$charcnv)) {
+                $strtxt =~ s/_/ /g;
+                $strtxt = &$dec($strtxt);
                 $strtxt =~ s/[\r\n]/ /g;
-		$ret .= &$charcnv($strtxt, $real_charset);
+                $ret .= &$charcnv($strtxt, $real_charset);
 
-	    # Fallback is to ignore
-	    } else {
-		$ret .= "=?$charset?$encoding?$strtxt?=";
-	    }
-	}
+                # Fallback is to ignore
+            } else {
+                $ret .= "=?$charset?$encoding?$strtxt?=";
+            }
+        }
     }
 
     # Convert left-over unencoded text
-    if (defined($encfunc)) {			# encoding
-	&$encfunc(\$str, $plain_real_charset, $TextEncode);
-	$ret .= $str;
-    } elsif ($dec_flag) {			# ignore if just decode
-	$ret .= $str;
-    } elsif (defined(&$plaincnv)) {		# decode and convert
-	$ret .= &$plaincnv($str, $plain_real_charset);
-    } else {					# ignore
-	$ret .= $str;
+    if (defined($encfunc)) {    # encoding
+        &$encfunc(\$str, $plain_real_charset, $TextEncode);
+        $ret .= $str;
+    } elsif ($dec_flag) {       # ignore if just decode
+        $ret .= $str;
+    } elsif (defined(&$plaincnv)) {    # decode and convert
+        $ret .= &$plaincnv($str, $plain_real_charset);
+    } else {                           # ignore
+        $ret .= $str;
     }
 
     $ret;
@@ -491,59 +486,64 @@ sub MAILdecode_1522_str {
 ##	  MAILread_header(), MAILread_file_header()
 ##
 sub MAILread_body {
-    my($fields,		# Parsed header hash
-       $body,		# Reference to raw body text
-       $inaltArg) = @_; # Flag if in multipart/alternative
+    my ($fields,    # Parsed header hash
+        $body,      # Reference to raw body text
+        $inaltArg
+    ) = @_;         # Flag if in multipart/alternative
 
-    my($type, $subtype, $boundary, $content, $ctype, $pos,
-       $encoding, $decodefunc, $args, $part, $uribase);
-    my(@parts) = ();
-    my(@files) = ();
-    my(@array) = ();
-    my $ret = "";
+    my ($type,  $subtype, $boundary, $content,
+        $ctype, $pos,     $encoding, $decodefunc,
+        $args,  $part,    $uribase
+    );
+    my (@parts) = ();
+    my (@files) = ();
+    my (@array) = ();
+    my $ret     = "";
 
     ## Get type/subtype
     if (defined($fields->{'content-type'})) {
-	$content = $fields->{'content-type'}->[0];
+        $content = $fields->{'content-type'}->[0];
     }
-    $content = 'text/plain'  unless $content;
-    ($ctype) = $content =~ m%^\s*([\w\-\./]+)%;	# Extract content-type
-    $ctype =~ tr/A-Z/a-z/;			# Convert to lowercase
-    if ($ctype =~ m%/%) {			# Extract base and sub types
-	($type,$subtype) = split(/\//, $ctype, 2);
+    $content = 'text/plain' unless $content;
+    ($ctype) = $content =~ m%^\s*([\w\-\./]+)%;    # Extract content-type
+    $ctype =~ tr/A-Z/a-z/;                         # Convert to lowercase
+    if ($ctype =~ m%/%) {    # Extract base and sub types
+        ($type, $subtype) = split(/\//, $ctype, 2);
     } elsif ($ctype =~ /text/i) {
-	$ctype = 'text/plain';
-	$type = 'text';  $subtype = 'plain';
+        $ctype   = 'text/plain';
+        $type    = 'text';
+        $subtype = 'plain';
     } else {
-	$type = $subtype = '';
+        $type = $subtype = '';
     }
     $fields->{'x-mha-content-type'} = $ctype;
 
     ## Check if type is excluded
     if (MAILis_excluded($ctype)) {
-	return (&$ExcludedPartFunc($ctype));
+        return (&$ExcludedPartFunc($ctype));
     }
 
     ## Get entity URI base
-    if (defined($fields->{'content-base'}) &&
-	    ($uribase = $fields->{'content-base'}[0])) {
-	$uribase =~ s/['"\s]//g;
-    } elsif (defined($fields->{'content-location'}) &&
-		($uribase = $fields->{'content-location'}[0])) {
-	$uribase =~ s/['"\s]//g;
+    if (defined($fields->{'content-base'})
+        && ($uribase = $fields->{'content-base'}[0])) {
+        $uribase =~ s/['"\s]//g;
+    } elsif (defined($fields->{'content-location'})
+        && ($uribase = $fields->{'content-location'}[0])) {
+        $uribase =~ s/['"\s]//g;
     }
-    $uribase =~ s|(.*/).*|$1|  if $uribase;
+    $uribase =~ s|(.*/).*|$1| if $uribase;
 
     ## Load content-type filter
-    if ( (!defined($filter = &load_filter($ctype)) || !defined(&$filter)) &&
-	 (!defined($filter = &load_filter("$type/*")) || !defined(&$filter)) &&
-	 (!$inaltArg &&
-	  (!defined($filter = &load_filter('*/*')) || !defined(&$filter)) &&
-	     $ctype !~ m^\bmessage/(?:rfc822|news)\b^i &&
-	     $type  !~ /\bmultipart\b/) ) {
-	warn qq|Warning: Unrecognized content-type, "$ctype", |,
-	     qq|assuming "application/octet-stream"\n|;
-	$filter = &load_filter('application/octet-stream');
+    if (   (!defined($filter = &load_filter($ctype)) || !defined(&$filter))
+        && (!defined($filter = &load_filter("$type/*")) || !defined(&$filter))
+        && (   !$inaltArg
+            && (!defined($filter = &load_filter('*/*')) || !defined(&$filter))
+            && $ctype !~ m^\bmessage/(?:rfc822|news)\b^i
+            && $type !~ /\bmultipart\b/)
+    ) {
+        warn qq|Warning: Unrecognized content-type, "$ctype", |,
+            qq|assuming "application/octet-stream"\n|;
+        $filter = &load_filter('application/octet-stream');
     }
 
     ## Check for filter arguments
@@ -551,291 +551,293 @@ sub MAILread_body {
 
     ## Check encoding
     if (defined($fields->{'content-transfer-encoding'})) {
-	$encoding = lc $fields->{'content-transfer-encoding'}[0];
-	$encoding =~ s/\s//g;
-	$decodefunc = &load_decoder($encoding);
+        $encoding = lc $fields->{'content-transfer-encoding'}[0];
+        $encoding =~ s/\s//g;
+        $decodefunc = &load_decoder($encoding);
     } else {
-	$encoding = undef;
-	$decodefunc = undef;
+        $encoding   = undef;
+        $decodefunc = undef;
     }
     my $decoded = 0;
     if (defined($decodefunc) && defined(&$decodefunc)) {
-	$$body = &$decodefunc($$body);
-	$decoded = 1;
+        $$body   = &$decodefunc($$body);
+        $decoded = 1;
     } elsif ($decodefunc =~ /as-is/i) {
-	$decoded = 1;
+        $decoded = 1;
     }
 
     ## Convert text encoding
     if ($type eq 'text') {
-	my $charset = extract_charset($content, $subtype, $body);
-	$fields->{'x-mha-charset'} = $charset;
-	my $textfunc = load_textencoder();
-	if (defined($textfunc)) {
+        my $charset = extract_charset($content, $subtype, $body);
+        $fields->{'x-mha-charset'} = $charset;
+        my $textfunc = load_textencoder();
+        if (defined($textfunc)) {
             if ($DEBUG) {
-              print STDERR "MAILread_body: have textfunc: $textfunc\n";
+                print STDERR "MAILread_body: have textfunc: $textfunc\n";
             }
-	    $fields->{'x-mha-charset'} = $TextEncode
-		if defined(&$textfunc($body, $charset, $TextEncode));
-	}
-	if (defined($TextPreFilter) && defined(&$TextPreFilter)) {
+            $fields->{'x-mha-charset'} = $TextEncode
+                if defined(&$textfunc($body, $charset, $TextEncode));
+        }
+        if (defined($TextPreFilter) && defined(&$TextPreFilter)) {
             if ($DEBUG) {
-              print STDERR 'MAILread_body: have TextPreFilter: ',
-                           $TextPreFilter, "\n";
+                print STDERR 'MAILread_body: have TextPreFilter: ',
+                    $TextPreFilter, "\n";
             }
-	    &$TextPreFilter($fields, $body);
-	}
+            &$TextPreFilter($fields, $body);
+        }
     } else {
-	# define x-mha-charset in case text filter associated with
-	# a non-text type
-	$fields->{'x-mha-charset'} = $TextDefCharset;
+        # define x-mha-charset in case text filter associated with
+        # a non-text type
+        $fields->{'x-mha-charset'} = $TextDefCharset;
     }
     if ($DEBUG) {
-      print STDERR 'MAILread_body: charset: ',$fields->{'x-mha-charset'},"\n";
+        print STDERR 'MAILread_body: charset: ', $fields->{'x-mha-charset'},
+            "\n";
     }
 
     ## A filter is defined for given content-type
     if ($filter && defined(&$filter)) {
-	@array = &$filter($fields, $body, $decoded, $args);
-	## Setup return variables
-	$ret = shift @array;				# Return string
-	push(@files, @array);				# Derived files
+        @array = &$filter($fields, $body, $decoded, $args);
+        ## Setup return variables
+        $ret = shift @array;    # Return string
+        push(@files, @array);   # Derived files
 
-    ## No filter defined for given content-type
+        ## No filter defined for given content-type
     } else {
-	## If multipart, recursively process each part
-	if ($type =~ /\bmultipart\b/i) {
-	    local(%Cid) = ( )  unless scalar(caller) eq 'readmail';
-	    my($isalt) = $subtype =~ /\balternative\b/i;
+        ## If multipart, recursively process each part
+        if ($type =~ /\bmultipart\b/i) {
+            local (%Cid) = () unless scalar(caller) eq 'readmail';
+            my ($isalt) = $subtype =~ /\balternative\b/i;
 
-	    ## Get boundary
-	    $boundary = "";
-	    if ($content =~ m/\bboundary\s*=\s*"([^"]*)"/i) {
-		$boundary = $1;
-	    } else {
-		($boundary) = $content =~ m/\bboundary\s*=\s*([^\s;]+)/i;
-		$boundary =~ s/;$//;  # chop ';' if grabbed
-	    }
+            ## Get boundary
+            $boundary = "";
+            if ($content =~ m/\bboundary\s*=\s*"([^"]*)"/i) {
+                $boundary = $1;
+            } else {
+                ($boundary) = $content =~ m/\bboundary\s*=\s*([^\s;]+)/i;
+                $boundary =~ s/;$//;    # chop ';' if grabbed
+            }
 
-	    ## If boundary defined, split body into parts
-	    if ($boundary =~ /\S/) {
-		my $found = 0;
-		my $have_end = 0;
-		my $start_pos = 0;
-		substr($$body, 0, 0) = "\n";
-		substr($boundary, 0, 0) = "\n--";
-		my $blen = length($boundary);
-		my $bchkstr;
+            ## If boundary defined, split body into parts
+            if ($boundary =~ /\S/) {
+                my $found     = 0;
+                my $have_end  = 0;
+                my $start_pos = 0;
+                substr($$body,    0, 0) = "\n";
+                substr($boundary, 0, 0) = "\n--";
+                my $blen = length($boundary);
+                my $bchkstr;
 
-		while (($pos = index($$body, $boundary, $start_pos)) > -1) {
-		    # have to check for case when boundary is a substring
-		    #	of another boundary, yuck!
-		    $bchkstr = substr($$body, $pos+$blen, 2);
-		    unless ($bchkstr =~ /\A\r?\n/ || $bchkstr =~ /\A--/) {
-			# incomplete match, continue search
-			$start_pos = $pos+$blen;
-			next;
-		    }
-		    $found = 1;
-		    push(@parts, substr($$body, 0, $pos));
-		    $parts[$#parts] =~ s/^\r//;
+                while (($pos = index($$body, $boundary, $start_pos)) > -1) {
+                    # have to check for case when boundary is a substring
+                    #	of another boundary, yuck!
+                    $bchkstr = substr($$body, $pos + $blen, 2);
+                    unless ($bchkstr =~ /\A\r?\n/ || $bchkstr =~ /\A--/) {
+                        # incomplete match, continue search
+                        $start_pos = $pos + $blen;
+                        next;
+                    }
+                    $found = 1;
+                    push(@parts, substr($$body, 0, $pos));
+                    $parts[$#parts] =~ s/^\r//;
 
-		    # prune out part data just grabbed
-		    substr($$body, 0, $pos+$blen) = "";
+                    # prune out part data just grabbed
+                    substr($$body, 0, $pos + $blen) = "";
 
-		    # check if hit end
-		    if ($$body =~ /\A--/) {
-			$have_end = 1;
-			last;
-		    }
+                    # check if hit end
+                    if ($$body =~ /\A--/) {
+                        $have_end = 1;
+                        last;
+                    }
 
-		    # remove EOL at the beginning
-		    $$body =~ s/\A\r?\n//;
-		    $start_pos = 0;
-		}
-		if ($found) {
-		    if (!$have_end) {
-			warn qq/Warning: No end boundary delimiter found in /,
-			     qq/message body\n/;
-			push(@parts, $$body);
-			$parts[$#parts] =~ s/^\r//;
-			$$body = "";
-		    } else {
-			# discard front-matter
-			shift(@parts);
-		    }
-		} else {
-		    # no boundary separators in message!
-		    warn qq/Warning: No boundary delimiters found in /,
-			 qq/multipart body\n/;
-		    if ($$body =~ m/\A\n[\w\-]+:\s/) {
-			# remove \n added above if part looks like it has
-			# headers.  we keep if it does not to avoid body
-			# data being parsed as a header below.
-			substr($$body, 0, 1) = "";
-		    }
-		    push(@parts, $$body);
-		}
+                    # remove EOL at the beginning
+                    $$body =~ s/\A\r?\n//;
+                    $start_pos = 0;
+                }
+                if ($found) {
+                    if (!$have_end) {
+                        warn qq/Warning: No end boundary delimiter found in /,
+                            qq/message body\n/;
+                        push(@parts, $$body);
+                        $parts[$#parts] =~ s/^\r//;
+                        $$body = "";
+                    } else {
+                        # discard front-matter
+                        shift(@parts);
+                    }
+                } else {
+                    # no boundary separators in message!
+                    warn qq/Warning: No boundary delimiters found in /,
+                        qq/multipart body\n/;
+                    if ($$body =~ m/\A\n[\w\-]+:\s/) {
+                        # remove \n added above if part looks like it has
+                        # headers.  we keep if it does not to avoid body
+                        # data being parsed as a header below.
+                        substr($$body, 0, 1) = "";
+                    }
+                    push(@parts, $$body);
+                }
 
-	    ## Else treat body as one part
-	    } else {
-		@parts = ($$body);
-	    }
+                ## Else treat body as one part
+            } else {
+                @parts = ($$body);
+            }
 
-	    ## Process parts
-	    my(@entity) = ();
-	    my($cid, $href, $pctype);
-	    my %alt_exc = ( );
-	    my $have_alt_prefs = $isalt && scalar(@_MIMEAltPrefs);
-	    my $partno = 0;
-	    @parts = \(@parts);
-	    while (defined($part = shift(@parts))) {
-		$href = { };
-		$partfields = $href->{'fields'} = (MAILread_header($part))[0];
-		$href->{'body'} = $part;
-		$href->{'filtered'} = 0;
-		$partfields->{'x-mha-part-number'} = ++$partno;
-		$pctype = extract_ctype(
-		    $partfields->{'content-type'}, $ctype);
+            ## Process parts
+            my (@entity) = ();
+            my ($cid, $href, $pctype);
+            my %alt_exc        = ();
+            my $have_alt_prefs = $isalt && scalar(@_MIMEAltPrefs);
+            my $partno         = 0;
+            @parts = \(@parts);
+            while (defined($part = shift(@parts))) {
+                $href = {};
+                $partfields = $href->{'fields'} = (MAILread_header($part))[0];
+                $href->{'body'}                    = $part;
+                $href->{'filtered'}                = 0;
+                $partfields->{'x-mha-part-number'} = ++$partno;
+                $pctype =
+                    extract_ctype($partfields->{'content-type'}, $ctype);
 
-		## check alternative preferences
-		if ($have_alt_prefs) {
-		  next  if ($alt_exc{$pctype});
-		  my $pos = $_MIMEAltPrefs{$pctype};
-		  if (defined($pos)) {
-		      for (++$pos; $pos <= $#_MIMEAltPrefs; ++$pos) {
-			  $alt_exc{$_MIMEAltPrefs[$pos]} = 1;
-		      }
-		  }
-		}
+                ## check alternative preferences
+                if ($have_alt_prefs) {
+                    next if ($alt_exc{$pctype});
+                    my $pos = $_MIMEAltPrefs{$pctype};
+                    if (defined($pos)) {
+                        for (++$pos; $pos <= $#_MIMEAltPrefs; ++$pos) {
+                            $alt_exc{$_MIMEAltPrefs[$pos]} = 1;
+                        }
+                    }
+                }
 
-		## only add to %Cid if not excluded
-		if (!&MAILis_excluded($pctype)) {
-		    if ($isalt) {
-			unshift(@entity, $href);
-		    } else {
-			push(@entity, $href);
-		    }
-		    $cid = $partfields->{'content-id'}[0] ||
-			   $partfields->{'message-id'}[0];
-		    if (defined($cid)) {
-			$cid =~ s/[\s<>]//g;
-			$Cid{"cid:$cid"} = $href  if $cid =~ /\S/;
-		    }
-		    $cid = undef;
-		    if (defined($partfields->{'content-location'}) &&
-			    ($cid = $partfields->{'content-location'}[0])) {
-			my $partbase = $uribase;
-			$cid =~ s/['"\s]//g;
-			if (defined($partfields->{'content-base'})) {
-			    $partbase = $partfields->{'content-base'}[0];
-			}
-			$cid = apply_base_url($partbase, $cid);
-			if ($cid =~ /\S/ && !$Cid{$cid}) {
-			    $Cid{$cid} = $href;
-			}
-		    }
-		    if ($cid) {
-			$partfields->{'content-location'} = [ $cid ];
-		    } elsif (!defined($partfields->{'content-base'})) {
-			$partfields->{'content-base'} = [ $uribase ];
-		    }
+                ## only add to %Cid if not excluded
+                if (!&MAILis_excluded($pctype)) {
+                    if ($isalt) {
+                        unshift(@entity, $href);
+                    } else {
+                        push(@entity, $href);
+                    }
+                    $cid = $partfields->{'content-id'}[0]
+                        || $partfields->{'message-id'}[0];
+                    if (defined($cid)) {
+                        $cid =~ s/[\s<>]//g;
+                        $Cid{"cid:$cid"} = $href if $cid =~ /\S/;
+                    }
+                    $cid = undef;
+                    if (defined($partfields->{'content-location'})
+                        && ($cid = $partfields->{'content-location'}[0])) {
+                        my $partbase = $uribase;
+                        $cid =~ s/['"\s]//g;
+                        if (defined($partfields->{'content-base'})) {
+                            $partbase = $partfields->{'content-base'}[0];
+                        }
+                        $cid = apply_base_url($partbase, $cid);
+                        if ($cid =~ /\S/ && !$Cid{$cid}) {
+                            $Cid{$cid} = $href;
+                        }
+                    }
+                    if ($cid) {
+                        $partfields->{'content-location'} = [$cid];
+                    } elsif (!defined($partfields->{'content-base'})) {
+                        $partfields->{'content-base'} = [$uribase];
+                    }
 
-		    $partfields->{'x-mha-parent-header'} = $fields;
-		}
-	    }
+                    $partfields->{'x-mha-parent-header'} = $fields;
+                }
+            }
 
-	    my($entity);
-	    ENTITY: foreach $entity (@entity) {
-		if ($entity->{'filtered'}) {
-		    next ENTITY;
-		}
+            my ($entity);
+        ENTITY: foreach $entity (@entity) {
+                if ($entity->{'filtered'}) {
+                    next ENTITY;
+                }
 
-		## If content-type not defined for part, then determine
-		## content-type based upon multipart subtype.
-		$partfields = $entity->{'fields'};
-		if (!defined($partfields->{'content-type'})) {
-		    $partfields->{'content-type'} =
-		      [ ($subtype =~ /digest/) ?
-			    'message/rfc822' : 'text/plain' ];
-		}
+                ## If content-type not defined for part, then determine
+                ## content-type based upon multipart subtype.
+                $partfields = $entity->{'fields'};
+                if (!defined($partfields->{'content-type'})) {
+                    $partfields->{'content-type'} = [
+                        ($subtype =~ /digest/)
+                        ? 'message/rfc822'
+                        : 'text/plain'
+                    ];
+                }
 
-		## Process part
-		@array = MAILread_body(
-			    $partfields,
-			    $entity->{'body'},
-			    $isalt);
+                ## Process part
+                @array =
+                    MAILread_body($partfields, $entity->{'body'}, $isalt);
 
-		## Only use last filterable part in alternate
-		if ($isalt) {
-		    $ret = shift @array;
-		    if ($ret) {
-			push(@files, @array);
-			$entity->{'filtered'} = 1;
-			last ENTITY;
-		    }
-		} else {
-		    if (!$array[0]) {
-			$array[0] = &$CantProcessPartFunc(
-					$partfields->{'content-type'}[0]);
-		    }
-		    $ret .= shift @array;
-		}
-		push(@files, @array);
-		$entity->{'filtered'} = 1;
-	    }
+                ## Only use last filterable part in alternate
+                if ($isalt) {
+                    $ret = shift @array;
+                    if ($ret) {
+                        push(@files, @array);
+                        $entity->{'filtered'} = 1;
+                        last ENTITY;
+                    }
+                } else {
+                    if (!$array[0]) {
+                        $array[0] =
+                            &$CantProcessPartFunc(
+                            $partfields->{'content-type'}[0]);
+                    }
+                    $ret .= shift @array;
+                }
+                push(@files, @array);
+                $entity->{'filtered'} = 1;
+            }
 
-	    ## Check if multipart/alternative, and no success
-	    if (!$ret && $isalt) {
-		warn qq|Warning: No recognized part in multipart/alternative; |,
-		     qq|will try to decode last part\n|;
-		$entity = $entity[0];
-		@array = &MAILread_body(
-			    $entity->{'fields'},
-			    $entity->{'body'});
-		$ret = shift @array;
-		if ($ret) {
-		    push(@files, @array);
-		} else {
-		    $ret = &$UnrecognizedAltPartFunc();
-		}
-	    }
+            ## Check if multipart/alternative, and no success
+            if (!$ret && $isalt) {
+                warn
+                    qq|Warning: No recognized part in multipart/alternative; |,
+                    qq|will try to decode last part\n|;
+                $entity = $entity[0];
+                @array =
+                    &MAILread_body($entity->{'fields'}, $entity->{'body'});
+                $ret = shift @array;
+                if ($ret) {
+                    push(@files, @array);
+                } else {
+                    $ret = &$UnrecognizedAltPartFunc();
+                }
+            }
 
-	    ## Aid garbage collection(?)
-	    foreach $entity (@entity) {
-		delete $entity->{'fields'}{'x-mha-parent-header'};
-	    }
+            ## Aid garbage collection(?)
+            foreach $entity (@entity) {
+                delete $entity->{'fields'}{'x-mha-parent-header'};
+            }
 
-	## Else if message/rfc822 or message/news
-	} elsif ($ctype =~ m^\bmessage/(?:rfc822|news)\b^i) {
-	    $partfields = (MAILread_header($body))[0];
+            ## Else if message/rfc822 or message/news
+        } elsif ($ctype =~ m^\bmessage/(?:rfc822|news)\b^i) {
+            $partfields = (MAILread_header($body))[0];
 
-	    # propogate parent and part no to message/* header
-	    $partfields->{'x-mha-parent-header'} =
-		$fields->{'x-mha-parent-header'};
-	    $partfields->{'x-mha-part-number'} =
-		$fields->{'x-mha-part-number'};
+            # propogate parent and part no to message/* header
+            $partfields->{'x-mha-parent-header'} =
+                $fields->{'x-mha-parent-header'};
+            $partfields->{'x-mha-part-number'} =
+                $fields->{'x-mha-part-number'};
 
-	    $ret = &$BeginEmbeddedMesgFunc();
-	    if ($FormatHeaderFunc && defined(&$FormatHeaderFunc)) {
-		$ret .= &$FormatHeaderFunc($partfields);
-	    } else {
-		warn "Warning: readmail: No message header formatting ",
-		     "function defined\n";
-	    }
-	    @array = MAILread_body($partfields, $body);
-	    $ret .= shift @array ||
-			&$CantProcessPartFunc(
-			    $partfields->{'content-type'}[0] || 'text/plain');
-	    $ret .= &$EndEmbeddedMesgFunc();
+            $ret = &$BeginEmbeddedMesgFunc();
+            if ($FormatHeaderFunc && defined(&$FormatHeaderFunc)) {
+                $ret .= &$FormatHeaderFunc($partfields);
+            } else {
+                warn "Warning: readmail: No message header formatting ",
+                    "function defined\n";
+            }
+            @array = MAILread_body($partfields, $body);
+            $ret .= shift @array
+                || &$CantProcessPartFunc($partfields->{'content-type'}[0]
+                    || 'text/plain');
+            $ret .= &$EndEmbeddedMesgFunc();
 
-	    push(@files, @array);
-	    delete $partfields->{'x-mha-parent-header'};
+            push(@files, @array);
+            delete $partfields->{'x-mha-parent-header'};
 
-	## Else cannot handle type
-	} else {
-	    $ret = '';
-	}
+            ## Else cannot handle type
+        } else {
+            $ret = '';
+        }
     }
 
     ($ret, @files);
@@ -854,44 +856,44 @@ sub MAILread_body {
 ##	($fields_hash_ref, $header_txt) = MAILread_header($mesg_data);
 ##
 sub MAILread_header {
-    my $mesg   = shift;
+    my $mesg = shift;
 
-    my $fields = { };
-    my $label = '';
+    my $fields = {};
+    my $label  = '';
     my $header = '';
-    my($value, $tmp, $pos);
+    my ($value, $tmp, $pos);
 
     ## Read a line at a time.
-    for ($pos=0; $pos >= 0; ) {
-	$pos = index($$mesg, "\n");
-	if ($pos >= 0) {
-	    $tmp = substr($$mesg, 0, $pos+1);
-	    substr($$mesg, 0, $pos+1) = "";
-	    last  if $tmp =~ /^\r?$/;	# Done if blank line
+    for ($pos = 0; $pos >= 0;) {
+        $pos = index($$mesg, "\n");
+        if ($pos >= 0) {
+            $tmp = substr($$mesg, 0, $pos + 1);
+            substr($$mesg, 0, $pos + 1) = "";
+            last if $tmp =~ /^\r?$/;    # Done if blank line
 
-	    $header .= $tmp;
-	    chop $tmp;			# Chop newline
-	    $tmp =~ s/\r$//;		# Delete <CR> characters
-	} else {
-	    $tmp = $$mesg;
-	    $header .= $tmp;
-	}
+            $header .= $tmp;
+            chop $tmp;                  # Chop newline
+            $tmp =~ s/\r$//;            # Delete <CR> characters
+        } else {
+            $tmp = $$mesg;
+            $header .= $tmp;
+        }
 
-	## Check for continuation of a field
-	if ($tmp =~ /^\s/) {
-	    $fields->{$label}[-1] .= $tmp  if $label;
-	    next;
-	}
+        ## Check for continuation of a field
+        if ($tmp =~ /^\s/) {
+            $fields->{$label}[-1] .= $tmp if $label;
+            next;
+        }
 
-	## Separate head from field text
-	if ($tmp =~ /^([^:\s]+):\s*([\s\S]*)$/) {
-	    ($label, $value) = (lc($1), $2);
-	    if ($fields->{$label}) {
-		push(@{$fields->{$label}}, $value);
-	    } else {
-		$fields->{$label} = [ $value ];
-	    }
-	}
+        ## Separate head from field text
+        if ($tmp =~ /^([^:\s]+):\s*([\s\S]*)$/) {
+            ($label, $value) = (lc($1), $2);
+            if ($fields->{$label}) {
+                push(@{$fields->{$label}}, $value);
+            } else {
+                $fields->{$label} = [$value];
+            }
+        }
     }
     decode_1522_fields($fields);
     ($fields, $header);
@@ -903,39 +905,39 @@ sub MAILread_header {
 ##	same manner as MAILread_header;
 ##
 ##	($fields_hash, $header_text) = MAILread_file_header($filehandle);
-##	
+##
 sub MAILread_file_header {
     my $handle = shift;
     my $encode = shift;
 
     my $label  = '';
     my $header = '';
-    my $fields = { };
-    local $/   = "\n";
+    my $fields = {};
+    local $/ = "\n";
 
-    my($value, $tmp);
+    my ($value, $tmp);
     while (($tmp = <$handle>) !~ /^[\r]?$/) {
-	## Save raw text
-	$header .= $tmp;
+        ## Save raw text
+        $header .= $tmp;
 
-	## Delete eol characters
-	$tmp =~ s/[\r\n]//g;
+        ## Delete eol characters
+        $tmp =~ s/[\r\n]//g;
 
-	## Check for continuation of a field
-	if ($tmp =~ /^\s/) {
-	    $fields->{$label}[-1] .= $tmp  if $label;
-	    next;
-	}
+        ## Check for continuation of a field
+        if ($tmp =~ /^\s/) {
+            $fields->{$label}[-1] .= $tmp if $label;
+            next;
+        }
 
-	## Separate head from field text
-	if ($tmp =~ /^([^:\s]+):\s*([\s\S]*)$/) {
-	    ($label, $value) = (lc($1), $2);
-	    if (defined($fields->{$label})) {
-		push(@{$fields->{$label}}, $value);
-	    } else {
-		$fields->{$label} = [ $value ];
-	    }
-	}
+        ## Separate head from field text
+        if ($tmp =~ /^([^:\s]+):\s*([\s\S]*)$/) {
+            ($label, $value) = (lc($1), $2);
+            if (defined($fields->{$label})) {
+                push(@{$fields->{$label}}, $value);
+            } else {
+                $fields->{$label} = [$value];
+            }
+        }
     }
     decode_1522_fields($fields);
     ($fields, $header);
@@ -951,24 +953,24 @@ sub MAILis_excluded {
 
     $ctype =~ s/\/x-/\//;
     if ($ctype =~ m|([^/]+)/|) {
-	$btype = $1;
+        $btype = $1;
     }
 
-    MIMEINCS: {
-	# Treat multipart special: It is always included unless present
-	# in MIMEExcs.
-	last  MIMEINCS  if ($ctype =~ /^multipart\b/);
+MIMEINCS: {
+        # Treat multipart special: It is always included unless present
+        # in MIMEExcs.
+        last MIMEINCS if ($ctype =~ /^multipart\b/);
 
-	if (%MIMEIncs) {
-	    if ($MIMEIncs{$ctype} || (defined($btype) && $MIMEIncs{$btype})) {
-		last MIMEINCS;
-	    } else {
-		return 1;
-	    }
-	}
+        if (%MIMEIncs) {
+            if ($MIMEIncs{$ctype} || (defined($btype) && $MIMEIncs{$btype})) {
+                last MIMEINCS;
+            } else {
+                return 1;
+            }
+        }
     }
     if ($MIMEExcs{$ctype} || (defined($btype) && $MIMEExcs{$btype})) {
-	return 1;
+        return 1;
     }
     0;
 }
@@ -982,35 +984,35 @@ sub MAILhead_get_disposition {
     my $hfields = shift;
     my $do_html = shift;
 
-    my($disp, $filename, $raw) = ('', '', '');
+    my ($disp, $filename, $raw) = ('', '', '');
     my $html_name = undef;
-    local($_);
+    local ($_);
 
-    if (defined($hfields->{'content-disposition'}) &&
-	    ($_ = $hfields->{'content-disposition'}->[0])) {
-	($disp)	= /^\s*([^\s;]+)/;
-	if (/filename="([^"]+)"/i) {
-	    $raw = $1;
-	} elsif (/filename=(\S+)/i) {
-	    ($raw = $1) =~ s/;\s*$//g;
-	}
+    if (defined($hfields->{'content-disposition'})
+        && ($_ = $hfields->{'content-disposition'}->[0])) {
+        ($disp) = /^\s*([^\s;]+)/;
+        if (/filename="([^"]+)"/i) {
+            $raw = $1;
+        } elsif (/filename=(\S+)/i) {
+            ($raw = $1) =~ s/;\s*$//g;
+        }
     }
     if (!$raw && defined($_ = $hfields->{'content-type'}[0])) {
-	if (/name="([^"]+)"/i) {
-	    $raw = $1;
-	} elsif (/name=(\S+)/i) {
-	    ($raw = $1) =~ s/;\s*$//g;
-	}
+        if (/name="([^"]+)"/i) {
+            $raw = $1;
+        } elsif (/name=(\S+)/i) {
+            ($raw = $1) =~ s/;\s*$//g;
+        }
     }
     $filename = MAILdecode_1522_str($raw, DECODE_ALL);
-    $filename =~ s%.*[/\\:]%%;	# Remove any path component
-    $filename =~ s/^\s+//;	# Remove leading whitespace
-    $filename =~ s/\s+$//;	# Remove trailing whitespace
+    $filename =~ s%.*[/\\:]%%;    # Remove any path component
+    $filename =~ s/^\s+//;        # Remove leading whitespace
+    $filename =~ s/\s+$//;        # Remove trailing whitespace
     $filename =~ tr/\0-\40\t\n\r?:*"'<>|\177-\377/_/;
-				# Remove questionable/invalid characters
+    # Remove questionable/invalid characters
 
     # Only provide HTML display version if requested
-    $html_name = MAILdecode_1522_str($raw)  if $do_html;
+    $html_name = MAILdecode_1522_str($raw) if $do_html;
 
     ($disp, $filename, $raw, $html_name);
 }
@@ -1046,16 +1048,16 @@ sub MAILhead_get_disposition {
 ##	    $mesg_body_charset = $parms->{'charset'}{'value'};
 ##
 sub MAILparse_parameter_str {
-    my $str     = shift;        # Input string
-    my $hasmain = shift;        # Flag if there is a main value to extract
+    my $str     = shift;    # Input string
+    my $hasmain = shift;    # Flag if there is a main value to extract
 
     require MHonArc::RFC822;
 
-    my $parm	= { };
-    my @toks    = MHonArc::RFC822::uncomment($str);
-    my($tok, $name, $value, $charset, $lang, $isPart);
+    my $parm = {};
+    my @toks = MHonArc::RFC822::uncomment($str);
+    my ($tok, $name, $value, $charset, $lang, $isPart);
 
-    $parm->{'x-main'} = shift @toks  if $hasmain;
+    $parm->{'x-main'} = shift @toks if $hasmain;
 
     ## Loop thru token list
     while ($tok = shift @toks) {
@@ -1077,26 +1079,28 @@ sub MAILparse_parameter_str {
         }
         ## Set values for parameter
         $name = lc $name;
-        $parm->{$name} = {}  unless defined($parm->{$name});
+        $parm->{$name} = {} unless defined($parm->{$name});
         $parm->{$name}{'charset'} = $charset;
-        $parm->{$name}{'lang'} = $lang;
+        $parm->{$name}{'lang'}    = $lang;
         ## Check if value is next token
         if ($value eq "") {
             ## If value next token, than it must be quoted
             $value = shift @toks;
-            $value =~ s/^"//;  $value =~ s/"$//;  $value =~ s/\\//g;
+            $value =~ s/^"//;
+            $value =~ s/"$//;
+            $value =~ s/\\//g;
         }
         if ($isPart && defined($parm->{$name}{'vlist'})) {
-          push(@{$parm->{$name}{'vlist'}}, $value);
+            push(@{$parm->{$name}{'vlist'}}, $value);
         } else {
-          $parm->{$name}{'vlist'} = [ $value ];
+            $parm->{$name}{'vlist'} = [$value];
         }
     }
 
     ## Now we loop thru each parameter and define the final values from
     ## the parts
     foreach $name (keys %$parm) {
-	next  if $name eq 'x-main';
+        next if $name eq 'x-main';
         $parm->{$name}{'value'} = join("", @{$parm->{$name}{'vlist'}});
     }
 
@@ -1119,12 +1123,12 @@ sub MAILparse_parameter_str {
 ##	be prefered over the text/html part.
 ##
 sub MAILset_alternative_prefs {
-    @_MIMEAltPrefs = map { lc } @_;
+    @_MIMEAltPrefs = map {lc} @_;
     %_MIMEAltPrefs = ();
     my $i = 0;
     my $ctype;
     foreach $ctype (@_MIMEAltPrefs) {
-	$_MIMEAltPrefs{$ctype} = $i++;
+        $_MIMEAltPrefs{$ctype} = $i++;
     }
 }
 
@@ -1137,18 +1141,18 @@ sub MAILset_alternative_prefs {
 ##	    'iso-8859-1' =>  [ 'latin1', 'iso_8859_1', '8859-1' ],
 ##	    'iso-8859-15' => [ 'latin9', 'iso_8859_15', '8859-15' ],
 ##	  }, $override );
-##	  
+##
 sub MAILset_charset_aliases {
-    my $map = shift;
+    my $map      = shift;
     my $override = shift;
 
-    %MIMECharsetAliases = ()  if $override;
-    my($charset, $aliases, $alias);
+    %MIMECharsetAliases = () if $override;
+    my ($charset, $aliases, $alias);
     while (($charset, $aliases) = each(%$map)) {
-	$charset = lc $charset;
-	foreach $alias (@$aliases) {
-	    $MIMECharsetAliases{lc $alias} = $charset;
-	}
+        $charset = lc $charset;
+        foreach $alias (@$aliases) {
+            $MIMECharsetAliases{lc $alias} = $charset;
+        }
     }
 }
 
@@ -1158,17 +1162,17 @@ sub MAILset_charset_aliases {
 ##
 ##	Example usage:
 ##	  ($func, $real_charset) = MAILload_charset_converter($charset);
-##	
+##
 ##	$func is the reference to the converter function, which may be
 ##	undef.  $real_charset is the real charset name that should be
 ##	used when invoking the function.
 ##
 sub MAILload_charset_converter {
     my $charset = lc shift;
-    $charset = $MIMECharsetAliases{$charset}  if $MIMECharsetAliases{$charset};
+    $charset = $MIMECharsetAliases{$charset} if $MIMECharsetAliases{$charset};
     my $func = load_charset($charset);
     if (!defined($func) || !defined(&$func)) {
-	$func = load_charset('default');
+        $func = load_charset('default');
     }
     ($func, $charset);
 }
@@ -1182,16 +1186,16 @@ sub MAILload_charset_converter {
 ##	message.
 ##
 sub cantProcessPart {
-    my($ctype) = $_[0];
+    my ($ctype) = $_[0];
     warn "Warning: Could not process part with given Content-Type: ",
-	 "$ctype\n";
+        "$ctype\n";
     "<br><tt>&lt;&lt;&lt; $ctype: Unrecognized &gt;&gt;&gt;</tt><br>\n";
 }
 ##---------------------------------------------------------------------------##
 ##	Default function returning message for content-types excluded.
 ##
 sub excludedPart {
-    my($ctype) = $_[0];
+    my ($ctype) = $_[0];
     "<br><tt>&lt;&lt;&lt; $ctype: EXCLUDED &gt;&gt;&gt;</tt><br>\n";
 }
 ##---------------------------------------------------------------------------##
@@ -1199,76 +1203,81 @@ sub excludedPart {
 ##
 sub unrecognizedAltPart {
     warn "Warning: No recognizable part in multipart/alternative\n";
-    "<br><tt>&lt;&lt;&lt; multipart/alternative: ".
-    "No recognizable part &gt;&gt;&gt;</tt><br>\n";
+    "<br><tt>&lt;&lt;&lt; multipart/alternative: "
+        . "No recognizable part &gt;&gt;&gt;</tt><br>\n";
 }
 ##---------------------------------------------------------------------------##
 ##	Default function for beggining of embedded message
 ##	(ie message/rfc822 or message/news).
 ##
 sub beginEmbeddedMesg {
-qq|<blockquote><small>---&nbsp;<i>Begin&nbsp;Message</i>&nbsp;---</small>\n|;
+    qq|<blockquote><small>---&nbsp;<i>Begin&nbsp;Message</i>&nbsp;---</small>\n|;
 }
 ##---------------------------------------------------------------------------##
 ##	Default function for end of embedded message
 ##	(ie message/rfc822 or message/news).
 ##
 sub endEmbeddedMesg {
-qq|<br><small>---&nbsp;<i>End Message</i>&nbsp;---</small></blockquote>\n|;
+    qq|<br><small>---&nbsp;<i>End Message</i>&nbsp;---</small></blockquote>\n|;
 }
 
 ##---------------------------------------------------------------------------##
 
 sub load_charset {
     require $MIMECharSetConvertersSrc{$_[0]}
-	if defined($MIMECharSetConvertersSrc{$_[0]}) &&
-	   $MIMECharSetConvertersSrc{$_[0]};
+        if defined($MIMECharSetConvertersSrc{$_[0]})
+        && $MIMECharSetConvertersSrc{$_[0]};
     $MIMECharSetConverters{$_[0]};
 }
+
 sub load_decoder {
-    my $enc = lc shift; $enc =~ s/\s//;
+    my $enc = lc shift;
+    $enc =~ s/\s//;
     require $MIMEDecodersSrc{$enc}
-	if defined($MIMEDecodersSrc{$enc}) &&
-	   $MIMEDecodersSrc{$enc};
+        if defined($MIMEDecodersSrc{$enc})
+        && $MIMEDecodersSrc{$enc};
     $MIMEDecoders{$enc};
 }
+
 sub load_filter {
     require $MIMEFiltersSrc{$_[0]}
-	if defined($MIMEFiltersSrc{$_[0]}) &&
-	   $MIMEFiltersSrc{$_[0]};
+        if defined($MIMEFiltersSrc{$_[0]})
+        && $MIMEFiltersSrc{$_[0]};
     $MIMEFilters{$_[0]};
 }
+
 sub get_filter_args {
-    my $args	= '';
+    my $args = '';
     my $s;
     foreach $s (@_) {
-	next  unless defined $s;
-	$args = $MIMEFiltersArgs{$s};
-	last  if defined($args) && ($args ne '');
+        next unless defined $s;
+        $args = $MIMEFiltersArgs{$s};
+        last if defined($args) && ($args ne '');
     }
     $args;
 }
+
 sub load_textencoder {
-    return undef  unless $TextEncode;
-    TRY: {
-	if (!defined($TextEncoderFunc)) {
-	    last TRY;
-	}
-	if (defined(&$TextEncoderFunc)) {
-	    return $TextEncoderFunc;
-	}
-	if (!defined($TextEncoderSrc)) {
-	    last TRY;
-	}
-	require $TextEncoderSrc;
-	if (defined(&$TextEncoderFunc)) {
-	    return $TextEncoderFunc;
-	}
+    return undef unless $TextEncode;
+TRY: {
+        if (!defined($TextEncoderFunc)) {
+            last TRY;
+        }
+        if (defined(&$TextEncoderFunc)) {
+            return $TextEncoderFunc;
+        }
+        if (!defined($TextEncoderSrc)) {
+            last TRY;
+        }
+        require $TextEncoderSrc;
+        if (defined(&$TextEncoderFunc)) {
+            return $TextEncoderFunc;
+        }
     }
     warn qq/Warning: Unable to load text encode for "$TextEncode"\n/;
-    $TextEncode = undef;
+    $TextEncode      = undef;
     $TextEncoderFunc = undef;
-    $TextEncoderSrc = undef;
+    $TextEncoderSrc  = undef;
 }
 
 ##---------------------------------------------------------------------------##
@@ -1276,16 +1285,16 @@ sub load_textencoder {
 ##	the beginning of given string.
 ##
 sub extract_ctype {
-    if (!defined($_[0]) ||
-	  (ref($_[0]) && ($_[0][0] !~ /\S/)) ||
-	  ($_[0] !~ /\S/)) {
-	return 'message/rfc822'
-	    if (defined($_[1]) && ($_[1] eq 'multipart/digest'));
-	return 'text/plain';
+    if (   !defined($_[0])
+        || (ref($_[0]) && ($_[0][0] !~ /\S/))
+        || ($_[0] !~ /\S/)) {
+        return 'message/rfc822'
+            if (defined($_[1]) && ($_[1] eq 'multipart/digest'));
+        return 'text/plain';
     }
     if (ref($_[0])) {
-	$_[0][0] =~ m|^\s*([\w\-\./]+)|;
-	return lc($1);
+        $_[0][0] =~ m|^\s*([\w\-\./]+)|;
+        return lc($1);
     }
     $_[0] =~ m|^\s*([\w\-\./]+)|;
     lc($1);
@@ -1296,11 +1305,11 @@ sub extract_ctype {
 ##	specific base;
 ##
 sub apply_base_url {
-    my $b = shift;  # Base URL
-    my $u = shift;  # URL to apply base to
+    my $b = shift;    # Base URL
+    my $u = shift;    # URL to apply base to
 
     ## If no base, nothing to do
-    return $u  if !defined($b) || $b !~ /\S/;
+    return $u if !defined($b) || $b !~ /\S/;
 
     ## If absolute URL or scroll link; do nothing
     $u =~ s/^\s+//;
@@ -1309,54 +1318,55 @@ sub apply_base_url {
     }
 
     ## Check if base URL allows relative resolution
-    my($host_part, $scheme);
-    if ($b =~ s{^((https?|ftp|file|nfs|acap|tftp)://[\w\-:\d.\@\%=~&]+)/?}{}) {
-	$host_part = $1;
-	$scheme    = lc $2;
+    my ($host_part, $scheme);
+    if ($b =~ s{^((https?|ftp|file|nfs|acap|tftp)://[\w\-:\d.\@\%=~&]+)/?}{})
+    {
+        $host_part = $1;
+        $scheme    = lc $2;
     } else {
-	warn qq/Warning: Invalid base url, "$b" to apply to "$u"\n/;
-	return $u;
+        warn qq/Warning: Invalid base url, "$b" to apply to "$u"\n/;
+        return $u;
     }
 
     ## If "/---", just use hostname:port of base.
     if ($u =~ /^\//) {
-	return $host_part . $u;
+        return $host_part . $u;
     }
 
     ## Clean up base URL
-    SCHEME: {
-	if ($scheme eq 'http' || $scheme eq 'https' || $scheme eq 'acap') {
-	    $b =~ s/\?.*$//;
-	    last SCHEME;
-	}
-	if ($scheme eq 'ftp') {
-	    $b =~ s/;type=.$//;
-	    last SCHEME;
-	}
-	if ($scheme eq 'tftp') {
-	    $b =~ s/;mode=\w+$//;
-	    last SCHEME;
-	}
+SCHEME: {
+        if ($scheme eq 'http' || $scheme eq 'https' || $scheme eq 'acap') {
+            $b =~ s/\?.*$//;
+            last SCHEME;
+        }
+        if ($scheme eq 'ftp') {
+            $b =~ s/;type=.$//;
+            last SCHEME;
+        }
+        if ($scheme eq 'tftp') {
+            $b =~ s/;mode=\w+$//;
+            last SCHEME;
+        }
     }
     $b =~ s/\/$//;    # strip any trailing '/' (we add it back later)
 
     ## "./---" or "../---": Need to remove and adjust base accordingly.
     my $cnt = 0;
-    while ( $u =~ s|^(\.{1,2})/|| ) { ++$cnt  if length($1) == 2; }
+    while ($u =~ s|^(\.{1,2})/||) { ++$cnt if length($1) == 2; }
 
     if ($b eq '') {
-	# base is just host
-	return join('/', $host_part, $u);
+        # base is just host
+        return join('/', $host_part, $u);
     }
     if ($cnt > 0) {
-	# trim path
-	my @a = split(/\//, $b);
-	if ($cnt <= scalar(@a)) {
-	    splice(@a, -$cnt);
-	    return join('/', $host_part, @a, $u);
-	}
-	# invalid relative path, tries to go past root
-	return join('/', $host_part, $u);
+        # trim path
+        my @a = split(/\//, $b);
+        if ($cnt <= scalar(@a)) {
+            splice(@a, -$cnt);
+            return join('/', $host_part, @a, $u);
+        }
+        # invalid relative path, tries to go past root
+        return join('/', $host_part, $u);
 
     }
     return join('/', $host_part, $b, $u);
@@ -1365,32 +1375,34 @@ sub apply_base_url {
 ##---------------------------------------------------------------------------##
 
 sub extract_charset {
-    my $content = shift;  # Content-type string of entity
-    my $subtype = shift;  # Text sub-type
-    my $body    = shift;  # Reference to entity text
+    my $content = shift;             # Content-type string of entity
+    my $subtype = shift;             # Text sub-type
+    my $body    = shift;             # Reference to entity text
     my $charset = $TextDefCharset;
 
     if ($content =~ /\bcharset\s*=\s*([^\s;]+)/i) {
-	$charset =  lc $1;
-	$charset =~ s/['";\s]//g;
+        $charset = lc $1;
+        $charset =~ s/['";\s]//g;
     }
 
     # If HTML, check <meta http-equiv=content-type> tag since it
     # can be different than what is specified in the entity header.
-    if (($subtype eq 'html' || $subtype eq 'x-html') &&
-	($$body =~ m/(<meta\s+http-equiv\s*=\s*['"]?
-		     content-type\b[^>]*>)/xi)) {
-	my $meta = $1;
-	if ($meta =~ m/\bcharset\s*=\s*['"]?([\w\.\-]+)/i) {
-	    $charset = lc $1;
-	}
+    if (($subtype eq 'html' || $subtype eq 'x-html')
+        && ($$body =~ m/(<meta\s+http-equiv\s*=\s*['"]?
+		     content-type\b[^>]*>)/xi
+        )
+    ) {
+        my $meta = $1;
+        if ($meta =~ m/\bcharset\s*=\s*['"]?([\w\.\-]+)/i) {
+            $charset = lc $1;
+        }
     }
     $charset = $MIMECharsetAliases{$charset}
-	if $MIMECharsetAliases{$charset};
+        if $MIMECharsetAliases{$charset};
 
     # If us-ascii, but 8-bit chars in body, we change to iso-8859-1
     if ($charset eq 'us-ascii') {
-	$charset = 'iso-8859-1'  if $$body =~ /[\x80-\xFF]/;
+        $charset = 'iso-8859-1' if $$body =~ /[\x80-\xFF]/;
     }
     $charset;
 }
@@ -1401,13 +1413,13 @@ sub extract_charset {
 ##
 sub gen_full_part_number {
     my $fields = shift;
-    my @number = ( );
+    my @number = ();
     while (defined($fields->{'x-mha-parent-header'})) {
-	unshift(@number, ($fields->{'x-mha-part-number'} || '1'));
-	$fields = $fields->{'x-mha-parent-header'};
+        unshift(@number, ($fields->{'x-mha-part-number'} || '1'));
+        $fields = $fields->{'x-mha-parent-header'};
     }
     if (!scalar(@number)) {
-	return $fields->{'x-mha-part-number'} || '1';
+        return $fields->{'x-mha-part-number'} || '1';
     }
     join('.', @number);
 }
@@ -1415,39 +1427,39 @@ sub gen_full_part_number {
 ##---------------------------------------------------------------------------##
 
 sub decode_1522_fields {
-  my $fields  = shift;
-  my $encfunc = load_textencoder();
-  my $mode    = defined($encfunc)
-                  ? TEXT_ENCODE : ($DecodeHeader ? JUST_DECODE : -1);
-  if ($mode == -1) {
-    return $fields;
-  }
-  my ($label, $value, $v);
-  while (($label, $value) = each %$fields) {
-    foreach $v (@$value) {
-      $v = &MAILdecode_1522_str($v, $mode);
+    my $fields  = shift;
+    my $encfunc = load_textencoder();
+    my $mode =
+        defined($encfunc) ? TEXT_ENCODE : ($DecodeHeader ? JUST_DECODE : -1);
+    if ($mode == -1) {
+        return $fields;
     }
-  }
-  $fields;
+    my ($label, $value, $v);
+    while (($label, $value) = each %$fields) {
+        foreach $v (@$value) {
+            $v = &MAILdecode_1522_str($v, $mode);
+        }
+    }
+    $fields;
 }
 
 ##---------------------------------------------------------------------------##
 
 sub dump_header {
-    my $fh	= shift;
-    my $fields	= shift;
-    my($key, $a, $value);
+    my $fh     = shift;
+    my $fields = shift;
+    my ($key, $a, $value);
     foreach $key (sort keys %$fields) {
-	$a = $fields->{$key};
-	if (ref($a)) {
-	    foreach $value (@$a) {
-		print $fh "$key: $value\n";
-	    }
-	} else {
-	    print $fh "$key: $a\n";
-	}
+        $a = $fields->{$key};
+        if (ref($a)) {
+            foreach $value (@$a) {
+                print $fh "$key: $value\n";
+            }
+        } else {
+            print $fh "$key: $a\n";
+        }
     }
 }
 
 ##---------------------------------------------------------------------------##
-1; # for require
+1;    # for require

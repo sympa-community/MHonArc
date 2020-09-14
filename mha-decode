@@ -35,14 +35,12 @@ use Getopt::Long;
 ##---------------------------------------------------------------------------##
 
 MAIN: {
-    unshift(@INC, 'lib');	# Should I leave this line in?
+    unshift(@INC, 'lib');    # Should I leave this line in?
 
     ## Grab options from @ARGV unique to this program
-    my %opts = ( );
+    my %opts = ();
     Getopt::Long::Configure('pass_through');
-    GetOptions(\%opts,
-      'dcd-digest'
-    );
+    GetOptions(\%opts, 'dcd-digest');
     my $digest_mode = $opts{'dcd-digest'} || 0;
 
     ## Reset pass-through of options
@@ -56,30 +54,28 @@ MAIN: {
 
     ## Set resources
     %readmail::MIMEFilters = (
-	'application/*'	=> 'm2h_external::filter',
-	'audio/*'	=> 'm2h_external::filter',
-	'chemical/*'	=> 'm2h_external::filter',
-	'image/*'	=> 'm2h_external::filter',
-	'model/*'	=> 'm2h_external::filter',
-	'text/*'	=> 'm2h_external::filter',
-	'video/*'	=> 'm2h_external::filter',
+        'application/*' => 'm2h_external::filter',
+        'audio/*'       => 'm2h_external::filter',
+        'chemical/*'    => 'm2h_external::filter',
+        'image/*'       => 'm2h_external::filter',
+        'model/*'       => 'm2h_external::filter',
+        'text/*'        => 'm2h_external::filter',
+        'video/*'       => 'm2h_external::filter',
     );
     %readmail::MIMEFiltersSrc = (
-	'application/*'	=> 'mhexternal.pl',
-	'audio/*'	=> 'mhexternal.pl',
-	'chemical/*'	=> 'mhexternal.pl',
-	'image/*'	=> 'mhexternal.pl',
-	'model/*'	=> 'mhexternal.pl',
-	'text/*'	=> 'mhexternal.pl',
-	'video/*'	=> 'mhexternal.pl',
+        'application/*' => 'mhexternal.pl',
+        'audio/*'       => 'mhexternal.pl',
+        'chemical/*'    => 'mhexternal.pl',
+        'image/*'       => 'mhexternal.pl',
+        'model/*'       => 'mhexternal.pl',
+        'text/*'        => 'mhexternal.pl',
+        'video/*'       => 'mhexternal.pl',
     );
-    %readmail::MIMEFiltersArgs = (
-	'm2h_external::filter'	=> 'usename',
-    );
+    %readmail::MIMEFiltersArgs = ('m2h_external::filter' => 'usename');
 
     if ($digest_mode) {
-      $readmail::MIMEFilters{'message/*'}    = 'm2h_external::filter';
-      $readmail::MIMEFiltersSrc{'message/*'} = 'mhexternal.pl';
+        $readmail::MIMEFilters{'message/*'}    = 'm2h_external::filter';
+        $readmail::MIMEFiltersSrc{'message/*'} = 'mhexternal.pl';
     }
 
     mhonarc::process_input() || exit($mhonarc::CODE);

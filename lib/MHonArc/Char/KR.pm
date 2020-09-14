@@ -26,9 +26,9 @@ package MHonArc::Char::KR;
 
 sub kr_2022_to_euc {
     # implementation of this function plagerized from Encode::KR::2022_KR.
-    my $data_r	= shift;
-    my($match);
-    $data_r =~ s/\e\$\)C//gx;	      # remove the designator
+    my $data_r = shift;
+    my ($match);
+    $data_r =~ s/\e\$\)C//gx;    # remove the designator
     $data_r =~ s{\x0E		      # replace characters in GL
 		 ([^\x0F]*)	      # between SO(\x0e) and SI(\x0f)
 		 \x0F}		      # with characters in GR

@@ -29,16 +29,18 @@
 ##    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
 ##    02111-1307, USA
 ##---------------------------------------------------------------------------##
- 
+
 package MHonArc::RFC822;
 
 use strict;
 use Exporter ();
+use MHonArc;
 use vars qw( @ISA @EXPORT @EXPORT_OK $VERSION );
-@ISA = qw ( Exporter );
-$VERSION = "0.01";
 
-@EXPORT = ();
+@ISA     = qw ( Exporter );
+$VERSION = $MHonArc::VERSION;
+
+@EXPORT    = ();
 @EXPORT_OK = qw(
     &tokenise
     &untokenise
@@ -46,7 +48,6 @@ $VERSION = "0.01";
     &first_route_addr
     &first_addr_spec
 );
-
 
 ##---------------------------------------------------------------------------##
 ## Synopsis:
@@ -60,7 +61,7 @@ $VERSION = "0.01";
 ##
 ##	Convert string to tokens.
 ##	In an array context, returns:
-##		('Joe', '(Random)', 'User', '<', '@', 'route', ':', 
+##		('Joe', '(Random)', 'User', '<', '@', 'route', ':',
 ##			'"j.r.l"', '@', 'host', '.', 'com', '>')
 ##	Not intended for use in a scalar context, but would return:
 ##		'Joe(Random)User<@route:"j.r.l"@host.com>'
@@ -81,7 +82,7 @@ $VERSION = "0.01";
 ##
 ##	Remove comments.
 ##	In an array context, returns:
-##		 ('Joe', 'User', '<', '@', 'route', ':', 
+##		 ('Joe', 'User', '<', '@', 'route', ':',
 ##			'"j.r.l"', '@', 'host', '.', 'com', '>')
 ##	In a scalar context, returns:
 ##		'Joe User<@route:"j.r.l"@host.com>'
@@ -114,10 +115,10 @@ $VERSION = "0.01";
 ##---------------------------------------------------------------------------##
 
 ## Define some variables to help us write regexps.
-my $self_delimiters = '<>@,;:.';		# use /[$self_delimiters]/
-my $specials = $self_delimiters.'()\\\\"\\[\\]';# use /[$specials]/
-my $quoted_pair = '\\\\.';			# use /$quoted_pair/
-my $qp_or_bs_end = $quoted_pair.'|\\\\$';	# use /$qp_or_bs_end/
+my $self_delimiters = '<>@,;:.';    # use /[$self_delimiters]/
+my $specials     = $self_delimiters . '()\\\\"\\[\\]';   # use /[$specials]/
+my $quoted_pair  = '\\\\.';                              # use /$quoted_pair/
+my $qp_or_bs_end = $quoted_pair . '|\\\\$';              # use /$qp_or_bs_end/
 
 ##---------------------------------------------------------------------------##
 ## Tokenise, per RFC 822.
@@ -138,56 +139,56 @@ sub tokenise {
     my ($comment, $comment_depth);
 
     while (s/^\s*(\S)/$firstchar = $1/e) {
-	if ($firstchar =~ /[$self_delimiters]/o) {
-	    # a special character as a self-delimiting token.
-	    s/^(.)//;
-	    push (@outtoks, $1);
-	} elsif ($firstchar eq '"') {
-	    # a quoted string.
-	    # XXX we don't prohibit bare CR.
-	    s/^(\"(?:$qp_or_bs_end|[^\\"])*(?:\"|\Z))//o;
-	    push (@outtoks, $1);
-	} elsif ($firstchar eq '[') {
-	    # a domain literal.
-	    # XXX we don't prohibit bare CR or '['.
-	    s/^(\[(?:$qp_or_bs_end|[^\\\]])*(?:\]|$))//o;
-	    push (@outtoks, $1);
-	} elsif ($firstchar eq '(') {
-	    # a comment.
-	    do {
-		s/^(([^()]*)([()]|$))//;
-		$comment .= $1;
+        if ($firstchar =~ /[$self_delimiters]/o) {
+            # a special character as a self-delimiting token.
+            s/^(.)//;
+            push(@outtoks, $1);
+        } elsif ($firstchar eq '"') {
+            # a quoted string.
+            # XXX we don't prohibit bare CR.
+            s/^(\"(?:$qp_or_bs_end|[^\\"])*(?:\"|\Z))//o;
+            push(@outtoks, $1);
+        } elsif ($firstchar eq '[') {
+            # a domain literal.
+            # XXX we don't prohibit bare CR or '['.
+            s/^(\[(?:$qp_or_bs_end|[^\\\]])*(?:\]|$))//o;
+            push(@outtoks, $1);
+        } elsif ($firstchar eq '(') {
+            # a comment.
+            do {
+                s/^(([^()]*)([()]|$))//;
+                $comment .= $1;
                 if ($3 eq '') {
-		    # XXX error recovery for unterminated comment
+                    # XXX error recovery for unterminated comment
                     warn "Unterminated comment: $comment\n";
                     $comment_depth = 0;
-                } elsif (substr($2,-1,1) eq '\\') {
+                } elsif (substr($2, -1, 1) eq '\\') {
                     # quoted comment delim, ignore
                 } elsif ($3 eq '(') {
                     ++$comment_depth;
                 } elsif ($3 eq ')') {
                     --$comment_depth;
                 } else {
-		    # Should not get here
+                    # Should not get here
                     warn "Internal error: expecting (' or ')' but got: $3\n";
                     $comment_depth = 0;
                 }
-	    } until ($comment_depth == 0);
-	    push (@outtoks, $comment);
-	} elsif ($firstchar ne '\\' && $firstchar =~ /[$specials]/o) {
-	    # an illegal special character.
-	    s/^(.)//;
-	    push (@outtoks, $1);
-	} else {
-	    # should be an atom, which is not allowed to contain
-	    # special characters or control characters.
-	    # we have already checked for all special chars except
-	    # controls and backslash.
-	    # XXX we don't check for controls.
-	    # XXX we allow a quoted-pair as part of an atom.
-	    s/^(($qp_or_bs_end|[^\s$specials])+)//o;
-	    push (@outtoks, $1);
-	 }
+            } until ($comment_depth == 0);
+            push(@outtoks, $comment);
+        } elsif ($firstchar ne '\\' && $firstchar =~ /[$specials]/o) {
+            # an illegal special character.
+            s/^(.)//;
+            push(@outtoks, $1);
+        } else {
+            # should be an atom, which is not allowed to contain
+            # special characters or control characters.
+            # we have already checked for all special chars except
+            # controls and backslash.
+            # XXX we don't check for controls.
+            # XXX we allow a quoted-pair as part of an atom.
+            s/^(($qp_or_bs_end|[^\s$specials])+)//o;
+            push(@outtoks, $1);
+        }
     }
 
     # return result
@@ -204,30 +205,29 @@ sub tokenise {
 
 sub untokenise {
     my ($token, $prevtok);
-    my ($prev, $this);
+    my ($prev,  $this);
     my $result = '';
 
     foreach $token (@_) {
-	# Do we need a space?
-	# A space is essential when both the left and right tokens
-	# are either atoms or quoted strings.
-	# XXX - Spaces are desirable in some other places, but for
-	# 	now it's too difficult to worry about that.  It's
-	#	context-dependent anyway -- for example, we sometimes
-	#	want spaces after ':' and ',', but not when they appear
-	#	inside a route-addr.  The tokener has no business knowing
-	#	about such details.
-	if ($result ne '') {
-	    $prev = substr($prevtok, $[, 1);
-	    $this = substr($token, $[, 1);
-	    if (   ($this eq '"' || $this !~ /[$specials]/o)
-		&& ($prev eq '"' || $prev !~ /[$specials]/o))
-	    {
-		$result .= ' ';
-	    }
-	}
-	$result .= $token;
-	$prevtok = $token;
+        # Do we need a space?
+        # A space is essential when both the left and right tokens
+        # are either atoms or quoted strings.
+        # XXX - Spaces are desirable in some other places, but for
+        # 	now it's too difficult to worry about that.  It's
+        #	context-dependent anyway -- for example, we sometimes
+        #	want spaces after ':' and ',', but not when they appear
+        #	inside a route-addr.  The tokener has no business knowing
+        #	about such details.
+        if ($result ne '') {
+            $prev = substr($prevtok, $[, 1);
+            $this = substr($token,   $[, 1);
+            if (   ($this eq '"' || $this !~ /[$specials]/o)
+                && ($prev eq '"' || $prev !~ /[$specials]/o)) {
+                $result .= ' ';
+            }
+        }
+        $result .= $token;
+        $prevtok = $token;
     }
 
     # return result
@@ -247,7 +247,7 @@ sub uncomment {
     my ($token);
 
     # tokenise the input if we were given a single string
-    @intoks = &tokenise($intoks[$[])  if $#intoks le $[;
+    @intoks = &tokenise($intoks[$[]) if $#intoks le $[;
 
     # delete comment tokens
     @outtoks = grep (/^[^(]/, @intoks);
@@ -275,49 +275,49 @@ sub first_route_addr {
     my ($state) = 'start';
 
     # tokenise the input if we were given a single string
-    @intoks = &tokenise($intoks[$[])  if $#intoks le $[;
+    @intoks = &tokenise($intoks[$[]) if $#intoks le $[;
 
     foreach $token (@intoks) {
-	$firstchar = substr($token,0,1);
-	if ($firstchar eq '(') {
-	    # ignore comments
-	    next;
-	} elsif ($firstchar eq '<') {
-	    # '<' is start of route-addr.
-	    # discard what came before.
-	    $state = 'routeaddr';
-	    @outtoks = ($token);
-	} elsif ($firstchar eq ':') {
-	    # ':' might be end of phrase for a group,
-	    # or might be end of route and start of addr-spec in route-addr.
-	    if ($state eq 'routeaddr') {
-		push (@outtoks, $token);
-	    } else {
-		$state = 'start';
-		@outtoks = ();
-	    }
-	} elsif ($firstchar eq ',') {
-	    # ',' might be a separator between addresses
-	    # or might be part of a route inside a route-addr.
-	    if ($state eq 'routeaddr') {
-		push (@outtoks, $token);
-	    } else {
-		$state = 'start';
-		last if $#outtoks ge $[; # we got what we wanted
-	    }
-	} elsif ($firstchar eq '>') {
-	    # '>' is end of route-addr
-	    push (@outtoks, $token);
-	    $state = 'end';
-	    last; # we got what we wanted
-	} elsif ($firstchar eq ';') {
-	    # ';' is end of group
-	    $state = 'end';
-	    last if $#outtoks ge $[; # we got what we wanted
-	} else {
-	    # accumulate valid tokens.
-	    push (@outtoks, $token);
-	}
+        $firstchar = substr($token, 0, 1);
+        if ($firstchar eq '(') {
+            # ignore comments
+            next;
+        } elsif ($firstchar eq '<') {
+            # '<' is start of route-addr.
+            # discard what came before.
+            $state   = 'routeaddr';
+            @outtoks = ($token);
+        } elsif ($firstchar eq ':') {
+            # ':' might be end of phrase for a group,
+            # or might be end of route and start of addr-spec in route-addr.
+            if ($state eq 'routeaddr') {
+                push(@outtoks, $token);
+            } else {
+                $state   = 'start';
+                @outtoks = ();
+            }
+        } elsif ($firstchar eq ',') {
+            # ',' might be a separator between addresses
+            # or might be part of a route inside a route-addr.
+            if ($state eq 'routeaddr') {
+                push(@outtoks, $token);
+            } else {
+                $state = 'start';
+                last if $#outtoks ge $[;    # we got what we wanted
+            }
+        } elsif ($firstchar eq '>') {
+            # '>' is end of route-addr
+            push(@outtoks, $token);
+            $state = 'end';
+            last;                           # we got what we wanted
+        } elsif ($firstchar eq ';') {
+            # ';' is end of group
+            $state = 'end';
+            last if $#outtoks ge $[;        # we got what we wanted
+        } else {
+            # accumulate valid tokens.
+            push(@outtoks, $token);
+        }
     }
 
     # return result
@@ -345,27 +345,28 @@ sub first_addr_spec {
     # if starts with '<' then it was a route-addr.
     # Keep the stuff between the last ':' (if any) and the first '>'.
     if ($intoks[$[] eq '<') {
-	$startpos = $[+1;	# skip the initial '<'
-	$endpos = $#intoks;	# don't yet know if there is a final '>'
-	foreach $i ($startpos..$endpos) {
-	    $token = $intoks[$i];
-	    if ($token eq '>') {
-		$endpos = $i - 1;
-		last;
-	    } elsif ($token eq ':') {
-		$startpos = $i + 1;
-	    }
-	}
+        $startpos = $[ + 1;      # skip the initial '<'
+        $endpos   = $#intoks;    # don't yet know if there is a final '>'
+        foreach $i ($startpos .. $endpos) {
+            $token = $intoks[$i];
+            if ($token eq '>') {
+                $endpos = $i - 1;
+                last;
+            } elsif ($token eq ':') {
+                $startpos = $i + 1;
+            }
+        }
     }
     # if it didn't start with '<' then it was an addr-spec
     else {
-	$startpos = $[;
-	$endpos = $#intoks;
+        $startpos = $[;
+        $endpos   = $#intoks;
     }
 
     # return result
-    wantarray ? @intoks[$startpos..$endpos]
-	      : &untokenise(@intoks[$startpos..$endpos]);
+    wantarray
+        ? @intoks[$startpos .. $endpos]
+        : &untokenise(@intoks[$startpos .. $endpos]);
 }
 
 ##---------------------------------------------------------------------------##

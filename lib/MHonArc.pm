@@ -1,10 +1,12 @@
 ##---------------------------------------------------------------------------##
 ##  File:
-##	$Id: JP.pm,v 1.1 2002/12/18 05:38:43 ehood Exp $
+##	$Id: MHonArc.pm,v 2.6.19 2020/06/29 21:40:15 ldidry Exp $
 ##  Author:
-##      Earl Hood       earl@earlhood.com
+##      Luc Didry <luc@framasoft.org> for Framasoft and Sympa community
+##  Description:
+##	POD after __END__.
 ##---------------------------------------------------------------------------##
-##    Copyright (C) 2002	Earl Hood, earl@earlhood.com
+##    Copyright (C) 2020	Sympa community
 ##
 ##    This program is free software; you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by
@@ -22,32 +24,17 @@
 ##    02111-1307, USA
 ##---------------------------------------------------------------------------##
 
-package MHonArc::Char::JP;
+package MHonArc;
 
-sub jp_2022_to_euc {
-    # implementation of this function plagerized from Encode::JP::JIS7.
-    my $data_in = shift;
-    my $data_r = ref($data_in) ? $data_in : \$data_in;
+use strict;
 
-    my ($esc_0212, $esc_asc, $esc_kana, $chunk);
-    $$data_r =~ s{(?:(\e\$\(D)|			  # JIS 0212
-		     (?:\e\$\@|\e\$B|\e&\@\e\$B)| # JIS 0208
-		     (\e\([BJ])|		  # ISO ASC
-		     (\e\(I))			  # JIS KANA
-		     ([^\e]*)}
-    {
-	($esc_0212, $esc_asc, $esc_kana, $chunk) =
-	    ($1, $2, $3, $4);
-	if (!$esc_asc) {
-	    $chunk =~ tr/\x21-\x7e/\xa1-\xfe/;
-	    if ($esc_kana) {
-		$chunk =~ s/([\xa1-\xdf])/\x8e$1/og;
-	    } elsif ($esc_0212) {
-		$chunk =~ s/([\xa1-\xfe][\xa1-\xfe])/\x8f$1/og;
-	    }
-	}
-	$chunk;
-    }gex;
+BEGIN {
+    use Exporter ();
+    our $VERSION = '2.6.19';
+    our @ISA     = qw(Exporter);
+    #Give a hoot don't pollute, do not export more than needed by default
+    our @EXPORT      = qw($VERSION);
+    our @EXPORT_OK   = qw();
+    our %EXPORT_TAGS = ();
 }
-
 1;

@@ -33,112 +33,111 @@ use MHonArc::CharMaps;
 ##---------------------------------------------------------------------------##
 
 sub clip {
-    my $str      = \shift;  # Prevent unnecessary copy.
-    my $len      = shift;   # Clip length
-    my $is_html  = shift;   # If entity references should be considered
-    my $has_tags = shift;   # If html tags should be stripped
+    my $str      = \shift;    # Prevent unnecessary copy.
+    my $len      = shift;     # Clip length
+    my $is_html  = shift;     # If entity references should be considered
+    my $has_tags = shift;     # If html tags should be stripped
 
     my $u = Encode::decode('utf8', $$str);
 
     if (!$is_html) {
-      return substr($u, 0, $len);
+        return substr($u, 0, $len);
     }
 
     my $text = Encode::decode('utf8', '');
     my $subtext;
     my $html_len = length($u);
-    my($pos, $sublen, $real_len, $semi);
+    my ($pos, $sublen, $real_len, $semi);
     my $er_len = 0;
-    
-    for ( $pos=0, $sublen=$len; $pos < $html_len; ) {
-	$subtext = substr($u, $pos, $sublen);
-	$pos += $sublen;
 
-	# strip tags
-	if ($has_tags) {
-	    # Strip full tags
-	    $subtext =~ s/<[^>]*>//g;
-	    # Check if clipped part of a tag
-	    if ($subtext =~ s/<[^>]*\Z//) {
-		my $gt = index($u, '>', $pos);
-		$pos = ($gt < 0) ? $html_len : ($gt+1);
-	    }
-	}
+    for ($pos = 0, $sublen = $len; $pos < $html_len;) {
+        $subtext = substr($u, $pos, $sublen);
+        $pos += $sublen;
 
-	# check for clipped entity reference
-	if (($pos < $html_len) && ($subtext =~ /\&[^;]*\Z/)) {
-	    my $semi = index($u, ';', $pos);
-	    if ($semi < 0) {
-		# malformed entity reference
-		$subtext .= substr($u, $pos);
-		$pos = $html_len;
-	    } else {
-		$subtext .= substr($u, $pos, $semi-$pos+1);
-		$pos = $semi+1;
-	    }
-	}
+        # strip tags
+        if ($has_tags) {
+            # Strip full tags
+            $subtext =~ s/<[^>]*>//g;
+            # Check if clipped part of a tag
+            if ($subtext =~ s/<[^>]*\Z//) {
+                my $gt = index($u, '>', $pos);
+                $pos = ($gt < 0) ? $html_len : ($gt + 1);
+            }
+        }
 
-	# compute entity reference lengths to determine "real" character
-	# count and not raw character count.
-	while ($subtext =~ /(\&[^;]+);/g) {
-	    $er_len += length($1);
-	}
+        # check for clipped entity reference
+        if (($pos < $html_len) && ($subtext =~ /\&[^;]*\Z/)) {
+            my $semi = index($u, ';', $pos);
+            if ($semi < 0) {
+                # malformed entity reference
+                $subtext .= substr($u, $pos);
+                $pos = $html_len;
+            } else {
+                $subtext .= substr($u, $pos, $semi - $pos + 1);
+                $pos = $semi + 1;
+            }
+        }
 
-	$text .= $subtext;
+        # compute entity reference lengths to determine "real" character
+        # count and not raw character count.
+        while ($subtext =~ /(\&[^;]+);/g) {
+            $er_len += length($1);
+        }
 
-	# done if we have enough
-	$real_len = length($text) - $er_len;
-	if ($real_len >= $len) {
-	    last;
-	}
-	$sublen = $len - (length($text) - $er_len);
+        $text .= $subtext;
+
+        # done if we have enough
+        $real_len = length($text) - $er_len;
+        if ($real_len >= $len) {
+            last;
+        }
+        $sublen = $len - (length($text) - $er_len);
     }
     Encode::encode('utf8', $text);
 }
 
 sub to_utf8 {
     my $charset = lc $_[1];
-    return $_[0]  if ($charset eq 'us-ascii' ||
-		      $charset eq 'utf-8' ||
-		      $charset eq 'utf8');
-    my $text    = $_[0];
-    my $text_r	= ref($text) ? $text : \$text;
-    eval {
-	Encode::from_to($$text_r, $charset, 'utf8');
-    };
+    return $_[0]
+        if ($charset eq 'us-ascii'
+        || $charset eq 'utf-8'
+        || $charset eq 'utf8');
+    my $text = $_[0];
+    my $text_r = ref($text) ? $text : \$text;
+    eval { Encode::from_to($$text_r, $charset, 'utf8'); };
     if ($@) {
-	# fallback implementation.
-	require MHonArc::UTF8::MhaEncode;
-	return MHonArc::UTF8::MhaEncode::to_utf8($text_r, $charset);
+        # fallback implementation.
+        require MHonArc::UTF8::MhaEncode;
+        return MHonArc::UTF8::MhaEncode::to_utf8($text_r, $charset);
     }
     $$text_r;
 }
 
 sub str2sgml {
-    my $text	= shift;
+    my $text    = shift;
     my $charset = lc shift;
     my $text_r  = ref($text) ? $text : \$text;
 
     if ($charset eq 'us-ascii') {
-	if ($$text_r =~ /[\x80-\xFF]/) {
-	    $charset = 'iso-8859-1';
-	} else {
-	    $$text_r =~ s/([$HTMLSpecials])/$HTMLSpecials{$1}/go;
-	    return $$text_r;
-	}
+        if ($$text_r =~ /[\x80-\xFF]/) {
+            $charset = 'iso-8859-1';
+        } else {
+            $$text_r =~ s/([$HTMLSpecials])/$HTMLSpecials{$1}/go;
+            return $$text_r;
+        }
     }
     if ($charset eq 'utf-8' || $charset eq 'utf8') {
-	$$text_r =~ s/([$HTMLSpecials])/$HTMLSpecials{$1}/go;
-	return $$text_r;
+        $$text_r =~ s/([$HTMLSpecials])/$HTMLSpecials{$1}/go;
+        return $$text_r;
     }
     eval {
-	Encode::from_to($$text_r, $charset, 'utf8');
-	$$text_r =~ s/([$HTMLSpecials])/$HTMLSpecials{$1}/go;
+        Encode::from_to($$text_r, $charset, 'utf8');
+        $$text_r =~ s/([$HTMLSpecials])/$HTMLSpecials{$1}/go;
     };
     if ($@) {
-	# fallback implementation.
-	require MHonArc::UTF8::MhaEncode;
-	return MHonArc::UTF8::MhaEncode::str2sgml($text_r, $charset);
+        # fallback implementation.
+        require MHonArc::UTF8::MhaEncode;
+        return MHonArc::UTF8::MhaEncode::str2sgml($text_r, $charset);
     }
     $$text_r;
 }

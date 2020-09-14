@@ -33,7 +33,7 @@ package mha_dbedit;
 ##---------------------------------------------------------------------------##
 
 MAIN: {
-    unshift(@INC, 'lib');	# Should I leave this line in?
+    unshift(@INC, 'lib');    # Should I leave this line in?
 
     ## Initialize MHonArc
     require 'mhamain.pl' || die qq/ERROR: Unable to require "mhamain.pl"\n/;
@@ -42,10 +42,11 @@ MAIN: {
     ## Open archive
     unshift(@ARGV, '-readdb', '-lock');
     if (!mhonarc::open_archive()) {
-	die "ERROR: Unable to open archive\n"; }
+        die "ERROR: Unable to open archive\n";
+    }
 
     ## Write database
-    print STDOUT "\nWriting database ...\n"  unless $mhonarc::QUIET;
+    print STDOUT "\nWriting database ...\n" unless $mhonarc::QUIET;
     my $status = mhonarc::output_db($mhonarc::DBPathName);
     mhonarc::close_archive();
     exit($status ? 0 : 1);

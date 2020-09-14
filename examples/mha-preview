@@ -35,21 +35,17 @@ my $PreviewLen = 256;
 ##-----------------------------------------------------------------------##
 
 MAIN: {
-    unshift(@INC, 'lib');	# Should I leave this line in?
+    unshift(@INC, 'lib');    # Should I leave this line in?
 
     ## Grab options from @ARGV unique to this program
-    my %opts = ( );
+    my %opts = ();
     Getopt::Long::Configure('pass_through');
-    GetOptions(\%opts,
-      'prv-maxlen=i',
-      'help',
-      'man'
-    );
+    GetOptions(\%opts, 'prv-maxlen=i', 'help', 'man');
     usage(1) if $opts{'help'};
     usage(2) if $opts{'man'};
 
     if ($opts{'prv-maxlen'} && ($opts{'prv-maxlen'} > 0)) {
-      $PreviewLen = $opts{'prv-maxlen'};
+        $PreviewLen = $opts{'prv-maxlen'};
     }
 
     ## Reset pass-through of options
@@ -71,42 +67,40 @@ MAIN: {
 ##-----------------------------------------------------------------------##
 
 sub register_callbacks {
-  $mhonarc::CBMessageBodyRead = \&msg_body_read;
-  $mhonarc::CBRcVarExpand     = \&rc_var_expand;
-  $mhonarc::CBDbSave	      = \&db_save;
+    $mhonarc::CBMessageBodyRead = \&msg_body_read;
+    $mhonarc::CBRcVarExpand     = \&rc_var_expand;
+    $mhonarc::CBDbSave          = \&db_save;
 }
 
 sub msg_body_read {
-  my($fields, $html, $files) = @_;
-  my $mha_index = $fields->{'x-mha-index'};
-  my $preview = extract_preview($html, $PreviewLen);
-  $X_MessagePreview{$mha_index} = $preview;
-  1;
+    my ($fields, $html, $files) = @_;
+    my $mha_index = $fields->{'x-mha-index'};
+    my $preview = extract_preview($html, $PreviewLen);
+    $X_MessagePreview{$mha_index} = $preview;
+    1;
 }
-
 
 sub rc_var_expand {
-  my($mha_index, $var_name, $arg_str) = @_;
+    my ($mha_index, $var_name, $arg_str) = @_;
 
-  # $X-MSG-PREVIEW(mesg_spec)$
-  if ($var_name eq 'X-MSG-PREVIEW') {
-    # Use MHonArc function to support a mesg_spec argument
-    my ($lref, $key, $pos, $opt) =
-	mhonarc::compute_msg_pos($mha_index, $var_name, $arg_str);
-    return ($X_MessagePreview{$key}||"", 0, 1);
-  }
+    # $X-MSG-PREVIEW(mesg_spec)$
+    if ($var_name eq 'X-MSG-PREVIEW') {
+        # Use MHonArc function to support a mesg_spec argument
+        my ($lref, $key, $pos, $opt) =
+            mhonarc::compute_msg_pos($mha_index, $var_name, $arg_str);
+        return ($X_MessagePreview{$key} || "", 0, 1);
+    }
 
-  # If we do not recognize $var_name, make sure to tell
-  # MHonArc we do not so it will try.
-  (undef, 0, 0);
+    # If we do not recognize $var_name, make sure to tell
+    # MHonArc we do not so it will try.
+    (undef, 0, 0);
 }
 
-
 sub db_save {
-  my($db_fh) = @_;
-  # Make sure variable is package qualified!
-  mhonarc::print_var($db_fh, 'MHAPreview::X_MessagePreview',
-		     \%X_MessagePreview);
+    my ($db_fh) = @_;
+    # Make sure variable is package qualified!
+    mhonarc::print_var($db_fh, 'MHAPreview::X_MessagePreview',
+        \%X_MessagePreview);
 }
 
 ##-----------------------------------------------------------------------##
@@ -114,88 +108,90 @@ sub db_save {
 ##-----------------------------------------------------------------------##
 
 sub extract_preview {
-  # Extracting the preview text of the message body is not as
-  # trivial as you may expect.  We have to deal with HTML tags
-  # and entity references, but want to avoid the overhead of
-  # using a full-blown HTML parser.  We also want to skip any
-  # quoted text, otherwise preview text of replies would mainly
-  # contain quoted text, making preview less useful.
+    # Extracting the preview text of the message body is not as
+    # trivial as you may expect.  We have to deal with HTML tags
+    # and entity references, but want to avoid the overhead of
+    # using a full-blown HTML parser.  We also want to skip any
+    # quoted text, otherwise preview text of replies would mainly
+    # contain quoted text, making preview less useful.
 
-  my $html_ref = shift;	# reference to HTML message body
-  my $prev_len = shift;	# length of preview to extract
+    my $html_ref = shift;    # reference to HTML message body
+    my $prev_len = shift;    # length of preview to extract
 
-  # Make copy since we will be pre-process data to make extraction easier
-  my $html = $$html_ref;
+    # Make copy since we will be pre-process data to make extraction easier
+    my $html = $$html_ref;
 
-  # Normalize EOLs to make other patterns simplier
-  $html =~ s/\r\n/\n/g;
-  # Strip out quoting using <blockquote> (for flowed and/or fancy-quoting)
-  $html =~ s/<blockquote[^>]*>.*?<\/blockquote\s*>//gis;
-  # Strip tags
-  $html =~ s/<[^>]*>//g;
-  # Quoting using > and other common styles
-  $html =~ s/^(?:&gt;|[\|:\+]).*$//gm;
-  # Outhouse method of quoting
-  $html =~ s/^-----Original Message-----.*\Z//;
-  # Remove signatures
-  $html =~ s/\n-- \n.*\z//s;
-  # Preamble side comments
-  $html =~ s/\A(?:\s*\[[^\]]*\])+//;
-  # Common quote preambles
-  $html =~ s/\A\s*In\s+article.*?(?:wrote|writes|said|says):[^\S\n]*\n//si;
-  $html =~ s/\A.*(?:wrote|writes|said|says):[^\S\n]*\n//si;
-  # Minimize whitespace
-  $html =~ s/\s+/ /g;
+    # Normalize EOLs to make other patterns simplier
+    $html =~ s/\r\n/\n/g;
+    # Strip out quoting using <blockquote> (for flowed and/or fancy-quoting)
+    $html =~ s/<blockquote[^>]*>.*?<\/blockquote\s*>//gis;
+    # Strip tags
+    $html =~ s/<[^>]*>//g;
+    # Quoting using > and other common styles
+    $html =~ s/^(?:&gt;|[\|:\+]).*$//gm;
+    # Outhouse method of quoting
+    $html =~ s/^-----Original Message-----.*\Z//;
+    # Remove signatures
+    $html =~ s/\n-- \n.*\z//s;
+    # Preamble side comments
+    $html =~ s/\A(?:\s*\[[^\]]*\])+//;
+    # Common quote preambles
+    $html =~ s/\A\s*In\s+article.*?(?:wrote|writes|said|says):[^\S\n]*\n//si;
+    $html =~ s/\A.*(?:wrote|writes|said|says):[^\S\n]*\n//si;
+    # Minimize whitespace
+    $html =~ s/\s+/ /g;
 
-  my $text = "";
-  my $html_len = length($html);
-  my($pos, $sublen, $erlen, $real_len);
-  
-  for ( $pos=0, $sublen=$prev_len; $pos < $html_len; ) {
-    $text .= substr($html, $pos, $sublen);
-    $pos += $sublen;
+    my $text     = "";
+    my $html_len = length($html);
+    my ($pos, $sublen, $erlen, $real_len);
 
-    # check for clipped entity reference
-    while (($pos < $html_len) && ($text =~ s/\&[^;]*\Z//)) {
-      $text .= substr($html, $pos, 1);
-      ++$pos;
+    for ($pos = 0, $sublen = $prev_len; $pos < $html_len;) {
+        $text .= substr($html, $pos, $sublen);
+        $pos += $sublen;
+
+        # check for clipped entity reference
+        while (($pos < $html_len) && ($text =~ s/\&[^;]*\Z//)) {
+            $text .= substr($html, $pos, 1);
+            ++$pos;
+        }
+
+        # compute entity reference lengths to determine "real" character
+        # count and not raw character count.
+        $er_len = 0;
+        while ($text =~ /(\&[^;]+);/g) {
+            $er_len += length($1);
+        }
+
+        # done if we have enough
+        $real_len = length($text) - $er_len;
+        if ($real_len >= $prev_len) {
+            if ($real_len < $html_len) {
+                $text .= '...';
+            }
+            last;
+        }
+
+        $sublen = $prev_len - (length($text) - $er_len);
     }
 
-    # compute entity reference lengths to determine "real" character
-    # count and not raw character count.
-    $er_len = 0;
-    while ($text =~ /(\&[^;]+);/g) {
-      $er_len += length($1);
-    }
-
-    # done if we have enough
-    $real_len = length($text)-$er_len;
-    if ($real_len >= $prev_len) {
-      if ($real_len < $html_len) {
-	$text .= '...';
-      }
-      last;
-    }
-
-    $sublen = $prev_len - (length($text)-$er_len);
-  }
-
-  $text;
+    $text;
 }
 
 sub usage {
-  require Pod::Usage;
-  my $verbose = shift;
-  if ($verbose == 0) {
-    Pod::Usage::pod2usage(-verbose => $verbose);
-  } else {
-    my $pager = $ENV{'PAGER'} || 'more';
-    local(*PAGER);
-    my $fh = (-t STDOUT && open(PAGER, "|$pager")) ? \*PAGER : \*STDOUT;
-    Pod::Usage::pod2usage(-verbose => $verbose,
-                          -output  => $fh);
-  }
-  exit 0;
+    require Pod::Usage;
+    my $verbose = shift;
+    if ($verbose == 0) {
+        Pod::Usage::pod2usage(-verbose => $verbose);
+    } else {
+        my $pager = $ENV{'PAGER'} || 'more';
+        local (*PAGER);
+        my $fh = (-t STDOUT && open(PAGER, "|$pager")) ? \*PAGER : \*STDOUT;
+        Pod::Usage::pod2usage(
+            -verbose => $verbose,
+            -output  => $fh
+        );
+    }
+    exit 0;
 }
 
 ##-----------------------------------------------------------------------##

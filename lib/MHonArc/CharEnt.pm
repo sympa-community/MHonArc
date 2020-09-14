@@ -29,6 +29,9 @@ package MHonArc::CharEnt;
 use strict;
 use MHonArc::CharMaps;
 use MHonArc::Char;
+use MHonArc;
+
+our $VERSION = $MHonArc::VERSION;
 
 ##---------------------------------------------------------------------------
 ##      Charset specification to mapping
@@ -42,61 +45,61 @@ use MHonArc::Char;
 ##	  conversion.
 
 my %CharsetMaps = (
-    'iso-8859-1'     =>	'MHonArc/CharEnt/ISO8859_1.pm',
-    'iso-8859-2'     =>	'MHonArc/CharEnt/ISO8859_2.pm',
-    'iso-8859-3'     =>	'MHonArc/CharEnt/ISO8859_3.pm',
-    'iso-8859-4'     =>	'MHonArc/CharEnt/ISO8859_4.pm',
-    'iso-8859-5'     =>	'MHonArc/CharEnt/ISO8859_5.pm',
-    'iso-8859-6'     =>	'MHonArc/CharEnt/ISO8859_6.pm',
-    'iso-8859-7'     =>	'MHonArc/CharEnt/ISO8859_7.pm',
-    'iso-8859-8'     =>	'MHonArc/CharEnt/ISO8859_8.pm',
-    'iso-8859-9'     =>	'MHonArc/CharEnt/ISO8859_9.pm',
-    'iso-8859-10'    =>	'MHonArc/CharEnt/ISO8859_10.pm',
-    'iso-8859-11'    =>	'MHonArc/CharEnt/ISO8859_11.pm',
-    'iso-8859-13'    =>	'MHonArc/CharEnt/ISO8859_13.pm',
-    'iso-8859-14'    =>	'MHonArc/CharEnt/ISO8859_14.pm',
-    'iso-8859-15'    =>	'MHonArc/CharEnt/ISO8859_15.pm',
-    'iso-8859-16'    =>	'MHonArc/CharEnt/ISO8859_16.pm',
-    'cp866'	     =>	'MHonArc/CharEnt/CP866.pm',
-    'cp949'	     =>	'MHonArc/CharEnt/CP949.pm', # euc-kr
-    'cp932'	     =>	'MHonArc/CharEnt/CP932.pm', # shiftjis
-    'cp936'	     =>	'MHonArc/CharEnt/CP936.pm', # GBK
-    'cp950'	     =>	'MHonArc/CharEnt/CP950.pm',
-    'cp1250'	     =>	'MHonArc/CharEnt/CP1250.pm',
-    'cp1251'	     =>	'MHonArc/CharEnt/CP1251.pm',
-    'cp1252'	     =>	'MHonArc/CharEnt/CP1252.pm',
-    'cp1253'	     =>	'MHonArc/CharEnt/CP1253.pm',
-    'cp1254'	     =>	'MHonArc/CharEnt/CP1254.pm',
-    'cp1255'	     =>	'MHonArc/CharEnt/CP1255.pm',
-    'cp1256'	     =>	'MHonArc/CharEnt/CP1256.pm',
-    'cp1257'	     =>	'MHonArc/CharEnt/CP1257.pm',
-    'cp1258'	     =>	'MHonArc/CharEnt/CP1258.pm',
-    'koi-0'	     =>	'MHonArc/CharEnt/KOI_0.pm',
-    'koi-7'	     =>	'MHonArc/CharEnt/KOI_7.pm',
-    'koi8-a'	     =>	'MHonArc/CharEnt/KOI8_A.pm',
-    'koi8-b'	     =>	'MHonArc/CharEnt/KOI8_B.pm',
-    'koi8-e'	     =>	'MHonArc/CharEnt/KOI8_E.pm',
-    'koi8-f'	     =>	'MHonArc/CharEnt/KOI8_F.pm',
-    'koi8-r'	     =>	'MHonArc/CharEnt/KOI8_R.pm',
-    'koi8-u'	     =>	'MHonArc/CharEnt/KOI8_U.pm',
-    'gost19768-87'   =>	'MHonArc/CharEnt/GOST19768_87.pm',
-    'viscii'	     =>	'MHonArc/CharEnt/VISCII.pm',
-    'macarabic'	     =>	'MHonArc/CharEnt/AppleArabic.pm',
+    'iso-8859-1'         => 'MHonArc/CharEnt/ISO8859_1.pm',
+    'iso-8859-2'         => 'MHonArc/CharEnt/ISO8859_2.pm',
+    'iso-8859-3'         => 'MHonArc/CharEnt/ISO8859_3.pm',
+    'iso-8859-4'         => 'MHonArc/CharEnt/ISO8859_4.pm',
+    'iso-8859-5'         => 'MHonArc/CharEnt/ISO8859_5.pm',
+    'iso-8859-6'         => 'MHonArc/CharEnt/ISO8859_6.pm',
+    'iso-8859-7'         => 'MHonArc/CharEnt/ISO8859_7.pm',
+    'iso-8859-8'         => 'MHonArc/CharEnt/ISO8859_8.pm',
+    'iso-8859-9'         => 'MHonArc/CharEnt/ISO8859_9.pm',
+    'iso-8859-10'        => 'MHonArc/CharEnt/ISO8859_10.pm',
+    'iso-8859-11'        => 'MHonArc/CharEnt/ISO8859_11.pm',
+    'iso-8859-13'        => 'MHonArc/CharEnt/ISO8859_13.pm',
+    'iso-8859-14'        => 'MHonArc/CharEnt/ISO8859_14.pm',
+    'iso-8859-15'        => 'MHonArc/CharEnt/ISO8859_15.pm',
+    'iso-8859-16'        => 'MHonArc/CharEnt/ISO8859_16.pm',
+    'cp866'              => 'MHonArc/CharEnt/CP866.pm',
+    'cp949'              => 'MHonArc/CharEnt/CP949.pm',           # euc-kr
+    'cp932'              => 'MHonArc/CharEnt/CP932.pm',           # shiftjis
+    'cp936'              => 'MHonArc/CharEnt/CP936.pm',           # GBK
+    'cp950'              => 'MHonArc/CharEnt/CP950.pm',
+    'cp1250'             => 'MHonArc/CharEnt/CP1250.pm',
+    'cp1251'             => 'MHonArc/CharEnt/CP1251.pm',
+    'cp1252'             => 'MHonArc/CharEnt/CP1252.pm',
+    'cp1253'             => 'MHonArc/CharEnt/CP1253.pm',
+    'cp1254'             => 'MHonArc/CharEnt/CP1254.pm',
+    'cp1255'             => 'MHonArc/CharEnt/CP1255.pm',
+    'cp1256'             => 'MHonArc/CharEnt/CP1256.pm',
+    'cp1257'             => 'MHonArc/CharEnt/CP1257.pm',
+    'cp1258'             => 'MHonArc/CharEnt/CP1258.pm',
+    'koi-0'              => 'MHonArc/CharEnt/KOI_0.pm',
+    'koi-7'              => 'MHonArc/CharEnt/KOI_7.pm',
+    'koi8-a'             => 'MHonArc/CharEnt/KOI8_A.pm',
+    'koi8-b'             => 'MHonArc/CharEnt/KOI8_B.pm',
+    'koi8-e'             => 'MHonArc/CharEnt/KOI8_E.pm',
+    'koi8-f'             => 'MHonArc/CharEnt/KOI8_F.pm',
+    'koi8-r'             => 'MHonArc/CharEnt/KOI8_R.pm',
+    'koi8-u'             => 'MHonArc/CharEnt/KOI8_U.pm',
+    'gost19768-87'       => 'MHonArc/CharEnt/GOST19768_87.pm',
+    'viscii'             => 'MHonArc/CharEnt/VISCII.pm',
+    'macarabic'          => 'MHonArc/CharEnt/AppleArabic.pm',
     'maccentraleurroman' => 'MHonArc/CharEnt/AppleCenteuro.pm',
-    'maccroatian'    =>	'MHonArc/CharEnt/AppleCroatian.pm',
-    'maccyrillic'    =>	'MHonArc/CharEnt/AppleCyrillic.pm',
-    'macgreek'	     =>	'MHonArc/CharEnt/AppleGreek.pm',
-    'machebrew'	     =>	'MHonArc/CharEnt/AppleHebrew.pm',
-    'macicelandic'   =>	'MHonArc/CharEnt/AppleIceland.pm',
-    'macromanian'    =>	'MHonArc/CharEnt/AppleRomanian.pm',
-    'macroman'	     =>	'MHonArc/CharEnt/AppleRoman.pm',
-    'macthai'	     =>	'MHonArc/CharEnt/AppleThai.pm',
-    'macturkish'     =>	'MHonArc/CharEnt/AppleTurkish.pm',
-    'big5-eten'      =>	'MHonArc/CharEnt/BIG5_ETEN.pm',
-    'big5-hkscs'     =>	'MHonArc/CharEnt/BIG5_HKSCS.pm',
-    'gb2312'         =>	'MHonArc/CharEnt/GB2312.pm',
-    'euc-jp'         =>	'MHonArc/CharEnt/EUC_JP.pm',
-    'hp-roman8'      =>	'MHonArc/CharEnt/HP_ROMAN8.pm',
+    'maccroatian'        => 'MHonArc/CharEnt/AppleCroatian.pm',
+    'maccyrillic'        => 'MHonArc/CharEnt/AppleCyrillic.pm',
+    'macgreek'           => 'MHonArc/CharEnt/AppleGreek.pm',
+    'machebrew'          => 'MHonArc/CharEnt/AppleHebrew.pm',
+    'macicelandic'       => 'MHonArc/CharEnt/AppleIceland.pm',
+    'macromanian'        => 'MHonArc/CharEnt/AppleRomanian.pm',
+    'macroman'           => 'MHonArc/CharEnt/AppleRoman.pm',
+    'macthai'            => 'MHonArc/CharEnt/AppleThai.pm',
+    'macturkish'         => 'MHonArc/CharEnt/AppleTurkish.pm',
+    'big5-eten'          => 'MHonArc/CharEnt/BIG5_ETEN.pm',
+    'big5-hkscs'         => 'MHonArc/CharEnt/BIG5_HKSCS.pm',
+    'gb2312'             => 'MHonArc/CharEnt/GB2312.pm',
+    'euc-jp'             => 'MHonArc/CharEnt/EUC_JP.pm',
+    'hp-roman8'          => 'MHonArc/CharEnt/HP_ROMAN8.pm',
 );
 
 my $char_maps = MHonArc::CharMaps->new(\%CharsetMaps);
@@ -106,21 +109,21 @@ my $char_maps = MHonArc::CharMaps->new(\%CharsetMaps);
 ###############################################################################
 
 sub str2sgml {
-    my $data 	 =    shift;
-    my $charset  = lc shift;
+    my $data    = shift;
+    my $charset = lc shift;
 
-    my $data_r  = ref($data) ? $data : \$data;
+    my $data_r = ref($data) ? $data : \$data;
     $charset =~ tr/_/-/;
 
     # UTF-8 can be converted algorithmically.
     if ($charset eq 'utf-8') {
-	_utf8_to_sgml($data_r);
-	return $$data_r;
+        _utf8_to_sgml($data_r);
+        return $$data_r;
     }
     # If us-ascii, use simple s/// operation.
     if ($charset eq 'us-ascii') {
-	$$data_r =~ s/([$HTMLSpecials])/$HTMLSpecials{$1}/go;
-	return $$data_r;
+        $$data_r =~ s/([$HTMLSpecials])/$HTMLSpecials{$1}/go;
+        return $$data_r;
     }
 
     MHonArc::Char::map_conv($data_r, $charset, $char_maps, \%HTMLSpecials);
@@ -132,7 +135,7 @@ sub str2sgml {
 # Array of masks for lead byte in UTF-8 (for Perl <5.6)
 # This could be computed on-the-fly, but using an array is faster
 my @utf8_lb_mask = (
-    0x3F, 0x1F, 0xF, 0x7, 0x3, 0x1  # 1, 2, 3, 4, 5, 6 bytes, respectively
+    0x3F, 0x1F, 0xF, 0x7, 0x3, 0x1    # 1, 2, 3, 4, 5, 6 bytes, respectively
 );
 # Regex pattern for UTF-8 data
 my $utf8_re = q/([\x00-\x7F]|
@@ -148,8 +151,7 @@ my $utf8_re = q/([\x00-\x7F]|
 		 .)/;
 # A lax regex for UTF-8 data.  Used for utf-8-aware perl since perl
 # will validate sequences
-my $utf8_re_lax =
-	      q/([\x00-\x7F]|
+my $utf8_re_lax = q/([\x00-\x7F]|
 		 [\xC0-\xDF][\x00-\xFF]|
 		 [\xE0-\xEF][\x00-\xFF]{2}|
 		 [\xF0-\xF7][\x00-\xFF]{3}|
@@ -161,21 +163,21 @@ sub _utf8_to_sgml {
     my $data_r = shift;
 
     if ($] >= 5.006) {
-	# UTF-8-aware perl
-	# Have to enable warnings to get stricter utf-8 checks for Perl 5.8
-	use warnings;
-	my($char, $ord, $malformed);
+        # UTF-8-aware perl
+        # Have to enable warnings to get stricter utf-8 checks for Perl 5.8
+        use warnings;
+        my ($char, $ord, $malformed);
 
-	# Define local warn handle to suppress malformed utf-8 warning
-	# messages and to flag when such occurrences happen.
-	my $cur_sig_warn = $SIG{__WARN__};
-	local $SIG{__WARN__} = sub {
-	    $malformed = 1;
-	    #warn @_;
-	    # invoke current warn handler, if defined
-	    &$cur_sig_warn  if defined($cur_sig_warn) && ref($cur_sig_warn);
-	};
-	$$data_r =~ s{
+        # Define local warn handle to suppress malformed utf-8 warning
+        # messages and to flag when such occurrences happen.
+        my $cur_sig_warn = $SIG{__WARN__};
+        local $SIG{__WARN__} = sub {
+            $malformed = 1;
+            #warn @_;
+            # invoke current warn handler, if defined
+            &$cur_sig_warn if defined($cur_sig_warn) && ref($cur_sig_warn);
+        };
+        $$data_r =~ s{
 	    $utf8_re_lax
 	}{
             # Bug #26577: Perl 5.10 changed unpack behavior
@@ -198,9 +200,9 @@ sub _utf8_to_sgml {
 	}gxeso;
 
     } else {
-	# non-UTF-8-aware perl
-	my($i, $n, $char);
-	$$data_r =~ s{
+        # non-UTF-8-aware perl
+        my ($i, $n, $char);
+        $$data_r =~ s{
 	    $utf8_re
 	}{
 	    if (($n = length($1)) == 1) {

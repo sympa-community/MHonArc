@@ -55,39 +55,58 @@ package mhonarc;
 ##	set to true.
 ##
 sub OSinit {
-    my($noOptions) = shift;
+    my ($noOptions) = shift;
 
     ##  Check what system we are executing under
-    my($tmp);
+    my ($tmp);
     if ($^O =~ /vms/i) {
-        $MSDOS = 0;  $MACOS = 0;  $UNIX = 0;  $VMS = 1;
-	$DIRSEP = '/';  $CURDIR = '.';
-	$PATHSEP = ':';
-	fileparse_set_fstype('VMS');
+        $MSDOS   = 0;
+        $MACOS   = 0;
+        $UNIX    = 0;
+        $VMS     = 1;
+        $DIRSEP  = '/';
+        $CURDIR  = '.';
+        $PATHSEP = ':';
+        fileparse_set_fstype('VMS');
 
-    } elsif (($^O !~ /cygwin/i) &&
-    	     (($^O =~ /mswin/i) ||
-	      ($^O =~ /\bdos\b/i) ||
-	      ($^O =~ /\bos2\b/i) ||
-    	      (($tmp = $ENV{'COMSPEC'}) &&
-	       ($tmp =~ /^[a-zA-Z]:\\/) &&
-	       (-e $tmp))) ) {
-        $MSDOS = 1;  $MACOS = 0;  $UNIX = 0;  $VMS = 0;
-	$DIRSEP = '\\';  $CURDIR = '.';
-	$PATHSEP = ';';
-	fileparse_set_fstype(($^O =~ /mswin/i) ? 'MSWin32' : 'MSDOS');
+    } elsif (
+        ($^O !~ /cygwin/i)
+        && (   ($^O =~ /mswin/i)
+            || ($^O =~ /\bdos\b/i)
+            || ($^O =~ /\bos2\b/i)
+            || (   ($tmp = $ENV{'COMSPEC'})
+                && ($tmp =~ /^[a-zA-Z]:\\/)
+                && (-e $tmp))
+        )
+    ) {
+        $MSDOS   = 1;
+        $MACOS   = 0;
+        $UNIX    = 0;
+        $VMS     = 0;
+        $DIRSEP  = '\\';
+        $CURDIR  = '.';
+        $PATHSEP = ';';
+        fileparse_set_fstype(($^O =~ /mswin/i) ? 'MSWin32' : 'MSDOS');
 
     } elsif (defined($MacPerl::Version)) {
-        $MSDOS = 0;  $MACOS = 1;  $UNIX = 0;  $VMS = 0;
-	$DIRSEP = ':';  $CURDIR = ':';
-	$PATHSEP = "\n";
-	fileparse_set_fstype('MacOS');
+        $MSDOS   = 0;
+        $MACOS   = 1;
+        $UNIX    = 0;
+        $VMS     = 0;
+        $DIRSEP  = ':';
+        $CURDIR  = ':';
+        $PATHSEP = "\n";
+        fileparse_set_fstype('MacOS');
 
     } else {
-        $MSDOS = 0;  $MACOS = 0;  $UNIX = 1;  $VMS = 0;
-	$DIRSEP = '/';  $CURDIR = '.';
-	$PATHSEP = ':';
-	fileparse_set_fstype('UNIX');
+        $MSDOS   = 0;
+        $MACOS   = 0;
+        $UNIX    = 1;
+        $VMS     = 0;
+        $DIRSEP  = '/';
+        $CURDIR  = '.';
+        $PATHSEP = ':';
+        fileparse_set_fstype('UNIX');
     }
 
     ##	Store name of program
@@ -100,16 +119,16 @@ sub OSinit {
 
     ##	Ask for command-line options if script is a Mac droplet
     ##		Code taken from the MacPerl FAQ
-    if (!$noOptions &&
-	defined($MacPerl::Version) &&
-	( $MacPerl::Version =~ /Application$/ )) {
+    if (   !$noOptions
+        && defined($MacPerl::Version)
+        && ($MacPerl::Version =~ /Application$/)) {
 
-	# we're running from the app
-	local( $cmdLine, @args );
-	$cmdLine = &MacPerl::Ask( "Enter command line options:" );
-	require "shellwords.pl";
-	@args = &shellwords( $cmdLine );
-	unshift( @ARGV, @args );
+        # we're running from the app
+        local ($cmdLine, @args);
+        $cmdLine = &MacPerl::Ask("Enter command line options:");
+        require "shellwords.pl";
+        @args = &shellwords($cmdLine);
+        unshift(@ARGV, @args);
     }
 }
 
@@ -117,14 +136,14 @@ sub OSinit {
 ##      OSis_absolute_path() returns true if a string is an absolute path
 ##
 sub OSis_absolute_path {
- 
+
     if ($MSDOS) {
         return $_[0] =~ /^([a-z]:)?[\\\/]/i;
     }
-    if ($MACOS) {               ## Not sure about Mac
+    if ($MACOS) {    ## Not sure about Mac
         return $_[0] =~ /^:/o;
     }
-    $_[0] =~ m|^/|o;            ## Unix (fallback)
+    $_[0] =~ m|^/|o;    ## Unix (fallback)
 }
 
 ##---------------------------------------------------------------------------##

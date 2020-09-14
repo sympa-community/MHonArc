@@ -29,17 +29,16 @@
 ##    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 ##---------------------------------------------------------------------------##
 
-
 package quoted_printable;
 
 sub qprdecode {
-    local($_) = shift;
+    local ($_) = shift;
 
-    s/[^\S\r\n]*(\r?\n)/$1/g;	# remove trailing whitespace on each line
-    s/\=\r?\n//g;		# remove soft linebreaks
-    s/=\Z//;			# drop any bogus soft lb at end of text
-    s/=([0-9A-Fa-f]{2})/pack('H2',$1)/ge;	# convert hex codes
-    $_;				# return result
+    s/[^\S\r\n]*(\r?\n)/$1/g;    # remove trailing whitespace on each line
+    s/\=\r?\n//g;                # remove soft linebreaks
+    s/=\Z//;                     # drop any bogus soft lb at end of text
+    s/=([0-9A-Fa-f]{2})/pack('H2',$1)/ge;    # convert hex codes
+    $_;                                      # return result
 }
 
 1;

@@ -37,18 +37,18 @@ package m2h_text_tsv;
 ##	Text/tab-separated-values filter for mhonarc.
 ##
 sub filter {
-    my($fields, $data, $isdecode, $args) = @_;
-    my($field, $line, $ret);
-    local($_);
+    my ($fields, $data, $isdecode, $args) = @_;
+    my ($field, $line, $ret);
+    local ($_);
 
     $$data =~ s/^\s+//;
-    $ret  = "<table border=1>\n";
+    $ret = "<table border=1>\n";
     foreach $line (split(/\r?\n/, $$data)) {
-	$ret .= "<tr>";
-	foreach $field (split(/\t/, $line)) {
-	    $ret .= '<td>' . mhonarc::htmlize($field) . '</td>';
-	}
-	$ret .= "</tr>\n";
+        $ret .= "<tr>";
+        foreach $field (split(/\t/, $line)) {
+            $ret .= '<td>' . mhonarc::htmlize($field) . '</td>';
+        }
+        $ret .= "</tr>\n";
     }
     $ret .= "</table>\n";
     ($ret);

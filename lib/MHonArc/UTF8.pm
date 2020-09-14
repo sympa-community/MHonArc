@@ -30,41 +30,39 @@ use strict;
 use MHonArc::CharMaps;
 
 BEGIN {
-    eval {
-	require MHonArc::UTF8::Encode;
-    };
+    use MHonArc;
+    our $VERSION = $MHonArc::VERSION;
+    eval { require MHonArc::UTF8::Encode; };
     if (!$@) {
-	# Encode module available
-	*entify    = \&_entify;
-	*clip      = \&MHonArc::UTF8::Encode::clip;
-	*to_utf8   = \&MHonArc::UTF8::Encode::to_utf8;
-	*str2sgml  = \&MHonArc::UTF8::Encode::str2sgml;
+        # Encode module available
+        *entify   = \&_entify;
+        *clip     = \&MHonArc::UTF8::Encode::clip;
+        *to_utf8  = \&MHonArc::UTF8::Encode::to_utf8;
+        *str2sgml = \&MHonArc::UTF8::Encode::str2sgml;
     } else {
-	eval {
-	    require MHonArc::UTF8::MapUTF8;
-	};
-	if (!$@) {
-	    # Unicode::MapUTF8 module available
-	    *entify    = \&_entify;
-	    *clip      = \&MHonArc::UTF8::MapUTF8::clip;
-	    *to_utf8   = \&MHonArc::UTF8::MapUTF8::to_utf8;
-	    *str2sgml  = \&MHonArc::UTF8::MapUTF8::str2sgml;
-	} else {
-	    # Fallback to homegrown implementation
-	    require MHonArc::UTF8::MhaEncode;
-	    *entify    = \&_entify;
-	    *clip      = \&MHonArc::UTF8::MhaEncode::clip;
-	    *to_utf8   = \&MHonArc::UTF8::MhaEncode::to_utf8;
-	    *str2sgml  = \&MHonArc::UTF8::MhaEncode::str2sgml;
-	}
+        eval { require MHonArc::UTF8::MapUTF8; };
+        if (!$@) {
+            # Unicode::MapUTF8 module available
+            *entify   = \&_entify;
+            *clip     = \&MHonArc::UTF8::MapUTF8::clip;
+            *to_utf8  = \&MHonArc::UTF8::MapUTF8::to_utf8;
+            *str2sgml = \&MHonArc::UTF8::MapUTF8::str2sgml;
+        } else {
+            # Fallback to homegrown implementation
+            require MHonArc::UTF8::MhaEncode;
+            *entify   = \&_entify;
+            *clip     = \&MHonArc::UTF8::MhaEncode::clip;
+            *to_utf8  = \&MHonArc::UTF8::MhaEncode::to_utf8;
+            *str2sgml = \&MHonArc::UTF8::MhaEncode::str2sgml;
+        }
     }
 }
 
 ##---------------------------------------------------------------------------##
 
 sub _entify {
-    my $text	= shift;
-    my $text_r  = ref($text) ? $text : \$text;
+    my $text = shift;
+    my $text_r = ref($text) ? $text : \$text;
     $$text_r =~ s/([$HTMLSpecials])/$HTMLSpecials{$1}/go;
     $$text_r;
 }
