@@ -1,4 +1,7 @@
 package MHonArc::UTF8::AppleArabic;
+
+our $VERSION = '2.6.21';
+
 +{
 'Ä','√Ñ',
 'Å','¬†',

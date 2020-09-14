@@ -1,4 +1,7 @@
 package MHonArc::CharEnt::KOI8_E;
+
+our $VERSION = '2.6.21';
+
 +{
 ' ','&#xA0;',
 '¡','&#x452;',

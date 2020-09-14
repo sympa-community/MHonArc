@@ -1,4 +1,7 @@
 package MHonArc::CharEnt::AppleRomanian;
+
+our $VERSION = '2.6.21';
+
 +{
 '¯','&#x53;&#x326;',
 'Þ','&#x54;&#x326;',

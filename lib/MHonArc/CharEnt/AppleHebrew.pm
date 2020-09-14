@@ -1,4 +1,7 @@
 package MHonArc::CharEnt::AppleHebrew;
+
+our $VERSION = '2.6.21';
+
 +{
 'Ä','&#xC4;',
 'Å','&#xFB1F;',

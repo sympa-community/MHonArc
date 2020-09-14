@@ -1,4 +1,7 @@
 package MHonArc::UTF8::BIG5_HKSCS;
+
+our $VERSION = '2.6.21';
+
 +{
 'ˆ@','ïŒƒ',
 'ˆA','ïŒ„',

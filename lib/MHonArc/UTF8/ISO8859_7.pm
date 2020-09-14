@@ -1,4 +1,7 @@
 package MHonArc::UTF8::ISO8859_7;
+
+our $VERSION = '2.6.21';
+
 +{
 ' ','Â ',
 '¡','Ê½',

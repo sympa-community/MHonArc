@@ -1,4 +1,7 @@
 package MHonArc::CharEnt::CP936;
+
+our $VERSION = '2.6.21';
+
 +{
 '€','&#x20AC;',
 '¡è','&#xA4;',

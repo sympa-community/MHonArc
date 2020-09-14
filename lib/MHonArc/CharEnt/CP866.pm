@@ -1,4 +1,7 @@
 package MHonArc::CharEnt::CP866;
+
+our $VERSION = '2.6.21';
+
 +{
 'ÿ','&#xA0;',
 'ý','&#xA4;',

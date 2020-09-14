@@ -26,9 +26,7 @@
 
 package MHonArc::Char;
 
-use MHonArc;
-
-$VERSION = $MHonArc::VERSION;
+our $VERSION = '2.6.21';
 
 ###############################################################################
 ##	Routines

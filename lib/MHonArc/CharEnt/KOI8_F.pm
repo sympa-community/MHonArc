@@ -1,4 +1,7 @@
 package MHonArc::CharEnt::KOI8_F;
+
+our $VERSION = '2.6.21';
+
 +{
 'Ä','&#x2500;',
 'Å','&#x2502;',

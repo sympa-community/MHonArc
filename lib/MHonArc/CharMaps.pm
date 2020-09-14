@@ -27,13 +27,13 @@
 package MHonArc::CharMaps;
 
 use strict;
-use vars qw( $VERSION @ISA @EXPORT %HTMLSpecials $HTMLSpecials );
+use vars qw( @ISA @EXPORT %HTMLSpecials $HTMLSpecials );
 
 use Carp;
 use Exporter ();
-use MHonArc;
 
-$VERSION = $MHonArc::VERSION;
+our $VERSION = '2.6.21';
+
 @ISA     = qw( Exporter );
 @EXPORT  = qw( $HTMLSpecials %HTMLSpecials );
 

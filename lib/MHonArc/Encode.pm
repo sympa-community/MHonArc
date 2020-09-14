@@ -28,10 +28,9 @@ package MHonArc::Encode;
 
 use strict;
 
-BEGIN {
-    use MHonArc;
-    our $VERSION = $MHonArc::VERSION;
+our $VERSION = '2.6.21';
 
+BEGIN {
     # If the Encode module is available, we use it, otherwise, we
     # try to use Unicode::MapUTF8.
     eval { require Encode; };

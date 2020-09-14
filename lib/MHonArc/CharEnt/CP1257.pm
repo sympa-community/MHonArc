@@ -1,4 +1,7 @@
 package MHonArc::CharEnt::CP1257;
+
+our $VERSION = '2.6.21';
+
 +{
 ' ','&#xA0;',
 '¢','&#xA2;',

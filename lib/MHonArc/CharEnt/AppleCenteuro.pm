@@ -1,4 +1,7 @@
 package MHonArc::CharEnt::AppleCenteuro;
+
+our $VERSION = '2.6.21';
+
 +{
 'Ê','&#xA0;',
 '£','&#xA3;',

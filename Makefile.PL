@@ -2,7 +2,7 @@ use ExtUtils::MakeMaker;
 
 WriteMakefile(
     'NAME'         => 'MHonArc',
-    'VERSION_FROM' => 'lib/MHonArc.pm',
+    'VERSION_FROM' => 'lib/mhamain.pl',
     'AUTHOR'       => ['Earl Hood <mhonarc@mhonarc.org>'],
     'ABSTRACT'     => 'Convert mail/news messages to HTML',
     'EXE_FILES'    => [

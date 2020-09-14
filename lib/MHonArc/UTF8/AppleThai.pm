@@ -1,4 +1,7 @@
 package MHonArc::UTF8::AppleThai;
+
+our $VERSION = '2.6.21';
+
 +{
 ' ','Â ',
 'û','Â©',

@@ -1,4 +1,7 @@
 package MHonArc::UTF8::AppleCyrillic;
+
+our $VERSION = '2.6.21';
+
 +{
 'Ê','Â ',
 '£','Â£',

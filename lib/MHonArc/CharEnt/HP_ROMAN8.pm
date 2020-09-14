@@ -1,4 +1,7 @@
 package MHonArc::CharEnt::HP_ROMAN8;
+
+our $VERSION = '2.6.21';
+
 +{
 ' ','&#xA0;',
 '¡','&#xC0;',

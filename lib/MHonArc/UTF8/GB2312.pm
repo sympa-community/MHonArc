@@ -1,4 +1,7 @@
 package MHonArc::UTF8::GB2312;
+
+our $VERSION = '2.6.21';
+
 +{
 '°°','„ÄÄ',
 '°¢','„ÄÅ',

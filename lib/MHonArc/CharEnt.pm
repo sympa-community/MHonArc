@@ -29,9 +29,8 @@ package MHonArc::CharEnt;
 use strict;
 use MHonArc::CharMaps;
 use MHonArc::Char;
-use MHonArc;
 
-our $VERSION = $MHonArc::VERSION;
+our $VERSION = '2.6.21';
 
 ##---------------------------------------------------------------------------
 ##      Charset specification to mapping

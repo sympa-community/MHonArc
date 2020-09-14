@@ -1,4 +1,7 @@
 package MHonArc::CharEnt::CP932;
+
+our $VERSION = '2.6.21';
+
 +{
 'Åò','&#xA7;',
 'ÅN','&#xA8;',
