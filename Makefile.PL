@@ -26,6 +26,9 @@ WriteMakefile(
                 type => 'git',
                 url  => 'https://github.com/sympa-community/mhonarc.git',
                 web  => 'https://github.com/sympa-community/mhonarc'
+            },
+            bugtracker => {
+                web  => 'https://github.com/sympa-community/mhonarc/issues'
             }
         },
         prereqs => {
