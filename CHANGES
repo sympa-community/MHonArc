@@ -14,6 +14,13 @@
 YYYY/MM/DD
 
 ============================================================================
+2020/09/14	(2.6.21)
+
+* Bug Fixes:
+
+  * Modify version declaration to allow PAUSE indexing
+
+============================================================================
 2020/09/14	(2.6.20)
 
 * MHonarc is now under the responsabilité of the Sympa community
