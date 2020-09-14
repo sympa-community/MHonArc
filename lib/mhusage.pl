@@ -29,23 +29,25 @@
 package mhonarc;
 
 sub mhusage {
-    my($usefh, $close);
-    local(*PAGER);
-    PAGERCHECK: {
-	if ($UNIX &&
-		(-t STDOUT) &&
-		(($ENV{'PAGER'} && open(PAGER, "| $ENV{'PAGER'}")) ||
-                 (-e '/etc/alternatives/pager' &&
-                  open(PAGER, '| /etc/alternatives/pager')) ||
-		 (open(PAGER, '| more')))) {
-	    $usefh = \*PAGER;
-	    $close = 1;
-	    last PAGERCHECK;
-	}
-	$usefh = \*STDOUT;
-	$close = 0;
+    my ($usefh, $close);
+    local (*PAGER);
+PAGERCHECK: {
+        if (   $UNIX
+            && (-t STDOUT)
+            && (($ENV{'PAGER'} && open(PAGER, "| $ENV{'PAGER'}"))
+                || (-e '/etc/alternatives/pager'
+                    && open(PAGER, '| /etc/alternatives/pager'))
+                || (open(PAGER, '| more'))
+            )
+        ) {
+            $usefh = \*PAGER;
+            $close = 1;
+            last PAGERCHECK;
+        }
+        $usefh = \*STDOUT;
+        $close = 0;
     }
-    my($curfh) = select($usefh);
+    my ($curfh) = select($usefh);
 
     print <<EndOfUsage;
 Usage:  $PROG [<options>] <mailfolder> ...
@@ -237,7 +239,7 @@ Version:
 $VINFO
 EndOfUsage
 
-    close($usefh)  if $close;
+    close($usefh) if $close;
     select($curfh);
 }
 

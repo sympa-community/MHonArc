@@ -32,7 +32,7 @@
 ##---------------------------------------------------------------------------##
 
 MAIN: {
-    unshift(@INC, 'lib');	# Should I leave this line in?
+    unshift(@INC, 'lib');    # Should I leave this line in?
 
     require 'mhamain.pl' || die qq/ERROR: Unable to require "mhamain.pl"\n/;
     mhonarc::initialize();

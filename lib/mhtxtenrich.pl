@@ -37,37 +37,37 @@
 package m2h_text_enriched;
 
 my %enriched_tags = (
-    'bigger' => 1,
-    'bold' => 1,
-    'center' => 1,
-    'color' => 1,
-    'comment' => 1,
-    'excerpt' => 1,
-    'fixed' => 1,
-    'flushboth' => 1,
-    'flushleft' => 1,
-    'flushright' => 1,
-    'fontfamily' => 1,
-    'indent' => 1,
+    'bigger'      => 1,
+    'bold'        => 1,
+    'center'      => 1,
+    'color'       => 1,
+    'comment'     => 1,
+    'excerpt'     => 1,
+    'fixed'       => 1,
+    'flushboth'   => 1,
+    'flushleft'   => 1,
+    'flushright'  => 1,
+    'fontfamily'  => 1,
+    'indent'      => 1,
     'indentright' => 1,
-    'italic' => 1,
-    'lang' => 1,
-    'lt' => 1,
-    'nl' => 1,
-    'nofill' => 1,
-    'paraindent' => 1,
-    'param' => 1,
-    'samepage' => 1,
-    'signature' => 1,
-    'smaller' => 1,
-    'subscript' => 1,
+    'italic'      => 1,
+    'lang'        => 1,
+    'lt'          => 1,
+    'nl'          => 1,
+    'nofill'      => 1,
+    'paraindent'  => 1,
+    'param'       => 1,
+    'samepage'    => 1,
+    'signature'   => 1,
+    'smaller'     => 1,
+    'subscript'   => 1,
     'superscript' => 1,
-    'underline' => 1,
+    'underline'   => 1,
 );
 
 my %special_to_char = (
-    'lt'  => '<',
-    'gt'  => '>',
+    'lt' => '<',
+    'gt' => '>',
 );
 
 ##---------------------------------------------------------------------------
@@ -76,28 +76,28 @@ my %special_to_char = (
 ##	     text/enriched anymore.
 ##
 sub filter {
-    my($fields, $data, $isdecode, $args) = @_;
-    my($innofill, $chunk);
+    my ($fields, $data, $isdecode, $args) = @_;
+    my ($innofill, $chunk);
     my $charset = $fields->{'x-mha-charset'};
-    my($charcnv, $real_charset_name) =
-	    readmail::MAILload_charset_converter($charset);
+    my ($charcnv, $real_charset_name) =
+        readmail::MAILload_charset_converter($charset);
     my $ret = "";
-    $args   = ""  unless defined($args);
+    $args = "" unless defined($args);
 
     ## Get content-type
-    my($ctype) = $fields->{'content-type'}[0] =~ m%^\s*([\w\-\./]+)%;
+    my ($ctype) = $fields->{'content-type'}[0] =~ m%^\s*([\w\-\./]+)%;
     my $richtext = $ctype =~ /\btext\/richtext\b/i;
 
     if (defined($charcnv) && defined(&$charcnv)) {
-	$$data = &$charcnv($$data, $real_charset_name);
+        $$data = &$charcnv($$data, $real_charset_name);
     } else {
-	mhonarc::htmlize($data);
-	warn qq/\n/,
-	     qq/Warning: Unrecognized character set: $charset\n/,
-	     qq/         Message-Id: <$mhonarc::MHAmsgid>\n/,
-             qq/         Message Subject: /, $fields->{'x-mha-subject'}, qq/\n/,
-	     qq/         Message Number: $mhonarc::MHAmsgnum\n/
-		unless ($charcnv eq '-decode-');
+        mhonarc::htmlize($data);
+        warn qq/\n/,
+            qq/Warning: Unrecognized character set: $charset\n/,
+            qq/         Message-Id: <$mhonarc::MHAmsgid>\n/,
+            qq/         Message Subject: /, $fields->{'x-mha-subject'},
+            qq/\n/, qq/         Message Number: $mhonarc::MHAmsgnum\n/
+            unless ($charcnv eq '-decode-');
     }
     ## Fixup any EOL mess
     $$data =~ s/\r?\n/\n/g;
@@ -108,7 +108,7 @@ sub filter {
 
     ## Convert specials
     if (!$richtext) {
-	$$data =~ s/<</\&lt;/g;
+        $$data =~ s/<</\&lt;/g;
     }
 
     ## Make sure only non-enriched tags are escaped
@@ -122,21 +122,21 @@ sub filter {
 
     $innofill = 0;
     foreach $chunk (split(m|(</?nofill>)|i, $$data)) {
-	if ($chunk =~ m|<nofill>|i) {
-	    $ret .= '<pre>';
-	    $innofill = 1;
-	    next;
-	}
-	if ($chunk =~ m|</nofill>|i) {
-	    $ret .= '</pre>';
-	    $innofill = 0;
-	    next;
-	}
-	convert_tags(\$chunk, $richtext);
-	if (!$richtext && !$innofill) {
-	    $chunk =~ s/(\n\s*)/&nl_seq_to_brs($1)/ge;
-	}
-	$ret .= $chunk;
+        if ($chunk =~ m|<nofill>|i) {
+            $ret .= '<pre>';
+            $innofill = 1;
+            next;
+        }
+        if ($chunk =~ m|</nofill>|i) {
+            $ret .= '</pre>';
+            $innofill = 0;
+            next;
+        }
+        convert_tags(\$chunk, $richtext);
+        if (!$richtext && !$innofill) {
+            $chunk =~ s/(\n\s*)/&nl_seq_to_brs($1)/ge;
+        }
+        $ret .= $chunk;
     }
     $ret;
 }
@@ -145,7 +145,7 @@ sub filter {
 ##	convert_tags translates text/enriched commands to HTML tags.
 ##
 sub convert_tags {
-    my $str  = shift;
+    my $str      = shift;
     my $richtext = shift;
 
     $$str =~ s{<comment\s*>.*?</comment\s*>}{}gis;
@@ -195,9 +195,9 @@ sub convert_tags {
     $$str =~ s{</indentright\s*>}{</p>}gi;
 
     if ($richtext) {
-	$$str =~ s{<nl\s*>\n?}{<br>}gis;
+        $$str =~ s{<nl\s*>\n?}{<br>}gis;
     } else {
-	$$str =~ s{<nl\s*>}{}gis;
+        $$str =~ s{<nl\s*>}{}gis;
     }
 
     # Cleanup bad tags
@@ -209,14 +209,14 @@ sub convert_tags {
 ##	of eols in a string.
 ##
 sub nl_seq_to_brs {
-    my($str) = shift;
-    my($n);
+    my ($str) = shift;
+    my ($n);
     $n = $str =~ tr/\n/\n/;
     --$n;
     if ($n <= 0) {
-	return " ";
+        return " ";
     } else {
-	return "<br>\n" x $n;
+        return "<br>\n" x $n;
     }
 }
 
@@ -225,9 +225,9 @@ sub nl_seq_to_brs {
 ##	converted to nbsps.
 ##
 sub preserve_space {
-    my($str) = shift;
-    1 while
-      $str =~ s/^([^\t]*)(\t+)/$1 . ' ' x (length($2) * 8 - length($1) % 8)/e;
+    my ($str) = shift;
+    1 while $str =~
+        s/^([^\t]*)(\t+)/$1 . ' ' x (length($2) * 8 - length($1) % 8)/e;
     $str =~ s/ /\&nbsp;/g;
     $str;
 }

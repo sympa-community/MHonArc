@@ -39,13 +39,13 @@ my $_sub_eval_cnt = 0;
 ##	      pre-dates Perl 5 where references were not supported.
 ##
 sub create_routines {
-    my($sub) = '';
+    my ($sub) = '';
 
     ##-----------------------------------------------------------------------
     ## exclude_field: Used to determine if field should be excluded from
     ## message header
     ##
-    $sub  =<<'EndOfRoutine';
+    $sub = <<'EndOfRoutine';
     sub exclude_field {
 	my($f) = shift;
 	my $ret = 0;
@@ -56,20 +56,19 @@ EndOfRoutine
     # expressions (a large || statement could also work).
     my $pat;
     foreach $pat (keys %HFieldsExc) {
-	$sub .= join('',
-		     'if ($f =~ /^',
-		     $pat,
-		     '/i) { $ret = 1;  last EXC_FIELD_SW; }',
-		     "\n");
+        $sub .= join('',
+            'if ($f =~ /^', $pat, '/i) { $ret = 1;  last EXC_FIELD_SW; }',
+            "\n");
     }
 
-    $sub .=<<'EndOfRoutine';
+    $sub .= <<'EndOfRoutine';
 	};
 	$ret;
     }
 EndOfRoutine
 
-    $sub .= "# $_sub_eval_cnt\n";  ++$_sub_eval_cnt;
+    $sub .= "# $_sub_eval_cnt\n";
+    ++$_sub_eval_cnt;
     eval $sub;
     die("ERROR: Unable to create exclude_field routine:\n$@\n") if $@;
 
@@ -77,7 +76,7 @@ EndOfRoutine
     ## subject_strip: Used to apply user-defined s/// operations on
     ## message subjects as they are read;
     ##
-    $sub  =<<EndOfRoutine;
+    $sub = <<EndOfRoutine;
     sub subject_strip {
 	local(\$_) = shift;
 	$SubStripCode;
@@ -85,7 +84,8 @@ EndOfRoutine
     }
 EndOfRoutine
 
-    $sub .= "# $_sub_eval_cnt\n";  ++$_sub_eval_cnt;
+    $sub .= "# $_sub_eval_cnt\n";
+    ++$_sub_eval_cnt;
     eval $sub;
     die("ERROR: Unable to create subject_strip routine:\n$@\n") if $@;
 
@@ -94,7 +94,7 @@ EndOfRoutine
     ##  If $LastMsgNum set, we return it after a sanity check
     ##  is done.  If check fails, scan directory to determine last number.
     ##
-    $sub =<<'EndOfRoutine';
+    $sub = <<'EndOfRoutine';
     sub get_last_msg_num {
 	opendir(DIR, $OUTDIR) || die("ERROR: Unable to open $OUTDIR\n");
 	my($max) = -1;
@@ -121,14 +121,15 @@ EndOfRoutine
     }
 EndOfRoutine
 
-    $sub .= "# $_sub_eval_cnt\n";  ++$_sub_eval_cnt;
+    $sub .= "# $_sub_eval_cnt\n";
+    ++$_sub_eval_cnt;
     eval $sub;
     die("ERROR: Unable to create get_last_msg_num routine:\n$@\n") if $@;
 
     ##-----------------------------------------------------------------------
     ##	Routine to get base subject text from index
     ##
-    $sub =<<'EndOfRoutine';
+    $sub = <<'EndOfRoutine';
     sub get_base_subject {
 	my($ret) = ($Subject{$_[0]});
 	1 while $ret =~ s/$SubReplyRxp//io;
@@ -139,14 +140,15 @@ EndOfRoutine
     }
 EndOfRoutine
 
-    $sub .= "# $_sub_eval_cnt\n";  ++$_sub_eval_cnt;
+    $sub .= "# $_sub_eval_cnt\n";
+    ++$_sub_eval_cnt;
     eval $sub;
     die("ERROR: Unable to create get_base_subject routine:\n$@\n") if $@;
 
     ##-----------------------------------------------------------------------
     ##	Routine to rewrite mail addresses in message header
     ##
-    $sub =<<EndOfRoutine;
+    $sub = <<EndOfRoutine;
     sub rewrite_address {
 	package mhonarc::Pkg_rewrite_address;
 	local \$_ = mhonarc::dehtmlize(shift);
@@ -155,14 +157,15 @@ EndOfRoutine
     }
 EndOfRoutine
 
-    $sub .= "# $_sub_eval_cnt\n";  ++$_sub_eval_cnt;
+    $sub .= "# $_sub_eval_cnt\n";
+    ++$_sub_eval_cnt;
     eval $sub;
     die("ERROR: Unable to create rewrite_address routine:\n$@\n") if $@;
 
     ##-----------------------------------------------------------------------
     ##	Routine to rewrite raw mail addresses
     ##
-    $sub =<<EndOfRoutine;
+    $sub = <<EndOfRoutine;
 sub rewrite_raw_address {
     package mhonarc::Pkg_rewrite_raw_address;
     local \$_ = shift;
@@ -170,16 +173,17 @@ sub rewrite_raw_address {
     \$_;
 }
 EndOfRoutine
-    $sub .= "# $_sub_eval_cnt\n";  ++$_sub_eval_cnt;
+    $sub .= "# $_sub_eval_cnt\n";
+    ++$_sub_eval_cnt;
     eval $sub;
     die("ERROR: Unable to create rewrite_raw_address routine:\n$@\n")
-	if $@;
+        if $@;
 
     ##-----------------------------------------------------------------------
     ## message_exclude: User-defined code to check if a message should
     ## be added or not.
     ##
-    $sub  =<<EndOfRoutine;
+    $sub = <<EndOfRoutine;
     sub message_exclude {
 	package mhonarc::Pkg_message_exclude;
 	local(\$_) = shift;
@@ -187,7 +191,8 @@ EndOfRoutine
     }
 EndOfRoutine
 
-    $sub .= "# $_sub_eval_cnt\n";  ++$_sub_eval_cnt;
+    $sub .= "# $_sub_eval_cnt\n";
+    ++$_sub_eval_cnt;
     eval $sub;
     die("ERROR: Unable to create subject_strip routine:\n$@\n") if $@;
 

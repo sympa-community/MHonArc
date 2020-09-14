@@ -31,10 +31,10 @@
 
 package iso_2022_jp;
 
-$Url    	= '(http://|https://|ftp://|afs://|wais://|telnet://|ldap://' .
-		   '|gopher://|news:|nntp:|mid:|cid:|mailto:|prospero:)';
-$UrlExp 	= $Url . q%[^\s\(\)\|<>"']*[^\.?!;,"'\|\[\]\(\)\s<>]%;
-$HUrlExp	= $Url . q%[^\s\(\)\|<>"'\&]*[^\.?!;,"'\|\[\]\(\)\s<>\&]%;
+$Url = '(http://|https://|ftp://|afs://|wais://|telnet://|ldap://'
+    . '|gopher://|news:|nntp:|mid:|cid:|mailto:|prospero:)';
+$UrlExp  = $Url . q%[^\s\(\)\|<>"']*[^\.?!;,"'\|\[\]\(\)\s<>]%;
+$HUrlExp = $Url . q%[^\s\(\)\|<>"'\&]*[^\.?!;,"'\|\[\]\(\)\s<>\&]%;
 
 ##---------------------------------------------------------------------------##
 ##	str2html(): Convert an iso-2022-jp string into HTML.  Function
@@ -51,81 +51,80 @@ sub str2html { jp2022_to_html($_[0], 1); }
 ##		Encoding for Internet Messages", 06/04/1993. (Pages=6)
 ##
 ##	RFC-1554  I
-##		M. Ohta, K. Handa, "ISO-2022-JP-2: Multilingual Extension of  
+##		M. Ohta, K. Handa, "ISO-2022-JP-2: Multilingual Extension of
 ##		ISO-2022-JP", 12/23/1993. (Pages=6)
 ##
 sub jp2022_to_html {
-    my($body) = shift;
-    my($nourl) = shift;
-    my(@lines) = split(/\r?\n/,$body);
-    my($ret, $ascii_text);
-    local($_);
+    my ($body)  = shift;
+    my ($nourl) = shift;
+    my (@lines) = split(/\r?\n/, $body);
+    my ($ret, $ascii_text);
+    local ($_);
 
     $ret = "";
     my $cnt = scalar(@lines);
-    my $i = 0;
+    my $i   = 0;
     foreach (@lines) {
-	my $line = "";
-	# a trick to process preceding ASCII text
-	$_ = "\033(B" . $_ unless /^\033/;
+        my $line = "";
+        # a trick to process preceding ASCII text
+        $_ = "\033(B" . $_ unless /^\033/;
 
-	# Process Each Segment
-	while(1) {
-	    if (s/^(\033\([BJ])//) { # Single Byte Segment
-		$line .= $1;
-		while(1) {
-		    if (s/^([^\033]+)//) {	# ASCII plain text
-			$ascii_text = $1;
+        # Process Each Segment
+        while (1) {
+            if (s/^(\033\([BJ])//) {    # Single Byte Segment
+                $line .= $1;
+                while (1) {
+                    if (s/^([^\033]+)//) {    # ASCII plain text
+                        $ascii_text = $1;
 
-			# Replace meta characters in ASCII plain text
-			$ascii_text =~ s%\&%\&amp;%g;
-			$ascii_text =~ s%<%\&lt;%g;
-			$ascii_text =~ s%>%\&gt;%g;
-			## Convert URLs to hyperlinks
-			$ascii_text =~ s%($HUrlExp)%<a href="$1">$1</a>%gio
-			    unless $nourl;
+                        # Replace meta characters in ASCII plain text
+                        $ascii_text =~ s%\&%\&amp;%g;
+                        $ascii_text =~ s%<%\&lt;%g;
+                        $ascii_text =~ s%>%\&gt;%g;
+                        ## Convert URLs to hyperlinks
+                        $ascii_text =~ s%($HUrlExp)%<a href="$1">$1</a>%gio
+                            unless $nourl;
 
-			$line .= $ascii_text;
-		    } elsif (s/(\033\.[A-F])//) { # G2 Designate Sequence
-			$line .= $1;
-		    } elsif (s/(\033N[ -])//) { # Single Shift Sequence
-			$line .= $1;
-		    } else {
-			last;
-		    }
-		}
-	    } elsif (s/^(\033\$[\@AB]|\033\$\([CD])//) { # Double Byte Segment
-		$line .= $1;
-		while (1) {
-		    if (s/^([!-~][!-~]+)//) { # Double Char plain text
-			$line .= $1;
-		    } elsif (s/(\033\.[A-F])//) { # G2 Designate Sequence
-			$line .= $1;
-		    } elsif (s/(\033N[ -])//) { # Single Shift Sequence
-			$line .= $1;
-		    } else {
-			last;
-		    }
-		}
-	    } else {
-		# Something wrong in text
-		$line .= $_;
-		last;
-	    }
-	}
+                        $line .= $ascii_text;
+                    } elsif (s/(\033\.[A-F])//) {    # G2 Designate Sequence
+                        $line .= $1;
+                    } elsif (s/(\033N[ -])//) {     # Single Shift Sequence
+                        $line .= $1;
+                    } else {
+                        last;
+                    }
+                }
+            } elsif (s/^(\033\$[\@AB]|\033\$\([CD])//) { # Double Byte Segment
+                $line .= $1;
+                while (1) {
+                    if (s/^([!-~][!-~]+)//) {    # Double Char plain text
+                        $line .= $1;
+                    } elsif (s/(\033\.[A-F])//) {    # G2 Designate Sequence
+                        $line .= $1;
+                    } elsif (s/(\033N[ -])//) {     # Single Shift Sequence
+                        $line .= $1;
+                    } else {
+                        last;
+                    }
+                }
+            } else {
+                # Something wrong in text
+                $line .= $_;
+                last;
+            }
+        }
 
-	# remove a `trick'
-	$line =~ s/^\033\(B//;
+        # remove a `trick'
+        $line =~ s/^\033\(B//;
 
-	$ret .= $line;
+        $ret .= $line;
 
-	# add back eol
-	$ret .= "\n"  unless (++$i >= $cnt);
+        # add back eol
+        $ret .= "\n" unless (++$i >= $cnt);
     }
 
     ($ret);
 }
-
 
 ##---------------------------------------------------------------------------##
 ##	clip($str, $length, $is_html, $has_tags): Clip an iso-2022-jp string.
@@ -134,75 +133,75 @@ sub jp2022_to_html {
 ##   as HTML character or not.
 ##   (i.e., the length of '&amp;' will be 1 if $is_html).
 ##
-sub clip {	# &clip($str, 10, 1, 1);
-    my($str) = shift;
-    my($length) = shift;
-    my($is_html) = shift;
-    my($has_tags) = shift;
-    my($ret, $inascii);
-    local($_) = $str;
+sub clip {    # &clip($str, 10, 1, 1);
+    my ($str)      = shift;
+    my ($length)   = shift;
+    my ($is_html)  = shift;
+    my ($has_tags) = shift;
+    my ($ret, $inascii);
+    local ($_) = $str;
 
     $ret = "";
     # a trick to process preceding ASCII text
     $_ = "\033(B" . $_ unless /^\033/;
 
     # Process Each Segment
-    CLIP: while(1) {
-	if (s/^(\033\([BJ])//) { # Single Byte Segment
-	    $inascii = 1;
-	    $ret .= $1;
-	    while(1) {
-		if (s/^([^\033])//) {      # ASCII plain text
-		    if ($is_html) {
-			if (($1 eq '<') && $has_tags) {
-			    s/^[^>\033]*>//;
-			} else {
-			    if ($1 eq '&') {
-				s/^([^\;]*\;)//;
-				$ret .= "&$1";
-			    } else {
-				$ret .= $1;
-			    }
-			    $length--;
-			}
-		    } else {
-			$ret .= $1;
-			$length--;
-		    }
-		} elsif (s/(\033\.[A-F])//) { # G2 Designate Sequence
-		    $ret .= $1;
-		} elsif (s/(\033N[ -])//) { # Single Shift Sequence
-		    $ret .= $1;
-		    $length--;
-		} else {
-		    last;
-		}
-		last CLIP if ($length <= 0);
-	    }
-	} elsif (s/^(\033\$[\@AB]|\033\$\([CD])//) { # Double Byte Segment
-	    $inascii = 0;
-	    $ret .= $1;
-	    while (1) {
-		if (s/^([!-~][!-~])//) { # Double Char plain text
-		    $ret .= $1;
-		    # The length of a double-byte-char is assumed 2.
-		    # If we consider compatibility with UTF-8, it should be 1.
-		    $length -= 2;
-		} elsif (s/(\033\.[A-F])//) { # G2 Designate Sequence
-		    $ret .= $1;
-		} elsif (s/(\033N[ -])//) { # Single Shift Sequence
-		    $ret .= $1;
-		    $length--;
-		} else {
-		    last;
-		}
-		last CLIP if ($length <= 0);
-	    }
-	} else {
-	    # Something wrong in text
-	    $ret .= $_;
-	    last;
-	}
+CLIP: while (1) {
+        if (s/^(\033\([BJ])//) {    # Single Byte Segment
+            $inascii = 1;
+            $ret .= $1;
+            while (1) {
+                if (s/^([^\033])//) {    # ASCII plain text
+                    if ($is_html) {
+                        if (($1 eq '<') && $has_tags) {
+                            s/^[^>\033]*>//;
+                        } else {
+                            if ($1 eq '&') {
+                                s/^([^\;]*\;)//;
+                                $ret .= "&$1";
+                            } else {
+                                $ret .= $1;
+                            }
+                            $length--;
+                        }
+                    } else {
+                        $ret .= $1;
+                        $length--;
+                    }
+                } elsif (s/(\033\.[A-F])//) {    # G2 Designate Sequence
+                    $ret .= $1;
+                } elsif (s/(\033N[ -])//) {     # Single Shift Sequence
+                    $ret .= $1;
+                    $length--;
+                } else {
+                    last;
+                }
+                last CLIP if ($length <= 0);
+            }
+        } elsif (s/^(\033\$[\@AB]|\033\$\([CD])//) {    # Double Byte Segment
+            $inascii = 0;
+            $ret .= $1;
+            while (1) {
+                if (s/^([!-~][!-~])//) {    # Double Char plain text
+                    $ret .= $1;
+                    # The length of a double-byte-char is assumed 2.
+                    # If we consider compatibility with UTF-8, it should be 1.
+                    $length -= 2;
+                } elsif (s/(\033\.[A-F])//) {    # G2 Designate Sequence
+                    $ret .= $1;
+                } elsif (s/(\033N[ -])//) {     # Single Shift Sequence
+                    $ret .= $1;
+                    $length--;
+                } else {
+                    last;
+                }
+                last CLIP if ($length <= 0);
+            }
+        } else {
+            # Something wrong in text
+            $ret .= $_;
+            last;
+        }
     }
 
     # remove a `trick'

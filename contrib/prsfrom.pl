@@ -2,12 +2,13 @@
 #$Id: prsfrom.pl 1.2 1998/01/21 12:09:26 aburgers Exp aburgers $
 # parse command-line arguments
 
-require('getopt.pl');&Getopt('o');
+require('getopt.pl');
+&Getopt('o');
 
 # print a help message
 
 if ($opt_h) {
-	print <<HELP;exit;
+    print <<HELP; exit;
 usage:
 	$0 -h
 	$0 [-o output_mailbox] [input_mailbox]
@@ -36,15 +37,15 @@ HELP
 # open output-file
 
 if ($opt_o) {
-	open(OUT,">$opt_o") || die "Error opening file $opt_o\n";
-	select OUT;
+    open(OUT, ">$opt_o") || die "Error opening file $opt_o\n";
+    select OUT;
 }
 
-$msg = 0;
-$inheader=0;
-$date_found = 0;
+$msg            = 0;
+$inheader       = 0;
+$date_found     = 0;
 $received_found = 0;
-$from_found = 0;
+$from_found     = 0;
 
 # method
 #
@@ -58,67 +59,66 @@ $from_found = 0;
 # $inheader=0 means we are outside the a header
 
 while (<>) {
-	if ($inheader) { # process message-header
-		push(@headerlines,$_);
-		study;
-		if      (/^date:/i) { 		# check for date field
-			$date_found = 1;
-		} elsif (/^received:/i) {	# check for received field
-			$received_found = 1;
-		} elsif (/^from:/i) {		# check for from field
-			$from_found = 1;
-		} elsif (/^\s*$/) {		# blank line ending header
-			unless($date_found || $received_found) {
-				if ($date) {
-					print "Date: $date\n";
-					$print_date++;
-				} else {
-					warn "No date in From field\n";
-				}
-			}
-			unless($from_found) {
-				if ($adress) {
-					print "From: $adress\n";
-					$print_from++;
-				} else {
-					warn "No adress in From field\n";
-				}
-			}
+    if ($inheader) {    # process message-header
+        push(@headerlines, $_);
+        study;
+        if (/^date:/i) {    # check for date field
+            $date_found = 1;
+        } elsif (/^received:/i) {    # check for received field
+            $received_found = 1;
+        } elsif (/^from:/i) {        # check for from field
+            $from_found = 1;
+        } elsif (/^\s*$/) {          # blank line ending header
+            unless ($date_found || $received_found) {
+                if ($date) {
+                    print "Date: $date\n";
+                    $print_date++;
+                } else {
+                    warn "No date in From field\n";
+                }
+            }
+            unless ($from_found) {
+                if ($adress) {
+                    print "From: $adress\n";
+                    $print_from++;
+                } else {
+                    warn "No adress in From field\n";
+                }
+            }
 
-			# Copy header to new mailbox
+            # Copy header to new mailbox
 
-			for $line (@headerlines) {
-				print $line;
-			}
+            for $line (@headerlines) {
+                print $line;
+            }
 
-			# Reset counters
+            # Reset counters
 
-			$inheader = 0;
-			undef @headerlines;
-			$date_found = 0;
-			$received_found = 0;
-			$from_found = 0;
-		}
-	}
-	else { # process message-body and message separator
-		if (/^From /) { #test for message-header
-			($dum,$adress,$date) = split(' ',$_,3);
-			$date   =~ s/\s*$//;
-			$adress =~ s/\s*$//;
-			$inheader = 1;
-			$msg++;
-		}
-		print;
-	}
+            $inheader = 0;
+            undef @headerlines;
+            $date_found     = 0;
+            $received_found = 0;
+            $from_found     = 0;
+        }
+    } else {    # process message-body and message separator
+        if (/^From /) {    #test for message-header
+            ($dum, $adress, $date) = split(' ', $_, 3);
+            $date =~ s/\s*$//;
+            $adress =~ s/\s*$//;
+            $inheader = 1;
+            $msg++;
+        }
+        print;
+    }
 }
 
 # print statistics
 
 if ($opt_o) {
-	select STDOUT;
-	print "Total number of messages found: $msg\n";
-	print "Added a Date field to $print_date messages\n" if ($print_date);
-	print "Added a From field to $print_from messages\n" if ($print_from);
+    select STDOUT;
+    print "Total number of messages found: $msg\n";
+    print "Added a Date field to $print_date messages\n" if ($print_date);
+    print "Added a From field to $print_from messages\n" if ($print_from);
 }
 
 __END__

@@ -27,7 +27,7 @@ package MHonArc::Char::JP;
 sub jp_2022_to_euc {
     # implementation of this function plagerized from Encode::JP::JIS7.
     my $data_in = shift;
-    my $data_r  = ref($data_in) ? $data_in : \$data_in;
+    my $data_r = ref($data_in) ? $data_in : \$data_in;
 
     my ($esc_0212, $esc_asc, $esc_kana, $chunk);
     $$data_r =~ s{(?:(\e\$\(D)|			  # JIS 0212

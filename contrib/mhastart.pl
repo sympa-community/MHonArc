@@ -24,28 +24,38 @@ need to be set before running C<mhastart.pl>.
 =cut
 
 use strict;
-my ($name, $mhonarc, $lib, $archive, $mbox, $mrc, $indexURL, $errordir, $adminpw, $encrypt,
-    $msgpw, $msgmaxsize, $pop3, $pophost, $user, $password, %in, $scriptname, $wrongpw);
+my ($name,     $mhonarc,    $lib,        $archive, $mbox,
+    $mrc,      $indexURL,   $errordir,   $adminpw, $encrypt,
+    $msgpw,    $msgmaxsize, $pop3,       $pophost, $user,
+    $password, %in,         $scriptname, $wrongpw
+);
 
-BEGIN	{
-    if ($ENV{HTTP_USER_AGENT} and $ENV{HTTP_USER_AGENT} !~ /^(?:libwww-perl|LWP::Simple)/
-      and $ENV{QUERY_STRING} ne 'update') {
+BEGIN {
+    if (    $ENV{HTTP_USER_AGENT}
+        and $ENV{HTTP_USER_AGENT} !~ /^(?:libwww-perl|LWP::Simple)/
+        and $ENV{QUERY_STRING} ne 'update') {
         require CGI::Carp;
         require File::Spec;
         errordir();
         if ($errordir) {
             import CGI::Carp 'carpout';
             my $file = File::Spec->catfile($errordir, 'ERRORLOG.TXT');
-            open LOG, ">> $file" or
-              mhaexit(prtheader(), "<h1>Error</h1>\n<pre>Couldn't open $file\n$!");
+            open LOG,
+                ">> $file"
+                or mhaexit(prtheader(),
+                "<h1>Error</h1>\n<pre>Couldn't open $file\n$!");
             carpout(\*LOG);
         } else {
-            unless ( eval { CGI::Carp -> VERSION(1.20) } ) {
+            unless (eval { CGI::Carp->VERSION(1.20) }) {
                 # previous versions don't handle eval properly with fatalsToBrowser
-                mhaexit(prtheader(), "<h1>Error</h1>\n<tt>", $@,
-                        '<p>You should either upgrade to v1.20 or higher, or ',
-                        "use the 'carpout' routine by setting the \$errordir ",
-                        'configuration variable.');
+                mhaexit(
+                    prtheader(),
+                    "<h1>Error</h1>\n<tt>",
+                    $@,
+                    '<p>You should either upgrade to v1.20 or higher, or ',
+                    "use the 'carpout' routine by setting the \$errordir ",
+                    'configuration variable.'
+                );
             }
             import CGI::Carp 'fatalsToBrowser';
         }
@@ -62,7 +72,7 @@ BEGIN	{
         exit;
     }
 
-    sub prtheader { "Content-Type: text/html; charset=ISO-8859-1\n\n" }
+    sub prtheader {"Content-Type: text/html; charset=ISO-8859-1\n\n"}
 
     sub errordir {
 
@@ -74,9 +84,10 @@ BEGIN	{
 ## Path to directory to which error messages will be redirected
 #  If this variable is empty, fatal error messages will be echoed to the
 #  browser window instead.
-$errordir = '';
+        $errordir = '';
 
-}}  # BEGIN block ends here
+    }
+}    # BEGIN block ends here
 
 ## Name of archive
 $name = "Demo Mail Archive";
@@ -85,16 +96,16 @@ $name = "Demo Mail Archive";
 $mhonarc = '/www/htdocs/gunnar/cgi-bin/mhonarc';
 
 ## Path to MHonArc library
-$lib = $mhonarc.'/lib';
+$lib = $mhonarc . '/lib';
 
 ## Path to archive directory
 $archive = '/www/htdocs/gunnar/mhonarc/demo';
 
 ## Path to mbox file
-$mbox = $mhonarc.'/mbox/demo';
+$mbox = $mhonarc . '/mbox/demo';
 
 ## Path to resource file
-$mrc = $mhonarc.'/demo.mrc';
+$mrc = $mhonarc . '/demo.mrc';
 
 ## Full URL to main index file
 $indexURL = 'http://www.gunnar.cc/mhonarc/demo/maillist.html';
@@ -106,7 +117,7 @@ $indexURL = 'http://www.gunnar.cc/mhonarc/demo/maillist.html';
 $adminpw = 'PASSWORD';
 
 ## Enable if $adminpw is encrypted (basic auth)
-$encrypt = 0;       # 1 = enabled, 0 = disabled
+$encrypt = 0;    # 1 = enabled, 0 = disabled
 
 ## Password for passing a message to this script
 #  The password is presupposed to be a string on a separate line, preceeding
@@ -116,12 +127,12 @@ $encrypt = 0;       # 1 = enabled, 0 = disabled
 $msgpw = 'abc';
 
 ## Max size for a message to pass to this script
-$msgmaxsize = 128;  # KiB (kibibytes, i.e. bytes / 1,024)
+$msgmaxsize = 128;    # KiB (kibibytes, i.e. bytes / 1,024)
 
 ## Update $mbox from pop account (requires the Net::POP3 module)
 #  Note: If the script shall be used to process forwarded messages, this
 #  variable must be disabled.
-$pop3 = 0;          # 1 = enabled, 0 = disabled
+$pop3 = 0;            # 1 = enabled, 0 = disabled
 
 ## Set if $pop3 is enabled
 $pophost  = 'pop.domain.com';
@@ -255,15 +266,15 @@ terms of the GNU GPL Licence E<lt>http://www.gnu.org/licenses/gpl.htmlE<gt>.
 =cut
 
 checkpath();
-$in{pw} = $in{routine} = '';             # prevents "uninitialized" warnings
+$in{pw} = $in{routine} = '';    # prevents "uninitialized" warnings
 unshift @INC, $lib;
 use File::Basename;
-$scriptname = basename( $0 or $ENV{SCRIPT_FILENAME} );
+$scriptname = basename($0 or $ENV{SCRIPT_FILENAME});
 
-unless ($ENV{HTTP_USER_AGENT}) {                                      #
-    autoupdate('');                                                   # if not invoked
-    mhaexit();                                                        # from a browser
-} elsif ($ENV{HTTP_USER_AGENT} =~ /^(?:libwww-perl|LWP::Simple)/) {   #
+unless ($ENV{HTTP_USER_AGENT}) {    #
+    autoupdate('');                 # if not invoked
+    mhaexit();                      # from a browser
+} elsif ($ENV{HTTP_USER_AGENT} =~ /^(?:libwww-perl|LWP::Simple)/) {    #
     autoupdate('fwd');
     mhaexit();
 }
@@ -275,17 +286,18 @@ if ($ENV{QUERY_STRING} eq 'update') {    # intended for update via hyperlink
 
 readinput();
 if (defined $adminpw and $adminpw ne '') {
-    die "You need to set some other password than \"PASSWORD\".\n" if $adminpw eq 'PASSWORD';
-    mhaexit( loginpage() ) unless checkpw();
+    die "You need to set some other password than \"PASSWORD\".\n"
+        if $adminpw eq 'PASSWORD';
+    mhaexit(loginpage()) unless checkpw();
 }
 
-unless ($in{routine})                         { print frames() }
-elsif  ($in{routine} eq 'forms')              { print forms() }
-elsif  ($in{routine} eq 'adminstart')         { print adminstart() }
-elsif  ($in{routine} eq 'add')                { add() }
-elsif  ($in{routine} eq 'Remove')             { remove() }
-elsif  ($in{routine} eq 'Remove latest msg')  { remove_mbox() }
-elsif  ($in{routine} eq 'shell')              { shell() }
+unless ($in{routine})                        { print frames() }
+elsif  ($in{routine} eq 'forms')             { print forms() }
+elsif  ($in{routine} eq 'adminstart')        { print adminstart() }
+elsif  ($in{routine} eq 'add')               { add() }
+elsif  ($in{routine} eq 'Remove')            { remove() }
+elsif  ($in{routine} eq 'Remove latest msg') { remove_mbox() }
+elsif  ($in{routine} eq 'shell')             { shell() }
 else {
     print prtheader(), 'Incorrect routine value!';
 }
@@ -293,13 +305,18 @@ else {
 ##---------------------------------------------------------------------------
 
 sub checkpath {
-    die "Variable \$mhonarc: $mhonarc is not a directory.\n" unless -d $mhonarc;
+    die "Variable \$mhonarc: $mhonarc is not a directory.\n"
+        unless -d $mhonarc;
     die "Variable \$lib: $lib is not a directory.\n" unless -d $lib;
-    die "Variable \$archive: $archive is not a directory.\n" unless -d $archive;
+    die "Variable \$archive: $archive is not a directory.\n"
+        unless -d $archive;
     die "Variable \$archive: I don't have write access to $archive.\n"
-        unless -r $archive and -w _ and -x _;
+        unless -r $archive
+        and -w _
+        and -x _;
     die "Variable \$mbox: $mbox is not a file.\n" unless -f $mbox;
-    die "Variable \$mbox: I don't have write access to $mbox.\n" unless -r $mbox and -w _;
+    die "Variable \$mbox: I don't have write access to $mbox.\n"
+        unless -r $mbox and -w _;
     die "Variable \$mrc: $mrc is not a file.\n" unless -f $mrc;
 }
 
@@ -307,19 +324,23 @@ sub autoupdate {
     my $fwd = shift;
     if ($pop3) {
         unless (eof STDIN) {
-            mhaexit("Status: 403 Script Config Obstacle\n\n") if $fwd eq 'fwd';
+            mhaexit("Status: 403 Script Config Obstacle\n\n")
+                if $fwd eq 'fwd';
             die "Requested action aborted:\n",
                 "$scriptname is not configured to process messages directly.\n\n";
         } else {
-            updatearchive('-add', '-quiet') if popretrieve();  # for invoking via cron
-        }                                                      # (or the command line)
+            updatearchive('-add', '-quiet')
+                if popretrieve();    # for invoking via cron
+        }    # (or the command line)
     } else {
-        read STDIN, my $newmail, $msgmaxsize * 1024;  # grabs message, that was passed to
-        if (eof STDIN) {                              # this script, for instant update of
-            $newmail =~ s/^(.+)\r?\n(From )/$2/;      # the archive
+        read STDIN, my $newmail,
+            $msgmaxsize * 1024;    # grabs message, that was passed to
+        if (eof STDIN) {           # this script, for instant update of
+            $newmail =~ s/^(.+)\r?\n(From )/$2/;    # the archive
             my $pw = ($1 or '');
             if (defined $msgpw and $pw ne $msgpw) {
-                mhaexit("Status: 403 Password Check Failed\n\n") if $fwd eq 'fwd';
+                mhaexit("Status: 403 Password Check Failed\n\n")
+                    if $fwd eq 'fwd';
                 die "Requested action aborted:\nPassword check failed\n\n";
             } elsif ($newmail =~ /^From /) {
                 updatembox(\$newmail);
@@ -340,7 +361,7 @@ sub autoupdate {
 sub refresh {
     popretrieve() if $pop3;
     updatearchive('-add', '-quiet');
-    print "Location: $indexURL\n\n";     # loads the updated main index page
+    print "Location: $indexURL\n\n";    # loads the updated main index page
 }
 
 sub readinput {
@@ -348,7 +369,8 @@ sub readinput {
     if ($ENV{REQUEST_METHOD} eq 'POST') {
         my $len = $ENV{CONTENT_LENGTH};
         $len <= 131072 or die "Too much data submitted.\n";
-        read(STDIN, $in, $len) == $len or die "Reading of posted data failed.\n";
+        read(STDIN, $in, $len) == $len
+            or die "Reading of posted data failed.\n";
     } else {
         $in = $ENV{QUERY_STRING};
     }
@@ -368,7 +390,8 @@ sub checkpw {
         for (split /; /, $ENV{HTTP_COOKIE}) {
             my ($key, $val) = split /=/;
             if ($key eq $cookiename) {
-                $result = 1 if $val eq ($encrypt ? $adminpw : crypt $adminpw, 'pw');
+                $result = 1
+                    if $val eq ($encrypt ? $adminpw : crypt $adminpw, 'pw');
                 last;
             }
         }
@@ -377,21 +400,25 @@ sub checkpw {
         if ($in{pw}) {
             my $pw = $encrypt ? crypt $in{pw}, $adminpw : $in{pw};
             if ($pw eq $adminpw) {
-                print "Set-cookie: $cookiename=", ($encrypt ? $pw : crypt $pw, 'pw'), "\n";
+                print "Set-cookie: $cookiename=",
+                    ($encrypt ? $pw : crypt $pw, 'pw'), "\n";
                 $result = 1;
             } else {
-                $wrongpw = '<h4 style="color: #cc3300; background: none; font-family: '
-                          ."arial, helvetica, sans-serif\">Incorrect password!</h4>\n";
+                $wrongpw =
+                    '<h4 style="color: #cc3300; background: none; font-family: '
+                    . "arial, helvetica, sans-serif\">Incorrect password!</h4>\n";
             }
         } elsif ($in{routine} eq 'forms') {
-            mhaexit(prtheader(),
-                    "Your browser is set to refuse cookies.<br />Change that\n",
-                    'setting to accept at least session cookies, and try again.');
+            mhaexit(
+                prtheader(),
+                "Your browser is set to refuse cookies.<br />Change that\n",
+                'setting to accept at least session cookies, and try again.'
+            );
         } elsif ($in{routine}) {
             mhaexit(prtheader(), '&nbsp;');
         }
     }
-    $result
+    $result;
 }
 
 sub loginpage {
@@ -407,7 +434,7 @@ $wrongpw<p>Enter password:</p>
 </html>|;
 }
 
-sub frames	{
+sub frames {
     return prtheader(), qq|<html>
 <head><title>$name - Admin</title></head>
 <frameset rows="190,*">
@@ -507,8 +534,8 @@ sub remove {
 }
 
 sub remove_mbox {
-    my @msgs = read_mbox($mbox);
-    my $deleted = $mbox . '_deleted';
+    my @msgs      = read_mbox($mbox);
+    my $deleted   = $mbox . '_deleted';
     my $latestmsg = pop @msgs;
 
     open FILE, ">> $deleted" or die "Couldn't open $deleted\n$!";
@@ -522,28 +549,29 @@ sub remove_mbox {
     close FILE;
 
     print prtheader(), '<pre>', "<b>Remove raw messages from $name</b>\n\n",
-          "The latest message was removed from $mbox\nand appended to $deleted.\n\n",
-          'The mailbox file now includes ', scalar @msgs, ' message',
-          (scalar @msgs == 1 ? '.' : 's.');
+        "The latest message was removed from $mbox\nand appended to $deleted.\n\n",
+        'The mailbox file now includes ', scalar @msgs, ' message',
+        (scalar @msgs == 1 ? '.' : 's.');
 }
 
 sub shell {
     my $checkpop;
     require 'shellwords.pl';
-    @ARGV = shellwords($in{command});    # the list of entered options is assigned
-    my $command = shift @ARGV;           # to @ARGV, and with that passed to MHonArc
-    for my $element (@ARGV)	{
-        if    ($element eq '$archive') { $element = $archive }
-        elsif ($element eq '$mbox')    { $element = $mbox }
-        elsif ($element eq '$mrc')     { $element = $mrc }
+    @ARGV =
+        shellwords($in{command});    # the list of entered options is assigned
+    my $command = shift @ARGV;    # to @ARGV, and with that passed to MHonArc
+    for my $element (@ARGV) {
+        if    ($element eq '$archive') { $element  = $archive }
+        elsif ($element eq '$mbox')    { $element  = $mbox }
+        elsif ($element eq '$mrc')     { $element  = $mrc }
         elsif ($element eq '-add')     { $checkpop = 1 }
     }
     print prtheader(), '<pre>';
-    if ( $command =~ /^(?:mhonarc|mha-d)/ ) {
+    if ($command =~ /^(?:mhonarc|mha-d)/) {
         print "<b>Command executed:</b>\n$command @ARGV\n\n<b>Output:</b>\n";
         popretrieve() if $pop3 and $checkpop;
         require File::Spec->catfile($mhonarc, $command)
-          or die "Couldn't invoke $command\n$!";
+            or die "Couldn't invoke $command\n$!";
     } else {
         print "That wasn't a MHonArc command, was it?";
     }
@@ -563,8 +591,8 @@ sub updatearchive {
     @ARGV = (@_, '-outdir', $archive);
     push @ARGV, $mbox unless $in{routine} eq 'remove';
     require 'mhamain.pl' or die "Couldn't require mhamain.pl\n$!";
-    mhonarc::initialize();         # skipped the 'mhonarc' program file in
-    mhonarc::process_input();      # order to avoid the ending exit call
+    mhonarc::initialize();       # skipped the 'mhonarc' program file in
+    mhonarc::process_input();    # order to avoid the ending exit call
 }
 
 sub popretrieve {
@@ -572,12 +600,14 @@ sub popretrieve {
     my $pop = Net::POP3->new($pophost);
     my $cnt;
 
-    POP: {
+POP: {
         $cnt = $pop->login($user, $password);
         my $msgs = $pop->list();
         last POP unless $cnt > 0;
 
-        my ($msg, $msgnum, $line, $list, $to, $subject, $tmp, $key, $aref, %header);
+        my ($msg,     $msgnum, $line, $list, $to,
+            $subject, $tmp,    $key,  $aref, %header
+        );
 
         ## Loop thru each message and append to $newmail
         foreach $msgnum (sort { $a <=> $b } keys %$msgs) {
@@ -585,11 +615,13 @@ sub popretrieve {
             next unless defined $msg;
 
             ## Grab message header
-            %header = ( );  $aref = undef;
+            %header = ();
+            $aref   = undef;
             foreach $line (@$msg) {
                 last if $line =~ /^$/;
-                $tmp = $line; chomp $tmp;
-                if ($tmp =~ s/^\s//)  {
+                $tmp = $line;
+                chomp $tmp;
+                if ($tmp =~ s/^\s//) {
                     next unless defined $aref;
                     $aref->[$#$aref] .= $tmp;
                     next;
@@ -597,23 +629,26 @@ sub popretrieve {
                 if ($tmp =~ s/^([^:]+):\s*//) {
                     $key = lc $1;
                     if (defined $header{$key}) { $aref = $header{$key} }
-                    else                       { $aref = $header{$key} = [ ] }
+                    else                       { $aref = $header{$key} = [] }
                     push @$aref, $tmp;
                     next;
                 }
             }
 
-            unshift @$msg, "From username\@domain.com Sat Jan  1 00:00:00 2000\n";
+            unshift @$msg,
+                "From username\@domain.com Sat Jan  1 00:00:00 2000\n";
             updatembox($msg);
             $pop->delete($msgnum);
         }
         $pop->quit();
         undef $pop;
-        print "$cnt message".($cnt > 1 ? 's' : '')." from $user\@$pophost\n",
-              "appended to $mbox\n\n" if $in{routine} eq ('add' or 'shell');
+        print "$cnt message"
+            . ($cnt > 1 ? 's' : '')
+            . " from $user\@$pophost\n", "appended to $mbox\n\n"
+            if $in{routine} eq ('add' or 'shell');
     }
     $pop->quit() if defined $pop;
-    $cnt
+    $cnt;
 }
 
 sub read_mbox {
@@ -628,9 +663,10 @@ sub read_mbox {
     local $_;
     open FH, "< $file" or die "Couldn't open '$file'\n$!";
     while (<FH>) {
+
         if ($blank and /\AFrom .*\d{4}/) {
             push @mail, $mail if @$mail;
-            $mail = [ $_ ];
+            $mail  = [$_];
             $blank = 0;
         } else {
             $blank = m#\A\Z#o ? 1 : 0;
@@ -639,6 +675,6 @@ sub read_mbox {
     }
     push @mail, $mail if @$mail;
     close FH;
-    @mail
+    @mail;
 }
 

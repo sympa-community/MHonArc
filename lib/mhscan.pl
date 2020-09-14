@@ -31,23 +31,25 @@ package mhonarc;
 ##	Function to do scan feature.
 ##
 sub scan {
-    local($key, $num, $index, $day, $mon, $year, $from, $date,
-	  $subject, $time, @array);
+    local (
+        $key,  $num,  $index,   $day,  $mon, $year,
+        $from, $date, $subject, $time, @array
+    );
 
     print STDOUT "$NumOfMsgs messages in $OUTDIR:\n\n";
     print STDOUT sprintf("%5s  %s  %-15s  %-43s\n",
-			 "Msg #", "YYYY/MM/DD", "From", "Subject");
+        "Msg #", "YYYY/MM/DD", "From", "Subject");
     print STDOUT sprintf("%5s  %s  %-15s  %-43s\n",
-			 "-" x 5, "----------", "-" x 15, "-" x 43);
+        "-" x 5, "----------", "-" x 15, "-" x 43);
 
     @array = &sort_messages();
     foreach $index (@array) {
-	$date = &time2mmddyy((split(/$X/o, $index))[0], 'yyyymmdd');
-	$num = $IndexNum{$index};
-	$from = substr(&extract_email_name($From{$index}), 0, 15);
-	$subject = substr($Subject{$index}, 0, 43);
-	print STDOUT sprintf("%5d  %s  %-15s  %-43s\n",
-			     $num, $date, $from, $subject);
+        $date    = &time2mmddyy((split(/$X/o, $index))[0], 'yyyymmdd');
+        $num     = $IndexNum{$index};
+        $from    = substr(&extract_email_name($From{$index}), 0, 15);
+        $subject = substr($Subject{$index}, 0, 43);
+        print STDOUT
+            sprintf("%5d  %s  %-15s  %-43s\n", $num, $date, $from, $subject);
     }
 }
 
