@@ -1,6 +1,6 @@
 package MHonArc::CharEnt::KOI8_U;
 
-our $VERSION = '2.6.21';
+our $VERSION = '2.6.22';
 
 +{
 '€','&#x2500;',

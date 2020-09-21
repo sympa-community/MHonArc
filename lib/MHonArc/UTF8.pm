@@ -29,7 +29,7 @@ package MHonArc::UTF8;
 use strict;
 use MHonArc::CharMaps;
 
-our $VERSION = '2.6.21';
+our $VERSION = '2.6.22';
 
 BEGIN {
     eval { require MHonArc::UTF8::Encode; };

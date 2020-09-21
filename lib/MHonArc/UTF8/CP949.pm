@@ -1,6 +1,6 @@
 package MHonArc::UTF8::CP949;
 
-our $VERSION = '2.6.21';
+our $VERSION = '2.6.22';
 
 +{
 'во','┬б',

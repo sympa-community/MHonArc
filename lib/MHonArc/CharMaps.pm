@@ -32,7 +32,7 @@ use vars qw( @ISA @EXPORT %HTMLSpecials $HTMLSpecials );
 use Carp;
 use Exporter ();
 
-our $VERSION = '2.6.21';
+our $VERSION = '2.6.22';
 
 @ISA     = qw( Exporter );
 @EXPORT  = qw( $HTMLSpecials %HTMLSpecials );

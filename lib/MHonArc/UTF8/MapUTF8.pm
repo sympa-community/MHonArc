@@ -31,7 +31,7 @@ use Unicode::String;
 use Unicode::MapUTF8;
 use MHonArc::CharMaps;
 
-our $VERSION = '2.6.21';
+our $VERSION = '2.6.22';
 
 sub clip {
     use utf8;
