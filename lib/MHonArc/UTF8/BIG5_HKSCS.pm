@@ -1,6 +1,6 @@
 package MHonArc::UTF8::BIG5_HKSCS;
 
-our $VERSION = '2.6.22';
+our $VERSION = '2.6.23';
 
 +{
 'ˆ@','ïŒƒ',

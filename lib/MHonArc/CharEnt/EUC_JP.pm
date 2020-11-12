@@ -1,6 +1,6 @@
 package MHonArc::CharEnt::EUC_JP;
 
-our $VERSION = '2.6.22';
+our $VERSION = '2.6.23';
 
 +{
 'Ž¡','&#xFF61;',

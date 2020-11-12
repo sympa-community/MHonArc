@@ -1,6 +1,6 @@
 package MHonArc::CharEnt::CP936;
 
-our $VERSION = '2.6.22';
+our $VERSION = '2.6.23';
 
 +{
 '€','&#x20AC;',

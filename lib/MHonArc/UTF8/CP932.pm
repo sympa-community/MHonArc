@@ -1,6 +1,6 @@
 package MHonArc::UTF8::CP932;
 
-our $VERSION = '2.6.22';
+our $VERSION = '2.6.23';
 
 +{
 '','ยง',

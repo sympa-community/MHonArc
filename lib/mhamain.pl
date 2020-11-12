@@ -30,7 +30,7 @@ use MHonArc;
 
 require 5;
 
-$VERSION = '2.6.22';
+$VERSION = '2.6.23';
 $VINFO   = <<EndOfInfo;
   MHonArc v$VERSION (Perl $] $^O)
   Copyright (C) 1995-2014  Earl Hood, mhonarc\@mhonarc.org

@@ -1,6 +1,6 @@
 package MHonArc::UTF8::GOST19768_87;
 
-our $VERSION = '2.6.22';
+our $VERSION = '2.6.23';
 
 +{
 '$','¤',
