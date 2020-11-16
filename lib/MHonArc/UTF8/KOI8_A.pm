@@ -1,6 +1,6 @@
 package MHonArc::UTF8::KOI8_A;
 
-our $VERSION = '2.6.23';
+our $VERSION = '2.6.24';
 
 +{
 '$','¤',

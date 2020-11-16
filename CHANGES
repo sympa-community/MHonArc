@@ -13,6 +13,9 @@
 
 YYYY/MM/DD
 
+============================================================================
+2020/11/16	(2.6.24)
+
 * Bug Fixes:
 
   * Fix bug in lib/mhamain.pl introduced while trying to avoid PAUSE conflict

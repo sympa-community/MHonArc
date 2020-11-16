@@ -30,7 +30,7 @@ use strict;
 use MHonArc::CharMaps;
 use MHonArc::Char;
 
-our $VERSION = '2.6.23';
+our $VERSION = '2.6.24';
 
 ##---------------------------------------------------------------------------
 ##      Charset specification to mapping

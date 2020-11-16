@@ -24,7 +24,7 @@
 
 package MHonArc::Char::KR;
 
-our $VERSION = '2.6.23';
+our $VERSION = '2.6.24';
 
 sub kr_2022_to_euc {
     # implementation of this function plagerized from Encode::KR::2022_KR.

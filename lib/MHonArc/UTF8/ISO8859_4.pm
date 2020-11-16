@@ -1,6 +1,6 @@
 package MHonArc::UTF8::ISO8859_4;
 
-our $VERSION = '2.6.23';
+our $VERSION = '2.6.24';
 
 +{
 ' ','Â ',

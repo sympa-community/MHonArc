@@ -28,7 +28,7 @@ package MHonArc::Encode;
 
 use strict;
 
-our $VERSION = '2.6.23';
+our $VERSION = '2.6.24';
 
 BEGIN {
     # If the Encode module is available, we use it, otherwise, we

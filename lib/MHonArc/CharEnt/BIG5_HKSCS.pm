@@ -1,6 +1,6 @@
 package MHonArc::CharEnt::BIG5_HKSCS;
 
-our $VERSION = '2.6.23';
+our $VERSION = '2.6.24';
 
 +{
 'ˆ@','&#xF303;',

@@ -1,6 +1,6 @@
 package MHonArc::CharEnt::AppleArabic;
 
-our $VERSION = '2.6.23';
+our $VERSION = '2.6.24';
 
 +{
 '€','&#xC4;',

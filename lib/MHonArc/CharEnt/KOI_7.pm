@@ -1,6 +1,6 @@
 package MHonArc::CharEnt::KOI_7;
 
-our $VERSION = '2.6.23';
+our $VERSION = '2.6.24';
 
 +{
 '$','&#xA4;',
