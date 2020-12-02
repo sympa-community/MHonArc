@@ -20,7 +20,7 @@ before_script:
   - perl -V
 
 script:
-  - for i in lib/*.pl lib/*.pm lib/*/*.pm; do perl -Ilib -c $i || exit 1; done
+  - for i in lib/*.pl lib/MHonArc/*.pm lib/MHonArc/*/*.pm; do perl -Ilib -c $i || exit 1; done
   - perl Makefile.PL
   - make
   - make install
