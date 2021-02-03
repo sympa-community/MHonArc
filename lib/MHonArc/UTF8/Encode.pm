@@ -31,6 +31,8 @@ use warnings;
 use Encode;
 use MHonArc::CharMaps;
 
+our $VERSION = '2.6.24';
+
 ##---------------------------------------------------------------------------##
 
 sub clip {

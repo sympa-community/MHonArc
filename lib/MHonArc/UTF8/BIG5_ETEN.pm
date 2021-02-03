@@ -2,6 +2,8 @@ package MHonArc::UTF8::BIG5_ETEN;
 use strict;
 use warnings;
 
+our $VERSION = '2.6.24';
+
 +{
 ' ','Â ',
 '¡±','Â§',

@@ -32,9 +32,9 @@ use vars qw( $VERSION @ISA @EXPORT %HTMLSpecials $HTMLSpecials );
 
 use Carp;
 use Exporter ();
-use MHonArc;
 
-$VERSION = $MHonArc::VERSION;
+our $VERSION = '2.6.24';
+
 @ISA     = qw( Exporter );
 @EXPORT  = qw( $HTMLSpecials %HTMLSpecials );
 

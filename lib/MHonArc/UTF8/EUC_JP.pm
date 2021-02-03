@@ -2,6 +2,8 @@ package MHonArc::UTF8::EUC_JP;
 use strict;
 use warnings;
 
+our $VERSION = '2.6.24';
+
 +{
 'Ž¡','ï½¡',
 'Ž¢','ï½¢',

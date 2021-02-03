@@ -2,6 +2,8 @@ package MHonArc::CharEnt::CP932;
 use strict;
 use warnings;
 
+our $VERSION = '2.6.24';
+
 +{
 'Åò','&#xA7;',
 'ÅN','&#xA8;',

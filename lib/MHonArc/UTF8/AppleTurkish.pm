@@ -2,6 +2,8 @@ package MHonArc::UTF8::AppleTurkish;
 use strict;
 use warnings;
 
+our $VERSION = '2.6.24';
+
 +{
 'ส','ย ',
 'ม','ยก',

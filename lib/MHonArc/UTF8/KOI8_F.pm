@@ -2,6 +2,8 @@ package MHonArc::UTF8::KOI8_F;
 use strict;
 use warnings;
 
+our $VERSION = '2.6.24';
+
 +{
 'Ä','‚îÄ',
 'Å','‚îÇ',

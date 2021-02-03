@@ -30,9 +30,8 @@ use strict;
 use warnings;
 use MHonArc::CharMaps;
 use MHonArc::Char;
-use MHonArc;
 
-our $VERSION = $MHonArc::VERSION;
+our $VERSION = '2.6.24';
 
 ##---------------------------------------------------------------------------
 ##      Charset specification to mapping

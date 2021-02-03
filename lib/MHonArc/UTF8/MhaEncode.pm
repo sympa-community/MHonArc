@@ -31,6 +31,8 @@ use warnings;
 use MHonArc::CharMaps;
 use MHonArc::Char;
 
+our $VERSION = '2.6.24';
+
 my %CharsetMaps = (
     'iso-8859-1'         => 'MHonArc/UTF8/ISO8859_1.pm',
     'iso-8859-2'         => 'MHonArc/UTF8/ISO8859_2.pm',

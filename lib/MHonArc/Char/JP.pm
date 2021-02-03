@@ -26,6 +26,7 @@ package MHonArc::Char::JP;
 
 use strict;
 use warnings;
+our $VERSION = '2.6.24';
 
 sub jp_2022_to_euc {
     # implementation of this function plagerized from Encode::JP::JIS7.

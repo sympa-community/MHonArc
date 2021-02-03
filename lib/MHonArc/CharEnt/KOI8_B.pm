@@ -2,6 +2,8 @@ package MHonArc::CharEnt::KOI8_B;
 use strict;
 use warnings;
 
+our $VERSION = '2.6.24';
+
 +{
 '£','&#x451;',
 '³','&#x401;',

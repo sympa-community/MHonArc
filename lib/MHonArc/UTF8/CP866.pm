@@ -2,6 +2,8 @@ package MHonArc::UTF8::CP866;
 use strict;
 use warnings;
 
+our $VERSION = '2.6.24';
+
 +{
 'ÿ','Â ',
 'ý','Â¤',

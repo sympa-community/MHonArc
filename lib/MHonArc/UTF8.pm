@@ -30,9 +30,9 @@ use strict;
 use warnings;
 use MHonArc::CharMaps;
 
+our $VERSION = '2.6.24';
+
 BEGIN {
-    use MHonArc;
-    our $VERSION = $MHonArc::VERSION;
     eval { require MHonArc::UTF8::Encode; };
     if (!$@) {
         # Encode module available
