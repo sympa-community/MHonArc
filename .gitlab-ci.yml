@@ -5,7 +5,9 @@
     - . ~/.bash_profile
     - perl -v
   script:
-    - for i in lib/*.pl lib/*.pm lib/*/*.pm; do perl -Ilib -c $i; done
+    - cpanm --installdeps --notest .
+    - cpanm --notest Unicode::String Unicode::MapUTF8
+    - for i in lib/*.pl lib/MHonArc/*.pm lib/MHonArc/*/*.pm; do perl -Ilib -c $i; done
     - perl Makefile.PL
     - make
     - make install
