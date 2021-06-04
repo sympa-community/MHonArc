@@ -6,6 +6,8 @@
     - perl -v
   script:
     - cpanm --installdeps --notest .
+    - cpanm --notest Test::Compile::Internal
+    - cpanm --notest CGI
     - cpanm --notest Unicode::String Unicode::MapUTF8
     - perl Makefile.PL
     - make

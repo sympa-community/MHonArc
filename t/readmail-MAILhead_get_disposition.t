@@ -26,7 +26,7 @@ foreach my $test (@tests) {
 done_testing();
 
 __END__
-bug #511: Non-ASCII encoded data is not decoded in filename disposition
+Savannah#511: Non-ASCII encoded data is not decoded in filename disposition
 .
 Content-type: application/pdf;
       name="=?iso-8859-1?Q?CT-564.pdf?="
