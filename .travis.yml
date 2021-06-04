@@ -1,6 +1,7 @@
 language: perl
 
 perl:
+  - "5.32"
   - "5.30"
   - "5.28"
   - "5.26"
@@ -20,10 +21,9 @@ before_script:
   - perl -V
 
 script:
-  - for i in lib/*.pl lib/*.pm lib/*/*.pm; do perl -Ilib -c $i || exit 1; done
   - perl Makefile.PL
   - make
-  - make install
-  - make tardist
+  - make disttest
+  - make dist
   - cpanm -L local MHonArc-*.tar.gz
   - make clean

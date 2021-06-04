@@ -5,11 +5,10 @@
     - . ~/.bash_profile
     - perl -v
   script:
-    - for i in lib/*.pl lib/*.pm lib/*/*.pm; do perl -Ilib -c $i; done
     - perl Makefile.PL
     - make
-    - make install
-    - make tardist
+    - make disttest
+    - make dist
     - cpanm -L local MHonArc-*.tar.gz
     - make clean
 
@@ -34,4 +33,6 @@
 "5.28":
   <<: *job
 "5.30":
+  <<: *job
+"5.32":
   <<: *job
