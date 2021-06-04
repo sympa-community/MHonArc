@@ -541,5 +541,6 @@ README.txt
 RELNOTES
 t/compile.t
 t/readmail-MAILhead_get_disposition.t
+t/readmail-MAILread_body.t
 TODO
 xt/perltidy.t
