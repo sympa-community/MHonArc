@@ -25,6 +25,9 @@
 
 package mhonarc;
 
+use strict;
+use warnings;
+
 ##---------------------------------------------------------------------------
 ##	Routine to perform conversion of a single mail message to
 ##	HTML.

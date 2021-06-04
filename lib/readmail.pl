@@ -42,9 +42,10 @@
 
 package readmail;
 
-no warnings qw(deprecated);
+use strict;
+use warnings;
 
-$DEBUG = 0;
+my $DEBUG = 0;
 
 ###############################################################################
 ##	Private Globals							     ##

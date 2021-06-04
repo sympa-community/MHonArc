@@ -1,4 +1,6 @@
 package MHonArc::CharEnt::ISO8859_4;
+use strict;
+use warnings;
 
 our $VERSION = '2.6.24';
 

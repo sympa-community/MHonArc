@@ -26,6 +26,8 @@
 package mhonarc;
 
 require 5;
+use strict;
+use warnings;
 
 $VERSION = '2.6.24';
 $VINFO   = <<EndOfInfo;
@@ -1590,7 +1592,6 @@ sub signal_catch {
 ##	Create Index2MsgId if not defined
 ##
 sub defineIndex2MsgId {
-    no warnings qw(deprecated);
     unless (%Index2MsgId) {
         foreach (keys %MsgId) {
             $Index2MsgId{$MsgId{$_}} = $_;

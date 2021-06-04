@@ -25,6 +25,8 @@
 
 package mhonarc;
 
+use strict;
+use warnings;
 use Getopt::Long;
 use Time::Local;
 
@@ -895,7 +897,6 @@ sub update_data_1_to_2 {
 ##	Update 2.1, or earlier, data.
 ##
 sub update_data_2_1_to_later {
-    no warnings qw(deprecated);
     # we can preserve filter arguments
     if (%main::MIMEFiltersArgs) {
         warn qq/         preserving MIMEARGS...\n/;

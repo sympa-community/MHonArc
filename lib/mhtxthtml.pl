@@ -31,6 +31,9 @@
 
 package m2h_text_html;
 
+use strict;
+use warnings;
+
 # Script related attributes: Basically any attribute that starts with "on"
 my $SAttr = q/\bon\w+\b/;
 

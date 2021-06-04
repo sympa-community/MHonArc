@@ -26,6 +26,8 @@
 
 package mha_decode;
 
+use strict;
+use warnings;
 use Getopt::Long;
 
 ##---------------------------------------------------------------------------##
@@ -33,8 +35,6 @@ use Getopt::Long;
 ##---------------------------------------------------------------------------##
 
 MAIN: {
-    unshift(@INC, 'lib');    # Should I leave this line in?
-
     ## Grab options from @ARGV unique to this program
     my %opts = ();
     Getopt::Long::Configure('pass_through');

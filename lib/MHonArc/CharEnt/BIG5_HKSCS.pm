@@ -1,4 +1,6 @@
 package MHonArc::CharEnt::BIG5_HKSCS;
+use strict;
+use warnings;
 
 our $VERSION = '2.6.24';
 

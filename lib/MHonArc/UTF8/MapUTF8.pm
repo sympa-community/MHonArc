@@ -25,6 +25,7 @@
 package MHonArc::UTF8::MapUTF8;
 
 use strict;
+use warnings;
 use Unicode::String;
 use Unicode::MapUTF8;
 use MHonArc::CharMaps;

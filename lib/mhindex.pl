@@ -25,6 +25,9 @@
 
 package mhonarc;
 
+use strict;
+use warnings;
+
 ##---------------------------------------------------------------------------
 ##	write_main_index outputs main index of archive
 ##

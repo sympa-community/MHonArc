@@ -24,10 +24,12 @@
 ##    You should have received a copy of the GNU General Public License
 ##    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ##---------------------------------------------------------------------------##
-
-use File::Basename;
-
+#
 package mhonarc;
+
+use strict;
+use warnings;
+use File::Basename;
 
 ##---------------------------------------------------------------------------##
 ##	OSinit() checks what operating system we are running on set

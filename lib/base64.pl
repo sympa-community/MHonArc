@@ -9,6 +9,9 @@
 
 package base64;
 
+use strict;
+use warnings;
+
 my $_have_MIME_Base64;
 
 BEGIN {

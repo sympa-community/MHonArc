@@ -29,6 +29,8 @@
 
 package iso_2022_jp;
 
+use strict;
+use warnings;
 $Url = '(http://|https://|ftp://|afs://|wais://|telnet://|ldap://'
     . '|gopher://|news:|nntp:|mid:|cid:|mailto:|prospero:)';
 $UrlExp  = $Url . q%[^\s\(\)\|<>"']*[^\.?!;,"'\|\[\]\(\)\s<>]%;

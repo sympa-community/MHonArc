@@ -25,6 +25,9 @@
 
 package mhonarc;
 
+use strict;
+use warnings;
+
 ##---------------------------------------------------------------------------
 ##	Function to do scan feature.
 ##

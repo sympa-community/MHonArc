@@ -1,4 +1,6 @@
 package MHonArc::CharEnt::CP950;
+use strict;
+use warnings;
 
 our $VERSION = '2.6.24';
 

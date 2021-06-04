@@ -25,6 +25,8 @@
 
 package mhonarc;
 
+use strict;
+use warnings;
 use MHonArc::RFC822;
 
 ## RFC 2369 header fields to check for URLs

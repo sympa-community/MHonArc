@@ -25,6 +25,9 @@
 
 package mhonarc;
 
+use strict;
+use warnings;
+
 sub mhidxrc_set_vars {
 
 ##-----------------##

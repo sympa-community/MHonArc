@@ -25,6 +25,7 @@
 package MHonArc::UTF8;
 
 use strict;
+use warnings;
 use MHonArc::CharMaps;
 
 our $VERSION = '2.6.24';

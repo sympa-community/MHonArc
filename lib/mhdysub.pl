@@ -27,6 +27,9 @@
 
 package mhonarc;
 
+use strict;
+use warnings;
+
 my $_sub_eval_cnt = 0;
 
 ##---------------------------------------------------------------------------

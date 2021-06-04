@@ -37,6 +37,9 @@
 
 package m2h_external;
 
+use strict;
+use warnings;
+
 ##---------------------------------------------------------------------------
 ##	Filter routine.
 ##

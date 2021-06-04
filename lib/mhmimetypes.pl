@@ -25,6 +25,8 @@
 
 package mhonarc;
 
+use strict;
+use warnings;
 use File::Basename;
 
 $UnknownExt = 'bin';

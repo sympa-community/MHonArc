@@ -26,6 +26,9 @@
 
 package mhonarc;
 
+use strict;
+use warnings;
+
 sub mhusage {
     my ($usefh, $close);
     local (*PAGER);

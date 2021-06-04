@@ -1,4 +1,6 @@
 package MHonArc::CharEnt::KOI8_A;
+use strict;
+use warnings;
 
 our $VERSION = '2.6.24';
 

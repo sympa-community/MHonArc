@@ -1,4 +1,6 @@
 package MHonArc::CharEnt::EUC_JP;
+use strict;
+use warnings;
 
 our $VERSION = '2.6.24';
 

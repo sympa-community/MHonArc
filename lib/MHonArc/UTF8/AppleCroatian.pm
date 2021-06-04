@@ -1,4 +1,6 @@
 package MHonArc::UTF8::AppleCroatian;
+use strict;
+use warnings;
 
 our $VERSION = '2.6.24';
 

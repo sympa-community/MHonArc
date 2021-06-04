@@ -30,6 +30,9 @@
 
 package m2h_null;
 
+use strict;
+use warnings;
+
 sub filter {
     my ($fields, $data, $isdecode, $args) = @_;
     my ($ctype) = $fields->{'content-type'}[0] =~ m%^\s*([\w\-\./]+)%;
