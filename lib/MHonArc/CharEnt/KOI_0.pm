@@ -1,4 +1,7 @@
 package MHonArc::CharEnt::KOI_0;
+
+our $VERSION = '2.6.24';
+
 +{
 '$','&#xA4;',
 '@','&#x44E;',

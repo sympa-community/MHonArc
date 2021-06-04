@@ -1,4 +1,7 @@
 package MHonArc::UTF8::CP936;
+
+our $VERSION = '2.6.24';
+
 +{
 '€','â‚¬',
 '¡è','Â¤',

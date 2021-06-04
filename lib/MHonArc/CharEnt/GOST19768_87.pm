@@ -1,4 +1,7 @@
 package MHonArc::CharEnt::GOST19768_87;
+
+our $VERSION = '2.6.24';
+
 +{
 '$','&#xA4;',
 ' ','&#xA0;',

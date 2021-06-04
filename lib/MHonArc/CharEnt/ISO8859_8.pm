@@ -1,4 +1,7 @@
 package MHonArc::CharEnt::ISO8859_8;
+
+our $VERSION = '2.6.24';
+
 +{
 ' ','&#xA0;',
 '¢','&#xA2;',

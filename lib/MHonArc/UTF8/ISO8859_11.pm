@@ -1,4 +1,7 @@
 package MHonArc::UTF8::ISO8859_11;
+
+our $VERSION = '2.6.24';
+
 +{
 '†','¬†',
 '°','‡∏Å',

@@ -1,4 +1,7 @@
 package MHonArc::CharEnt::AppleIceland;
+
+our $VERSION = '2.6.24';
+
 +{
 'Ê','&#xA0;',
 'Á','&#xA1;',

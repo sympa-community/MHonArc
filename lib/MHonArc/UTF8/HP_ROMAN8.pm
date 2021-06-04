@@ -1,4 +1,7 @@
 package MHonArc::UTF8::HP_ROMAN8;
+
+our $VERSION = '2.6.24';
+
 +{
 ' ','Â ',
 '¡','Ã€',

@@ -1,4 +1,7 @@
 package MHonArc::CharEnt::EUC_JP;
+
+our $VERSION = '2.6.24';
+
 +{
 'Ž¡','&#xFF61;',
 'Ž¢','&#xFF62;',

@@ -1,4 +1,7 @@
 package MHonArc::CharEnt::AppleGreek;
+
+our $VERSION = '2.6.24';
+
 +{
 'Ê','&#xA0;',
 '’','&#xA3;',

@@ -1,4 +1,7 @@
 package MHonArc::CharEnt::AppleRoman;
+
+our $VERSION = '2.6.24';
+
 +{
 'Ê','&#xA0;',
 'Á','&#xA1;',

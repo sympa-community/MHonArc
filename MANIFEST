@@ -371,7 +371,6 @@ lib/mhmsgextbody.pl
 lib/mhmsgfile.pl
 lib/mhnote.pl
 lib/mhnull.pl
-lib/MHonArc.pm
 lib/MHonArc/Char.pm
 lib/MHonArc/Char/JP.pm
 lib/MHonArc/Char/KR.pm

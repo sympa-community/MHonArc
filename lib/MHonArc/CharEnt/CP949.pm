@@ -1,4 +1,7 @@
 package MHonArc::CharEnt::CP949;
+
+our $VERSION = '2.6.24';
+
 +{
 'во','&#xA1;',
 'в┤','&#xA4;',

@@ -1,4 +1,7 @@
 package MHonArc::UTF8::CP1251;
+
+our $VERSION = '2.6.24';
+
 +{
 ' ','Â ',
 '¤','Â¤',

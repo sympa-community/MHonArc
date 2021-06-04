@@ -1,4 +1,7 @@
 package MHonArc::CharEnt::BIG5_ETEN;
+
+our $VERSION = '2.6.24';
+
 +{
 ' ','&#xA0;',
 '¡±','&#xA7;',

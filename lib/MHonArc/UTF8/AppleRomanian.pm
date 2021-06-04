@@ -1,4 +1,7 @@
 package MHonArc::UTF8::AppleRomanian;
+
+our $VERSION = '2.6.24';
+
 +{
 '¯','SÌ¦',
 'Þ','TÌ¦',

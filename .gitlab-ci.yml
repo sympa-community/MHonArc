@@ -5,6 +5,8 @@
     - . ~/.bash_profile
     - perl -v
   script:
+    - cpanm --installdeps --notest .
+    - cpanm --notest Unicode::String Unicode::MapUTF8
     - perl Makefile.PL
     - make
     - make disttest

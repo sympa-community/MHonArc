@@ -1,4 +1,7 @@
 package MHonArc::CharEnt::VISCII;
+
+our $VERSION = '2.6.24';
+
 +{
 '','&#x1EB2;',
 '','&#x1EB4;',

@@ -1,4 +1,7 @@
 package MHonArc::UTF8::AppleGreek;
+
+our $VERSION = '2.6.24';
+
 +{
 'Ê','Â ',
 '’','Â£',

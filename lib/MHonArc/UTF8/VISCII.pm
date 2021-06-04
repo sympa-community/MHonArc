@@ -1,4 +1,7 @@
 package MHonArc::UTF8::VISCII;
+
+our $VERSION = '2.6.24';
+
 +{
 '','Ẳ',
 '','Ẵ',

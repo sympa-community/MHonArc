@@ -1,4 +1,7 @@
 package MHonArc::CharEnt::GB2312;
+
+our $VERSION = '2.6.24';
+
 +{
 '¡¡','&#x3000;',
 '¡¢','&#x3001;',

@@ -1,4 +1,7 @@
 package MHonArc::UTF8::KOI8_B;
+
+our $VERSION = '2.6.24';
+
 +{
 '£','—ë',
 '≥','–Å',
