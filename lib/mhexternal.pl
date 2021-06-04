@@ -226,7 +226,7 @@ INLINESW: {
         $ret = '<p>'
             . mhonarc::htmlize($fields->{'content-description'}[0])
             . "</p>\n"
-            if (defined $fields{'content-description'});
+            if (defined $fields->{'content-description'});
         $ret .= qq|<p><a href="$urlfile" $target><img src="$urlfile" |
             . qq|alt="$type"></a></p>\n|;
 
