@@ -532,10 +532,14 @@ man/mha-dbrecover.1
 man/mha-decode.1
 man/mhonarc.1
 MANIFEST			This list of files
+MANIFEST.SKIP
 mha-dbedit
 mha-dbrecover
 mha-decode
 mhonarc
 README.txt
 RELNOTES
+t/compile.t
+t/readmail-MAILhead_get_disposition.t
 TODO
+xt/perltidy.t

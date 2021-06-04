@@ -1,6 +1,7 @@
 language: perl
 
 perl:
+  - "5.32"
   - "5.30"
   - "5.28"
   - "5.26"
@@ -21,11 +22,12 @@ before_script:
 
 script:
   - cpanm --installdeps --notest .
+  - cpanm --notest Test::Compile::Internal
+  - cpanm --notest CGI
   - cpanm --notest Unicode::String Unicode::MapUTF8
-  - for i in lib/*.pl lib/MHonArc/*.pm lib/MHonArc/*/*.pm; do perl -Ilib -c $i || exit 1; done
   - perl Makefile.PL
   - make
-  - make install
-  - make tardist
+  - make disttest
+  - make dist
   - cpanm -L local MHonArc-*.tar.gz
   - make clean

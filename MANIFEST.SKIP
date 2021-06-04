@@ -1,0 +1,38 @@
+# ExtUtils::MakeMaker
+^MANIFEST[.]bak
+^Makefile$
+^Makefile[.]old$
+^blib/
+^MakeMaker-\d
+^pm_to_blib$
+^pm_to_blib[.]ts$
+^MHonArc-[.\d_]+[.]tar[.]gz$
+
+# MYMETA.* files
+^MYMETA[.]
+
+# PerlTidy
+^[.]perltidyrc$
+^[.]tidyall[.]d/
+
+# Git
+\B[.]git\b
+\B[.]gitignore\b
+
+# GitHub
+^[.]travis[.]yml$
+^[.]github/
+
+# Gitlab
+^[.]gitlab-ci[.]yml$
+
+# Temporary/backup files
+^#
+^~
+~$
+[.]bak$
+[.]old$
+[.]rej$
+[.]swp$
+[.]tmp$
+

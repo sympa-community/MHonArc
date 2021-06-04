@@ -32,6 +32,11 @@ WriteMakefile(
             }
         },
         prereqs => {
+            build => {
+                requires => {
+                    'Test::Compile::Internal' => 0,
+                },
+            },
             runtime => {
                 recommends => {
                     'Digest::MD5'  => 0,
